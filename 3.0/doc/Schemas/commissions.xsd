@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="commissions">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Описание дерева комиссий</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="day" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="time" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="amount" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="commission" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="operator" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Комиссия для оператора</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="day" minOccurs="0" maxOccurs="unbounded"/>
+              <xs:element ref="time" minOccurs="0" maxOccurs="unbounded"/>
+              <xs:element ref="amount" minOccurs="0" maxOccurs="unbounded"/>
+              <xs:element ref="commission" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:integer" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="day">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Ограничение комиссий по дням</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="time" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="amount" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="commission" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:integer" use="required">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Номер дня недели</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="time">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Ограничение комиссий по времени</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="amount" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="commission" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="begin" type="xs:time" use="required">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Время начало действия комиссии</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="end" type="xs:time" use="required">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Время окончания действия комиссии</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="amount">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Ограничение комиссий по сумме платежа</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="commission" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="above" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Минимальная сумма для которой применима комиссия</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="below" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Максимальная сумма для которой применима комиссия</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="commission">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Описание конкретной комиссии</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="amount" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Кол-во единиц комиссии</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="type" type="xs:string" default="absolute">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Тип комиссии (absolute/percent)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="min_charge" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Минимальное кол-во взимаемых абсолютных единиц (для процентной комиссии)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="max_charge" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Максимальное кол-во взимаемых абсолютных единиц (для процентной комиссии)</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

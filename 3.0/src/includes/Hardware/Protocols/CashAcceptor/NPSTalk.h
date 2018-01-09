@@ -1,0 +1,1 @@
+#include "../../../../modules/Hardware/Protocols/CashAcceptor/NPSTalk/src/NPSTalk.h"

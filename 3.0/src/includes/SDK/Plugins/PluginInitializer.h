@@ -1,0 +1,1 @@
+#include "../../../Modules/SDK/Plugins/src/PluginInitializer.h"

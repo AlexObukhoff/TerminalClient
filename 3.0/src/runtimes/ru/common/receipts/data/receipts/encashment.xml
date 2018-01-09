@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string if="String('%POINT_EXTERNAL_ID%').length == 0">Инкассация терминала %TERMINAL_NUMBER%</string>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Инкассация терминала %TERMINAL_NUMBER% / %POINT_EXTERNAL_ID%</else>
+	<string>Название: %POINT_NAME%</string>
+	<string>Адрес: %POINT_ADDRESS%</string>
+	<else if="String('%ENCASHMENT_DEALER_INFO%').length > 0">%ENCASHMENT_DEALER_INFO%</else>
+	<string>-----------------------------------</string>
+	<string>За период с: %ENCASHMENT_START_DATE%</string>
+	<string>         по: %ENCASHMENT_END_DATE%</string>
+	<string>Номер чека: %ENCASHMENT_NUMBER%</string>
+	<string>-----------------------------------</string>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Получатель: %DEALER_NAME%</else>
+	<else if="String('%STACKER_ID%').length > 0">ID кассеты: %STACKER_ID%</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0 || String('%STACKER_ID%').length > 0">-----------------------------------</else>
+	<string>Монеты 0.50 %CURRENCY% x %0.50_COIN_COUNT% = %0.50_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 1 %CURRENCY% x %1_COIN_COUNT% = %1_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 2 %CURRENCY% x %2_COIN_COUNT% = %2_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 5 %CURRENCY% x %5_COIN_COUNT% = %5_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 10 %CURRENCY% x %10_COIN_COUNT% = %10_COIN_SUM% %CURRENCY%</string>
+	<string>-----------------------------------</string>
+	<string>Кол-во монет: %COIN_COUNT%</string>
+	<string> Сумма монет: %COIN_SUM%</string>
+	<string>-----------------------------------</string>
+	<string>Купюры 10 %CURRENCY% x %10_BILL_COUNT% = %10_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 50 %CURRENCY% x %50_BILL_COUNT% = %50_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 100 %CURRENCY% x %100_BILL_COUNT% = %100_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 500 %CURRENCY% x %500_BILL_COUNT% = %500_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 1000 %CURRENCY% x %1000_BILL_COUNT% = %1000_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 5000 %CURRENCY% x %5000_BILL_COUNT% = %5000_BILL_SUM% %CURRENCY%</string>
+	<string>-----------------------------------</string>
+	<string>Кол-во купюр: %BILL_COUNT%</string>
+	<string> Сумма купюр: %BILL_SUM%</string>
+ 	<string>-----------------------------------</string>
+	<string>Общая сумма:  %TOTAL_SUM%</string>
+ 	<string>-----------------------------------</string>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Инкассатор ____</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Контр.работник при инкассации ____</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">-----------------------------------</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Указанная выше сумма принята.</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Кассовый работник ____</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Контролирующий работник ____</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">-----------------------------------</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">[b]АКТ[/b]</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">При вскрытии и пересчете оказалось:</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Наличными:</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Недосдача:</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Неплатежных:</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Излишек:</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Сомнительных:</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Кассовый работник ____</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">Контролирующий работник ____</else>
+	<else if="String('%POINT_EXTERNAL_ID%').length > 0">-----------------------------------</else>
+</body>

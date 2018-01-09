@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string if="%DEALER_IS_BANK% == 0">Платежный субагент:</string>
+    <else if="%DEALER_IS_BANK% != 0">Банковский платежный агент:</else>
+	<string>[b]%DEALER_NAME%[/b]</string>
+	<string>ИНН [b]%DEALER_INN%[/b]</string>
+	<string if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') == 0">[b]НДС не облагается[/b]</string>
+	<else if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') > 0">[b]НДС 18%[/b]</else>
+	<string>Место нахождения:[b]%DEALER_BUSINESS_ADDRESS%[/b]</string>
+	<string>Терминал [b]%TERMINAL_NUMBER%[/b]</string>
+	<string>Адрес терминала: [b]%POINT_ADDRESS%[/b]</string>
+	<string>-----------------------------------</string>
+	<string>  %DATETIME% </string>
+	<string>-----------------------------------</string>
+	<string>Ваши средства в размере [b]%AMOUNT% %CURRENCY%[/b]</string>
+	<string>[b]из-за ошибки оборудования остались</string>
+	<string>[b]в терминале.</string>
+	<string>[b]За инструкциями обратитесь в тех. поддержку.</string>
+	<string>-----------------------------------</string>
+	<string if="%DEALER_IS_BANK% == 0">По всем вопросам обращайтесь к</string>
+	<string if="%DEALER_IS_BANK% == 0">Платежному субагенту:</string>
+	<else if="%DEALER_IS_BANK% != 0">По всем вопросам обращайтесь к</else>
+	<else if="%DEALER_IS_BANK% != 0">Банковскому платежному агенту:</else>
+	<string>-----------------------------------</string>
+	<string>%AD_RECEIPT_FOOTER%</string>
+</body>

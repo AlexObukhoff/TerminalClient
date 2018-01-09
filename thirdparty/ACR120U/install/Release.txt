@@ -1,0 +1,45 @@
+Release Notes for ACR110U Proprietary Driver:
+=============================================
+
+----------------------------------------------
+Version: 1.0.1.1 (RW)	 Date: 28-January-2010
+----------------------------------------------
+
+Description:
+- ACR120U proprietary driver package for win98/ME, 2000, XP, 2003/2008, Vista and Windows 7 (x86 & x64).
+
+Changes:
+- Solved conflict with certain antivirus programs.
+- 1 driver package for all mentioned OS's.
+- ACS SPC Signed for Vista/Win7 x86 & x64.
+
+-----------------------------------------------
+Update: 1.0.1.0 (GC)	 Date: 10-November-2009
+-----------------------------------------------
+
+Description:
+- Proprietary drivers
+
+Changes:
+- SPC signed for Windows 7.
+
+-----------------------------------------------
+Update: 1.0.1.0 (GC)	 Date: 1-August-2007
+-----------------------------------------------
+
+Description:
+- Proprietary drivers
+
+Changes:
+- Add PID_8103 support.
+
+-----------------------------------------------
+Version: 1.0.1.0 (GC)	 Date: 30-April-2007
+-----------------------------------------------
+
+Description:
+- Proprietary drivers
+
+Changes:
+- Initial release
+

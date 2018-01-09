@@ -1,0 +1,468 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- C++Builder XML Project -->
+<PROJECT>
+  <MACROS>
+    <VERSION value="BCB.06.00"/>
+    <PROJECT value="..\..\output\WebClient.exe"/>
+    <OBJFILES value="..\objoutput\WebClient.obj ..\objoutput\Unit1.obj 
+      ..\objoutput\cbm1000t2.obj ..\objoutput\CommandParameters.obj 
+      ..\objoutput\ComPortClass.obj ..\objoutput\ComPortParameters.obj 
+      ..\objoutput\DeviceClass.obj ..\objoutput\DeviceState.obj 
+      ..\objoutput\DeviceThread.obj ..\objoutput\ShtrihPrinter.obj 
+      ..\objoutput\CPrinter.obj ..\objoutput\Citizen268Class.obj 
+      ..\objoutput\Citizen268Thread.obj ..\objoutput\CValidator.obj 
+      ..\objoutput\CWatchDog.obj ..\objoutput\WatchDogOSMPClass.obj 
+      ..\objoutput\WatchDogOSMPDevice.obj ..\objoutput\WatchDogOSMPThread.obj 
+      ..\objoutput\ValidatorInfo.obj ..\objoutput\XMLInfo.obj 
+      ..\objoutput\TModem.obj ..\objoutput\PacketSender.obj 
+      ..\objoutput\TConnectThread.obj ..\objoutput\TPayment.obj 
+      ..\objoutput\TSendThread.obj ..\objoutput\XMLPacket.obj 
+      ..\objoutput\CMoneyCounter.obj ..\objoutput\TFileMap.obj 
+      ..\objoutput\StarTUP900Class.obj ..\objoutput\StarTUP900Thread.obj 
+      ..\objoutput\CustomPrnClass.obj ..\objoutput\CustomPrnThread.obj 
+      ..\objoutput\TWConfig.obj ..\objoutput\WinPrnClass.obj 
+      ..\objoutput\Unit2.obj ..\objoutput\CommandReceiver.obj 
+      ..\objoutput\CitizenPPU700Class.obj ..\objoutput\CitizenPPU700Thread.obj 
+      ..\objoutput\EMailSender.obj ..\objoutput\EMailSendThread.obj 
+      ..\objoutput\Epson442Class.obj ..\objoutput\Epson442Thread.obj 
+      ..\objoutput\ICTDevice.obj ..\objoutput\ICTDeviceClass.obj 
+      ..\objoutput\ICTDeviceThread.obj ..\objoutput\TGptComPortThread.obj 
+      ..\objoutput\LogClass.obj ..\objoutput\SwecoinTTP2010Class.obj 
+      ..\objoutput\LptPort.obj ..\objoutput\V2Edevice.obj 
+      ..\objoutput\V2EDeviceClass.obj ..\objoutput\V2EDeviceThread.obj 
+      ..\objoutput\PRN609_012R.obj ..\objoutput\GptComPortClass.obj 
+      ..\objoutput\GebeGCTClass.obj ..\objoutput\GebeGCTThread.obj 
+      ..\objoutput\JCMdevice.obj ..\objoutput\JCMDeviceClass.obj 
+      ..\objoutput\JCMDeviceThread.obj ..\objoutput\WatchDog.obj 
+      ..\objoutput\TPinPayment.obj ..\objoutput\TGetCardsInfoThread.obj 
+      ..\objoutput\Cheque.obj ..\objoutput\CCNETDeviceClass.obj 
+      ..\objoutput\CCNETDeviceThread.obj ..\objoutput\common.obj 
+      ..\objoutput\CSPacketSender.obj ..\objoutput\SSPacketSender.obj 
+      ..\objoutput\Prim21kThread.obj ..\objoutput\Prim21kClass.obj 
+      ..\objoutput\ID003_1Device.obj ..\objoutput\ID003_1DeviceClass.obj 
+      ..\objoutput\ID003_1DeviceThread.obj ..\objoutput\ID003_2Device.obj 
+      ..\objoutput\ID003_2DeviceClass.obj ..\objoutput\ID003_2DeviceThread.obj 
+      ..\objoutput\THTTPGetFileThread.obj ..\objoutput\Prim08TKClass.obj 
+      ..\objoutput\Prim08TKThread.obj ..\objoutput\WatchDogAlarmClass.obj 
+      ..\objoutput\WatchDogAlarmDevice.obj ..\objoutput\WatchDogAlarmThread.obj 
+      ..\objoutput\TThreadMod.obj ..\objoutput\IskraKeybDevice.obj 
+      ..\objoutput\IskraKeybDeviceClass.obj 
+      ..\objoutput\IskraKeybDeviceThread.obj ..\objoutput\CKeyboard.obj 
+      ..\objoutput\SMSSender.obj ..\objoutput\SMSOutbound.obj 
+      ..\objoutput\XMLOutbound.obj ..\objoutput\ModemSiemensMC35i.obj 
+      ..\objoutput\Modem.obj ..\objoutput\WatchDogOSMP2Class.obj 
+      ..\objoutput\WatchDogOSMP2Device.obj ..\objoutput\WatchDogOSMP2Thread.obj 
+      ..\objoutput\CitizenPPU231Class.obj ..\objoutput\CitizenPPU231Thread.obj 
+      ..\objoutput\CitizenPPU232Class.obj ..\objoutput\CitizenPPU232Thread.obj 
+      ..\objoutput\StarTSP700Class.obj ..\objoutput\StarTSP700Thread.obj 
+      ..\objoutput\MetroCardClass.obj ..\objoutput\MetroCardDevice.obj 
+      ..\objoutput\MetroCardThread.obj ..\objoutput\CardReader.obj 
+      ..\objoutput\CardReaderParams.obj ..\objoutput\WatchDogPlatixClass.obj 
+      ..\objoutput\WatchDogPlatixDevice.obj 
+      ..\objoutput\WatchDogPlatixThread.obj ..\objoutput\NV9_CCNETdevice.obj 
+      ..\objoutput\NV9_CCNETDeviceClass.obj 
+      ..\objoutput\NV9_CCNETDeviceThread.obj ..\objoutput\TModemThread.obj 
+      ..\objoutput\evroset_lib.obj ..\objoutput\TJSMaker.obj 
+      ..\objoutput\TPSound.obj ..\objoutput\KtekKeybDevice.obj 
+      ..\objoutput\KtekKeybDeviceClass.obj ..\objoutput\KtekKeybDeviceThread.obj 
+      ..\objoutput\SBK2Class.obj ..\objoutput\SBK2Device.obj 
+      ..\objoutput\SBK2Thread.obj ..\objoutput\LDOGClass.obj 
+      ..\objoutput\LDOGDevice.obj ..\objoutput\LDOGThread.obj 
+      ..\objoutput\FairPayWDClass.obj ..\objoutput\FairPayWDDevice.obj 
+      ..\objoutput\FairPayWDThread.obj ..\objoutput\CitizenCPP8001Class.obj 
+      ..\objoutput\CitizenCPP8001Thread.obj ..\objoutput\SetupUnit.obj 
+      ..\objoutput\TCfgFieldData.obj ..\objoutput\TMoneyTransferPayment.obj 
+      ..\objoutput\MEIDevice.obj ..\objoutput\MEIDeviceClass.obj 
+      ..\objoutput\MEIDeviceThread.obj ..\objoutput\TLocationParser.obj 
+      ..\objoutput\SIM2OSMPClass.obj ..\objoutput\SIM2OSMPDevice.obj 
+      ..\objoutput\SIM2OSMPThread.obj ..\objoutput\JSONDocument.obj 
+      ..\objoutput\WatchDogClass.obj ..\objoutput\WatchDogDevice.obj 
+      ..\objoutput\WatchDogThread.obj ..\objoutput\wp_t833.obj 
+      ..\objoutput\TAviaPayment.obj ..\objoutput\globals.obj 
+      ..\objoutput\printreceiptengine.obj ..\objoutput\NRIDevice.obj 
+      ..\objoutput\CCoinAcceptor.obj ..\objoutput\NRIDeviceThread.obj 
+      ..\objoutput\NRIDeviceClass.obj ..\objoutput\StarTSP600Class.obj 
+      ..\objoutput\StarTSP600Thread.obj ..\objoutput\THalfPinPayment.obj 
+      ..\objoutput\Scanner.obj ..\objoutput\NullScanner.obj 
+      ..\objoutput\wp_k833.obj ..\objoutput\BD2Class.obj 
+      ..\objoutput\TTaxPayment.obj ..\objoutput\ScannerThread.obj 
+      ..\objoutput\CCNETdevice.obj ..\objoutput\AtolPrinter.obj 
+      ..\objoutput\AtolPrinterThread.obj ..\objoutput\localize.obj 
+      ..\objoutput\TSendThread2.obj ..\objoutput\MemoryLeaks.obj 
+      ..\objoutput\TMetroPayment.obj ..\objoutput\CSankyoCardReader.obj 
+      ..\objoutput\CSankyoCardReaderThread.obj ..\objoutput\BaseCardReader.obj 
+      ..\objoutput\gz_stream.obj ..\objoutput\ExpressPayThread.obj 
+      ..\objoutput\ExpressPayClass.obj ..\objoutput\ExpressPayDevice.obj 
+      ..\objoutput\TNote.obj ..\objoutput\TFunctionThread.obj"/>
+    <RESFILES value="..\objoutput\WebClient.res"/>
+    <IDLFILES value=""/>
+    <IDLGENFILES value=""/>
+    <DEFFILE value=""/>
+    <RESDEPEN value="$(RESFILES) Unit1.dfm Unit2.dfm SetupUnit.dfm"/>
+    <LIBFILES value="Connect\nafxcwd.lib ..\TCryptLib\CryptLib.lib 
+      ..\Thirdparty\zlib\dll32\zlib.lib 
+      ..\Thirdparty\zlib\dll32\zlibwapi.lib 
+      ..\Thirdparty\bin\tinyxml_stl_bcb.lib 
+      ..\PaymentBook\PaymentBook.lib"/>
+    <LIBRARIES value="ThemeManagerC6D.lib ThemeManagerC6.lib VirtualTreesC6.lib 
+      bcb2kaxserver.lib dclocx.lib indy.lib"/>
+    <SPARELIBS value="vcl.lib rtl.lib bcbie.lib vclie.lib dbrtl.lib bdertl.lib qrpt.lib vclx.lib 
+      nmfast.lib indy.lib xmlrtl.lib inet.lib vcldb.lib ibxpress.lib cds.lib 
+      bdecds.lib vcldbx.lib teeui.lib teedb.lib tee.lib dss.lib teeqr.lib 
+      visualdbclx.lib dsnapcrba.lib dsnapcon.lib bcbsmp.lib inetdbbde.lib 
+      inetdbxpress.lib dbexpress.lib soaprtl.lib dclocx.lib dbxcds.lib 
+      bcb2kaxserver.lib adortl.lib VirtualTreesC6.lib ThemeManagerC6.lib 
+      ThemeManagerC6D.lib"/>
+    <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
+      vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
+      teedb.bpi tee.bpi dss.bpi teeqr.bpi visualclx.bpi visualdbclx.bpi 
+      dsnapcrba.bpi dsnapcon.bpi bcbsmp.bpi vclie.bpi xmlrtl.bpi inet.bpi 
+      inetdbbde.bpi inetdbxpress.bpi inetdb.bpi nmfast.bpi webdsnap.bpi 
+      bcbie.bpi websnap.bpi soaprtl.bpi dbexpress.bpi dbxcds.bpi"/>
+    <PATHCPP value=".;..\Devices\Printers\Citizen;..\Devices\BaseDevice\CommandParameters;..\Devices\BaseDevice\ComPort;..\Devices\BaseDevice\DeviceClass;..\Devices\BaseDevice\DeviceState;..\Devices\BaseDevice\DeviceThread;..\Devices\Printers\Shtrih;..\Devices\BaseDevice\CPrinter;..\Devices\Printers\Citizen268;..\Devices\BaseDevice\CValidator;..\Devices\BaseDevice\CWatchDog;..\Devices\WatchDogs\OSMP;..\Devices\MoneyCounter;..\Devices\MoneyCounter\XMLInfo;..\Devices\TModem;..\PacketSender;..\TConnectThread;..\TPayment;..\TSendThread;..\XMLPacket;..\TFileMap;..\Devices\Printers\StarTUP900;..\Devices\Printers\CustomPrinter;..\TWConfig;..\Devices\Printers\WinPrinter;..\CommandReceiver;..\Devices\Printers\CitizenPPU700;..\EMailSender;..\EMailSendThread;..\Devices\Printers\Epson442;..\Devices\Validators\ICTDevice;..\Devices\Validators\GPT;..\Devices\BaseDevice\LogClass;..\Devices\Printers\SwecoinTTP2010;..\Devices\WatchDogs\LptPort;..\Devices\Printers\PRN609_012R;..\Devices\Printers\GebePrinter;..\Devices\Validators\JCMDevice;..\Devices\WatchDogs\Alniko&amp;NewGT;..\TGetCardsInfoThread;..\Devices\Printers\Cheque;..\Devices\Validators\CCNETdevice;..\Common;..\Devices\Printers\Prim21k;..\Devices\Validators\ID003_1Device;..\Devices\Validators\ID003_2Device;..\THTTPGetFileThread;..\Devices\Printers\Prim08TK;..\Devices\WatchDogs\WatchDogAlarm;..\Devices\BaseDevice\TThreadMod;..\Devices\Keyboards\IskraKeybDevice;..\Devices\BaseDevice\CKeyboard;..\XMLOutbound;..\Devices\Modems\SiemensMC35i;..\Devices\BaseDevice\CModem;..\Devices\WatchDogs\OSMP2;..\Devices\Printers\CitizenPPU231;..\Devices\Printers\CitizenPPU232;..\Devices\Printers\StarTSP700;..\Devices\CardReaders\MetroCard;..\Devices\BaseDevice\CCardReader;..\Devices\WatchDogs\WatchDogPlatix;..\Devices\Validators\NV9_CCNET;..\TModemThread;..\evroset_lib;..\TJSMaker;..\TPSound;..\Devices\Keyboards\KtekKeybDevice;..\Devices\WatchDogs\SBK2;..\Devices\WatchDogs\LDOG;..\Devices\WatchDogs\FairPayWD;..\Devices\Printers\CitizenCPP8001;..\TCfgFieldData;..\Devices\Validators\MEIDevice;..\TLocationParser;..\Devices\WatchDogs\2SIM_OSMP;..\JSONDocument;..\Devices\WatchDogs\av268;..\Devices\Printers\WPT833;..\Globals;..\PrintReceiptEngine;..\Devices\CoinAcceptors\NRIDevice;..\Devices\BaseDevice\CCoinAcceptor;..\Devices\Printers\StarTSP600;..\Devices\BaseDevice\Scanner;..\Devices\Printers\WPK833;..\Devices\Printers\bd2-286;..\Devices\Printers\Atol;..\MemoryLeaks;..\Devices\CardReaders\Sankyo;..\Thirdparty\zlib\source;..\Devices\WatchDogs\ExpressPay"/>
+    <PATHPAS value=".;"/>
+    <PATHRC value=".;"/>
+    <PATHASM value=".;"/>
+    <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
+    <RELEASELIBPATH value="$(BCB)\lib\release"/>
+    <LINKER value="ilink32"/>
+    <USERDEFINES value="_DEBUG"/>
+    <SYSDEFINES value="NO_STRICT;USEPACKAGES"/>
+    <MAINSOURCE value="WebClient.cpp"/>
+    <INCLUDEPATH value="..\Thirdparty\zlib\source;..\Thirdparty\zlib\source;..\Devices\WatchDogs\ExpressPay;..\Devices\CardReaders\Sankyo;..\NoteBook;..\MemoryLeaks;..\Devices\Printers\Atol;..\Devices\Printers\bd2-286;..\Devices\Printers\WPK833;..\Devices\BaseDevice\Scanner;..\Devices\Printers\StarTSP600;..\Thirdparty\VirtualTreeview\CBuilder;..\PrintReceiptEngine;..\Thirdparty\7zip;..\Devices\Printers\WPT833;..\Devices\WatchDogs\av268;..\JSONDocument;..\Devices\WatchDogs\2SIM_OSMP;..\TLocationParser;..\Devices\Validators\MEIDevice;..\TCfgFieldData;..\Devices\Printers\CitizenCPP8001;..\Devices\WatchDogs\FairPayWD;..\Devices\WatchDogs\LDOG;..\Devices\WatchDogs\SBK2;..\Devices\Keyboards\KtekKeybDevice;..\TPSound;..\TJSMaker;..\TEUConnectThread;..\TModemThread;..\Devices\Validators\NV9_CCNET;..\Devices\WatchDogs\WatchDogPlatix;..\Devices\BaseDevice\CCardReader;..\Devices\CardReaders\MetroCard;..\Devices\Printers\StarTSP700;..\Devices\Printers\CitizenPPU232;..\Devices\Printers\CitizenPPU231;..\Devices\WatchDogs\OSMP2;..\Devices\BaseDevice\CModem;..\Devices\Modems\SiemensMC35i;..\XMLOutbound;..\Devices\BaseDevice\CKeyboard;..\Devices\Keyboards\IskraKeybDevice;..\Devices\BaseDevice\TThreadMod;..\Devices\WatchDogs\WatchDogAlarm;..\Devices\Printers\Prim08TK;..\THTTPGetFileThread;..\Devices\Validators\ID003_2Device;..\Devices\Validators\ID003_1Device;..\Devices\Printers\Prim21k;..\Common;..\Devices\Printers\Cheque;..\TGetCardsInfoThread;..\Devices\WatchDogs\Alniko&amp;NewGT;..\Devices\Validators\JCMDevice;..\Devices\Printers\GebePrinter;..\Devices\Printers\PRN609_012R;..\Devices\WatchDogs\LptPort;..\Devices\Printers\SwecoinTTP2010;..\Devices\BaseDevice\LogClass;..\Devices\Validators\GPT;..\Devices\Validators\ICTDevice;..\Devices\Printers\Epson442;..\EMailSendThread;..\EMailSender;..\Devices\Printers\CitizenPPU700;..\CommandReceiver;..\Devices\Printers\WinPrinter;..\TWConfig;..\TCryptLib;..\Devices\Printers\CustomPrinter;..\Devices\Printers\StarTUP900;..\TFileMap;..\XMLPacket;..\TSendThread;..\TPayment;..\TConnectThread;..\PacketSender;..\Devices\TModem;..\Devices\MoneyCounter\XMLInfo;..\Devices\MoneyCounter;..\Devices\WatchDogs\OSMP;..\Devices\BaseDevice\CWatchDog;..\Devices\BaseDevice\CValidator;..\Devices\Printers\Citizen268;..\Devices\BaseDevice\CPrinter;..\Devices\Printers\Shtrih;..\Devices\Validators\CCNETdevice;..\Devices\BaseDevice\DeviceThread;..\Devices\BaseDevice\DeviceState;..\Devices\BaseDevice\DeviceClass;..\Devices\BaseDevice\ComPort;..\Devices\BaseDevice\CommandParameters;..\Devices\Printers\Citizen;..\Thirdparty\VirtualTreeview\Source;..\evroset_lib;$(BCB)\Imports;$(BCB)\include;$(BCB)\include\vcl;..\Thirdparty\ThemeManager\Source;..\Thirdparty\ThemeManager\cbuilder;..\Thirdparty\boost_1_34_1;..\globals;..\Thirdparty\tinyxml;..\Devices\CoinAcceptors\NRIDevice;..\Devices\CoinAcceptors;..\Devices\BaseDevice\CCoinAcceptor;..\Thirdparty\curl;..\Devices\CardReaders"/>
+    <LIBPATH value="..\Thirdparty\zlib\source;..\Thirdparty\zlib\source;..\Devices\WatchDogs\ExpressPay;..\Devices\CardReaders\Sankyo;..\NoteBook;..\MemoryLeaks;..\Devices\Printers\Atol;&quot;..\Devices\Printers\bd2-286&quot;;..\Devices\Printers\WPK833;..\Devices\BaseDevice\Scanner;..\Devices\Printers\StarTSP600;..\Devices\BaseDevice\CCoinAcceptor;..\Devices\CoinAcceptors\NRIDevice;..\Thirdparty\VirtualTreeview\CBuilder;..\PrintReceiptEngine;..\Globals;..\Devices\Printers\WPT833;..\Devices\WatchDogs\av268;..\JSONDocument;..\Devices\WatchDogs\2SIM_OSMP;..\TLocationParser;..\Devices\Validators\MEIDevice;..\TCfgFieldData;..\Devices\Printers\CitizenCPP8001;..\Devices\WatchDogs\FairPayWD;..\Devices\WatchDogs\LDOG;..\Devices\WatchDogs\SBK2;..\Devices\Keyboards\KtekKeybDevice;..\TPSound;..\TJSMaker;..\TEUConnectThread;..\TModemThread;..\Devices\Validators\NV9_CCNET;..\Devices\WatchDogs\WatchDogPlatix;..\Devices\BaseDevice\CCardReader;..\Devices\CardReaders\MetroCard;..\Devices\Printers\StarTSP700;..\Devices\Printers\CitizenPPU232;..\Devices\Printers\CitizenPPU231;..\Devices\WatchDogs\OSMP2;..\Devices\BaseDevice\CModem;..\Devices\Modems\SiemensMC35i;..\XMLOutbound;..\Devices\BaseDevice\CKeyboard;..\Devices\Keyboards\IskraKeybDevice;..\Devices\BaseDevice\TThreadMod;..\Devices\WatchDogs\WatchDogAlarm;..\Devices\Printers\Prim08TK;..\THTTPGetFileThread;..\Devices\Validators\ID003_2Device;..\Devices\Validators\ID003_1Device;..\Devices\Printers\Prim21k;..\Common;..\Devices\Printers\Cheque;..\TGetCardsInfoThread;..\Devices\WatchDogs\Alniko&amp;NewGT;..\Devices\Validators\JCMDevice;..\Devices\Printers\GebePrinter;..\Devices\Printers\PRN609_012R;..\Devices\WatchDogs\LptPort;..\Devices\Printers\SwecoinTTP2010;..\Devices\BaseDevice\LogClass;..\Devices\Validators\GPT;..\Devices\Validators\ICTDevice;..\Devices\Printers\Epson442;..\EMailSendThread;..\EMailSender;..\Devices\Printers\CitizenPPU700;..\CommandReceiver;..\Devices\Printers\WinPrinter;..\TWConfig;..\TCryptLib;..\Devices\Printers\CustomPrinter;..\Devices\Printers\StarTUP900;..\TFileMap;..\XMLPacket;..\TSendThread;..\TPayment;..\TConnectThread;..\PacketSender;..\Devices\TModem;..\Devices\MoneyCounter\XMLInfo;..\Devices\MoneyCounter;..\Devices\WatchDogs\OSMP;..\Devices\BaseDevice\CWatchDog;..\Devices\BaseDevice\CValidator;..\Devices\Printers\Citizen268;..\Devices\BaseDevice\CPrinter;..\Devices\Printers\Shtrih;..\Devices\Validators\CCNETdevice;..\Devices\BaseDevice\DeviceThread;..\Devices\BaseDevice\DeviceState;..\Devices\BaseDevice\DeviceClass;..\Devices\BaseDevice\ComPort;..\Devices\BaseDevice\CommandParameters;..\Devices\Printers\Citizen;..\Thirdparty\bin;$(BCB)\lib;$(BCB)\lib\release;..\evroset_lib;$(BCB)\Projects\Lib;$(BCB)\Imports;$(BCB)\lib\obj;..\Thirdparty\VirtualTreeview\Source;$(BCB)\lib\psdk;..\Thirdparty\zlib\dll32;..\Thirdparty\7zip;..\Devices\CardReaders"/>
+    <WARNINGS value="-w-par"/>
+    <OTHERFILES value=""/>
+  </MACROS>
+  <OPTIONS>
+    <IDLCFLAGS value="-I..\Thirdparty\zlib\source -I..\Thirdparty\zlib\source 
+      -I..\Devices\WatchDogs\ExpressPay -I..\Devices\CardReaders\Sankyo 
+      -I..\NoteBook -I..\MemoryLeaks -I..\Devices\Printers\Atol 
+      -I..\Devices\Printers\bd2-286 -I..\Devices\Printers\WPK833 
+      -I..\Devices\BaseDevice\Scanner -I..\Devices\Printers\StarTSP600 
+      -I..\Thirdparty\VirtualTreeview\CBuilder -I..\PrintReceiptEngine 
+      -I..\Thirdparty\7zip -I..\Devices\Printers\WPT833 
+      -I..\Devices\WatchDogs\av268 -I..\JSONDocument 
+      -I..\Devices\WatchDogs\2SIM_OSMP -I..\TLocationParser 
+      -I..\Devices\Validators\MEIDevice -I..\TCfgFieldData 
+      -I..\Devices\Printers\CitizenCPP8001 -I..\Devices\WatchDogs\FairPayWD 
+      -I..\Devices\WatchDogs\LDOG -I..\Devices\WatchDogs\SBK2 
+      -I..\Devices\Keyboards\KtekKeybDevice -I..\TPSound -I..\TJSMaker 
+      -I..\TEUConnectThread -I..\TModemThread -I..\Devices\Validators\NV9_CCNET 
+      -I..\Devices\WatchDogs\WatchDogPlatix -I..\Devices\BaseDevice\CCardReader 
+      -I..\Devices\CardReaders\MetroCard -I..\Devices\Printers\StarTSP700 
+      -I..\Devices\Printers\CitizenPPU232 -I..\Devices\Printers\CitizenPPU231 
+      -I..\Devices\WatchDogs\OSMP2 -I..\Devices\BaseDevice\CModem 
+      -I..\Devices\Modems\SiemensMC35i -I..\XMLOutbound 
+      -I..\Devices\BaseDevice\CKeyboard -I..\Devices\Keyboards\IskraKeybDevice 
+      -I..\Devices\BaseDevice\TThreadMod -I..\Devices\WatchDogs\WatchDogAlarm 
+      -I..\Devices\Printers\Prim08TK -I..\THTTPGetFileThread 
+      -I..\Devices\Validators\ID003_2Device 
+      -I..\Devices\Validators\ID003_1Device -I..\Devices\Printers\Prim21k 
+      -I..\Common -I..\Devices\Printers\Cheque -I..\TGetCardsInfoThread 
+      -I..\Devices\WatchDogs\Alniko&amp;NewGT -I..\Devices\Validators\JCMDevice 
+      -I..\Devices\Printers\GebePrinter -I..\Devices\Printers\PRN609_012R 
+      -I..\Devices\WatchDogs\LptPort -I..\Devices\Printers\SwecoinTTP2010 
+      -I..\Devices\BaseDevice\LogClass -I..\Devices\Validators\GPT 
+      -I..\Devices\Validators\ICTDevice -I..\Devices\Printers\Epson442 
+      -I..\EMailSendThread -I..\EMailSender -I..\Devices\Printers\CitizenPPU700 
+      -I..\CommandReceiver -I..\Devices\Printers\WinPrinter -I..\TWConfig 
+      -I..\TCryptLib -I..\Devices\Printers\CustomPrinter 
+      -I..\Devices\Printers\StarTUP900 -I..\TFileMap -I..\XMLPacket 
+      -I..\TSendThread -I..\TPayment -I..\TConnectThread -I..\PacketSender 
+      -I..\Devices\TModem -I..\Devices\MoneyCounter\XMLInfo 
+      -I..\Devices\MoneyCounter -I..\Devices\WatchDogs\OSMP 
+      -I..\Devices\BaseDevice\CWatchDog -I..\Devices\BaseDevice\CValidator 
+      -I..\Devices\Printers\Citizen268 -I..\Devices\BaseDevice\CPrinter 
+      -I..\Devices\Printers\Shtrih -I..\Devices\Validators\CCNETdevice 
+      -I..\Devices\BaseDevice\DeviceThread -I..\Devices\BaseDevice\DeviceState 
+      -I..\Devices\BaseDevice\DeviceClass -I..\Devices\BaseDevice\ComPort 
+      -I..\Devices\BaseDevice\CommandParameters -I..\Devices\Printers\Citizen 
+      -I..\Thirdparty\VirtualTreeview\Source -I..\evroset_lib -I$(BCB)\Imports 
+      -I$(BCB)\include -I$(BCB)\include\vcl -I..\Thirdparty\ThemeManager\Source 
+      -I..\Thirdparty\ThemeManager\cbuilder -I..\Thirdparty\boost_1_34_1 
+      -I..\globals -I..\Thirdparty\tinyxml -I..\Devices\CoinAcceptors\NRIDevice 
+      -I..\Devices\CoinAcceptors -I..\Devices\BaseDevice\CCoinAcceptor 
+      -I..\Thirdparty\curl -I..\Devices\CardReaders -src_suffix cpp -D_DEBUG 
+      &lt;&lt;&lt;&lt;&lt;&lt;&lt; .mine -boa"/>
+    <CFLAG1 value="-Od -w -Vx -Ve -xf -xp -X- -r- -a8 -b- -k -y -v -vi- -c -tW -tWM"/>
+    <PFLAGS value="-N2..\objoutput -N0..\objoutput -$Y+ -$W -$R -$Q -$O- -$C- -$A8 -v -JPHNE -M"/>
+    <RFLAGS value=""/>
+    <AFLAGS value="/mx /w2 /zi"/>
+    <LFLAGS value="-I..\objoutput -D&quot;&quot; -aa -Tpe -GD -s -Gn -v"/>
+    <OTHERFILES value=""/>
+  </OPTIONS>
+  <LINKER>
+    <ALLOBJ value="c0w32.obj $(PACKAGES) sysinit.obj $(OBJFILES)"/>
+    <ALLRES value="$(RESFILES)"/>
+    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib"/>
+    <OTHERFILES value=""/>
+  </LINKER>
+  <FILELIST>
+      <FILE FILENAME="WebClient.cpp" FORMNAME="" UNITNAME="WebClient" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Unit1.cpp" FORMNAME="Form1" UNITNAME="Unit1" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Connect\nafxcwd.lib" FORMNAME="" UNITNAME="nafxcwd.lib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Citizen\cbm1000t2.cpp" FORMNAME="" UNITNAME="cbm1000t2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\CommandParameters\CommandParameters.cpp" FORMNAME="" UNITNAME="CommandParameters" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\ComPort\ComPortClass.cpp" FORMNAME="" UNITNAME="ComPortClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\ComPort\ComPortParameters.cpp" FORMNAME="" UNITNAME="ComPortParameters.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\DeviceClass\DeviceClass.cpp" FORMNAME="" UNITNAME="DeviceClass" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\DeviceState\DeviceState.cpp" FORMNAME="" UNITNAME="DeviceState" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\DeviceThread\DeviceThread.cpp" FORMNAME="" UNITNAME="DeviceThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Shtrih\ShtrihPrinter.cpp" FORMNAME="" UNITNAME="ShtrihPrinter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\CPrinter\CPrinter.cpp" FORMNAME="" UNITNAME="CPrinter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Citizen268\Citizen268Class.cpp" FORMNAME="" UNITNAME="Citizen268Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Citizen268\Citizen268Thread.cpp" FORMNAME="" UNITNAME="Citizen268Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\CValidator\CValidator.cpp" FORMNAME="" UNITNAME="CValidator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\CWatchDog\CWatchDog.cpp" FORMNAME="" UNITNAME="CWatchDog" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\OSMP\WatchDogOSMPClass.cpp" FORMNAME="" UNITNAME="WatchDogOSMPClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\OSMP\WatchDogOSMPDevice.cpp" FORMNAME="" UNITNAME="WatchDogOSMPDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\OSMP\WatchDogOSMPThread.cpp" FORMNAME="" UNITNAME="WatchDogOSMPThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\MoneyCounter\ValidatorInfo.cpp" FORMNAME="" UNITNAME="ValidatorInfo" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\MoneyCounter\XMLInfo\XMLInfo.cpp" FORMNAME="" UNITNAME="XMLInfo" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\TModem\TModem.cpp" FORMNAME="" UNITNAME="TModem" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\PacketSender\PacketSender.cpp" FORMNAME="" UNITNAME="PacketSender" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TConnectThread\TConnectThread.cpp" FORMNAME="" UNITNAME="TConnectThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TPayment\TPayment.cpp" FORMNAME="" UNITNAME="TPayment" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TSendThread\TSendThread.cpp" FORMNAME="" UNITNAME="TSendThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\XMLPacket\XMLPacket.cpp" FORMNAME="" UNITNAME="XMLPacket" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\MoneyCounter\CMoneyCounter.cpp" FORMNAME="" UNITNAME="CMoneyCounter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TFileMap\TFileMap.cpp" FORMNAME="" UNITNAME="TFileMap" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\StarTUP900\StarTUP900Class.cpp" FORMNAME="" UNITNAME="StarTUP900Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\StarTUP900\StarTUP900Thread.cpp" FORMNAME="" UNITNAME="StarTUP900Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\CustomPrinter\CustomPrnClass.cpp" FORMNAME="" UNITNAME="CustomPrnClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\CustomPrinter\CustomPrnThread.cpp" FORMNAME="" UNITNAME="CustomPrnThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TWConfig\TWConfig.cpp" FORMNAME="" UNITNAME="TWConfig" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\WinPrinter\WinPrnClass.cpp" FORMNAME="" UNITNAME="WinPrnClass" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Unit2.cpp" FORMNAME="Form2" UNITNAME="Unit2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\CommandReceiver\CommandReceiver.cpp" FORMNAME="" UNITNAME="CommandReceiver" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\CitizenPPU700\CitizenPPU700Class.cpp" FORMNAME="" UNITNAME="CitizenPPU700Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\CitizenPPU700\CitizenPPU700Thread.cpp" FORMNAME="" UNITNAME="CitizenPPU700Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\EMailSender\EMailSender.cpp" FORMNAME="" UNITNAME="EMailSender" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\EMailSendThread\EMailSendThread.cpp" FORMNAME="" UNITNAME="EMailSendThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Epson442\Epson442Class.cpp" FORMNAME="" UNITNAME="Epson442Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Epson442\Epson442Thread.cpp" FORMNAME="" UNITNAME="Epson442Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\ICTDevice\ICTDevice.cpp" FORMNAME="" UNITNAME="ICTDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\ICTDevice\ICTDeviceClass.cpp" FORMNAME="" UNITNAME="ICTDeviceClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\ICTDevice\ICTDeviceThread.cpp" FORMNAME="" UNITNAME="ICTDeviceThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\GPT\TGptComPortThread.cpp" FORMNAME="" UNITNAME="TGptComPortThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\LogClass\LogClass.cpp" FORMNAME="" UNITNAME="LogClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\SwecoinTTP2010\SwecoinTTP2010Class.cpp" FORMNAME="" UNITNAME="SwecoinTTP2010Class" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\LptPort\LptPort.cpp" FORMNAME="" UNITNAME="LptPort" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\GPT\V2Edevice.cpp" FORMNAME="" UNITNAME="V2Edevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\GPT\V2EDeviceClass.cpp" FORMNAME="" UNITNAME="V2EDeviceClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\GPT\V2EDeviceThread.cpp" FORMNAME="" UNITNAME="V2EDeviceThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\PRN609_012R\PRN609_012R.cpp" FORMNAME="" UNITNAME="PRN609_012R" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\GPT\GptComPortClass.cpp" FORMNAME="" UNITNAME="GptComPortClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\GebePrinter\GebeGCTClass.cpp" FORMNAME="" UNITNAME="GebeGCTClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\GebePrinter\GebeGCTThread.cpp" FORMNAME="" UNITNAME="GebeGCTThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\JCMDevice\JCMdevice.cpp" FORMNAME="" UNITNAME="JCMdevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\JCMDevice\JCMDeviceClass.cpp" FORMNAME="" UNITNAME="JCMDeviceClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\JCMDevice\JCMDeviceThread.cpp" FORMNAME="" UNITNAME="JCMDeviceThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\Alniko&amp;NewGT\WatchDog.cpp" FORMNAME="" UNITNAME="WatchDog" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TPayment\TPinPayment.cpp" FORMNAME="" UNITNAME="TPinPayment" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TGetCardsInfoThread\TGetCardsInfoThread.cpp" FORMNAME="" UNITNAME="TGetCardsInfoThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Cheque\Cheque.cpp" FORMNAME="" UNITNAME="Cheque" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\CCNETdevice\CCNETDeviceClass.cpp" FORMNAME="" UNITNAME="CCNETDeviceClass" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\CCNETdevice\CCNETDeviceThread.cpp" FORMNAME="" UNITNAME="CCNETDeviceThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Common\common.cpp" FORMNAME="" UNITNAME="common" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\PacketSender\CSPacketSender.cpp" FORMNAME="" UNITNAME="CSPacketSender" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\PacketSender\SSPacketSender.cpp" FORMNAME="" UNITNAME="SSPacketSender.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Prim21k\Prim21kThread.cpp" FORMNAME="" UNITNAME="Prim21kThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Prim21k\Prim21kClass.cpp" FORMNAME="" UNITNAME="Prim21kClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\ID003_1Device\ID003_1Device.cpp" FORMNAME="" UNITNAME="ID003_1Device.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\ID003_1Device\ID003_1DeviceClass.cpp" FORMNAME="" UNITNAME="ID003_1DeviceClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\ID003_1Device\ID003_1DeviceThread.cpp" FORMNAME="" UNITNAME="ID003_1DeviceThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\ID003_2Device\ID003_2Device.cpp" FORMNAME="" UNITNAME="ID003_2Device.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\ID003_2Device\ID003_2DeviceClass.cpp" FORMNAME="" UNITNAME="ID003_2DeviceClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\ID003_2Device\ID003_2DeviceThread.cpp" FORMNAME="" UNITNAME="ID003_2DeviceThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\THTTPGetFileThread\THTTPGetFileThread.cpp" FORMNAME="" UNITNAME="THTTPGetFileThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Prim08TK\Prim08TKClass.cpp" FORMNAME="" UNITNAME="Prim08TKClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Prim08TK\Prim08TKThread.cpp" FORMNAME="" UNITNAME="Prim08TKThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\WatchDogAlarm\WatchDogAlarmClass.cpp" FORMNAME="" UNITNAME="WatchDogAlarmClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\WatchDogAlarm\WatchDogAlarmDevice.cpp" FORMNAME="" UNITNAME="WatchDogAlarmDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\WatchDogAlarm\WatchDogAlarmThread.cpp" FORMNAME="" UNITNAME="WatchDogAlarmThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\TThreadMod\TThreadMod.cpp" FORMNAME="" UNITNAME="TThreadMod" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Keyboards\IskraKeybDevice\IskraKeybDevice.cpp" FORMNAME="" UNITNAME="IskraKeybDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Keyboards\IskraKeybDevice\IskraKeybDeviceClass.cpp" FORMNAME="" UNITNAME="IskraKeybDeviceClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Keyboards\IskraKeybDevice\IskraKeybDeviceThread.cpp" FORMNAME="" UNITNAME="IskraKeybDeviceThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\CKeyboard\CKeyboard.cpp" FORMNAME="" UNITNAME="CKeyboard" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\PacketSender\SMSSender.cpp" FORMNAME="" UNITNAME="SMSSender" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\XMLOutbound\SMSOutbound.cpp" FORMNAME="" UNITNAME="SMSOutbound" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\XMLOutbound\XMLOutbound.cpp" FORMNAME="" UNITNAME="XMLOutbound" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Modems\SiemensMC35i\ModemSiemensMC35i.cpp" FORMNAME="" UNITNAME="ModemSiemensMC35i" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\CModem\Modem.cpp" FORMNAME="" UNITNAME="Modem" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\OSMP2\WatchDogOSMP2Class.cpp" FORMNAME="" UNITNAME="WatchDogOSMP2Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\OSMP2\WatchDogOSMP2Device.cpp" FORMNAME="" UNITNAME="WatchDogOSMP2Device.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\OSMP2\WatchDogOSMP2Thread.cpp" FORMNAME="" UNITNAME="WatchDogOSMP2Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\CitizenPPU231\CitizenPPU231Class.cpp" FORMNAME="" UNITNAME="CitizenPPU231Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\CitizenPPU231\CitizenPPU231Thread.cpp" FORMNAME="" UNITNAME="CitizenPPU231Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\CitizenPPU232\CitizenPPU232Class.cpp" FORMNAME="" UNITNAME="CitizenPPU232Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\CitizenPPU232\CitizenPPU232Thread.cpp" FORMNAME="" UNITNAME="CitizenPPU232Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\StarTSP700\StarTSP700Class.cpp" FORMNAME="" UNITNAME="StarTSP700Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\StarTSP700\StarTSP700Thread.cpp" FORMNAME="" UNITNAME="StarTSP700Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\CardReaders\MetroCard\MetroCardClass.cpp" FORMNAME="" UNITNAME="MetroCardClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\CardReaders\MetroCard\MetroCardDevice.cpp" FORMNAME="" UNITNAME="MetroCardDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\CardReaders\MetroCard\MetroCardThread.cpp" FORMNAME="" UNITNAME="MetroCardThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\CCardReader\CardReader.cpp" FORMNAME="" UNITNAME="CardReader.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\CCardReader\CardReaderParams.cpp" FORMNAME="" UNITNAME="CardReaderParams.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\WatchDogPlatix\WatchDogPlatixClass.cpp" FORMNAME="" UNITNAME="WatchDogPlatixClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\WatchDogPlatix\WatchDogPlatixDevice.cpp" FORMNAME="" UNITNAME="WatchDogPlatixDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\WatchDogPlatix\WatchDogPlatixThread.cpp" FORMNAME="" UNITNAME="WatchDogPlatixThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\NV9_CCNET\NV9_CCNETdevice.cpp" FORMNAME="" UNITNAME="NV9_CCNETdevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\NV9_CCNET\NV9_CCNETDeviceClass.cpp" FORMNAME="" UNITNAME="NV9_CCNETDeviceClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\NV9_CCNET\NV9_CCNETDeviceThread.cpp" FORMNAME="" UNITNAME="NV9_CCNETDeviceThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TModemThread\TModemThread.cpp" FORMNAME="" UNITNAME="TModemThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\evroset_lib\evroset_lib.cpp" FORMNAME="" UNITNAME="evroset_lib" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TJSMaker\TJSMaker.cpp" FORMNAME="" UNITNAME="TJSMaker" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TPSound\TPSound.cpp" FORMNAME="" UNITNAME="TPSound" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Keyboards\KtekKeybDevice\KtekKeybDevice.cpp" FORMNAME="" UNITNAME="KtekKeybDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Keyboards\KtekKeybDevice\KtekKeybDeviceClass.cpp" FORMNAME="" UNITNAME="KtekKeybDeviceClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Keyboards\KtekKeybDevice\KtekKeybDeviceThread.cpp" FORMNAME="" UNITNAME="KtekKeybDeviceThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\SBK2\SBK2Class.cpp" FORMNAME="" UNITNAME="SBK2Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\SBK2\SBK2Device.cpp" FORMNAME="" UNITNAME="SBK2Device.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\SBK2\SBK2Thread.cpp" FORMNAME="" UNITNAME="SBK2Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\LDOG\LDOGClass.cpp" FORMNAME="" UNITNAME="LDOGClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\LDOG\LDOGDevice.cpp" FORMNAME="" UNITNAME="LDOGDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\LDOG\LDOGThread.cpp" FORMNAME="" UNITNAME="LDOGThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\FairPayWD\FairPayWDClass.cpp" FORMNAME="" UNITNAME="FairPayWDClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\FairPayWD\FairPayWDDevice.cpp" FORMNAME="" UNITNAME="FairPayWDDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\FairPayWD\FairPayWDThread.cpp" FORMNAME="" UNITNAME="FairPayWDThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\CitizenCPP8001\CitizenCPP8001Class.cpp" FORMNAME="" UNITNAME="CitizenCPP8001Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\CitizenCPP8001\CitizenCPP8001Thread.cpp" FORMNAME="" UNITNAME="CitizenCPP8001Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="SetupUnit.cpp" FORMNAME="SetupForm" UNITNAME="SetupUnit" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TCfgFieldData\TCfgFieldData.cpp" FORMNAME="" UNITNAME="TCfgFieldData" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TPayment\TMoneyTransferPayment.cpp" FORMNAME="" UNITNAME="TMoneyTransferPayment" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\MEIDevice\MEIDevice.cpp" FORMNAME="" UNITNAME="MEIDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\MEIDevice\MEIDeviceClass.cpp" FORMNAME="" UNITNAME="MEIDeviceClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\MEIDevice\MEIDeviceThread.cpp" FORMNAME="" UNITNAME="MEIDeviceThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TLocationParser\TLocationParser.cpp" FORMNAME="" UNITNAME="TLocationParser" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\2SIM_OSMP\SIM2OSMPClass.cpp" FORMNAME="" UNITNAME="SIM2OSMPClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\2SIM_OSMP\SIM2OSMPDevice.cpp" FORMNAME="" UNITNAME="SIM2OSMPDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\2SIM_OSMP\SIM2OSMPThread.cpp" FORMNAME="" UNITNAME="SIM2OSMPThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\JSONDocument\JSONDocument.cpp" FORMNAME="" UNITNAME="JSONDocument" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\av268\WatchDogClass.cpp" FORMNAME="" UNITNAME="WatchDogClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\av268\WatchDogDevice.cpp" FORMNAME="" UNITNAME="WatchDogDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\av268\WatchDogThread.cpp" FORMNAME="" UNITNAME="WatchDogThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\WPT833\wp_t833.cpp" FORMNAME="" UNITNAME="wp_t833" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="WebClient.rc" FORMNAME="" UNITNAME="WebClient.rc" CONTAINERID="RCCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TPayment\TAviaPayment.cpp" FORMNAME="" UNITNAME="TAviaPayment" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TAviaConnectThread\TAviaConnectThread.h" FORMNAME="" UNITNAME="TAviaConnectThread.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Globals\globals.cpp" FORMNAME="" UNITNAME="globals" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\PrintReceiptEngine\printreceiptengine.cpp" FORMNAME="" UNITNAME="printreceiptengine" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\PrintReceiptEngine\printreceiptengine.h" FORMNAME="" UNITNAME="printreceiptengine.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\CoinAcceptors\NRIDevice\NRIDevice.h" FORMNAME="" UNITNAME="NRIDevice.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\CoinAcceptors\NRIDevice\NRIDevice.cpp" FORMNAME="" UNITNAME="NRIDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\CCoinAcceptor\CCoinAcceptor.cpp" FORMNAME="" UNITNAME="CCoinAcceptor" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\CoinAcceptors\NRIDevice\NRIDeviceThread.cpp" FORMNAME="" UNITNAME="NRIDeviceThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\CoinAcceptors\NRIDevice\NRIDeviceClass.cpp" FORMNAME="" UNITNAME="NRIDeviceClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\StarTSP600\StarTSP600Class.cpp" FORMNAME="" UNITNAME="StarTSP600Class.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\StarTSP600\StarTSP600Thread.cpp" FORMNAME="" UNITNAME="StarTSP600Thread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TPayment\THalfPinPayment.cpp" FORMNAME="" UNITNAME="THalfPinPayment" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\Scanner\Scanner.cpp" FORMNAME="" UNITNAME="Scanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\Scanner\NullScanner.cpp" FORMNAME="" UNITNAME="NullScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\WPK833\wp_k833.cpp" FORMNAME="" UNITNAME="wp_k833" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\bd2-286\BD2Class.cpp" FORMNAME="" UNITNAME="BD2Class" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TPayment\TTaxPayment.cpp" FORMNAME="" UNITNAME="TTaxPayment" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\Scanner\ScannerThread.cpp" FORMNAME="" UNITNAME="ScannerThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Validators\CCNETdevice\CCNETdevice.cpp" FORMNAME="" UNITNAME="CCNETdevice" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Atol\AtolPrinter.cpp" FORMNAME="" UNITNAME="AtolPrinter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\Printers\Atol\AtolPrinterThread.cpp" FORMNAME="" UNITNAME="AtolPrinterThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="localize.cpp" FORMNAME="" UNITNAME="localize" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TSendThread\TSendThread2.cpp" FORMNAME="" UNITNAME="TSendThread2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\MemoryLeaks\MemoryLeaks.cpp" FORMNAME="" UNITNAME="MemoryLeaks" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TCryptLib\CryptLib.lib" FORMNAME="" UNITNAME="CryptLib.lib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\TPayment\TMetroPayment.cpp" FORMNAME="" UNITNAME="TMetroPayment" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\CardReaders\Sankyo\CSankyoCardReader.cpp" FORMNAME="" UNITNAME="CSankyoCardReader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\CardReaders\Sankyo\CSankyoCardReaderThread.cpp" FORMNAME="" UNITNAME="CSankyoCardReaderThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\BaseDevice\CCardReader\BaseCardReader.cpp" FORMNAME="" UNITNAME="BaseCardReader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Thirdparty\zlib\source\gz_stream.cpp" FORMNAME="" UNITNAME="gz_stream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Thirdparty\zlib\dll32\zlib.lib" FORMNAME="" UNITNAME="zlib.lib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Thirdparty\zlib\dll32\zlibwapi.lib" FORMNAME="" UNITNAME="zlibwapi.lib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Thirdparty\bin\tinyxml_stl_bcb.lib" FORMNAME="" UNITNAME="tinyxml_stl_bcb.lib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\ExpressPay\ExpressPayThread.cpp" FORMNAME="" UNITNAME="ExpressPayThread.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\ExpressPay\ExpressPayClass.cpp" FORMNAME="" UNITNAME="ExpressPayClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\WatchDogs\ExpressPay\ExpressPayDevice.cpp" FORMNAME="" UNITNAME="ExpressPayDevice.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Devices\MoneyCounter\TNote.cpp" FORMNAME="" UNITNAME="TNote" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Common\TFunctionThread.cpp" FORMNAME="" UNITNAME="TFunctionThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\PaymentBook\PaymentBook.lib" FORMNAME="" UNITNAME="PaymentBook.lib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+  </FILELIST>
+  <BUILDTOOLS>
+  </BUILDTOOLS>
+
+  <IDEOPTIONS>
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=1
+MajorVer=1
+MinorVer=0
+Release=0
+Build=1
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=1049
+CodePage=1251
+
+[Version Info Keys]
+CompanyName=Cyberplat
+FileDescription=
+FileVersion=1.0.0.1
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=Pyment system web client
+ProductVersion=1.0.0.0
+Comments=
+
+[HistoryLists\hlIncludePath]
+Count=0
+
+[HistoryLists\hlLibraryPath]
+Count=0
+
+[HistoryLists\hlConditionals]
+Count=1
+Item0=_DEBUG
+
+[HistoryLists\hlIntOutputDir]
+Count=1
+Item0=..\objoutput
+
+[HistoryLists\hlFinalOutputDir]
+Count=0
+
+[Debugging]
+DebugSourceDirs=
+
+[Parameters]
+RunParams=
+Launcher=
+UseLauncher=0
+DebugCWD=
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteLauncher=
+RemoteCWD=
+RemoteDebug=0
+
+[Compiler]
+ShowInfoMsgs=0
+LinkDebugVcl=1
+LinkCGLIB=0
+
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
+
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
+  </IDEOPTIONS>
+</PROJECT>

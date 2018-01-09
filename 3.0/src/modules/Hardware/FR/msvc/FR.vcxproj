@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseWithDebugInfo|Win32">
+      <Configuration>ReleaseWithDebugInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2016BFFB-C71C-4932-B435-C732523FB305}</ProjectGuid>
+    <RootNamespace>ComPortWin</RootNamespace>
+    <Keyword>Qt4VSv1.0</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(TC_LIB_DIR)\Hardware\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(TC_LIB_DIR)\Hardware\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\obj\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(ProjectDir)\obj\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(TC_LIB_DIR)\Hardware\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\obj\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)d</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(THIRDPARTY_DIR);$(TC_DIR);$(TC_INCLUDE_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QCOMPORTWIN_LIB;CYBERPLAT_DRIVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(THIRDPARTY_DIR);$(TC_DIR);$(TC_INCLUDE_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QCOMPORTWIN_LIB;CYBERPLAT_DRIVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(THIRDPARTY_DIR);$(TC_DIR);$(TC_INCLUDE_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_CORE_LIB;COMPORTWIN_LIB;CYBERPLAT_DRIVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Atol\Base\AtolSerialFR.cpp" />
+    <ClCompile Include="..\src\Atol\Ejector\AtolEjectorFR.cpp" />
+    <ClCompile Include="..\src\Atol\AtolModelData.cpp" />
+    <ClCompile Include="..\src\Atol\Base\Ejector\PayPPU700.cpp" />
+    <ClCompile Include="..\src\Atol\Ejector\AtolVKP80BasedFR.cpp" />
+    <ClCompile Include="..\src\Atol\Online\AtolOnlineFRBase.cpp" />
+    <ClCompile Include="..\src\Atol\Online\Paymaster.cpp" />
+    <ClCompile Include="..\src\Base\Port\PortFRBase.cpp" />
+    <ClCompile Include="..\src\Kasbi\KasbiFRBase.cpp" />
+    <ClCompile Include="..\src\Prim\Online\PrimOnlineFRBase.cpp" />
+    <ClCompile Include="..\src\Shtrih\Base\ProtoShtrihFR.cpp" />
+    <ClCompile Include="..\src\Shtrih\Base\ShtrihSerialFR.cpp" />
+    <ClCompile Include="..\src\Shtrih\ModelData.cpp" />
+    <ClCompile Include="..\src\Shtrih\Online\PayOnlineFR.cpp" />
+    <ClCompile Include="..\src\Shtrih\Online\ShtrihOnlineFRBase.cpp" />
+    <ClCompile Include="..\src\Prim\Ejector\PrimEjectorFR.cpp" />
+    <ClCompile Include="..\src\Prim\Presenter\PrimPresenterFR.cpp" />
+    <ClCompile Include="..\src\Prim\PrimFRBase.cpp" />
+    <ClCompile Include="..\src\Shtrih\Base\ShtrihRetractorFR.cpp" />
+    <ClCompile Include="..\src\Atol\Base\AtolFRBase.cpp" />
+    <ClCompile Include="..\src\Base\FRBase.cpp" />
+    <ClCompile Include="..\src\OPOSMStarTUPK\OPOSMStarTUPK.cpp" />
+    <ClCompile Include="..\src\Shtrih\Base\ShtrihFRBase.cpp" />
+    <ClCompile Include="..\src\Shtrih\Retractor\ShtrihRetractorFRLite.cpp" />
+    <ClCompile Include="..\src\Spark\AdaptiveFiscalLogic.cpp" />
+    <ClCompile Include="..\src\Spark\SparkFR.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRBaseConstants.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\OFDServerData.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRErrorDescription.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Protocols\FR\FiscalChequeStates.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRStatusCodes.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRStatusesDescriptions.h" />
+    <ClInclude Include="..\src\Atol\AtolCodec.h" />
+    <ClInclude Include="..\src\Atol\AtolDataTypes.h" />
+    <ClInclude Include="..\src\Atol\Base\AtolFR.h" />
+    <ClInclude Include="..\src\Atol\Base\AtolFRBaseConstants.h" />
+    <ClInclude Include="..\src\Atol\Base\AtolSerialFR.h" />
+    <ClInclude Include="..\src\Atol\Ejector\AtolEjectorDataTypes.h" />
+    <ClInclude Include="..\src\Atol\Ejector\AtolEjectorFR.h" />
+    <ClInclude Include="..\src\Atol\Ejector\AtolEjectorFRConstants.h" />
+    <ClInclude Include="..\src\Atol\AtolModelData.h" />
+    <ClInclude Include="..\src\Atol\AtolFRConstants.h" />
+    <ClInclude Include="..\src\Atol\Base\AtolFRBase.h" />
+    <ClInclude Include="..\src\Atol\Base\Ejector\PayVKP80.h" />
+    <ClInclude Include="..\src\Atol\Online\AtolOnlineFRConstants.h" />
+    <ClInclude Include="..\src\Atol\Online\AtolOnlineFRBase.h" />
+    <ClInclude Include="..\src\Atol\Online\Paymaster.h" />
+    <ClInclude Include="..\src\Base\Port\PortFRBase.h" />
+    <ClInclude Include="..\src\Kasbi\KasbiFRBase.h" />
+    <ClInclude Include="..\src\Kasbi\KasbiFRConstants.h" />
+    <ClInclude Include="..\src\Kasbi\KasbiModelData.h" />
+    <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFR.h" />
+    <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFRConstants.h" />
+    <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFRBase.h" />
+    <ClInclude Include="..\src\Prim\Ejector\PrimEjectorOnlineFR.h" />
+    <ClInclude Include="..\src\Prim\Online\PrimOnlineFRBase.h" />
+    <ClInclude Include="..\src\Prim\Online\PrimOnlineFRConstants.h" />
+    <ClInclude Include="..\src\Prim\Presenter\PrimPresenterFR.h" />
+    <ClInclude Include="..\src\Prim\PrimFRBase.h" />
+    <ClInclude Include="..\src\Prim\PrimFRConstants.h" />
+    <ClInclude Include="..\src\Prim\PrimFRDataTypes.h" />
+    <ClInclude Include="..\src\Prim\PrimModelData.h" />
+    <ClInclude Include="..\src\Shtrih\Base\ProtoShtrihFR.h" />
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihFRBaseConstants.h" />
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihKiosk.h" />
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihSerialFR.h" />
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihSerialFRBase.h" />
+    <ClInclude Include="..\src\Shtrih\Base\VirtualShtrihFR.h" />
+    <ClInclude Include="..\src\Shtrih\Online\MStarTK2.h" />
+    <ClInclude Include="..\src\Shtrih\Online\PayOnlineFR.h" />
+    <ClInclude Include="..\src\Shtrih\Online\ShtrihFROnlineConstants.h" />
+    <ClInclude Include="..\src\Shtrih\Online\ShtrihOnlineFRBase.h" />
+    <ClInclude Include="..\src\Shtrih\Base\Yarus01K.h" />
+    <ClInclude Include="..\src\Shtrih\Online\ShtrihTCPFRBase.h" />
+    <ClInclude Include="..\src\Shtrih\Retractor\ShtrihRetractorFRLite.h" />
+    <ClInclude Include="..\src\Spark\AdaptiveFiscalLogic.h" />
+    <ClInclude Include="..\src\Spark\AdaptiveFiscalLogicConstants.h" />
+    <ClInclude Include="..\src\Spark\SparkCodec.h" />
+    <ClInclude Include="..\src\Spark\SparkFR.h" />
+    <ClInclude Include="..\src\Spark\SparkFRConstants.h" />
+    <ClInclude Include="..\src\Spark\SparkModelData.h" />
+    <CustomBuild Include="..\src\Base\FRBase.h" />
+    <ClInclude Include="..\src\Atol\Base\Ejector\PayPPU700.h" />
+    <ClInclude Include="..\src\Atol\Ejector\AtolVKP80BasedFR.h" />
+    <ClInclude Include="..\src\OPOSMStarTUPK\OPOSMStarTUPKData.h" />
+    <ClInclude Include="..\src\OPOSMStarTUPK\OPOSMStarTUPKDataTypes.h" />
+    <ClInclude Include="..\src\Shtrih\ModelData.h" />
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihRetractorFR.h" />
+    <ClInclude Include="..\src\Shtrih\ShtrihFRConstants.h" />
+    <ClInclude Include="..\src\Shtrih\ShtrihFRDataTypes.h" />
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihFRBase.h" />
+    <CustomBuild Include="..\src\OPOSMStarTUPK\OPOSMStarTUPK.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\msvc\Common.vcxproj">
+      <Project>{70d02db7-a7cb-4d22-b13e-0c7f4eb7df86}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Protocols\FR\Incotex\IncotexProtocol.vcxproj">
+      <Project>{b12702ad-abfb-343a-a199-8e24837244a3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Protocols\FR\Prim\PrimFR.vcxproj">
+      <Project>{5cef800e-0984-4486-a804-313c92a72132}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Protocols\FR\Shtrih\ShtrihFR.vcxproj">
+      <Project>{7e9fe953-c21a-4362-be27-70b22132279a}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

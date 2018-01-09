@@ -1,0 +1,1 @@
+#include "../../modules/NetworkTaskManager/src/HashVerifier.h"

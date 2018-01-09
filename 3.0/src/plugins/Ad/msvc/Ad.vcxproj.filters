@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{dfdfe519-dddc-4cfd-8fb7-dab201f5ff8c}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{510d3cff-a369-4fbb-863f-665eb8d6890c}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{4df31659-a568-4a83-ac0b-34d018aaa232}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="AdSource">
+      <UniqueIdentifier>{e9ff51f8-79fc-4589-97a7-70968b7a32f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AdRemote">
+      <UniqueIdentifier>{ba94f2ba-e604-4c9b-896b-5fc40055b0ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AdPayment">
+      <UniqueIdentifier>{13b9198a-9e2f-4cb2-82c5-0e4f48e8e787}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\PluginFactoryDefinition.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_AdRemotePlugin.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_AdRemotePlugin.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_AdRemotePlugin.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AdSourcePlugin.cpp">
+      <Filter>AdSource</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_AdSourcePlugin.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_AdSourcePlugin.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_AdSourcePlugin.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AdRemotePlugin.cpp">
+      <Filter>AdRemote</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PaymentFactory.cpp">
+      <Filter>AdPayment</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PaymentFactory.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_PaymentFactory.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PaymentFactory.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PaymentFactoryBase.cpp">
+      <Filter>AdPayment</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PaymentFactoryBase.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_PaymentFactoryBase.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PaymentFactoryBase.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AdPayment.cpp">
+      <Filter>AdPayment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AdPaymentRequest.cpp">
+      <Filter>AdPayment</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\AdSourcePlugin.h">
+      <Filter>AdSource</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\AdRemotePlugin.h">
+      <Filter>AdRemote</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\PaymentFactory.h">
+      <Filter>AdPayment</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\PaymentFactoryBase.h">
+      <Filter>AdPayment</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\includes\SDK\GUI\IAdSource.h">
+      <Filter>AdSource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AdPayment.h">
+      <Filter>AdPayment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AdPaymentRequest.h">
+      <Filter>AdPayment</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

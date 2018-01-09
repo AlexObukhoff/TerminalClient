@@ -1,0 +1,323 @@
+@charset "utf-8";
+
+* {
+	font-family: "Roboto Medium", Arial, Geneva, sans-serif;
+	font-size: 25px;
+	line-height: 34px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+body, html {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	width: 100%;
+	background: #F2F2F2;
+	overflow: hidden;
+}
+body {
+padding: 39px 110px 40px 40px;
+}
+h1 {
+	font-family: "Roboto Condensed", Arial, Geneva, sans-serif;
+	font-size: 33px;
+	line-height: 34px;
+	margin: 0px;
+	padding: 15px 0px 19px 0px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #820039;
+}
+h2, h3, h4 {
+	line-height: 34px;
+	font-size: 25px;
+	margin: 0px 0px 34px 0px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #820039;
+}
+.title {
+	padding: 15px 0px 53px 0px;
+}
+
+em {
+	font-style: normal;
+	color: #666;
+}
+p {
+	margin:0px 0px 34px 0px;
+}
+ul {
+	margin: 0px 0px 34px 0px;
+	padding: 0px;
+}
+/* Специально для офферты */
+.offer p {
+	margin:0px 0px 34px 85px;
+}
+.offer ul {
+	margin: 0px 0px 34px 85px;
+}
+.offer span {
+	display: inline-block;
+	float: left;
+	color:#666666
+}
+.offer .terms p, .offer .info p {
+	margin-left: 0em;
+}
+ul li {
+	list-style:none;
+	margin: 0px;
+	padding: 0px 0px 0px 30px;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAINJREFUeNpiYBgFo2AUjIJRQCRgxCY4c9f1ACBlAOVeSHfT3EBTi4EWCgCp9UDsgKbuABAHAh3wgVoWM6Hx67FYygAVq6emj9EtLsCjtoCWFtMNDBqL8aXeDbS0OBGUfbCouwCVo10+hmapBCD2hwptBOIF1MxKo2AUjIJRMDQBQIABAIDdFzBBugJFAAAAAElFTkSuQmCC');
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+ol {
+	list-style:none;
+	margin: 0px;
+	padding: 0px;
+}
+ol li span {
+	display: block;
+	float: left;
+	margin: 0px;
+	padding: 0px;
+}
+ol li {
+	margin: 0 0 0.5em 0;
+}
+ol li a {
+	margin-left: 2em;
+	display:block;
+}
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+.columns:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.warning {
+	color: #C00;
+}
+
+.legend {
+	font-size: 25px;
+	line-height: 34px;
+	margin: 10px 0 0 0;
+	color: #666;
+}
+
+/* Окно постраничного отображения */
+div.page {
+	height: 100%;
+	width: 100%;
+	padding: 0px;
+}
+.container {
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	
+	overflow: hidden;
+}
+/* Таблицы */
+
+.half {
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	width: 50%;		
+}
+td {
+	font-size: 25px;
+	line-height: 34px;
+	padding:15px 20px 0px 0px;
+	height: 102px;
+
+	
+	box-sizing:border-box;
+	overflow: hidden;
+}
+.datasheet2 td, .datasheet4 td, .datasheet3 td, .datasheet5 td {
+	vertical-align: top;
+	text-align: left;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: #CCC;
+}
+td:nth-child(3) {
+	padding:15px 0px 0px 0px;
+}
+.nb td, th {
+	color: #b70050;
+	font-weight: bold;
+	height: 100px;
+	border-bottom-color: #b70050;
+	/*font-family: "Roboto Cn";
+	font-size: 33px;*/
+	text-transform: uppercase;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	vertical-align: middle;
+}
+.region td, .region {
+	font-family: "Roboto Condensed";
+	font-size: 33px;
+	line-height: 34px;
+	margin: 0px;
+	padding: 15px 0px 17px 0px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #820039;
+	vertical-align: middle;
+}
+.datasheet2 .container, .datasheet5 .container, .datasheet3 .container, .datasheet6 .container {
+	height: 510px;
+	width: 1060px;
+	margin: 72px 0px 0px 0px;
+	overflow: hidden;/*background-color: #FFF;*/
+}
+.datasheet4 .container {
+	height: 544px;
+	width: 1060px;
+	margin: 72px 0px 0px 0px;
+	overflow: hidden;/*background-color: #FFF;*/
+}
+.datasheet2 td {
+	height: 255px;
+}
+.datasheet3 td {
+	height: 170px;
+}
+.datasheet4 td {
+	height: 136px;
+}
+.datasheet5 td {
+	height: 102px;
+}
+.datasheet6 td {
+	height: 85px;
+}
+
+.datasheet6 .region td {
+	height: 170px;
+	padding: 0;
+}
+
+.datasheet15 td {
+	height: 40px;
+}
+
+.header {
+	margin: 10px 0px 0px 40px;
+	height: 102px;
+	width: 1060px;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+}
+.header td {
+	height: 102px;
+}
+/* Кнопки скроллинга */
+.verticalScrollBar {
+	top: 0px;
+	right: 4px;
+	position: fixed;
+	height: 100%;
+	width: 102px;
+	display: block;
+	padding: 111px 0px;
+}
+.verticalScrollTrack {
+	height: 100%;
+	width: 102px;
+	display: block;
+	margin:0 auto;
+	position: relative;
+}
+.verticalScrollDrag {
+	height: 50%;
+	width: 12px;
+	display: block;
+	background-color: #b70050;
+	background-color: #b70050;
+	margin:0 auto;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	position: absolute;
+	top: 0px;
+	right: 45px;
+}
+.verticalLine {
+	position: absolute;
+	top: 0px;
+	right: 50px;	
+	background-color: #b70050;
+	width: 2px;
+	height: 100%;
+}
+a.btn_down, a.btn_up {
+	position: fixed;
+	height: 102px;
+	width: 102px;
+	display: block;
+}
+a.btn_down {
+	right: 4px;
+	bottom: 4px;
+}
+a.btn_up {
+	right: 4px;
+	top: 4px;
+}
+.arrow {
+	fill: #b70050;
+}
+.back {
+	opacity: 0;
+	fill: #b70050;
+}
+a:active .arrow {
+	fill: #F2F2F2;
+}
+a:active .back {
+	opacity: 0.5;
+	fill: #b70050;
+}
+/* Специально для страницы */
+.logo {
+	margin: 0px 30px 30px 0px;
+	float:left;
+}
+.ref {
+	color: #FF6600;
+}
+
+/* Отладка */
+.logs {
+	background-color: rgba( 0, 0, 0, 0.7);
+	position: fixed;
+	padding: 10px;
+	font-size: 16px;
+	color: #FFF;
+	left: 5px;
+	top: 5px;
+	display: block;
+}
+ul.logs li {
+	font-size: 16px;
+	list-style-type: square;
+	list-style-image: none;
+	background-image: none;
+}

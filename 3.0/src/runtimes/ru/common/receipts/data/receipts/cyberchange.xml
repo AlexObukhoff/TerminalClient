@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string> </string>
+	<string>Чек активации карты "%CARD_TYPE_NAME%"</string>
+	<string>-----------------------------------</string>
+	<string>Номер точки: %TERMINAL_NUMBER%</string>
+	<string>Адрес точки: %POINT_ADDRESS%</string>
+	<string>Наименование дилера: %DEALER_NAME%</string>
+	<string>ИНН: %OPERATOR_INN%</string>
+	<string>-----------------------------------</string>
+	<string>Номер карты: %CARD_NUMBER%</string>
+	<string>Дата активации: %DATETIME%</string>
+	<string>-----------------------------------</string>
+	<string>Поставщик услуг: %SERVICE_TYPE% (%OPERATOR_BRAND%)</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%AD_RECEIPT_FOOTER%</string>
+</body>

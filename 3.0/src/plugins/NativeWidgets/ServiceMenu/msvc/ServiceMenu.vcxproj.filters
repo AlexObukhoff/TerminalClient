@@ -1,0 +1,1129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Backend">
+      <UniqueIdentifier>{e9f00aee-1ec4-49af-b489-94e99a8e89be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DeviceTests">
+      <UniqueIdentifier>{8b8537c9-3320-408e-b693-6b5674ba8b8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Translation files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins">
+      <UniqueIdentifier>{d2ab91e9-da2a-4217-b5e1-d13b7338bee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\AutoEncashment">
+      <UniqueIdentifier>{540d839d-f0b1-46dd-830c-9d4d6d6cad85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\FirstSetup">
+      <UniqueIdentifier>{2637123b-8726-44a4-90a8-ecdcae7104e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\ServiceMenu">
+      <UniqueIdentifier>{3040c493-2b8f-4c5a-b10a-f537470cb887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\VirtualKeyboard">
+      <UniqueIdentifier>{f77e3b0b-dfdc-4c1f-bac4-8b29d179b2c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\AutoEncashment\Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\FirstSetup\Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Plugins\VirtualKeyboard\Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\ServiceMenu\Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{fee0f59a-8c8c-46be-a626-27defd51bcb6}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{b8f28dfa-4bee-40ae-b401-212d853ce950}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{2d27eed7-ddab-4c93-b3d7-49639b4892a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Backend\Form files">
+      <UniqueIdentifier>{f4dff56f-eacb-4844-acd8-a9079715284e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Backend\HardwareManager.cpp">
+      <Filter>Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Backend\KeysManager.cpp">
+      <Filter>Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Backend\MessageBox.cpp">
+      <Filter>Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Backend\NetworkManager.cpp">
+      <Filter>Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Backend\ServiceMenuBackend.cpp">
+      <Filter>Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DeviceTests\GenericDeviceTest.cpp">
+      <Filter>DeviceTests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DeviceTests\PrinterTest.cpp">
+      <Filter>DeviceTests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AutoEncashment\AutoEncashment.cpp">
+      <Filter>Plugins\AutoEncashment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AutoEncashment\AutoEncashmentWindow.cpp">
+      <Filter>Plugins\AutoEncashment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\DialupWizardPage.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\FirstSetup.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\HardwareWizardPage.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\KeysWizardPage.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\NetworkWizardPage.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\SaveSettingsWizardPage.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\UnmanagedWizardPage.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\WelcomeWizardPage.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\WizardFrame.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\WizardPage.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\VirtualKeyboard\Keyboard.cpp">
+      <Filter>Plugins\VirtualKeyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\VirtualKeyboard\KeyboardWindow.cpp">
+      <Filter>Plugins\VirtualKeyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\DeviceSlot.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\DeviceStatusWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\DiagnosticsServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\DialupConnectionWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\EditorPane.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\EditorPaneListItem.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\EncashmentServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\HardwareServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\HardwareWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\KeysServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\KeysWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\MainServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\NetworkServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\PaymentServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\PluginLibraryDefinition.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\ServiceMenu.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\SetupServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\UnmanagedConnectionWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_KeyboardWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_KeyboardWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_UnmanagedConnectionWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_UnmanagedConnectionWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_SetupServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_SetupServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PaymentServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PaymentServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_NetworkServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_NetworkServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_KeysWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_KeysWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_KeysServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_KeysServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_HardwareWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_HardwareWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_HardwareServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_HardwareServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_EncashmentServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_EncashmentServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_EditorPaneListItem.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_EditorPaneListItem.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_EditorPane.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_EditorPane.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_DialupConnectionWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_DialupConnectionWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_DiagnosticsServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_DiagnosticsServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_DeviceStatusWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_DeviceStatusWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_DeviceSlot.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_DeviceSlot.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_WizardPage.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_WizardPage.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_WizardFrame.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_WizardFrame.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_WelcomeWizardPage.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_WelcomeWizardPage.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_UnmanagedWizardPage.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_UnmanagedWizardPage.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_SaveSettingsWizardPage.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_SaveSettingsWizardPage.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_NetworkWizardPage.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_NetworkWizardPage.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_KeysWizardPage.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_KeysWizardPage.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_HardwareWizardPage.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_HardwareWizardPage.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_DialupWizardPage.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_DialupWizardPage.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_AutoEncashmentWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_AutoEncashmentWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PrinterTest.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PrinterTest.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_GenericDeviceTest.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_GenericDeviceTest.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_NetworkManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_NetworkManager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_MessageBox.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_MessageBox.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_KeysManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_KeysManager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_HardwareManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_HardwareManager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\qrc_Resources.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Backend\PaymentManager.cpp">
+      <Filter>Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PaymentManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PaymentManager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_AutoEncashmentWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_DeviceSlot.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_DeviceStatusWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_DiagnosticsServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_DialupConnectionWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_DialupWizardPage.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_EditorPane.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_EditorPaneListItem.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_EncashmentServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_GenericDeviceTest.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_HardwareManager.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_HardwareServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_HardwareWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_HardwareWizardPage.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_KeyboardWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_KeysManager.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_KeysServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_KeysWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_KeysWizardPage.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_MessageBox.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_NetworkManager.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_NetworkServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_NetworkWizardPage.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_PaymentManager.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_PaymentServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_PrinterTest.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_SaveSettingsWizardPage.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_SetupServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_UnmanagedConnectionWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_UnmanagedWizardPage.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_WelcomeWizardPage.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_WizardFrame.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_WizardPage.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DeviceTests\BillAcceptorTest.cpp">
+      <Filter>DeviceTests</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_BillAcceptorTest.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_BillAcceptorTest.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_BillAcceptorTest.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DeviceTests\CoinAcceptorTest.cpp">
+      <Filter>DeviceTests</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_CoinAcceptorTest.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_CoinAcceptorTest.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_CoinAcceptorTest.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DeviceTests\HIDTest.cpp">
+      <Filter>DeviceTests</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_HIDTest.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_HIDTest.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_HIDTest.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\LogsServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_LogsServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_LogsServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_LogsServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DeviceTests\DispenserTest.cpp">
+      <Filter>DeviceTests</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_DispenserTest.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_DispenserTest.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_DispenserTest.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\DispenserServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_DispenserServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_DispenserServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_DispenserServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_MainServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_MainServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_MainServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FirstSetup\TokenWizardPage.cpp">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_TokenWizardPage.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_TokenWizardPage.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_TokenWizardPage.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\TokenWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_TokenWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_TokenWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_TokenWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\TokenServiceWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_TokenServiceWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_TokenServiceWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_TokenServiceWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\EncashmentHistoryWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_EncashmentHistoryWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_EncashmentHistoryWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_EncashmentHistoryWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_InputBox.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_InputBox.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_InputBox.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\InputBox.cpp">
+      <Filter>Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_EncashmentWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_EncashmentWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_EncashmentWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\EncashmentWindow.cpp">
+      <Filter>Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ServiceMenuBackend.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ServiceMenuBackend.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ServiceMenuBackend.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Backend\IConfigManager.h">
+      <Filter>Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AutoEncashment\AutoEncashment.h">
+      <Filter>Plugins\AutoEncashment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\FirstSetup\FirstSetup.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\FirstSetup\WizardContext.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\VirtualKeyboard\Keyboard.h">
+      <Filter>Plugins\VirtualKeyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GUI\CountryLocale.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GUI\IDeviceBackend.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GUI\IServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GUI\PaymentInfo.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GUI\ServiceTags.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_AutoEncashmentWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_NetworkWizardPage.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_SaveSettingsWizardPage.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_WelcomeWizardPage.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_WizardFrame.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_UnmanagedConnectionWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_DeviceSlot.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_DeviceStatusWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_DiagnosticsServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_DialupConnectionWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_EditorPane.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_EncashmentServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_HardwareServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_HardwareWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_KeysServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_KeysWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_LogsServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_MainServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_NetworkServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_PaymentServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_SetupServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_KeyboardWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GUI\ListDelegate.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_DispenserServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_TokenWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_TokenServiceWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_EncashmentHistoryWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_InputBox.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GUI\ServiceMenu.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\Locale\service_menu_en.ts">
+      <Filter>Translation files</Filter>
+    </None>
+    <None Include="..\src\Locale\service_menu_ru.ts">
+      <Filter>Translation files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\GraphicsItems\autoencashment.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\GraphicsItems\first_setup.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\GraphicsItems\keyboard.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\GraphicsItems\message_box.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\GraphicsItems\message_box.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\GraphicsItems\service_menu.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Scenario\autoencashment_scenario.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Scenario\first_setup_scenario.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Scenario\service_menu_scenario.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\button_close.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\down_arrow.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\left_arrow.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\logo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\logo_big.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\logo_small.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\next_b.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\next_w.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\prev_b.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\prev_w.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\right_arrow.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\up_arrow.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\btn_empty.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\cancel.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\cancel_t.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\critical.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\dont_save_t.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\info.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\ok.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\question.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\save_t.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\wait.gif">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\wait.mng">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\MessageBox\warning.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Scenario\autoencashment_scenario.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Scenario\first_setup_scenario.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Scenario\service_menu_scenario.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\backspace_b.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\enter_b.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\GUI\Resources\Images\shift_b.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\Locale\service_menu_kk.ts">
+      <Filter>Translation files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\VirtualKeyboard\KeyboardWindow.h">
+      <Filter>Plugins\VirtualKeyboard</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UnmanagedConnectionWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\SetupServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\PaymentServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\NetworkServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\KeysWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\KeysServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\HardwareWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\HardwareServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\EncashmentServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\EditorPaneListItem.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\EditorPane.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\DialupConnectionWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\DiagnosticsServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\DeviceStatusWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\DeviceSlot.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\WizardPage.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\WizardFrame.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\WelcomeWizardPage.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\UnmanagedWizardPage.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\SaveSettingsWizardPage.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\NetworkWizardPage.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\KeysWizardPage.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\HardwareWizardPage.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\DialupWizardPage.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\AutoEncashment\AutoEncashmentWindow.h">
+      <Filter>Plugins\AutoEncashment</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\DeviceTests\PrinterTest.h">
+      <Filter>DeviceTests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\DeviceTests\GenericDeviceTest.h">
+      <Filter>DeviceTests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Backend\NetworkManager.h">
+      <Filter>Backend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Backend\MessageBox.h">
+      <Filter>Backend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Backend\KeysManager.h">
+      <Filter>Backend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Backend\HardwareManager.h">
+      <Filter>Backend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\Resources\Resources.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\AutoEncashment\AutoEncashmentWindow.ui">
+      <Filter>Plugins\AutoEncashment\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\UI\NetworkWizardPage.ui">
+      <Filter>Plugins\FirstSetup\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\UI\SaveSettingsWizardPage.ui">
+      <Filter>Plugins\FirstSetup\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\UI\WelcomeWizardPage.ui">
+      <Filter>Plugins\FirstSetup\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\UI\WizardFrame.ui">
+      <Filter>Plugins\FirstSetup\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\UnmanagedConnectionWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\DeviceSlot.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\DeviceStatusWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\DiagnosticsServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\DialupConnectionWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\EditorPane.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\EncashmentServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\HardwareServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\HardwareWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\KeysServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\KeysWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\LogsServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\MainServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\NetworkServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\PaymentServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\SetupServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\VirtualKeyboard\KeyboardWindow.ui">
+      <Filter>Plugins\VirtualKeyboard\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Backend\PaymentManager.h">
+      <Filter>Backend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\DeviceTests\BillAcceptorTest.h">
+      <Filter>DeviceTests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\DeviceTests\CoinAcceptorTest.h">
+      <Filter>DeviceTests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\DeviceTests\HIDTest.h">
+      <Filter>DeviceTests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\LogsServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\DeviceTests\DispenserTest.h">
+      <Filter>DeviceTests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\DispenserServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\DispenserServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\MainServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\FirstSetup\TokenWizardPage.h">
+      <Filter>Plugins\FirstSetup</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\TokenWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\TokenWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\TokenServiceWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\TokenServiceWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\EncashmentHistoryWindow.ui">
+      <Filter>Plugins\ServiceMenu\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\EncashmentHistoryWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\InputBox.h">
+      <Filter>Backend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\UI\InputBox.ui">
+      <Filter>Backend\Form files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\EncashmentWindow.h">
+      <Filter>Backend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Backend\ServiceMenuBackend.h">
+      <Filter>Backend</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\src\GUI\Resources\Images\rutoken_s_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<directory>
+  <connections>
+    <connection name="MTS GPRS" init_string='AT+CGDCONT=1,"IP","internet.mts.ru"' phone="*99***1#" login="mts" password="mts">
+      <balance number="*100#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="Beeline GPRS" init_string='AT+CGDCONT=1,"IP","internet.beeline.ru"' phone="*99***1#" login="beeline" password="beeline">
+      <balance number="*102#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="Beeline Интернет Дома" init_string='AT+CGDCONT=1,"IP","home.beeline.ru"' phone="*99***1#" login="beeline" password="beeline">
+      <balance number="*102#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="Megafon GPRS" init_string='AT+CGDCONT=1,"IP","internet"' phone="*99***1#" login="" password="">
+      <balance number="*100#" regexp="(-?\d+([\.,]\d+)?)"/>
+      <sim_number number="*205#" regexp="(\d{7,12})"/>
+    </connection>
+    <connection name="Megafon Северо-Запад GPRS" init_string='AT+CGDCONT=1,"IP","internet"' phone="*99***1#" login="" password="">
+      <balance number="*101#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="Megafon Урал" init_string='AT+CGDCONT=1,"IP","internet"' phone="*99***1#" login="" password="">
+      <balance number="*100#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="Megafon Сибирь" init_string='AT+CGDCONT=1,"IP","internet"' phone="*99***1#" login="" password="">
+      <balance number="*105*100#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="TELE2 GPRS" init_string='AT+CGDCONT=1,"IP","internet.tele2.ru"' phone="*99***1#" login="" password="">
+      <balance number="*105#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="U-tel GPRS" init_string='AT+CGDCONT=1,"IP","internet.usi.ru"' phone="*99***1#" login="" password="">
+      <balance number="*102#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="NSS GPRS" init_string='AT+CGDCONT=1,"IP","internet"' phone="*99***1#" login="" password="">
+      <balance number="*100#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="BWC" init_string='AT+CGDCONT=1,"IP","inet.bwc.ru"' phone="*99***1#" login="bwc" password="bwc">
+      <balance number="*101#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="ETK" init_string='AT+CGDCONT=1,"IP","internet.etk.ru"' phone="*99***1#" login="" password="">
+      <balance number="*101*1#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="Smarts-Astrakhan GPRS" init_string='AT+CGDCONT=1,"IP","internet.smarts.ru"' phone="*99***1#" login="" password="">
+      <balance number="*7000#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="Smarts-Volgograd GPRS" init_string='AT+CGDCONT=1,"IP","internet.volgogsm.ru"' phone="*99***1#" login="" password="">
+      <balance number="*123#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="Smarts-Ivanovo GPRS" init_string='AT+CGDCONT=1,"IP","internet.smarts.ru"' phone="*99***1#" login="internet" password="internet"/>
+    <connection name="Smarts-Penza GPRS" init_string='AT+CGDCONT=1,"IP","internet.smarts.ru"' phone="*99***1#" login="" password=""/>
+    <connection name="Smarts-Samara GPRS" init_string='AT+CGDCONT=1,"IP","internet.smarts.ru"' phone="*99***1#" login="" password=""/>
+    <connection name="Smarts-Saratov GPRS" init_string='AT+CGDCONT=1,"IP","internet.smarts.ru"' phone="*99***1#" login="" password=""/>
+    <connection name="Smarts-Ulyanov GPRS" init_string='AT+CGDCONT=1,"IP","internet.smarts.ru"' phone="*99***1#" login="" password=""/>
+    <connection name="Smarts-Yaroslavl GPRS" init_string='AT+CGDCONT=1,"IP","internet.smarts.ru"' phone="*99***1#" login="" password=""/>
+    <connection name="Motiv GPRS" init_string='AT+CGDCONT=1,"IP","inet.ycc.ru"' phone="*99***1#" login="motiv" password="motiv">
+      <balance number="*102#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+    <connection name="STEK GSM" init_string='AT+CGDCONT=1,"IP","internet.stekgsm.ru"' phone="*99***1#" login="" password="">
+      <balance number="*101*1#" regexp="(-?\d+([\.,]\d+)?)"/>
+    </connection>
+  </connections>
+</directory>

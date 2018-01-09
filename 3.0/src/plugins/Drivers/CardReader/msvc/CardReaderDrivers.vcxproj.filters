@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{69e9c2cd-39f0-4186-aeef-85b8b15c62c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{da567a18-0654-4ba7-befa-647c5d8e5c3d}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{ff904551-7f3b-4353-8b01-d454e87a4c86}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{929bb2ea-af29-44b8-a610-cd53ea585d51}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="PC/SC Reader">
+      <UniqueIdentifier>{b305ea2f-1a1b-4ce0-9d3d-1dc8c4155501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{09ba7de4-036b-4c5b-84ad-3d7a73c0824a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MifareReader.cpp">
+      <Filter>PC/SC Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PCSCReader.cpp">
+      <Filter>PC/SC Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CardReaderPlugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\PCSCReader.h">
+      <Filter>PC/SC Reader</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\MifareReader.h">
+      <Filter>PC/SC Reader</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\MifareReaderModelData.h">
+      <Filter>PC/SC Reader</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\locale\card_readers_en.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+    <None Include="..\src\locale\card_readers_kk.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+    <None Include="..\src\locale\card_readers_ru.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\CardReaderStatusesDescriptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PCSCReaderStatusCodes.h">
+      <Filter>PC/SC Reader</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

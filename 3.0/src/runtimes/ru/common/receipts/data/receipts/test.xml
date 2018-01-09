@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string>      ПЛАТЕЖНАЯ СИСТЕМА КИБЕРПЛАТ</string>
+	<string>-----------------------------------</string>
+	<string>Терминал %TERMINAL_NUMBER%</string>
+	<string>-----------------------------------</string>
+	<string>Название: %DEALER_NAME%</string>
+	<string>-----------------------------------</string>
+	<string>Адрес: %DEALER_BUSINESS_ADDRESS%</string>
+	<string>-----------------------------------</string>
+	<string>ИНН: %DEALER_INN%</string>
+	<string>-----------------------------------</string>
+	<string>Телефон поддержки: %DEALER_SUPPORT_PHONE%</string>
+	<string>-----------------------------------</string>
+	<string>Адрес точки приема платежей:</string>
+	<string>%POINT_ADDRESS%</string>
+ 	<string>-----------------------------------</string>
+	<string>            СПАСИБО</string>
+	<string>%AD_RECEIPT_FOOTER%</string>
+</body>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="windows-1251" standalone="no"?>
+<body>
+	<String>-----------------------------------</String>
+	<String>БАНК: %INT_BANK_NAME%</String>
+	<String>Адрес точки приема платежей:</String>
+	<String>%INT_POINT_ADDRESS%</String>
+	<String>Телефон службы техподдержки</String>
+	<String>%INT_DEALER_PHONE%</String>
+	<String>%INT_DEALER_NAME%</String>
+	<String>-----------------------------------</String>
+	<String>     Дата     Время     Терминал</String>
+	<String>  %DATETIME%   %TERMNUMBER%</String>
+	<String>Номер сессии  : %SESSNUM%</String>
+	<String>Сумма         : %AMOUNTALL%</String>
+	<String>Комиссия      : %COMISSION%</String>
+	<String>К зачислению  : %AMOUNT%</String>
+	<String>Оператор      : %INT_RECIPIENT_NAME%</String>
+	<String>%RAW_PARAMETER_NAME% : %RAW_PARAMETER_DATA%</String>
+	<String>%RAW_PARAMETER_NAME% : %RAW_PARAMETER_DATA%</String>
+	<String>%RAW_PARAMETER_NAME% : %RAW_PARAMETER_DATA%</String>
+	<String>%RAW_PARAMETER_NAME% : %RAW_PARAMETER_DATA%</String>
+	<String>%RAW_PARAMETER_NAME% : %RAW_PARAMETER_DATA%</String>
+	<String>%RAW_PARAMETER_NAME% : %RAW_PARAMETER_DATA%</String>
+	<String>-----------------------------------</String>
+	<String>Внесенная сумма будет зачислена</String>
+	<String>на 3-й рабочий день</String>
+    <String>Центр обслуживания клиентов</String>
+	<String>Банка "Тинькофф. Кредитные Системы"</String> 
+	<String>8-800-555-1010</String>        
+	<String>-----------------------------------</String>
+	<String>      СПАСИБО, СОХРАНЯЙТЕ ЧЕК.</String>
+</body>

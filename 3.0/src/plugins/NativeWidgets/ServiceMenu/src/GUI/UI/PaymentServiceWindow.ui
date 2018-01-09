@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PaymentServiceWindow</class>
+ <widget class="QFrame" name="PaymentServiceWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>802</width>
+    <height>508</height>
+   </rect>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QFrame#paymentsServiceWindow
+{
+	background: rgba(247, 245, 237);
+}
+
+QTextEdit
+{
+	background: rgba(247, 245, 237);
+	font-size: 10px;
+}
+
+QPushButton 
+{
+border: 1px solid gray;
+border-radius: 8px;
+padding-left: 10px;
+padding-right: 10px;
+color: white;
+background-color: rgba(80, 107, 176);
+}
+
+QPushButton:disabled
+{
+color: gray;
+background-color: lightgray;
+}
+
+QPushButton:pressed 
+{
+background-color: rgba(98, 141, 191);
+}
+
+QTabBar::tab 
+{
+     background: rgba(160, 175, 211);
+     border: 1px solid #C4C4C3;
+     border-bottom-color: #C2C7CB; 
+     border-top-left-radius: 4px;
+     border-top-right-radius: 4px;
+     min-width: 8ex;
+     padding: 2px;
+ }
+
+ QTabBar::tab:selected, QTabBar::tab:hover 
+{
+     background: rgba(247, 245, 237);
+ }
+
+QLineEdit 
+{
+    padding: 8;
+	border: 2px solid rgba(160, 175, 211);
+    border-radius: 10px;
+}
+
+/*
+QFrame#LogsInfoServiceWindow 
+{
+background: rgba(247, 245, 237);
+}
+QScrollArea#scrollArea 
+{
+background-color: white;
+}
+
+QScrollBar:vertical 
+{
+border: 1px solid lightgray;
+border-radius: 2px;
+width: 24px;
+margin: 21px 0 21px 0;
+}
+
+QScrollBar::handle:vertical 
+{
+min-height: 24px;
+width: 25px;
+background-color: rgba(186, 200, 237);
+border-radius: 2px;
+border-top: 1px solid gray;
+border-bottom: 1px solid gray;
+}
+
+QScrollBar::add-line:vertical 
+{
+border: 1px solid lightgray;
+border-radius: 2px;
+height: 20px;
+subcontrol-position: bottom;
+subcontrol-origin: margin;
+background-color: rgba(247, 245, 237);
+image: url(:/Images/down_arrow.png);
+}
+
+QScrollBar::add-line:vertical:pressed 
+{
+background-color: rgba(186, 200, 237);
+}
+
+QScrollBar::sub-line:vertical 
+{
+border: 1px solid lightgray;
+border-radius: 2px;
+height: 20px;
+subcontrol-position: top;
+subcontrol-origin: margin;
+background-color: rgba(247, 245, 237);
+image: url(:/Images/up_arrow.png);
+}
+
+QScrollBar::sub-line:vertical:pressed 
+{
+background-color: rgba(186, 200, 237);
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical 
+{
+background-color: rgba(247, 245, 237);
+}
+
+
+QScrollBar:horizontal 
+{
+border: 1px solid lightgray;
+border-radius: 2px;
+height: 24px;
+margin: 0 21px 0 21px;
+}
+
+QScrollBar::handle:horizontal 
+{
+min-width: 24px;
+height: 25px;
+background-color: rgba(186, 200, 237);
+border-radius: 2px;
+border-left: 1px solid gray;
+border-right: 1px solid gray;
+}
+
+QScrollBar::add-line:horizontal 
+{
+border: 1px solid lightgray;
+border-radius: 2px;
+width: 20px;
+subcontrol-position: right;
+subcontrol-origin: margin;
+background-color: rgba(247, 245, 237);
+image: url(:/Images/right_arrow.png);
+}
+
+QScrollBar::add-line:horizontal:pressed 
+{
+background-color: rgba(186, 200, 237);
+}
+
+QScrollBar::sub-line:horizontal 
+{
+border: 1px solid lightgray;
+border-radius: 2px;
+width: 20px;
+subcontrol-position: left;
+subcontrol-origin: margin;
+background-color: rgba(247, 245, 237);
+image: url(:/Images/left_arrow.png);
+}
+
+QScrollBar::sub-line:horizontal:pressed 
+{
+background-color: rgba(186, 200, 237);
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal 
+{
+background-color: rgba(247, 245, 237);
+}
+
+QHeaderView::section 
+{
+     background-color: rgba(186, 200, 237);
+     color: black;
+     padding-left: 4px;
+     border: 1px solid #6c6c6c;
+	 height: 30px;
+	 border-radius: 5px;
+ }
+
+QHeaderView::down-arrow 
+{
+     image: url(:/Images/down_arrow.png);
+ }
+
+QHeaderView::up-arrow 
+{
+     image: url(:/Images/up_arrow.png);
+ }
+
+QTableView 
+{
+     selection-background-color: rgba(186, 200, 237);
+	 background-color: white;
+ }
+*/</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
+    <widget class="QWidget" name="wPaymentSummary" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1">
+       <widget class="QLabel" name="lbLastRecievedPayment">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>#undefined</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" rowspan="2">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>301</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="3" rowspan="2">
+       <widget class="QLabel" name="lbFailedPaymentCountTitle">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>#failed_payment_count</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" rowspan="2">
+       <widget class="QLabel" name="lbFailedPaymentCount">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>#undefined</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>301</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbLastRecievedPaymentTitle">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>#last_recieved_payment_date</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="lbSuccessfulPaymentCountTitle">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>#successful_payment_count</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLabel" name="lbSuccessfulPaymentCount">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>#undefined</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" rowspan="2">
+       <widget class="QLabel" name="lbLastProcessedPaymentTitle">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>#last_processed_payment_date</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" rowspan="2">
+       <widget class="QLabel" name="lbLastProcessedPayment">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>#undefined</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,7">
+     <item>
+      <widget class="QToolBox" name="toolBox">
+       <property name="currentIndex">
+        <number>2</number>
+       </property>
+       <widget class="QWidget" name="pageFields">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>69</width>
+          <height>337</height>
+         </rect>
+        </property>
+        <attribute name="label">
+         <string>#fields</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2"/>
+       </widget>
+       <widget class="QWidget" name="pageFilter">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>130</width>
+          <height>337</height>
+         </rect>
+        </property>
+        <attribute name="label">
+         <string>#filter</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QRadioButton" name="rbAllDates">
+           <property name="text">
+            <string>#all</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rbLastEncashment">
+           <property name="text">
+            <string>#last_encashment</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rbDate">
+           <property name="text">
+            <string>#date</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateEdit" name="dateEdit">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="date">
+            <date>
+             <year>2013</year>
+             <month>1</month>
+             <day>1</day>
+            </date>
+           </property>
+           <property name="maximumDate">
+            <date>
+             <year>2100</year>
+             <month>12</month>
+             <day>31</day>
+            </date>
+           </property>
+           <property name="minimumDate">
+            <date>
+             <year>2000</year>
+             <month>1</month>
+             <day>1</day>
+            </date>
+           </property>
+           <property name="displayFormat">
+            <string>dd MMMM</string>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cbRange">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rbAllPayments">
+           <property name="text">
+            <string>#all</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rbProcessed">
+           <property name="text">
+            <string>#failed_payments</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rbPrinted">
+           <property name="text">
+            <string>#failed_reciepts</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="pageOperations">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>174</width>
+          <height>337</height>
+         </rect>
+        </property>
+        <attribute name="label">
+         <string>#operations</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QPushButton" name="btnPrintCurrentReceipt">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>#print_current_receipt</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnProcessCurrentPayment">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>#process_current_payment</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnPrintReceipts">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>#print_receipts</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnPrintFilteredReceipts">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>#print_filtered_receipts</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnProcessPayments">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>#process_payments</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QTableView" name="tvPayments">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="btnExpandTable">
+           <property name="minimumSize">
+            <size>
+             <width>40</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>&lt;&gt;</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>#search</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="leSearch"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>#clear</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../Resources/Resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>leSearch</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>119</x>
+     <y>291</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>125</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnExpandTable</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>toolBox</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>187</x>
+     <y>488</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>153</x>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>leSearch</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>89</x>
+     <y>291</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>87</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

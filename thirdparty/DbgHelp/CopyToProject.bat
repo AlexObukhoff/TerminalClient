@@ -1,0 +1,1 @@
+xcopy "%~dp0\bin\dbghelp.dll" "%1" /y

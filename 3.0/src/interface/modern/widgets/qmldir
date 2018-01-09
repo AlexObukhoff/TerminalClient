@@ -1,0 +1,42 @@
+Spacer 1.0 spacer.qml
+InputField 1.0 input_field.qml
+List 1.0 list.qml
+ScrollBar 1.0 scroll_bar.qml
+Scroller 1.0 scroller.qml
+OperatorMenu 1.0 operator_menu.qml
+OperatorSelector 1.0 operator_selector.qml
+SceneBase 1.0 scene_base.qml
+SceneBase2 1.0 scene_base2.qml
+Flash 1.0 flash_container.qml
+StatusBar 1.0 status_bar.qml
+Button 1.0 button.qml
+AnimateButton 1.0 animate_button.qml
+CheckBoxButton 1.0 checkbox.qml
+AnimationSequence 1.0 animation_sequence.qml
+Ad 1.0 ad.qml
+RootGroups 1.0 root_groups.qml
+WarningPanel 1.0 warning_panel.qml
+Icon 1.0 icon.qml
+
+KeyboardButton 1.0 keyboard_button.qml
+NumericButton 1.0 numeric_button.qml
+
+NumericKeyboard 1.0 numeric_keyboard.qml
+RuKeyboard 1.0 ru_keyboard.qml
+EnKeyboard 1.0 en_keyboard.qml
+DeKeyboard 1.0 de_keyboard.qml
+ExtraKeyboard 1.0 extra_keyboard.qml
+Keyboard 1.0 keyboard.qml
+
+EnumEditor 1.0 enum_editor.qml
+ChecklistEditor 1.0 checklist_editor.qml
+NumberEditor 1.0 number_editor.qml
+TextEditor 1.0 text_editor.qml
+TableEditor 1.0 table_editor.qml
+PlatruLoginEditor 1.0 platru_login_editor.qml
+HtmlEditor 1.0 html_editor.qml
+FallbackEditor 1.0 fallback_editor.qml
+MultiEditorWrapper 1.0 multieditor_wrapper.qml
+PayConfirmEditor 1.0 pay_confirm_editor.qml
+
+EditorDescription 1.0 editor_description.qml

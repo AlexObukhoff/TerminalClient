@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string>Кассовый чек N%RECEIPT_NUMBER%</string>
+	<string>-----------------------------------</string>
+	<string>Оператор по переводу денежных средств:</string> 
+	<string>ООО КБ "ПЛАТИНА", ИНН 7705012216</string>
+	<string>Краснопресненская наб., д.12</string>
+	<string>тел.+7(495)967-02-00, БИК 044525931</string>   
+	<string>Ген. лицензия Банка России N2347 от 20.05.93</string>
+	<string>[b]Телефон поддержки: %DEALER_SUPPORT_PHONE%[/b]</string>
+	<string>-----------------------------------</string>
+	<string>Терминал %TERMINAL_NUMBER%, дата %DATETIME%</string>
+	<string>Адрес терминала: %POINT_ADDRESS%</string>
+	<string>Номер сессии   : %INITIAL_SESSION%</string>
+    <string>Оплата: %SERVICE_TYPE% (%OPERATOR_BRAND%)</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string> </string>
+	<string>Принято        : %AMOUNT_ALL% %CURRENCY%</string>
+	<string>Комиссия агента: %DEALER_FEE% %CURRENCY%</string>
+	<string>Комиссия Банка Платина: %PROCESSING_FEE% %CURRENCY%</string>
+	<string>Общая комиссия : %FEE% %CURRENCY%</string>
+	<string>К зачислению   : %AMOUNT% %CURRENCY%</string>
+	<string> </string>
+	<string>-----------------------------------</string>
+	<string>СОХРАНЯЙТЕ ЧЕК ДО ЗАЧИСЛЕНИЯ СРЕДСТВ!</string>
+	<string>Информационно-технологическое обеспечение</string>
+	<string>ООО "КИБЕРПЛАТ", тел. +7(495)788-56-96</string>
+	<string>%AD_RECEIPT_FOOTER%</string>
+</body>

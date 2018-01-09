@@ -1,0 +1,576 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="operators">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Корневой элемент описания операторов приёма платежей.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="operator" type="Operator" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Описание одного оператора.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Версия формата файла, первый релиз - 2.0</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <!--Item-->
+  <xs:complexType name="Item">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Тип элемент списка в описании поля данных.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="item" type="Item" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Описание дочернего элемента.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="ru">Название элемента списка для пользователя.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="value" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="ru">Значение данного элемента.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="sort" type="xs:integer" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="ru">Порядок поля</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <!--Operator-->
+  <xs:complexType name="Operator">
+    <xs:all>
+      <xs:element name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Локализованное название оператора.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="cid" type="xs:integer">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Уникальный ID опертора в системе CyberPlat.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="limit">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Описание ограничений на принимаемые суммы платежей в пользу оператора.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="min" type="xs:string" use="required">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Минимальная принимаемая сумма платежей в пользу оператора. В единицах валюты.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="max" type="xs:string" use="required">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Максимальная принимаемая сумма платежей в пользу оператора. В единицах валюты.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="system" type="xs:string" use="required">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Опрделяет максимальный лимит платежа в системе. В единицах валюты.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="check" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Если указана сумма, то она отправляется в запросе FAKE_CHECK.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="fields" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Определение полей данных, заполняемых пользователем.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="field" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation xml:lang="ru">Определение одного поля данных.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:all>
+                  <xs:element name="name" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Локализованное название поля для пользователя.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="comment" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Дополнительное локализованное описание поля для пользователя.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="mask" minOccurs="0">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Маска поля, используется для отображения. Может содержать любые символы, при этом символ asterisk "*" опеределяет место для ввода пользовательских данных.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="password" type="xs:boolean" use="optional">
+                            <xs:annotation>
+                              <xs:documentation xml:lang="ru">Определяет необходимо ли при отображении маскировать введённые символы.</xs:documentation>
+                            </xs:annotation>
+                          </xs:attribute>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="format" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Правило, в соответствии с которым введённые данные приводятся к выходному виду. Может содержать любые символы и макросы "[N]", где N - ссылка на N-ый символ, введённый пользователем.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="enum" minOccurs="0">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Для полей типа список (enum) опеределяет содержимое списка. </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="item" type="Item" minOccurs="0" maxOccurs="unbounded">
+                          <xs:annotation>
+                            <xs:documentation xml:lang="ru">Описание элемента списка.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="default" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Значение поля по умолчанию.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="dependency" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Логическое выражение в формате javascript, определяет используется ли поле в данный момент. Может содержать ссылка на значения полей используя макросы {id_поля}.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="on_external_data" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Обработчик javascript.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:all>
+                <xs:attribute name="type" use="required">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Тип поля: число, произвольная строка, список. Влияет на способ отображения и ввода данных.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="number"/>
+                      <xs:enumeration value="number:float"/>
+                      <xs:enumeration value="text"/>
+                      <xs:enumeration value="enum"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="id" type="xs:string" use="required">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Уникальный идентификатор поля, используется для ссылки на значение поля.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="case" use="optional">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="lower">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Нижний регистр символов</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="upper">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Верхний регистр символов</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="lang" type="xs:string" use="optional">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Двух символьный код языка.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="min_size" type="xs:integer" use="optional">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Минимальная длина данных: кол-во символов для строковых полей.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="max_size" type="xs:integer" use="optional">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Максимальная длина данных: кол-во символов для строковых полей.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="sort" type="xs:integer" use="optional">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Порядок поля</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="class" type="xs:string" use="optional">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Поле не используется.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="required" type="xs:boolean" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Определяет обязательность заполнения поля. Если отсутствует, поле считается обязательным.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="processor">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Описание шлюза через который проводятся платежи по данному оператору.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="request" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation xml:lang="ru">Описание платёжного запроса</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="url" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">URL для выполнения запроса.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="request_property" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Поле данных для включаемое в запрос.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:attribute name="name" type="xs:string" use="required">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Имя поля.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="value" type="xs:string" use="required">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Значение поля. Может включать макросы {id_поля} для ссылка на значения полей, введённых пользователем.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="crypted" type="xs:boolean" use="optional">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Даёт возможность зашифровать поле при отправке.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="receive_property" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Поле данных возвращаемое запросом. Если поля в запросе нет, то такой запрос считается неудачным.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:attribute name="name" type="xs:string" use="required">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Имя поля.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="crypted" type="xs:boolean" use="optional">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Определяет нужно ли расшифровывать поле.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="name" use="required">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Тип запроса.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="check">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Проверка данных.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="payment">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Проведение платежа.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="status">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Запрос статуса платежа.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="getcards">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Запрос getcards.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="login">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Запрос login.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="keys" type="xs:integer" use="optional">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Идентификатор ключей, используемых для подписи и шифрования запросов.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="type" use="required">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Тип шлюза.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="cyberplat">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Обычный платёж.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="cyberplat_pin">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Пиновый платёж.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="half_pin">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Полупиновый платёж.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="avia_center">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Авиа центр.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="cyberplat_taxes">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Налоги.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="cyberplat_mt">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Денежные переводы.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="skip_check" type="xs:boolean" use="optional">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Дает возможность пропустить этап онлайн-проверки данных пользователя.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="rounding" type="xs:boolean" use="optional">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Если этот флаг установлен, то на сервер отправляются округлённые значения сумм платежа. Используется банковский способ округления.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="pay_online" type="xs:boolean" use="optional">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Даёт возможность отключить онлайн-проведение платежа.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ask_for_retry" type="xs:boolean" use="optional">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Определяет может ли пользователь в случае ошибки выбрать повторное проведение или получить чек неудачно проведённого платежа.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="require_printer" type="xs:boolean" use="optional">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Определяет необходимо ли обязательное наличие работающего принтера для проведения платежа.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="show_add_info" type="xs:boolean" use="optional">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Определяет необходимо ли выводить на экран дополнительную информацию о платеже, возвращаемую сервером.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="fee_type" type="xs:boolean" use="optional">
+            <xs:annotation>
+              <xs:documentation xml:lang="ru">Определяет способ расчета комиссии amount - считаем комиссию по сумме к зачислению, amount_all - по внесённой сумме</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          
+          
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="comment" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Дополнительное локализованное описание оператора.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="receipts" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Описание чеков для данного оператора.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation xml:lang="ru">Описание дополнительного параметра, включаемого в чек.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:attribute name="name" type="xs:string" use="required">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Имя параметра - одно из зарезервированных имён, использующихся в шаблонах чеков.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="value" type="xs:string" use="required">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Значение параметра.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="receipt" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation xml:lang="ru">Описание чека - привязка контекста/статуса платежа/ситуации к файлу шаблона.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:attribute name="type" use="required">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Контекст/статус платежа/ситуации.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="default">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Успешный платеж.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="error">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Неудачный платеж.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="not_enough_money">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Неудачный платеж, не хватает средств. Может возникнуть при обработки платежа по таймауту экрана внесения средств.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="delayed">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Платёж будет проведён в офлайне (для денежных переводов).</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="template" type="xs:string" use="required">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Имя файла с шаблоном чека.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="pins" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Лимиты по продаваемым и хранимым пинам.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="restriction">
+              <xs:annotation>
+                <xs:documentation xml:lang="ru">Перечисление продаваемых пинов.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="pin" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Описание пина одного номинала.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:attribute name="id" type="xs:integer" use="required">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Номинал пина.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="type" use="required">
+                  <xs:annotation>
+                    <xs:documentation xml:lang="ru">Тип ограничения.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="allow">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Белый список.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="deny">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Черный список.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="stored">
+              <xs:annotation>
+                <xs:documentation xml:lang="ru">Перечисление автоматически закупаемых номиналов.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="pin" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Описание пина одного номинала.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:attribute name="id" type="xs:integer" use="required">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Номинал пина.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="quantity" type="xs:integer" use="required">
+                        <xs:annotation>
+                          <xs:documentation xml:lang="ru">Количество закупаемых пинов (0 - онлайн продажа).</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="cwid" type="xs:integer" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Поле не используется</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+    <xs:attribute name="id" type="xs:integer" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="ru">Уникальный ID оператора.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>
+
+
+
+
+
+
+
+

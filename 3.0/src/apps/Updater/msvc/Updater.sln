@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Updater", "Updater.vcxproj", "{9D1146B4-1756-4D36-BB53-B91108597544}"
+	ProjectSection(ProjectDependencies) = postProject
+		{71717493-D454-49B5-8F5F-A31CFBE67337} = {71717493-D454-49B5-8F5F-A31CFBE67337}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UpdateEngine", "..\..\..\modules\UpdateEngine\msvc\UpdateEngine.vcxproj", "{71717493-D454-49B5-8F5F-A31CFBE67337}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		ReleaseWithDebugInfo|Win32 = ReleaseWithDebugInfo|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D1146B4-1756-4D36-BB53-B91108597544}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9D1146B4-1756-4D36-BB53-B91108597544}.Debug|Win32.Build.0 = Debug|Win32
+		{9D1146B4-1756-4D36-BB53-B91108597544}.Release|Win32.ActiveCfg = Release|Win32
+		{9D1146B4-1756-4D36-BB53-B91108597544}.Release|Win32.Build.0 = Release|Win32
+		{9D1146B4-1756-4D36-BB53-B91108597544}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
+		{9D1146B4-1756-4D36-BB53-B91108597544}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
+		{71717493-D454-49B5-8F5F-A31CFBE67337}.Debug|Win32.ActiveCfg = Debug|Win32
+		{71717493-D454-49B5-8F5F-A31CFBE67337}.Debug|Win32.Build.0 = Debug|Win32
+		{71717493-D454-49B5-8F5F-A31CFBE67337}.Release|Win32.ActiveCfg = Release|Win32
+		{71717493-D454-49B5-8F5F-A31CFBE67337}.Release|Win32.Build.0 = Release|Win32
+		{71717493-D454-49B5-8F5F-A31CFBE67337}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
+		{71717493-D454-49B5-8F5F-A31CFBE67337}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

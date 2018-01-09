@@ -1,0 +1,17 @@
+{
+	"name": "main_menu_scene",
+	spacing: 10,
+	"items": [
+	{  path: "spacer.qml", parameters: { height: 11 } },
+	{
+		name: "TopOperators",
+		path: "operator_menu.qml",
+		parameters: { itemsOnPage: 20, model: MenuWalker.model }
+	},
+	{ path: "spacer.qml", parameters: { height: 1 } },
+	{
+		name: "RootGroups",
+		path: "root_groups.qml",
+		parameters: { font: "font.root.group.20", columns: 4, rows: 1, scrollable: true, cellWidth: 244, cellHeight: 200 }
+	}]
+}

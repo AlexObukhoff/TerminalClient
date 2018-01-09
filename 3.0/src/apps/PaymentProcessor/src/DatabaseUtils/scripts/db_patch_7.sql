@@ -1,0 +1,2 @@
+ALTER TABLE `payment_param` ADD COLUMN `external` INTEGER NOT NULL default 0;
+insert or replace into `device_param` (`value`, `name`, fk_device_id) values(7, 'db_patch', (select id from device where type = 6 limit 1));

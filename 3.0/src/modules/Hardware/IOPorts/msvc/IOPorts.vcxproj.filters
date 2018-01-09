@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="AsyncSerialPort">
+      <UniqueIdentifier>{32de8b29-978f-499c-8a1d-42091056a8e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="USBSerialPort">
+      <UniqueIdentifier>{78c8f221-3f40-4e93-bb8d-f5dcb44f9dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TCPPort">
+      <UniqueIdentifier>{dae712c9-4be5-4622-8539-7024be5f0fc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{031564fa-e226-4e8b-82a4-c8b8e0ac752d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{f882433d-4130-4128-9d27-6ba501600919}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{a1274a68-9d0b-4523-9e53-02bfa6274309}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{22a5d05d-adc6-4328-b618-f65b11a10491}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="SystemDeviceUtils">
+      <UniqueIdentifier>{bd51fc38-afb3-47db-b267-c922e1a7ef0a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\COM\windows\AsyncSerialPort.cpp">
+      <Filter>AsyncSerialPort</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\USB\USBSerialPort.cpp">
+      <Filter>USBSerialPort</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TCP\TCPPort.cpp">
+      <Filter>TCPPort</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Base\IOPortBase.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_TCPPort.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_TCPPort.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_TCPPort.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\COM\windows\SystemDeviceUtils.cpp">
+      <Filter>SystemDeviceUtils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\COM\windows\AsyncSerialPort.h">
+      <Filter>AsyncSerialPort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\USB\USBSerialPort.h">
+      <Filter>USBSerialPort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\IOPortStatusCodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base\IOPortBase.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\DeviceWinProperties.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\IOPortGUIDs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\COM\windows\SystemDeviceUtils.h">
+      <Filter>SystemDeviceUtils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\TCP\TCPPort.h">
+      <Filter>TCPPort</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

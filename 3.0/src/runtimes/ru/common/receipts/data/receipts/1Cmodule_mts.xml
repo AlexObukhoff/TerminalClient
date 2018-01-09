@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string>Кассовый чек N%RECEIPT_NUMBER%</string>
+	<string>-----------------------------------</string>
+	<string>Платежный субагент:</string>
+	<string>[b]%DEALER_NAME%[/b]</string>
+	<string>ИНН [b]%DEALER_INN%[/b]</string>
+	<string>Место нахождения:[b]%DEALER_BUSINESS_ADDRESS%[/b]</string>
+	<string>Терминал [b]%TERMINAL_NUMBER%[/b]</string>
+	<string>Адрес терминала: [b]%POINT_ADDRESS%[/b]</string>
+	<string>-----------------------------------</string>
+	<string>Оплата:[b] %SERVICE_TYPE% (%OPERATOR_BRAND%)[/b]</string>
+	<string>Поставщик: [b]%OPERATOR_NAME%[/b]</string>
+	<string>Тел. поставщика: [b]%OPERATOR_PHONE%[/b]</string>
+	<string>Общая сумма принятых денежных средств:</string>
+	<string>[b]%AMOUNT_ALL% %CURRENCY%[/b]</string>
+	<string>Комиссия: [b]%FEE% %CURRENCY%[/b]</string>
+	<string>К перечислению поставщику: [b]%AMOUNT% %CURRENCY%[/b]</string>
+	<string>Дата, время приема денежных средств:</string>
+	<string>[b]%DATETIME%[/b]</string>
+	<string>Номер сессии: %INITIAL_SESSION%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>-----------------------------------</string>
+	<string>Оператор по приему платежей:</string>
+	<string>ООО "КИБЕРПЛАТ"</string>
+	<string>Место нахождения: 121108, г.Москва,</string>
+	<string>ул.Герасима Курина, д.4, корп. 3, пом. I</string>
+	<string>ИНН 7710377540 , тел. +7 (495) 788-56-96</string>
+	<string>-----------------------------------</string>
+	<string>[b]Платеж принят без акцептования МТС[/b]</string>
+	<string>[b]Сохраняйте чек до зачисления средств[/b]</string>
+	<string>[b]на счет.[/b]</string>
+	<string>[b]Проверка платежа:http://info.cyberplat.ru[/b]</string>
+	<string>По всем вопросам обращайтесь к</string>
+	<string>Платежному субагенту:</string>
+	<string>[b]ТЕЛЕФОН ПОДДЕРЖКИ: %DEALER_SUPPORT_PHONE%[/b]</string>
+</body>

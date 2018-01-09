@@ -1,0 +1,40 @@
+set PATH=%PATH%;%QTDIR%\bin
+cd %THIRDPARTY_DIR%
+
+dumpcpp OPOS\CommonCO\OPOSBelt.ocx -n OPOS -o OPOS\QtWrappers\Belt
+dumpcpp OPOS\CommonCO\OPOSBillAcceptor.ocx -n OPOS -o OPOS\QtWrappers\BillAcceptor
+dumpcpp OPOS\CommonCO\OPOSBillDispenser.ocx -n OPOS -o OPOS\QtWrappers\BillDispenser
+dumpcpp OPOS\CommonCO\OPOSBiometrics.ocx -n OPOS -o OPOS\QtWrappers\Biometrics
+dumpcpp OPOS\CommonCO\OPOSBumpBar.ocx -n OPOS -o OPOS\QtWrappers\BumpBar
+dumpcpp OPOS\CommonCO\OPOSCashChanger.ocx -n OPOS -o OPOS\QtWrappers\CashChanger
+dumpcpp OPOS\CommonCO\OPOSCashDrawer.ocx -n OPOS -o OPOS\QtWrappers\CashDrawer
+dumpcpp OPOS\CommonCO\OPOSCAT.ocx -n OPOS -o OPOS\QtWrappers\CAT
+dumpcpp OPOS\CommonCO\OPOSCheckScanner.ocx -n OPOS -o OPOS\QtWrappers\CheckScanner
+dumpcpp OPOS\CommonCO\OPOSCoinAcceptor.ocx -n OPOS -o OPOS\QtWrappers\CoinAcceptor
+dumpcpp OPOS\CommonCO\OPOSCoinDispenser.ocx -n OPOS -o OPOS\QtWrappers\CoinDispenser
+dumpcpp OPOS\CommonCO\OPOSElectronicJournal.ocx -n OPOS -o OPOS\QtWrappers\ElectronicJournal
+dumpcpp OPOS\CommonCO\OPOSElectronicValueRW.ocx -n OPOS -o OPOS\QtWrappers\ElectronicValueRW
+dumpcpp OPOS\CommonCO\OPOSFiscalPrinter.ocx -n OPOS -o OPOS\QtWrappers\FiscalPrinter
+dumpcpp OPOS\CommonCO\OPOSGate.ocx -n OPOS -o OPOS\QtWrappers\Gate
+dumpcpp OPOS\CommonCO\OPOSImageScanner.ocx -n OPOS -o OPOS\QtWrappers\ImageScanner
+dumpcpp OPOS\CommonCO\OPOSItemDispenser.ocx -n OPOS -o OPOS\QtWrappers\ItemDispenser
+dumpcpp OPOS\CommonCO\OPOSKeylock.ocx -n OPOS -o OPOS\QtWrappers\Keylock
+dumpcpp OPOS\CommonCO\OPOSLights.ocx -n OPOS -o OPOS\QtWrappers\Lights
+dumpcpp OPOS\CommonCO\OPOSLineDisplay.ocx -n OPOS -o OPOS\QtWrappers\LineDisplay
+dumpcpp OPOS\CommonCO\OPOSMICR.ocx -n OPOS -o OPOS\QtWrappers\MICR
+dumpcpp OPOS\CommonCO\OPOSMotionSensor.ocx -n OPOS -o OPOS\QtWrappers\MotionSensor
+dumpcpp OPOS\CommonCO\OPOSMSR.ocx -n OPOS -o OPOS\QtWrappers\MSR
+dumpcpp OPOS\CommonCO\OPOSPINPad.ocx -n OPOS -o OPOS\QtWrappers\PINPad
+dumpcpp OPOS\CommonCO\OPOSPointCardRW.ocx -n OPOS -o OPOS\QtWrappers\PointCardRW
+dumpcpp OPOS\CommonCO\OPOSPOSKeyboard.ocx -n OPOS -o OPOS\QtWrappers\POSKeyboard
+dumpcpp OPOS\CommonCO\OPOSPOSPower.ocx -n OPOS -o OPOS\QtWrappers\POSPower
+dumpcpp OPOS\CommonCO\OPOSPOSPrinter.ocx -n OPOS -o OPOS\QtWrappers\POSPrinter
+dumpcpp OPOS\CommonCO\OPOSRemoteOrderDisplay.ocx -n OPOS -o OPOS\QtWrappers\RemoteOrderDisplay
+dumpcpp OPOS\CommonCO\OPOSRFIDScanner.ocx -n OPOS -o OPOS\QtWrappers\RFIDScanner
+dumpcpp OPOS\CommonCO\OPOSScale.ocx -n OPOS -o OPOS\QtWrappers\Scale
+dumpcpp OPOS\CommonCO\OPOSScanner.ocx -n OPOS -o OPOS\QtWrappers\Scanner
+dumpcpp OPOS\CommonCO\OPOSSigCap.ocx -n OPOS -o OPOS\QtWrappers\SigCap
+dumpcpp OPOS\CommonCO\OPOSSmartCardRW.ocx -n OPOS -o OPOS\QtWrappers\SmartCardRW
+dumpcpp OPOS\CommonCO\OPOSToneIndicator.ocx -n OPOS -o OPOS\QtWrappers\ToneIndicator
+dumpcpp OPOS\CommonCO\OPOSTotals.ocx -n OPOS -o OPOS\QtWrappers\Totals
+dumpcpp OPOS\CommonCO\Opos_Constants.dll -n OPOS -o OPOS\QtWrappers\Constants

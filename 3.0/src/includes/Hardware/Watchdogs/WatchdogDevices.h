@@ -1,0 +1,8 @@
+#include "../../../../modules/Hardware/Watchdogs/src/Alarm/Alarm.h"
+#include "../../../../modules/Hardware/Watchdogs/src/OSMP/OSMP.h"
+#include "../../../../modules/Hardware/Watchdogs/src/OSMP/OSMP2.h"
+#include "../../../../modules/Hardware/Watchdogs/src/OSMP/STOD.h"
+#include "../../../../modules/Hardware/Watchdogs/src/LDog/LDog.h"
+#include "../../../../modules/Hardware/Watchdogs/src/Shtrih/Shtrih.h"
+#include "../../../../modules/Hardware/Watchdogs/src/Platix/Platix.h"
+#include "../../../../modules/Hardware/Watchdogs/src/OSMP2.5/OSMP2.5.h"

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Сборка терминального ПО с русской локализацией -->
+<runtime base="terminal_common">
+	<!-- Общий контент Российской площадки -->
+	<directory source="src/runtimes/ru/common" target="" recursive="true"/>
+
+	<!-- Интерфейс modern, компонент interface -->
+	<directory source="src/interface/modern/build" target="interface/interface/modern" recursive="true">
+		<exclude>*.wav</exclude>
+	</directory>
+	<file source="{QBS_RESULT_PATH}/plugins/interface/utils.dll" target="interface/interface/modern/plugins/utils.dll"/>
+	
+	<!-- Звуки интерфейса modern -->
+	<directory source="src/interface/modern/build/sounds" target="sounds/interface/modern/sounds" recursive="true"/>
+
+	<!-- Логотипы Россия, компонент logo -->
+	<directory source="{BUILD_HOME}/Logo/ru" target="logo/interface/logo" recursive="true"/>
+	<directory source="{BUILD_HOME}/Logo/root_groups" target="logo/interface/logo/root_groups" recursive="true"/>
+
+	<!-- Установка Modern интерфейса по умолчанию -->
+	<option target="data/client.ini" key="common/interface_path" value="interface/modern" />
+
+	<!-- Установка имени конфигурации -->
+	<option target="data/client.ini" key="common/configuration" value="terminal_ru" />
+
+	<!-- Включаем в интерфейсе возможность переключения на Русский язык -->
+	<option target="interface/interface/modern/interface.ini" key="locale/ru" value="Русский" />
+	<option target="interface/interface/modern/interface.ini" key="locale/default" value="ru" />
+
+	<!-- Настройка параметров интерфейса -->
+	<option target="interface/interface/modern/interface.ini" key="ui/build_name" value="ru_common" />
+	<option target="interface/interface/modern/interface.ini" key="ui/show_platru" value="true" />
+	<option target="interface/interface/modern/interface.ini" key="ui/show_language" value="false" />
+	<option target="interface/interface/modern/interface.ini" key="ui/show_search" value="true" />
+	<option target="interface/interface/modern/interface.ini" key="ui/show_info" value="true" />
+	<option target="interface/interface/modern/interface.ini" key="ui/show_sms_spam" value="true" />
+	<option target="interface/interface/modern/interface.ini" key="ui/icon_set" value="modern" />
+	<option target="interface/interface/modern/interface.ini" key="ui/layouts" value="ru,en" />
+	<!-- Настройка ГосУслуг -->	
+	<option target="interface/interface/modern/interface.ini" key="ui/use_smart_grid" value="9144,9176,9196,9200,9209,9210,9211" />
+	<!-- Настройка автоматического перевода остатка на ПК -->	
+	<option target="interface/interface/modern/interface.ini" key="ui/use_platru_changeback" value="true" />
+	
+	<!-- Настройка URL для помощника абонента -->
+	<option target="user/user/plugins/user_assistant.ini" key="PaymentProcessor.ScenarioFactory.UserAssistant/url" value="https://mon.cyberplat.ru/cgi-bin/get_payments.cgi" />
+	
+	<!-- Плагин plat.ru, компонент plugins -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/platru.dll" target="plugins/plugins/platru.dll"/>
+
+	<!-- Плагин рекламы, компонент plugins -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/ad.dll" target="plugins/plugins/ad.dll"/>
+	
+	<!-- Сценарии для сервиса Киберсдача, компонент plugins -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/cyberchange.dll" target="plugins/plugins/cyberchange.dll"/>
+
+	<!-- Uniteller plugin -->
+	<!-- <file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/uniteller.dll" target="plugins/plugins/uniteller.dll"/> -->
+
+	<!-- Драйверы, компонент drivers -->
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/fr.dll" target="drivers/plugins/drivers/fr.dll"/>
+
+	<!-- Локализации исполняемых файлов -->
+	<file source="{QBS_RESULT_PATH}/locale/WatchService_ru.qm" target="locale/guard_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/WatchServiceController_ru.qm" target="locale/tray_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/Updater_ru.qm" target="locale/updater_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/PaymentProcessor_ru.qm" target="locale/client_ru.qm"/>
+
+	<!-- Локализации драйверов -->
+	<file source="{QBS_RESULT_PATH}/locale/ioports_ru.qm" target="locale/plugins/drivers/ioports_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/bill_acceptors_ru.qm" target="locale/plugins/drivers/bill_acceptors_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/bill_dispensers_ru.qm" target="locale/plugins/drivers/bill_dispensers_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/coin_acceptors_ru.qm" target="locale/plugins/drivers/coin_acceptors_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/printers_ru.qm" target="locale/plugins/drivers/printers_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/modems_ru.qm" target="locale/plugins/drivers/modems_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/watchdogs_ru.qm" target="locale/plugins/drivers/watchdogs_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/fr_ru.qm" target="locale/plugins/drivers/fr_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/scanners_ru.qm" target="locale/plugins/drivers/scanners_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/card_readers_ru.qm" target="locale/plugins/drivers/card_readers_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/health_ru.qm" target="locale/plugins/drivers/health_ru.qm"/>
+	<file source="{QBS_RESULT_PATH}/locale/camera_ru.qm" target="locale/plugins/drivers/camera_ru.qm"/>
+
+	<!-- Локализации плагинов -->
+	<file source="{QBS_RESULT_PATH}/locale/service_menu_ru.qm" target="locale/plugins/service_menu_ru.qm"/>
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/user_assistant_ru.qm" target="locale/plugins/user_assistant_ru.qm"/>
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/cyberplat_monitoring_ru.qm" target="locale/plugins/cyberplat_monitoring_ru.qm"/>	
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/platru_ru.qm" target="locale/plugins/platru_ru.qm"/>
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/cyberchange_ru.qm" target="locale/plugins/cyberchange_ru.qm"/>
+	<!-- <file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/uniteller_ru.qm" target="locale/plugins/uniteller_ru.qm"/> -->
+	
+	<!-- ######################################################################################  -->
+
+	<!-- Шрифты для терминалов Beeline -->
+	<directory source="src/runtimes/ru/dealers/_interface_beeline" target="_interface_beeline" recursive="true"/>
+
+	<!-- Интерфейс ИОН/Ноу-Хау -->
+	<directory source="src/runtimes/ru/dealers/_interface_ion" target="_interface_ion" recursive="true"/>
+
+	<!-- Интерфейс МТС -->
+	<directory source="src/runtimes/ru/dealers/_interface_mts" target="_interface_mts" recursive="true"/>
+
+	<!-- ######################################################################################  -->
+
+	<!-- Контент Самарского дистрибутива -->
+	<directory source="src/runtimes/ru/samara" target="" recursive="true"/>
+
+	<!-- Плагин сценария samaraticket, компонент plugins -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/samara_ticket.dll" target="_tclib/plugins/samara_ticket.dll"/>
+	
+	<!-- Локализации плагинов -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/samara_ticket_ru.qm" target="_tclib/plugins/samara_ticket_ru.qm"/>
+
+	<!-- Token plugin -->
+	<file if="{TC_USE_TOKEN} &amp;&amp; {CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/drivers/token.dll" target="drivers/plugins/drivers/token.dll"/>
+	
+	<!-- ######################################################################################  -->
+	
+</runtime>

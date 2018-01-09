@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{69e9c2cd-39f0-4186-aeef-85b8b15c62c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CashAcceptor">
+      <UniqueIdentifier>{7a50afce-f7f5-4ca7-a078-a75c594ab3d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{be13bcb4-f00f-4a1e-beec-88976b5b0a53}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{f4b289e4-d607-419e-b635-77733eb5c183}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{0d51291e-07fa-4ed3-bd44-a6d323fa5ec6}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="CashDispenser">
+      <UniqueIdentifier>{239a1c3b-f0bb-49bf-bdf1-a6fb8cdb1415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\VirtualDevicesPlugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CashAcceptor\VirtualCashAcceptor.cpp">
+      <Filter>CashAcceptor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CashDispenser\VirtualCashDispenser.cpp">
+      <Filter>CashDispenser</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\CashAcceptor\VirtualCashAcceptor.h">
+      <Filter>CashAcceptor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\CashDispenser\VirtualCashDispenser.h">
+      <Filter>CashDispenser</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\locale\virtual_devices_ru.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

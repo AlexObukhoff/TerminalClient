@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string>Кассовый чек N%RECEIPT_NUMBER%</string>
+	<string>-----------------------------------</string>
+	<string if="%DEALER_IS_BANK% == 0">Платежный субагент:</string>
+    <else if="%DEALER_IS_BANK% != 0">Банковский платежный агент:</else>
+	<string>[b]%DEALER_NAME%[/b]</string>
+	<string>ИНН [b]%DEALER_INN%[/b]</string>
+	<string if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') == 0">[b]НДС не облагается[/b]</string>
+	<else if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') > 0">[b]НДС 18%[/b]</else>
+	<string>Место нахождения:[b]%DEALER_BUSINESS_ADDRESS%[/b]</string>
+	<string>Терминал [b]%TERMINAL_NUMBER%[/b]</string>
+	<string>Адрес терминала: [b]%POINT_ADDRESS%[/b]</string>
+	<string>-----------------------------------</string>
+	<string if="%DEALER_IS_BANK% == 0">Оплата:[b] %SERVICE_TYPE% (%OPERATOR_BRAND%)[/b]</string>
+	<string if="%DEALER_IS_BANK% == 0">Поставщик: [b]%OPERATOR_NAME%[/b]</string>
+	<string if="%DEALER_IS_BANK% == 0">Тел. поставщика: [b]%OPERATOR_PHONE%[/b]</string>
+	<string if="%DEALER_IS_BANK% == 0">Общая сумма принятых денежных средств:</string>
+	<string if="%DEALER_IS_BANK% == 0">[b]%AMOUNT_ALL% %CURRENCY%[/b]</string>
+	<string if="%DEALER_IS_BANK% == 0">Комиссия: [b]%FEE% %CURRENCY%[/b]</string>
+	<string if="%DEALER_IS_BANK% == 0">К перечислению поставщику: [b]%AMOUNT% %CURRENCY%[/b]</string>
+	<string if="%DEALER_IS_BANK% == 0">Дата, время приема денежных средств:</string>
+	<string if="%DEALER_IS_BANK% == 0">[b]%DATETIME%[/b]</string>
+	<else if="%DEALER_IS_BANK% != 0">Получатель денежных средств:</else>
+	<else if="%DEALER_IS_BANK% != 0">[b]%OPERATOR_NAME%[/b]</else>
+	<else if="%DEALER_IS_BANK% != 0">Наименование операции:</else>
+	<else if="%DEALER_IS_BANK% != 0">прием от физического лица наличных</else>
+	<else if="%DEALER_IS_BANK% != 0">денежных средств.</else>
+	<else if="%DEALER_IS_BANK% != 0">Назначение перевода:</else>
+	<else if="%DEALER_IS_BANK% != 0">[b]%SERVICE_TYPE% (%OPERATOR_BRAND%)[/b]</else>
+	<else if="%DEALER_IS_BANK% != 0">Принято: [b]%AMOUNT_ALL% %CURRENCY%[/b]</else>
+	<else if="%DEALER_IS_BANK% != 0">Комиссия: [b]%FEE% %CURRENCY%[/b]</else>
+	<else if="%DEALER_IS_BANK% != 0">Зачислено: [b]%AMOUNT% %CURRENCY%[/b]</else>
+	<else if="%DEALER_IS_BANK% != 0">Дата, время приема (выдачи) денежных</else>
+	<else if="%DEALER_IS_BANK% != 0">средств: [b]%DATETIME%[/b]</else>
+	<string>Номер сессии: %INITIAL_SESSION%</string>
+	<string>-----------------------------------</string>
+	<string if="%DEALER_IS_BANK% == 0">Оператор по приему платежей:</string>
+	<string if="%DEALER_IS_BANK% == 0">ООО "КИБЕРПЛАТ"</string>
+	<string if="%DEALER_IS_BANK% == 0">Место нахождения: 121108, г.Москва,</string>
+	<string if="%DEALER_IS_BANK% == 0">ул.Герасима Курина, д.4, корп. 3, пом. I</string>
+	<string if="%DEALER_IS_BANK% == 0">ИНН 7710377540 , тел. +7 (495) 788-56-96</string>
+	<else if="%DEALER_IS_BANK% != 0">Оператор по переводу денежных средств:</else>
+	<else if="%DEALER_IS_BANK% != 0">ООО КБ "ПЛАТИНА"</else>
+	<else if="%DEALER_IS_BANK% != 0">Ген. лицензия ЦБ РФ N2347 от 20.05.1993</else>
+	<else if="%DEALER_IS_BANK% != 0">Юр.Адрес: 123610, г. Москва,</else>
+	<else if="%DEALER_IS_BANK% != 0">Краснопресненская наб., д.12</else>
+	<else if="%DEALER_IS_BANK% != 0">тел.+7(495)967-02-00</else>
+	<else if="%DEALER_IS_BANK% != 0">ИНН 7705012216, БИК 044525931</else>
+	<string>-----------------------------------</string>
+    <string>[b]Сохраняйте чек до зачисления средств[/b]</string>
+	<string>[b]на счет.[/b]</string>
+	<string>[b]Проверка платежа:http://info.cyberplat.ru[/b]</string>
+	<string if="%DEALER_IS_BANK% == 0">По всем вопросам обращайтесь к</string>
+	<string if="%DEALER_IS_BANK% == 0">Платежному субагенту:</string>
+	<else if="%DEALER_IS_BANK% != 0">По всем вопросам обращайтесь к</else>
+	<else if="%DEALER_IS_BANK% != 0">Банковскому платежному агенту:</else>
+	<string>[b]ТЕЛЕФОН ПОДДЕРЖКИ: %DEALER_SUPPORT_PHONE%[/b]</string>
+	<string>-----------------------------------</string>
+	<string>ООО "Росгосстрах", Лицензия С N 0977 50</string>
+	<string>СТРАХОВАНИЕ ИМУЩЕСТВА</string>
+	<string>НОМЕР ПОЛИСА: %POLNUM%</string>
+	<string>СТРАХОВАТЕЛЬ:</string>
+	<string>%101%</string>
+	<string>ВЫГОДОПРИОБРЕТАТЕЛЬ:</string>
+	<string>за счет кого следует (ст. 930 ГК РФ)</string>
+	<string>ТЕЛЕФОН:</string>
+	<string>%100%</string>
+	<string>АДРЕС ЗАСТРАХОВАННОГО ИМУЩЕСТВА:</string>
+	<string>%102%</string>
+	<string>СРОК СТРАХОВАНИЯ:</string>
+	<string>с %BEGIN_DATE% по %EXPIRE_DATE%</string>
+	<string>Вариант страхования: %OPERATOR_FIELD%</string>
+	<string>СТРАХОВАЯ ПРЕМИЯ: %PRICE% руб.</string>
+	<string>СТРАХОВОЕ ПОКРЫТИЕ: </string>
+	<string>Внутренняя отделка и инженерное</string>
+	<string>оборудование: %VOSUM% руб.</string>
+	<string>Распределение стоимости:</string>
+	<string>стены - 30%, пол - 20%, потолок - 10%,</string>
+	<string>окна - 10%, двери - 10%,</string>
+	<string>инженерное оборудование - 15%,</string>
+	<string>прочее - 5%</string>
+	<string>Домашнее имущество: %DISUM% руб.</string>
+	<string>Гражданская ответственность: %GOSUM% руб.</string>
+	<string>ВНЕСЕННАЯ СТРАХОВАЯ ПРЕМИЯ: %PRICE% руб.</string>
+	<string>-----------------------------------</string>
+	<string>Правила добровольного страхования</string>
+	<string>строений, квартир, домашнего и другого</string>
+	<string>имущества, ГО собственников имущества</string>
+	<string>N167 от 15.10.2007 г.</string>
+	<string>Застрахованные риски:</string>
+	<string>- несчастный случай;</string>
+	<string>- стихийные бедствия;</string>
+	<string>- преступления против собственности.</string>
+	<string>[b]ТЕЛЕФОН ЦУУ:[b]</string>
+	<string>[b]8 800 200 99 77 или 8 495 926 99 77[b]</string>
+	<string>При наступлении страхового случая</string>
+	<string>Страхователь (Выгодоприобретатель) обязан</string>
+	<string>предоставить документы, подтверждающие его</string>
+	<string>имущественный интерес в отношении</string>
+	<string>застрахованного объекта.</string>
+	<string>Страховая выплата по квартире, внутренней</string>
+	<string>отделке и инженерному оборудованию в</string>
+	<string>квартире производится с "учетом износа"</string>
+	<string>Страховая выплата производится по "первому</string>
+	<string>риску".</string>
+	<string>С условиями страхования ознакомлен и</string>
+	<string>обязуюсь их выполнять.</string>
+	<string>Подтверждаю свое согласие на обработку</string>
+	<string>Страховщиком в порядке, установленном в</string>
+	<string>условиях страхования, перечисленных в</string>
+	<string>настоящем полисе/чеке персональных</string>
+	<string>данных Страхователя для осуществления</string>
+	<string>страхования по полису/чеку, в том числе</string>
+	<string>в целях проверки качества оказания</string>
+	<string>страховых услуг и урегулирования убытков</string>
+	<string>по полису/чеку, администрирования</string>
+	<string>полиса/чека, а также в целях</string>
+	<string>информирования Страхователя о других</string>
+	<string>продуктах и услугах Страховщика.</string>
+	<string> </string>
+	<string>[b]ОБЯЗАТЕЛЬНО СОХРАНЯЙТЕ ЭТОТ ДОКУМЕНТ[b]</string>
+	<string> </string>
+	<string>                 www.rgs.ru</string>
+	<string> </string>
+	<string>%AD_RECEIPT_FOOTER%</string>
+</body>

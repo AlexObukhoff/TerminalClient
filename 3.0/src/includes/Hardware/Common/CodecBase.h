@@ -1,0 +1,1 @@
+#include "../../../modules/Hardware/Common/src/Codec/CodecBase.h"

@@ -1,0 +1,19 @@
+/* Файл созданный QtCreator */
+
+import QmlProject 1.1
+
+Project {
+	/* Включает файлы .qml, .js и изображений из текущего каталога и его подкаталогов */
+	QmlFiles {
+		directory: [".", "info_content", "scripts", "widgets"]
+	}
+	JavaScriptFiles {
+		directory: "."
+	}
+	ImageFiles {
+		directory: "."
+	}
+	/* Список каталогов модулей, передаваемый среде выполнения QML */
+	importPaths: [ "plugins" ]
+	mainFile: "main_menu_scene.qml"
+}

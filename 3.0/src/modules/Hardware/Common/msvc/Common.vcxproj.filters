@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{784d58b3-777e-45eb-bc25-b90727d3596b}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{ab402ac1-0d20-44f4-b36f-91f7a84d5170}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{5801b0fe-6e35-48fa-a505-4495cdf4356a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{2bf66f8f-b70e-4402-a887-bcb4103b849c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Polling">
+      <UniqueIdentifier>{2e8f9c65-e769-4fbc-b110-4086b93ea0c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protocols">
+      <UniqueIdentifier>{05a66427-6757-4ba2-bfec-56ab43443fc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Proto">
+      <UniqueIdentifier>{5f3c0f0f-2aad-44a2-ac77-4845a4f91833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Virtual">
+      <UniqueIdentifier>{83863134-643a-46bc-9e30-826202b5b1cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OPOS">
+      <UniqueIdentifier>{93d1e5e2-b95b-465b-bf5b-ad447c2bf172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Port">
+      <UniqueIdentifier>{c547f533-e155-453c-82c0-8f52b7f25aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Port\Serial">
+      <UniqueIdentifier>{cd730337-f0dd-4526-8733-1ad2c7e06b10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Port\USB">
+      <UniqueIdentifier>{d1fd3949-f447-4486-bfe4-59036d4a52a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meta">
+      <UniqueIdentifier>{95eccaf4-781d-4d84-bcd9-d846630ee0ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins">
+      <UniqueIdentifier>{7f6d61a4-3873-4ee9-a2c2-6d0ce842ed85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Codec">
+      <UniqueIdentifier>{e53fcf10-152c-4f82-b9d7-db0f4cad1c13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PortPolling">
+      <UniqueIdentifier>{143d6cec-0dc5-401b-a2c4-a39860b7a8d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SafePerformer">
+      <UniqueIdentifier>{7c8253c0-2554-4d04-8f55-30503f88900f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Port\TCP">
+      <UniqueIdentifier>{6481669b-1344-4431-a495-6ae3553f9296}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PollingExpector.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PollingExpector.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Common\ReleaseWithDebugInfo\moc_PollingExpector.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MutexLocker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Base\DeviceBase.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Port\Serial\SerialDeviceBase.cpp">
+      <Filter>Port\Serial</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ProtoDevice.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ProtoDevice.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ProtoDevice.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Polling\PollingDeviceBase.cpp">
+      <Filter>Polling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Polling\PollingExpector.cpp">
+      <Filter>Polling</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ProtoCashAcceptor.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ProtoCashAcceptor.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ProtoCashAcceptor.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ProtoDispenser.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ProtoDispenser.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ProtoDispenser.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ProtoWatchdog.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ProtoWatchdog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ProtoWatchdog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Virtual\VirtualDeviceBase.cpp">
+      <Filter>Virtual</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ProtoFR.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ProtoFR.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ProtoFR.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_WorkingThreadProxy.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_WorkingThreadProxy.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_WorkingThreadProxy.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\WorkingThreadProxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ProtoHID.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ProtoHID.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ProtoHID.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ProtoOPOSScanner.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ProtoOPOSScanner.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ProtoOPOSScanner.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Port\PortDeviceBase.cpp">
+      <Filter>Port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Port\USB\USBDeviceBase.cpp">
+      <Filter>Port\USB</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ProtoMifareReader.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ProtoMifareReader.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ProtoMifareReader.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Meta\MetaDevice.cpp">
+      <Filter>Meta</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Codec\CodecBase.cpp">
+      <Filter>Codec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PortPolling\PortPollingDeviceBase.cpp">
+      <Filter>PortPolling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\OPOS\OPOSPollingDeviceBase.cpp">
+      <Filter>OPOS</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_SafePerformer.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_SafePerformer.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_SafePerformer.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SafePerformer\SafePerformer.cpp">
+      <Filter>SafePerformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Port\TCP\TCPDeviceBase.cpp">
+      <Filter>Port\TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Protocols\Common\ProtocolUtils.cpp">
+      <Filter>Protocols</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ASCII.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\HardwareConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\Specifications.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\LoggingType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MutexLocker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Port\Serial\SerialDeviceBase.h">
+      <Filter>Port\Serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\HystoryList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Protocols\Common\ProtocolNames.h">
+      <Filter>Protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\BaseStatus.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\BaseStatusDescriptions.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Virtual\VirtualDeviceBase.h">
+      <Filter>Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ProtoDevices.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Port\PortDeviceBase.h">
+      <Filter>Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Port\USB\USBDeviceBase.h">
+      <Filter>Port\USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\USBDeviceModelData.h">
+      <Filter>Port\USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Meta\MetaDevice.h">
+      <Filter>Meta</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Plugins\CommonParameters.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Plugins\DevicePluginBase.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ProtocolBase.h">
+      <Filter>Protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\CommandResults.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\CommandResultData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\StatusCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Codec\CodecBase.h">
+      <Filter>Codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceCodeSpecification.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceCodeSpecificationBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PortPolling\PortPollingDeviceBase.h">
+      <Filter>PortPolling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\BaseStatusTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OPOS\OPOSPollingDeviceBase.h">
+      <Filter>OPOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Port\TCP\TCPDeviceBase.h">
+      <Filter>Port\TCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Protocols\Common\ProtocolUtils.h">
+      <Filter>Protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\CodecDescriptions.h">
+      <Filter>Codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\FunctionTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceDataConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\locale\common_ru.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+    <None Include="..\src\locale\common_en.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+    <None Include="..\src\locale\common_kk.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\Base\DeviceBase.h">
+      <Filter>Base</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Polling\PollingDeviceBase.h">
+      <Filter>Polling</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Polling\PollingExpector.h">
+      <Filter>Polling</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\Hardware\Common\ProtoDevice.h">
+      <Filter>Proto</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\Hardware\CashAcceptors\ProtoCashAcceptor.h">
+      <Filter>Proto</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\Hardware\Dispensers\ProtoDispenser.h">
+      <Filter>Proto</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\Hardware\Watchdogs\ProtoWatchdog.h">
+      <Filter>Proto</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\Hardware\FR\ProtoFR.h">
+      <Filter>Proto</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\WorkingThreadProxy.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\Hardware\HID\ProtoHID.h">
+      <Filter>Proto</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\Hardware\HID\ProtoOPOSScanner.h">
+      <Filter>Proto</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\Hardware\CardReaders\ProtoMifareReader.h">
+      <Filter>Proto</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\SafePerformer\SafePerformer.h">
+      <Filter>SafePerformer</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

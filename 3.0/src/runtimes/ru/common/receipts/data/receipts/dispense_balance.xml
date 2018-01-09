@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string>Баланс по терминалу %TERMINAL_NUMBER%</string>
+	<string>-----------------------------------</string>
+	<string>За период с: %ENCASHMENT_START_DATE%</string>
+	<string>         по: %DATETIME%</string>
+	<string>-----------------------------------</string>
+	<string>[b]ВЫДАНО В КАЧЕСТВЕ СДАЧИ[/b]</string>
+	<string>-----------------------------------</string>
+	<string>Монеты 0.50 %CURRENCY% x %DISPENSED_0.50_COIN_COUNT% = %DISPENSED_0.50_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 1 %CURRENCY% x %DISPENSED_1_COIN_COUNT% = %DISPENSED_1_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 2 %CURRENCY% x %DISPENSED_2_COIN_COUNT% = %DISPENSED_2_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 5 %CURRENCY% x %DISPENSED_5_COIN_COUNT% = %DISPENSED_5_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 10 %CURRENCY% x %DISPENSED_10_COIN_COUNT% = %DISPENSED_10_COIN_SUM% %CURRENCY%</string>
+	<string>-----------------------------------</string>
+	<string>Кол-во монет: %DISPENSED_COIN_COUNT%</string>
+	<string> Сумма монет: %DISPENSED_COIN_SUM%</string>
+	<string>-----------------------------------</string>
+	<string>Купюры 10 %CURRENCY% x %DISPENSED_10_BILL_COUNT% = %DISPENSED_10_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 50 %CURRENCY% x %DISPENSED_50_BILL_COUNT% = %DISPENSED_50_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 100 %CURRENCY% x %DISPENSED_100_BILL_COUNT% = %DISPENSED_100_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 500 %CURRENCY% x %DISPENSED_500_BILL_COUNT% = %DISPENSED_500_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 1000 %CURRENCY% x %DISPENSED_1000_BILL_COUNT% = %DISPENSED_1000_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 5000 %CURRENCY% x %DISPENSED_5000_BILL_COUNT% = %DISPENSED_5000_BILL_SUM% %CURRENCY%</string>
+	<string>-----------------------------------</string>
+	<string>Кол-во купюр: %DISPENSED_BILL_COUNT%</string>
+	<string> Сумма купюр: %DISPENSED_BILL_SUM%</string>
+ 	<string>-----------------------------------</string>
+	<string>Выдана сумма:  %DISPENSED_TOTAL_SUM%</string>
+ 	<string>-----------------------------------</string>
+</body>

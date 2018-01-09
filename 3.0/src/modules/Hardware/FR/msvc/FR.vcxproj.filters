@@ -1,0 +1,385 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Base">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{797b1638-0771-4788-8303-eee38cf6c707}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{afdf7ca9-0818-45c7-806d-b5203f6ba496}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Template">
+      <UniqueIdentifier>{3b269bb2-fbf6-47d2-9279-9809b4cf64f4}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{f0d576f6-70e9-4c85-a20f-8e86917f8918}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ATOL">
+      <UniqueIdentifier>{bff489f1-4394-4739-87c7-67e62514de82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PRIM">
+      <UniqueIdentifier>{33269d55-b2a5-403e-87b2-93d6402c47d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shtrih">
+      <UniqueIdentifier>{44d44555-2db2-4e71-8a9b-e806241bb2e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Multisoft">
+      <UniqueIdentifier>{b3790832-720e-45af-abe5-16e394d6aa6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OPOS MStarTUPK">
+      <UniqueIdentifier>{1b0e1461-e7c6-4e1d-bef2-27ff568101d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SPARK">
+      <UniqueIdentifier>{303b8ee1-a8f9-46dc-afc8-2fafa09843ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SPARK\AdaptiveTextLogic">
+      <UniqueIdentifier>{55f3cd5b-0deb-4875-90f3-06c1ff79e2ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shtrih\Online">
+      <UniqueIdentifier>{95aace92-3632-43fd-a349-0d91c7651991}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PRIM\Ejector">
+      <UniqueIdentifier>{cfdc684b-b702-4d1e-9d41-6b9a2cf794db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PRIM\Presenter">
+      <UniqueIdentifier>{a69beca3-b81d-4dcf-9bbc-f7081f929afd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Port">
+      <UniqueIdentifier>{6e9267c5-8276-46f6-a47c-1b0e5ea9f840}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shtrih\Base">
+      <UniqueIdentifier>{6deee53a-5652-4d5e-a5fb-c78f9a733a23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shtrih\Base\Ejector">
+      <UniqueIdentifier>{fe60a2bb-40f7-4aa2-87f2-4046dfc34408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shtrih\Base\Serial">
+      <UniqueIdentifier>{d65459c6-148a-47af-97db-0dd750b74304}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ATOL\Base">
+      <UniqueIdentifier>{357e7c78-58ff-4f86-ad28-edcf1e71fdd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ATOL\Base\Serial">
+      <UniqueIdentifier>{78d6a9b3-42c4-4f54-b1f1-be6756b0c04b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ATOL\Base\Ejector">
+      <UniqueIdentifier>{25a2146e-9ab9-4582-aea5-325e5d65a911}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ATOL\Online">
+      <UniqueIdentifier>{76d40851-ea2f-44d0-9632-db1e7d374290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ATOL\Ejector">
+      <UniqueIdentifier>{2107fab2-b72e-4143-a73a-cb6ace3aefa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PRIM\Online">
+      <UniqueIdentifier>{0dcbc690-009b-411d-a52e-3a262abe412b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shtrih\Base\Proto">
+      <UniqueIdentifier>{bb605215-3cbf-4aeb-85db-bcdab7988081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kasbi">
+      <UniqueIdentifier>{97f80e30-5ca8-4504-9171-9f5d4be1e110}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Base\FRBase.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\OPOSMStarTUPK\OPOSMStarTUPK.cpp">
+      <Filter>OPOS MStarTUPK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Base\Ejector\PayPPU700.cpp">
+      <Filter>ATOL\Base\Ejector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Base\ShtrihRetractorFR.cpp">
+      <Filter>Shtrih\Base\Ejector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Spark\SparkFR.cpp">
+      <Filter>SPARK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\AtolModelData.cpp">
+      <Filter>ATOL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Spark\AdaptiveFiscalLogic.cpp">
+      <Filter>SPARK\AdaptiveTextLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Prim\Ejector\PrimEjectorFR.cpp">
+      <Filter>PRIM\Ejector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Prim\Presenter\PrimPresenterFR.cpp">
+      <Filter>PRIM\Presenter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Prim\PrimFRBase.cpp">
+      <Filter>PRIM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Base\Port\PortFRBase.cpp">
+      <Filter>Base\Port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Base\ShtrihFRBase.cpp">
+      <Filter>Shtrih\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Base\ShtrihSerialFR.cpp">
+      <Filter>Shtrih\Base\Serial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Base\AtolFRBase.cpp">
+      <Filter>ATOL\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Base\AtolSerialFR.cpp">
+      <Filter>ATOL\Base\Serial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Ejector\AtolEjectorFR.cpp">
+      <Filter>ATOL\Ejector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Ejector\AtolVKP80BasedFR.cpp">
+      <Filter>ATOL\Ejector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Online\AtolOnlineFRBase.cpp">
+      <Filter>ATOL\Online</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Online\ShtrihOnlineFRBase.cpp">
+      <Filter>Shtrih\Online</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Prim\Online\PrimOnlineFRBase.cpp">
+      <Filter>PRIM\Online</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Retractor\ShtrihRetractorFRLite.cpp">
+      <Filter>Shtrih\Base\Ejector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Base\ProtoShtrihFR.cpp">
+      <Filter>Shtrih\Base\Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Online\Paymaster.cpp">
+      <Filter>ATOL\Online</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\ModelData.cpp">
+      <Filter>Shtrih</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Online\PayOnlineFR.cpp">
+      <Filter>Shtrih\Online</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Kasbi\KasbiFRBase.cpp">
+      <Filter>Kasbi</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Protocols\FR\FiscalChequeStates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRStatusCodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRStatusesDescriptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRErrorDescription.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\AtolDataTypes.h">
+      <Filter>ATOL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\AtolModelData.h">
+      <Filter>ATOL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OPOSMStarTUPK\OPOSMStarTUPKData.h">
+      <Filter>OPOS MStarTUPK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OPOSMStarTUPK\OPOSMStarTUPKDataTypes.h">
+      <Filter>OPOS MStarTUPK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Base\Ejector\PayPPU700.h">
+      <Filter>ATOL\Base\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\ShtrihFRConstants.h">
+      <Filter>Shtrih</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\ShtrihFRDataTypes.h">
+      <Filter>Shtrih</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\ModelData.h">
+      <Filter>Shtrih</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihRetractorFR.h">
+      <Filter>Shtrih\Base\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Base\Yarus01K.h">
+      <Filter>Shtrih\Base\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihKiosk.h">
+      <Filter>Shtrih\Base\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Spark\SparkFR.h">
+      <Filter>SPARK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Spark\SparkFRConstants.h">
+      <Filter>SPARK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Spark\SparkModelData.h">
+      <Filter>SPARK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Spark\SparkCodec.h">
+      <Filter>SPARK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Spark\AdaptiveFiscalLogicConstants.h">
+      <Filter>SPARK\AdaptiveTextLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Spark\AdaptiveFiscalLogic.h">
+      <Filter>SPARK\AdaptiveTextLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\PrimFRConstants.h">
+      <Filter>PRIM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFR.h">
+      <Filter>PRIM\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFRConstants.h">
+      <Filter>PRIM\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\Presenter\PrimPresenterFR.h">
+      <Filter>PRIM\Presenter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\PrimModelData.h">
+      <Filter>PRIM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\PrimFRBase.h">
+      <Filter>PRIM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base\Port\PortFRBase.h">
+      <Filter>Base\Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihFRBase.h">
+      <Filter>Shtrih\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihSerialFR.h">
+      <Filter>Shtrih\Base\Serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihFRBaseConstants.h">
+      <Filter>Shtrih\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Online\ShtrihFROnlineConstants.h">
+      <Filter>Shtrih\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Base\AtolFRBase.h">
+      <Filter>ATOL\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\AtolFRConstants.h">
+      <Filter>ATOL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Base\AtolSerialFR.h">
+      <Filter>ATOL\Base\Serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Base\AtolFR.h">
+      <Filter>ATOL\Base\Serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Base\AtolFRBaseConstants.h">
+      <Filter>ATOL\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Online\Paymaster.h">
+      <Filter>ATOL\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Base\Ejector\PayVKP80.h">
+      <Filter>ATOL\Base\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Ejector\AtolEjectorFR.h">
+      <Filter>ATOL\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Ejector\AtolEjectorDataTypes.h">
+      <Filter>ATOL\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Ejector\AtolVKP80BasedFR.h">
+      <Filter>ATOL\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Online\AtolOnlineFRBase.h">
+      <Filter>ATOL\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Ejector\AtolEjectorFRConstants.h">
+      <Filter>ATOL\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Online\ShtrihOnlineFRBase.h">
+      <Filter>Shtrih\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\Online\PrimOnlineFRBase.h">
+      <Filter>PRIM\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\Online\PrimOnlineFRConstants.h">
+      <Filter>PRIM\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\PrimFRDataTypes.h">
+      <Filter>PRIM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Online\AtolOnlineFRConstants.h">
+      <Filter>ATOL\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFRBase.h">
+      <Filter>PRIM\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\Ejector\PrimEjectorOnlineFR.h">
+      <Filter>PRIM\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Online\PayOnlineFR.h">
+      <Filter>Shtrih\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Retractor\ShtrihRetractorFRLite.h">
+      <Filter>Shtrih\Base\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Base\ProtoShtrihFR.h">
+      <Filter>Shtrih\Base\Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Base\VirtualShtrihFR.h">
+      <Filter>Shtrih\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\OFDServerData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Base\ShtrihSerialFRBase.h">
+      <Filter>Shtrih\Base\Serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Online\MStarTK2.h">
+      <Filter>Shtrih\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRBaseConstants.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Kasbi\KasbiFRBase.h">
+      <Filter>Kasbi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Kasbi\KasbiFRConstants.h">
+      <Filter>Kasbi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Kasbi\KasbiModelData.h">
+      <Filter>Kasbi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\AtolCodec.h">
+      <Filter>ATOL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Online\ShtrihTCPFRBase.h">
+      <Filter>Shtrih\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\OPOSMStarTUPK\OPOSMStarTUPK.h">
+      <Filter>OPOS MStarTUPK</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Base\FRBase.h">
+      <Filter>Base</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

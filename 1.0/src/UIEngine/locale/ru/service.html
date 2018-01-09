@@ -1,0 +1,416 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+        <title>Cyberplat::Service menu</title>
+
+    <script src="../../mj/mj.js" language="javascript" type="text/javascript"></script>
+    <script src="../../mj/mj_cybobj.js" language="javascript" type="text/javascript"></script>
+    <script src="lcp.js" language="javascript" type="text/javascript"></script>
+    <script src="../../webclient.js" language="javascript" type="text/javascript"></script>
+
+<script>
+var $a_serv_butns = {
+       1 : { enabl: 1, title: LCP('svmnu_incass') },
+       4 : { enabl: 0, title: LCP('svmnu_conn2cyber') },
+       6 : { enabl: 0, title: LCP('svmnu_balance') },
+       3 : { enabl: 0, title: LCP('svmnu_monserver') },
+       7 : { enabl: 1, title: LCP('svmnu_zreport') },
+       5 : { enabl: 0, title: LCP('svmnu_exit') },
+
+       2 : { enabl: 0, title: LCP('svmnu_termreset') },
+       9 : { enabl: 0, title: LCP('svmnu_closewindow') },
+       10 : { enabl: 1, title: LCP('svmnu_printunprintedchecks') },
+       12 : { enabl: 1, title: LCP('svmnu_generatekeysbyhands') },
+//       8 : { enabl: 1, title: LCP('svmnu_configtool') },
+//       14 : { enabl: 1, title: LCP('svmnu_generatekeys') },
+       11 : { enabl: 1, title: LCP('svmnu_generatekeysbyhands') }
+};
+</script>
+
+<style type="text/css">
+
+                        body {
+                                margin: 0px 0px 0px 0px;
+                                padding:  0px 0px 0px 0px;
+                                background-color: Silver;
+                                color: #000000;
+
+                                overflow: hidden;
+
+                                font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+                                font-size: 14px;
+                                font-style: normal;
+                                font-weight: bold;
+                                text-decoration: none;
+
+                        }
+
+                        td {
+                                text-align: center;
+                                vertical-align: middle;
+                        }
+
+                        td#id_info {
+                                padding:  0px 0px 0px 0px;
+                                text-align: left;
+                                vertical-align: top;
+                        }
+
+                        .infodiv {
+                                float: left;
+                                display: block;
+
+                                vertical-align: top;
+                                padding:  2px 2px 2px 4px;
+
+                                font-size: 12px;
+
+                                border-top: 2px solid #000066;
+                                border-left: 2px solid #000066;
+                                border-right: 2px solid #444499;
+                                border-bottom: 2px solid #444499;
+                        }
+
+                        .infodiv span {
+                                padding:  2px 4px 2px 4px;
+
+
+                                clear: both;
+                                float: right;
+                                display: inline;
+
+                                font-size: 14px;
+
+                                background-color: #000099;
+
+                                border-top: 2px solid #000066;
+                                border-left: 2px solid #000066;
+                                border-right: 2px solid #444499;
+                                border-bottom: 2px solid #444499;
+                        }
+
+
+                        .mart {
+                                background-color: #995555;
+                                color: #ffffff;
+
+                                font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+                                font-size: 13px;
+                                font-style: normal;
+                                font-weight: bold;
+                                text-decoration: none;
+
+                                border-top: 3px solid #cc3333;
+                                border-left: 3px solid #cc3333;
+                                border-right: 3px solid #551111;
+                                border-bottom: 3px solid #551111;
+                        }
+                        .nfor {
+                                background-color: #777799;
+                                color: #ffffff;
+
+                                font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+                                font-size: 25px;
+                                font-style: normal;
+                                font-weight: bold;
+                                text-decoration: none;
+
+                                border-top: 5px solid #8888aa;
+                                border-left: 5px solid #8888aa;
+                                border-right: 5px solid #555577;
+                                border-bottom: 5px solid #555577;
+                        }
+                        .nfop1 {
+                                background-color: #666600;
+                                color: #888800;
+
+                                font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+                                font-size: 19px;
+                                font-style: normal;
+                                font-weight: bold;
+                                text-decoration: none;
+
+                                border-top: 5px solid #555500;
+                                border-left: 5px solid #555500;
+                                border-right: 5px solid #777700;
+                                border-bottom: 5px solid #777700;
+                        }
+                        .nfop {
+                                background-color: #663333;
+                                color: #885555;
+
+                                font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+                                font-size: 19px;
+                                font-style: normal;
+                                font-weight: bold;
+                                text-decoration: none;
+
+                                border-top: 5px solid #553333;
+                                border-left: 5px solid #553333;
+                                border-right: 5px solid #774444;
+                                border-bottom: 5px solid #774444;
+                        }
+                        .nfoa {
+                                background-color: #559955;
+                                color: #ffffff;
+
+                                font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+                                font-size: 25px;
+                                font-style: normal;
+                                font-weight: bold;
+                                text-decoration: none;
+
+                                border-top: 5px solid #88aa88;
+                                border-left: 5px solid #88aa88;
+                                border-right: 5px solid #557755;
+                                border-bottom: 5px solid #557755;
+                        }
+                        .marn {
+                                background-color: #990000;
+                                color: #ffffff;
+
+                                font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+                                font-size: 29px;
+                                font-style: normal;
+                                font-weight: bold;
+                                text-decoration: none;
+
+                                border-top: 7px solid #cc3333;
+                                border-left: 7px solid #cc3333;
+                                border-right: 7px solid #551111;
+                                border-bottom: 7px solid #551111;
+                        }
+                        .info {
+                                background-color: #333344;
+                                color: #ffffff;
+
+                                font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+                                font-size: 15px;
+                                font-style: normal;
+                                font-weight: bold;
+                                text-decoration: none;
+
+                                border-top: 2px solid #000066;
+                                border-left: 2px solid #000066;
+                                border-right: 2px solid #444499;
+                                border-bottom: 2px solid #444499;
+                        }
+</style>
+
+</head>
+
+<script language="JavaScript" type="text/javascript">
+var Pass="";
+var OutOfOrderPassword = getParameter('ooops', '1234');
+var WebclinetVersion = getParameter('v', 'undetetcted');
+// alert(WebclietVersion);
+
+
+var tnum = getParameter('tnum', LCP('terminal_number'));
+var suppstr = getParameter('suppstr', '&nbsp;');
+
+function Add(Char)
+{
+if (OutOfOrderPassword!="none") {
+  if (OutOfOrderPassword.indexOf(Pass+Char)!=0)
+    Pass=Char;
+    else
+    Pass+=Char;
+  if (Pass==OutOfOrderPassword)
+    document.location.href="main.html";
+  }
+}
+
+var $a_fenum = [
+        'svmnu_m_BillsCount',
+        'svmnu_m_BillsSum',
+        'svmnu_m_ValidatorState',
+        'svmnu_m_PrinterState',
+        'svmnu_m_UnprocPaymentsCount',
+        'svmnu_m_UnprocStatPacketsCount',
+        'svmnu_m_SIMBalance',
+        'svmnu_m_GSMSignalQuality',
+        'svmnu_m_LastPaymentReceived',
+        'svmnu_m_LastPaymentProcessed'
+];
+
+// tdi events map
+var $a_tdiev = new Array();
+
+
+</script>
+
+
+<body>
+<table width="100%" height="100%" border="1"><tr><td width="100%" height="100%" valign="middle" align="center">
+
+<table width="95%" height="600" border="0">
+<tr>
+<td class="mart" id="tdd01" width="30%">&nbsp;</td>
+<td class="mart" id="tdd02" height="5%">CYBERPLAT.COM / Service Menu</td>
+<td class="mart" id="tdd03" width="30%">MeG&nbsp;</td>
+
+</tr>
+<tr>
+<td id="tdd04" colspan="3" class="marn" height="75%" valign="middle">
+
+<!-- STA: inner buttons -->
+<table width="99%" height="100%">
+<!--
+<tr style="height: 100%;">
+ -->
+<tr style="height: 100px;">
+<td id='id_info' rowspan="5" width="25%" class="info">&nbsp;</td>
+<td id="tdi1" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+<td id="tdi2" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+</tr>
+<tr style="height: 100px;">
+<td id="tdi3" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+<td id="tdi4" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+</tr>
+<tr style="height: 100px;">
+<td id="tdi5" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+<td id="tdi6" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+</tr>
+<tr style="height: 100px;">
+<td id="tdi7" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+<td id="tdi8" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+</tr>
+</tr>
+<tr style="height: 100px;">
+<td id="tdi9" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+<td id="tdi10" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+</tr>
+<tr style="height: 100px;">
+<td id="tdd11" class="nfoa" valign="middle" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+<td id="tdi11" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+<td id="tdi12" width="33%" class="nfop" onclick="gotoCmdPage(this.id);">&nbsp;</td>
+</tr>
+
+</table>
+<!-- FIN: inner buttons -->
+
+</td>
+</tr>
+<tr>
+</tr>
+
+
+</table>
+
+<script language="JavaScript" type="text/javascript">
+// buttons initialization
+
+// alert(document.location.href);
+
+var $cnt = 1;
+for (var $k in $a_serv_butns) {
+        var $di = document.getElementById('tdi'+$cnt);
+
+        // disabling restricted buttons
+        $cmd = $k;
+        if ('2' === getParameter('menu', '1')) {
+                if (0 === $a_serv_butns[$k]['enabl'])  {
+                        $cmd = 0;
+                        }
+        }
+
+        if ('11' === $cmd) {
+                if ('0' == getParameter('gkbshow', '0')){
+                        $cmd = 0;
+                        $a_serv_butns[$k]['title'] = '';
+                }else{
+                        $a_serv_butns[$k]['title']+=' ('+getParameter('gkbshow', '0')+')';
+                }
+
+        }
+
+        // adding map-click info
+        $a_tdiev['tdi'+$cnt] = $cmd;
+
+        $di.innerHTML = $a_serv_butns[$k]['title'];
+
+        var $cls = 'nfop';
+        if (0 < $cmd) {
+                $cls = 'nfor';
+        }
+        if ('0' === $k) {
+                $cls = 'nfoa';
+        }
+        $di['className'] = $cls;
+        $cnt++;
+}
+
+// MjCRIODA($a_tdiev);
+
+//  - - - - - shows da parameters!!!
+var $sa = '';
+var $asd = getParameter('asd', '');
+// var $asd = '2|1100|0|1|0|0|-1|-1|11:22|30.12 00:00';
+var $a_asd = $asd.split('|');
+// alert($a_asd[0]);
+// $cnt = 0;
+
+
+for (var $i=0; $i<$a_fenum.length; $i++) {
+        if ( ('undefined' !== typeof($a_asd[$i])) && ('' !== $a_asd[$i]) ) {
+                var $st = $a_asd[$i];
+                if ( ('svmnu_m_ValidatorState' == $a_fenum[$i]) || ('svmnu_m_PrinterState' == $a_fenum[$i]) ) {
+                        var $states = LCP('svmnu_m_states');
+
+                        if ('undefined' === typeof($states[$a_asd[$i]])) {
+                                $st = LCP('svmnu_m_states_unrecognized');
+                        }
+                        else {
+                                $st = $states[$a_asd[$i]];
+                        }
+                } // if validator or printer state
+
+                $sa += '<div class="infodiv">' + LCP($a_fenum[$i]) + ':<span>'+$st+'</span></div>';
+        }
+}
+
+document.getElementById('id_info').innerHTML = $sa;
+
+document.getElementById('tdd01').innerHTML = tnum;
+document.getElementById('tdd02').innerHTML = LCP('svmnu_title')+'; v'+WebclinetVersion;
+document.getElementById('tdd11').innerHTML = LCP('svmnu_back');
+// document.getElementById('tdd04').innerHTML = LCP('out_of_service');
+
+
+
+//  - - - - - - - show clock
+function timerUpdate() {
+        var $s = GetTimeA();
+        var $re = new RegExp('<br(?: /)>', 'gi');
+        $s = $s.replace($re, '&nbsp;');
+
+        document.getElementById('tdd03').innerHTML = $s;
+        setTimeout('timerUpdate()', 500);
+}
+timerUpdate();
+
+
+//  - - - - - - -
+function gotoCmdPage($__tdi) {
+        if ('tdd11' === $__tdi) {
+                document.location.href = 'main.html';
+                return;
+        }
+        if (('undefined' !== typeof($a_tdiev[$__tdi])) && (0 < $a_tdiev[$__tdi])) {
+                // alert($a_tdiev[$__tdi]);
+                // return;
+                Parameters['cmd'] = $a_tdiev[$__tdi];
+                document.location.href = 'service.html?'+getParametersAllAsUrl();
+        }
+}
+
+
+</script>
+
+</td></tr></table>
+
+</body>
+</html>

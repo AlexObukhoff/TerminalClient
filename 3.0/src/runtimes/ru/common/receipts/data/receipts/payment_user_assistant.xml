@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<body>
+ 	<string>Информация о платеже</string>
+	<string>-----------------------------------</string>
+	<string>Терминал %TERMINAL_NUMBER%, дата %PAYMENT_DATETIME%</string>
+	<string>-----------------------------------</string>
+	<string>Провайдер: %OPERATOR_NAME%</string>
+	<string>Номер телефона/счёта: %NUMBER_ACCOUNT%</string>	
+	<string>Внесено        : %AMOUNT_ALL% %CURRENCY%</string>
+	<string>Комиссия       : %FEE% %CURRENCY%</string>
+	<string>К зачислению   : %AMOUNT% %CURRENCY%</string>
+	<string>Статус платежа : %STATUS%</string>
+	<string>-----------------------------------</string>
+	<string>Номер сессии   : %INITIAL_SESSION%</string>
+	<string>Номер транзакции : %TRANSACTION_ID%</string>
+	<string>-----------------------------------</string>
+	<string>Телефон провайдера: %OPERATOR_PHONE%</string>
+	<string>-----------------------------------</string>
+	<string>Информационно-технологическое обеспечение</string>
+	<string>ООО "КИБЕРПЛАТ", тел. +7(495)788-56-96</string>
+	<string>Оператор по переводу денежных средств:</string> 
+    <string>ООО КБ "ПЛАТИНА"</string>
+    <string>Ген. лицензия ЦБ РФ N2347 от 20.05.93</string>
+    <string>Юр.Адрес: 123610, Москва</string>
+    <string>Краснопресненская наб., д.12</string>
+    <string>ИНН 7705012216, БИК 044525931</string>
+    <string>тел.+7(495)967-02-00</string>  
+	<string>тел. +7(499)681-21-21</string>
+	<string>%AD_RECEIPT_FOOTER%</string>
+</body>

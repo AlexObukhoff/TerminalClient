@@ -1,0 +1,34 @@
+LIBRARY   ACR120U
+EXPORTS
+	ACR120_Close@4	@1
+	ACR120_Copy@16	@2
+	ACR120_Dec@16	@3
+	ACR120_DirectReceive@20	@4
+	ACR120_DirectSend@24	@5
+	ACR120_Inc@16	@6
+	ACR120_ListTags@20	@7
+	ACR120_Login@20	@8
+	ACR120_MultiTagSelect@24	@9
+	ACR120_Open@4	@10
+	ACR120_Power@8	@11
+	ACR120_Read@12	@12
+	ACR120_ReadATQB	@13
+	ACR120_ReadEEPROM@12	@14
+	ACR120_ReadRC500Reg@12	@15
+	ACR120_ReadUserPort@8	@16
+	ACR120_ReadValue@12	@17
+	ACR120_RequestDLLVersion@8	@18
+	ACR120_Reset@4	@19
+	ACR120_Select@16	@20
+	ACR120_Status@12	@21
+	ACR120_TxDataTelegram@20	@22
+	ACR120_Write@12	@23
+	ACR120_WriteEEPROM@12	@24
+	ACR120_WriteMasterKey@12	@25
+	ACR120_WriteRC500Reg@12	@26
+	ACR120_WriteUserPort@8	@27
+	ACR120_WriteValue@12	@28
+	PICC_Deselect@8	@29
+	PICC_InitBlockNumber@4	@30
+	PICC_RATS@16	@31
+	PICC_Xch_APDU@24	@32

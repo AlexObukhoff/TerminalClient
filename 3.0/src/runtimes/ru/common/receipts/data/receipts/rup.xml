@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string>Точка %TERMINAL_NUMBER%</string>
+	<string>Адрес: %POINT_ADDRESS%</string>
+	<string>-----------------------------------</string>
+	<string>[b]    Внесение в ЭКЛЗ сумм [/b]</string>
+	<string>[b]нераспечатанных квитанций[/b]</string>
+	<string>-----------------------------------</string>
+	<string>Список платежей:</string>
+	<string>-----------------------------------</string>
+	<string>[b]ID           Сессия         Сумма[/b]</string>
+	<string>%[UNPRINTED_PAYMENT_LIST]%</string>
+	<string>-----------------------------------</string>
+</body>

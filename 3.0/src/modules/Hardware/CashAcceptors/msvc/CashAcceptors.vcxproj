@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseWithDebugInfo|Win32">
+      <Configuration>ReleaseWithDebugInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{03D4C2DC-B127-410A-BDDE-A80CD3A2D978}</ProjectGuid>
+    <RootNamespace>ComPortWin</RootNamespace>
+    <Keyword>Qt4VSv1.0</Keyword>
+    <ProjectName>CashAcceptors</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(TC_LIB_DIR)\Hardware\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(TC_LIB_DIR)\Hardware\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\obj\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(ProjectDir)\obj\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(TC_LIB_DIR)\Hardware\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\obj\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)d</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(THIRDPARTY_DIR);$(TC_DIR);$(TC_INCLUDE_DIR);.\src;$(QTDIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;CYBERPLAT_DRIVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(THIRDPARTY_DIR);$(TC_DIR);$(TC_INCLUDE_DIR);.\src;$(QTDIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;CYBERPLAT_DRIVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(THIRDPARTY_DIR);$(TC_DIR);$(TC_INCLUDE_DIR);.\src;$(QTDIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_CORE_LIB;COMPORTWIN_LIB;CYBERPLAT_DRIVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\CCNet\CCNetCashAcceptorBase.cpp" />
+    <ClCompile Include="..\src\CCNet\CCNetCashcodeGX.cpp" />
+    <ClCompile Include="..\src\CCNet\CCNetCreator.cpp" />
+    <ClCompile Include="..\src\CCNet\CCNetRecycler.cpp" />
+    <ClCompile Include="..\src\CCNet\IntelHex.cpp" />
+    <ClCompile Include="..\src\EBDS\EBDSCashAcceptor.cpp" />
+    <ClCompile Include="..\src\ICT\ICTCashAcceptor.cpp" />
+    <ClCompile Include="..\src\ID003\ID003CashAcceptor.cpp" />
+    <ClCompile Include="..\src\ID003\ID003ModelData.cpp" />
+    <ClCompile Include="..\src\PortCashAcceptor.cpp" />
+    <ClCompile Include="..\src\CashAcceptorBase.cpp" />
+    <ClCompile Include="..\src\SSP\SSPCashAcceptor.cpp" />
+    <ClCompile Include="..\src\V2e\V2eModelData.cpp" />
+    <ClCompile Include="..\src\V2e\V2eCashAcceptor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorBaseConstants.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusCodes.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusesDescriptions.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\BillTable.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CurrencyDescriptions.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\ModelData.h" />
+    <ClInclude Include="..\src\CashAcceptorData.h" />
+    <ClInclude Include="..\src\CashAcceptorStatusData.h" />
+    <ClInclude Include="..\src\CCNet\CCNetCashAcceptorBase.h" />
+    <ClInclude Include="..\src\CCNet\CCNetCashAcceptorDataTypes.h" />
+    <ClInclude Include="..\src\CCNet\CCNetCashcodeGX.h" />
+    <ClInclude Include="..\src\CCNet\CCNetCashAcceptorConstants.h" />
+    <ClInclude Include="..\src\CCNet\CCNetCreator.h" />
+    <ClInclude Include="..\src\CCNet\CCNetCreatorConstants.h" />
+    <ClInclude Include="..\src\CCNet\CCNetRecycler.h" />
+    <ClInclude Include="..\src\CCNet\FirmwareVersions.h" />
+    <ClInclude Include="..\src\CCNet\IntelHex.h" />
+    <ClInclude Include="..\src\CCNet\CCNetModelData.h" />
+    <ClInclude Include="..\src\CCNet\Models.h" />
+    <ClInclude Include="..\src\CurrencyErrors.h" />
+    <ClInclude Include="..\src\CashAcceptorBase.h" />
+    <ClInclude Include="..\src\EBDS\EBDSCashAcceptor.h" />
+    <ClInclude Include="..\src\EBDS\EBDSCashAcceptorConstants.h" />
+    <ClInclude Include="..\src\EBDS\EBDSModelData.h" />
+    <ClInclude Include="..\src\ICT\ICTCashAcceptor.h" />
+    <ClInclude Include="..\src\ICT\ICTCashAcceptorConstants.h" />
+    <ClInclude Include="..\src\ICT\ICTModelData.h" />
+    <ClInclude Include="..\src\ID003\CurrencySpecification.h" />
+    <ClInclude Include="..\src\ID003\ID003CashAcceptor.h" />
+    <ClInclude Include="..\src\ID003\ID003CashAcceptorConstants.h" />
+    <ClInclude Include="..\src\ID003\ID003ModelData.h" />
+    <ClInclude Include="..\src\SSP\SSPCashAcceptor.h" />
+    <ClInclude Include="..\src\SSP\SSPCashAcceptorConstants.h" />
+    <ClInclude Include="..\src\SSP\SSPModelData.h" />
+    <ClInclude Include="..\src\V2e\V2eModelData.h" />
+    <ClInclude Include="..\src\V2e\V2eCashAcceptor.h" />
+    <ClInclude Include="..\src\V2e\V2eCashAcceptorConstants.h" />
+    <CustomBuild Include="..\src\PortCashAcceptor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\msvc\Common.vcxproj">
+      <Project>{70d02db7-a7cb-4d22-b13e-0c7f4eb7df86}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

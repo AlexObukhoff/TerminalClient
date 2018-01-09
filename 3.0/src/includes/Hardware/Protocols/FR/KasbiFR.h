@@ -1,0 +1,1 @@
+#include "../../../../modules/Hardware/Protocols/FR/Kasbi/src/KasbiFR.h"

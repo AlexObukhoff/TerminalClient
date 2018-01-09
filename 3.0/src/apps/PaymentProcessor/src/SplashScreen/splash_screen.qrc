@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/GraphicsItems">
+        <file>splash_screen.ini</file>
+        <file>splash_screen_scene.qml</file>
+        <file>images/background_tile.png</file>
+        <file>images/ic_balance_error.png</file>
+        <file>images/ic_blocked.png</file>
+        <file>images/ic_config.png</file>
+        <file>images/ic_card_error.png</file>
+        <file>images/ic_crypt.png</file>
+        <file>images/ic_network_error.png</file>
+        <file>images/ic_printer_error.png</file>
+        <file>images/ic_update.png</file>
+        <file>images/ic_validator_error.png</file>
+        <file>images/logo_cyberplat_big.png</file>
+        <file>images/waiting.gif</file>
+        <file>images/ic_token_error.png</file>
+    </qresource>
+</RCC>

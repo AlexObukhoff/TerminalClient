@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DispenserServiceWindow</class>
+ <widget class="QWidget" name="DispenserServiceWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>383</height>
+   </rect>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QFrame#logsServiceWindow
+{
+	background: rgba(247, 245, 237);
+}
+
+QPushButton
+{
+	border: 1px solid gray;
+	border-radius: 5px;
+	color: white;
+	background-color: rgba(80, 107, 176);
+}
+
+QPushButton:disabled
+{
+	color: gray;
+	background-color: lightgray;
+}
+
+QPushButton:pressed 
+{
+	background-color: rgba(98, 141, 191);
+}
+
+/* Список типов устройств */
+QListWidget, QListView
+{
+	border-top: 1px solid #4D7A99;
+}
+
+QListWidget::item, QListView::item
+{
+	border: 1px solid #4D7A99;
+	border-top: none;
+	height: 35px;
+	color: black;
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #F2F2F2, stop:1 #C9C9C9);
+}
+
+QListWidget::item:selected, QListView::item:selected
+{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #6B90B3, stop:1 #E1F3FA);
+}
+</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QListWidget" name="lwCashUnits"/>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

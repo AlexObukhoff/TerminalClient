@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string>Баланс по терминалу %TERMINAL_NUMBER%</string>
+	<string>Название: %POINT_NAME%</string>
+	<string>Адрес: %POINT_ADDRESS%</string>
+	<string>-----------------------------------</string>
+	<string>За период с: %ENCASHMENT_START_DATE%</string>
+	<string>         по: %DATETIME%</string>
+	<string>-----------------------------------</string>
+	<string>Монеты 0.50 %CURRENCY% x %0.50_COIN_COUNT% = %0.50_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 1 %CURRENCY% x %1_COIN_COUNT% = %1_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 2 %CURRENCY% x %2_COIN_COUNT% = %2_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 5 %CURRENCY% x %5_COIN_COUNT% = %5_COIN_SUM% %CURRENCY%</string>
+	<string>Монеты 10 %CURRENCY% x %10_COIN_COUNT% = %10_COIN_SUM% %CURRENCY%</string>
+	<string>-----------------------------------</string>
+	<string>Кол-во монет: %COIN_COUNT%</string>
+	<string> Сумма монет: %COIN_SUM%</string>
+	<string>-----------------------------------</string>
+	<string>Купюры 10 %CURRENCY% x %10_BILL_COUNT% = %10_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 50 %CURRENCY% x %50_BILL_COUNT% = %50_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 100 %CURRENCY% x %100_BILL_COUNT% = %100_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 200 %CURRENCY% x %200_BILL_COUNT% = %200_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 500 %CURRENCY% x %500_BILL_COUNT% = %500_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 1000 %CURRENCY% x %1000_BILL_COUNT% = %1000_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 2000 %CURRENCY% x %2000_BILL_COUNT% = %2000_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 5000 %CURRENCY% x %5000_BILL_COUNT% = %5000_BILL_SUM% %CURRENCY%</string>
+	<string>-----------------------------------</string>
+	<string>Кол-во купюр: %BILL_COUNT%</string>
+	<string> Сумма купюр: %BILL_SUM%</string>
+ 	<string>-----------------------------------</string>
+	<string>Общая сумма:  %TOTAL_SUM%</string>
+ 	<string>-----------------------------------</string>
+</body>

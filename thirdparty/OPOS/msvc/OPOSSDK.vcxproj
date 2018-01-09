@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{86CFE30E-261F-4222-9446-E29EF4E93F4A}</ProjectGuid>
+    <RootNamespace>OPOSSDK</RootNamespace>
+    <Keyword>Qt4VSv1.0</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(THIRDPARTY_BIN_DIR)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PreBuildEventUseInBuild>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(THIRDPARTY_BIN_DIR)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreBuildEventUseInBuild>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)d</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">$(THIRDPARTY_BIN_DIR)</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Message>Generating Qt AxContainer wrappers</Message>
+      <Command>$(THIRDPARTY_DIR)\OPOS\GenerateWrappers.cmd</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\qtmain;$(THIRDPARTY_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_NO_DEBUG;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WarningLevel>Level4</WarningLevel>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Message>Generating Qt AxContainer wrappers</Message>
+      <Command>$(THIRDPARTY_DIR)\OPOS\GenerateWrappers.cmd</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\qtmain;$(THIRDPARTY_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <ClCompile>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\QtWrappers\Belt.cpp" />
+    <ClCompile Include="..\QtWrappers\BillAcceptor.cpp" />
+    <ClCompile Include="..\QtWrappers\BillDispenser.cpp" />
+    <ClCompile Include="..\QtWrappers\Biometrics.cpp" />
+    <ClCompile Include="..\QtWrappers\BumpBar.cpp" />
+    <ClCompile Include="..\QtWrappers\CashChanger.cpp" />
+    <ClCompile Include="..\QtWrappers\CashDrawer.cpp" />
+    <ClCompile Include="..\QtWrappers\CAT.cpp" />
+    <ClCompile Include="..\QtWrappers\CheckScanner.cpp" />
+    <ClCompile Include="..\QtWrappers\CoinAcceptor.cpp" />
+    <ClCompile Include="..\QtWrappers\CoinDispenser.cpp" />
+    <ClCompile Include="..\QtWrappers\Constants.cpp" />
+    <ClCompile Include="..\QtWrappers\ElectronicJournal.cpp" />
+    <ClCompile Include="..\QtWrappers\ElectronicValueRW.cpp" />
+    <ClCompile Include="..\QtWrappers\FiscalPrinter.cpp" />
+    <ClCompile Include="..\QtWrappers\Gate.cpp" />
+    <ClCompile Include="..\QtWrappers\ImageScanner.cpp" />
+    <ClCompile Include="..\QtWrappers\ItemDispenser.cpp" />
+    <ClCompile Include="..\QtWrappers\Keylock.cpp" />
+    <ClCompile Include="..\QtWrappers\Lights.cpp" />
+    <ClCompile Include="..\QtWrappers\LineDisplay.cpp" />
+    <ClCompile Include="..\QtWrappers\MICR.cpp" />
+    <ClCompile Include="..\QtWrappers\MotionSensor.cpp" />
+    <ClCompile Include="..\QtWrappers\MSR.cpp" />
+    <ClCompile Include="..\QtWrappers\PINPad.cpp" />
+    <ClCompile Include="..\QtWrappers\PointCardRW.cpp" />
+    <ClCompile Include="..\QtWrappers\POSKeyboard.cpp" />
+    <ClCompile Include="..\QtWrappers\POSPower.cpp" />
+    <ClCompile Include="..\QtWrappers\POSPrinter.cpp" />
+    <ClCompile Include="..\QtWrappers\RemoteOrderDisplay.cpp" />
+    <ClCompile Include="..\QtWrappers\RFIDScanner.cpp" />
+    <ClCompile Include="..\QtWrappers\Scale.cpp" />
+    <ClCompile Include="..\QtWrappers\Scanner.cpp" />
+    <ClCompile Include="..\QtWrappers\SigCap.cpp" />
+    <ClCompile Include="..\QtWrappers\SmartCardRW.cpp" />
+    <ClCompile Include="..\QtWrappers\ToneIndicator.cpp" />
+    <ClCompile Include="..\QtWrappers\Totals.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\QtWrappers\Belt.h" />
+    <ClInclude Include="..\QtWrappers\BillAcceptor.h" />
+    <ClInclude Include="..\QtWrappers\BillDispenser.h" />
+    <ClInclude Include="..\QtWrappers\Biometrics.h" />
+    <ClInclude Include="..\QtWrappers\BumpBar.h" />
+    <ClInclude Include="..\QtWrappers\CashChanger.h" />
+    <ClInclude Include="..\QtWrappers\CashDrawer.h" />
+    <ClInclude Include="..\QtWrappers\CAT.h" />
+    <ClInclude Include="..\QtWrappers\CheckScanner.h" />
+    <ClInclude Include="..\QtWrappers\CoinAcceptor.h" />
+    <ClInclude Include="..\QtWrappers\CoinDispenser.h" />
+    <ClInclude Include="..\QtWrappers\Constants.h" />
+    <ClInclude Include="..\QtWrappers\ElectronicJournal.h" />
+    <ClInclude Include="..\QtWrappers\ElectronicValueRW.h" />
+    <ClInclude Include="..\QtWrappers\FiscalPrinter.h" />
+    <ClInclude Include="..\QtWrappers\Gate.h" />
+    <ClInclude Include="..\QtWrappers\ImageScanner.h" />
+    <ClInclude Include="..\QtWrappers\ItemDispenser.h" />
+    <ClInclude Include="..\QtWrappers\Keylock.h" />
+    <ClInclude Include="..\QtWrappers\Lights.h" />
+    <ClInclude Include="..\QtWrappers\LineDisplay.h" />
+    <ClInclude Include="..\QtWrappers\MICR.h" />
+    <ClInclude Include="..\QtWrappers\MotionSensor.h" />
+    <ClInclude Include="..\QtWrappers\MSR.h" />
+    <ClInclude Include="..\QtWrappers\PINPad.h" />
+    <ClInclude Include="..\QtWrappers\PointCardRW.h" />
+    <ClInclude Include="..\QtWrappers\POSKeyboard.h" />
+    <ClInclude Include="..\QtWrappers\POSPower.h" />
+    <ClInclude Include="..\QtWrappers\POSPrinter.h" />
+    <ClInclude Include="..\QtWrappers\RemoteOrderDisplay.h" />
+    <ClInclude Include="..\QtWrappers\RFIDScanner.h" />
+    <ClInclude Include="..\QtWrappers\Scale.h" />
+    <ClInclude Include="..\QtWrappers\Scanner.h" />
+    <ClInclude Include="..\QtWrappers\SigCap.h" />
+    <ClInclude Include="..\QtWrappers\SmartCardRW.h" />
+    <ClInclude Include="..\QtWrappers\ToneIndicator.h" />
+    <ClInclude Include="..\QtWrappers\Totals.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties lupdateOnBuild="0" MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,10 @@
+#include "../../../../modules/Hardware/CashAcceptors/src/CCNet/CCNetCashAcceptorBase.h"
+#include "../../../../modules/Hardware/CashAcceptors/src/CCNet/CCNetCashcodeGX.h"
+#include "../../../../modules/Hardware/CashAcceptors/src/CCNet/CCNetCreator.h"
+#include "../../../../modules/Hardware/CashAcceptors/src/CCNet/CCNetRecycler.h"
+
+#include "../../../../modules/Hardware/CashAcceptors/src/EBDS/EBDSCashAcceptor.h"
+#include "../../../../modules/Hardware/CashAcceptors/src/ICT/ICTCashAcceptor.h"
+#include "../../../../modules/Hardware/CashAcceptors/src/ID003/ID003CashAcceptor.h"
+#include "../../../../modules/Hardware/CashAcceptors/src/V2e/V2eCashAcceptor.h"
+#include "../../../../modules/Hardware/CashAcceptors/src/SSP/SSPCashAcceptor.h"

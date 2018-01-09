@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="runtime">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="directory">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Действие, описывающие копирование каталога.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="if" type="xs:string" default="true" use="optional">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Булевый предикат на javascript. Если ложен, то действие пропускается.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="source" type="xs:string" use="required">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Путь к каталогу который будет скопирован.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="target" type="xs:string" use="required">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Путь к каталогу в который будет помещён source-каталог.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="recursive" type="xs:boolean" default="false" use="optional">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Следует ли применять рекурсивное копирование.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="file">
+          <xs:annotation xml:lang="ru">
+            <xs:documentation>Действие, описывающее копирование файла.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="if" type="xs:string" default="true" use="optional">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Булевый предикат на javascript. Если ложен, то действие пропускается.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="source" type="xs:string" use="required">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Путь к файлу, который будет скопирован.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="target" type="xs:string" use="required">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Путь в файлу в который будет скопирован source-файл.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="option">
+          <xs:annotation xml:lang="ru">
+            <xs:documentation>Действие, описывающее изменение параметра в .ini файле.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="if" type="xs:string" default="true" use="optional">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Булевый предикат на javascript. Если ложен, то действие пропускается.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="target" type="xs:string" use="required">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Путь к .ini файлу в каталоге результата.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="key" type="xs:string" use="required">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Название параметра. Группы разделяются прямым слэшем.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="value" type="xs:string" use="required">
+              <xs:annotation xml:lang="ru">
+                <xs:documentation>Значение параметра.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="base" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Название родительской конфигурации (совпадает с именем её файла без расширения).</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+
+
+
+
+
+
+
+
+
+
+
+

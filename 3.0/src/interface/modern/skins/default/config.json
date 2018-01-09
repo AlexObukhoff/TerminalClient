@@ -1,0 +1,362 @@
+{
+	"font.enum" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "25",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.button" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "33",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.title" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "33",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.main" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "25"
+	},
+	"font.main.accent" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "22",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.main.accent.thin" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "22",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.root.group.20" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "20",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.root.group.22" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "22",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.root.group.28" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "28",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.wide.group.name" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "26"
+	},
+	"font.wide.group.title" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "26"
+	},
+	"font.wide.group.description" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "19"
+	},
+	"font.secondary" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "22"
+	},
+	"font.message" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "46"
+	},
+	"font.message.secondary" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "25"
+	},
+	"font.tooltip" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "25"
+	},
+	"font.tooltip.secondary" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "22"
+	},
+	"font.tooltip.attention" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "33",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.key" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "46",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.key.number" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "55",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.bookmark.primary" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "21",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.bookmark.secondary" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "21",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.panel.title" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "33",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.panel.title.compact" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "33",
+		"bold" : "true"
+	},
+	"font.panel.secondary" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "22"
+	},
+	"font.status.primary" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "22",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.status.secondary" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "22",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.info.primary" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "20",
+		"bold" : "true"
+	},
+	"font.info.secondary" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "20"
+	},
+	"font.money" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "66",
+		"bold" : "true"
+	},
+	"font.textfield" : {
+		"family" : "Roboto Mono Medium",
+		"pixelSize" : "52"
+	},
+	"font.tariff" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "32"
+	},
+	"font.balance" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "32",
+		"bold" : "true"
+	},
+	"font.sum" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "42",
+		"bold" : "true"
+	},
+	"font.operator.normal" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "20",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.search.label" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "22"
+	},
+	"font.checkbox" : {
+		"family" : "Roboto Medium",
+		"pixelSize" : "22"
+	},
+	"font.toggle" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "50",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+	"font.radiobutton" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "33",
+		"bold" : "true",
+		"capitalization" : "Font.AllUppercase"
+	},
+
+	"color.main.primary" : "#F2F2F2",
+	"color.main.secondary" : "#B6DDFF",
+	"color.button" : "#F2F2F2",
+	"color.button.primary" : "#F2F2F2",
+	"color.button.primary.background" : "#2B8F0E",
+	"color.button.secondary" : "#F2F2F2",
+	"color.operator" : "#000000",
+	"color.group" : "#F2F2F2",
+	"color.tooltip.simple" : "#F2F2F2",
+	"color.tooltip.button" : "#F2F2F2",
+	"color.tooltip.attention" : "#F2F2F2",
+	"color.title" : "#003E75",
+	"color.subtitle" : "#4D4D4D",
+	"color.description" : "#F5E2D0",
+	"color.entry.primary" : "#000000",
+	"color.entry.secondary" : "#003E75",
+	"color.entry.third" : "#FFCD34",
+	"color.table.primary" : "#F2F2F2",
+	"color.table.secondary" : "#B6DDFF",
+	"color.panel.primary" : "#F2F2F2",
+	"color.panel.secondary" : "#B6DDFF",
+	"color.panel.tertiary" : "#F2F2F2",
+	"color.message" : "#000000",
+	"color.message.background" : "#EBF1F7",
+	"color.tariff.min" : "#F2F2F2",
+	"color.tariff.max" : "#F2F2F2",
+	"color.info.primary" : "#F2F2F2",
+	"color.info.secondary" : "#F2F2F2",
+	"color.bookmark.primary" : "#000000",
+	"color.bookmark.secondary" : "#4D4D4D",
+	"color.line.horizontal" : "#B6DDFF",
+	"color.line.vertical" : "#B6DDFF",
+	"color.key.normal" : "#F2F2F2",
+	"color.key.pressed" : "#B6DDFF",
+	"color.contrast" : "#FF5050",
+	"color.scrollbar" : "#99BAD7",
+	"color.list.normal" : "#F2F2F2",
+	"color.list.check" : "#003E75",
+	"color.operator.normal" : "#000000",
+	"color.popup.overlay" : "#003E75",
+	"color.button.toggle.normal" : "#F2F2F2",
+	"color.button.toggle.pressed" : "#00529C",
+	"color.radiobutton.normal" : "#F2F2F2",
+	"color.radiobutton.pressed" : "#F2F2F2",
+
+	"background" : "images/background.png",
+	"waiting" : "images/waiting.png",
+
+	"panel.operator" : "images/box_solid_1.png",
+	"panel.iconsback.modern" : "images/panel_iconsback_modern.png",
+	"panel.iconsback.modern_flat" : "images/panel_iconsback_modern_flat.png",
+	"panel.iconsback.orange" : "images/panel_iconsback_orange.png",
+	"panel.iconsback.flat_yellow" : "images/panel_iconsback_flat_yellow.png",
+	"panel.iconsback.white" : "images/panel_iconsback_white.png",
+	"panel.keyboard" : "images/panel_keyboard.png",
+	"panel.change" : "images/panel_change.png",
+	"panel.change.empty" : "images/panel_change_empty.png",
+	"panel.secondary" : "images/panel_secondary.png",
+	"panel.warning" : "images/box_solid_2.png",
+	"panel.enum" : "images/panel_enum.png",
+	"webview.angles" : "images/win_angles.png",
+	"webview.angles.overlay" : "images/win_angles_overlay.png",
+	"panel.entry" : "images/box_solid_1.png",
+	"panel.payment" : "images/panel_secondary.png",
+	"panel.commission" : "images/panel_secondary.png",
+
+	"top.spacer" : "images/spacer_tp.png",
+	"dot" : "images/dot.png",
+	"dot.active" : "images/dot_a.png",
+	"paybook.logo" : "images/logo_paybook.png",
+	"search.spacer" : "images/spacer_search.png",
+
+	"enum.check" : "images/enum_check_a.png",
+	"enum.check2" : "images/enum_check_a2.png",
+	"enum.normal" : "images/enum.png",
+	"enum.pressed" : "images/enum_a.png",
+	"enum.online" : "images/enum_online.png",
+
+	"textfield" : "images/editor_background.png",
+
+	"checkbox.on" : "images/checkbox_on.png",
+	"checkbox.off" : "images/checkbox_off.png",
+	"checkbox.pressed" : "images/checkbox_a.png",
+
+	"icons.primary" : "images/icons_primary.png",
+	"icons.secondary" : "images/icons_secondary.png",
+	"icons.support" : "images/ic_support.png",
+	"icons.terminal" : "images/ic_display.png",
+	"icons.time" : "images/ic_clock.png",
+	"icons.rest" : "images/ic_rest.png",
+	"icons.uncover" : "images/ic_uncover.png",
+
+	"comment.bottom.simple" : "images/comment_bottom_simple.png",
+	"comment.bottom.pressed" : "images/comment_bottom_button_a.png",
+	"comment.bottom.button" : "images/comment_bottom_button.png",
+	"comment.left" : "images/comment_left_simple.png",
+	"comment.left.button" : "images/comment_left_button.png",
+	"comment.left.pressed" : "images/comment_left_button_a.png",
+	"comment.left.attention.normal" : "images/comment_left_attention.png",
+	"comment.left.attention.pressed" : "images/comment_left_attention_a.png",
+
+	"scroll.left.normal" : "images/scroll_left_button.png",
+	"scroll.left.pressed" : "images/scroll_left_button_a.png",
+	"scroll.right.normal" : "images/scroll_right_button.png",
+	"scroll.right.pressed" : "images/scroll_right_button_a.png",
+	"scroll.up.normal" : "images/scroll_up_button.png",
+	"scroll.up.pressed" : "images/scroll_up_button_a.png",
+	"scroll.down.normal" : "images/scroll_down_button.png",
+	"scroll.down.pressed" : "images/scroll_down_button_a.png",
+
+	"button.key.normal" : "images/button_key.png",
+	"button.key.pressed" : "images/button_key_a.png",
+	"button.number.normal" : "images/button_num.png",
+	"button.number.pressed" : "images/button_num_a.png",
+	"button.function.normal" : "images/button_func.png",
+	"button.function.pressed" : "images/button_func_a.png",
+	"button.backspace.normal" : "images/button_backspace.png",
+	"button.backspace.pressed" : "images/button_backspace_a.png",
+
+	"button.operator.normal" : "images/button_operator.png",
+	"button.operator.pressed" : "images/button_operator_a.png",
+	"button.operator.blank" : "images/button_operator_blank.png",
+
+	"button.primary.normal" : "images/button_primary.png",
+	"button.primary.pressed" : "images/button_primary_a.png",
+
+	"button.secondary.normal" : "images/button_secondary.png",
+	"button.secondary.pressed" : "images/button_secondary_a.png",
+	"button.secondary.highlighted" : "images/button_secondary_hl.png",
+
+	"button.notice.normal" : "images/button_notice.png",
+	"button.notice.pressed" : "images/button_notice_a.png",
+
+	"button.disabled" : "images/button_disabled.png",
+	"button.function.disabled" : "images/button_disabled.png",
+
+	"button.paybook.normal" : "images/button_pb_primary.png",
+	"button.paybook.pressed" : "images/button_pb_primary_a.png",
+	"button.paybook.secondary.normal" : "images/button_pb_secondary.png",
+	"button.paybook.secondary.pressed" : "images/button_pb_secondary_a.png",
+	"button.paybook.add" : "images/button_pb_add.png",
+	"button.paybook.bookmark" : "images/button_pb_bookmark.png",
+	"button.paybook.common" : "images/button_pb_common.png",
+	"button.paybook.common.pressed" : "images/button_pb_common_a.png",
+	"button.paybook.alert" : "images/button_pb_alert.png",
+	"button.paybook.alert.pressed" : "images/button_pb_alert_a.png",
+
+	"button.group.normal" : "images/button_group.png",
+	"button.group.pressed" : "images/button_group_a.png",
+
+	"button.toggle.normal" : "images/box_solid_3.png",
+	"button.toggle.pressed" : "images/box_solid_1.png",
+
+	"radiobutton.off" : "images/box_border_1.png",
+	"radiobutton.on" : "images/box_solid_2.png",
+	"item.normal" : "images/item.png",
+	"item.active" : "images/item_a.png",
+
+	"cyberchange.logo1" : "images/cyberchange_logo1.png",
+	"cyberchange.logo2" : "images/cyberchange_logo2.png",
+	"cyberchange.logo3" : "images/cyberchange_logo3.png",
+	
+	"pinpad" : "images/pinpad.png"
+}

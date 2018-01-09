@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<body>
+	<string>Терминал %TERMINAL_NUMBER%, %DATETIME%</string>
+	<string>Адрес терминала: %POINT_ADDRESS%</string>
+	<string>-----------------------------------</string>
+	<string>Состояние кассет диспенсера:</string>
+	<string>-----------------------------------</string>
+	<string>Кассета %CU_FIRST%:</string>
+	<string>Было:  %CU_FIRST_NOMINAL_BEFORE% %CURRENCY% * %CU_FIRST_COUNT_BEFORE% шт. = %CU_FIRST_AMOUNT_BEFORE% %CURRENCY%</string>
+	<string>Стало: %CU_FIRST_NOMINAL_AFTER% %CURRENCY% * %CU_FIRST_COUNT_AFTER% шт. = %CU_FIRST_AMOUNT_AFTER% %CURRENCY%</string>
+	<string>Разница: %CU_FIRST_DIFF% %CURRENCY%</string>
+	<string>-----------------------------------</string>
+	<string>Кассета %CU_SECOND%:</string>
+	<string>Было:  %CU_SECOND_NOMINAL_BEFORE% %CURRENCY% * %CU_SECOND_COUNT_BEFORE% шт. = %CU_SECOND_AMOUNT_BEFORE% %CURRENCY%</string>
+	<string>Стало: %CU_SECOND_NOMINAL_AFTER% %CURRENCY% * %CU_SECOND_COUNT_AFTER% шт. = %CU_SECOND_AMOUNT_AFTER% %CURRENCY%</string>
+	<string>Разница: %CU_SECOND_DIFF% %CURRENCY%</string>
+	<string>-----------------------------------</string>
+</body>

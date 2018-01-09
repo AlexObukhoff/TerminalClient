@@ -1,0 +1,1 @@
+#include "../../../../modules/Hardware/Protocols/CashAcceptor/ID003/src/ID003.h"

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- База для сборок для платёжных терминалов -->
+<runtime base="common">
+	
+	<!-- Драйверы, компонент drivers -->
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/bill_acceptors.dll" target="drivers/plugins/drivers/bill_acceptors.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/bill_dispensers.dll" target="drivers/plugins/drivers/bill_dispensers.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/modems.dll" target="drivers/plugins/drivers/modems.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/watchdogs.dll" target="drivers/plugins/drivers/watchdogs.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/coin_acceptors.dll" target="drivers/plugins/drivers/coin_acceptors.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/scanners.dll" target="drivers/plugins/drivers/scanners.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/card_readers.dll" target="drivers/plugins/drivers/card_readers.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/health.dll" target="drivers/plugins/drivers/health.dll"/>
+	
+	<!-- Интерфейс 12", компонент interface -->
+	<!--
+	<directory source="src/interface/touch12/build" target="interface/interface/touch12" recursive="true"/>
+	<file source="{QBS_RESULT_PATH}/plugins/interface/utils.dll" target="interface/interface/touch12/plugins/utils.dll"/>
+	-->
+</runtime>

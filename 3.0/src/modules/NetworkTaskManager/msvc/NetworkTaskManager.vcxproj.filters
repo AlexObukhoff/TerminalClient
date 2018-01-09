@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+    </Filter>
+    <Filter Include="Tasks">
+      <UniqueIdentifier>{f13d3c09-25c9-4d02-9493-a3001194802b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{8f7f44c7-8924-4b04-a5c6-45c6c45e497e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStream">
+      <UniqueIdentifier>{3c8fdcb6-a483-4c03-bb8b-a7670f39beaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Verifier">
+      <UniqueIdentifier>{575619ce-75b6-4291-88fa-0531cc888e9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{e9ec592b-6617-4b7f-b35c-2ac99787cf9b}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{4b905850-292c-4e34-9cb5-e9fb797e08f0}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{1af56ffb-f3d4-4335-ae17-a515a64bafba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\FileDownloadTask.cpp">
+      <Filter>Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NetworkTask.cpp">
+      <Filter>Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NetworkTaskManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DataStream.cpp">
+      <Filter>DataStream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FileDataStream.cpp">
+      <Filter>DataStream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MemoryDataStream.cpp">
+      <Filter>DataStream</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_NetworkTask.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_NetworkTask.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_FileDownloadTask.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_FileDownloadTask.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_NetworkTaskManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_NetworkTaskManager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\NetworkTaskManager\ReleaseWithDebugInfo\moc_FileDownloadTask.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\NetworkTaskManager\ReleaseWithDebugInfo\moc_NetworkTask.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\NetworkTaskManager\ReleaseWithDebugInfo\moc_NetworkTaskManager.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\HashVerifier.cpp">
+      <Filter>Verifier</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\DataStream.h">
+      <Filter>DataStream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\FileDataStream.h">
+      <Filter>DataStream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MemoryDataStream.h">
+      <Filter>DataStream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\IVerifier.h">
+      <Filter>Verifier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\HashVerifier.h">
+      <Filter>Verifier</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\FileDownloadTask.h">
+      <Filter>Tasks</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\NetworkTask.h">
+      <Filter>Tasks</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\NetworkTaskManager.h">
+      <Filter>Manager</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

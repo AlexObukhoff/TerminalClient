@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\src\Alarm\Alarm.cpp">
+      <Filter>Alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LDog\LDog.cpp">
+      <Filter>LDog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\OSMP\OSMP.cpp">
+      <Filter>OSMP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Shtrih.cpp">
+      <Filter>Shtrih</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Platix\Platix.cpp">
+      <Filter>Platix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\OSMP\OSMP2.cpp">
+      <Filter>OSMP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\OSMP2.5\OSMP2.5.cpp">
+      <Filter>OSMP 2.5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\WatchdogBase.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Alarm\AlarmData.h">
+      <Filter>Alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LDog\LDogData.h">
+      <Filter>LDog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OSMP\OSMPWdData.h">
+      <Filter>OSMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OSMP\STOD.h">
+      <Filter>OSMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\ShtrihConstants.h">
+      <Filter>Shtrih</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OSMP2.5\OSMP2.5.h">
+      <Filter>OSMP 2.5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OSMP2.5\OSMP2.5Data.h">
+      <Filter>OSMP 2.5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\WatchdogStatus.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Watchdogs\WatchdogStatusCodes.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\Alarm\Alarm.h">
+      <Filter>Alarm</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\LDog\LDog.h">
+      <Filter>LDog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\OSMP\OSMP.h">
+      <Filter>OSMP</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Shtrih\Shtrih.h">
+      <Filter>Shtrih</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Platix\Platix.h">
+      <Filter>Platix</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\OSMP\OSMP2.h">
+      <Filter>OSMP</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\WatchdogBase.h">
+      <Filter>Base</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Alarm">
+      <UniqueIdentifier>{bd019896-a3e1-4414-87f9-ed54e74d04b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LDog">
+      <UniqueIdentifier>{57726754-4da4-449e-8343-91febfa70531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OSMP">
+      <UniqueIdentifier>{4af11d8e-4108-4b12-bfd1-8e07b9ded0d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shtrih">
+      <UniqueIdentifier>{abd19988-55a2-4353-960a-fd92c4b0f3c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platix">
+      <UniqueIdentifier>{6eac8b73-4ce8-45d3-9bbb-f683dbc267f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{bcd45d86-1808-42ab-ac63-cf60ef8ae58f}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{47088be1-2ee5-4498-9938-0c56b914da52}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{a71b21d4-41d1-4eae-94eb-2b442b9ee6e0}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="OSMP 2.5">
+      <UniqueIdentifier>{c422a14c-2d0b-40f8-a342-06d050909456}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{893f2963-bf71-42f7-a33b-5c95494647d0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,548 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{8f44455e-55c2-40fe-a4de-905c4c106301}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Services">
+      <UniqueIdentifier>{3b2e1c2e-733e-4c75-b474-b5c2140eea83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Payment">
+      <UniqueIdentifier>{1144e654-46d2-4993-a276-14c694cfed26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Settings">
+      <UniqueIdentifier>{e08c0101-35a3-4148-8f32-efa906bbab6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripting">
+      <UniqueIdentifier>{6a351bf1-b814-4221-b199-3aec0b07dcfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{742c2382-324e-4bca-bea9-633a5b65f455}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{ec0c3389-9b83-46ef-af3b-54cdbb722d62}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="CyberPlat">
+      <UniqueIdentifier>{828193b9-def8-4e54-a064-4ba53e569dcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{3806d0ad-be4e-493c-a998-e0d255745692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Security">
+      <UniqueIdentifier>{eacadb34-4380-4de5-8cef-da2b8192edff}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\DatabaseConstants.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\Event.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\ReceiptTypes.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\ICryptService.h">
+      <Filter>Core\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IEventService.h">
+      <Filter>Core\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IService.h">
+      <Filter>Core\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\ISettingsService.h">
+      <Filter>Core\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\ITerminalService.h">
+      <Filter>Core\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Payment\Amount.h">
+      <Filter>Payment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Payment\IPayment.h">
+      <Filter>Payment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Payment\IPaymentFactory.h">
+      <Filter>Payment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Payment\Parameters.h">
+      <Filter>Payment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Commissions.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\DealerSettings.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Directory.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Settings\ISettingsAdapter.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Range.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TerminalSettings.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\ServiceParameters.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CyberPlat\ErrorCodes.h">
+      <Filter>CyberPlat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CyberPlat\Request.h">
+      <Filter>CyberPlat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CyberPlat\Response.h">
+      <Filter>CyberPlat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\HookConstants.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ExtensionsSettings.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\ITask.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\ISchedulerService.h">
+      <Filter>Core\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Provider.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IFundsService.h">
+      <Filter>Core\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IDatabaseService.h">
+      <Filter>Core\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\Encashment.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\UserSettings.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Security\SecurityFilter.h">
+      <Filter>Security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IServiceState.h">
+      <Filter>Core\Services</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Commissions.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DealerSettings.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Directory.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Range.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TerminalSettings.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\Core.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\FundsService.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\NetworkService.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\PaymentService.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\PrinterService.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\Settings.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Settings.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Settings.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ScriptArray.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ScriptArray.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PrinterService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PrinterService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PaymentService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PaymentService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_NetworkService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_NetworkService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_FundsService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_FundsService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Step.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Step.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ICore.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ICore.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_EventTypes.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_EventTypes.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_IPrinterService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_IPrinterService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_IPaymentService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_IPaymentService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_IHIDService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_IHIDService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_IDeviceService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_IDeviceService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Core.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Core.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_IDeviceTest.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_IDeviceTest.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CyberPlat\Request.cpp">
+      <Filter>CyberPlat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CyberPlat\RequestSender.cpp">
+      <Filter>CyberPlat</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_RequestSender.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_RequestSender.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CyberPlat\Response.cpp">
+      <Filter>CyberPlat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ExtensionsSettings.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_Core.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_EventTypes.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_FundsService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_ICore.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_IDeviceService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_IDeviceTest.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_IHIDService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_IPaymentService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_IPrinterService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_NetworkService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_PaymentService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_PrinterService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_RequestSender.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_ScriptArray.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_Settings.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\PaymentProcessorSDK\ReleaseWithDebugInfo\moc_Step.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\AudioService.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_AudioService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_AudioService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_AudioService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Provider.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_HIDService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_HIDService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_HIDService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\HIDService.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_IRemoteService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_IRemoteService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_IRemoteService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_IRemoteClient.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_IRemoteClient.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_IRemoteClient.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\AdService.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_AdService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_AdService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_AdService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\GUIService.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_GUIService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_GUIService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_GUIService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ICashAcceptorManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ICashAcceptorManager.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ICashAcceptorManager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_ICashDispenserManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ICashDispenserManager.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ICashDispenserManager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_DeviceService.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_DeviceService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_DeviceService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Scripting\DeviceService.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\UserSettings.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Security\SecurityFilter.cpp">
+      <Filter>Security</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_IBackendScenarioObject.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_IBackendScenarioObject.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_IBackendScenarioObject.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\EventTypes.h">
+      <Filter>Core</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\ICore.h">
+      <Filter>Core</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IDeviceService.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IGUIService.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IHIDService.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\INetworkService.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\Includes\SDK\PaymentProcessor\Core\IPaymentService.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\Includes\SDK\PaymentProcessor\Core\IPrinterService.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Payment\Step.h">
+      <Filter>Payment</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\Core.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\FundsService.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\NetworkService.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\PaymentService.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\PrinterService.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\ScriptArray.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\Settings.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\IDeviceTest.h">
+      <Filter>Core</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\CyberPlat\RequestSender.h">
+      <Filter>CyberPlat</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IAudioService.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\AudioService.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\Provider.moc">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\$(ProjectName)\Release\Provider.moc">
+      <Filter>Generated Files\Release</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\HIDService.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IChargeProvider.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IRemoteService.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IRemoteClient.h">
+      <Filter>Core</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\AdService.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\GUIService.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\ICashAcceptorManager.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\ICashDispenserManager.h">
+      <Filter>Core\Services</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\DeviceService.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Scripting\IBackendScenarioObject.h">
+      <Filter>Scripting</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

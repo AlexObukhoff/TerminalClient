@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{dc5114f9-1472-4b5b-904b-f9dec6a5b598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{ad0db9ec-04af-414c-b641-77b560561474}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ACR120">
+      <UniqueIdentifier>{baf7349f-ca17-45fa-8df9-c3bff79bc4a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OPOSMetrologic">
+      <UniqueIdentifier>{ee285a94-2a47-4a85-9cd5-a0ceb30dba9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{18eecaf9-77e0-4f62-984a-018e2ba3743a}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{e4c4c47c-3b2a-48da-9602-b77c07b4ea4e}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{1488d296-9405-44f1-86f9-8d141a9cfefb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Port">
+      <UniqueIdentifier>{ae901865-6d95-46c3-9bde-947e65c82af3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Port\Base">
+      <UniqueIdentifier>{4b5f28bf-2e06-46ee-b8e8-3570c0f20363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Port\USB">
+      <UniqueIdentifier>{ff0e96a0-0050-4bc2-8f53-423c7a1aa8d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Port\Serial">
+      <UniqueIdentifier>{1cf9f2fd-0aad-46bb-9a9b-a8e9e6b8d93f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\ACR120\ACR120.cpp">
+      <Filter>ACR120</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\OPOS\OPOSMetrologicScanner.cpp">
+      <Filter>OPOSMetrologic</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_OPOSMetrologicScanner.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_OPOSMetrologicScanner.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_OPOSMetrologicScanner.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Serial\USBScanner.cpp">
+      <Filter>Port\USB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Serial\PortScanner.cpp">
+      <Filter>Port\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Serial\SerialScanner.cpp">
+      <Filter>Port\Serial</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\ACR120\ACR120.h">
+      <Filter>ACR120</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\OPOS\OPOSMetrologicScanner.h">
+      <Filter>OPOSMetrologic</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Serial\PortScanner.h">
+      <Filter>Port\Base</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\includes\Hardware\HID\HIDBase.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Serial\HHPModelData.h">
+      <Filter>Port\USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Serial\USBScanner.h">
+      <Filter>Port\USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Serial\SerialScanner.h">
+      <Filter>Port\Serial</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

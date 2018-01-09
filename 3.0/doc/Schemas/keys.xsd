@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="keys">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="pair" minOccurs="1" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Описание пары ключей</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="sd" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Код дилера</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="ap" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Код точки</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="op" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Код оператора точки</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="serial_number" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Номер банковского ключа</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="public_key" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Путь к файлу публичного ключа относительно каталога инсталляции</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="secret_key" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Путь к файлу секретного ключа относительно каталога инсталляции</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="secret_password" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Зашифрованная кодовая фраза для секретного ключа</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:all>
+            <xs:attribute name="id" type="xs:integer" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="ru">Уникальный идентификатор ключа</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Версия формата файла, первый релиз - 2.0</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

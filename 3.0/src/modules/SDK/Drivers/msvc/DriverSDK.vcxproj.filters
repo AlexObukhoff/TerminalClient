@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="IOPort">
+      <UniqueIdentifier>{f1a1af01-8294-4f64-ac9f-38292c055994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+    </Filter>
+    <Filter Include="Watchdog">
+      <UniqueIdentifier>{7a8f0074-4067-4710-9479-6390c8e1cbc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{a11e71f7-7950-4927-88c9-28f240cfb823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CashAcceptor">
+      <UniqueIdentifier>{becbc08e-0961-4069-916a-6a2c0dc57c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CardReader">
+      <UniqueIdentifier>{11450ce0-f293-4ab9-ac32-cc450fa6e2b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dispenser">
+      <UniqueIdentifier>{24bf970c-070a-4922-97ea-a218b6cee050}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HID">
+      <UniqueIdentifier>{40c0ad69-72bb-49bd-9ac7-6f212bb36cc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FR">
+      <UniqueIdentifier>{6511f295-1a1b-44fd-9f60-b65c65fb2952}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Constants.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\WarningLevel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CashAcceptor\CurrencyList.h">
+      <Filter>CashAcceptor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Includes\SDK\Drivers\CashAcceptor\Par.h">
+      <Filter>CashAcceptor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CashAcceptor\CashAcceptorStatus.h">
+      <Filter>CashAcceptor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Includes\SDK\Drivers\IOPort\COMParameters.h">
+      <Filter>IOPort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Includes\SDK\Drivers\IOPort\LPTParameters.h">
+      <Filter>IOPort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\Watchdog\Linetypes.h">
+      <Filter>Watchdog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\ICashAcceptor.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IDevice.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IFiscalPrinter.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IHID.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IIOPort.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IModem.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IPrinter.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IWatchdog.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\DeviceStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IMifareReader.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\ICardReader.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CardReader\CardReaderStatus.h">
+      <Filter>CardReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\Dispenser\DispenserStatus.h">
+      <Filter>Dispenser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IDispenser.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\Watchdog\WatchdogStatus.h">
+      <Filter>Watchdog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\Components.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\InteractionTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\FR\FiscalDataTypes.h">
+      <Filter>FR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\FR\FiscalPrinterCommand.h">
+      <Filter>FR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\FR\FiscalPrinterConstants.h">
+      <Filter>FR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\FR\FRStatus.h">
+      <Filter>FR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\FR\FiscalFields.h">
+      <Filter>FR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\HardwareConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\DetectingPriority.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

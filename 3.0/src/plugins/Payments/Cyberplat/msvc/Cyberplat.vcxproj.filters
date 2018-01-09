@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+    </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{9a25f4a6-39a0-4710-886f-3ca6dc67c1f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Payment">
+      <UniqueIdentifier>{ca21e9e9-83ea-447b-920a-be3e6c85eb76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Payment\Requests">
+      <UniqueIdentifier>{f9ee8627-fc45-43cd-93d7-b56f2658f7ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PinPayment">
+      <UniqueIdentifier>{976fd215-0b43-4645-8afc-824a842c5d0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PinPayment\Requests">
+      <UniqueIdentifier>{6ff66f69-4223-4cb8-8181-4f6627c417a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{2abaa6e9-050a-4c9e-8c35-94ecc412b111}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{0e77513a-8cfb-4bd7-8789-b3e71c0bb05e}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{0273c4b6-1837-4a36-ade6-a396bda2b0fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DealerPayment">
+      <UniqueIdentifier>{195865bd-0e18-40ee-9e5d-b758e5f024d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Multistage">
+      <UniqueIdentifier>{cf34d02f-51e7-4aa2-980d-47a7e81a0b06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Multistage\Requests">
+      <UniqueIdentifier>{1cb396fc-f1e6-4598-9507-573928899f63}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\PaymentFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PaymentFactoryBase.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Payment.cpp">
+      <Filter>Payment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PaymentCheckRequest.cpp">
+      <Filter>Payment\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PaymentPayRequest.cpp">
+      <Filter>Payment\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PaymentRequest.cpp">
+      <Filter>Payment\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PaymentResponse.cpp">
+      <Filter>Payment\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PaymentStatusRequest.cpp">
+      <Filter>Payment\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PaymentStatusResponse.cpp">
+      <Filter>Payment\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PinPayment.cpp">
+      <Filter>PinPayment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PinGetCardListRequest.cpp">
+      <Filter>PinPayment\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PinGetCardListResponse.cpp">
+      <Filter>PinPayment\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PinPaymentCheckRequest.cpp">
+      <Filter>PinPayment\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PinPaymentStatusRequest.cpp">
+      <Filter>PinPayment\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PluginFactoryDefinition.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PaymentFactoryBase.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PaymentFactoryBase.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PaymentFactory.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PaymentFactory.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\cyberplat_payments\ReleaseWithDebugInfo\moc_PaymentFactory.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\cyberplat_payments\ReleaseWithDebugInfo\moc_PaymentFactoryBase.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DealerPayment.cpp">
+      <Filter>DealerPayment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MultistagePayment.cpp">
+      <Filter>Multistage</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PinLoader.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_PinLoader.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PinLoader.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PinLoader.cpp">
+      <Filter>PinPayment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MultistagePaymentGetStepRequest.cpp">
+      <Filter>Multistage\Requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MultistagePaymentGetStepResponse.cpp">
+      <Filter>Multistage\Requests</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Payment.h">
+      <Filter>Payment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PaymentCheckRequest.h">
+      <Filter>Payment\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PaymentPayRequest.h">
+      <Filter>Payment\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PaymentRequest.h">
+      <Filter>Payment\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PaymentResponse.h">
+      <Filter>Payment\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PaymentStatusRequest.h">
+      <Filter>Payment\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PaymentStatusResponse.h">
+      <Filter>Payment\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PinCard.h">
+      <Filter>PinPayment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PinPayment.h">
+      <Filter>PinPayment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PinGetCardListRequest.h">
+      <Filter>PinPayment\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PinGetCardListResponse.h">
+      <Filter>PinPayment\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PinPaymentCheckRequest.h">
+      <Filter>PinPayment\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PinPaymentStatusRequest.h">
+      <Filter>PinPayment\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\DealerPayment.h">
+      <Filter>DealerPayment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MultistagePayment.h">
+      <Filter>Multistage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MultistagePaymentGetStepRequest.h">
+      <Filter>Multistage\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MultistagePaymentGetStepResponse.h">
+      <Filter>Multistage\Requests</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\PaymentFactory.h">
+      <Filter>Factory</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\PaymentFactoryBase.h">
+      <Filter>Factory</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\PinLoader.h">
+      <Filter>PinPayment</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

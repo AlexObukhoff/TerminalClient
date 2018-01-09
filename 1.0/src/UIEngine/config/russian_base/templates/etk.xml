@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="windows-1251" standalone="no"?>
+<body>
+	<String>----------------------------------------</String>
+	<String>Телефон службы техподдержки</String>
+	<String>%INT_DEALER_PHONE%</String>
+	<String>%INT_DEALER_NAME%</String>
+	<String>----------------------------------------</String>
+	<String>Квитанция №%SESSNUM%</String>
+	<String>Терминал №%TERMNUMBER%</String>
+	<String>Серийный №%PIN_SERIAL%</String>
+	<String>Дата платежа %DATETIME%</String>
+	<String>Поставщик: ЕТК</String>
+	<String>Принято:	%AMOUNTALL%</String>
+	<String>Комиссия:	%COMISSION%</String>
+	<String>       НОМИНАЛ %AMOUNT% рублей</String>
+	<String>PIN-код %PIN_VALUE%</String>
+	<String>Правила пользования</String>
+	<String>Для активации</String>
+	<String>1.Для внесения средств на  свой  лицевой </String>
+	<String> счет Вы можете: послать SMS сообщение с </String>
+	<String> PIN-кодом на номер 70020, позвонить  на</String>
+	<String> номер 7005 и точно следовать инструкции</String>
+	<String> автоинформатора или послать USSD-запрос </String>
+	<String> командой *102*2*PIN-код#клавиша  посыла </String>
+	<String> вызова.</String>
+	<String>2.После   завершения   операции  на  Ваш </String>
+	<String>  лицевой  счет  будет  зачислена  сумма,</String>
+	<String>  равная номиналу.</String>
+	<String>3.Для подтверждения зачисления Вы можете </String>
+	<String>  проверить   сумму   баланса,  отправив </String>
+	<String>  SMS-сообщение   (любой   текст   кроме </String>
+	<String>  пробела) на номер  7001,  позвонив  по</String>
+	<String>  номеру 70011  или отправив USSD-запрос</String>
+	<String>  командой *102*1#.</String>
+	<String>4.Телефон справочной службы ЕТК – 000,</String>
+	<String>  23-90-05  или 410041</String>
+	<String>   - зачисление  оплаты  с  помощью  SMS</String>
+	<String>     и  USSD производится круглосуточно</String>
+	<String>   - повторное использование PIN-кода не </String>
+	<String>     допускается</String>
+	<String>   - PIN-код    возврату  и  обмену   не </String>
+	<String>     подлежит</String>
+	<String>   - сохраняйте квитанцию с PIN-кодом </String>
+	<String>     как подтверждение платежа</String>
+	<String>   - сохраняйте      квитанцию        до </String>
+	<String>     подтверждения о  зачислении платежа</String>
+	<String>      Спасибо что воспользовались </String>
+	<String>           нашим терминалом</String>
+	<String>----------------------------------------</String>
+</body>

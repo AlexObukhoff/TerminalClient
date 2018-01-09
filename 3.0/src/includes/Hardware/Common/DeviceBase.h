@@ -1,0 +1,1 @@
+#include "../../../modules/Hardware/Common/src/Base/DeviceBase.h"

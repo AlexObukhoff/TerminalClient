@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/play.ico</file>
+        <file>icons/stop.ico</file>
+        <file>icons/tray.png</file>
+        <file>icons/tray_stopped.png</file>
+    </qresource>
+</RCC>

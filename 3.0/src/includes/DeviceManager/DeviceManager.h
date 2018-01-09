@@ -1,0 +1,1 @@
+#include "../../modules/DeviceManager/src/DeviceManager.h"

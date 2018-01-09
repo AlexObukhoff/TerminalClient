@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="windows-1251" standalone="no"?>
+<body>
+	<String>-----------------------------------</String>
+	<String>Телефон службы техподдержки</String>
+	<String>%INT_DEALER_PHONE%</String>
+	<String>%INT_DEALER_NAME%</String>
+	<String>-----------------------------------  </String>
+	<String>ТЕРМИНАЛ №%TERMNUMBER%</String>
+	<String>Дата         : %DATETIME%</String>
+	<String>Оператор     : %OPNAME%</String>
+	<String>Оплачено     : %AMOUNTALL%</String>
+	<String>К зачислению : %AMOUNT% %INT_CURRENCY%.</String>
+	<String>Вы внесли недостаточную сумму.</String>
+	<String>Платеж не был проведен.</String>
+	<String>Обратитесь в техподдержку.</String>
+	<String>-----------------------------------</String>
+	<String>       СОХРАНЯЙТЕ ЧЕК</String>
+	<String>-----------------------------------</String>
+</body>

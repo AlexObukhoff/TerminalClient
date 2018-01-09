@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EncashmentHistoryWindow</class>
+ <widget class="QWidget" name="EncashmentHistoryWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>640</width>
+    <height>480</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* common styles */
+QPushButton 
+{
+	color: white;
+	background-color: rgba(80, 107, 176);
+	border: 1px solid gray;
+	border-radius: 8px;
+	padding-left: 1px;
+	padding-right: 1px;
+}
+
+QPushButton:disabled
+{
+	color: gray;
+	background-color: lightgray;
+}
+
+QPushButton:pressed 
+{
+	background-color: rgba(98, 141, 191);
+}
+
+QTabBar::tab 
+{
+	background: rgba(186, 200, 232);
+	border-top: 1px solid #C4C4C3;
+	border-left: 1px solid #C4C4C3;
+	border-right: 1px solid #C4C4C3;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	min-width: 26ex;
+	min-height: 8ex;
+	padding: 2px;
+}
+
+QTabBar::tab:selected
+{
+	background: white;
+}
+
+QLineEdit 
+{
+	padding: 8;
+	border: 2px solid rgba(160, 175, 211);
+	border-radius: 10px;
+}
+
+/* MainServiceWindow styles*/
+QWidget#ServiceMenuWindow
+{
+	background-color: white;
+}
+
+QWidget#wNumericPad
+{
+	background: rgba(247, 245, 237);
+	border-radius: 10px;
+}
+
+QWidget#wNumericPad QPushButton
+{
+	font: 16pt bold;
+}
+</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="historyHeader">
+     <property name="text">
+      <string>#history_header</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="historyHowto">
+     <property name="text">
+      <string>#history_howto</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridHistoryLayout">
+     <property name="leftMargin">
+      <number>9</number>
+     </property>
+     <property name="rightMargin">
+      <number>9</number>
+     </property>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

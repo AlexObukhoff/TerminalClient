@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX IF NOT EXISTS `i__device__name` ON `device` (`name`);
+insert or replace into `device_param` (`value`, `name`, fk_device_id) values(6, 'db_patch', (select id from device where type = 6 limit 1));

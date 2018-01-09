@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{b8d8176e-f847-43d3-b2da-c76c2bdff475}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{da698785-2f6d-4af9-95d8-c01306849800}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Template">
+      <UniqueIdentifier>{c4c922f1-b843-4aef-89d9-ed282ff9bb8d}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{f40d4aa8-b994-4be7-857e-75ae1b8e12ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{8d36a02f-c7d8-42f3-8b56-0c809f92357b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CCNet">
+      <UniqueIdentifier>{b37cacaa-7286-4210-a22e-52b6108b54ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ID003">
+      <UniqueIdentifier>{8f03c0f2-e1ca-4810-8641-1cb32443dabe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EBDS">
+      <UniqueIdentifier>{d09676de-bb87-4ba3-9348-2801ac4d4281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ICT">
+      <UniqueIdentifier>{779aec85-209f-4907-a5e6-adc0eb34469e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="V2e">
+      <UniqueIdentifier>{80327ce3-a02c-4081-9f44-32b6dd21d961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CCNet\Base">
+      <UniqueIdentifier>{eb790cea-628f-41db-a883-f5cf1af0e758}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CCNet\Creator">
+      <UniqueIdentifier>{c272abf8-4203-43d8-8917-91f7cd02f9c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CCNet\Recycler">
+      <UniqueIdentifier>{b8dd48f9-c6dc-4091-b877-140805799d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CCNet\CashcodeGX">
+      <UniqueIdentifier>{3543b0a3-f10a-4679-842b-bcf2e93442d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CCNet\IntelHex">
+      <UniqueIdentifier>{b91ca106-ede8-498b-811f-1df3af59a441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SSP">
+      <UniqueIdentifier>{2adb5832-e301-4235-becd-56451765e9ab}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\CashAcceptorBase.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CCNet\CCNetCashAcceptorBase.cpp">
+      <Filter>CCNet\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CCNet\CCNetCreator.cpp">
+      <Filter>CCNet\Creator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CCNet\IntelHex.cpp">
+      <Filter>CCNet\IntelHex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EBDS\EBDSCashAcceptor.cpp">
+      <Filter>EBDS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ID003\ID003CashAcceptor.cpp">
+      <Filter>ID003</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\V2e\V2eCashAcceptor.cpp">
+      <Filter>V2e</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ICT\ICTCashAcceptor.cpp">
+      <Filter>ICT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CCNet\CCNetRecycler.cpp">
+      <Filter>CCNet\Recycler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CCNet\CCNetCashcodeGX.cpp">
+      <Filter>CCNet\CashcodeGX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PortCashAcceptor.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ID003\ID003ModelData.cpp">
+      <Filter>ID003</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\V2e\V2eModelData.cpp">
+      <Filter>V2e</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SSP\SSPCashAcceptor.cpp">
+      <Filter>SSP</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorBaseConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusCodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusesDescriptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\BillTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CurrencyDescriptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CashAcceptorData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CashAcceptorStatusData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CurrencyErrors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CashAcceptorBase.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\CCNetCashAcceptorBase.h">
+      <Filter>CCNet\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\FirmwareVersions.h">
+      <Filter>CCNet\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\Models.h">
+      <Filter>CCNet\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\CCNetCreator.h">
+      <Filter>CCNet\Creator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\IntelHex.h">
+      <Filter>CCNet\IntelHex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\EBDS\EBDSCashAcceptor.h">
+      <Filter>EBDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ID003\CurrencySpecification.h">
+      <Filter>ID003</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ID003\ID003CashAcceptor.h">
+      <Filter>ID003</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\V2e\V2eCashAcceptor.h">
+      <Filter>V2e</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\V2e\V2eCashAcceptorConstants.h">
+      <Filter>V2e</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ICT\ICTCashAcceptor.h">
+      <Filter>ICT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\CCNetRecycler.h">
+      <Filter>CCNet\Recycler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\CCNetCashcodeGX.h">
+      <Filter>CCNet\CashcodeGX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\ModelData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\CCNetCashAcceptorConstants.h">
+      <Filter>CCNet\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\CCNetCreatorConstants.h">
+      <Filter>CCNet\Creator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ICT\ICTCashAcceptorConstants.h">
+      <Filter>ICT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\EBDS\EBDSCashAcceptorConstants.h">
+      <Filter>EBDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\CCNetModelData.h">
+      <Filter>CCNet\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\EBDS\EBDSModelData.h">
+      <Filter>EBDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ICT\ICTModelData.h">
+      <Filter>ICT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ID003\ID003ModelData.h">
+      <Filter>ID003</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\V2e\V2eModelData.h">
+      <Filter>V2e</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ID003\ID003CashAcceptorConstants.h">
+      <Filter>ID003</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCNet\CCNetCashAcceptorDataTypes.h">
+      <Filter>CCNet\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SSP\SSPCashAcceptor.h">
+      <Filter>SSP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SSP\SSPCashAcceptorConstants.h">
+      <Filter>SSP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SSP\SSPModelData.h">
+      <Filter>SSP</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\PortCashAcceptor.h">
+      <Filter>Base</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

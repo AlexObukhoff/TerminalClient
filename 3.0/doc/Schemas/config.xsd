@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="config">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="terminal">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Общие настройки поведения терминала</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="reboot_allowed" type="xs:boolean">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Разрешать перезагрузку терминала если это необходимо ПО</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="logs">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Настройки логгирования</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:attribute name="max_size" type="xs:integer" use="required">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Максимальный размер лог-файлов (в мегабайтах)</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="advertisement" type="xs:boolean">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Показывать рекламу</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="skin">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Настройки интерфейса</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string" use="required">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Имя используемого скина</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="connection_check_interval">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Интервал проверки соединения</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:attribute name="value" type="xs:string" use="required">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Минуты</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="encashment" type="xs:integer" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                  <xs:documentation>Последний номер инкассации с которой для этой точки (для новых инсталляций)</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="hardware">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Настройки периферии</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="printer_settings">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Настройки принтера</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="block_terminal_on_error" type="xs:boolean">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Блокировать терминал при неисправностях принтера</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="font_size" type="xs:string">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Размер шрифта чека</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="validator_settings">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Настройки купюроприёмника</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="block_terminal_on_error" type="xs:boolean">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Блокировать терминал при неисправностях принтера</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="min_note" type="xs:string">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Минимальный номинал принимаемой банкноты</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="notes" type="xs:string">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Допустимый набор номиналов для купюрника</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="service_menu">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Настройки сервисного меню</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="operator" type="xs:integer">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Оператор для входа</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="phone" type="xs:integer">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Телефон для входа</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="screen_password" type="xs:integer">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Последовательность кликов по областям на экране для входа</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="service_password" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Пароль для администратора</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="collection_password" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Пароль для инкассатора</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="technician_password" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Пароль для техника</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dealer">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Информация о дилере</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="dealer_name" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>Название юр. лица дилера</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="dealer_address" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Адрес дилера</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="dealer_business_address" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Юр. адрес дилера</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="dealer_inn" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">ИНН дилера</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="dealer_phone" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Телефон дилера</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="dealer_support_phone" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Телефон техподдержки дилера</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="point_address" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Адрес точки</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="point_name" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Название точки</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="contract_number" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>Номер договора</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="bank_name" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Название банка</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="bank_bik" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">БИК банка</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="bank_phone" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Телефон банка</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="bank_address" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Адрес банка</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="bank_inn" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Инн банка</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="extensions">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Информация для расширений</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="extension" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Расширение</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:documentation>Именованый параметр</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:anyType">
+                          <xs:attribute name="name" type="xs:string">
+                            <xs:annotation>
+                              <xs:documentation xml:lang="ru">Имя параметра</xs:documentation>
+                            </xs:annotation>
+                          </xs:attribute>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:all>
+      <xs:attribute name="version" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Версия формата файла, первый релиз - 2.0</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+
+
+
+
+
+
+

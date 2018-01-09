@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="AV268">
+      <UniqueIdentifier>{ac92efcb-1af8-441f-a647-03d30e97a9dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fujitsu">
+      <UniqueIdentifier>{bf9e6927-68da-4a50-a891-b3ced5f14b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gebe">
+      <UniqueIdentifier>{3c54a987-a2be-4c34-ae14-95a83b042ff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primex">
+      <UniqueIdentifier>{a385dc98-8422-454c-a3c8-adf5bfc1faba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Swecoin">
+      <UniqueIdentifier>{aea08916-5334-49be-a3af-e26b1975e551}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STAR">
+      <UniqueIdentifier>{2b41a11b-24f9-4fa3-a6c7-7796b7c1baf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{3e0f6a02-0594-4be1-86c8-9ecdedc55e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{797b1638-0771-4788-8303-eee38cf6c707}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{afdf7ca9-0818-45c7-806d-b5203f6ba496}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Template">
+      <UniqueIdentifier>{3b269bb2-fbf6-47d2-9279-9809b4cf64f4}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{f0d576f6-70e9-4c85-a20f-8e86917f8918}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STAR\Ejector">
+      <UniqueIdentifier>{a6b72804-2a6e-4368-8bf0-49a79fc623ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STAR\MemorySwitch">
+      <UniqueIdentifier>{aced2303-5c3c-45b5-86c6-d2e833e7c3e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="POS">
+      <UniqueIdentifier>{7cf38655-702c-49b8-ac89-c27a160873cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="POS\Common">
+      <UniqueIdentifier>{a27604d0-ac28-4330-ab05-e29c51f71224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="POS\EjectorPOS">
+      <UniqueIdentifier>{7521f91b-6a8a-47d8-aa9f-8afa3060f6a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="POS\CitizenPPU231">
+      <UniqueIdentifier>{89d81058-9366-4d23-b311-81ee1467f351}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{0e672ad4-6b61-4fbc-9f89-926d2c796f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tags">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{5955cc3c-a0fc-41bf-85cd-25884d23f21a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="POS\Epson">
+      <UniqueIdentifier>{1652e6d1-d57c-4c12-a756-ede891f68dd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Port">
+      <UniqueIdentifier>{0eec7b52-8063-4a30-88da-372d94566e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Port\Serial">
+      <UniqueIdentifier>{2e544532-b61b-487d-b9fc-32ed72e0d186}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Tags\Tags.cpp">
+      <Filter>Tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AV268\AV268.cpp">
+      <Filter>AV268</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Fujitsu\FujitsuPrinters.cpp">
+      <Filter>Fujitsu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GeBe\GeBe.cpp">
+      <Filter>Gebe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PrimexNP2511\PrimexNP2511.cpp">
+      <Filter>Primex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SwecoinTTP20XXBase\SwecoinTTP20XXBase.cpp">
+      <Filter>Swecoin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Star\StarPrinters.cpp">
+      <Filter>STAR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SystemPrinter\SystemPrinter.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\Common\POSPrinter.cpp">
+      <Filter>POS\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\EjectorPOS\Common\EjectorPOS.cpp">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Star\EjectorStarPrinters.cpp">
+      <Filter>STAR\Ejector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Star\StarMemorySwitchesBase.cpp">
+      <Filter>STAR\MemorySwitch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\Common\POSParameters.cpp">
+      <Filter>POS\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\CitizenPPU231\CitizenPPU231.cpp">
+      <Filter>POS\CitizenPPU231</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\EjectorPOS\CitizenPPU700.cpp">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\EjectorPOS\CustomVKP80III.cpp">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Base\PrinterBase.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\CustomPrinters.cpp">
+      <Filter>POS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\Epson\EpsonEUT400.cpp">
+      <Filter>POS\Epson</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Base\Port\PortPrinterBase.cpp">
+      <Filter>Base\Port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\EjectorPOS\CustomVKP80.cpp">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\AV268\AV268.h">
+      <Filter>AV268</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AV268\AV268Constants.h">
+      <Filter>AV268</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Fujitsu\FujitsuPrinters.h">
+      <Filter>Fujitsu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GeBe\GeBe.h">
+      <Filter>Gebe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PrimexNP2511\PrimexNP2511.h">
+      <Filter>Primex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SwecoinTTP20XXBase\SwecoinTTP20XXBase.h">
+      <Filter>Swecoin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Star\StarPrinters.h">
+      <Filter>STAR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SystemPrinter\SystemPrinter.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\Common\POSPrinter.h">
+      <Filter>POS\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\Common\POSParameters.h">
+      <Filter>POS\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\EjectorPOS\CustomVKP80.h">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\EjectorPOS\CitizenPPU700.h">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\EjectorPOS\Common\EjectorPOS.h">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CustomPrinters.h">
+      <Filter>POS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenCTS2000.h">
+      <Filter>POS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenCPP8001.h">
+      <Filter>POS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenCBM1000II.h">
+      <Filter>POS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Printers\POSPrinterData.h">
+      <Filter>POS\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Star\StarPrinterData.h">
+      <Filter>STAR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GeBe\GeBEData.h">
+      <Filter>Gebe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Fujitsu\FujitsuPrinterData.h">
+      <Filter>Fujitsu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PrimexNP2511\PrimexPrinterData.h">
+      <Filter>Primex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SwecoinTTP20XXBase\SwecoinPrinterData.h">
+      <Filter>Swecoin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Star\ModelData.h">
+      <Filter>STAR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Star\EjectorStarPrinters.h">
+      <Filter>STAR\Ejector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Star\StarMemorySwitches.h">
+      <Filter>STAR\MemorySwitch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Star\StarMemorySwitchesBase.h">
+      <Filter>STAR\MemorySwitch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Star\StarMemorySwitchTypes.h">
+      <Filter>STAR\MemorySwitch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SystemPrinter\SystemPrinters.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenPPU231\CitizenPPU231.h">
+      <Filter>POS\CitizenPPU231</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenPPU231\CitizenPPU231Constants.h">
+      <Filter>POS\CitizenPPU231</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\EjectorPOS\CustomVKP80III.h">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenCTS310II.h">
+      <Filter>POS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base\PrinterBase.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Printers\PrinterConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Printers\PrinterStatusesDescriptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Printers\PrinterStatusCodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Tags\Tags.h">
+      <Filter>Tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base\Port\Serial\SerialPrinterBase.h">
+      <Filter>Base\Port\Serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\Epson\EpsonEUT400.h">
+      <Filter>POS\Epson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\Epson\EpsonConstants.h">
+      <Filter>POS\Epson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CustomTG2480H.h">
+      <Filter>POS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base\Port\PortPrinterBase.h">
+      <Filter>Base\Port</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,91 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WatchService", "WatchService", "{86D7D70A-61AA-4905-9546-16100BC7648E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Updater", "Updater\msvc\Updater.vcxproj", "{9D1146B4-1756-4D36-BB53-B91108597544}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PaymentProcessor", "PaymentProcessor\msvc\PaymentProcessor.vcxproj", "{FB44CB07-F797-4FA6-88E1-60215BFE88DC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WatchService", "WatchService\msvc\WatchService.vcxproj", "{E5152B83-664A-438A-BB5B-91EE4B3B8024}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WatchServiceController", "WatchServiceController\msvc\WatchServiceController.vcxproj", "{1DB61521-39AA-4C27-914D-8B2229E27855}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		ReleaseWithDebugInfo|Win32 = ReleaseWithDebugInfo|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D1146B4-1756-4D36-BB53-B91108597544}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9D1146B4-1756-4D36-BB53-B91108597544}.Debug|Win32.Build.0 = Debug|Win32
+		{9D1146B4-1756-4D36-BB53-B91108597544}.Release|Win32.ActiveCfg = Release|Win32
+		{9D1146B4-1756-4D36-BB53-B91108597544}.Release|Win32.Build.0 = Release|Win32
+		{9D1146B4-1756-4D36-BB53-B91108597544}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
+		{9D1146B4-1756-4D36-BB53-B91108597544}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
+		{FB44CB07-F797-4FA6-88E1-60215BFE88DC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FB44CB07-F797-4FA6-88E1-60215BFE88DC}.Debug|Win32.Build.0 = Debug|Win32
+		{FB44CB07-F797-4FA6-88E1-60215BFE88DC}.Release|Win32.ActiveCfg = Release|Win32
+		{FB44CB07-F797-4FA6-88E1-60215BFE88DC}.Release|Win32.Build.0 = Release|Win32
+		{FB44CB07-F797-4FA6-88E1-60215BFE88DC}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
+		{FB44CB07-F797-4FA6-88E1-60215BFE88DC}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
+		{E5152B83-664A-438A-BB5B-91EE4B3B8024}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E5152B83-664A-438A-BB5B-91EE4B3B8024}.Debug|Win32.Build.0 = Debug|Win32
+		{E5152B83-664A-438A-BB5B-91EE4B3B8024}.Release|Win32.ActiveCfg = Release|Win32
+		{E5152B83-664A-438A-BB5B-91EE4B3B8024}.Release|Win32.Build.0 = Release|Win32
+		{E5152B83-664A-438A-BB5B-91EE4B3B8024}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
+		{E5152B83-664A-438A-BB5B-91EE4B3B8024}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
+		{1DB61521-39AA-4C27-914D-8B2229E27855}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1DB61521-39AA-4C27-914D-8B2229E27855}.Debug|Win32.Build.0 = Debug|Win32
+		{1DB61521-39AA-4C27-914D-8B2229E27855}.Release|Win32.ActiveCfg = Release|Win32
+		{1DB61521-39AA-4C27-914D-8B2229E27855}.Release|Win32.Build.0 = Release|Win32
+		{1DB61521-39AA-4C27-914D-8B2229E27855}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
+		{1DB61521-39AA-4C27-914D-8B2229E27855}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E5152B83-664A-438A-BB5B-91EE4B3B8024} = {86D7D70A-61AA-4905-9546-16100BC7648E}
+		{1DB61521-39AA-4C27-914D-8B2229E27855} = {86D7D70A-61AA-4905-9546-16100BC7648E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		QtVersion = $(DefaultQtVersion)
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+EndGlobal

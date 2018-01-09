@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- База для любых сборок на основе терминального ПО -->
+<runtime>
+	<!-- Исполняемые файлы, компонент executables -->
+	<file source="{QBS_RESULT_PATH}/bin/client.exe" target="executables/client.exe"/>
+	<file source="{QBS_RESULT_PATH}/bin/guard.exe" target="executables/guard.exe"/>
+	<file source="{QBS_RESULT_PATH}/bin/tray.exe" target="executables/tray.exe"/>
+	<file source="{QBS_RESULT_PATH}/bin/updater.exe" target="executables/updater.exe"/>
+
+	<!-- Драйверы, компонент drivers -->
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/ioports.dll" target="drivers/plugins/drivers/ioports.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/drivers/printers.dll" target="drivers/plugins/drivers/printers.dll"/>
+	
+	<!-- Виртуальный купюроприёмник -->
+	<file if="{TC_DEBUG_BUILD} &amp;&amp; {CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/drivers/virtual_devices.dll" target="drivers/plugins/drivers/virtual_devices.dll"/>
+	
+	<!-- Плагины, компонент plugins -->
+	<file source="{QBS_RESULT_PATH}/plugins/cyberplat_payments.dll" target="plugins/plugins/cyberplat_payments.dll"/>
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/cyberplat_monitoring.dll" target="plugins/plugins/cyberplat_monitoring.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/service_menu.dll" target="plugins/plugins/service_menu.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/user_assistant.dll" target="plugins/plugins/user_assistant.dll"/>
+	
+	<!-- Графические движки, компонент plugins -->
+	<!--
+		<file source="{QBS_RESULT_PATH}/plugins/webkit_backend.dll" target="plugins/plugins/backends/webkit_backend.dll"/>
+	-->
+	<file source="{QBS_RESULT_PATH}/plugins/qml_backend.dll" target="plugins/plugins/backends/qml_backend.dll"/>
+	<file source="{QBS_RESULT_PATH}/plugins/native_backend.dll" target="plugins/plugins/backends/native_backend.dll"/>
+
+	<!-- Другие необходимые файлы для запуска ПО (ssl, 7zip и т.д.), компонент thirdparty -->
+	<directory source="src/runtimes/common" target="" recursive="true"/>
+	
+	<!-- Qt, компонент qt -->
+	<file source="{QTDIR}/bin/QtCore4.dll" target="qt/QtCore4.dll"/>
+	<file source="{QTDIR}/bin/QtDeclarative4.dll" target="qt/QtDeclarative4.dll"/>
+	<file source="{QTDIR}/bin/QtGui4.dll" target="qt/QtGui4.dll"/>
+	<file source="{QTDIR}/bin/QtNetwork4.dll" target="qt/QtNetwork4.dll"/>
+	<file source="{QTDIR}/bin/QtOpenGL4.dll" target="qt/QtOpenGL4.dll"/>
+	<file source="{QTDIR}/bin/QtScript4.dll" target="qt/QtScript4.dll"/>
+	<file source="{QTDIR}/bin/QtScriptTools4.dll" target="qt/QtScriptTools4.dll"/>
+	<file source="{QTDIR}/bin/QtSql4.dll" target="qt/QtSql4.dll"/>
+	<file source="{QTDIR}/bin/QtWebKit4.dll" target="qt/QtWebKit4.dll"/>
+	<file source="{QTDIR}/bin/QtXml4.dll" target="qt/QtXml4.dll"/>
+	<file source="{QTDIR}/bin/QtXmlPatterns4.dll" target="qt/QtXmlPatterns4.dll"/>
+	<file source="{QTDIR}/bin/phonon4.dll" target="qt/phonon4.dll"/>
+	<file source="{QTDIR}/plugins/imageformats/qgif4.dll" target="qt/imageformats/qgif4.dll"/>
+	<file source="{QTDIR}/plugins/imageformats/qjpeg4.dll" target="qt/imageformats/qjpeg4.dll"/>
+	<file source="{QTDIR}/plugins/imageformats/qmng4.dll" target="qt/imageformats/qmng4.dll"/>
+	<file source="{QTDIR}/plugins/phonon_backend/phonon_ds94.dll" target="qt/phonon_backend/phonon_ds94.dll"/>
+	<file source="{QTDIR}/plugins/sqldrivers/qsqlite4.dll" target="qt/sqldrivers/qsqlite4.dll"/>
+	<file source="{QTDIR}/imports/QtWebKit/qmldir" target="qt/QtWebKit/qmldir"/>
+	<file source="{QTDIR}/imports/QtWebKit/qmlwebkitplugin.dll" target="qt/QtWebKit/qmlwebkitplugin.dll"/>
+	<file source="{QTDIR}/imports/Qt/labs/particles/qmldir" target="qt/Qt/labs/particles/qmldir"/>
+	<file source="{QTDIR}/imports/Qt/labs/particles/qmlparticlesplugin.dll" target="qt/Qt/labs/particles/qmlparticlesplugin.dll"/>
+	
+	<!-- Qt, компонент qt DEBUG -->
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtCored4.dll" target="qt/QtCored4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtDeclaratived4.dll" target="qt/QtDeclaratived4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtGuid4.dll" target="qt/QtGuid4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtNetworkd4.dll" target="qt/QtNetworkd4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtOpenGLd4.dll" target="qt/QtOpenGLd4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtScriptd4.dll" target="qt/QtScriptd4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtScriptToolsd4.dll" target="qt/QtScriptToolsd4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtSqld4.dll" target="qt/QtSqld4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtWebKitd4.dll" target="qt/QtWebKitd4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtXmld4.dll" target="qt/QtXmld4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtXmlPatternsd4.dll" target="qt/QtXmlPatternsd4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/phonond4.dll" target="qt/phonond4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/plugins/imageformats/qgifd4.dll" target="qt/imageformats/qgifd4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/plugins/imageformats/qjpegd4.dll" target="qt/imageformats/qjpegd4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/plugins/imageformats/qmngd4.dll" target="qt/imageformats/qmngd4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/plugins/phonon_backend/phonon_ds9d4.dll" target="qt/phonon_backend/phonon_ds9d4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/plugins/sqldrivers/qsqlited4.dll" target="qt/sqldrivers/qsqlited4.dll"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/imports/QtWebKit/qmldir" target="qt/QtWebKit/qmldir"/>
+	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/imports/QtWebKit/qmlwebkitplugind.dll" target="qt/QtWebKit/qmlwebkitplugind.dll"/>
+
+	<!-- Обновление конфигурации ТК -->
+	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/FlashSecurityUpdate.cmd" target="update_settings/post-action-FlashSecurityUpdate.cmd"/>
+	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/AutoEndTasksSetup.cmd" target="update_settings/post-action-AutoEndTasksSetup.cmd"/>
+
+	<!-- Обновление корневых сертификатов Windows -->
+	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/rootsupd.exe" target="update_root_cert/rootsupd.exe"/>
+	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/rootsupd.cmd" target="update_root_cert/post-action-rootsupd.cmd"/>
+	
+</runtime>
