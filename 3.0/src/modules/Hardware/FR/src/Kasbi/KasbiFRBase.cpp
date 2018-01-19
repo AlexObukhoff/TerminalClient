@@ -422,17 +422,22 @@ bool KasbiFRBase::getFSData(CKasbiFR::SFSData & aData)
 }
 
 //--------------------------------------------------------------------------------
-bool KasbiFRBase::isSessionOpened()
+ESessionState::Enum KasbiFRBase::getSessionState()
 {
 	CKasbiFR::SFSData data;
 
-	return !getFSData(data) || data.sessionOpened;
+	if (!getFSData(data))
+	{
+		return ESessionState::Error;
+	}
+
+	return data.sessionOpened ? ESessionState::Opened : ESessionState::Closed;
 }
 
 //--------------------------------------------------------------------------------
 bool KasbiFRBase::openSession()
 {
-	if (isSessionOpened())
+	if (getSessionState() == ESessionState::Opened)
 	{
 		toLog(LogLevel::Warning, mDeviceName + ": Session is opened already");
 		return true;
@@ -460,7 +465,7 @@ bool KasbiFRBase::execZReport(bool aAuto)
 
 	toLog(LogLevel::Normal, mDeviceName + QString(": Begin processing %1Z-report").arg(aAuto ? "auto-" : ""));
 
-	if (!isSessionOpened())
+	if (getSessionState() == ESessionState::Closed)
 	{
 		toLog(LogLevel::Error, mDeviceName + QString(": Session is closed, exit!"));
 		return false;
@@ -505,7 +510,7 @@ bool KasbiFRBase::sale(const SAmountData & aAmountData)
 //--------------------------------------------------------------------------------
 bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
 {
-	if (!isSessionOpened() && !openSession())
+	if ((getSessionState() == ESessionState::Closed) && !openSession())
 	{
 		return false;
 	}

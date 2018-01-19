@@ -429,7 +429,19 @@ bool POSPrinter::printImage(const QImage & aImage, const Tags::TTypes & aTags)
 		request.append((const char *)aImage.scanLine(i), widthInBytes);
 	}
 
-	return mIOPort->write(request);
+	if (!mIOPort->write(request))
+	{
+		return false;
+	}
+
+	//TODO: под рефакторинг.
+	//Причины необходимости задержки ясны не до конца, т.к. задержка начинает работать после фактической печати картинки.
+	//Задержка нужна тем большая, чем больше картинок печатается одновременно или почти одновременно, через какое-то количество строк текста.
+	int pause = qMin(int(double(request.size()) / 2), 5000);
+	toLog(LogLevel::Debug, mDeviceName + QString(": size = %1, pause = %2").arg(request.size()).arg(pause));
+	SleepHelper::msleep(pause);
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------

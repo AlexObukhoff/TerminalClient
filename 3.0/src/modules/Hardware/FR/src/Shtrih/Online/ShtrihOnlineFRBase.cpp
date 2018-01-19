@@ -72,6 +72,9 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 	// Печатать все реквизиты пользователя в чеках
 	setFRParameter(CShtrihOnlineFR::FRParameters::PrintUserData, CShtrihOnlineFR::PrintFullUserData);
 
+	// Печатать фискальные теги, вводимые на платеже
+	setFRParameter(CShtrihOnlineFR::FRParameters::PrintCustomFields, true);
+
 	if (mOperatorPresence)
 	{
 		if (!containsConfigParameter(CHardware::FiscalFields::Cashier))
@@ -82,7 +85,7 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 
 		QString cashier = getConfigParameter(CHardware::FiscalFields::Cashier).toString();
 
-		if (!setFRParameter(CShtrihOnlineFR::FRParameters::Cashier, cashier, CShtrihOnlineFR::FRParameters::CashierSeries))
+		if (!setFRParameter(CShtrihOnlineFR::FRParameters::Cashier, cashier, CShtrihOnlineFR::CashierSeries))
 		{
 			toLog(LogLevel::Error, QString("%1: Failed to set cashier fiscal field (%2)").arg(mDeviceName).arg(cashier));
 			return false;
@@ -91,13 +94,36 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 
 	QByteArray data;
 
-	if (!processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalizationResume, &data) || (data.size() <= 41))
+	if (!processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalizationResume, &data) || (data.size() <= 46))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to get fiscalization resume");
 		return false;
 	}
 
-	return checkTaxationData(data[40]) && checkOperationModes(data[41]);
+	if (!checkTaxationData(data[40]) || !checkOperationModes(data[41]))
+	{
+		return false;
+	}
+
+	bool result = false;
+
+	if (processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, data.mid(43, 4)))
+	{
+		CFR::STLV TLV;
+
+		while (processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, &data))
+		{
+			if (parseTLV(data.mid(3), TLV))
+			{
+				if (TLV.field == FiscalFields::AgentFlagsRegistered)
+				{
+					result = checkAgentFlags(TLV.data[0]);
+				}
+			}
+		}
+	}
+
+	return result;
 }
 
 //---------------------------------------------------------------------------
@@ -230,9 +256,15 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 	if (getFRParameter(RNM, data)) mRNM = CFR::RNMToString(data);
 
 	#define SET_LCONFIG_FISCAL_FIELD(aName) QString aName##Log = QString("fiscal tag %1 (%2)").arg(FiscalFields::aName).arg(CHardware::FiscalFields::aName); \
-		if (getFRParameter(aName, data)) { setLConfigParameter(CHardware::FiscalFields::aName, data); QString value = getConfigParameter(CHardware::FiscalFields::aName, data).toString(); \
-			 toLog(LogLevel::Normal, QString("%1: Set %2 = \"%3\" to config data").arg(mDeviceName).arg(aName##Log).arg(value)); } \
-		else toLog(LogLevel::Error, QString("%1: Failed to set %2 to config data").arg(mDeviceName).arg(aName##Log));
+		if (getFRParameter(aName, data)) { setLConfigParameter(CHardware::FiscalFields::aName, data); \
+		     QString value = getConfigParameter(CHardware::FiscalFields::aName, data).toString(); \
+		     toLog(LogLevel::Normal, QString("%1: Add %2 = \"%3\" to config data").arg(mDeviceName).arg(aName##Log).arg(value)); } \
+		else toLog(LogLevel::Error, QString("%1: Failed to add %2 to config data").arg(mDeviceName).arg(aName##Log));
+
+	#define SET_BCONFIG_FISCAL_FIELD(aName) QString aName##Log = QString("fiscal tag %1 (%2)").arg(FiscalFields::aName).arg(CHardware::FiscalFields::aName); \
+		if (getFRParameter(aName, data)) { char value = data[0]; setConfigParameter(CHardware::FiscalFields::aName, value); \
+		     toLog(LogLevel::Normal, QString("%1: Add %2 = %3 to config data").arg(mDeviceName).arg(aName##Log).arg(value)); } \
+		else toLog(LogLevel::Error,  QString("%1: Failed to add %2 to config data").arg(mDeviceName).arg(aName##Log));
 
 	SET_LCONFIG_FISCAL_FIELD(FTSURL);
 	SET_LCONFIG_FISCAL_FIELD(OFDURL);
@@ -240,6 +272,12 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 	SET_LCONFIG_FISCAL_FIELD(LegalOwner);
 	SET_LCONFIG_FISCAL_FIELD(PayOffAddress);
 	SET_LCONFIG_FISCAL_FIELD(PayOffPlace);
+
+	/*
+	SET_BCONFIG_FISCAL_FIELD(LotteryMode);
+	SET_BCONFIG_FISCAL_FIELD(GamblingMode);
+	SET_BCONFIG_FISCAL_FIELD(ExcisableUnitMode);
+	*/
 
 	if (getFRParameter(SD::Status, data))
 	{
@@ -377,7 +415,7 @@ bool ShtrihOnlineFRBase<T>::sale(const SAmountData & aAmountData, bool aBack)
 		return ShtrihFRBase<T>::sale(aAmountData, aBack);
 	}
 
-	char documentType = aBack ? CShtrihFR::DocumentTypes::SaleBack : CShtrihFR::DocumentTypes::Sale;
+	char documentType = aBack ? CShtrihOnlineFR::DocumentTypes::SaleBack : CShtrihOnlineFR::DocumentTypes::Sale;
 	char taxIndex = char(mTaxData[aAmountData.VAT].group);
 	char section = (aAmountData.section == -1) ? CShtrihFR::SectionNumber : char(aAmountData.section);
 	QByteArray sum = getHexReverted(aAmountData.sum, 5, 2);
@@ -416,6 +454,16 @@ bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SP
 		toLog(LogLevel::Error, QString("%1: Failed to set taxation system %2 (%3)").arg(mDeviceName).arg(ProtocolUtils::toHexLog(taxation)).arg(CFR::Taxations[taxation]));
 		return false;
 	}
+
+	/*
+	char agentFlag = char(aPaymentData.agentFlag);
+
+	if ((agentFlag != EAgentFlags::None) && (mAgentFlags.size() != 1) && !setFRParameter(CShtrihOnlineFR::FRParameters::AgentFlag, agentFlag))
+	{
+		toLog(LogLevel::Error, QString("%1: Failed to set agent flag %2 (%3)").arg(mDeviceName).arg(ProtocolUtils::toHexLog(agentFlag)).arg(CFR::AgentFlags[agentFlag]));
+		return false;
+	}
+	*/
 
 	bool result = ShtrihFRBase<T>::performFiscal(aReceipt, aPaymentData, aFPData, aPSData);
 

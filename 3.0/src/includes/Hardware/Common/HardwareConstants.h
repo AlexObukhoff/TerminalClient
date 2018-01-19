@@ -16,6 +16,7 @@ namespace CHardware
 	const char UpdatingFilenameExtension[] = "updating_filename_extension";
 	const char PluginParameterNames[] = "plugin_parameter_names";
 	const char RequiredResourceNames[] = "required_resource_names";
+	const char PluginPath[] = "plugin_path";
 
 	/// Типы вызова функционала драйвера.
 	namespace CallingTypes

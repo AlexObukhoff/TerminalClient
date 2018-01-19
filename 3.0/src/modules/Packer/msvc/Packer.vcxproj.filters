@@ -36,9 +36,4 @@
       <Filter>Source Files</Filter>
     </CustomBuild>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\Crc32.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>

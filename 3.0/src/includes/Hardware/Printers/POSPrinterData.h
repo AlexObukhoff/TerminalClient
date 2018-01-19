@@ -29,13 +29,14 @@ namespace CPOSPrinter
 		const char PrintImage[]             = "\x1D\x76\x30";       /// Печать картинки.
 		const char AlignLeft[]              = "\x1B\x61\x30";       /// Выравнивание по левому краю.
 
+		/// Штрих-коды.
 		namespace Barcode
 		{
 			const char Height[]      = "\x1D\x68";      /// Высота штрих-кода - 20.25 мм.
 			const char HRIPosition[] = "\x1D\x48";      /// Позиционирование символов штрих-кода - выше штрих-кода.
 			const char FontSize[]    = "\x1D\x66";      /// Размер шрифта штрих-кода.
 			const char Width[]       = "\x1D\x77";      /// Ширина линии - 0.25 мм.
-			const char Print[]       = "\x1D\x6B";      /// Ширина линии - 0.25 мм.
+			const char Print[]       = "\x1D\x6B";      /// Печать.
 		}
 	}
 

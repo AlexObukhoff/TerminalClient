@@ -89,10 +89,10 @@ protected:
 	bool processAnswer(char aError);
 
 	/// Выполнить Z-отчет.
-	bool execZReport();
+	virtual bool execZReport();
 
 	/// Узнать, открыта ли смена.
-	bool isSessionOpened();
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
 
 	/// Получить номер последнего фискального документа.
 	int getLastDocumentNumber();

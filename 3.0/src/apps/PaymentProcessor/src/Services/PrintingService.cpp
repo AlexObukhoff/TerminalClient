@@ -143,9 +143,6 @@ bool PrintingService::initialize()
 //------------------------------------------------------------------------------
 void PrintingService::finishInitialize()
 {
-	auto settings = SettingsService::instance(mApplication)->getAdapter<SDK::PaymentProcessor::TerminalSettings>();
-
-	mRandomReceiptsID = settings->getCommonSettings().randomReceiptsID;
 }
 
 //---------------------------------------------------------------------------
@@ -1396,12 +1393,11 @@ void PrintingService::updateHardwareConfiguration()
 		.arg(DSDK::CComponents::Printer).arg(DSDK::CComponents::DocumentPrinter).arg(DSDK::CComponents::FiscalRegistrator);
 	QStringList printerNames = settings->getDeviceList().filter(QRegExp(regExpData));
 
+	mRandomReceiptsID = settings->getCommonSettings().randomReceiptsID;
+	QTime autoZReportTime = settings->getCommonSettings().autoZReportTime;
+
 	mPrinterDevices.clear();
 	mAvailablePrinters.clear();
-
-	QVariantMap delalerSettings;
-	delalerSettings.insert(CHardwareSDK::FR::DealerTaxation,  mStaticParameters.value(CPrintConstants::DealerTaxation));
-	delalerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters.value(CPrintConstants::DealerAgentFlag));
 
 	// Запрашиваем устройства.
 	foreach (const QString & printerName, printerNames)
@@ -1410,6 +1406,10 @@ void PrintingService::updateHardwareConfiguration()
 
 		if (device)
 		{
+			QVariantMap dealerSettings;
+			dealerSettings.insert(CHardwareSDK::FR::DealerTaxation, mStaticParameters.value(CPrintConstants::DealerTaxation));
+			dealerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters.value(CPrintConstants::DealerAgentFlag));
+
 			mPrinterDevices.append(device);
 
 			// Подписываемся на события принтера.
@@ -1419,9 +1419,16 @@ void PrintingService::updateHardwareConfiguration()
 			if (dynamic_cast<DSDK::IFiscalPrinter *>(device))
 			{
 				device->subscribe(SDK::Driver::IFiscalPrinter::FRSessionClosedSignal, this, SLOT(onFRSessionClosed(const QVariantMap &)));
+
+				if (autoZReportTime.isValid() && !autoZReportTime.isNull())
+				{
+					toLog(LogLevel::Normal, QString("Setup auto z-report time: %1.").arg(autoZReportTime.toString("hh:mm:ss")));
+
+					dealerSettings.insert(CHardwareSDK::FR::ZReportTime, autoZReportTime);
+				}
 			}
 
-			device->setDeviceConfiguration(delalerSettings);
+			device->setDeviceConfiguration(dealerSettings);
 		}
 		else
 		{

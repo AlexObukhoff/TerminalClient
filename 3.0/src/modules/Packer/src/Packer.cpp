@@ -8,6 +8,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QTextCodec>
 #include <QtCore/QCryptographicHash>
+#include <QtCore/QDateTime>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
@@ -15,11 +16,18 @@
 
 // Project
 #include "Packer.h"
-#include "Crc32.h"
 
+// Qt 3rdparty
+#include <zlib.h>
+
+//------------------------------------------------------------------------------
 namespace CPacker
 {
 	const int DefaultTimeout = 300 * 1000;  // таймаут распаковки/запаковки в мс.
+	
+	// ported from https://stackoverflow.com/questions/2690328/qt-quncompress-gzip-data
+	const int GZIP_WINDOWS_BIT = 15 + 16;
+	const int GZIP_CHUNK_SIZE = 32 * 1024;
 };
 
 //------------------------------------------------------------------------------
@@ -58,32 +66,221 @@ void Packer::setUpdateMode(bool aUpdateMode)
 }
 
 //---------------------------------------------------------------------------
-QByteArray Packer::compressToGZ(const QByteArray & aInBuffer, const QString & aFileName, int aLevel)
+bool Packer::gzipCompress(const QByteArray & aInBuffer, const QString & aFileName, QByteArray & aOutBuffer, int aLevel)
 {
-	const unsigned char gzipheader[10] = { 0x1f,0x8b,8,0,0,0,0,0,2,0 };
-	unsigned long crc = Crc32().fromByteArray(aInBuffer);
-	quint32 len = aInBuffer.size();
+	// Prepare output
+	aOutBuffer.clear();
 
-	QByteArray out = qCompress(aInBuffer, aLevel);
-	out.remove(0, 4); //qt makes first 4 bytes size of zipped data, i don't need it for gzip
-	out.remove(0, 2); // Remove Zlib header
-	out.chop(4); // Remove Zlib trailer 
-
-	QByteArray gzBufer = QByteArray((const char *)gzipheader, 10);
-
-	if (!aFileName.isEmpty())
+	// Is there something to do?
+	if (aInBuffer.length())
 	{
-		gzBufer[3] = 8;
+		// Declare vars
+		int flush = 0;
 
-		gzBufer.append(aFileName.toLatin1());
-		gzBufer.append("\0", 1);
+		// Prepare deflater status
+		z_stream strm;
+		memset(&strm, 0, sizeof(strm));
+
+		// Initialize deflater
+		int ret = deflateInit2(&strm, qMax(-1, qMin(9, aLevel)), Z_DEFLATED, CPacker::GZIP_WINDOWS_BIT, 8, Z_DEFAULT_STRATEGY);
+
+		if (ret != Z_OK)
+		{
+			return false;
+		}
+
+		gz_header header;
+		memset(&header, 0, sizeof(header));
+		QByteArray nameBuffer = aFileName.toLatin1();
+		nameBuffer.append('\0');
+		header.name = (Bytef *)nameBuffer.constData();
+		header.name_max = nameBuffer.size();
+		header.time = QDateTime::currentDateTime().toTime_t();
+
+		ret = deflateSetHeader(&strm, &header);
+		if (ret != Z_OK)
+		{
+			return false;
+		}
+
+		// Prepare output
+		aOutBuffer.clear();
+
+		// Extract pointer to input data
+		const char * input_data = aInBuffer.data();
+		int input_data_left = aInBuffer.length();
+
+		// Compress data until available
+		do
+		{
+			// Determine current chunk size
+			int chunk_size = qMin(CPacker::GZIP_CHUNK_SIZE, input_data_left);
+
+			// Set deflater references
+			strm.next_in = (unsigned char*)input_data;
+			strm.avail_in = chunk_size;
+
+			// Update interval variables
+			input_data += chunk_size;
+			input_data_left -= chunk_size;
+
+			// Determine if it is the last chunk
+			flush = (input_data_left <= 0 ? Z_FINISH : Z_NO_FLUSH);
+
+			// Deflate chunk and cumulate output
+			do
+			{
+				// Declare vars
+				char out[CPacker::GZIP_CHUNK_SIZE];
+
+				// Set deflater references
+				strm.next_out = (unsigned char*)out;
+				strm.avail_out = CPacker::GZIP_CHUNK_SIZE;
+
+				// Try to deflate chunk
+				ret = deflate(&strm, flush);
+
+				// Check errors
+				if (ret == Z_STREAM_ERROR)
+				{
+					// Clean-up
+					deflateEnd(&strm);
+
+					// Return
+					return false;
+				}
+
+				// Determine compressed size
+				int have = (CPacker::GZIP_CHUNK_SIZE - strm.avail_out);
+
+				// Cumulate result
+				if (have > 0)
+				{
+					aOutBuffer.append((char*)out, have);
+				}
+			} while (strm.avail_out == 0);
+
+		} while (flush != Z_FINISH);
+
+		// Clean-up
+		deflateEnd(&strm);
+
+		// Return
+		return (ret == Z_STREAM_END);
 	}
 
-	gzBufer.append(out);
-	gzBufer.append((const char *)&crc, 4);
-	gzBufer.append((const char *)&len, 4);
+	return true;
+}
 
-	return gzBufer;
+//------------------------------------------------------------------------------
+bool Packer::gzipUncompress(const QByteArray & aInBuffer, QString & aFileName, QByteArray & aOutBuffer)
+{
+	// Prepare output
+	aFileName.clear();
+	aOutBuffer.clear();
+
+	// Is there something to do?
+	if (aInBuffer.length() > 0)
+	{
+		// Prepare inflater status
+		z_stream strm;
+		memset(&strm, 0, sizeof(strm));
+
+		// Initialize inflater
+		int ret = inflateInit2(&strm, CPacker::GZIP_WINDOWS_BIT);
+
+		if (ret != Z_OK)
+		{
+			return false;
+		}
+
+		gz_header header;
+		memset(&header, 0, sizeof(header));
+		QByteArray nameBuffer;
+		nameBuffer.fill('\0', 256);
+		header.name = (Bytef *)nameBuffer.data();
+		header.name_max = nameBuffer.size();
+
+		ret = inflateGetHeader(&strm, &header);
+		if (ret != Z_OK)
+		{
+			return false;
+		}
+
+		// Extract pointer to aInBuffer data
+		const char * input_data = aInBuffer.data();
+		int input_data_left = aInBuffer.length();
+
+		// Decompress data until available
+		do
+		{
+			// Determine current chunk size
+			int chunk_size = qMin(CPacker::GZIP_CHUNK_SIZE, input_data_left);
+
+			// Check for termination
+			if (chunk_size <= 0)
+			{
+				break;
+			}
+
+			// Set inflater references
+			strm.next_in = (unsigned char*)input_data;
+			strm.avail_in = chunk_size;
+
+			// Update interval variables
+			input_data += chunk_size;
+			input_data_left -= chunk_size;
+
+			// Inflate chunk and cumulate output
+			do
+			{
+				// Declare vars
+				char out[CPacker::GZIP_CHUNK_SIZE];
+
+				// Set inflater references
+				strm.next_out = (unsigned char*)out;
+				strm.avail_out = CPacker::GZIP_CHUNK_SIZE;
+
+				// Try to inflate chunk
+				ret = inflate(&strm, Z_NO_FLUSH);
+
+				switch (ret)
+				{
+				case Z_NEED_DICT:
+					ret = Z_DATA_ERROR;
+				case Z_DATA_ERROR:
+				case Z_MEM_ERROR:
+				case Z_STREAM_ERROR:
+					inflateEnd(&strm);  // Clean-up
+					return false;
+				}
+
+				// Determine decompressed size
+				int have = (CPacker::GZIP_CHUNK_SIZE - strm.avail_out);
+
+				// Cumulate result
+				if (have > 0)
+				{
+					aOutBuffer.append((char*)out, have);
+				}
+
+			} while (strm.avail_out == 0);
+
+		} while (ret != Z_STREAM_END);
+
+		if (strlen((const char *)header.name))
+		{
+			aFileName = QString::fromLatin1((const char *)header.name);
+		}
+
+		// Clean-up
+		inflateEnd(&strm);
+
+		// Return
+		return (ret == Z_STREAM_END);
+	}
+
+	return true;
 }
 
 //------------------------------------------------------------------------------

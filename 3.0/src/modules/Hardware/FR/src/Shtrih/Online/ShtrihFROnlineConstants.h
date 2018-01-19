@@ -37,6 +37,9 @@ namespace CShtrihOnlineFR
 	/// Печатать все реквизиты пользователя (название юр. лица, адрес и место расчетов).
 	const int PrintFullUserData = 7;
 
+	/// Ряд кассира по умолчанию (сисадмин).
+	const int CashierSeries = 30;
+
 	/// Параметры автообновления.
 	namespace FirmwareUpdating
 	{
@@ -46,11 +49,16 @@ namespace CShtrihOnlineFR
 		const int Single   = 0;      /// Многократное обновление.
 	}
 
+	/// Типы фискальных чеков.
+	namespace DocumentTypes
+	{
+		const char Sale     = '\x01';    /// Продажа.
+		const char SaleBack = '\x02';    /// Возврат продажи.
+	}
+
 	/// Параметры ФР.
 	namespace FRParameters
 	{
-		const int CashierSeries = 30;    /// Ряд кассира по умолчанию (сисадмин).
-
 		using namespace CShtrihFR::FRParameters;
 
 		const SData Cashier             = SData( 2,  2);    /// Кассир по умолчанию (сисадмин).
@@ -59,6 +67,7 @@ namespace CShtrihOnlineFR
 		const SData PrintOFDData        = SData(10, 17);    /// Печатать данные ОФД.
 		const SData PrintUserData       = SData(12, 17);    /// Печатать реквизитов [суб]дилера.
 		const SData FFDFR               = SData(17, 17);    /// ФФД ФР.
+		const SData PrintCustomFields   = SData(25, 17);    /// Автопечать тегов, вводимых на платеже.
 		const SData SerialNumber        = SData( 1, 18);    /// Серийный номер.
 		const SData INN                 = SData( 2, 18);    /// ИНН.
 		const SData RNM                 = SData( 3, 18);    /// РНМ.
@@ -69,6 +78,7 @@ namespace CShtrihOnlineFR
 		const SData OFDURL              = SData(11, 18);    /// Aдрес сайта ОФД.
 		const SData FTSURL              = SData(13, 18);    /// Адрес сайта ФНС.
 		const SData PayOffPlace         = SData(14, 18);    /// Место расчетов.
+		const SData AgentFlag           = SData(16, 18);    /// Признак агента.
 		const SData OFDAddress          = SData( 1, 19);    /// Aдрес ОФД.
 		const SData OFDPort             = SData( 2, 19);    /// Порт ОФД.
 		const SData AutomaticNumber     = SData( 1, 24);    /// Номер автомата.

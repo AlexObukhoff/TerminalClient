@@ -12,6 +12,8 @@
 namespace CHardware { namespace FiscalFields
 {
 	const char FDName[]                  = "fd_name";                       // 1000 (Наименование фискального документа).
+	const char AutomaticMode[]           = "automatic_mode";                // 1001 (Признак автоматического режима).
+	const char AutonomousMode[]          = "autonomous_mode";               // 1002 (Признак автономного режима).
 	const char UserContact[]             = "user_contact";                  // 1008 (Телефон или электронный адрес покупателя).
 	const char PayOffAddress[]           = "payoff_address";                // 1009 (Адрес расчетов).
 	const char FDDateTime[]              = "fd_date_time";                  // 1012 (Дата и время ФД).
@@ -32,6 +34,7 @@ namespace CHardware { namespace FiscalFields
 	const char LegalOwner[]              = "legal_owner";                   // 1048 (Наименование юр. лица владельца).
 	const char PayOffType[]              = "payoff_type";                   // 1054 (Признак расчета).
 	const char TaxSystem[]               = "tax_system";                    // 1055 (СНО на платеже).
+	const char EncryptionMode[]          = "encryption_mode";               // 1056 (Признак шифрования).
 	const char AgentFlagsRegistered[]    = "agent_flags_registered";        // 1057 (Признак(и) платежного агента из итогов регистрации).
 	const char PayOffSubject[]           = "payoff_subject";                // 1059 (Предмет расчета).
 	const char FTSURL[]                  = "fts_url";                       // 1060 (Адрес сайта ФНС).
@@ -52,13 +55,19 @@ namespace CHardware { namespace FiscalFields
 	const char TaxAmount06[] = "tax_amount_06";    // 1106 (Сумма НДС чека по расчетной ставке 18/118).
 	const char TaxAmount07[] = "tax_amount_07";    // 1107 (Сумма НДС чека по расчетной ставке 10/110).
 
-	const char PayOffPlace[]       = "payoff_place";           // 1187 (Место расчетов).
-	const char VATRate[]           = "vat_rate";               // 1199 (Ставка НДС).
-	const char CashierINN[]        = "cashier_inn";            // 1203 (ИНН кассира).
-	const char OFDURL[]            = "ofd_url";                // 1208 (Адрес сайта для получения чека).
-	const char PayOffSubjectType[] = "payoff_subject_type";    // 1212 (Признак предмета расчета).
-	const char PayOffMethodType[]  = "payoff_method_type";     // 1214 (Признак способа расчета).
-	const char AgentFlag[]         = "agent_flags";            // 1222 (Признак платежного агента на платеже).
+	const char InternetMode[]       = "internet_mode";           // 1108 (Признак работы с интернет (без принтера).
+	const char ServiceAreaMode[]    = "service_area_mode";       // 1109 (Признак применения в сфере услуг).
+	const char FixedReportingMode[] = "fixed_reporting_mode";    // 1110 (Признак работы с бланками строгой отчетности (БСО).
+	const char LotteryMode[]        = "lottery_mode";            // 1126 (Признак проведения лотереи).
+	const char PayOffPlace[]        = "payoff_place";            // 1187 (Место расчетов).
+	const char GamblingMode[]       = "gambling_mode";           // 1193 (Признак проведения азартных игр).
+	const char VATRate[]            = "vat_rate";                // 1199 (Ставка НДС).
+	const char CashierINN[]         = "cashier_inn";             // 1203 (ИНН кассира).
+	const char ExcisableUnitMode[]  = "excisable_unit_mode";     // 1207 (Признак торговли подакцизными товарами).
+	const char OFDURL[]             = "ofd_url";                 // 1208 (Адрес сайта для получения чека).
+	const char PayOffSubjectType[]  = "payoff_subject_type";     // 1212 (Признак предмета расчета).
+	const char PayOffMethodType[]   = "payoff_method_type";      // 1214 (Признак способа расчета).
+	const char AgentFlag[]          = "agent_flag";              // 1222 (Признак платежного агента на платеже).
 
 }}    // namespace CHardware::FiscalFields
 
@@ -150,6 +159,8 @@ namespace CFR { namespace FiscalFields
 			#define ADD_FISCAL_FIELD(aName, aType) append(SDK::Driver::FiscalFields::aName, SData(ETypes::aType, CHardware::FiscalFields::aName))
 
 			ADD_FISCAL_FIELD(FDName,                 String);       // 1000 (Наименование фискального документа).
+			ADD_FISCAL_FIELD(AutomaticMode,          Byte);         // 1001 (Признак автоматического режима).
+			ADD_FISCAL_FIELD(AutonomousMode,         Byte);         // 1002 (Признак автономного режима).
 			ADD_FISCAL_FIELD(UserContact,            String);       // 1008 (Телефон или электронный адрес покупателя).
 			ADD_FISCAL_FIELD(PayOffAddress,          String);       // 1009 (Адрес расчетов).
 			ADD_FISCAL_FIELD(FDDateTime,             UnixTime);     // 1012 (Дата и время ФД).
@@ -170,6 +181,7 @@ namespace CFR { namespace FiscalFields
 			ADD_FISCAL_FIELD(LegalOwner,             String);       // 1048 (Наименование юр. лица владельца).
 			ADD_FISCAL_FIELD(PayOffType,             Byte);         // 1054 (Признак расчета).
 			ADD_FISCAL_FIELD(TaxSystem,              Byte);         // 1055 (СНО на платеже).
+			ADD_FISCAL_FIELD(EncryptionMode,         Byte);         // 1056 (Признак шифрования).
 			ADD_FISCAL_FIELD(AgentFlagsRegistered,   Byte);         // 1057 (Признак(и) платежного агента из итогов регистрации).
 			ADD_FISCAL_FIELD(PayOffSubject,          STLV);         // 1059 (Предмет расчета).
 			ADD_FISCAL_FIELD(FTSURL,                 String);       // 1060 (Адрес сайта ФНС).
@@ -190,13 +202,19 @@ namespace CFR { namespace FiscalFields
 			ADD_FISCAL_FIELD(TaxAmount06, VLN);    // 1106 (Сумма НДС чека по расчетной ставке 18/118).
 			ADD_FISCAL_FIELD(TaxAmount07, VLN);    // 1107 (Сумма НДС чека по расчетной ставке 10/110).
 
-			ADD_FISCAL_FIELD(PayOffPlace,       String);    // 1187 (Место расчетов).
-			ADD_FISCAL_FIELD(VATRate,           Byte);      // 1199 (Ставка НДС).
-			ADD_FISCAL_FIELD(CashierINN,        String);    // 1203 (ИНН кассира).
-			ADD_FISCAL_FIELD(OFDURL,            String);    // 1208 (Адрес сайта для получения чека).
-			ADD_FISCAL_FIELD(PayOffSubjectType, Byte);      // 1212 (Признак предмета расчета).
-			ADD_FISCAL_FIELD(PayOffMethodType,  Byte);      // 1214 (Признак способа расчета).
-			ADD_FISCAL_FIELD(AgentFlag,         Byte);      // 1222 (Признак платежного агента на платеже).
+			ADD_FISCAL_FIELD(InternetMode,       Byte);      // 1108 (Признак работы с интернет (без принтера).
+			ADD_FISCAL_FIELD(ServiceAreaMode,    Byte);      // 1109 (Признак применения в сфере услуг).
+			ADD_FISCAL_FIELD(FixedReportingMode, Byte);      // 1110 (Признак работы с бланками строгой отчетности (БСО).
+			ADD_FISCAL_FIELD(LotteryMode,        Byte);      // 1126 (Признак проведения лотереи).
+			ADD_FISCAL_FIELD(PayOffPlace,        String);    // 1187 (Место расчетов).
+			ADD_FISCAL_FIELD(GamblingMode,       Byte);      // 1193 (Признак проведения азартных игр).
+			ADD_FISCAL_FIELD(VATRate,            Byte);      // 1199 (Ставка НДС).
+			ADD_FISCAL_FIELD(CashierINN,         String);    // 1203 (ИНН кассира).
+			ADD_FISCAL_FIELD(ExcisableUnitMode,  Byte);      // 1207 (Признак торговли подакцизными товарами).
+			ADD_FISCAL_FIELD(OFDURL,             String);    // 1208 (Адрес сайта для получения чека).
+			ADD_FISCAL_FIELD(PayOffSubjectType,  Byte);      // 1212 (Признак предмета расчета).
+			ADD_FISCAL_FIELD(PayOffMethodType,   Byte);      // 1214 (Признак способа расчета).
+			ADD_FISCAL_FIELD(AgentFlag,          Byte);      // 1222 (Признак платежного агента на платеже).
 		}
 	};
 

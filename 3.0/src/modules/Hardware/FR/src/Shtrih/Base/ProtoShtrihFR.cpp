@@ -1021,10 +1021,25 @@ TResult ProtoShtrihFR<T>::getLongStatus(QByteArray & aAnswer)
 	{
 		mMode    = aAnswer[15] & CShtrihFR::InnerModes::Mask;
 		mSubmode = aAnswer[16];
-		mSessionOpened = (mMode == CShtrihFR::InnerModes::SessionOpened) || (mMode == CShtrihFR::InnerModes::NeedCloseSession);
 	}
 
 	return result;
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+ESessionState::Enum ProtoShtrihFR<T>::getSessionState()
+{
+	QByteArray data;
+
+	if (!getLongStatus(data))
+	{
+		return ESessionState::Error;
+	}
+
+	bool result = (mMode == CShtrihFR::InnerModes::SessionOpened) || (mMode == CShtrihFR::InnerModes::NeedCloseSession);
+
+	return result ? ESessionState::Opened : ESessionState::Closed;
 }
 
 //--------------------------------------------------------------------------------

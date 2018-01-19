@@ -64,7 +64,9 @@ bool AtolOnlineFRBase::updateParameters()
 		return false;
 	}
 
-	if (!processCommand(CAtolOnlineFR::Commands::FS::GetFiscalizationResume, &data) || (data.size() <= 40))
+	int reregistrationNumber = getDeviceParameter(CDeviceData::FR::ReregistrationNumber).toInt();
+
+	if (!processCommand(CAtolOnlineFR::Commands::FS::GetFiscalizationResume, QByteArray(1, char(reregistrationNumber)), &data) || (data.size() <= 40))
 	{
 		return false;
 	}
@@ -76,12 +78,22 @@ bool AtolOnlineFRBase::updateParameters()
 
 	using namespace CFR::FiscalFields;
 
-	ERequired::Enum required = (mTaxations.size() > 1) ? ERequired::Yes : ERequired::No;
-	mFiscalFieldData.data()[FiscalFields::TaxSystem].required = required;
+	ERequired::Enum  taxationRequired =  (mTaxations.size() > 1) ? ERequired::Yes : ERequired::No;
+	ERequired::Enum agentFlagRequired = (mAgentFlags.size() > 1) ? ERequired::Yes : ERequired::No;
 
-	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(FiscalFields::aName, data)) { setLConfigParameter(CHardware::FiscalFields::aName, data); \
-		toLog(LogLevel::Normal, QString("%1: Set fiscal tag %2 (%3) = \"%4\" to config data") \
-			.arg(mDeviceName).arg(FiscalFields::aName).arg(CHardware::FiscalFields::aName).arg(getConfigParameter(CHardware::FiscalFields::aName, data).toString())); }
+	mFiscalFieldData.data()[FiscalFields::TaxSystem].required = taxationRequired;
+	mFiscalFieldData.data()[FiscalFields::AgentFlag].required = agentFlagRequired;
+
+	#define SET_LCONFIG_FISCAL_FIELD(aName) QString aName##Log = QString("fiscal tag %1 (%2)").arg(FiscalFields::aName).arg(CHardware::FiscalFields::aName); \
+		if (getTLV(FiscalFields::aName, data)) { setLConfigParameter(CHardware::FiscalFields::aName, data); \
+		     QString value = getConfigParameter(CHardware::FiscalFields::aName, data).toString(); \
+		     toLog(LogLevel::Normal, QString("%1: Add %2 = \"%3\" to config data").arg(mDeviceName).arg(aName##Log).arg(value)); } \
+		else toLog(LogLevel::Error, QString("%1: Failed to add %2 to config data").arg(mDeviceName).arg(aName##Log));
+
+	#define SET_BCONFIG_FISCAL_FIELD(aName) QString aName##Log = QString("fiscal tag %1 (%2)").arg(FiscalFields::aName).arg(CHardware::FiscalFields::aName); \
+		if (getTLV(FiscalFields::aName, data)) { char value = data[0]; setConfigParameter(CHardware::FiscalFields::aName, value); \
+		     toLog(LogLevel::Normal, QString("%1: Add %2 = %3 to config data").arg(mDeviceName).arg(aName##Log).arg(int(value))); } \
+		else toLog(LogLevel::Error,  QString("%1: Failed to add %2 to config data").arg(mDeviceName).arg(aName##Log));
 
 	SET_LCONFIG_FISCAL_FIELD(FTSURL);
 	SET_LCONFIG_FISCAL_FIELD(OFDURL);
@@ -90,12 +102,11 @@ bool AtolOnlineFRBase::updateParameters()
 	SET_LCONFIG_FISCAL_FIELD(PayOffAddress);
 	SET_LCONFIG_FISCAL_FIELD(PayOffPlace);
 
-	if (getTLV(FiscalFields::AgentFlagsRegistered, data))
-	{
-		return checkAgentFlags(data[0]);
-	}
+	SET_BCONFIG_FISCAL_FIELD(LotteryMode);
+	SET_BCONFIG_FISCAL_FIELD(GamblingMode);
+	SET_BCONFIG_FISCAL_FIELD(ExcisableUnitMode);
 
-	return true;
+	return getTLV(FiscalFields::AgentFlagsRegistered, data) && !data.isEmpty() && checkAgentFlags(data[0]);
 }
 
 //--------------------------------------------------------------------------------

@@ -56,7 +56,7 @@ public:
 	virtual bool printEncashment(const QStringList & aReceipt, double aAmount);
 
 	/// Открыта ли сессия.
-	virtual bool isSessionOpened();
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
 
 	/// Находится ли в фискальном режиме.
 	virtual bool isFiscal() const;
@@ -121,6 +121,15 @@ protected:
 
 	/// Получить массив байтов TLV-структуры для установки тега VLN-типа.
 	QByteArray getDigitTLVData(qulonglong aValue);
+
+	/// Проверить Z-отчет по таймеру.
+	void checkZReportOnTimer();
+
+	/// Выполнить Z-отчет.
+	virtual void onExecZReport();
+
+	/// Выполнить Z-отчет.
+	virtual bool execZReport(bool /*aAuto*/) { return false; }
 
 	/// Печать Z-отчета.
 	virtual bool performZReport(bool aPrintDeferredReports) = 0;
@@ -187,9 +196,6 @@ protected:
 
 	/// Глобальная ошибка принтерной части части ФР, печать невозможна.
 	bool mPrinterCollapse;
-
-	/// Открыта ли сессия.
-	bool mSessionOpened;
 
 	/// Признак фискализированности ККМ.
 	bool mFiscalized;

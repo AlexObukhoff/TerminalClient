@@ -265,8 +265,9 @@ void DeviceBase<T>::initialize()
 		processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::NotAvailable);
 	}
 
+	QString pluginPath = QString("\n%1 : %2").arg(CHardware::PluginPath).arg(getConfigParameter(CHardware::PluginPath).toString());
 	SLogData logData = getDeviceData();
-	setConfigParameter(CHardwareSDK::DeviceData, logData.pluginConfig + logData.device + logData.requiedDevicePluginConfig);
+	setConfigParameter(CHardwareSDK::DeviceData, pluginPath + logData.pluginConfig + logData.device + logData.requiedDevicePluginConfig);
 	logDeviceData(logData);
 	removeConfigParameter(CHardware::CallingType);
 

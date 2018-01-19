@@ -161,6 +161,7 @@ namespace CPrimFR
 		const char EReport               = '\x34';
 		const char EDocument             = '\x3E';
 		const char GetLastCVCNumber      = '\x3F';
+		const char GetDateTime           = '\x43';
 		const char SetMoneyBoxSettings   = '\x44';
 		const char GetMoneyBoxSettings   = '\x45';
 		const char SetFDTypeNames        = '\x47';

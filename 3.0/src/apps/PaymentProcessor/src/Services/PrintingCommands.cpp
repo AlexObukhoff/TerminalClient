@@ -151,35 +151,33 @@ bool PrintFiscalCommand::getFiscalInfo(QVariantMap & aParameters, QStringList & 
 {
 	PPSDK::IFiscalRegister * fr = mService->getFiscalRegister();
 
-	if (!fr || !fr->haveCapability(PPSDK::IFiscalRegister::Receipt))
-	{
-		return true;
-	}
-
-	QStringList parameterNames = fr->getParameterNames();
-
-	// Если в параметрах платежа ещё нет информации о фискальном номере
-	bool OK = !parameterNames.toSet().intersect(aParameters.keys().toSet()).isEmpty();
-	
-	if (!OK)
+	if (fr && fr->haveCapability(PPSDK::IFiscalRegister::Receipt))
 	{
 		qint64 paymentId = aParameters.value(PPSDK::CPayment::Parameters::ID).toLongLong();
-		QDateTime creationDate = aParameters.value(PPSDK::CPayment::Parameters::CreationDate, "").toDateTime();
+		QStringList parameterNames = fr->getParameterNames();
 
-		auto fiscalParameters = fr->createFiscalTicket(paymentId, creationDate, getPaymentData(aParameters));
-		OK = !fiscalParameters.isEmpty();
+		// Если в параметрах платежа ещё нет информации о фискальном номере
+		bool OK = !parameterNames.toSet().intersect(aParameters.keys().toSet()).isEmpty();
+	
+		if (!OK)
+		{
+			auto fiscalParameters = fr->createFiscalTicket(paymentId, aParameters, getPaymentData(aParameters));
+			OK = !fiscalParameters.isEmpty();
 		
-		aParameters.unite(fiscalParameters);
+			aParameters.unite(fiscalParameters);
 
-		mService->setFiscalNumber(paymentId, fiscalParameters);
+			mService->setFiscalNumber(paymentId, fiscalParameters);
+		}
+
+		if (OK)
+		{
+			aReceiptLines = fr->getReceipt(paymentId, aParameters);
+		}
+
+		return OK;
 	}
 
-	if (OK)
-	{
-		aReceiptLines = fr->getReceipt(aParameters);
-	}
-
-	return OK;
+	return false;
 }
 
 //---------------------------------------------------------------------------
@@ -236,7 +234,10 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 
 		if (!mFiscalPaymentData.isEmpty())
 		{
-			#define ADD_FISCAL_TAG(aTranstation, aFiscalTag) receipt << aTranstation + ":  " + mFiscalPaymentData[DSDK::FiscalFields::aFiscalTag].toString();
+			#define ADD_FISCAL_TAG(aTranstation, aFiscalTag) \
+				if (DSDK::FiscalFields::isMoney(DSDK::FiscalFields::aFiscalTag)) \
+				{ receipt << QString("%1:  %2").arg(aTranstation).arg(mFiscalPaymentData[DSDK::FiscalFields::aFiscalTag].toInt() / 100.0, 0, 'f', 2); } \
+				else { receipt << QString("%1:  %2").arg(aTranstation).arg(mFiscalPaymentData[DSDK::FiscalFields::aFiscalTag].toString()); }
 
 			ADD_FISCAL_TAG(tr("#taxation"),      TaxSystem);
 			ADD_FISCAL_TAG(tr("#kkt_timestamp"), FDDateTime);

@@ -18,6 +18,10 @@ class ProtoFR: public ProtoDevice, public SDK::Driver::IFiscalPrinter
 signals :
 	/// Данные о закрытой сессии.
 	void FRSessionClosed(const QVariantMap & aOutData);
+
+protected slots:
+	/// Выполнить Z-отчет.
+	virtual void onExecZReport() {}
 };
 
 //--------------------------------------------------------------------------------

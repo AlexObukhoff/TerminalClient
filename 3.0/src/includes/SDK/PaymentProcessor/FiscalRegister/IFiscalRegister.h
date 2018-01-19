@@ -40,10 +40,10 @@ public:
 	virtual bool haveCapability(quint32 aCapabilityFlags) = 0;
 
 	/// Зарегистрировать платёж и вернуть набор параметров
-	virtual QVariantMap createFiscalTicket(qint64 aPaymentId, const QDateTime & aPaymentTime, const SDK::Driver::SPaymentData & aPaymentData) = 0;
+	virtual QVariantMap createFiscalTicket(qint64 aPaymentId, const QVariantMap & aPaymentParameters, const SDK::Driver::SPaymentData & aPaymentData) = 0;
 
 	/// Получить строки для чека с фискальной информацией, список параметров может модифицироваться!
-	virtual QStringList getReceipt(QVariantMap & aPaymentParameters) = 0;
+	virtual QStringList getReceipt(qint64 paymentId, const QVariantMap & aPaymentParameters) = 0;
 
 	/// Получить отчёт по балансу ФР
 	virtual QStringList balance() = 0;

@@ -11,6 +11,7 @@
 #include <numeric>
 
 // SDK
+#include <SDK/Drivers/FR/FiscalFields.h>
 #include <SDK/Drivers/FR/FiscalDataTypes.h>
 
 // Modules
@@ -94,6 +95,9 @@ namespace CFR
 
 	/// Количество секунд в сутках.
 	const int SecsInDay = 24 * 60 * 60;
+
+	/// Количество миллисекунд в сутках.
+	const int MSecsInDay = SecsInDay * 1000;
 
 	/// Константные данные ФФД.
 	struct SFFDData
@@ -271,7 +275,7 @@ namespace CFR
 			append(SimplifiedIncomeMinusExpense, "УСН доход - расход");
 			append(SingleImputedIncome,          "ЕНВД");
 			append(SingleAgricultural,           "ЕСН");
-			append(Patent,                       "патент");
+			append(Patent,                       "Патент");
 		}
 	};
 
@@ -334,28 +338,42 @@ namespace CFR
 	static CPayOffTypes PayOffTypes;
 
 	//--------------------------------------------------------------------------------
-	/// Наименование фискального чека.
-	const QString CashFDName = QString::fromUtf8("КАССОВЫЙ ЧЕК");
+	const QString FDName            = QString::fromUtf8("КАССОВЫЙ ЧЕК");                /// ПФ тега 1000 (Наименование фискального документа).
+	const QString LotteryMode       = QString::fromUtf8("ПРОВЕДЕНИЕ ЛОТЕРЕИ");          /// ПФ тега 1126 (Признак проведения лотереи).
+	const QString GamblingMode      = QString::fromUtf8("ПРОВЕДЕНИЕ АЗАРТНОЙ ИГРЫ");    /// ПФ тега 1193 (Признак проведения азартных игр).
+	const QString ExcisableUnitMode = QString::fromUtf8("ПОДАКЦИЗНЫЕ ТОВАРЫ");          /// ПФ тега 1207 (Признак торговли подакцизными товарами).
 
 	//--------------------------------------------------------------------------------
 	/// Режимы работы.
-	class COperationModes : public CBitmapDescription<char>
+	namespace OperationModes
 	{
-	public:
-		COperationModes()
+		struct SData
 		{
-			using namespace SDK::Driver::EOperationModes;
+			int field;
+			QString description;
 
-			append(Encrypting,     "шифрование");
-			append(Autonomous,     "автономный режим");
-			append(Automatic,      "автоматический режим");
-			append(ServicesArea,   "сфера услуг");
-			append(FixedReporting, "БСО");
-			append(Internet,       "интернет");
-		}
-	};
+			SData(): field(0) {}
+			SData(int aField, const QString & aDescription): field(aField), description(aDescription) {}
+		};
 
-	static COperationModes OperationModes;
+		#define ADD_OPERATION_MODE(aName, aDescription) append(SDK::Driver::EOperationModes::aName, SData(SDK::Driver::FiscalFields::aName##Mode, QString::fromUtf8(aDescription)))
+
+		class CData: public CSpecification<char, SData>
+		{
+		public:
+			CData()
+			{
+				ADD_OPERATION_MODE(Encryption,     "ШФД");
+				ADD_OPERATION_MODE(Autonomous,     "АВТОНОМН. РЕЖИМ");
+				ADD_OPERATION_MODE(Automatic,      "АВТОМАТ. РЕЖИМ");
+				ADD_OPERATION_MODE(ServiceArea,    "ККТ ДЛЯ УСЛУГ");
+				ADD_OPERATION_MODE(FixedReporting, "АС БСО");
+				ADD_OPERATION_MODE(Internet,       "ККТ ДЛЯ ИНТЕРНЕТ");
+			}
+		};
+
+		static CData Data;
+	}
 }
 
 //--------------------------------------------------------------------------------

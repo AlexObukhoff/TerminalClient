@@ -58,6 +58,7 @@ public:
 				QVariantMap configuration;
 				configuration.insert(CHardware::PluginParameterNames, pluginParameterNames);
 				configuration.insert(CHardware::RequiredResourceNames, requiredResourceNames);
+				configuration.insert(CHardware::PluginPath, makeDriverPath<T>());
 				T::setDeviceConfiguration(configuration);
 			}
 		}

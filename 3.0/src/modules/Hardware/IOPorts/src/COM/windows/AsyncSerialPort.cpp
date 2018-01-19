@@ -126,7 +126,7 @@ void AsyncSerialPort::setDeviceConfiguration(const QVariantMap & aConfiguration)
 		mType = EPortTypes::COMEmulator;
 	}
 
-	if (!mExist)
+	if (!mExist && !mSystemName.isEmpty())
 	{
 		checkExistence();
 	}

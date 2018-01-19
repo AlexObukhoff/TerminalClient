@@ -58,6 +58,7 @@ namespace CAllHardware
 		const char DealerAgentFlag[] = "dealer_agent_flag";
 		const char UserPhone[] = "user_phone";
 		const char UserMail[] = "user_mail";
+		const char ZReportTime[] = "z_report_time";
 	}
 
 	/// Константы принтера.

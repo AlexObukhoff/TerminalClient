@@ -15,6 +15,16 @@
 namespace SDK {
 namespace Driver {
 
+namespace ESessionState
+{
+	enum Enum
+	{
+		Error,     /// Ошибка определения
+		Opened,    /// Открыта
+		Closed     /// Закрыта
+	};
+}
+
 class IFiscalPrinter: public IPrinter
 {
 public:
@@ -39,7 +49,7 @@ public:
 	virtual bool isFiscalReady(bool aOnline, EFiscalPrinterCommand::Enum aCommand = EFiscalPrinterCommand::Sale) = 0;
 
 	/// Открыта ли сессия.
-	virtual bool isSessionOpened() = 0;
+	//virtual ESessionState::Enum getSessionState() = 0;
 
 	/// Находится ли в фискальном режиме.
 	virtual bool isFiscal() const = 0;

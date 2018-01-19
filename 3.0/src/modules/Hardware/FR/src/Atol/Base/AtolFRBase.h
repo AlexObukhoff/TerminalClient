@@ -135,7 +135,7 @@ protected:
 	bool exitInnerMode();
 
 	/// Выполнить Z-отчет.
-	bool execZReport(bool aAuto);
+	virtual bool execZReport(bool aAuto);
 
 	/// Установить параметры ФР.
 	virtual bool setFRParameters();
@@ -162,7 +162,7 @@ protected:
 	void checkZBufferState();
 
 	/// Узнать, открыта ли смена.
-	bool isSessionOpened();
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
 
 	/// Получить короткий статус.
 	virtual bool getShortStatus(TStatusCodes & aStatusCodes);

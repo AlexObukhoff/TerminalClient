@@ -309,7 +309,7 @@ TResult AtolFRBase::execCommand(const QByteArray & aCommand, const QByteArray & 
 
 	if (mModelData.ZBufferSize && ((aCommand[0] == CAtolFR::Commands::OpenDocument) || (aCommand[0] == CAtolFR::Commands::Encashment)))
 	{
-		isSessionInZBufferOpened = !isSessionOpened();
+		isSessionInZBufferOpened = getSessionState() == ESessionState::Closed;
 	}
 
 	QByteArray commandData = aCommand + aCommandData;
@@ -397,7 +397,7 @@ void AtolFRBase::setErrorFlags(char aError, const QByteArray & /*aCommand*/)
 //--------------------------------------------------------------------------------
 bool AtolFRBase::openFRSession()
 {
-	if (isSessionOpened())
+	if (getSessionState() == ESessionState::Opened)
 	{
 		return true;
 	}
@@ -1375,7 +1375,7 @@ bool AtolFRBase::execZReport(bool aAuto)
 
 	bool success = false;
 
-	if (isSessionOpened())
+	if (getSessionState() == ESessionState::Opened)
 	{
 		char innerMode = mMode;
 
@@ -1464,11 +1464,18 @@ void AtolFRBase::checkZBufferState()
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::isSessionOpened()
+ESessionState::Enum AtolFRBase::getSessionState()
 {
 	QByteArray data;
 
-	return getLongStatus(data) && bool(data[9] & CAtolFR::States::SessionOpen);
+	if (!getLongStatus(data) || (data.size() <= 9))
+	{
+		return ESessionState::Error;
+	}
+
+	bool result = bool(data[9] & CAtolFR::States::SessionOpen);
+
+	return result ? ESessionState::Opened : ESessionState::Closed;
 }
 
 //--------------------------------------------------------------------------------

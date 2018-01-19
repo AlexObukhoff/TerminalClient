@@ -56,7 +56,7 @@ protected:
 	virtual bool performZReport(bool aPrintDeferredReports);
 
 	/// Печать Z отчета.
-	bool execZReport(bool aAuto);
+	virtual bool execZReport(bool aAuto);
 
 	/// Выполнить Z-отчет.
 	virtual TResult doZReport(bool aAuto);
@@ -134,12 +134,12 @@ protected:
 	/// Распарсить реал-тайм статусы принтера по реал-тайм коду.
 	TStatusCodes parseRTStatus(int aCommand, char aAnswer);
 
+	/// Узнать, открыта ли смена.
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
+
 	/// Получить ASCII-представление 1-байтного целочисленного числа.
 	inline QString int2String(int aValue);
 	inline QByteArray int2ByteArray(int aValue);
-
-	/// Таймер для выполнения отложенных действий.
-	QTimer mDeferredAction;
 
 	/// Режим работы.
 	EFRMode::Enum mMode;

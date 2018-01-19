@@ -580,10 +580,11 @@ void TerminalService::sendFeedback(const QString & aSenderSubsystem, const QStri
 
 			zipArray += "]";
 
+			QByteArray gz;
+			if (Packer::gzipCompress(zipArray, QString("payment_%1.json").arg(paymentId), gz))
 			{
 				sendBody += "pluslog_val=";
-				sendBody += Packer::compressToGZ(zipArray, QString("payment_%1.json").arg(paymentId)).toBase64().toPercentEncoding() + "&";
-				toLog(LogLevel::Debug, QString("sizeof zippped log: %1").arg(zipArray.size()));
+				sendBody += gz.toBase64().toPercentEncoding() + "&";
 			}
 		}
 

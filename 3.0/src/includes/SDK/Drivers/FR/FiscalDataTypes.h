@@ -128,10 +128,10 @@ namespace EOperationModes
 	enum Enum
 	{
 		None = 0x00,    /// Отсутствует
-		Encrypting     = 0x01,    /// Шифрование
+		Encryption     = 0x01,    /// Шифрование
 		Autonomous     = 0x02,    /// Автономный режим
 		Automatic      = 0x04,    /// Автоматический режим
-		ServicesArea   = 0x08,    /// Применение в сфере услуг
+		ServiceArea    = 0x08,    /// Применение в сфере услуг
 		FixedReporting = 0x10,    /// Бланк строгой отчетности (БСО)
 		Internet       = 0x20     /// Применение в интернете
 	};

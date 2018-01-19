@@ -117,6 +117,9 @@ protected:
 	/// Отрезка.
 	virtual bool cut();
 
+	/// Узнать, открыта ли смена.
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
+
 	/// Установить значение в системной таблице.
 	bool setFRParameter(const CShtrihFR::FRParameters::SData & aData, const QVariant & aValue, char aSeries = 1);
 

@@ -394,9 +394,6 @@ TResult PrimFRBase::processCommand(char aCommand, const CPrimFR::TData & aComman
 		return result;
 	}
 
-	ushort state = QString(answerData[2]).toUShort(0, 16);
-	mSessionOpened = qToBigEndian(state) & CPrimFR::SessionOpenedMask;
-
 	if (aAnswer)
 	{
 		*aAnswer = answerData;
@@ -443,6 +440,22 @@ TResult PrimFRBase::processCommand(char aCommand, const CPrimFR::TData & aComman
 	mProcessingErrors.pop_back();
 
 	return processCommand(aCommand, aCommandData, aAnswer);
+}
+
+//--------------------------------------------------------------------------------
+ESessionState::Enum PrimFRBase::getSessionState()
+{
+	CPrimFR::TData answer;
+
+	if (!processCommand(CPrimFR::Commands::GetDateTime, &answer))
+	{
+		return ESessionState::Error;
+	}
+
+	ushort state = QString(answer[2]).toUShort(0, 16);
+	bool result = qToBigEndian(state) & CPrimFR::SessionOpenedMask;
+
+	return result ? ESessionState::Opened : ESessionState::Closed;
 }
 
 //--------------------------------------------------------------------------------

@@ -8,6 +8,8 @@ StaticLibrary {
 
 	Depends { name: "Core" }
 
+	cpp.includePaths: [ Qt.core.incPath + "/../src/3rdparty/zlib" ]
+	
 	files: [ "src/*.cpp", "src/*.h" ]
 }
 

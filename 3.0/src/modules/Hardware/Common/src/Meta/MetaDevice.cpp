@@ -206,6 +206,8 @@ bool MetaDevice::containsDeviceParameter(const QString & aName) const
 //---------------------------------------------------------------------------
 void MetaDevice::logDeviceData(const SLogData & aData) const
 {
+	toLog(LogLevel::Normal, "Plugin path: " + getConfigParameter(CHardware::PluginPath).toString());
+
 	if (!aData.pluginConfig.isEmpty())
 	{
 		toLog(LogLevel::Normal, "Plugin data:" + aData.pluginConfig);

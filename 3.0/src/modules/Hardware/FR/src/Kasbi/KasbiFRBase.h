@@ -57,7 +57,7 @@ protected:
 	void processDeviceData(const QByteArray & aRegistrationData);
 
 	/// Открыта ли смена. Если будет ошибка - по умолчанию открыта.
-	bool isSessionOpened();
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
 
 	/// Открыт ли документ. Если будет ошибка - по умолчанию закрыт.
 	bool isDocumentOpened();
@@ -66,7 +66,7 @@ protected:
 	bool getFSData(CKasbiFR::SFSData & aData);
 
 	/// Выполнить Z-отчет.
-	bool execZReport(bool aAuto);
+	virtual bool execZReport(bool aAuto);
 
 	/// Открыть смену.
 	bool openSession();

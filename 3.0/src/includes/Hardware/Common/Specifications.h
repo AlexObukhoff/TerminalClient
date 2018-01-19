@@ -57,6 +57,7 @@ public:
 		return result.join(", ");
 	}
 
+protected:
 	void addBit(int aBit, const char * aParameter)
 	{
 		append(T(1) << aBit, QString::fromUtf8(aParameter));

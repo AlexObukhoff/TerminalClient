@@ -109,7 +109,7 @@ protected:
 	bool getZBufferSlots(int & aSlots, bool aFilled);
 
 	/// Z отчет.
-	bool execZReport(bool aAuto);
+	virtual bool execZReport(bool aAuto);
 
 	/// Печать отложенных Z отчетов.
 	bool printDeferredZReports();

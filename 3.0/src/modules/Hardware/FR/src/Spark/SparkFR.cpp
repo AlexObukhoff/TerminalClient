@@ -958,7 +958,7 @@ bool SparkFR::isSessionExpired()
 {
 	TKKMInfoData data;
 
-	return isSessionOpened() && getKKMData(data) && mSessionOpeningDT.daysTo(parseDateTime(data));
+	return (getSessionState() == ESessionState::Opened) && getKKMData(data) && mSessionOpeningDT.daysTo(parseDateTime(data));
 }
 
 //--------------------------------------------------------------------------------
@@ -970,9 +970,12 @@ int SparkFR::getLastDocumentNumber()
 }
 
 //--------------------------------------------------------------------------------
-bool SparkFR::isSessionOpened()
+ESessionState::Enum SparkFR::getSessionState()
 {
-	return mSessionOpeningDT != CSparkFR::ClosedSession;
+	// Т.е. если дата и время начала смены валидны, то она открыта. Возможно - особенность нефискализированного аппарата.
+	bool result = mSessionOpeningDT != CSparkFR::ClosedSession;
+
+	return result ? ESessionState::Opened : ESessionState::Closed;
 }
 
 //--------------------------------------------------------------------------------
@@ -980,7 +983,7 @@ bool SparkFR::execZReport()
 {
 	toLog(LogLevel::Normal, QString("%1: Begin processing %2-report").arg(mDeviceName).arg(CSparkFR::ZReport));
 
-	if (!isSessionOpened())
+	if (getSessionState() == ESessionState::Closed)
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Session is closed, exit!");
 		return false;

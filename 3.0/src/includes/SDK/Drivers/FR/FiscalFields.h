@@ -8,6 +8,8 @@ namespace Driver {
 namespace FiscalFields
 {
 	const int FDName                  = 1000;    // Наименование фискального документа.
+	const int AutomaticMode           = 1001;    // Признак автоматического режима.
+	const int AutonomousMode          = 1002;    // Признак автономного режима.
 	const int UserContact             = 1008;    // Телефон или электронный адрес покупателя.
 	const int PayOffAddress           = 1009;    // Адрес расчетов.
 	const int FDDateTime              = 1012;    // Дата и время ФД.
@@ -28,6 +30,7 @@ namespace FiscalFields
 	const int LegalOwner              = 1048;    // Наименование юр. лица владельца.
 	const int PayOffType              = 1054;    // Признак расчета.
 	const int TaxSystem               = 1055;    // СНО на платеже.
+	const int EncryptionMode          = 1056;    // Признак шифрования.
 	const int AgentFlagsRegistered    = 1057;    // Признак(и) платежного агента из итогов регистрации.
 	const int PayOffSubject           = 1059;    // Предмет расчета.
 	const int FTSURL                  = 1060;    // Адрес сайта ФНС.
@@ -48,13 +51,19 @@ namespace FiscalFields
 	const int TaxAmount06 = 1106;    // Сумма НДС чека по расчетной ставке 18/118.
 	const int TaxAmount07 = 1107;    // Сумма НДС чека по расчетной ставке 10/110.
 
-	const int PayOffPlace       = 1187;    // Место расчетов.
-	const int VATRate           = 1199;    // Ставка НДС.
-	const int CashierINN        = 1203;    // ИНН кассира.
-	const int OFDURL            = 1208;    // Адрес сайта для получения чека.
-	const int PayOffSubjectType = 1212;    // Признак предмета расчета.
-	const int PayOffMethodType  = 1214;    // Признак способа расчета.
-	const int AgentFlag         = 1222;    // Признак платежного агента на платеже.
+	const int InternetMode       = 1108;    // Признак работы с интернет (без принтера).
+	const int ServiceAreaMode    = 1109;    // Признак применения в сфере услуг.
+	const int FixedReportingMode = 1110;    // Признак работы с бланками строгой отчетности (БСО).
+	const int LotteryMode        = 1126;    // Признак проведения лотереи.
+	const int PayOffPlace        = 1187;    // Место расчетов.
+	const int GamblingMode       = 1193;    // Признак проведения азартных игр.
+	const int VATRate            = 1199;    // Ставка НДС.
+	const int CashierINN         = 1203;    // ИНН кассира.
+	const int ExcisableUnitMode  = 1207;    // Признак торговли подакцизными товарами.
+	const int OFDURL             = 1208;    // Адрес сайта для получения чека.
+	const int PayOffSubjectType  = 1212;    // Признак предмета расчета.
+	const int PayOffMethodType   = 1214;    // Признак способа расчета.
+	const int AgentFlag          = 1222;    // Признак платежного агента на платеже.
 
 	// Является ли поле денежным.
 	inline bool isMoney(int aField)

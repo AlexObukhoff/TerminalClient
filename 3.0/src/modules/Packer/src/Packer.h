@@ -48,7 +48,10 @@ public:
 
 public:
 	/// Архивирует буфер в пямяти в GZ формат
-	static QByteArray compressToGZ(const QByteArray & aInBuffer, const QString & aFileName, int aLevel = 9);
+	static bool gzipCompress(const QByteArray & aInBuffer, const QString & aFileName, QByteArray & aOutBuffer, int aLevel = 9);
+
+	/// Распаковывает GZ архив в память
+	static bool gzipUncompress(const QByteArray & aInBuffer, QString & aFileName, QByteArray & aOutBuffer);
 
 	/// Архивирует файлы в один том. В случае успеха возвращает имя сформированного архива.
 	QString compress(const QString & aTargetName, const QString & aSourceDir, const QStringList & aSearchMasks, const QStringList & aExcludeWildcard);
