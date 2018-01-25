@@ -32,6 +32,7 @@ CitizenPPU231::CitizenPPU231()
 	mLineSize = CCitizenPPU231::LineSize;
 	mAutoDetectable = false;
 	mPrintingStringTimeout = 100;
+	mRussianCodePage = '\x07';
 }
 
 //--------------------------------------------------------------------------------

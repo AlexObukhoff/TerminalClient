@@ -22,12 +22,12 @@ namespace CCCNet
 	public:
 		CFimwareVersions()
 		{
-			data()[Models::CashcodeGX ][Currency::RUB][true] = TFimwareVersionSet() << 1205;
+			data()[Models::CashcodeGX ][Currency::RUB][true]  = TFimwareVersionSet() << 1205;
 
-			data()[Models::CashcodeSM ][Currency::RUB][true] = TFimwareVersionSet() << 1351;
+			data()[Models::CashcodeSM ][Currency::RUB][true]  = TFimwareVersionSet() << 1351;
 
 			data()[Models::CashcodeSM ][Currency::RUB][false] = TFimwareVersionSet() << 1378 << 1434;
-			data()[Models::CashcodeMSM][Currency::RUB][false] = TFimwareVersionSet() << 1114;
+			data()[Models::CashcodeMSM][Currency::RUB][false] = TFimwareVersionSet() << 1115;
 			data()[Models::CashcodeMSM][Currency::EUR][false] = TFimwareVersionSet() << 1130 << 1228 << 1329 << 1411 << 1527;
 			data()[Models::CashcodeMVU][Currency::RUB][false] = TFimwareVersionSet() << 1330;
 			data()[Models::CashcodeMFL][Currency::RUB][false] = TFimwareVersionSet() << 1140;

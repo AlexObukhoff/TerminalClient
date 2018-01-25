@@ -9,7 +9,6 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
-#include "PaymentProcessor/PrintConstants.h"
 #include "Hardware/Common/PollingExpector.h"
 
 // Project

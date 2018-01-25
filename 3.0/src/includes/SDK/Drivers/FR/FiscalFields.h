@@ -64,6 +64,7 @@ namespace FiscalFields
 	const int PayOffSubjectType  = 1212;    // Признак предмета расчета.
 	const int PayOffMethodType   = 1214;    // Признак способа расчета.
 	const int AgentFlag          = 1222;    // Признак платежного агента на платеже.
+	const int ProviderINN        = 1226;    // ИНН поставщика.
 
 	// Является ли поле денежным.
 	inline bool isMoney(int aField)

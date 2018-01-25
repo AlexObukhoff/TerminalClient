@@ -68,6 +68,7 @@ namespace CHardware { namespace FiscalFields
 	const char PayOffSubjectType[]  = "payoff_subject_type";     // 1212 (Признак предмета расчета).
 	const char PayOffMethodType[]   = "payoff_method_type";      // 1214 (Признак способа расчета).
 	const char AgentFlag[]          = "agent_flag";              // 1222 (Признак платежного агента на платеже).
+	const char ProviderINN[]        = "provider_inn";            // 1226 (ИНН поставщика).
 
 }}    // namespace CHardware::FiscalFields
 
@@ -215,6 +216,7 @@ namespace CFR { namespace FiscalFields
 			ADD_FISCAL_FIELD(PayOffSubjectType,  Byte);      // 1212 (Признак предмета расчета).
 			ADD_FISCAL_FIELD(PayOffMethodType,   Byte);      // 1214 (Признак способа расчета).
 			ADD_FISCAL_FIELD(AgentFlag,          Byte);      // 1222 (Признак платежного агента на платеже).
+			ADD_FISCAL_FIELD(ProviderINN,        String);    // 1226 (ИНН поставщика).
 		}
 	};
 

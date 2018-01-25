@@ -148,15 +148,16 @@ typedef double TSum;
 
 struct SAmountData
 {
-	TSum sum;        /// Сумма платежа.
-	TVAT VAT;        /// НДС (value added tax).
-	QString name;    /// Локализованное название платежа (товар).
+	TSum sum;                                       /// Сумма платежа.
+	TVAT VAT;                                       /// НДС (value added tax).
+	QString name;                                   /// Локализованное название платежа (товар).
+	QString providerINN;                            /// ИНН поставщика товара (оператор/дилер/Платина).
 	EPayOffSubjectTypes::Enum payOffSubjectType;    /// Признак предмета расчета.
-	int section;     /// Отдел.
+	int section;                                    /// Отдел.
 
 	SAmountData() : sum(0), VAT(0), section(-1) {}
-	SAmountData(double aSum, TVAT aVAT, const QString & aName, EPayOffSubjectTypes::Enum aPayOffSubjectType, int aSection = -1):
-		sum(aSum), VAT(aVAT), name(aName), payOffSubjectType(aPayOffSubjectType), section(aSection) {}
+	SAmountData(double aSum, TVAT aVAT, const QString & aName, const QString & aProviderINN, EPayOffSubjectTypes::Enum aPayOffSubjectType, int aSection = -1):
+		sum(aSum), VAT(aVAT), name(aName), providerINN(aProviderINN), payOffSubjectType(aPayOffSubjectType), section(aSection) {}
 };
 
 typedef QList<SAmountData> TAmountDataList;

@@ -14,7 +14,7 @@ Item {
 	// Показывает содержит ли редактор допустимое значение
 	property bool acceptable: global.enabled
 
-	property bool rollup: false
+	property bool rollup: true
 
 	property bool setupDefaultValue: true
 
@@ -122,6 +122,7 @@ Item {
 		var errmsg = aResult.hasOwnProperty("ERRMSG");
 
 		global.enabled = !errmsg;
+		rootItem.rollup = !global.enabled
 
 		bookingResult.text = errmsg ? aResult.ERRMSG : ""
 

@@ -105,7 +105,7 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 		return false;
 	}
 
-	bool result = false;
+	bool result = true;
 
 	if (processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, data.mid(43, 4)))
 	{

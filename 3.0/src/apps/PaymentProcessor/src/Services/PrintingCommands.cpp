@@ -67,35 +67,39 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 
 	if (amountList.isNull())
 	{
+		QString operatorINN = aParameters.value(CPrintConstants::OpINN).toString();
 		QString paymentTitle = QString("%1 (%2)")
 			.arg(aParameters[CPrintConstants::ServiceType].toString())
 			.arg(aParameters[CPrintConstants::OpBrand].toString());
 
-		fiscalAmountList << DSDK::SAmountData(amount, vat, paymentTitle, DSDK::EPayOffSubjectTypes::Payment);
+		fiscalAmountList << DSDK::SAmountData(amount, vat, paymentTitle, operatorINN, DSDK::EPayOffSubjectTypes::Payment);
 	}
 	else
 	{
 		QVariantList amounts = amountList.toList();
 		QVariantList amountTitles = aParameters.value("[AMOUNT_TITLE]").toList();
 		QVariantList amountsVAT = aParameters.value("[AMOUNT_VAT]").toList();
+		QVariantList operatorINNs = aParameters.value("[OPERATOR_INN]").toList();
 
 		// amount содержит список сумм для печати реестра нераспечатанных чеков
 		for (int i = 0; i < amounts.size(); i++)
 		{
-			fiscalAmountList << DSDK::SAmountData(amounts[i].toDouble(), amountsVAT[i].toInt(), amountTitles[i].toString(), DSDK::EPayOffSubjectTypes::Payment);
+			fiscalAmountList << DSDK::SAmountData(amounts[i].toDouble(), amountsVAT[i].toInt(), amountTitles[i].toString(), operatorINNs[i].toString(), DSDK::EPayOffSubjectTypes::Payment);
 		}
 	}
 
 	if (!qFuzzyIsNull(fee))
 	{
+		QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
 		fiscalAmountList << (dealerIsBank ?
-			DSDK::SAmountData(fee, dealerVAT, tr("#bank_fee"), DSDK::EPayOffSubjectTypes::Payment) :
-			DSDK::SAmountData(fee, dealerVAT, tr("#dealer_fee"), DSDK::EPayOffSubjectTypes::AgentFee));
+			DSDK::SAmountData(fee, dealerVAT, tr("#bank_fee"),   dealerINN, DSDK::EPayOffSubjectTypes::Payment) :
+			DSDK::SAmountData(fee, dealerVAT, tr("#dealer_fee"), dealerINN, DSDK::EPayOffSubjectTypes::AgentFee));
 	}
 
 	if (!qFuzzyIsNull(processingFee))
 	{
-		fiscalAmountList << DSDK::SAmountData(processingFee, 0, tr("#processing_fee"), DSDK::EPayOffSubjectTypes::Payment);
+		QString bankINN = aParameters.value(CPrintConstants::BankInn).toString();
+		fiscalAmountList << DSDK::SAmountData(processingFee, 0, tr("#processing_fee"), bankINN, DSDK::EPayOffSubjectTypes::Payment);
 	}
 
 	bool EMoney = aParameters.value(PPSDK::CPayment::Parameters::PayTool).toInt() > 0;

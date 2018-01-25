@@ -24,23 +24,11 @@ public:
 	/// Устанавливает конфигурацию устройству.
 	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
 
-	/// Завершение инициализации.
-	virtual void finaliseInitialization();
-
 	/// Готов ли к печати.
 	virtual bool isDeviceReady(bool aOnline);
 
 	/// Готов ли к обработке данной фискальной команды.
 	virtual bool isFiscalReady(bool aOnline, SDK::Driver::EFiscalPrinterCommand::Enum aCommand = SDK::Driver::EFiscalPrinterCommand::Sale);
-
-	/// Запрос статуса.
-	virtual bool processStatus(TStatusCodes & aStatusCodes);
-
-	/// Проверить установки сервера ОФД.
-	bool checkOFDData(const QByteArray & aAddressData, const QByteArray & aPortData);
-
-	/// Проверить возможность использования фискального реквизита.
-	bool checkFiscalField(int aField, bool & aResult);
 
 	/// Печать фискального чека.
 	virtual bool printFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
@@ -55,9 +43,6 @@ public:
 	virtual bool printEncashment(const QStringList & aReceipt);
 	virtual bool printEncashment(const QStringList & aReceipt, double aAmount);
 
-	/// Открыта ли сессия.
-	virtual SDK::Driver::ESessionState::Enum getSessionState();
-
 	/// Находится ли в фискальном режиме.
 	virtual bool isFiscal() const;
 
@@ -65,6 +50,21 @@ public:
 	virtual bool isOnline() const;
 
 protected:
+	/// Завершение инициализации.
+	virtual void finaliseInitialization();
+
+	/// Запрос статуса.
+	virtual bool processStatus(TStatusCodes & aStatusCodes);
+
+	/// Проверить установки сервера ОФД.
+	bool checkOFDData(const QByteArray & aAddressData, const QByteArray & aPortData);
+
+	/// Проверить возможность использования фискального реквизита.
+	bool checkFiscalField(int aField, bool & aResult);
+
+	/// Открыта ли сессия.
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
+
 	/// Установить начальные параметры.
 	virtual void setInitialData();
 
@@ -170,8 +170,11 @@ protected:
 	/// Получить все налоговые ставки платежа.
 	SDK::Driver::TVATs getVATs(const SDK::Driver::SPaymentData & aPaymentData) const;
 
-	/// Получить все налоговые ставки платежа.
+	/// Логгировать данные налогов.
 	QString getVATLog(const SDK::Driver::TVATs & aVATs) const;
+
+	/// Получить лог фискальных данных платежа.
+	QString getFPDataLog(const SDK::Driver::TFiscalPaymentData & aFPData) const;
 
 	/// Наличие ЭКЛЗ.
 	bool mEKLZ;

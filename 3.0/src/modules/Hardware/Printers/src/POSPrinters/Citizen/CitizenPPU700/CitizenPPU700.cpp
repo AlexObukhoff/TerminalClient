@@ -43,10 +43,6 @@ CitizenPPU700::CitizenPPU700()
 	parameters.errors->data()[6][1].insert('\x20', PrinterStatusCode::Error::Presenter);
 	parameters.errors->data()[6][1].insert('\x40', DeviceStatusCode::Error::Electronic);
 
-	// теги
-	parameters.tagEngine->appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
-	parameters.tagEngine->appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
-
 	// параметры моделей
 	mDeviceName = "Citizen PPU-700";
 	mModelID = '\x75';

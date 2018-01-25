@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Common/EjectorPOS.h"
+#include "../../EjectorPOS/EjectorPOS.h"
 
 //--------------------------------------------------------------------------------
 /// Константы принтера Custom VKP-80.

@@ -1,25 +1,34 @@
-/* @file Принтер Citizen CTS-2000. */
+/* @file Принтер Citizen CBM-1000II. */
 
 #pragma once
 
-#include "Hardware/Printers/POSPrinter.h"
+#include "CitizenBase.h"
 
 //--------------------------------------------------------------------------------
-class CitizenCTS2000 : public POSPrinter
+class CitizenCBM1000II : public CitizenBase<POSPrinter>
 {
-	SET_SUBSERIES("CitizenCTS2000")
+	SET_SUBSERIES("CitizenCBM1000II")
 
 public:
-	CitizenCTS2000();
+	CitizenCBM1000II();
 
 	/// Устанавливает конфигурацию устройству.
 	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
 };
 
 //--------------------------------------------------------------------------------
-CitizenCTS2000::CitizenCTS2000()
+CitizenCBM1000II::CitizenCBM1000II()
 {
+	using namespace SDK::Driver::IOPort::COM;
+
 	POSPrinters::SParameters parameters(mModelData.getDefault().parameters);
+
+	// параметры порта
+	parameters.portSettings->data().insert(EParameters::BaudRate, POSPrinters::TSerialDevicePortParameter()
+		<< EBaudRate::BR38400
+		<< EBaudRate::BR19200
+		<< EBaudRate::BR4800
+		<< EBaudRate::BR9600);
 
 	// статусы ошибок
 	parameters.errors->data().clear();
@@ -36,23 +45,21 @@ CitizenCTS2000::CitizenCTS2000()
 	parameters.errors->data()[4][1].insert('\x0C', PrinterStatusCode::Warning::PaperNearEnd);
 	parameters.errors->data()[4][1].insert('\x60', PrinterStatusCode::Error::PaperEnd);
 
-	// теги
-	parameters.tagEngine->appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
-	parameters.tagEngine->appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
-
 	// параметры моделей
-	setConfigParameter(CHardware::Printer::FeedingAmount, 5);
-	mDeviceName = "Citizen CT-S2000";
-	mModelID = '\x51';
+	mDeviceName = "Citizen CBM-1000II";
+	mModelID = '\x30';
+	setConfigParameter(CHardware::Printer::FeedingAmount, 3);
 
 	// модели
 	mModelData.data().clear();
 	mModelData.add(mModelID, true, mDeviceName, parameters);
 	mPortParameters = parameters.portSettings->data();
+
+	setConfigParameter(CHardware::Printer::FeedingAmount, 5);
 }
 
 //--------------------------------------------------------------------------------
-void CitizenCTS2000::setDeviceConfiguration(const QVariantMap & aConfiguration)
+void CitizenCBM1000II::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	POSPrinter::setDeviceConfiguration(aConfiguration);
 

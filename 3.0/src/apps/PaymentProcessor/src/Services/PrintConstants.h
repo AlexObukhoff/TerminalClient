@@ -28,6 +28,7 @@ namespace CPrintConstants
 	const char * const PointExternalID       = "POINT_EXTERNAL_ID";
 	const char * const OpBrand               = "OPERATOR_BRAND";
 	const char * const OpName                = "OPERATOR_NAME";
+	const char * const OpINN                 = "OPERATOR_INN";
 	const char * const RecipientInn          = "RECIPIENT_INN";
 	const char * const RecipientName         = "RECIPIENT_NAME";
 	const char * const ServiceType           = "SERVICE_TYPE";

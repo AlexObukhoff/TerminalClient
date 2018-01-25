@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "Common/EjectorPOS.h"
+#include "../CitizenBase.h"
+#include "../../EjectorPOS/EjectorPOS.h"
 
 //--------------------------------------------------------------------------------
 namespace CCitizenPPU700
@@ -16,7 +17,7 @@ namespace CCitizenPPU700
 }
 
 //--------------------------------------------------------------------------------
-class CitizenPPU700 : public EjectorPOS
+class CitizenPPU700 : public CitizenBase<EjectorPOS>
 {
 	SET_SUBSERIES("CitizenPPU700")
 

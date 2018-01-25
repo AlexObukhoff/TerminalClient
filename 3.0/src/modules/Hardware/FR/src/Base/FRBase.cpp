@@ -152,17 +152,23 @@ void FRBase<T>::finaliseInitialization()
 				agentFlagsData.insert(EAgentFlags::Enum(agentFlag), CFR::AgentFlags[agentFlag]);
 			}
 
-			TOperationModeData operationModedata;
+			TOperationModeData operationModeData;
 
 			foreach(char operationMode, mOperationModes)
 			{
-				operationModedata.insert(EOperationModes::Enum(operationMode), CFR::OperationModes::Data[operationMode].description);
+				operationModeData.insert(EOperationModes::Enum(operationMode), CFR::OperationModes::Data[operationMode].description);
 			}
+
+			QStringList operationModeDescriptions = operationModeData.values();
+
+			if (getConfigParameter(CHardware::FiscalFields::LotteryMode,       0).toInt()) operationModeDescriptions += CFR::LotteryMode;
+			if (getConfigParameter(CHardware::FiscalFields::GamblingMode,      0).toInt()) operationModeDescriptions += CFR::GamblingMode;
+			if (getConfigParameter(CHardware::FiscalFields::ExcisableUnitMode, 0).toInt()) operationModeDescriptions += CFR::ExcisableUnitMode;
 
 			setDeviceParameter(CDeviceData::FS::SerialNumber, mFSSerialNumber);
 			setDeviceParameter(CDeviceData::FR::Taxations, QStringList(taxationData.values()).join(", "));
 			setDeviceParameter(CDeviceData::FR::AgentFlags, QStringList(agentFlagsData.values()).join(", "));
-			setDeviceParameter(CDeviceData::FR::OperationModes, QStringList(operationModedata.values()).join(", "));
+			setDeviceParameter(CDeviceData::FR::OperationModes, operationModeDescriptions.join(", "));
 			setDeviceParameter(CDeviceData::FR::FFDFR, CFR::FFD[mFFDFR].description);
 			setDeviceParameter(CDeviceData::FR::FFDFS, CFR::FFD[mFFDFS].description);
 
@@ -861,6 +867,16 @@ bool FRBase<T>::printFiscal(const QStringList & aReceipt, const SPaymentData & a
 	if (getConfigParameter(CHardware::FiscalFields::GamblingMode,      0).toInt()) aFPData.insert(FiscalFields::GamblingMode,      CFR::GamblingMode);
 	if (getConfigParameter(CHardware::FiscalFields::ExcisableUnitMode, 0).toInt()) aFPData.insert(FiscalFields::ExcisableUnitMode, CFR::ExcisableUnitMode);
 
+	toLog(LogLevel::Normal, mDeviceName + ": Fiscal payment data:\n" + getFPDataLog(aFPData));
+	QString log;
+
+	foreach(const TFiscalPaymentData FPData, aPSData)
+	{
+		log += getFPDataLog(FPData);
+	}
+
+	toLog(LogLevel::Normal, mDeviceName + ": Payoff subject data:\n" + log);
+
 	return true;
 }
 
@@ -1427,6 +1443,39 @@ void FRBase<T>::parseSTLVData(const CFR::STLV & aTLV, TComplexFiscalPaymentData 
 			aPSData << FPData;
 		}
 	}
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+QString FRBase<T>::getFPDataLog(const TFiscalPaymentData & aFPData) const
+{
+	if (aFPData.isEmpty())
+	{
+		return "";
+	}
+
+	QList<int> fields = aFPData.keys();
+	qSort(fields);
+
+	QList<int> descriptionSizes;
+
+	foreach(int field, fields)
+	{
+		descriptionSizes << mFiscalFieldData[field].description.size();
+	}
+
+	qSort(descriptionSizes);
+	int maxDescriptionSize = descriptionSizes.last();
+	QStringList log;
+
+	foreach(int field, fields)
+	{
+		QString description = mFiscalFieldData[field].description;
+		QString descriptionLog = QString("(%1)%2").arg(description).arg("", maxDescriptionSize - description.size());
+		log << QString("%1 %2 = %3").arg(field).arg(descriptionLog).arg(aFPData[field].toString());
+	}
+
+	return "\n" + log.join("\n") + "\n";
 }
 
 //--------------------------------------------------------------------------------

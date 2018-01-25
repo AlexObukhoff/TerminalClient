@@ -396,6 +396,16 @@ void Updater::download()
 }
 
 //---------------------------------------------------------------------------
+void closeFileTask(NetworkTask * aTask)
+{
+	auto fileTask = qobject_cast<FileDownloadTask *>(aTask);
+	if (fileTask)
+	{
+		fileTask->closeFile();
+	}
+}
+
+//---------------------------------------------------------------------------
 void Updater::downloadComplete()
 {
 	auto task = mActiveTasks.front();
@@ -416,6 +426,8 @@ void Updater::downloadComplete()
 	{
 		Log(LogLevel::Normal, QString("File %1 downloaded successfully.").arg(task->getUrl().toString()));
 
+		closeFileTask(task);
+
 		return goToNextFile();
 	}
 
@@ -429,20 +441,8 @@ void Updater::downloadComplete()
 
 	if (task->getError() == NetworkTask::VerifyFailed || task->getHttpError() == 416) // 416 - Requested Range Not Satisfiable
 	{
-		IHashVerifier * verifier = dynamic_cast<IHashVerifier *>(task->getVerifier());
+		checkTaskVerifierResult(task);
 
-		if (verifier)
-		{
-			Log(LogLevel::Error, QString("Failed verify. Downloaded file hash:%1 required_hash:%2. Remove temporary file")
-				.arg(verifier->calculatedHash()).arg(verifier->referenceHash()));
-		}
-		else
-		{
-			Log(LogLevel::Error, "Failed verify downloaded file. Remove temporary file");
-		}
-
-		QMetaObject::invokeMethod(task, "resetFile", Qt::DirectConnection);
-		mCurrentTaskSize = 0;
 		nextTryTimeout = 1;
 
 		if (task->property(CComponent::OptionalTask()).toBool())
@@ -491,6 +491,26 @@ void Updater::downloadComplete()
 		mProgressTimer.stop();
 		emit done(CUpdaterErrors::NetworkError);
 	}
+}
+
+//---------------------------------------------------------------------------
+void Updater::checkTaskVerifierResult(NetworkTask * aTask)
+{
+	IHashVerifier * verifier = dynamic_cast<IHashVerifier *>(aTask->getVerifier());
+
+	if (verifier)
+	{
+		Log(LogLevel::Error, QString("Failed verify. Downloaded file hash:%1 required_hash:%2. Remove temporary file")
+			.arg(verifier->calculatedHash()).arg(verifier->referenceHash()));
+	}
+	else
+	{
+		Log(LogLevel::Error, "Failed verify downloaded file. Remove temporary file");
+	}
+
+	QMetaObject::invokeMethod(aTask, "resetFile", Qt::DirectConnection);
+	
+	mCurrentTaskSize = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -904,6 +924,7 @@ void Updater::downloadPackage()
 		Log(LogLevel::Normal, QString("Downloading file %1...").arg(mConfigURL));
 
 		// Запускаем закачку.
+		mCurrentTaskSize = task->getDataStream()->size();
 		mNetworkTaskManager.addTask(task);
 	}
 }
@@ -914,15 +935,14 @@ void Updater::packageDownloaded(QObject * aPackage)
 	auto task = qobject_cast<NetworkTask *>(mMapper.mapping(aPackage));
 	auto package = qobject_cast<Package *>(aPackage);
 
+	bool haveNewData = (mCurrentTaskSize != task->getDataStream()->size());
+	bool retryCountReached = ++mFailCount >= CUpdater::MaxFails;
+
 	if (!task->getError() || task->getError() == NetworkTask::TaskFailedButVerified)
 	{
-		Log(LogLevel::Normal, QString("File %1.zip was downloaded sucessfully.").arg(package->getId()));
+		Log(LogLevel::Normal, QString("File %1.zip was downloaded successfully.").arg(package->getId()));
 
-		auto fileTask = qobject_cast<FileDownloadTask *>(task);
-		if (fileTask)
-		{
-			fileTask->closeFile();
-		}
+		closeFileTask(task);
 
 		deployDownloadedPackage(package);
 	}
@@ -930,7 +950,12 @@ void Updater::packageDownloaded(QObject * aPackage)
 	{
 		Log(LogLevel::Error, QString("Failed to download file %1. Network error: %2.").arg(package->getId()).arg(task->errorString()));
 
-		if (mFailCount >= CUpdater::MaxFails)
+		if (task->getError() && task->getHttpError() == 416) // 416 - Requested Range Not Satisfiable
+		{
+			checkTaskVerifierResult(task);
+		}
+
+		if (retryCountReached)
 		{
 			emit done(CUpdaterErrors::NetworkError);
 		}
@@ -948,9 +973,7 @@ void Updater::packageDownloaded(QObject * aPackage)
 				Log(LogLevel::Error, QString("Waiting %1 minutes before next try...").arg(CUpdater::MinutesBeforeNextTry));
 			}
 
-			// Инициируем повторную попытку.
-			mFailCount++;
-
+			closeFileTask(task);
 			QTimer::singleShot(timeout, this, SLOT(downloadPackage()));
 		}
 	}

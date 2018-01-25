@@ -1,32 +1,21 @@
-/* @file Принтер Citizen CPP-8001. */
+/* @file Принтер Citizen CT-S310II. */
 
 #pragma once
 
 #include "Hardware/Printers/POSPrinter.h"
 
 //--------------------------------------------------------------------------------
-class CitizenCPP8001 : public POSPrinter
+class CitizenCTS310II : public POSPrinter
 {
-	SET_SUBSERIES("CitizenCPP8001")
+	SET_SUBSERIES("CitizenCTS310II")
 
 public:
-	CitizenCPP8001();
-
-	/// Устанавливает конфигурацию устройству.
-	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
+	CitizenCTS310II();
 };
 
-//--------------------------------------------------------------------------------
-CitizenCPP8001::CitizenCPP8001()
+CitizenCTS310II::CitizenCTS310II()
 {
 	POSPrinters::SParameters parameters(mModelData.getDefault().parameters);
-
-	// параметры порта
-	parameters.portSettings->data().insert(SDK::Driver::IOPort::COM::EParameters::BaudRate, POSPrinters::TSerialDevicePortParameter()
-		<< SDK::Driver::IOPort::COM::EBaudRate::BR38400
-		<< SDK::Driver::IOPort::COM::EBaudRate::BR19200
-		<< SDK::Driver::IOPort::COM::EBaudRate::BR4800
-		<< SDK::Driver::IOPort::COM::EBaudRate::BR9600);
 
 	// статусы ошибок
 	parameters.errors->data().clear();
@@ -37,6 +26,7 @@ CitizenCPP8001::CitizenCPP8001()
 	parameters.errors->data()[2][1].insert('\x20', PrinterStatusCode::Error::PaperEnd);
 	parameters.errors->data()[2][1].insert('\x40', DeviceStatusCode::Error::Unknown);
 
+	parameters.errors->data()[3][1].insert('\x04', DeviceStatusCode::Error::MechanismPosition);
 	parameters.errors->data()[3][1].insert('\x08', PrinterStatusCode::Error::Cutter);
 	parameters.errors->data()[3][1].insert('\x60', DeviceStatusCode::Error::Unknown);
 
@@ -48,30 +38,15 @@ CitizenCPP8001::CitizenCPP8001()
 	parameters.tagEngine->appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
 
 	// параметры моделей
-	mDeviceName = "Citizen CPP-8001";
-	mModelID = '\x20';
+	setConfigParameter(CHardware::Printer::FeedingAmount, 3);
+	mDeviceName = "Citizen CT-S310II";
+	mModelID = '\x3D';
+	mRussianCodePage = '\x07';
 
 	// модели
 	mModelData.data().clear();
 	mModelData.add(mModelID, true, mDeviceName, parameters);
 	mPortParameters = parameters.portSettings->data();
-
-	setConfigParameter(CHardware::Printer::FeedingAmount, 6);
-}
-
-//--------------------------------------------------------------------------------
-void CitizenCPP8001::setDeviceConfiguration(const QVariantMap & aConfiguration)
-{
-	POSPrinter::setDeviceConfiguration(aConfiguration);
-
-	int lineSpacing = getConfigParameter(CHardware::Printer::Settings::LineSpacing).toInt();
-
-	int feeding = 6;
-	     if (lineSpacing >= 75) feeding = 3;
-	else if (lineSpacing >= 60) feeding = 4;
-	else if (lineSpacing >= 50) feeding = 5;
-
-	setConfigParameter(CHardware::Printer::FeedingAmount, feeding);
 }
 
 //--------------------------------------------------------------------------------
