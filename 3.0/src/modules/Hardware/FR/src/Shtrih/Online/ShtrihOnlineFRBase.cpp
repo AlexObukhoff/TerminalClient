@@ -17,10 +17,11 @@ ShtrihOnlineFRBase<T>::ShtrihOnlineFRBase()
 	mSupportedModels = getModelList();
 	mDeviceName = CShtrihFR::Models::OnlineDefault;
 	setConfigParameter(CHardwareSDK::CanOnline, true);
-	mOFDFiscalParameters -= FiscalFields::Cashier;
 	mNotEnableFirmwareUpdating = false;
 	mPrinterStatusEnabled = true;
 	mIsOnline = true;
+	mOFDFiscalParameters.remove(FiscalFields::Cashier);
+	mOFDFiscalParameters.remove(FiscalFields::TaxSystem);
 
 	// типы оплаты
 	mPayTypeData.add(EPayTypes::Cash,          1);
@@ -100,7 +101,7 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 		return false;
 	}
 
-	if (!checkTaxationData(data[40]) || !checkOperationModes(data[41]))
+	if (!checkTaxSystems(data[40]) || !checkOperationModes(data[41]))
 	{
 		return false;
 	}
@@ -410,7 +411,7 @@ void ShtrihOnlineFRBase<T>::checkSalesName(QString & aName)
 template<class T>
 bool ShtrihOnlineFRBase<T>::sale(const SAmountData & aAmountData, bool aBack)
 {
-	if (mOldFirmware)
+	if (mModelData.date < CShtrihOnlineFR::MinFWDate::V2)
 	{
 		return ShtrihFRBase<T>::sale(aAmountData, aBack);
 	}
@@ -423,20 +424,52 @@ bool ShtrihOnlineFRBase<T>::sale(const SAmountData & aAmountData, bool aBack)
 	QString name = aAmountData.name;
 
 	QByteArray commandData;
-	commandData.append(documentType);                         // тип операции
-	commandData.append(getHexReverted(1, 6, 6));              // количество
-	commandData.append(sum);                                  // цена
-	commandData.append(sum);                                  // сумма операций
-	commandData.append(CShtrihOnlineFR::FiscalTaxData);       // налог
-	commandData.append(taxIndex);                             // налоговая ставка
-	commandData.append(section);                              // отдел
-	commandData.append(EPayOffMethodTypes::Prepayment100);    // признак способа расчета
-	commandData.append(payOffSubjectType);                    // признак предмета расчета
-	commandData.append(mCodec->fromUnicode(name));            // наименование товара
+	commandData.append(documentType);                      // тип операции
+	commandData.append(getHexReverted(1, 6, 6));           // количество
+	commandData.append(sum);                               // цена
+	commandData.append(sum);                               // сумма операций
+	commandData.append(CShtrihOnlineFR::FiscalTaxData);    // налог
+	commandData.append(taxIndex);                          // налоговая ставка
+	commandData.append(section);                           // отдел
+	commandData.append(CFR::PayOffSubjectMethodType);      // признак способа расчета
+	commandData.append(payOffSubjectType);                 // признак предмета расчета
+	commandData.append(mCodec->fromUnicode(name));         // наименование товара
 
 	if (!processCommand(CShtrihOnlineFR::Commands::FS::Sale, commandData))
 	{
 		toLog(LogLevel::Error, QString("%1: Failed to sale for %2 (%3, VAT = %4), feed, cut and exit").arg(mDeviceName).arg(aAmountData.sum, 0, 'f', 2).arg(name).arg(aAmountData.VAT));
+		return false;
+	}
+
+	return setOFDParametersOnSale(aAmountData);
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+bool ShtrihOnlineFRBase<T>::closeDocument(double aSum, EPayTypes::Enum aPayType)
+{
+	if (mModelData.date < CShtrihOnlineFR::MinFWDate::V2)
+	{
+		return ShtrihFRBase<T>::closeDocument(aSum, aPayType);
+	}
+
+	QByteArray commandData;
+
+	for (int i = 1; i <= CShtrihOnlineFR::PayTypeQuantity; ++i)
+	{
+		double sum = (i == mPayTypeData[aPayType].value) ? aSum : 0;
+		commandData.append(getHexReverted(sum, 5, 2));    // сумма
+	}
+
+	char taxSystem = char(getConfigParameter(CHardware::FiscalFields::TaxSystem).toInt());
+
+	commandData.append(ASCII::NUL);                             // Округление до рубля
+	commandData.append(CShtrihOnlineFR::ClosingFiscalTaxes);    // налоги
+	commandData.append(taxSystem);                              // СНО
+
+	if (!processCommand(CShtrihOnlineFR::Commands::FS::CloseDocument, commandData))
+	{
+		toLog(LogLevel::Error, "ShtrihFR: Failed to close document, feed, cut and exit");
 		return false;
 	}
 
@@ -447,23 +480,16 @@ bool ShtrihOnlineFRBase<T>::sale(const SAmountData & aAmountData, bool aBack)
 template<class T>
 bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
 {
-	char taxation = char(aPaymentData.taxation);
-
-	if ((taxation != ETaxations::None) && (mTaxations.size() != 1) && !setFRParameter(CShtrihOnlineFR::FRParameters::Taxation, taxation))
+	if (mModelData.date < CShtrihOnlineFR::MinFWDate::V2)
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to set taxation system %2 (%3)").arg(mDeviceName).arg(ProtocolUtils::toHexLog(taxation)).arg(CFR::Taxations[taxation]));
-		return false;
-	}
+		char taxSystem = char(aPaymentData.taxSystem);
 
-	/*
-	char agentFlag = char(aPaymentData.agentFlag);
-
-	if ((agentFlag != EAgentFlags::None) && (mAgentFlags.size() != 1) && !setFRParameter(CShtrihOnlineFR::FRParameters::AgentFlag, agentFlag))
-	{
-		toLog(LogLevel::Error, QString("%1: Failed to set agent flag %2 (%3)").arg(mDeviceName).arg(ProtocolUtils::toHexLog(agentFlag)).arg(CFR::AgentFlags[agentFlag]));
-		return false;
+		if ((taxSystem != ETaxSystems::None) && (mTaxSystems.size() != 1) && !setFRParameter(CShtrihOnlineFR::FRParameters::TaxSystem, taxSystem))
+		{
+			toLog(LogLevel::Error, QString("%1: Failed to set taxation system %2 (%3)").arg(mDeviceName).arg(ProtocolUtils::toHexLog(taxSystem)).arg(CFR::TaxSystems[taxSystem]));
+			return false;
+		}
 	}
-	*/
 
 	bool result = ShtrihFRBase<T>::performFiscal(aReceipt, aPaymentData, aFPData, aPSData);
 
@@ -612,12 +638,20 @@ bool ShtrihOnlineFRBase<T>::processAnswer(const QByteArray & aCommand)
 			{
 				getLongStatus();
 
-				return (mMode == CShtrihFR::InnerModes::SessionClosed) && openSession();
+				return (mMode == CShtrihFR::InnerModes::SessionClosed) && openFRSession();
 			}
 		}
 	}
 
-	return ShtrihFRBase<T>::processAnswer(aCommand);
+	bool result = ShtrihFRBase<T>::processAnswer(aCommand);
+
+	if ((aCommand == CShtrihOnlineFR::Commands::FS::GetFiscalTLVData) && !mProcessingErrors.isEmpty() && (mProcessingErrors.last() == CShtrihFR::Errors::BadModeForCommand))
+	{
+		mProcessingErrors.pop_back();
+		mLastError = 0;
+	}
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -631,7 +665,7 @@ bool ShtrihOnlineFRBase<T>::prepareFiscal()
 
 	if (mMode == CShtrihFR::InnerModes::SessionClosed)
 	{
-		return openSession();
+		return openFRSession();
 	}
 
 	return true;
@@ -639,7 +673,7 @@ bool ShtrihOnlineFRBase<T>::prepareFiscal()
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ShtrihOnlineFRBase<T>::setTLV(int aField)
+bool ShtrihOnlineFRBase<T>::setTLV(int aField, bool aForSale)
 {
 	bool result;
 
@@ -650,8 +684,9 @@ bool ShtrihOnlineFRBase<T>::setTLV(int aField)
 
 	QString fieldLog;
 	QByteArray commandData = getTLVData(aField, getConfigParameter(mFiscalFieldData[aField].description), &fieldLog);
+	QByteArray command = aForSale ? CShtrihOnlineFR::Commands::FS::SetOFDParameterLinked : CShtrihOnlineFR::Commands::FS::SetOFDParameter;
 
-	if (!processCommand(CShtrihOnlineFR::Commands::FS::SetOFDParameter, commandData))
+	if (!processCommand(command, commandData))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to set " + fieldLog);
 		return false;

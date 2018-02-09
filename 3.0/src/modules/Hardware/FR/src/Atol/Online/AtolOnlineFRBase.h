@@ -62,7 +62,7 @@ protected:
 	virtual bool sale(const SDK::Driver::SAmountData & aAmountData);
 
 	/// Установить TLV-параметр.
-	virtual bool setTLV(int aField);
+	virtual bool setTLV(int aField, bool aForSale = false);
 
 	/// Получить TLV-параметр.
 	bool getTLV(int aField, QByteArray & aData, uchar aBlockNumber = 0);

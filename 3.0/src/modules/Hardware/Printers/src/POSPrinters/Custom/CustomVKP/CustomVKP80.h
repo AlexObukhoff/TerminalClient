@@ -29,6 +29,9 @@ public:
 	/// Инициализация устройства.
 	virtual bool updateParametersOut();
 
+	/// Устанавливает конфигурацию устройству.
+	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
+
 protected:
 	/// Напечатать чек.
 	virtual bool printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt);

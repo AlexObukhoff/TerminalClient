@@ -111,7 +111,7 @@ namespace CDeviceData
 		const char INN[] = "inn";
 		const char RNM[] = "rnm";
 		const char AgentFlags[] = "agent_flags";
-		const char Taxations[] = "taxations";
+		const char TaxSystems[] = "tax_systems";
 		const char FFDFR[] = "ffd_fr";
 		const char FFDFS[] = "ffd_fs";
 		const char OFDServer[] = "ofd_server";

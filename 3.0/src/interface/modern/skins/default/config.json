@@ -155,6 +155,10 @@
 		"family" : "Roboto Mono Medium",
 		"pixelSize" : "52"
 	},
+	"font.textfield.sm" : {
+		"family" : "Roboto Mono Medium",
+		"pixelSize" : "32"
+	},
 	"font.tariff" : {
 		"family" : "Roboto Medium",
 		"pixelSize" : "32"

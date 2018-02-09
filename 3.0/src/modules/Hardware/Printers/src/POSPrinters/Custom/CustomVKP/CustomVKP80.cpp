@@ -48,6 +48,22 @@ CustomVKP80::CustomVKP80()
 }
 
 //--------------------------------------------------------------------------------
+void CustomVKP80::setDeviceConfiguration(const QVariantMap & aConfiguration)
+{
+	EjectorPOS::setDeviceConfiguration(aConfiguration);
+
+	if (aConfiguration.contains(CHardware::Codepage))
+	{
+		using namespace CHardware::Codepages;
+
+		QString codepage = aConfiguration[CHardware::Codepage].toString();
+		QString codecName = (codepage == CustomKZT) ? CustomKZT : CP866;
+
+		mCodec = CodecByName[codecName];
+	}
+}
+
+//--------------------------------------------------------------------------------
 bool CustomVKP80::printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt)
 {
 	if (mOverflow)

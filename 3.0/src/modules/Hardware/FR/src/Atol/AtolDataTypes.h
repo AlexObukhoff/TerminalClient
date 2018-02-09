@@ -108,7 +108,7 @@ namespace CAtolFR
 		bool terminal;
 		bool verified;
 		EFRType::Enum FRType;
-		int buildVersion;
+		int build;
 		bool ejector;
 		bool cutter;
 		int feedingAmount;
@@ -123,7 +123,7 @@ namespace CAtolFR
 			bool aTerminal,
 			bool aVerified,
 			EFRType::Enum aFRType,
-			int aBuildVersion,
+			int aBuild,
 			bool aEjector,
 			bool aCutter,
 			int aFeedingAmount,
@@ -136,7 +136,7 @@ namespace CAtolFR
 				terminal(aTerminal),
 				verified(aVerified),
 				FRType(aFRType),
-				buildVersion(aBuildVersion),
+				build(aBuild),
 				ejector(aEjector),
 				cutter(aCutter),
 				feedingAmount(aFeedingAmount),
@@ -150,7 +150,7 @@ namespace CAtolFR
 			terminal(false),
 			verified(false),
 			FRType(EFRType::FS),
-			buildVersion(0),
+			build(0),
 			ejector(false),
 			cutter(true),
 			feedingAmount(0),

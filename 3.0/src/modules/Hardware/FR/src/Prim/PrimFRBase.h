@@ -62,7 +62,7 @@ protected:
 	virtual TResult doZReport(bool aAuto);
 
 	/// Открыть смену.
-	virtual TResult openFRSession();
+	virtual bool openSession();
 
 	/// Локальная печать X-отчета.
 	virtual bool processXReport();

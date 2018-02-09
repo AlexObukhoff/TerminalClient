@@ -164,7 +164,7 @@ Widgets.SceneBase2 {
 	}
 
 	function notifyHandler(aEvent, aParameters) {
-		if (aEvent === "update_fields") {
+		if (aEvent === "append_fields") {
 			Editor.save();
 			global.rightButtonDisabled = false;
 			changeEditorAnimation.leftToRight = aParameters.forward;
@@ -178,8 +178,10 @@ Widgets.SceneBase2 {
 				global.lastIndex = next - 1;
 			}
 		}
-
-		if (aEvent === Scenario.Payment.Event.HIDUpdated) {
+		else if (aEvent === "update_fields") {
+			Editor.updateFields(aParameters.fields)
+		}
+		else if (aEvent === Scenario.Payment.Event.HIDUpdated) {
 			var hidFields = {};
 
 			// Если данные только для одного поля, то обновим значение текущего редактора

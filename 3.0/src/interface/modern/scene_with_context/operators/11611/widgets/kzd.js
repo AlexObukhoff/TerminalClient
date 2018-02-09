@@ -1,4 +1,4 @@
-/*var $ = {
+﻿/*var $ = {
 	o: User.getObject("KZD"),
 
 	model: null,//User.getObject("KZD").model,
@@ -40,6 +40,7 @@ var $ = {
 			ticket["trainNumber"] = this.trainModel()[ticket.train].Number;
 			ticket["depDate"] = this.trainModel()[ticket.train].DepartureDateTime;
 			ticket["depTime"] = this.trainModel()[ticket.train].DepartureDateTime.split("T")[1];
+			ticket["timeInWay"] = this.trainModel()[ticket.train].TimeInWay;
 		}
 
 		if (ticket.car) {

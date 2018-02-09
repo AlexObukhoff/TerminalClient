@@ -30,7 +30,8 @@ template <class T>
 TParameterList defaultParameters(const QStringList & aModels, const QString & aDefaultModelName)
 {
 	return modifyPriority(createNamedList<T>(aModels, aDefaultModelName), EDetectingPriority::Low)
-		<< setFiscalModeEnabled();
+		<< setFiscalModeEnabled()
+		<< setSessionOpeningTime();
 }
 
 //------------------------------------------------------------------------------

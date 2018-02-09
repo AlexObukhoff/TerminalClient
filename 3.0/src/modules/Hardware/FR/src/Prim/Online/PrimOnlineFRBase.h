@@ -32,7 +32,7 @@ protected:
 	virtual TResult doZReport(bool aAuto);
 
 	/// Открыть смену.
-	virtual TResult openFRSession();
+	virtual bool openSession();
 
 	/// Получить проверочный код последнего фискального документа - номер КПК.
 	virtual int getVerificationCode();

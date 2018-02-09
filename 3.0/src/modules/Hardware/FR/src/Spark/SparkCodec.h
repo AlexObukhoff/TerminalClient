@@ -11,7 +11,7 @@ public:
 	SparkTextCodec()
 	{
 		mName = CHardware::Codepages::SPARK;
-		mMIB = 3000;
+		mMIB = 3001;
 
 		mData.add('\x80', "А");               mData.add('\x90', "П");               mData.add('\xA0', "Я");               mData.add('\xB0', "а");
 		mData.add('\x81', "Б");               mData.add('\x91', "Р");               mData.add('\xA1', "«");               mData.add('\xB1', "б");

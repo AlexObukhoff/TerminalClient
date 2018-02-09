@@ -67,6 +67,7 @@ Item {
 		property bool savedState
 		property string id
 		property bool isPlaceEditor
+		property string timeInWay
 	}
 
 	// Сохраняет значение
@@ -160,6 +161,15 @@ Item {
 			var ticket = Core.userProperties.get("ticket");
 			ticket.places = [];
 			Core.userProperties.set("ticket", ticket);
+		}
+		else {
+			ticket = Core.userProperties.get("ticket");
+			global.timeInWay = ticket.timeInWay.split(":")[0]
+
+			//ticket.type=3 плацкарт
+			if (ticket.type == 3 && global.timeInWay < 6) {
+				GUI.notify("update_fields", {fields: [{"id": "wo_bedding", "behavior": ""}]});
+			}
 		}
 
 		try {

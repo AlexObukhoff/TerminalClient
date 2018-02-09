@@ -35,17 +35,20 @@ CData::CData()
 	/// Виртуальные ФР на старом протоколе.
 	addOld(900, "NeoService", true);
 
+	mDefaultFWDate = QDate(2017, 12, 29);
+
 	/// Сторонние разработки.
-	addNew(-1, "PAYONLINE",    "PayOnline-01-FA", true, true, 0, 0, QDate(2017, 8, 29));
-	addNew(-2, "PAY VKP-80K-ФА", "PayVKP-80K-FA", true, true, 0, 0, QDate(2017, 8, 29));
-	addNew(-30, "MSTAR-TK.2", "Multisoft MStar-TK2", true, false, 0, 0);
-	addNew(-31, "ШТРИХ-ON-LINE", "Shtrih-M Shtrih-Online", true, false, 0, 3);
-	addNew(-32, "ШТРИХ-ФР-01Ф", "Shtrih-M Shtrih-FR-01F", true, false);
-	addNew(-33, "ШТРИХ-ЛАЙТ-01Ф", "Shtrih-M Light-01F", true, false, 0, 4, QDate::currentDate(), 0, 20);
-	addNew(-34, "ШТРИХ-ЛАЙТ-02Ф", "Shtrih-M Light-02F", true, false, 0, 4, QDate::currentDate(), 0, 20);
-	addNew(-35, "ШТРИХ-М-01Ф", "Shtrih-M Shtrih-M-01F", true, false, 0, 5);
-	addNew(-36, "ШТРИХ-М-02Ф", "Shtrih-M Shtrih-M-02F", true, false, 0, 5);
-	addNew(-37, "ШТРИХ-МИНИ-01Ф", "Shtrih-M Mini-01F", true, false, 0, 5);
+	addNew( -1, "PAYONLINE",      "PayOnline-01-FA",     true, true,  0, 0);
+	addNew( -2, "PAY VKP-80K-ФА", "PayVKP-80K-FA",       true, true,  0, 0);
+	addNew(-20, "MSTAR-TK.2",     "Multisoft MStar-TK2", true, false, 0, 3, QDate(2017, 12, 14));
+
+	addNew(-31, "ШТРИХ-ON-LINE",  "Shtrih-M Shtrih-Online", true, false, 0, 3);
+	addNew(-32, "ШТРИХ-ФР-01Ф",   "Shtrih-M Shtrih-FR-01F", true, false);
+	addNew(-33, "ШТРИХ-ЛАЙТ-01Ф", "Shtrih-M Light-01F",     true, false, 0, 4, mDefaultFWDate, 20);
+	addNew(-34, "ШТРИХ-ЛАЙТ-02Ф", "Shtrih-M Light-02F",     true, false, 0, 4, mDefaultFWDate, 20);
+	addNew(-35, "ШТРИХ-М-01Ф",    "Shtrih-M Shtrih-M-01F",  true, false, 0, 5);
+	addNew(-36, "ШТРИХ-М-02Ф",    "Shtrih-M Shtrih-M-02F",  true, false, 0, 5);
+	addNew(-37, "ШТРИХ-МИНИ-01Ф", "Shtrih-M Mini-01F",      true, false, 0, 5);
 
 	setDefault(SModelData("", Models::Default, false, false, 0, 6, QDate::currentDate(), 0, 0));
 }
@@ -95,9 +98,10 @@ void CData::addOld(int aNumber, const QString & aName, bool aVerified, bool aEje
 }
 
 //--------------------------------------------------------------------------------
-void CData::addNew(int aNumber, const char * aId, const QString & aName, bool aVerified, bool aEjector, int aZReportQuantity, int aFeed, const QDate & aDate, int aBuild, int aLinePrintingTimeout)
+void CData::addNew(int aNumber, const char * aId, const QString & aName, bool aVerified, bool aEjector, int aZReportQuantity, int aFeed, const QDate & aDate, int aLinePrintingTimeout)
 {
-	append(aNumber, SModelData(QString::fromUtf8(aId), aName, aVerified, aEjector, aZReportQuantity, aFeed, aDate, aBuild, aLinePrintingTimeout));
+	QDate FWDate = aDate.isValid() ? aDate : (mDefaultFWDate.isValid() ? mDefaultFWDate : QDate::currentDate().addYears(100));
+	append(aNumber, SModelData(QString::fromUtf8(aId), aName, aVerified, aEjector, aZReportQuantity, aFeed, FWDate, 0, aLinePrintingTimeout));
 }
 
 }}

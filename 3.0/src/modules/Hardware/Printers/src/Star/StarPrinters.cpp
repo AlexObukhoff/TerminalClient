@@ -7,7 +7,6 @@
 #include <Common/QtHeadersEnd.h>
 
 // Project
-#include "Hardware/Common/CodecDescriptions.h"
 #include "Hardware/Common/PollingExpector.h"
 
 #include "StarPrinters.h"

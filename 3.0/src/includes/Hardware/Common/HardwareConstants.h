@@ -46,6 +46,7 @@ namespace CHardware
 		const char Base[] = "Base";
 		const char SPARK[] = "SPARK";
 		const char ATOL[] = "ATOL";
+		const char CustomKZT[] = "CP866 (Kazakhstan)";
 	}
 
 	/// Варинатны использования настроек.
@@ -228,6 +229,7 @@ namespace CHardware
 		const char FiscalMode[] = "fiscal_mode";
 		const char CanAutoCloseSession[] = "can_auto_close_session";
 		const char FiscalChequeCreation[] = "fiscal_cheque_creation";
+		const char SessionOpeningTime[] = "session_opening_time";
 		const char Amount[] = "amount";
 		const char StartZReportNumber[] = "begin_z_report_number";
 		const char ZReportNumber[] = "z_report_number";

@@ -1107,7 +1107,7 @@ bool PrimFRBase::processAnswer(char aError)
 }
 
 //--------------------------------------------------------------------------------
-TResult PrimFRBase::openFRSession()
+bool PrimFRBase::openSession()
 {
 	CPrimFR::TData commandData = CPrimFR::TData() << "";    // реквизиты смены
 

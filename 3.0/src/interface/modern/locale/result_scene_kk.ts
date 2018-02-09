@@ -5,7 +5,7 @@
     <name>result_scene</name>
     <message>
         <location filename="../result_scene.qml" line="14"/>
-        <location filename="../result_scene.qml" line="245"/>
+        <location filename="../result_scene.qml" line="246"/>
         <source>result_scene#back</source>
         <translation>Артқа</translation>
     </message>
@@ -45,7 +45,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="243"/>
+        <location filename="../result_scene.qml" line="244"/>
         <source>result_scene#take_change_receipt2</source>
         <translation>Қайтарым түбіртектi алу үшін «Растау» батырмасына басыңыз.&lt;br&gt;Деректемелер экранның жоғарғы жағында көрсетілген.</translation>
     </message>
@@ -55,13 +55,13 @@
         <translation>%1 %2 нақты түрінде алу</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="237"/>
+        <location filename="../result_scene.qml" line="238"/>
         <source>result_scene#take_change_receipt</source>
         <translation>Қайтарым алған түбіртектi шығару үшін «Жабу» батырмасына басыңыз.&lt;br&gt;Деректемелер экранның жоғарғы жағында көрсетілген.</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="238"/>
-        <location filename="../result_scene.qml" line="244"/>
+        <location filename="../result_scene.qml" line="239"/>
+        <location filename="../result_scene.qml" line="245"/>
         <source>result_scene#take_change_receipt_error</source>
         <translation>Қайтарымды алу үшін техникалық қолдауға хабарласыңыз.&lt;br&gt;Деректемелер экранның жоғарғы жағында көрсетілген</translation>
     </message>
@@ -121,17 +121,17 @@
         <translation>«КиберСдача Хэви» картасын іске қосу үшін оны жай ғана штрих-код сканеріне жақындатыңыз.</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="152"/>
+        <location filename="../result_scene.qml" line="153"/>
         <source>result_scene#cash</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="246"/>
+        <location filename="../result_scene.qml" line="247"/>
         <source>result_scene#confirm</source>
         <translation>Растау</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="271"/>
+        <location filename="../result_scene.qml" line="272"/>
         <source>result_scene#enter_phone_number</source>
         <translation>Өзіңіздің ұялы телефон нөміріңізді еңгізіңіз</translation>
     </message>

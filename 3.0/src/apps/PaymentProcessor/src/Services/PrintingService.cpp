@@ -1156,9 +1156,17 @@ void PrintingService::expandTags(QStringList & aReceipt, const QVariantMap & aPa
 		if (it->contains(CPrintingService::ConditionTag))
 		{
 			QStringList l = it->split(CPrintingService::ConditionTag);
+			
+			toLog(LogLevel::Debug, QString("Evaluate receipt condition %1").arg(l.join(";")));
+			
 			if (QScriptEngine().evaluate(l.first()).toBool())
 			{
+				toLog(LogLevel::Debug, QString("Evaluate receipt result %1").arg(l.last()));
 				result.append(l.last());
+			}
+			else
+			{
+				toLog(LogLevel::Debug, QString("Evaluate condition nothing.").arg(l.last()));
 			}
 
 			continue;
@@ -1407,8 +1415,8 @@ void PrintingService::updateHardwareConfiguration()
 		if (device)
 		{
 			QVariantMap dealerSettings;
-			dealerSettings.insert(CHardwareSDK::FR::DealerTaxation,  mStaticParameters.value(CPrintConstants::DealerTaxation));
-			dealerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters.value(CPrintConstants::DealerAgentFlag));
+			if (mStaticParameters.contains(CPrintConstants::DealerTaxSystem)) dealerSettings.insert(CHardwareSDK::FR::DealerTaxSystem, mStaticParameters[CPrintConstants::DealerTaxSystem]);
+			if (mStaticParameters.contains(CPrintConstants::DealerAgentFlag)) dealerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters[CPrintConstants::DealerAgentFlag]);
 
 			mPrinterDevices.append(device);
 

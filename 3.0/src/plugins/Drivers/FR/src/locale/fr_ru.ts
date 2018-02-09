@@ -103,6 +103,11 @@
     </message>
     <message>
         <location filename="../Parameters/FRPluginParameterTranslations.h" line="14"/>
+        <source>FRParameters#session_opening_time</source>
+        <translation>Время автозакрытия смены</translation>
+    </message>
+    <message>
+        <location filename="../Parameters/FRPluginParameterTranslations.h" line="15"/>
         <source>FRParameters#ejector_parameters</source>
         <translation>Параметры эжектора</translation>
     </message>
@@ -141,68 +146,73 @@
     </message>
     <message>
         <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="36"/>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="51"/>
-        <source>#wrong_dealer_taxation</source>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="52"/>
+        <source>#wrong_dealer_tax_system</source>
         <translation>неверно настроена СНО</translation>
     </message>
     <message>
         <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="37"/>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="52"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="53"/>
         <source>#wrong_dealer_agent_flag</source>
         <translation>неверно настроен признак агента</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="40"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="38"/>
+        <source>#wrong_fiscalization_settings</source>
+        <translation>параметры фискализации некорректны</translation>
+    </message>
+    <message>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="41"/>
         <source>#fiscal_add_on_error</source>
         <translation>ошибка фискальной доработки</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="41"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="42"/>
         <source>#EKLZ_error</source>
         <translation>ошибка ЭКЛЗ</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="42"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="43"/>
         <source>#fiscal_collapse</source>
         <translation>ошибка фискальной доработки, печать невозможна</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="43"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="44"/>
         <source>#FM_error</source>
         <translation>ошибка фискальной памяти</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="44"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="45"/>
         <source>#z_buffer_error</source>
         <translation>ошибка буфера Z-отчетов</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="45"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="46"/>
         <source>#z_buffer_overflow</source>
         <translation>необходимо распечатать Z-отчеты</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="46"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="47"/>
         <source>#need_close_session</source>
         <translation>необходимо выполнить Z-отчет</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="47"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="48"/>
         <source>#fs_end</source>
         <translation>срок действия ФН кончился</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="48"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="49"/>
         <source>#fs_memory_end</source>
         <translation>необходимо подключение к серверу ОФД</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="49"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="50"/>
         <source>#fs</source>
         <translation>ошибка ФН</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="50"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="51"/>
         <source>#no_money</source>
         <translation>не хватает денег</translation>
     </message>

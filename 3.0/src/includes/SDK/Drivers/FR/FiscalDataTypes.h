@@ -26,7 +26,7 @@ namespace EFiscalAmount
 
 //--------------------------------------------------------------------------------
 /// Системы налогообложения - СНО (1062 в ФР, 1055 в чеке).
-namespace ETaxations
+namespace ETaxSystems
 {
 	enum Enum
 	{
@@ -41,7 +41,7 @@ namespace ETaxations
 }
 
 /// Описатель списка СНО
-typedef QMap<ETaxations::Enum, QString> TTaxationData;
+typedef QMap<ETaxSystems::Enum, QString> TTaxSystemData;
 
 //--------------------------------------------------------------------------------
 /// Признаки агента (1057 в ФР, 1222 в чеке).
@@ -80,7 +80,7 @@ namespace EPayTypes
 
 //--------------------------------------------------------------------------------
 /// Признак способа расчета (1214).
-namespace EPayOffMethodTypes
+namespace EPayOffSubjectMethodTypes
 {
 	enum Enum
 	{
@@ -91,7 +91,7 @@ namespace EPayOffMethodTypes
 		Full,              /// Полный расчет
 		Part,              /// Частичный расчет и кредит
 		CreditTransfer,    /// Передача в кредит
-		Credit             /// Оплата кредита
+		CreditPayment      /// Оплата кредита
 	};
 }
 
@@ -102,6 +102,7 @@ namespace EPayOffSubjectTypes
 	enum Enum
 	{
 		None = 0,        /// Отсутствует
+		Unit,            /// Товар
 		Payment = 10,    /// Платеж
 		AgentFee         /// Агентское вознаграждение
 	};
@@ -162,18 +163,19 @@ struct SAmountData
 
 typedef QList<SAmountData> TAmountDataList;
 
+/// Фискальные данные платежа
 struct SPaymentData
 {
 	TAmountDataList amountDataList;    /// Список данных товара
 	bool back;                         /// Признак возврата товара
 	EPayTypes::Enum payType;           /// Тип оплаты
-	ETaxations::Enum taxation;         /// Система налогообложения (СНО)
+	ETaxSystems::Enum taxSystem;       /// Система налогообложения (СНО)
 	EAgentFlags::Enum agentFlag;       /// Флаг агента
-	QVariantMap fiscalParameters;      /// Параметры для фискальной печати (см. CHardware::FiscalFields)
+	QVariantMap fiscalParameters;      /// Параметры платежа - теги или имеют к ним отношение
 
-	SPaymentData(): back(false), payType(EPayTypes::None), taxation(ETaxations::None), agentFlag(EAgentFlags::None) {}
-	SPaymentData(const TAmountDataList & aAmountDataList, bool aBack, EPayTypes::Enum aPayType = EPayTypes::None, ETaxations::Enum aTaxation = ETaxations::None, EAgentFlags::Enum aAgentFlag = EAgentFlags::None):
-		back(aBack), amountDataList(aAmountDataList), taxation(aTaxation), payType(aPayType), agentFlag(aAgentFlag) {}
+	SPaymentData(): back(false), payType(EPayTypes::None), taxSystem(ETaxSystems::None), agentFlag(EAgentFlags::None) {}
+	SPaymentData(const TAmountDataList & aAmountDataList, bool aBack, EPayTypes::Enum aPayType = EPayTypes::None, ETaxSystems::Enum aTaxSystem = ETaxSystems::None, EAgentFlags::Enum aAgentFlag = EAgentFlags::None):
+		back(aBack), amountDataList(aAmountDataList), taxSystem(aTaxSystem), payType(aPayType), agentFlag(aAgentFlag) {}
 };
 
 //--------------------------------------------------------------------------------
@@ -188,7 +190,7 @@ typedef QMap<int, QString> TSectionNames;
 
 }} // namespace SDK::Driver
 
-Q_DECLARE_METATYPE(SDK::Driver::TTaxationData);
+Q_DECLARE_METATYPE(SDK::Driver::TTaxSystemData);
 Q_DECLARE_METATYPE(SDK::Driver::TAgentFlagsData);
 Q_DECLARE_METATYPE(SDK::Driver::TSectionNames);
 

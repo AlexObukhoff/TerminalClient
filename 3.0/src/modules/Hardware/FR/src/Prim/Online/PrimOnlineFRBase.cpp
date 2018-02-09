@@ -69,10 +69,10 @@ bool PrimOnlineFRBase::updateParameters()
 		return false;
 	}
 
-	char taxationData   = char(data[8].toInt(0, 16));
-	char operationModes = char(data[9].toInt(0, 16));
+	char taxSystemData     = char(data[8].toInt(0, 16));
+	char operationModeData = char(data[9].toInt(0, 16));
 
-	if (!checkTaxationData(taxationData) || !checkOperationModes(operationModes))
+	if (!checkTaxSystems(taxSystemData) || !checkOperationModes(operationModeData))
 	{
 		return false;
 	}
@@ -185,7 +185,7 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 		}
 	}
 
-	int taxData = int(aPaymentData.taxation);
+	int taxData = int(aPaymentData.taxSystem);
 
 	if (taxData)
 	{
@@ -283,7 +283,7 @@ TResult PrimOnlineFRBase::doZReport(bool aAuto)
 }
 
 //--------------------------------------------------------------------------------
-TResult PrimOnlineFRBase::openFRSession()
+bool PrimOnlineFRBase::openSession()
 {
 	CPrimFR::TData commandData = CPrimFR::TData() << CPrimFR::OperatorID << "" << "" << "";    // + сообщение оператору, доп. реквизит и реквизиты смены
 

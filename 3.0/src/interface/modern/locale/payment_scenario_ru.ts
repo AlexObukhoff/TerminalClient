@@ -4,45 +4,45 @@
 <context>
     <name>payment_scenario</name>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="386"/>
-        <location filename="../scenario/payment_scenario.js" line="464"/>
+        <location filename="../scenario/payment_scenario.js" line="390"/>
+        <location filename="../scenario/payment_scenario.js" line="470"/>
         <source>payment_scenario#cannot_use_provider</source>
         <translation>Извините, этот платёж временно не может быть принят. Попробуйте позже.</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="348"/>
-        <location filename="../scenario/payment_scenario.js" line="383"/>
+        <location filename="../scenario/payment_scenario.js" line="352"/>
+        <location filename="../scenario/payment_scenario.js" line="387"/>
         <source>payment_scenario#cannot_check_payment</source>
         <translation>Во время проверки произошла ошибка.</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="254"/>
+        <location filename="../scenario/payment_scenario.js" line="256"/>
         <source>payment_scenario#cannot_use_provider_without_printer</source>
         <translation>Извините, этот платёж не может быть принят из-за неработающего принтера. Попробуйте позже.</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="421"/>
+        <location filename="../scenario/payment_scenario.js" line="425"/>
         <source>payment_scenario#checking_payment</source>
         <translation>Пожалуйста, подождите, идёт проверка платежа...</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="470"/>
-        <location filename="../scenario/payment_scenario.js" line="645"/>
+        <location filename="../scenario/payment_scenario.js" line="476"/>
+        <location filename="../scenario/payment_scenario.js" line="652"/>
         <source>payment_scenario#printing_receipt</source>
         <translation>Подождите, печатается чек...</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="496"/>
+        <location filename="../scenario/payment_scenario.js" line="502"/>
         <source>payment_scenario#submit_ok</source>
         <translation>Ваша заявка принята.</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="512"/>
+        <location filename="../scenario/payment_scenario.js" line="518"/>
         <source>cash_charge_scenario#cannot_enable_validator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="540"/>
+        <location filename="../scenario/payment_scenario.js" line="546"/>
         <source>payment_scenario#processing_payment</source>
         <translation>Проведение платежа...</translation>
     </message>

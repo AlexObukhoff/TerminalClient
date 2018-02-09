@@ -175,6 +175,8 @@ Item {
 
 		var $ = function (aKey, aIndex, aUseRaw) { return eval("fields.%1%2.%3".arg(aKey).arg(aIndex ? aIndex : "").arg(aUseRaw ? "rawValue" : "value")) }
 
+		var woBedding = !JSON.parse($("wo_bedding", 0, true))
+
 		var blanks = [];
 
 		for (var num = 1; num <= $("ticket_num"); num++) {
@@ -213,6 +215,7 @@ Item {
 
 					Railway.$.updateTicket("orderId", "");
 					Backend$KZD.bookingFinished.connect(onBookingFinished);
+					Railway.$.updateTicket("woBedding", woBedding);
 					Railway.$.updateTicket("blanks", blanks);
 					Backend$KZD.booking(Railway.$.ticket());
 				}

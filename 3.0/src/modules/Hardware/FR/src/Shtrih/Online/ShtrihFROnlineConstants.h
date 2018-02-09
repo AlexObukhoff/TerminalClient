@@ -19,8 +19,18 @@ namespace CShtrihOnlineFR
 	/// Статус SD - недоступна.
 	const char SDNotConnected = '\xFE';
 
-	/// Минимальная дата прошивки, начиная с которой возможно снятие Z-отчетов в буфер.
-	const QDate MinZBufferFirmwareDate = QDate(2017, 6, 29);
+	/// Минимальные даты прошивкок, начиная с которых возможно выполнение определенного функционала.
+	namespace MinFWDate
+	{
+		/// Снятие Z-отчетов в буфер.
+		const QDate ZBuffer = QDate(2017, 6, 29);
+
+		/// Флаги агента для продажи.
+		const QDate AgentFlagOnSale = QDate(2017, 12, 29);
+
+		/// Операции V2.
+		const QDate V2 = QDate(2017, 5, 17);
+	}
 
 	/// Данные налога для продажи - налог вычисляется ФР.
 	const char FiscalTaxData[] = "\xFF\xFF\xFF\xFF\xFF";
@@ -39,6 +49,12 @@ namespace CShtrihOnlineFR
 
 	/// Ряд кассира по умолчанию (сисадмин).
 	const int CashierSeries = 30;
+
+	/// Количество типов оплаты.
+	const int PayTypeQuantity = 16;
+
+	/// Налоги на закрытии чека по количеству налоговых  групп. Фиктивные, т.к. используются налоги на позицию.
+	const QByteArray ClosingFiscalTaxes = QByteArray(6 * 5, ASCII::NUL);
 
 	/// Параметры автообновления.
 	namespace FirmwareUpdating
@@ -71,7 +87,7 @@ namespace CShtrihOnlineFR
 		const SData SerialNumber        = SData( 1, 18);    /// Серийный номер.
 		const SData INN                 = SData( 2, 18);    /// ИНН.
 		const SData RNM                 = SData( 3, 18);    /// РНМ.
-		const SData Taxation            = SData( 5, 18);    /// СНО.
+		const SData TaxSystem           = SData( 5, 18);    /// СНО.
 		const SData LegalOwner          = SData( 7, 18);    /// Наименование юр. лица владельца.
 		const SData PayOffAddress       = SData( 9, 18);    /// Адрес расчетов.
 		const SData OFDName             = SData(10, 18);    /// Наименование ОФД.
@@ -126,7 +142,9 @@ namespace CShtrihOnlineFR
 			const char StartFiscalTLVData[]      = "\xFF\x3A";    /// Начать получение данных фискального документа в TLV-формате.
 			const char GetFiscalTLVData[]        = "\xFF\x3B";    /// Получить данные фискального документа в TLV-формате.
 			const char GetSessionParameters[]    = "\xFF\x40";    /// Получить параметры текущей смены.
+			const char CloseDocument[]           = "\xFF\x45";    /// Закрыть фискальный чек.
 			const char Sale[]                    = "\xFF\x46";    /// Продажа.
+			const char SetOFDParameterLinked[]   = "\xFF\x4D";    /// Передать произвольную TLV структуру (реквизит для ОФД), привязанную к операции.
 		}
 	}
 

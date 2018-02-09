@@ -65,6 +65,12 @@ protected:
 	/// Открыта ли сессия.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
 
+	/// Открыть смену.
+	virtual bool openSession() { return false; }
+
+	/// Открыть смену.
+	bool openFRSession();
+
 	/// Установить начальные параметры.
 	virtual void setInitialData();
 
@@ -78,10 +84,16 @@ protected:
 	virtual int getSessionNumber() { return 0; }
 
 	/// Загрузить СНО.
-	bool checkTaxationData(char aData);
+	bool checkTaxSystems(char aData);
+
+	/// Проверить корректность СНО дилера.
+	bool checkDealerTaxSystems(bool aCanLog = false);
 
 	/// Загрузить признаки агента.
 	bool checkAgentFlags(char aData);
+
+	/// Проверить корректность признаков агента дилера.
+	bool checkDealerAgentFlags(bool aCanLog = false);
 
 	/// Загрузить режимы работы.
 	bool checkOperationModes(char aData);
@@ -101,8 +113,11 @@ protected:
 	/// Установить реквизиты ОФД.
 	bool setOFDParameters();
 
+	/// Установить реквизиты ОФД на продаже.
+	bool setOFDParametersOnSale(const SDK::Driver::SAmountData & aAmountData);
+
 	/// Установить TLV-параметр.
-	virtual bool setTLV(int /*aField*/) { return true; }
+	virtual bool setTLV(int /*aField*/, bool /*aForSale*/ = false) { return true; }
 
 	/// Распарсить TLV-параметр.
 	bool parseTLV(const QByteArray & aData, CFR::STLV & aTLV);
@@ -230,6 +245,9 @@ protected:
 	/// Реквизиты ОФД для установки в момент печати фискального чека.
 	QSet<int> mOFDFiscalParameters;
 
+	/// Реквизиты ОФД для установки в момент печати фискального чека на продаже.
+	QSet<int> mOFDFiscalParametersOnSale;
+
 	/// Количество неотправленных документов в ОФД.
 	int mOFDNotSentCount;
 
@@ -242,9 +260,9 @@ protected:
 	/// Данные типов оплаты.
 	CFR::PayTypeData mPayTypeData;
 
-	/// Система налогообложения (СНО).
-	typedef QList<char> TTaxations;
-	TTaxations mTaxations;
+	/// Системы налогообложения (СНО).
+	typedef QList<char> TTaxSystems;
+	TTaxSystems mTaxSystems;
 
 	/// Признаки агента.
 	typedef QList<char> TAgentFlags;
@@ -277,6 +295,9 @@ protected:
 
 	/// Может работать с буфером Z-отчетов.
 	bool mCanProcessZBuffer;
+
+	/// Параметры фискализации некорректны?
+	bool mWrongFiscalizationSettings;
 };
 
 //--------------------------------------------------------------------------------

@@ -91,6 +91,12 @@ namespace CShtrihFR
 	/// Пароль администратора по умолчанию.
 	const char AdminPassword = 30;
 
+	/// Количество типов оплаты.
+	const int PayTypeQuantity = 4;
+
+	/// Налоги на закрытии чека по количеству налоговых  групп. Фиктивные, т.к. используются налоги на позицию.
+	const QByteArray ClosingFiscalTaxes = QByteArray(4, ASCII::NUL);
+
 	/// Данные языковых таблиц.
 	class CLanguages : public CDescription<uchar>
 	{

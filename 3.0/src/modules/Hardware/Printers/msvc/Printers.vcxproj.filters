@@ -292,5 +292,8 @@
     <ClInclude Include="..\src\POSPrinters\Citizen\CitizenCTS2000.h">
       <Filter>POS\Citizen</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\Custom\CustomKZTCodec.h">
+      <Filter>POS\Custom</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

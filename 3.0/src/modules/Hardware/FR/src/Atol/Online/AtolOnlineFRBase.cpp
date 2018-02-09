@@ -15,9 +15,8 @@ AtolOnlineFRBase::AtolOnlineFRBase()
 	mIsOnline = true;
 	mFRBuildUnifiedTaxes = 3689;
 
-	mOFDFiscalParameters
-		<< FiscalFields::TaxSystem
-		<< FiscalFields::AgentFlag;
+	mOFDFiscalParametersOnSale
+		<< FiscalFields::PayOffSubjectMethodType;
 
 	// регистры
 	      mRegisterData.add(CAtolFR::Registers::SerialNumber,      '\x16', 7);
@@ -71,29 +70,19 @@ bool AtolOnlineFRBase::updateParameters()
 		return false;
 	}
 
-	if (!checkTaxationData(data[39]) || !checkOperationModes(data[40]))
+	if (!checkTaxSystems(data[39]) || !checkOperationModes(data[40]))
 	{
 		return false;
 	}
 
-	using namespace CFR::FiscalFields;
-
-	ERequired::Enum  taxationRequired =  (mTaxations.size() > 1) ? ERequired::Yes : ERequired::No;
-	ERequired::Enum agentFlagRequired = (mAgentFlags.size() > 1) ? ERequired::Yes : ERequired::No;
-
-	mFiscalFieldData.data()[FiscalFields::TaxSystem].required = taxationRequired;
-	mFiscalFieldData.data()[FiscalFields::AgentFlag].required = agentFlagRequired;
-
 	#define SET_LCONFIG_FISCAL_FIELD(aName) QString aName##Log = QString("fiscal tag %1 (%2)").arg(FiscalFields::aName).arg(CHardware::FiscalFields::aName); \
 		if (getTLV(FiscalFields::aName, data)) { setLConfigParameter(CHardware::FiscalFields::aName, data); \
 		     QString value = getConfigParameter(CHardware::FiscalFields::aName, data).toString(); \
-		     toLog(LogLevel::Normal, QString("%1: Add %2 = \"%3\" to config data").arg(mDeviceName).arg(aName##Log).arg(value)); } \
-		else toLog(LogLevel::Error, QString("%1: Failed to add %2 to config data").arg(mDeviceName).arg(aName##Log));
+		     toLog(LogLevel::Normal, QString("%1: Add %2 = \"%3\" to config data").arg(mDeviceName).arg(aName##Log).arg(value)); }
 
 	#define SET_BCONFIG_FISCAL_FIELD(aName) QString aName##Log = QString("fiscal tag %1 (%2)").arg(FiscalFields::aName).arg(CHardware::FiscalFields::aName); \
 		if (getTLV(FiscalFields::aName, data)) { char value = data[0]; setConfigParameter(CHardware::FiscalFields::aName, value); \
-		     toLog(LogLevel::Normal, QString("%1: Add %2 = %3 to config data").arg(mDeviceName).arg(aName##Log).arg(int(value))); } \
-		else toLog(LogLevel::Error,  QString("%1: Failed to add %2 to config data").arg(mDeviceName).arg(aName##Log));
+		     toLog(LogLevel::Normal, QString("%1: Add %2 = %3 to config data").arg(mDeviceName).arg(aName##Log).arg(int(value))); }
 
 	SET_LCONFIG_FISCAL_FIELD(FTSURL);
 	SET_LCONFIG_FISCAL_FIELD(OFDURL);
@@ -262,11 +251,6 @@ bool AtolOnlineFRBase::performFiscal(const QStringList & aReceipt, const SPaymen
 {
 	openFRSession();
 
-	if (mTaxations.size() > 1)
-	{
-		setConfigParameter(CHardware::FiscalFields::TaxSystem, aPaymentData.taxation);
-	}
-
 	bool result = AtolFRBase::performFiscal(aReceipt, aPaymentData, aFPData, aPSData);
 
 	if (result)
@@ -346,7 +330,15 @@ bool AtolOnlineFRBase::processAnswer(const QByteArray & aCommand, char aError)
 		}
 	}
 
-	return AtolFRBase::processAnswer(aCommand, aError);
+	bool result = AtolFRBase::processAnswer(aCommand, aError);
+
+	if ((aCommand == CAtolOnlineFR::Commands::FS::GetFiscalTLVData) && !mProcessingErrors.isEmpty() && (mProcessingErrors.last() == CAtolOnlineFR::Errors::NoRequiedDataInFS))
+	{
+		mProcessingErrors.pop_back();
+		mLastError = 0;
+	}
+
+	return result;
 }
 
 //---------------------------------------------------------------------------
@@ -376,6 +368,11 @@ bool AtolOnlineFRBase::sale(const SAmountData & aAmountData)
 		return false;
 	}
 
+	if (!setOFDParametersOnSale(aAmountData))
+	{
+		return false;
+	}
+
 	int taxGroup = mTaxData[aAmountData.VAT].group;
 	QByteArray sum = getBCD(aAmountData.sum / 10.0, 7, 2, 3);
 	QByteArray name = mCodec->fromUnicode(aAmountData.name);
@@ -398,7 +395,7 @@ bool AtolOnlineFRBase::sale(const SAmountData & aAmountData)
 }
 
 //--------------------------------------------------------------------------------
-bool AtolOnlineFRBase::setTLV(int aField)
+bool AtolOnlineFRBase::setTLV(int aField, bool /*aForSale*/)
 {
 	bool result;
 
@@ -408,7 +405,8 @@ bool AtolOnlineFRBase::setTLV(int aField)
 	}
 
 	QString fieldLog;
-	QByteArray commandData = getTLVData(aField, getConfigParameter(mFiscalFieldData[aField].description), &fieldLog);
+	QVariant value = getConfigParameter(mFiscalFieldData[aField].description);
+	QByteArray commandData = getTLVData(aField, value, &fieldLog);
 	commandData.prepend('\x00');    // номер блока
 	commandData.prepend('\x01');    // количество блоков
 	commandData.prepend(CAtolOnlineFR::PrintOFDParameter);    /// печатать ОФД-реквизит.

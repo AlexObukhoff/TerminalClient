@@ -184,13 +184,11 @@ SPluginParameter setPresentationLength(const QString & aOptionalTranslation, int
 }
 
 //------------------------------------------------------------------------------
-SPluginParameter setCodepage()
+SPluginParameter setCustomCodepage()
 {
 	return SPluginParameter(CHardware::Codepage, false, PPT::Codepage, QString(), CHardware::Codepages::CP866, QStringList()
 		<< CHardware::Codepages::CP866
-		<< CHardware::Codepages::Win1250
-		<< CHardware::Codepages::Win1251
-		<< CHardware::Codepages::Win1252, false);
+		<< CHardware::Codepages::CustomKZT, false);
 }
 
 //------------------------------------------------------------------------------

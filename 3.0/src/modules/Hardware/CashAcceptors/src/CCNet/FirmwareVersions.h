@@ -37,7 +37,7 @@ namespace CCCNet
 			data()[Models::CashcodeMFL][Currency::KZT][false] = TFimwareVersionSet() << 1124;
 			data()[Models::CashcodeMSM][Currency::KZT][false] = TFimwareVersionSet() << 1126;
 
-			data()[Models::CashcodeG200][Currency::RUB][false] = TFimwareVersionSet() << 1522;
+			data()[Models::CashcodeG200][Currency::RUB][false] = TFimwareVersionSet() << 1523;
 		}
 	};
 

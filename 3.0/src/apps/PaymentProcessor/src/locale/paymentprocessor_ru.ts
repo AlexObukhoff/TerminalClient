@@ -4,7 +4,7 @@
 <context>
     <name>DeviceService</name>
     <message>
-        <location filename="../Services/DeviceService.cpp" line="44"/>
+        <location filename="../Services/DeviceService.cpp" line="43"/>
         <source>#status_undefined</source>
         <translation>Статус неопределён</translation>
     </message>
@@ -12,7 +12,7 @@
 <context>
     <name>GUIService</name>
     <message>
-        <location filename="../Services/GUIService.cpp" line="497"/>
+        <location filename="../Services/GUIService.cpp" line="498"/>
         <source>#penetration_detected</source>
         <translation>Попытка удаленного управления</translation>
     </message>
@@ -30,7 +30,7 @@
         <translation>Комиссия субагента</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="101"/>
+        <location filename="../Services/PrintingCommands.cpp" line="102"/>
         <source>#processing_fee</source>
         <translation>Комиссия КБ Платина</translation>
     </message>
@@ -42,67 +42,67 @@
         <translation type="obsolete">К зачислению</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="244"/>
-        <source>#taxation</source>
+        <location filename="../Services/PrintingCommands.cpp" line="245"/>
+        <source>#tax_system</source>
         <translation>СНО</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="245"/>
+        <location filename="../Services/PrintingCommands.cpp" line="246"/>
         <source>#kkt_timestamp</source>
         <translation>ВРЕМЯ ККТ</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="246"/>
+        <location filename="../Services/PrintingCommands.cpp" line="247"/>
         <source>#kkt_znm</source>
         <translation>ЗН ККТ</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="247"/>
+        <location filename="../Services/PrintingCommands.cpp" line="248"/>
         <source>#kkt_rnm</source>
         <translation>РН ККТ</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="248"/>
+        <location filename="../Services/PrintingCommands.cpp" line="249"/>
         <source>#kkt_session</source>
         <translation>СМЕНА</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="249"/>
+        <location filename="../Services/PrintingCommands.cpp" line="250"/>
         <source>#kkt_fd_serial</source>
         <translation>ЧЕК</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="250"/>
+        <location filename="../Services/PrintingCommands.cpp" line="251"/>
         <source>#kkt_fn</source>
         <translation>ФН</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="251"/>
+        <location filename="../Services/PrintingCommands.cpp" line="252"/>
         <source>#kkt_fd</source>
         <translation>ФД</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="252"/>
+        <location filename="../Services/PrintingCommands.cpp" line="253"/>
         <source>#kkt_fp</source>
         <translation>ФП</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="254"/>
+        <location filename="../Services/PrintingCommands.cpp" line="255"/>
         <source>#tax_amount_02</source>
         <translation>НДС 18%</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="255"/>
+        <location filename="../Services/PrintingCommands.cpp" line="256"/>
         <source>#tax_amount_03</source>
         <translation>НДС 10%</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="256"/>
+        <location filename="../Services/PrintingCommands.cpp" line="257"/>
         <source>#tax_amount_04</source>
         <translation>НДС 0%</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="257"/>
+        <location filename="../Services/PrintingCommands.cpp" line="258"/>
         <source>#tax_amount_05</source>
         <translation>БЕЗ НДС</translation>
     </message>

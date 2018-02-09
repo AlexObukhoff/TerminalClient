@@ -395,7 +395,7 @@ void AtolFRBase::setErrorFlags(char aError, const QByteArray & /*aCommand*/)
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::openFRSession()
+bool AtolFRBase::openSession()
 {
 	if (getSessionState() == ESessionState::Opened)
 	{
@@ -587,7 +587,7 @@ bool AtolFRBase::getStatus(TStatusCodes & aStatusCodes)
 		return false;
 	}
 
-	bool buildOK = !mFRBuild || (mFRBuild >= mModelData.buildVersion);
+	bool buildOK = !mFRBuild || (mFRBuild >= mModelData.build);
 
 	if (!buildOK)
 	{

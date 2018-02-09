@@ -153,6 +153,7 @@
     <ClInclude Include="..\src\POSPrinters\Citizen\CitizenPPU700\CitizenPPU700.h" />
     <ClInclude Include="..\src\POSPrinters\Common\POSParameters.h" />
     <ClInclude Include="..\src\POSPrinters\Common\POSPrinter.h" />
+    <ClInclude Include="..\src\POSPrinters\Custom\CustomKZTCodec.h" />
     <ClInclude Include="..\src\POSPrinters\Custom\CustomPrinters.h" />
     <ClInclude Include="..\src\POSPrinters\Custom\CustomTG2480H.h" />
     <ClInclude Include="..\src\POSPrinters\Custom\CustomVKP\CustomVKP80.h" />

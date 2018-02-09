@@ -54,7 +54,7 @@ void PayOnlineFR<T>::processDeviceData()
 {
 	ShtrihRetractorFRLite<T>::processDeviceData();
 
-	mCanProcessZBuffer = mModelData.date >= CShtrihOnlineFR::MinZBufferFirmwareDate;
+	mCanProcessZBuffer = mModelData.date >= CShtrihOnlineFR::MinFWDate::ZBuffer;
 	QByteArray data;
 
 	if (getFRParameter(CShtrihOnlineFR::FRParameters::PrinterModel, data) && CPayOnlineFR::PrinterModels.data().contains(data[0]))
