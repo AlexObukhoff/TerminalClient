@@ -103,7 +103,7 @@ namespace CKasbiFR
 		const char GetFirmware           = '\x03';    /// Получить инфо о ПО девайса
 		const char GetModelInfo          = '\x04';    /// Модель ККТ
 		const char GetFSSerial           = '\x05';    /// Серийный номер ФН
-		const char GetFSFirmware         = '\x06';    /// Версия ПО ФН
+		const char GetFSVersion          = '\x06';    /// Версия ПО ФН
 		const char GetFSData             = '\x07';    /// Данные ФН
 		const char GetFSStatus           = '\x08';    /// Статус ФН
 		const char GetRegistrationData   = '\x0A';    /// Получить параметры регистрации ККТ

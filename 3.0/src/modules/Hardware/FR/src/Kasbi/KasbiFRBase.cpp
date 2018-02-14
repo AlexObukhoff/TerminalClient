@@ -208,9 +208,9 @@ void KasbiFRBase::processDeviceData(const QByteArray & aRegistrationData)
 		mFSSerialNumber = CFR::FSSerialToString(data);
 	}
 
-	if (processCommand(CKasbiFR::Commands::GetFSFirmware, &data))
+	if (processCommand(CKasbiFR::Commands::GetFSVersion, &data))
 	{
-		setDeviceParameter(CDeviceData::FS::Firmware, data);
+		setDeviceParameter(CDeviceData::FS::Version, clean(data));
 	}
 
 	if (processCommand(CKasbiFR::Commands::GetFSData, &data) && (data.size() >= 5))

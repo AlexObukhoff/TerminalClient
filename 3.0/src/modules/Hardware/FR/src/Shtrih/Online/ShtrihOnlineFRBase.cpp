@@ -1,4 +1,4 @@
-/* @file Онлайн ФР семейства Штрих. */
+﻿/* @file Онлайн ФР семейства Штрих. */
 
 #include "ShtrihOnlineFRBase.h"
 
@@ -107,8 +107,11 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 	}
 
 	bool result = true;
+	bool FSError = mFSError;
 
-	if (processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, data.mid(43, 4)))
+	TResult commandResult = processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, data.mid(43, 4));
+
+	if (commandResult)
 	{
 		CFR::STLV TLV;
 
@@ -122,6 +125,11 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 				}
 			}
 		}
+	}
+	else if ((commandResult == CommandResult::Device) && (mLastError == CShtrihOnlineFR::Errors::NoRequiedDataInFS))
+	{
+		mFSError = FSError;
+		mProcessingErrors.pop_back();
 	}
 
 	return result;
@@ -217,7 +225,7 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 	if (processCommand(CShtrihOnlineFR::Commands::FS::GetStatus, &data))
 	{
 		mFSSerialNumber = CFR::FSSerialToString(data.mid(13, 16));
-		int FDCount = ProtocolUtils::revert(data.right(4)).toHex().toUInt(0, 16);
+		int FDCount = revert(data.right(4)).toHex().toUInt(0, 16);
 
 		setDeviceParameter(CDeviceData::FR::FiscalDocuments, FDCount);
 	}
@@ -237,7 +245,7 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 
 	if (processCommand(CShtrihOnlineFR::Commands::FS::GetVersion, &data) && (data.size() > 19))
 	{
-		setDeviceParameter(CDeviceData::FS::Type, data[19] ? "serial" : "debug");
+		setDeviceParameter(CDeviceData::FS::Version, QString("%1, type %2").arg(clean(data.mid(3, 16)).data()).arg(data[19] ? "serial" : "debug"));
 	}
 
 	using namespace CShtrihOnlineFR::FRParameters;
@@ -293,7 +301,7 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 		else
 		{
 			auto getSDData = [&] (const CShtrihFR::FRParameters::SData & aData) -> uint { if (!getFRParameter(aData, data)) return 0;
-				return ProtocolUtils::revert(data).toHex().toUInt(0, 16); };
+				return revert(data).toHex().toUInt(0, 16); };
 
 			QString SDCardData = QString("cluster %1 KB, space %2 MB (%3 MB free), io errors %4, retry count %5")
 				.arg(getSDData(SD::ClusterSize) / 1024)
@@ -321,7 +329,7 @@ bool ShtrihOnlineFRBase<T>::checkFirmwareUpdatingData(const CShtrihFR::FRParamet
 		return false;
 	}
 
-	int value = ProtocolUtils::revert(data).toHex().toUShort(0, 16);
+	int value = revert(data).toHex().toUShort(0, 16);
 
 	if (value != aValue)
 	{
@@ -486,7 +494,7 @@ bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SP
 
 		if ((taxSystem != ETaxSystems::None) && (mTaxSystems.size() != 1) && !setFRParameter(CShtrihOnlineFR::FRParameters::TaxSystem, taxSystem))
 		{
-			toLog(LogLevel::Error, QString("%1: Failed to set taxation system %2 (%3)").arg(mDeviceName).arg(ProtocolUtils::toHexLog(taxSystem)).arg(CFR::TaxSystems[taxSystem]));
+			toLog(LogLevel::Error, QString("%1: Failed to set taxation system %2 (%3)").arg(mDeviceName).arg(toHexLog(taxSystem)).arg(CFR::TaxSystems[taxSystem]));
 			return false;
 		}
 	}
@@ -499,7 +507,7 @@ bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SP
 
 		if (processCommand(CShtrihOnlineFR::Commands::FS::GetStatus, &data) && (data.size() >= 33))
 		{
-			uint FDNumber = ProtocolUtils::revert(data.mid(29, 4)).toHex().toUInt(0, 16);
+			uint FDNumber = revert(data.mid(29, 4)).toHex().toUInt(0, 16);
 			aFPData.insert(FiscalFields::FDNumber, FDNumber);
 
 			if (processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, getHexReverted(FDNumber, 4)))

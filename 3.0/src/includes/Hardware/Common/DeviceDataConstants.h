@@ -156,9 +156,7 @@ namespace CDeviceData
 		const char SerialNumber[] = "fs_serial_number";
 		const char ValidityData[] = "fs_validity_data";
 		const char DifferenceDT[] = "fs_difference_date_time";
-		const char Type[] = "fs_type";
 		const char Version[] = "fs_version";
-		const char Firmware[] = "fs_firmware";
 	}
 
 	/// Сторожевые таймеры.

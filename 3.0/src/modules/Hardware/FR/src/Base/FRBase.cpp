@@ -469,7 +469,7 @@ bool FRBase<T>::checkAgentFlags(char aData)
 	ERequired::Enum required = (mAgentFlags.size() > 1) ? ERequired::Yes : ERequired::No;
 	mFiscalFieldData.data()[FiscalFields::AgentFlagsRegistered].required = required;
 
-	if (mAgentFlags.size() > 1)
+	if (mAgentFlags.size() >= 1)
 	{
 		mOFDFiscalParameters.insert(FiscalFields::AgentFlagsRegistered);
 
@@ -936,7 +936,7 @@ bool FRBase<T>::printFiscal(const QStringList & aReceipt, const SPaymentData & a
 	{
 		setConfigParameter(CHardware::FiscalFields::TaxSystem, char(paymentData.taxSystem));
 	}
-
+	/*
 	if (mAgentFlags.size() > 1)
 	{
 		foreach (const SAmountData & amountData, aPaymentData.amountDataList)
@@ -957,7 +957,7 @@ bool FRBase<T>::printFiscal(const QStringList & aReceipt, const SPaymentData & a
 			}
 		}
 	}
-
+	*/
 	char agentFlag = char(paymentData.agentFlag);
 	char agentFlagData = char(getConfigParameter(CHardwareSDK::FR::DealerAgentFlag).toInt());
 	EAgentFlags::Enum dealerAgentFlag = EAgentFlags::Enum(agentFlagData);

@@ -1166,7 +1166,7 @@ void PrintingService::expandTags(QStringList & aReceipt, const QVariantMap & aPa
 			}
 			else
 			{
-				toLog(LogLevel::Debug, QString("Evaluate condition nothing.").arg(l.last()));
+				toLog(LogLevel::Debug, QString("Evaluate condition nothing for %1").arg(l.last()));
 			}
 
 			continue;

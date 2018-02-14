@@ -30,7 +30,7 @@ FocusScope {
 			visible: text.text
 
 			width: 404
-			height: 100
+			height: 120
 
 			source: "image://ui/button.secondary.normal"
 			border { left: 21; top: 84; right: 84; bottom: 21 }

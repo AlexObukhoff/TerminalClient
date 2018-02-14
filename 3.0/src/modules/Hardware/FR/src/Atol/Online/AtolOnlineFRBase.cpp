@@ -137,7 +137,7 @@ void AtolOnlineFRBase::processDeviceData()
 
 	if (processCommand(CAtolOnlineFR::Commands::FS::GetVersion, &data) && (data.size() > 18))
 	{
-		setDeviceParameter(CDeviceData::FS::Version, data.mid(2, 16));
+		setDeviceParameter(CDeviceData::FS::Version, QString("%1, type %2").arg(clean(data.mid(2, 16)).data()).arg(data[18] ? "serial" : "debug"));
 	}
 
 	if (processCommand(CAtolOnlineFR::Commands::FS::GetFiscalizationResume, &data))
