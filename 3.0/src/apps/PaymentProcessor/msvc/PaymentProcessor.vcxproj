@@ -78,7 +78,7 @@
       <ResourceOutputFileName>$(IntDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>QtScript4.lib;QtNetwork4.lib;QtCore4.lib;QtGui4.lib;QtSql4.lib;QtXml4.lib;QtOpenGL4.lib;phonon4.lib;qtmain.lib;DatabaseProxy.lib;CryptEngine.lib;Log.lib;Application.lib;MessageQueue.lib;DeviceManager.lib;WatchServiceClient.lib;Connection.lib;KeysUtils.lib;SysUtils.lib;DebugUtils.lib;NetworkTaskManager.lib;GraphicsEngine.lib;ScenarioEngine.lib;SettingsManager.lib;PaymentProcessorSDK.lib;DriverSDK.lib;PluginSDK.lib;Packer.lib;qntp.lib;UpdateEngine.lib;QtSingleApplication.lib;QZint.lib;qBreakpad.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtScript4.lib;QtNetwork4.lib;QtCore4.lib;QtGui4.lib;QtSql4.lib;QtXml4.lib;phonon4.lib;qtmain.lib;DatabaseProxy.lib;CryptEngine.lib;Log.lib;Application.lib;MessageQueue.lib;DeviceManager.lib;WatchServiceClient.lib;Connection.lib;KeysUtils.lib;SysUtils.lib;DebugUtils.lib;NetworkTaskManager.lib;GraphicsEngine.lib;ScenarioEngine.lib;SettingsManager.lib;PaymentProcessorSDK.lib;DriverSDK.lib;PluginSDK.lib;Packer.lib;qntp.lib;UpdateEngine.lib;QtSingleApplication.lib;QZint.lib;qBreakpad.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);$(THIRDPARTY_BIN_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
@@ -121,7 +121,7 @@
       <ResourceOutputFileName>$(IntDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>QtScript4.lib;QtNetwork4.lib;QtCore4.lib;QtGui4.lib;QtSql4.lib;QtXml4.lib;QtOpenGL4.lib;phonon4.lib;qtmain.lib;DatabaseProxy.lib;CryptEngine.lib;Log.lib;Application.lib;MessageQueue.lib;DeviceManager.lib;WatchServiceClient.lib;Connection.lib;KeysUtils.lib;SysUtils.lib;DebugUtils.lib;NetworkTaskManager.lib;GraphicsEngine.lib;ScenarioEngine.lib;SettingsManager.lib;PaymentProcessorSDK.lib;DriverSDK.lib;PluginSDK.lib;Packer.lib;qntp.lib;UpdateEngine.lib;QtSingleApplication.lib;QZint.lib;qBreakpad.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtScript4.lib;QtNetwork4.lib;QtCore4.lib;QtGui4.lib;QtSql4.lib;QtXml4.lib;phonon4.lib;qtmain.lib;DatabaseProxy.lib;CryptEngine.lib;Log.lib;Application.lib;MessageQueue.lib;DeviceManager.lib;WatchServiceClient.lib;Connection.lib;KeysUtils.lib;SysUtils.lib;DebugUtils.lib;NetworkTaskManager.lib;GraphicsEngine.lib;ScenarioEngine.lib;SettingsManager.lib;PaymentProcessorSDK.lib;DriverSDK.lib;PluginSDK.lib;Packer.lib;qntp.lib;UpdateEngine.lib;QtSingleApplication.lib;QZint.lib;qBreakpad.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);$(THIRDPARTY_BIN_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
@@ -164,7 +164,7 @@
       <ResourceOutputFileName>$(IntDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>QtScriptd4.lib;QtNetworkd4.lib;QtCored4.lib;QtGuid4.lib;QtXmld4.lib;QtSqld4.lib;QtOpenGLd4.lib;phonond4.lib;qtmaind.lib;DatabaseProxyd.lib;CryptEngined.lib;Logd.lib;Applicationd.lib;MessageQueued.lib;DeviceManagerd.lib;WatchServiceClientd.lib;Connectiond.lib;KeysUtilsd.lib;SysUtilsd.lib;DebugUtilsd.lib;NetworkTaskManagerd.lib;GraphicsEngined.lib;ScenarioEngined.lib;SettingsManagerd.lib;PaymentProcessorSDKd.lib;DriverSDKd.lib;PluginSDKd.lib;Packerd.lib;qntpd.lib;UpdateEngined.lib;QtSingleApplicationd.lib;QZintd.lib;qBreakpadd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtScriptd4.lib;QtNetworkd4.lib;QtCored4.lib;QtGuid4.lib;QtXmld4.lib;QtSqld4.lib;phonond4.lib;qtmaind.lib;DatabaseProxyd.lib;CryptEngined.lib;Logd.lib;Applicationd.lib;MessageQueued.lib;DeviceManagerd.lib;WatchServiceClientd.lib;Connectiond.lib;KeysUtilsd.lib;SysUtilsd.lib;DebugUtilsd.lib;NetworkTaskManagerd.lib;GraphicsEngined.lib;ScenarioEngined.lib;SettingsManagerd.lib;PaymentProcessorSDKd.lib;DriverSDKd.lib;PluginSDKd.lib;Packerd.lib;qntpd.lib;UpdateEngined.lib;QtSingleApplicationd.lib;QZintd.lib;qBreakpadd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);$(THIRDPARTY_DIR)\VisualLeakDetector\lib\Win32;$(THIRDPARTY_BIN_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>

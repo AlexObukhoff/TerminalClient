@@ -25,8 +25,10 @@
 	<string>Купюры 10 %CURRENCY% x %10_BILL_COUNT% = %10_BILL_SUM% %CURRENCY%</string>
 	<string>Купюры 50 %CURRENCY% x %50_BILL_COUNT% = %50_BILL_SUM% %CURRENCY%</string>
 	<string>Купюры 100 %CURRENCY% x %100_BILL_COUNT% = %100_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 200 %CURRENCY% x %200_BILL_COUNT% = %200_BILL_SUM% %CURRENCY%</string>
 	<string>Купюры 500 %CURRENCY% x %500_BILL_COUNT% = %500_BILL_SUM% %CURRENCY%</string>
 	<string>Купюры 1000 %CURRENCY% x %1000_BILL_COUNT% = %1000_BILL_SUM% %CURRENCY%</string>
+	<string>Купюры 2000 %CURRENCY% x %2000_BILL_COUNT% = %2000_BILL_SUM% %CURRENCY%</string>
 	<string>Купюры 5000 %CURRENCY% x %5000_BILL_COUNT% = %5000_BILL_SUM% %CURRENCY%</string>
 	<string>-----------------------------------</string>
 	<string>Кол-во купюр: %BILL_COUNT%</string>

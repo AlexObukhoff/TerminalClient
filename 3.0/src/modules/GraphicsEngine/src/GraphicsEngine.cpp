@@ -1,4 +1,4 @@
-﻿/* @file Графический интерфейс. */
+﻿﻿/* @file Графический интерфейс. */
 
 
 // Qt
@@ -9,8 +9,6 @@
 #include <QtGui/QKeySequence>
 #include <QtGui/QApplication>
 #include <QtGui/QWidget>
-#include <QtOpenGL/QGLFormat>
-#include <QtOpenGL/QGLWidget>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsSceneMouseEvent>
@@ -141,7 +139,7 @@ GraphicsEngine::~GraphicsEngine()
 }
 
 //---------------------------------------------------------------------------
-bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aUseOpenGL, bool aShowDebugInfo)
+bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aShowDebugInfo)
 {
 	// Если задан отсутствующий в системе дисплей, откатываемся на нулевой
 	if (aDisplay < 0 || aDisplay > mScreens.size() - 1)
@@ -166,13 +164,6 @@ bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aSho
 	mDebugWidget.setPosition(QPoint(0, aHeight));
 	mScene.addItem(&mDebugWidget);
 	mDebugWidget.setVisible(aShowDebugInfo);
-
-	if (aUseOpenGL)
-	{
-		QGLFormat format = QGLFormat::defaultFormat();
-		QGLWidget* glWidget = new QGLWidget(format);
-		mView.setViewport(glWidget);
-	}
 
 	mView.setScene(&mScene);
 
