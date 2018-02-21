@@ -12,7 +12,7 @@
 <context>
     <name>GUIService</name>
     <message>
-        <location filename="../Services/GUIService.cpp" line="498"/>
+        <location filename="../Services/GUIService.cpp" line="497"/>
         <source>#penetration_detected</source>
         <translation>Попытка удаленного управления</translation>
     </message>
@@ -20,17 +20,17 @@
 <context>
     <name>PrintFiscalCommand</name>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="95"/>
+        <location filename="../Services/PrintingCommands.cpp" line="100"/>
         <source>#bank_fee</source>
         <translation>Комиссия БПА</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="96"/>
+        <location filename="../Services/PrintingCommands.cpp" line="101"/>
         <source>#dealer_fee</source>
         <translation>Комиссия субагента</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="102"/>
+        <location filename="../Services/PrintingCommands.cpp" line="107"/>
         <source>#processing_fee</source>
         <translation>Комиссия КБ Платина</translation>
     </message>

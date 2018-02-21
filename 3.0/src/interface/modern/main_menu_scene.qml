@@ -155,6 +155,8 @@ Widgets.SceneBase {
 
 	// Переход в категорию/подкатегорию
 	function goToCategory(aId, aIsGroup, aSelectedIndex) {
+		GUI.log("GO TO CATEGORY: ", aId, aIsGroup, aSelectedIndex)
+
 		if (aIsGroup) {
 			global.menuLevel = MenuWalker.go(aId, operatorSelector.getCurrentPosition());
 			Utils.playSound(Scenario.Sound.ChooseOperator);

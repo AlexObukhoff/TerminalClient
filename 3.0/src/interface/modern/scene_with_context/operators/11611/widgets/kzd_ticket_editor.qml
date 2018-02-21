@@ -196,7 +196,7 @@ Item {
 															doc: $("doc", num),
 															docType: $("doc_type", num, true),
 															sex: $("sex", num, true),
-															citizenship: $("citizenship", num),
+															citizenship: $("citizenship", num, true),
 															childBirthday: fields.hasOwnProperty("birthday%1".arg(num)) ? $("birthday", num) : "",
 															needPlace: fields.hasOwnProperty("need_place%1".arg(num)) ? $("need_place", num, true) : 1,
 															phone: fields.hasOwnProperty("phone%1".arg(num)) ? $("phone", num) : ""

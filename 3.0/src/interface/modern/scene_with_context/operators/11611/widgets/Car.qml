@@ -1,4 +1,4 @@
-import QtQuick 1.1
+﻿import QtQuick 1.1
 
 Component {
 	BorderImage {
@@ -19,10 +19,18 @@ Component {
 					width: 250
 					anchors.verticalCenter: parent.verticalCenter
 
-					Text {
-						text: "Вагон №%1".arg(model.Number)
-						color: Utils.ui.color("color.title")
-						font: Utils.ui.font("font.main.accent")
+					Row {
+						spacing: 10
+						Text {
+							text: "Вагон №%1".arg(model.Number)
+							color: Utils.ui.color("color.title")
+							font: Utils.ui.font("font.main.accent")
+						}
+						Image {
+							anchors.verticalCenter: parent.verticalCenter
+							source: "images/er.png"
+							visible: model.ElRegPossible
+						}
 					}
 
 					Text {

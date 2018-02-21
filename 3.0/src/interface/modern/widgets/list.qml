@@ -263,5 +263,6 @@ Item {
 		view.currentIndex = -1;
 		rootItem.__doubleHeightMode = false;
 		rootItem.__halfFontHeightMode = false;
+		rootItem.readonly = false
 	}
 }

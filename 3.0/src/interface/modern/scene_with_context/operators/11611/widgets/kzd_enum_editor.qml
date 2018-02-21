@@ -164,10 +164,14 @@ Item {
 		}
 		else {
 			ticket = Core.userProperties.get("ticket");
-			global.timeInWay = ticket.timeInWay.split(":")[0]
+			global.timeInWay = Number(ticket.timeInWay.split(":")[0])
+			global.timeInWay = global.timeInWay ? global.timeInWay : 1 // Скорректируем до часа
+
+			GUI.notify("update_fields", {fields: [{"id": "wo_bedding", "behavior": "readonly", "default_value": "1"}]});
 
 			//ticket.type=3 плацкарт
-			if (ticket.type == 3 && global.timeInWay < 6) {
+			// Время в пути больше суток кодируется количество_суток.оставшиеся_часы
+			if (ticket.type == 3 && (global.timeInWay.indexOf(".") == -1 && global.timeInWay < 6)) {
 				GUI.notify("update_fields", {fields: [{"id": "wo_bedding", "behavior": ""}]});
 			}
 		}
@@ -179,6 +183,8 @@ Item {
 			.arg(Core.userProperties.get("operator.fields").to.value);
 
 			description.comment = aField.extendedComment ? "" : Utils.toPlain(aField.comment);
+
+			GUI.log(aField, aValue)
 
 			// Установка текущего значения
 			if (rootItem.setupDefaultValue) {

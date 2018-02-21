@@ -33,8 +33,8 @@ public:
 		mData.add('\xB9', "ө");
 		mData.add('\xBA', "Ұ");
 		mData.add('\xBB', "ұ");
-		//mData.add('\xBC', "U");
-		//mData.add('\xBD', "u");
+		mData.add('\xBC', "Ү");
+		mData.add('\xBD', "ү");
 		mData.add('\xBE', "Һ");
 		mData.add('\xBF', "һ");
 	}
