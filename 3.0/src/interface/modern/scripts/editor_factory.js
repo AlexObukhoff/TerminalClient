@@ -63,7 +63,7 @@ function popFields()
 }
 
 //------------------------------------------------------------------------------
-function updateFields(aFields)
+function updateFields(aFields, aReset)
 {
 	var $ = []
 
@@ -80,12 +80,18 @@ function updateFields(aFields)
 	for (var i in $) {
 		for (var k in aFields) {
 			if ($[i].id == aFields[k].id) {
-				for (var p in aFields[k]) {
-					if (p == "id") continue
 
-					log("@updateFields", $[i][p], aFields[k][p])
+				if (aReset !== undefined && aReset) {
+					delete values[$[i].id]
+					continue
+				}
+
+				for (var p in aFields[k]) {
+					if (p == "id") {
+						continue
+					}
+
 					$[i][p] = aFields[k][p]
-					log("@@updateFields", $[i][p], aFields[k][p])
 				}
 			}
 		}

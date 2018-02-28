@@ -1,4 +1,4 @@
-﻿/* @file Графический интерфейс. */
+/* @file Графический интерфейс. */
 
 
 // Qt
@@ -444,7 +444,7 @@ void GraphicsEngine::notify(const QString & aEvent, const QVariantMap & aParamet
 		mTopWidget->graphics->notify(aEvent, aParameters);
 	}
 	
-	toLog(LogLevel::Normal, QString("NOTIFY '%1'. Parameters: %2").arg(w->info.name).arg(formatParams(aParameters)));
+	toLog(LogLevel::Debug, QString("NOTIFY '%1'. Parameters: %2").arg(w->info.name).arg(formatParams(aParameters)));
 }
 
 //---------------------------------------------------------------------------

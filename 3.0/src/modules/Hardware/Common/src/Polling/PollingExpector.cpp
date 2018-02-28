@@ -49,9 +49,9 @@ void ExpectorWorkingThread::process(TBoolMethod aOnPoll, TBoolMethod aCondition,
 //--------------------------------------------------------------------------------
 void ExpectorWorkingThread::onPoll()
 {
-	bool result = mOnPoll._Empty() || mOnPoll();
+	bool result =  !mOnPoll || mOnPoll();
 
-	if ((!result && mPollingSensible) || (!mErrorCondition._Empty() && mErrorCondition()))
+	if ((!result && mPollingSensible) || (mErrorCondition && mErrorCondition()))
 	{
 		emit finished(false);
 
@@ -99,26 +99,26 @@ bool PollingExpector::wait(std::function<bool()> aOnPoll, TBoolMethod aCondition
 {
 	mResult = false;
 
-	if (aCondition._Empty())
+	if (!aCondition)
 	{
 		return false;
 	}
 
 	bool OK = aCondition();
-	bool error = !aErrorCondition._Empty() && aErrorCondition();
+	bool error = aErrorCondition && aErrorCondition();
 
 	if (OK || error)
 	{
 		return OK && !error;
 	}
 
-	if (!aOnPoll._Empty() && !aOnPoll() && aPollingSensible)
+	if (aOnPoll && !aOnPoll() && aPollingSensible)
 	{
 		return false;
 	}
 
 	OK = aCondition();
-	error = !aErrorCondition._Empty() && aErrorCondition();
+	error = aErrorCondition && aErrorCondition();
 
 	if (OK || error)
 	{

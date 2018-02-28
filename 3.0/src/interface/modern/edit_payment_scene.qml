@@ -181,6 +181,9 @@ Widgets.SceneBase2 {
 		else if (aEvent === "update_fields") {
 			Editor.updateFields(aParameters.fields)
 		}
+		else if (aEvent === "reset_fields") {
+			Editor.updateFields(aParameters.fields, true)
+		}
 		else if (aEvent === Scenario.Payment.Event.HIDUpdated) {
 			var hidFields = {};
 

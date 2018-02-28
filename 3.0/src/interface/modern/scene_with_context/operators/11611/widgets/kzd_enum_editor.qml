@@ -167,7 +167,8 @@ Item {
 			global.timeInWay = Number(ticket.timeInWay.split(":")[0])
 			global.timeInWay = global.timeInWay ? global.timeInWay : 1 // Скорректируем до часа
 
-			GUI.notify("update_fields", {fields: [{"id": "wo_bedding", "behavior": "readonly", "default_value": "1"}]});
+			GUI.notify("update_fields", {fields: [{"id": "wo_bedding", "behavior": "readonly"}]});
+			GUI.notify("reset_fields", {fields: [{"id": "wo_bedding"}]});
 
 			//ticket.type=3 плацкарт
 			// Время в пути больше суток кодируется количество_суток.оставшиеся_часы
