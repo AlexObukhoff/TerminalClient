@@ -568,7 +568,7 @@ bool OPOSMStarTUPK::fixError(EFiscalPrinterCommand::Enum aCommand, TBoolMethod a
 		return false;
 	}
 
-	if (!aFunction._Empty())
+	if (aFunction)
 	{
 		mLastHandledOperations.append(aFunction);
 	}

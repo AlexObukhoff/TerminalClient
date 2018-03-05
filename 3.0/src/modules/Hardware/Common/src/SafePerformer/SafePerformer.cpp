@@ -39,7 +39,7 @@ void SafePerformerThread::onTask(const STaskData & aData)
 		LOG(mLog, LogLevel::Error, QString("Task was performed for %1 ms").arg(performingTime));
 		aData.changePerformingTimeout(aData.context, aData.timeout, performingTime);
 
-		if (!aData.forwardingTask._Empty())
+		if (aData.forwardingTask)
 		{
 			LOG(mLog, LogLevel::Normal, "Going to forwarding task");
 
@@ -57,7 +57,7 @@ SafePerformer::SafePerformer(ILog * aLog) : mLog(aLog), mResult(false)
 //--------------------------------------------------------------------------------
 ETaskResult::Enum SafePerformer::process(const STaskData & aData)
 {
-	if (aData.task._Empty())
+	if (!aData.task)
 	{
 		return ETaskResult::Invalid;
 	}
