@@ -7,7 +7,6 @@ StaticLibrary {
 	Depends { name: "Qt"; submodules: ["core"] }
 
 	Depends { name: "Core" }
-	Depends { name: "qt5port" }
 
 	files: [
 		"src/*.cpp",

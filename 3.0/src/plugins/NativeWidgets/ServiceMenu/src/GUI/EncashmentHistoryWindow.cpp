@@ -2,9 +2,9 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QWidget>
-#include <QtGui/QPushButton>
-#include <QtGui/QSpacerItem>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpacerItem>
 #include <Common/QtHeadersEnd.h>
 
 // Project

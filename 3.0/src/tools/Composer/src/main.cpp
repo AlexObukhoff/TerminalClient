@@ -13,8 +13,8 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QSet>
 #include <QtCore/QSettings>
-#include <QtScript/QScriptEngine>
-#include <QtScript/QScriptValue>
+#include <QtQml/QJSEngine>
+#include <QtQml/QJSValue>
 #include <QtCore/QProcessEnvironment>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
@@ -43,7 +43,7 @@ QMap<QString, QString> gEnvironment;
 QString gSettingsFile;
 QString gSourceDir;
 QString gTargetDir;
-QScriptEngine * gScriptEngine;
+QJSEngine * gScriptEngine;
 
 NetworkTaskManager gNetworkTaskManager;
 
@@ -94,11 +94,12 @@ bool testCondition(const QString & aCondition)
 	}
 
 	std::cout << " testing condition \"" << aCondition.toStdString() << "\" >> \"" << script.toStdString() << "\"" << std::endl;
-	QScriptValue result = gScriptEngine->evaluate(script);
+	QJSValue result = gScriptEngine->evaluate(script);
 
-	if (gScriptEngine->hasUncaughtException())
+	if (result.isError())
 	{
-		std::cout << " failed to evaluate the condition script: " << gScriptEngine->uncaughtException().toString().toStdString() << std::endl;
+		std::cout << " failed to evaluate the condition script: " << "Uncaught exception at line" << result.property("lineNumber").toInt()
+			<< ":" << result.toString().toStdString() << std::endl;
 		return false;
 	}
 
@@ -616,7 +617,7 @@ int main(int argc, char * argv[])
 		return INVALID_ARGUMENTS;
 	}
 
-	gScriptEngine = new QScriptEngine(&a.getQtApplication());
+	gScriptEngine = new QJSEngine(&a.getQtApplication());
 	gSettingsFile = a.getQtApplication().arguments().at(1);
 	gSourceDir = a.getQtApplication().arguments().at(2);
 	gTargetDir = a.getQtApplication().arguments().at(3);

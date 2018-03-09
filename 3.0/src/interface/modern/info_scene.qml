@@ -1,6 +1,6 @@
 ﻿/* @file Экран информации о терминале. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import QtWebKit 1.1
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets

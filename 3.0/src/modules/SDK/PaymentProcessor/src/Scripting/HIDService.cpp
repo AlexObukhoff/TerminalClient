@@ -5,7 +5,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QBuffer>
 #include <QtGui/QImage>
-#include <QtScript/QScriptEngine>
+#include <QtQml/QJSEngine>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -64,12 +64,12 @@ QString HIDService::getExternalData()
 }
 
 //------------------------------------------------------------------------------
-QScriptValue JS_setField(QScriptContext * aContext, QScriptEngine *, void * aParameters)
+/*QJSValue JS_setField(QJSContext * aContext, QJSEngine *, void * aParameters)
 {
-	reinterpret_cast<QVariantMap *>(aParameters)->insert(aContext->argument(0).toString(), aContext->argument(1).toString());
+	//reinterpret_cast<QVariantMap *>(aParameters)->insert(aContext->argument(0).toString(), aContext->argument(1).toString());
 
-	return QScriptValue();
-}
+	return QJSValue();
+}*/
 
 //------------------------------------------------------------------------------
 void HIDService::onData(const QVariantMap & aDataMap)
@@ -91,10 +91,12 @@ void HIDService::onData(const QVariantMap & aDataMap)
 		QString externalDataHandler = getExternalData();
 		if (!externalDataHandler.trimmed().isEmpty() && !value.isEmpty())
 		{
-			QScriptEngine script;
+			QJSEngine script;
 
-			script.globalObject().setProperty("value", value);
-			QScriptValue setFunc = script.newFunction(JS_setField, &parameters);
+			// TODO PORT_QT5
+			
+			/*script.globalObject().setProperty("value", value);
+			QJSValue setFunc = script.newFunction(JS_setField, &parameters);
 			script.globalObject().setProperty("setField", setFunc);
 
 			if (!script.canEvaluate(externalDataHandler))
@@ -112,7 +114,7 @@ void HIDService::onData(const QVariantMap & aDataMap)
 					.arg(script.uncaughtExceptionBacktrace().join("\n")));
 
 				return;
-			}
+			}*/
 
 			parameters.insert(HID::EXTERNAL_DATA, true);
 		}
@@ -134,10 +136,10 @@ void HIDService::onData(const QVariantMap & aDataMap)
 
 		if (faceDetected)
 		{
-			QBuffer faceBuffer;
-			faceBuffer.open(QIODevice::WriteOnly);
-			aDataMap.value(CHardwareSDK::HID::ImageWithFaceArea).value<QImage>().convertToFormat(QImage::Format_RGB16).save(&faceBuffer, "jpg");
-			parameters.insert(HID::CAMERA_FACE_DETECTED_IMAGE, QString(faceBuffer.data().toBase64()));
+			QBuffer buffer;
+			buffer.open(QIODevice::WriteOnly);
+			aDataMap.value(CHardwareSDK::HID::ImageWithFaceArea).value<QImage>().convertToFormat(QImage::Format_RGB16).save(&buffer, "jpg");
+			parameters.insert(HID::CAMERA_FACE_DETECTED_IMAGE, QString(buffer.data().toBase64()));
 		}
 	}
 

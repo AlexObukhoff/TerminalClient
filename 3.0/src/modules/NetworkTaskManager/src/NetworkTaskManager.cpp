@@ -155,7 +155,8 @@ void NetworkTaskManager::onAddTask(NetworkTask * aTask)
 		}
 	}
 
-	mTasks[reply] = aTask;
+	//TODO mTasks[reply] = aTask;
+	mTasks[reply] = QPointer<NetworkTask>(aTask);
 
 	connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(onTaskProgress(qint64, qint64)));
 	connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(onTaskUploadProgress(qint64, qint64)));
@@ -249,36 +250,27 @@ void NetworkTaskManager::onTaskReadyRead()
 					}
 
 					case 200: // Успех.
-					case 206: // Успех частичного скачивания.
+					case 206: // Успех частичнного скачивания.
 					{
-						if (task->getSize() == 0) // выполняем этот код, только в момент получения первого пакета данных
+						if (task->getSize() == 0)
 						{
-							QString contentRange = QString::fromLatin1(reply->rawHeader("Content-Range"));
-
-							if (contentRange.isEmpty())
+							if (statusCode == 200)
 							{
 								// Если запрашивали кусок данных, а пришел файл целиком - нужно начинать писать поток с 0-го байта
 								task->getDataStream()->clear();
 							}
-							else
+							else 
 							{
-								// Если запрашивали кусок данных, позиционируем на начало передаваемого диапазона
+								// Если запрашивали кусок данных позиционируем на начало передаваемого диапазона
 								// http://tools.ietf.org/html/rfc2616#section-14.16
 								QRegExp rx("(\\d+)\\-\\d+/\\d+");
 
-								if (rx.indexIn(contentRange) > 0)
+								if (rx.indexIn(QString::fromLatin1(reply->rawHeader("Content-Range"))) > 0)
 								{
-									qint64 pos = rx.cap(1).toLongLong();
-
-									if (!task->getDataStream()->seek(pos))
-									{
-										toLog(LogLevel::Error, QString("Content-Range: %1. Error seek stream to position: %2.").arg(contentRange).arg(pos));
-									}
+									task->getDataStream()->seek(rx.cap(1).toLongLong());
 								}
 								else
 								{
-									toLog(LogLevel::Error, QString("Can't parse Content-Range: %1.").arg(contentRange));
-
 									task->getDataStream()->clear();
 								}
 							}
@@ -299,7 +291,7 @@ void NetworkTaskManager::onTaskReadyRead()
 					}
 
 					default:
-						toLog(LogLevel::Error, QString("Data is ready for read, but response code is incorrect: %1").arg(httpStatusCode.toString()));
+						toLog(LogLevel::Error, QString("Data is ready for read, but responce code is incorrect: %1").arg(httpStatusCode.toString()));
 						reply->abort();
 				}
 			}

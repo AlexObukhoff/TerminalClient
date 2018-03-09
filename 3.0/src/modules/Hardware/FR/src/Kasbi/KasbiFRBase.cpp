@@ -103,7 +103,7 @@ bool KasbiFRBase::updateParameters()
 		return false;
 	}
 
-	if (!checkOperationModes(data[32]) || !checkTaxSystems(data[33]) || !checkAgentFlags(data[34]))
+	if (!checkOperationModes(data[32]) || !checkTaxationData(data[33]) || !checkAgentFlags(data[34]))
 	{
 		return false;
 	}
@@ -208,9 +208,9 @@ void KasbiFRBase::processDeviceData(const QByteArray & aRegistrationData)
 		mFSSerialNumber = CFR::FSSerialToString(data);
 	}
 
-	if (processCommand(CKasbiFR::Commands::GetFSVersion, &data))
+	if (processCommand(CKasbiFR::Commands::GetFSFirmware, &data))
 	{
-		setDeviceParameter(CDeviceData::FS::Version, clean(data));
+		setDeviceParameter(CDeviceData::FS::Firmware, data);
 	}
 
 	if (processCommand(CKasbiFR::Commands::GetFSData, &data) && (data.size() >= 5))
@@ -329,7 +329,7 @@ bool KasbiFRBase::processAnswer(char aCommand, char aError)
 		{
 			mProcessingErrors.append(aError);
 
-			return execZReport(true) && openFRSession();
+			return execZReport(true) && openSession();
 		}
 		case CKasbiFR::Errors::UnknownCommand:
 		{
@@ -502,7 +502,7 @@ bool KasbiFRBase::sale(const SAmountData & aAmountData)
 		getTLVData(FiscalFields::PayOffSubjectUnitPrice, qRound64(aAmountData.sum * 100.0)) +
 		getTLVData(FiscalFields::PayOffSubjectQuantity, 1.0) +
 		getTLVData(FiscalFields::VATRate, char(section)) +
-		getTLVData(FiscalFields::PayOffSubjectMethodType, CKasbiFR::FullPrepaymentSettlement);
+		getTLVData(FiscalFields::PayOffMethodType, CKasbiFR::FullPrepaymentSettlement);
 
 	return processCommand(CKasbiFR::Commands::Sale, getTLVData(FiscalFields::PayOffSubject, commandData));
 }
@@ -510,7 +510,7 @@ bool KasbiFRBase::sale(const SAmountData & aAmountData)
 //--------------------------------------------------------------------------------
 bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
 {
-	if ((getSessionState() == ESessionState::Closed) && !openFRSession())
+	if ((getSessionState() == ESessionState::Closed) && !openSession())
 	{
 		return false;
 	}
@@ -538,7 +538,7 @@ bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData
 	uint totalSum = uint(getTotalAmount(aPaymentData) * 100);
 
 	QByteArray commandData = QByteArray() +
-		getTLVData(FiscalFields::TaxSystem, char(aPaymentData.taxSystem)) +
+		getTLVData(FiscalFields::TaxSystem, char(aPaymentData.taxation)) +
 		getTLVData(FiscalFields::CashFiscalTotal, totalSum) +
 		getTLVData(FiscalFields::CardFiscalTotal, 0) +
 		getTLVData(FiscalFields::PrePaymentFiscalTotal, 0) +

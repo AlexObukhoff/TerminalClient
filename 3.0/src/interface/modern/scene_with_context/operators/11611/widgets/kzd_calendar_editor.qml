@@ -1,4 +1,4 @@
-﻿/* @file Редактор выбора даты. */
+/* @file Редактор выбора даты. */
 
 import QtQuick 1.1
 import "../../../../widgets" 1.0 as Widgets
@@ -102,7 +102,8 @@ FocusScope {
 					width: view.cellWidth
 					height: view.cellHeight
 
-					//Дизаблим дни пред и пост месяцев. так проще, чем переделывать модель :)
+					//!modelData.isActive ? "transparent"
+					//прячем дни пред и пост месяцев. так проще, чем переделывать модель :)
 
 					Rectangle {
 						id: background
@@ -110,7 +111,7 @@ FocusScope {
 						width: 164
 						height:60
 						radius: 4
-						color: modelData.isSelected ? Utils.ui.color("color.button.primary.background") : Utils.ui.color("color.title")//(modelData.isActive ? Utils.ui.color("color.title") : "transparent")
+						color: modelData.isSelected ? Utils.ui.color("color.button.primary.background") : (modelData.isActive ? Utils.ui.color("color.title") : "transparent")
 
 						Text {
 							anchors.fill: parent
@@ -256,20 +257,9 @@ FocusScope {
 									 });
 			}
 
-			function checkActiveDay(aDayNumber) {
-				if (__year < __today.getFullYear()) return false
-
-				else if (__year == __today.getFullYear()) {
-					if (__month < __today.getMonth()) return false
-					if (__month == __today.getMonth() && aDayNumber < __today.getDate()) return false
-				}
-
-				return true
-			}
-
 			for (var ii = 1; ii <= daysInMonth(__year, __month); ii++) {
 				model.push({ dayNumber: ii,
-										 isActive: checkActiveDay(ii),
+										 isActive: true,
 										 isSelected: false,
 										 isToday: (__today.getMonth() === __month) ? (__today.getDate() == ii) : ii == 1,
 																																 isHoliday: isHoliday(__month, ii),

@@ -2,9 +2,9 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtWebkit/QGraphicsWebView>
-#include <QtWebkit/QWebPage>
-#include <QtWebkit/QWebFrame>
+#include <QtWebKitWidgets/QGraphicsWebView>
+#include <QtWebKitWidgets/QWebPage>
+#include <QtWebKitWidgets/QWebFrame>
 #include <QtCore/QMetaEnum>
 #include <QtNetwork/QSslConfiguration>
 #include <QtNetwork/QSslKey>

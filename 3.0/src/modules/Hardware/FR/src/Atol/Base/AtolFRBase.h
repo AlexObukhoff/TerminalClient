@@ -23,7 +23,7 @@ public:
 	AtolFRBase();
 
 	/// Готов ли к обработке данной фискальной команды.
-	virtual bool isFiscalReady(bool aOnline, SDK::Driver::EFiscalPrinterCommand::Enum aCommand = SDK::Driver::EFiscalPrinterCommand::Sale);
+	virtual bool isFiscalReady(bool aOnline, SDK::Driver::EFiscalPrinterCommand::Enum aCommand);
 
 protected:
 	/// Попытка самоидентификации.
@@ -75,7 +75,7 @@ protected:
 	virtual void execTags(Tags::SLexeme & aTagLexeme, QVariant & aLine);
 
 	/// Открыть смену.
-	virtual bool openSession();
+	bool openFRSession();
 
 	/// Отрезка.
 	virtual bool cut();

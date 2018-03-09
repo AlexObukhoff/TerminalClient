@@ -1,4 +1,4 @@
-/* @file Графический элемент QML. */
+﻿/* @file Графический элемент QML. */
 
 #pragma once
 
@@ -11,7 +11,7 @@
 #include <SDK/GUI/IGraphicsItem.h>
 #include <SDK/GUI/GraphicsItemInfo.h>
 
-class QDeclarativeItem;
+class QQuickItem;
 class QMLBackend;
 class ILog;
 
@@ -20,7 +20,7 @@ class ILog;
 class QMLGraphicsItem : public SDK::GUI::IGraphicsItem
 {
 public:
-	QMLGraphicsItem(const SDK::GUI::GraphicsItemInfo & aInfo, QDeclarativeEngine* aEngine, ILog * aLog);
+	QMLGraphicsItem(const SDK::GUI::GraphicsItemInfo & aInfo, QQmlEngine* aEngine, ILog * aLog);
 
 	/// Вызывается перед отображением виджета.
 	virtual void show();
@@ -41,7 +41,7 @@ public:
 	virtual QString getError() const;
 
 	/// Возвращает виджет.
-	virtual QGraphicsItem * getWidget() const;
+	virtual QQuickItem * getWidget() const;
 
 	virtual QWidget * getNativeWidget() const { return nullptr; }
 
@@ -55,8 +55,8 @@ private:
 private:
 	ILog * mLog;
 	QString mError;
-	QDeclarativeEngine * mEngine;
-	QSharedPointer<QDeclarativeItem> mItem;
+	QQmlEngine * mEngine;
+	QSharedPointer<QQuickItem> mItem;
 	SDK::GUI::GraphicsItemInfo mInfo;
 };
 

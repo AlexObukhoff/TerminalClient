@@ -1,13 +1,13 @@
 /* @file Экран блокировки терминала. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import Core.Types 1.0
 
 Image {
 	width: Core.graphics.width
 	height: Core.graphics.height
 	fillMode: Image.Tile
-	source: ":/GraphicsItems/images/background_tile.png"
+	source: "/GraphicsItems/images/background_tile.png"
 
 	Rectangle {
 		width: Core.graphics.width - 60
@@ -23,7 +23,7 @@ Image {
 				width: 420
 				height: 260
 				anchors.horizontalCenter: parent.horizontalCenter
-				source: ":/GraphicsItems/images/logo_cyberplat_big.png"
+				source: "/GraphicsItems/images/logo_cyberplat_big.png"
 			}
 
 			Row {
@@ -34,7 +34,7 @@ Image {
 					model: statusModel
 
 					AnimatedImage {
-						source: image ? ":/GraphicsItems/images/" + image : ""
+						source: image ? "/GraphicsItems/images/" + image : ""
 					}
 				}
 			}

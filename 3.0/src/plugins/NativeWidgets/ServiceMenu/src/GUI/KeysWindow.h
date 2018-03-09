@@ -5,7 +5,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QFutureWatcher>
-#include "ui_keysWindow.h"
+#include "ui_KeysWindow.h"
 #include <Common/QtHeadersEnd.h>
 
 class ServiceMenuBackend;

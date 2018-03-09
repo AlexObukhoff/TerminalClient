@@ -12,7 +12,7 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QDateTime>
-#include <QtCore/QWeakPointer>
+#include <QtCore/QPointer>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
@@ -163,7 +163,7 @@ private:
 
 	int mKeyPair;
 
-	QWeakPointer<NetworkTaskManager> mNetwork;
+	QPointer<NetworkTaskManager> mNetwork;
 	ICryptEngine * mCryptEngine;
 
 	bool mOnlySecureConnection;

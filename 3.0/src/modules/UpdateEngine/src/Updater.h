@@ -143,9 +143,6 @@ private slots:
 	void showProgress();
 
 private:
-	/// Обработка результатов проверки контрольной суммы
-	void checkTaskVerifierResult(NetworkTask * task);
-
 	/// Сохранить текущую конфигурацию на диске
 	void saveUpdateConfiguration();
 	

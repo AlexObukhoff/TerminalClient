@@ -12,6 +12,14 @@
         <translation>Выберите способ оплаты:</translation>
     </message>
     <message>
+        <source>payment_method_selector_scene#enter_amount</source>
+        <translation>Введите нужную сумму, минимум %1, максимум %2</translation>
+    </message>
+    <message>
+        <source>payment_method_selector_scene#confirm_payment</source>
+        <translation>Подвердите оплату</translation>
+    </message>
+    <message>
         <source>payment_method_selector_scene#card</source>
         <translation>Карта</translation>
     </message>

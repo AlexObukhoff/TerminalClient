@@ -1,4 +1,4 @@
-/* @file Сервис, владеющий крипто-движком. */
+﻿/* @file Сервис, владеющий крипто-движком. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -198,7 +198,7 @@ void CryptService::loadKey(SDK::PaymentProcessor::SKeySettings & aKey)
 		if (!crypt.loadKeyPair(aKey.id, static_cast<CCrypt::ETypeEngine>(aKey.engine),
 			secretKeyPath, aKey.secretPassword, publicKeyPath, aKey.serialNumber, aKey.bankSerialNumber, error))
 		{
-			LOG(mLog, LogLevel::Error, QString("Failed to load aKey pair %1 with encrypted password. Error: %2.").arg(aKey.id).arg(error));
+			LOG(mLog, LogLevel::Error, QString("Failed to load key pair %1 with encrypted password. Error: %2.").arg(aKey.id).arg(error));
 		}
 		else
 		{
@@ -211,7 +211,7 @@ void CryptService::loadKey(SDK::PaymentProcessor::SKeySettings & aKey)
 		if (!crypt.loadKeyPair(aKey.id, static_cast<CCrypt::ETypeEngine>(aKey.engine),
 			secretKeyPath, QString::fromLatin1(secretPassword.data()), publicKeyPath, aKey.serialNumber, aKey.bankSerialNumber, error))
 		{
-			LOG(mLog, LogLevel::Error, QString("Failed to load aKey pair %1 with unencrypted password. Error: %2.").arg(aKey.id).arg(error));
+			LOG(mLog, LogLevel::Error, QString("Failed to load key pair %1 with unencrypted password. Error: %2.").arg(aKey.id).arg(error));
 		}
 		else
 		{

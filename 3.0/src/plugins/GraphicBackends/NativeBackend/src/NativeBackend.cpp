@@ -1,11 +1,5 @@
 /* @file Реализация плагина. */
 
-// Qt
-#include <Common/QtHeadersBegin.h>
-#include <QtGui/QGridLayout>
-#include <QtGui/QPushButton>
-#include <Common/QtHeadersEnd.h>
-
 // SDK
 #include <SDK/Plugins/PluginInitializer.h>
 #include <SDK/Plugins/IPluginFactory.h>

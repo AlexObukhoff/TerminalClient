@@ -5,8 +5,11 @@
 #include <QtCore/QSettings>
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonValue>
+#include <QtCore/QJsonObject>
 #include <QtGui/QFontDatabase>
-#include <qjson.h>
 #include <Common/QtHeadersEnd.h>
 
 

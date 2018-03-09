@@ -1,8 +1,9 @@
-/* @file Mainline. */
+﻿/* @file Mainline. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QApplication>
+#include <QtGlobal>
+#include <QtWidgets/QApplication>
 #include <QBreakpadHandler.h>
 #include <Common/QtHeadersEnd.h>
 
@@ -12,7 +13,7 @@
 //---------------------------------------------------------------------------
 int main(int aArgc, char * aArgv[])
 {
-	qInstallMsgHandler(UpdaterApp::qtMessageHandler);
+	qInstallMessageHandler(UpdaterApp::qtMessageHandler);
 
 	UpdaterApp app(aArgc, aArgv);
 	QBreakpadInstance.setDumpPath(app.getWorkingDirectory() + "/logs/");

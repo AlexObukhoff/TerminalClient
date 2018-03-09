@@ -1,10 +1,9 @@
-/* @file Набор вспомогательных функций для qml. */
+﻿/* @file Набор вспомогательных функций для qml. */
 
 #pragma once
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtDeclarative/QDeclarativeExtensionPlugin>
 #include <QtCore/QTextCodec>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
@@ -19,6 +18,8 @@
 #include "ProviderListModel.h"
 #include "ProviderListFilter.h"
 
+class QQmlEngine;
+
 //------------------------------------------------------------------------------
 class Utils : public QObject
 {
@@ -31,7 +32,7 @@ class Utils : public QObject
 	Q_PROPERTY(QObject * ui READ getSkin CONSTANT);
 
 public:
-	Utils(QDeclarativeEngine * aEngine, const QString & aInterfacePath, const QString & aUserPath);
+	Utils(QQmlEngine * aEngine, const QString & aInterfacePath, const QString & aUserPath);
 
 public slots:
 	/// Генерирует системное событие нажатия клавиши.
@@ -109,7 +110,7 @@ private:
 	QMap<qint64, quint32> getStatistic();
 
 private:
-	QDeclarativeEngine * mEngine;
+	QQmlEngine * mEngine;
 	mutable QMap<QString, QTextCodec *> mCodecCache;
 
 	QSharedPointer<Skin> mSkin;

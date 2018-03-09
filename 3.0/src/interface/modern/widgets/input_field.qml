@@ -1,6 +1,6 @@
 ﻿/* @file Поле ввода touch17. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "../controls" 1.0 as Controls
 
 Controls.InputField {

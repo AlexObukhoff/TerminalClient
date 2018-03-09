@@ -42,9 +42,3 @@ SPluginParameter setFiscalChequeCreation()
 }
 
 //------------------------------------------------------------------------------
-SPluginParameter setSessionOpeningTime()
-{
-	return SPluginParameter(CHardware::FR::SessionOpeningTime, false, PPT::SessionOpeningTime, QString(), QString(), QStringList(), true);
-}
-
-//------------------------------------------------------------------------------

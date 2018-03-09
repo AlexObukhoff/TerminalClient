@@ -4,6 +4,6 @@ Project {
 	references: [
 		"NativeBackend/NativeBackend.qbs",
 		"QMLBackend/QMLBackend.qbs",
-		"WebKitBackend/WebKitBackend.qbs"
+//		"WebKitBackend/WebKitBackend.qbs"
 	]
 }

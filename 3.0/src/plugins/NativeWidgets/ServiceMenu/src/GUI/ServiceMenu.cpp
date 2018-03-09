@@ -1,8 +1,8 @@
-/* @file Виджет сервисного меню */
+﻿/* @file Виджет сервисного меню */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QGraphicsScene>
+#include <QtWidgets/QGraphicsScene>
 #include <QtCore/QTime>
 #include <Common/QtHeadersEnd.h>
 
@@ -184,9 +184,11 @@ void ServiceMenu::reset(const QVariantMap & /*aParameters*/)
 }
 
 //---------------------------------------------------------------------------
-QGraphicsItem * ServiceMenu::getWidget() const
+QQuickItem * ServiceMenu::getWidget() const
 {
-	return mMainWidget;
+	//return mMainWidget;
+	//FIXME
+	return nullptr;
 }
 
 //---------------------------------------------------------------------------

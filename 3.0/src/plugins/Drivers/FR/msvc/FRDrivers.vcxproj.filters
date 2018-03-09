@@ -22,6 +22,26 @@
     <Filter Include="Parameters">
       <UniqueIdentifier>{3d4efc1a-0d1f-4a46-9de8-e2ca219115a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{bb28259c-b6f7-4f23-a8e7-4d40476aa341}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{4efd7347-9786-4bfc-b9d6-24474c139717}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{72a1c90d-65ce-40c9-8cd6-d98bcb2db102}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\FRPlugin.cpp">
@@ -35,6 +55,15 @@
     </ClCompile>
     <ClCompile Include="..\src\Parameters\FRPluginParameters.cpp">
       <Filter>Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -64,5 +93,10 @@
     <None Include="..\src\locale\fr_kk.ts">
       <Filter>Translation Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\PluginLibraryDefinition.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

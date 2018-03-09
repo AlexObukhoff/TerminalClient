@@ -3,6 +3,9 @@
 #pragma once
 
 // Windows
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
 #include <setupapi.h>
 

@@ -44,8 +44,8 @@ AudioService::~AudioService()
 //---------------------------------------------------------------------------
 bool AudioService::initialize()
 {
-	mMusic = QSharedPointer<Phonon::MediaObject>(Phonon::createPlayer(Phonon::MusicCategory));
-	connect(mMusic.data(), SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(stateChanged(Phonon::State, Phonon::State)));
+	mPlayer = QSharedPointer<QMediaPlayer>(new QMediaPlayer());
+	connect(mPlayer.data(), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 
 	return true;
 }
@@ -98,14 +98,13 @@ void AudioService::play(const QString & aFileName)
 
 	if (QFile::exists(filePath))
 	{
-		if (mMusic->state() ==  Phonon::PlayingState || mMusic->state() == Phonon::LoadingState)
+		if (mPlayer->state() !=  QMediaPlayer::StoppedState)
 		{
-			mMusic->enqueue(Phonon::MediaSource(filePath));
+			stop();
 		}
-		else
-		{
-			mMusic->setCurrentSource(Phonon::MediaSource(filePath));
-		}
+
+		mPlayer->setMedia(QUrl::fromLocalFile(filePath));
+		mPlayer->play();
 	}
 	else
 	{
@@ -118,24 +117,17 @@ void AudioService::play(const QString & aFileName)
 //---------------------------------------------------------------------------
 void AudioService::stop()
 {
-	if (mMusic)
+	if (mPlayer)
 	{
-		mMusic->clear();
+		mPlayer->stop();
 	}
 }
 
 //---------------------------------------------------------------------------
-void AudioService::stateChanged(Phonon::State aNewstate, Phonon::State)
+void AudioService::stateChanged(QMediaPlayer::State aState)
 {
-	if (aNewstate == Phonon::StoppedState) // this state will be set when media has loaded clip
+	if (aState == QMediaPlayer::StoppedState)
 	{
-		Phonon::MediaSource::Type type = mMusic->currentSource().type();
-
-		if (mMusic->queue().size() > 0 || 
-			(type != Phonon::MediaSource::Invalid && type != Phonon::MediaSource::Empty))
-		{
-			mMusic->play();
-		}
 	}
 }
 

@@ -1,6 +1,6 @@
 ﻿/* @file Область со скроллируемым содержимым. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 
 Item {
 	default property alias children: content.children

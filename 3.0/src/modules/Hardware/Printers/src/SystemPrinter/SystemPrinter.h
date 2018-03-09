@@ -1,10 +1,10 @@
-/* @file Системный принтер. */
+﻿/* @file Системный принтер. */
 
 #pragma once
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QPrinter>
+#include <QtPrintSupport/QPrinter>
 #include <QtGui/QBitmap>
 #include <QtGui/QTextDocument>
 #include <Common/QtHeadersEnd.h>

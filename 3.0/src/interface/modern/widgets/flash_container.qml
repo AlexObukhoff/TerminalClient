@@ -1,7 +1,7 @@
-/* @file Контейнер для swf. */
+﻿/* @file Контейнер для swf. */
 
-import QtQuick 1.1
-import QtWebKit 1.1
+import QtQuick 2.2
+import QtWebKit 3.0
 
 Item {
 	id: rootItem
@@ -35,13 +35,13 @@ Item {
 			id: webView
 
 			anchors { left: parent.left; right: parent.right }
-			backgroundColor: "transparent"
+			//backgroundColor: "transparent"
 
 			property string flash
 			property int flashWidth
 			property int flashHeight
 
-			html: "<html><head><body marginwidth='0' marginheight='0'>" +
+			/*html: "<html><head><body marginwidth='0' marginheight='0'>" +
 						"<embed width='" + flashWidth + "'height='" + flashHeight + "' name='plugin' src='" + flash +
 						"'wmode='transparent' type='application/x-shockwave-flash'>" +
 						"<script>\
@@ -75,7 +75,7 @@ Item {
 						Core.log.error("Popup handler error: %1; %2".arg(e.message).arg(aParameters));
 					}
 				}
-			}
+			}*/
 		}
 	}
 }

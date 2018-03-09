@@ -1,4 +1,4 @@
-/* @file Реализация криптодвижока на libipriv. */
+﻿/* @file Реализация криптодвижока на libipriv. */
 
 //boost
 #include <boost/optional.hpp>

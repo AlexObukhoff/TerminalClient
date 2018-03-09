@@ -1,12 +1,12 @@
-/* @file Графический объект. */
+﻿/* @file Графический объект. */
 
 #pragma once
 
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QSharedPointer>
-#include <QtWebKit/QGraphicsWebView>
-#include <QtWebkit/QWebElement>
+#include <QtWebKitWidgets/QGraphicsWebView>
+#include <QtWebKit/QWebElement>
 #include <Common/QtHeadersEnd.h>
 
 #include <Common/ILog.h>
@@ -48,7 +48,7 @@ public:
 	virtual QString getError() const;
 
 	/// Возвращает виджет.
-	virtual QGraphicsItem * getWidget() const;
+	virtual QQuickItem * getWidget() const;
 
 	virtual QWidget * getNativeWidget() const { return nullptr; }
 

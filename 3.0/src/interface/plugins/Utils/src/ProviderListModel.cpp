@@ -1,4 +1,4 @@
-/* @file Модель со списком провайдеров, хагруженных клиентом. */
+﻿/* @file Модель со списком провайдеров, хагруженных клиентом. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -16,20 +16,22 @@ ProviderListModel::ProviderListModel(QObject * aParent, QSharedPointer<GroupMode
 	QAbstractListModel(aParent),
 	mGroupModel(aGroupModel)
 {
-	QHash<int, QByteArray> roles;
-
-	roles[IdRole] = "id";
-	roles[NameRole] = "name";
-	roles[InfoRole] = "info";
-	roles[ImageRole] = "image";
-
-	setRoleNames(roles);
+	mRoles[IdRole] = "id";
+	mRoles[NameRole] = "name";
+	mRoles[InfoRole] = "info";
+	mRoles[ImageRole] = "image";
 }
 
 //------------------------------------------------------------------------------
 ProviderListModel::~ProviderListModel()
 {
 
+}
+
+//------------------------------------------------------------------------------
+QHash<int, QByteArray> ProviderListModel::roleNames() const
+{
+	return mRoles;
 }
 
 //------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-call %QTDIR%\bin\qtvars.bat
+﻿call %QTDIR%\bin\qtenv2.bat
 
 set LOCALE_DIR=locale
 set LOPTIONS=-no-obsolete

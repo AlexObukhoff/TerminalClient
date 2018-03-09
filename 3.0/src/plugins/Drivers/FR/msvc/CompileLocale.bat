@@ -1,4 +1,4 @@
-call %QTDIR%\bin\qtvars.bat
+rem call %QTDIR%\bin\qtenv2.bat
 
 rem russian
 lrelease "..\src\locale\fr_ru.ts" "%TC_LIB_DIR%\Hardware\common_ru.ts" "%TC_LIB_DIR%\Hardware\printers_ru.ts" -qm "%~1\%~2_ru.qm"

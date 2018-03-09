@@ -100,15 +100,15 @@ bool EncashmentWindow::doEncashmentProcess()
 	case PPSDK::EncashmentResult::OK:
 		result = true;
 
-		MessageBox::info(tr("#encashment_complete"));
-		
 		if (!printerOK)
 		{
-			mMessageError = tr("#encashment_print_failed");
+			MessageBox::info(tr("#encashment_complete"));
 		}
 		else
 		{
 			mMessageSuccess = tr("#encashment_complete_and_printed");
+			mMessageError = tr("#encashment_print_failed");
+
 			MessageBox::wait(tr("#printing"));
 		}
 

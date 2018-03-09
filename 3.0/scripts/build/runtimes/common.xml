@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- База для любых сборок на основе терминального ПО -->
 <runtime>
 	<!-- Исполняемые файлы, компонент executables -->
@@ -31,48 +31,37 @@
 	<directory source="src/runtimes/common" target="" recursive="true"/>
 	
 	<!-- Qt, компонент qt -->
-	<file source="{QTDIR}/bin/QtCore4.dll" target="qt/QtCore4.dll"/>
-	<file source="{QTDIR}/bin/QtDeclarative4.dll" target="qt/QtDeclarative4.dll"/>
-	<file source="{QTDIR}/bin/QtGui4.dll" target="qt/QtGui4.dll"/>
-	<file source="{QTDIR}/bin/QtNetwork4.dll" target="qt/QtNetwork4.dll"/>
-	<file source="{QTDIR}/bin/QtOpenGL4.dll" target="qt/QtOpenGL4.dll"/>
-	<file source="{QTDIR}/bin/QtScript4.dll" target="qt/QtScript4.dll"/>
-	<file source="{QTDIR}/bin/QtScriptTools4.dll" target="qt/QtScriptTools4.dll"/>
-	<file source="{QTDIR}/bin/QtSql4.dll" target="qt/QtSql4.dll"/>
-	<file source="{QTDIR}/bin/QtWebKit4.dll" target="qt/QtWebKit4.dll"/>
-	<file source="{QTDIR}/bin/QtXml4.dll" target="qt/QtXml4.dll"/>
-	<file source="{QTDIR}/bin/QtXmlPatterns4.dll" target="qt/QtXmlPatterns4.dll"/>
-	<file source="{QTDIR}/bin/phonon4.dll" target="qt/phonon4.dll"/>
-	<file source="{QTDIR}/plugins/imageformats/qgif4.dll" target="qt/imageformats/qgif4.dll"/>
-	<file source="{QTDIR}/plugins/imageformats/qjpeg4.dll" target="qt/imageformats/qjpeg4.dll"/>
-	<file source="{QTDIR}/plugins/imageformats/qmng4.dll" target="qt/imageformats/qmng4.dll"/>
-	<file source="{QTDIR}/plugins/phonon_backend/phonon_ds94.dll" target="qt/phonon_backend/phonon_ds94.dll"/>
-	<file source="{QTDIR}/plugins/sqldrivers/qsqlite4.dll" target="qt/sqldrivers/qsqlite4.dll"/>
-	<file source="{QTDIR}/imports/QtWebKit/qmldir" target="qt/QtWebKit/qmldir"/>
-	<file source="{QTDIR}/imports/QtWebKit/qmlwebkitplugin.dll" target="qt/QtWebKit/qmlwebkitplugin.dll"/>
-	<file source="{QTDIR}/imports/Qt/labs/particles/qmldir" target="qt/Qt/labs/particles/qmldir"/>
-	<file source="{QTDIR}/imports/Qt/labs/particles/qmlparticlesplugin.dll" target="qt/Qt/labs/particles/qmlparticlesplugin.dll"/>
+<!--	<file source="{QTDIR}/bin/Qt5Core.dll" target="qt/Qt5Core.dll"/>
+	<file source="{QTDIR}/bin/Qt5Gui.dll" target="qt/Qt5Gui.dll"/>
+	<file source="{QTDIR}/bin/Qt5Network.dll" target="qt/Qt5Network.dll"/>
+	<file source="{QTDIR}/bin/Qt5OpenGL.dll" target="qt/Qt5OpenGL.dll"/>
+	<file source="{QTDIR}/bin/Qt5Script.dll" target="qt/Qt5Script.dll"/>
+	<file source="{QTDIR}/bin/Qt5Sql.dll" target="qt/Qt5Sql.dll"/>
+	<file source="{QTDIR}/bin/Qt5Widgets.dll" target="qt/Qt5Widgets.dll"/>
+	<file source="{QTDIR}/bin/Qt5WebKit.dll" target="qt/Qt5WebKit.dll"/>
+	<file source="{QTDIR}/bin/Qt5WebKitWidgets.dll" target="qt/Qt5WebKitWidgets.dll"/>
+	<file source="{QTDIR}/bin/Qt5Multimedia.dll" target="qt/Qt5Multimedia.dll"/>
+	<file source="{QTDIR}/bin/Qt5Xml.dll" target="qt/Qt5Xml.dll"/>
+	<file source="{QTDIR}/bin/Qt5XmlPatterns.dll" target="qt/Qt5XmlPatterns.dll"/>
+	<file source="{QTDIR}/bin/Qt5Svg.dll" target="qt/Qt5Svg.dll"/>
+	<file source="{QTDIR}/bin/Qt5PrintSupport.dll" target="qt/Qt5PrintSupport.dll"/>
+	<file source="{QTDIR}/bin/icudt51.dll" target="qt/icudt51.dll"/>
+	<file source="{QTDIR}/bin/icuin51.dll" target="qt/icuin51.dll"/>
+	<file source="{QTDIR}/bin/icuuc51.dll" target="qt/icuuc51.dll"/>
+	<file source="{QTDIR}/bin/libEGL.dll" target="qt/libEGL.dll"/>
+	<file source="{QTDIR}/bin/libGLESv2.dll" target="qt/libGLESv2.dll"/>
+	<file source="{QTDIR}/plugins/imageformats/qgif.dll" target="qt/imageformats/qgif.dll"/>
+	<file source="{QTDIR}/plugins/imageformats/qico.dll" target="qt/imageformats/qico.dll"/>
+	<file source="{QTDIR}/plugins/imageformats/qjpeg.dll" target="qt/imageformats/qjpeg.dll"/>
+	<file source="{QTDIR}/plugins/imageformats/qmng.dll" target="qt/imageformats/qmng.dll"/>
+	<file source="{QTDIR}/plugins/imageformats/qsvg.dll" target="qt/imageformats/qsvg.dll"/>
+	<file source="{QTDIR}/plugins/imageformats/qwbmp.dll" target="qt/imageformats/qwbmp.dll"/>
+	<file source="{QTDIR}/plugins/platforms/qwindows.dll" target="qt/platforms/qwindows.dll"/>  
+
 	
-	<!-- Qt, компонент qt DEBUG -->
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtCored4.dll" target="qt/QtCored4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtDeclaratived4.dll" target="qt/QtDeclaratived4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtGuid4.dll" target="qt/QtGuid4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtNetworkd4.dll" target="qt/QtNetworkd4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtOpenGLd4.dll" target="qt/QtOpenGLd4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtScriptd4.dll" target="qt/QtScriptd4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtScriptToolsd4.dll" target="qt/QtScriptToolsd4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtSqld4.dll" target="qt/QtSqld4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtWebKitd4.dll" target="qt/QtWebKitd4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtXmld4.dll" target="qt/QtXmld4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/QtXmlPatternsd4.dll" target="qt/QtXmlPatternsd4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/bin/phonond4.dll" target="qt/phonond4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/plugins/imageformats/qgifd4.dll" target="qt/imageformats/qgifd4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/plugins/imageformats/qjpegd4.dll" target="qt/imageformats/qjpegd4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/plugins/imageformats/qmngd4.dll" target="qt/imageformats/qmngd4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/plugins/phonon_backend/phonon_ds9d4.dll" target="qt/phonon_backend/phonon_ds9d4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/plugins/sqldrivers/qsqlited4.dll" target="qt/sqldrivers/qsqlited4.dll"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/imports/QtWebKit/qmldir" target="qt/QtWebKit/qmldir"/>
-	<file if="{TC_DEBUG_BUILD}" source="{QTDIR}/imports/QtWebKit/qmlwebkitplugind.dll" target="qt/QtWebKit/qmlwebkitplugind.dll"/>
+	<file source="{QTDIR}/plugins/sqldrivers/qsqlite.dll" target="qt/sqldrivers/qsqlite.dll"/>
+	<file source="{QTDIR}/qml/QtWebKit/qmldir" target="qt/QtWebKit/qmldir"/>
+	<file source="{QTDIR}/qml/QtWebKit/qmlwebkitplugin.dll" target="qt/QtWebKit/qmlwebkitplugin.dll"/>-->
 
 	<!-- Обновление конфигурации ТК -->
 	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/FlashSecurityUpdate.cmd" target="update_settings/post-action-FlashSecurityUpdate.cmd"/>
@@ -81,5 +70,10 @@
 	<!-- Обновление корневых сертификатов Windows -->
 	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/rootsupd.exe" target="update_root_cert/rootsupd.exe"/>
 	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/rootsupd.cmd" target="update_root_cert/post-action-rootsupd.cmd"/>
+	
+	<!-- Обновление VS 2013 Runtime -->
+	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/vs_runtime_update.cmd" target="update_vs_runtime/post-action-runtime-update.cmd"/>
+	<file if="{CYBERPLAT_BUILD}" source="scripts/install/thirdparty/vcredist_x86_2015.exe" target="update_vs_runtime/vcredist_x86_2015.exe"/>
+	<file if="{CYBERPLAT_BUILD}" source="scripts/install/thirdparty/vc2015test.exe" target="update_vs_runtime/vc2015test.exe"/>
 	
 </runtime>

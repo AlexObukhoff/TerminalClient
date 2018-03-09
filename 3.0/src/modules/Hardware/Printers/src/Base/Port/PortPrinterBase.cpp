@@ -71,9 +71,9 @@ bool PortPrinterBase<T>::isPossible(bool aOnline, QVariant aCommand)
 
 //---------------------------------------------------------------------------
 template <class T>
-bool PortPrinterBase<T>::print(const QStringList & aReceipt)
+bool PortPrinterBase<T>::processNonReentrant(TBoolMethod aCommand)
 {
-	bool result = T::print(aReceipt);
+	bool result = T::processNonReentrant(aCommand);
 
 	if (mOperatorPresence)
 	{

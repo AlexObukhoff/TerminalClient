@@ -14,7 +14,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QSharedPointer>
 #include <QtCore/QFutureWatcher>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include "ui_HardwareWindow.h"
 #include <Common/QtHeadersEnd.h>
 

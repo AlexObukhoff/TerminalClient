@@ -1,6 +1,5 @@
-import QtQuick 1.1
+import QtQuick 2.2
 import "." 1.0 as Widgets
-import "../scripts/gui.js" as GUI
 
 Item {
 	id: rootItem
@@ -20,12 +19,8 @@ Item {
 
 		onFlashChanged: Core.ad.addEvent(type, {})
 		onPopuped: rootItem.popuped(aParameters.html)
-		onClicked: {
-			GUI.log("BANNER CLICKED: ", aParameters)
-			// Для групп указывается id без префикса
-			rootItem.clicked(aParameters.hasOwnProperty("id") ? aParameters.id : -1,
+		onClicked: rootItem.clicked(aParameters.hasOwnProperty("id") ? aParameters.id : -1,
 																aParameters.hasOwnProperty("group") ? aParameters.group : false)
-		}
 	}
 
 	function reset() {

@@ -54,16 +54,16 @@ public:
 	static bool gzipUncompress(const QByteArray & aInBuffer, QString & aFileName, QByteArray & aOutBuffer);
 
 	/// Архивирует файлы в один том. В случае успеха возвращает имя сформированного архива.
-	QString compress(const QString & aTargetName, const QString & aSourceDir, const QStringList & aSearchMasks, const QStringList & aExcludeWildcard);
+	QString pack(const QString & aTargetName, const QString & aSourceDir, const QStringList & aSearchMasks, const QStringList & aExcludeWildcard);
 
 	/// Архивириут файлы в несколько томов, размер которых ограничивается aMaxPartSize в байтах.
-	QStringList compress(const QString & aTargetName, const QString & aSourceDir, const QStringList & aSearchMasks, const QStringList & aExcludeWildcard, int aMaxPartSize);
+	QStringList pack(const QString & aTargetName, const QString & aSourceDir, const QStringList & aSearchMasks, const QStringList & aExcludeWildcard, int aMaxPartSize);
 
 	/// Протестировать архив
 	bool test(const QString & aTargetName);
 
 	/// Распаковать определенные файлы из архива в определенную папку
-	bool extract(const QString & aSourceName, const QString & aDestinationDir, bool aSkipExisting, const QStringList & aExtractFiles = QStringList());
+	bool unpack(const QString & aSourceName, const QString & aDestinationDir, bool aSkipExisting, const QStringList & aExtractFiles = QStringList());
 
 	/// Экстренно прервать процесс архиватора, может быть вызван только из соседнего потока
 	void terminate();

@@ -1,4 +1,4 @@
-/* @file Реализация базового класса для сетевого запроса. */
+﻿/* @file Реализация базового класса для сетевого запроса. */
 
 #pragma once
 
@@ -87,9 +87,7 @@ public:
 	void setTag(const QVariant & aTag);
 	const QVariant & getTag() const;
 
-	/// Возвращает размер скачиваемого контента в байтах. Будет не нулевым после получения первого пакета с данными.
 	qint64 getSize() const;
-
 	qint64 getCurrentSize() const;
 
 	/// Указатель забирает внутрь, память освобождает самостоятельно.
@@ -146,7 +144,7 @@ private:
 	QSharedPointer<DataStream>  mDataStream;
 	TByteMap                    mRequestHeader;
 	TByteMap                    mResponseHeader;
-	QWeakPointer<QThread>       mParentThread;
+	QThread *                   mParentThread;
 	qint64                      mSize;
 	qint64                      mCurrentSize;
 	QVariant                    mTag;

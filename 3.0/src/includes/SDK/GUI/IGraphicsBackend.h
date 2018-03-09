@@ -41,5 +41,8 @@ protected:
 
 }} // namespace SDK::GUI
 
+// ќбъ€вление интерфейса, доступного из библиотеки.
+//Q_DECLARE_INTERFACE(SDK::GUI::IGraphicsBackend, "Cyberplat.*.Graphics.Backend")
+
 //---------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QtConcurrentRun>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QFutureWatcher>
 #include <Common/QtHeadersEnd.h>
 

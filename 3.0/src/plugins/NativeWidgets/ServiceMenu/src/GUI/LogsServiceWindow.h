@@ -6,7 +6,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTimer>
 #include <QtCore/QFutureWatcher>
-#include <QtGui/QStringListModel>
+#include <QtCore/QStringListModel>
 #include "ui_LogsServiceWindow.h"
 #include <Common/QtHeadersEnd.h>
 
@@ -47,7 +47,7 @@ public:
 
 					if (line.size() > 14)
 					{
-						switch (line.at(14).toAscii())
+						switch (line.at(14).toLatin1())
 						{
 						case 'W': return QColor(0xff, 0xaa, 0x00);
 						case 'E':

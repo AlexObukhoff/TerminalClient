@@ -1,4 +1,4 @@
-/* @file Реализация интерфейса SysUtils. */
+﻿/* @file Реализация интерфейса SysUtils. */
 
 // windows
 #include <windows.h>
@@ -109,13 +109,13 @@ QVariantMap ISysUtils::getPrinterData(const QString & aPrinterName)
 		return result;
 	}
 
-	result.insert(CDeviceData::Name,   QString::fromUtf16(printerInfo->pPrinterName));
-	result.insert(CDeviceData::Port,   QString::fromUtf16(printerInfo->pPortName));
-	result.insert(CDeviceData::Driver, QString::fromUtf16(printerInfo->pDriverName));
-	result.insert(CDeviceData::Printers::Location, QString::fromUtf16(printerInfo->pLocation));
-	result.insert(CDeviceData::Printers::Comment,  QString::fromUtf16(printerInfo->pComment));
-	result.insert(CDeviceData::Printers::Server,   QString::fromUtf16(printerInfo->pServerName));
-	result.insert(CDeviceData::Printers::Share,    QString::fromUtf16(printerInfo->pShareName));
+	result.insert(CDeviceData::Name,   QString::fromWCharArray(printerInfo->pPrinterName));
+	result.insert(CDeviceData::Port,   QString::fromWCharArray(printerInfo->pPortName));
+	result.insert(CDeviceData::Driver, QString::fromWCharArray(printerInfo->pDriverName));
+	result.insert(CDeviceData::Printers::Location, QString::fromWCharArray(printerInfo->pLocation));
+	result.insert(CDeviceData::Printers::Comment,  QString::fromWCharArray(printerInfo->pComment));
+	result.insert(CDeviceData::Printers::Server,   QString::fromWCharArray(printerInfo->pServerName));
+	result.insert(CDeviceData::Printers::Share,    QString::fromWCharArray(printerInfo->pShareName));
 
 	ClosePrinter(printer);
 

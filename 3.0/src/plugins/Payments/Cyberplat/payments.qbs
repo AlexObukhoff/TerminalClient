@@ -5,14 +5,14 @@ Project {
 		name: "cyberplat_payments"
 
 		Depends { name: 'cpp' }
-		Depends { name: "Qt"; submodules: ["core", "xml", "network"] }
+		Depends { name: "Qt"; submodules: ["core", "xml", "network", "qml"] }
 
 		Depends { name: "Core" }
 		Depends { name: "PluginsSDK" }
 		Depends { name: "PPSDK" }
 		Depends { name: "NetworkTaskManager" }
 		Depends { name: "PaymentBase" }
-		Depends { name: "qt5port" }
+//		Depends { name: "qt5port" }
 
 		files: [
 			"../../../includes/Common/CoreVersion.rc",

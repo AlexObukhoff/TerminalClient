@@ -10,6 +10,7 @@
 #include <Common/QtHeadersEnd.h>
 
 #ifdef Q_OS_WIN
+#define NOMINMAX
 #include <windows.h>
 #endif
 

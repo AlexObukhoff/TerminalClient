@@ -2,6 +2,21 @@
 
 #pragma once
 
+// STL
+#include <functional>
+
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QSet>
+#include <QtCore/QMutex>
+#include <QtCore/QWaitCondition>
+#include <QtCore/QSharedPointer>
+#include <Common/QtHeadersEnd.h>
+
+#pragma push_macro("min")
+#pragma push_macro("max")
+#undef min
+#undef max
+
 // OPOS
 #import "OPOSFiscalPrinter.tlb" rename("ResetPrinter", "ResetOPOSPrinter")
 
@@ -16,6 +31,9 @@
 #include "Hardware/Printers/PrinterBase.h"
 #include "Hardware/FR/FRBase.h"
 #include "Hardware/FR/ProtoFR.h"
+
+#pragma pop_macro("max")
+#pragma pop_macro("min")
 
 // Project
 #include "OPOSMStarTUPKDataTypes.h"

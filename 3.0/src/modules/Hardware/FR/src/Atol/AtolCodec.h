@@ -11,7 +11,7 @@ public:
 	AtolTextCodec()
 	{
 		mName = CHardware::Codepages::ATOL;
-		mMIB = 3002;
+		mMIB = 3001;
 		mMinValueActive = 0;
 
 		mData.add('\x00', "А");               mData.add('\x10', "Р");               mData.add('\x20', " ");               mData.add('\x30', "0");

@@ -23,6 +23,7 @@
  *  2005-08-05   v5    - Removed most Lint (http://www.gimpel.com/) errors... thanks to Okko Willeboordse!
  *
  **********************************************************************/
+#define NOMINMAX // HACK for QDateTime Qt 5.0.0
 #include <windows.h>
 #include <tchar.h>
 #include <stdio.h>

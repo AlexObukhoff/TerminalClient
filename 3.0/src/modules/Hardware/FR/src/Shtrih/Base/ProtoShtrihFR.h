@@ -74,11 +74,11 @@ protected:
 	/// Открыть чек.
 	bool openDocument(bool aBack);
 
-	/// Продажа.
-	virtual bool sale(const SDK::Driver::SAmountData & aAmountData, bool aBack);
-
 	/// Закрыть чек.
 	virtual bool closeDocument(double aSum, SDK::Driver::EPayTypes::Enum aPayType);
+
+	/// Продажа.
+	virtual bool sale(const SDK::Driver::SAmountData & aAmountData, bool aBack);
 
 	/// Получить имена секций.
 	void getSectionNames();

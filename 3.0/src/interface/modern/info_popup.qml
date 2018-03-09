@@ -1,6 +1,6 @@
 ﻿/* @file Всплывающее окно ожидания завершения или уведомления у результате какой-либо операции. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
@@ -146,7 +146,7 @@ Item {
 		from: 1
 		to: 0
 
-		onCompleted: hide()
+		onRunningChanged: if(!running) hide()
 	}
 
 	// Кнопки

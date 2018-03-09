@@ -1,10 +1,10 @@
-/* @file Плагин виртуальной клавиатуры */
+﻿/* @file Плагин виртуальной клавиатуры */
 
 #pragma once
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QGraphicsProxyWidget>
+#include <QtWidgets/QGraphicsProxyWidget>
 #include <Common/QtHeadersEnd.h>
 
 // Plugin SDK
@@ -63,7 +63,7 @@ public:
 	virtual QString getError() const;
 
 	// Возвращает виджет.
-	virtual QGraphicsItem * getWidget() const;
+	virtual QQuickItem * getWidget() const;
 
 	virtual QWidget * getNativeWidget() const { return mKeyboardWindow; }
 

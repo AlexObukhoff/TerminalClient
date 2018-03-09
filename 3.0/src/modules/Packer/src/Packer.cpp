@@ -284,15 +284,15 @@ bool Packer::gzipUncompress(const QByteArray & aInBuffer, QString & aFileName, Q
 }
 
 //------------------------------------------------------------------------------
-QString Packer::compress(const QString & aTargetName, const QString & aSourceDir, const QStringList & aSearchMasks, const QStringList & aExcludeWildcard)
+QString Packer::pack(const QString & aTargetName, const QString & aSourceDir, const QStringList & aSearchMasks, const QStringList & aExcludeWildcard)
 {
-	QStringList files = compress(aTargetName, aSourceDir, aSearchMasks, aExcludeWildcard, 0);
+	QStringList files = pack(aTargetName, aSourceDir, aSearchMasks, aExcludeWildcard, 0);
 
 	return files.isEmpty() ? QString() : files.first();
 }
 
 //------------------------------------------------------------------------------
-QStringList Packer::compress(const QString & aTargetName, const QString & aSourceDir, const QStringList & aSearchMasks, const QStringList & aExcludeWildcard, int aMaxPartSize)
+QStringList Packer::pack(const QString & aTargetName, const QString & aSourceDir, const QStringList & aSearchMasks, const QStringList & aExcludeWildcard, int aMaxPartSize)
 {
 	QStringList zipArguments = QStringList() 
 		<< (mUpdateMode ? "u" : "a")
@@ -391,7 +391,7 @@ bool Packer::test(const QString & aTargetName)
 }
 
 //------------------------------------------------------------------------------
-bool Packer::extract(const QString & aSourceName, const QString & aDestinationDir, bool aSkipExisting, const QStringList & aExtractFiles /*= QStringList()*/)
+bool Packer::unpack(const QString & aSourceName, const QString & aDestinationDir, bool aSkipExisting, const QStringList & aExtractFiles /*= QStringList()*/)
 {
 	QStringList commanParams;
 

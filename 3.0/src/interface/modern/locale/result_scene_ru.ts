@@ -5,7 +5,7 @@
     <name>result_scene</name>
     <message>
         <location filename="../result_scene.qml" line="14"/>
-        <location filename="../result_scene.qml" line="246"/>
+        <location filename="../result_scene.qml" line="245"/>
         <source>result_scene#back</source>
         <translation>Назад</translation>
     </message>
@@ -46,7 +46,7 @@
         <translation>Сдача зачислена на указанный номер телефона</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="244"/>
+        <location filename="../result_scene.qml" line="243"/>
         <source>result_scene#take_change_receipt2</source>
         <translation>Нажмите «Согласен», чтобы распечатать квитанцию на получение сдачи. &lt;br&gt;Для получения сдачи обратитесь в техническую поддержку, реквизиты указаны в верхней части экрана.</translation>
     </message>
@@ -56,13 +56,13 @@
         <translation>Получить %1 %2 наличными</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="238"/>
+        <location filename="../result_scene.qml" line="237"/>
         <source>result_scene#take_change_receipt</source>
         <translation>Нажмите «Закрыть», чтобы распечатать квитанцию на получение сдачи. &lt;br&gt;Для получения сдачи обратитесь в техническую поддержку, реквизиты указаны в верхней части экрана.</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="239"/>
-        <location filename="../result_scene.qml" line="245"/>
+        <location filename="../result_scene.qml" line="238"/>
+        <location filename="../result_scene.qml" line="244"/>
         <source>result_scene#take_change_receipt_error</source>
         <translation>Для получения сдачи обратитесь в техническую поддержку.&lt;br&gt;Реквизиты указаны в верхней части экрана</translation>
     </message>
@@ -122,17 +122,17 @@
         <translation>Для активации карты «КиберПлатёж»  просто поднесите её к сканеру штрих-кода.</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="153"/>
+        <location filename="../result_scene.qml" line="152"/>
         <source>result_scene#cash</source>
         <translation>Выдать наличными</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="247"/>
+        <location filename="../result_scene.qml" line="246"/>
         <source>result_scene#confirm</source>
         <translation>Согласен</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="272"/>
+        <location filename="../result_scene.qml" line="271"/>
         <source>result_scene#enter_phone_number</source>
         <translation>Введите свой номер сотового телефона</translation>
     </message>

@@ -53,6 +53,7 @@
 	<string>ИНН оператора: [b]%OPERATOR_INN%[/b]</string>
 	<string>[b]По данному провайдеру возможна задержка платежа[/b]</string>
 	<string>[b]Платеж принят без акцептования МТС[/b]</string>
+	<string if="'%AUTHCODE%' &amp;&amp; '%AUTHCODE%'.length &gt; 0">Номер платежа ЕСПП: %AUTHCODE%</string>
 	<string>-----------------------------------</string>
 	<string if="%DEALER_IS_BANK% == 0">Оператор по приему платежей:</string>
 	<string if="%DEALER_IS_BANK% == 0">ООО "КИБЕРПЛАТ"</string>

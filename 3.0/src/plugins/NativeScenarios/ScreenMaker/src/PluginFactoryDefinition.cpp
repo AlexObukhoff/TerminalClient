@@ -10,6 +10,4 @@ QString SDK::Plugin::PluginFactory::mAuthor      = "Cyberplat";
 QString SDK::Plugin::PluginFactory::mVersion     = "1.0";
 QString SDK::Plugin::PluginFactory::mModuleName  = "screen_maker";
 
-Q_EXPORT_PLUGIN2(ScreenMaker, SDK::Plugin::PluginFactory)
-
 //------------------------------------------------------------------------------

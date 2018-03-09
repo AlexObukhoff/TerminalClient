@@ -1,9 +1,10 @@
-/* @file Реализация плагина. */
+﻿/* @file Реализация плагина. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeItem>
+#include <QtQml/QQmlContext>
+#include <QtQml/QQmlComponent>
+#include <QtQuick/QQuickItem>
 #include <Common/QtHeadersEnd.h>
 
 // GUI SDK
@@ -67,7 +68,7 @@ QMLBackend::QMLBackend(SDK::Plugin::IEnvironment * aFactory, const QString & aIn
 	qmlRegisterUncreatableType<SDK::GUI::MessageBoxParams>(
 		QString("%1.%2").arg(SDK::PaymentProcessor::Scripting::CProxyNames::Core).arg(CQMLBackend::TypesExportNamespace).toLatin1(), 1, 0, "MessageBox", "MessageBoxParams enum is readonly.");
 
-	connect(&mQMLEngine, SIGNAL(warnings(const QList<QDeclarativeError> &)), this, SLOT(onWarnings(const QList<QDeclarativeError> &)));
+	connect(&mQMLEngine, SIGNAL(warnings(const QList<QQmlError> &)), this, SLOT(onWarnings(const QList<QQmlError> &)));
 }
 
 //------------------------------------------------------------------------------
@@ -171,10 +172,10 @@ void QMLBackend::shutdown()
 }
 
 //------------------------------------------------------------------------------
-void QMLBackend::onWarnings(const QList<QDeclarativeError> & aWarnings)
+void QMLBackend::onWarnings(const QList<QQmlError> & aWarnings)
 {
 	QString warnings;
-	foreach (QDeclarativeError e, aWarnings)
+	foreach (QQmlError e, aWarnings)
 	{
 		warnings += e.toString() + "\n";
 	}

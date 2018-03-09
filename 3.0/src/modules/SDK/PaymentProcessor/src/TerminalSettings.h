@@ -104,6 +104,8 @@ struct SCommonSettings
 	QList<SBlockByNote> blockNotes; /// Блокировка по номиналам
 	bool blockCheatedPayment; /// Блокировка при подозрении на манипуляции с устройством
 	bool autoEncachement;
+	bool printFailedReceipts;        /// Распечатывать не напечатанные фискальные чеки при инкассации
+	bool randomReceiptsID;
 	Currency::Nominal minPar;
 	QSet<Currency::Nominal> enabledParNotesList; /// Список разрешенных купюр.
 	QSet<Currency::Nominal> enabledParCoinsList; /// Список разрешенных монет.
@@ -113,21 +115,16 @@ struct SCommonSettings
 	bool disableAmountOverflow; /// Не допускать появление сдачи путем отбраковки купюр сверх лимита.
 	EEventType::Enum penetrationEventLevel;
 
-	// Printer
-	bool printFailedReceipts;  /// Распечатывать не напечатанные фискальные чеки при инкассации
-	bool randomReceiptsID;     /// Номера чеков в рандомном порядке
-	QTime autoZReportTime;     /// Автоматичекое закрытие смены ККТ в определенное время
-
 	SCommonSettings() : 
 		blockCheatedPayment(false),
 		autoEncachement(false),
+		printFailedReceipts(true),
+		randomReceiptsID(false),
 		minPar(10),
 		skipCheckWhileNetworkError(false),
 		isValid(true),
 		disableAmountOverflow(false),
-		penetrationEventLevel(EEventType::OK),
-		printFailedReceipts(true),
-		randomReceiptsID(false)
+		penetrationEventLevel(EEventType::OK)
 	{
 		_blockOn
 			<< ValidatorError

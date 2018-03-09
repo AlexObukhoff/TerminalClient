@@ -147,11 +147,6 @@ void PrinterBase<T>::cleanReceipt(QStringList & aReceipt)
 	for (int i = 0; i < aReceipt.size(); ++i)
 	{
 		aReceipt[i] = aReceipt[i].replace(ASCII::TAB, ASCII::Space);
-
-		for (auto it = CPrinters::AutoCorrection.data().begin(); it != CPrinters::AutoCorrection.data().end(); ++it)
-		{
-			aReceipt[i] = aReceipt[i].replace(it.key(), it.value());
-		}
 	}
 
 	for (int i = 0; i < aReceipt.size(); ++i)

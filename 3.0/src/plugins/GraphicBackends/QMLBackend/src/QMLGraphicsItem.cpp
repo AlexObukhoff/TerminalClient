@@ -4,7 +4,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QUrl>
 #include <QtCore/QDir>
-#include <QtDeclarative/QDeclarativeItem>
+#include <QtQuick/QQuickItem>
 #include <Common/QtHeadersEnd.h>
 
 // Модули
@@ -32,23 +32,23 @@ namespace CQMLGraphicsItem
 }
 
 //---------------------------------------------------------------------------
-QMLGraphicsItem::QMLGraphicsItem(const SDK::GUI::GraphicsItemInfo & aInfo, QDeclarativeEngine * aEngine, ILog * aLog)
+QMLGraphicsItem::QMLGraphicsItem(const SDK::GUI::GraphicsItemInfo & aInfo, QQmlEngine * aEngine, ILog * aLog)
 	: mLog(aLog),
 	  mEngine(aEngine),
 	  mItem(0),
 	  mInfo(aInfo)
 {
 	QString qmlPath = QDir::toNativeSeparators(QDir::cleanPath(aInfo.directory + QDir::separator() + aInfo.parameters[CQMLGraphicsItem::ItemKey]));
-	QDeclarativeComponent component(mEngine, qmlPath.startsWith("qrc") ? QUrl(qmlPath) : QUrl::fromLocalFile(qmlPath));
+	QQmlComponent component(mEngine, qmlPath.startsWith("qrc") ? QUrl(qmlPath) : QUrl::fromLocalFile(qmlPath));
 
 	QObject * object = component.create();
 	if (object)
 	{
-		mItem = QSharedPointer<QDeclarativeItem>(qobject_cast<QDeclarativeItem *>(object));
+		mItem = QSharedPointer<QQuickItem>(qobject_cast<QQuickItem *>(object));
 	}
 	else
 	{
-		foreach (QDeclarativeError error, component.errors())
+		foreach (QQmlError error, component.errors())
 		{
 			mError += error.toString() + "\n";
 		}
@@ -107,7 +107,7 @@ void QMLGraphicsItem::notify(const QString & aEvent, const QVariantMap & aParame
 }
 
 //---------------------------------------------------------------------------
-QGraphicsItem * QMLGraphicsItem::getWidget() const
+QQuickItem * QMLGraphicsItem::getWidget() const
 {
 	return mItem.data();
 }

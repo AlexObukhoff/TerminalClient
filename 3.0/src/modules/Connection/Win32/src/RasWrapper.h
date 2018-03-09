@@ -12,6 +12,7 @@
 #undef WINVER
 #endif
 #define WINVER 0x501
+#define NOMINMAX // HACK for QDateTime Qt 5.0.0
 #include <windows.h>
 #include <ras.h>
 #include <raserror.h>

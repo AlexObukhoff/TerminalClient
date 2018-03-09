@@ -1,4 +1,4 @@
-/* @file Модель для отображения списка провайдеров. */
+﻿/* @file Модель для отображения списка провайдеров. */
 #pragma once
 
 // stl
@@ -47,18 +47,20 @@ GroupModel::GroupModel() :
 mRootElement(-1),
 mCurrentCategory(0)
 {
-	QHash<int, QByteArray> roles;
+	mRoles[IdRole] = CGroupModel::Attributes::Id;
+	mRoles[NameRole] = CGroupModel::Attributes::Name;
+	mRoles[TitleRole] = CGroupModel::Attributes::Title;
+	mRoles[DescriptionRole] = CGroupModel::Attributes::Description;
+	mRoles[TypeRole] = CGroupModel::Attributes::Type;
+	mRoles[ImageRole] = CGroupModel::Attributes::Image;
+	mRoles[IsGroupRole] = CGroupModel::Attributes::IsGroup;
+	mRoles[JSONRole] = CGroupModel::Attributes::JSON;
+}
 
-	roles[IdRole] = CGroupModel::Attributes::Id;
-	roles[NameRole] = CGroupModel::Attributes::Name;
-	roles[TitleRole] = CGroupModel::Attributes::Title;
-	roles[DescriptionRole] = CGroupModel::Attributes::Description;
-	roles[TypeRole] = CGroupModel::Attributes::Type;
-	roles[ImageRole] = CGroupModel::Attributes::Image;
-	roles[IsGroupRole] = CGroupModel::Attributes::IsGroup;
-	roles[JSONRole] = CGroupModel::Attributes::JSON;
-
-	setRoleNames(roles);
+//------------------------------------------------------------------------------
+QHash<int, QByteArray> GroupModel::roleNames() const
+{
+	return mRoles;
 }
 
 //------------------------------------------------------------------------------

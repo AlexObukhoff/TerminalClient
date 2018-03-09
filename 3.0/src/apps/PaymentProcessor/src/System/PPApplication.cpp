@@ -1,4 +1,4 @@
-/* @file Класс приложения для PaymentProcessor. */
+﻿/* @file Класс приложения для PaymentProcessor. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -7,7 +7,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QAbstractEventDispatcher>
 #include <QtCore/QThreadPool>
-#include <QtGui/QDesktopWidget>
+#include <QtWidgets/QDesktopWidget>
 #include <QtGui/QPixmap>
 #include <QtGui/QImage>
 #include <QtGui/QSessionManager>
@@ -15,6 +15,7 @@
 
 // WinAPI
 #ifdef Q_OS_WIN
+#define NOMINMAX
 #include <Windows.h>
 #endif
 
@@ -49,8 +50,6 @@ PPApplication::PPApplication(
 	: BasicQtApplication<SafeQApplication>(aName, aVersion, aArgumentCount, aArguments),
 	mProtection("PaymentProcessorProtection")
 {
-	CatchUnhandledExceptions();
-
 	// Производим проверку на наличие еще одной запущенной копии приложения.
 	mProtection.attach();
 
@@ -101,7 +100,7 @@ PPApplication::~PPApplication()
 int PPApplication::exec()
 {
 	// Устанавливаем обработчик системных событий.
-	QAbstractEventDispatcher::instance()->setEventFilter(&PPApplication::systemEventFilter);
+	QAbstractEventDispatcher::instance()->installNativeEventFilter(this);
 
 	// блокируем скринсеййвер 
 	ISysUtils::disableScreenSaver();
@@ -128,11 +127,11 @@ SDK::PaymentProcessor::ICore * PPApplication::getCore()
 }
 
 //------------------------------------------------------------------------
-void PPApplication::qtMessageHandler(QtMsgType /*aType*/, const char * aMessage)
+void PPApplication::qtMessageHandler(QtMsgType /*aType*/, const QMessageLogContext & /*aContext*/, const QString & aMessage)
 {
 	static ILog * log = ILog::getInstance("QtMessages");
 
-	log->write(LogLevel::Normal, QString::fromLatin1(aMessage));
+	log->write(LogLevel::Normal, aMessage);
 }
 
 //------------------------------------------------------------------------
@@ -233,7 +232,7 @@ QString PPApplication::getUserPluginPath() const
 }
 
 //------------------------------------------------------------------------
-bool PPApplication::systemEventFilter(void * aMessage)
+bool PPApplication::nativeEventFilter(const QByteArray & aEventType, void * aMessage, long * aResult)
 {
 #ifdef Q_OS_WIN
 	MSG * message = (MSG *)aMessage;

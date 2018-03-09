@@ -19,7 +19,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../addinfo_scene.qml" line="245"/>
+        <location filename="../addinfo_scene.qml" line="252"/>
         <source>payment_scenario#cannot_check_payment</source>
         <translation type="unfinished"></translation>
     </message>

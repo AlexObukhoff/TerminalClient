@@ -1,11 +1,11 @@
-/* @file Базовый класс для класса реализующего платёж. */
+﻿/* @file Базовый класс для класса реализующего платёж. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/qmath.h>
 #include <QtCore/QReadLocker>
 #include <QtCore/QWriteLocker>
-#include <QtScript/QScriptEngine>
+#include <QtQml/QJSEngine>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -319,7 +319,7 @@ bool PaymentBase::getLimits(double & aMinAmount, double & aMaxAmount)
 		maxLimit.replace(macroPattern.cap(0), getParameter(macroPattern.cap(1)).value.toString());
 	}
 
-	QScriptEngine myEngine;
+	QJSEngine myEngine;
 	aMinAmount = myEngine.evaluate(minLimit).toString().toDouble();
 
 	// Если не получилось вычислить максимальный лимит, то берем системный

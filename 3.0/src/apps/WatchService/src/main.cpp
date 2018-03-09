@@ -1,4 +1,4 @@
-/* @file Реализация сторожевого сервиса как обычного приложения. */
+﻿/* @file Реализация сторожевого сервиса как обычного приложения. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -20,11 +20,11 @@ namespace CWatchService
 }
 
 //----------------------------------------------------------------------------
-void qtMessageHandler(QtMsgType /*aType*/, const char * aMessage)
+void qtMessageHandler(QtMsgType /*aType*/, const QMessageLogContext & /*aContext*/, const QString & aMessage)
 {
 	static ILog * log = ILog::getInstance("QtMessages");
 
-	log->write(LogLevel::Normal, QString::fromLatin1(aMessage));
+	log->write(LogLevel::Normal, aMessage);
 }
 
 //----------------------------------------------------------------------------
@@ -51,13 +51,13 @@ int main(int aArgc, char * aArgv[])
 	application.getQtApplication().initialize();
 	application.getQtApplication().setQuitOnLastWindowClosed(false);
 
-	qInstallMsgHandler(qtMessageHandler);
+	qInstallMessageHandler(qtMessageHandler);
 
 	WatchService service;
 
 	int result = application.exec();
 
-	qInstallMsgHandler(0);
+	qInstallMessageHandler(nullptr);
 
 	return result;
 }

@@ -3,7 +3,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtGui/QPainter>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <Common/QtHeadersEnd.h>
 
 // Проект

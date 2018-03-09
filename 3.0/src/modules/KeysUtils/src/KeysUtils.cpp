@@ -2,7 +2,7 @@
 
 // Qt headers
 #include "Common/QtHeadersBegin.h"
-#include <QtCore/QDebug>
+#include <QtCore/QUrlQuery>
 #include "Common/QtHeadersEnd.h"
 
 // Modules
@@ -60,11 +60,13 @@ EKeysUtilsError::Enum createKeyPair(ICryptEngine * aCrypt, int aKeyNumber, Netwo
                   const QString & aLogin, const QString & aPassword, SKeyPair & aPair)
 {
 	QUrl url(aUrl);
+	QUrlQuery urlQuery;
 
-	url.addQueryItem(CKeysFactory::ClientFields::User, aLogin);
-	url.addQueryItem(CKeysFactory::ClientFields::Password, aPassword);
-	url.addQueryItem(CKeysFactory::ClientFields::Query, CKeysFactory::Queries::GetCard);
-	url.addQueryItem(CKeysFactory::ClientFields::AcceptKeys, QString::number(1));
+	urlQuery.addQueryItem(CKeysFactory::ClientFields::User, aLogin);
+	urlQuery.addQueryItem(CKeysFactory::ClientFields::Password, aPassword);
+	urlQuery.addQueryItem(CKeysFactory::ClientFields::Query, CKeysFactory::Queries::GetCard);
+	urlQuery.addQueryItem(CKeysFactory::ClientFields::AcceptKeys, QString::number(1));
+	url.setQuery(urlQuery);
 
 	QScopedPointer<NetworkTask, ScopedPointerLaterDeleter<NetworkTask>> task(new NetworkTask());
 

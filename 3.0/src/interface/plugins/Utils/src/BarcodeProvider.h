@@ -5,8 +5,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QMap>
-#include <QtDeclarative/QDeclarativeExtensionPlugin>
-#include <QtDeclarative/QDeclarativeImageProvider>
+#include <QtQuick/QQuickImageProvider>
 #include <Common/QtHeadersEnd.h>
 
 /*------------------------------------------------------------------------------
@@ -36,7 +35,7 @@
 */
 
 //------------------------------------------------------------------------------
-class BarcodeProvider : public QDeclarativeImageProvider
+class BarcodeProvider : public QQuickImageProvider
 {
 public:
 	BarcodeProvider();

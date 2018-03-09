@@ -1,4 +1,4 @@
-/* @file Класс для обмена сообщениями по http. */
+﻿/* @file Класс для обмена сообщениями по http. */
 
 // STL
 #include <functional>
@@ -203,7 +203,7 @@ Response * RequestSender::request(NetworkTask::Type aType, const QUrl & aUrl, Re
 
 	task->getDataStream()->write(signedRequest);
 
-	mNetwork.data()->addTask(task.data());
+	mNetwork->addTask(task.data());
 
 	task->waitForFinished();
 

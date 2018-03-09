@@ -1,6 +1,6 @@
 ﻿/* @file Сетка для отображения кнопок операторов с обработкой кликов и прокрутки. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "../scenario/constants.js" as Scenario
 
 GridView {
@@ -162,7 +162,7 @@ GridView {
 		easing.type: Easing.OutBack
 		easing.overshoot: 1
 
-		onCompleted: rootItem.animationComplete()
+		onRunningChanged: if(!running) { rootItem.animationComplete() }
 	}
 
 	onCountChanged: {
@@ -178,7 +178,7 @@ GridView {
 
 	// aUseGlobalValue - если true, то использовать сохарненное при инициализации значение
 	function calcLayout(aUseGlobalValue) {
-		var aMaxLength = model.getMaxNameLength();
+		var aMaxLength = model.maxNameLength
 
 		var unit = __minCellWidth;
 		var gridCellWidth;

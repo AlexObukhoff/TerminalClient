@@ -4,8 +4,8 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QStyledItemDelegate>
-#include <QtGui/QListWidgetItem>
+#include <QtWidgets/QStyledItemDelegate>
+#include <QtWidgets/QListWidgetItem>
 #include <Common/QtHeadersEnd.h>
 
 //------------------------------------------------------------------------

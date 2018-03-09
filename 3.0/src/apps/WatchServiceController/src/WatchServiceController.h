@@ -1,4 +1,4 @@
-/* @file Модуль управления сторожевым сервисом через сокет. */
+﻿/* @file Модуль управления сторожевым сервисом через сокет. */
 
 #pragma once
 
@@ -7,8 +7,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtCore/QSignalMapper>
-#include <QtGui/QMenu>
-#include <QtGui/QSystemTrayIcon>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QSystemTrayIcon>
 #include <Common/QtHeadersEnd.h>
 
 // Modules

@@ -2,7 +2,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QCheckBox>
+#include <QtWidgets/QCheckBox>
 #include <Common/QtHeadersEnd.h>
 
 // Project

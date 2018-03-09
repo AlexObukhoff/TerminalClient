@@ -7,7 +7,6 @@
 #include <Common/QtHeadersEnd.h>
 
 // Project
-#include "../Provider.h"
 #include "SecurityFilter.h"
 
 namespace SDK {

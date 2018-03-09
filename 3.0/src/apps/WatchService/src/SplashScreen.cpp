@@ -11,7 +11,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTimer>
 #include <QtCore/QDir>
-#include <QtGui/QHBoxLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <Common/QtHeadersEnd.h>
 
 // SDK

@@ -33,7 +33,7 @@ MutexLocker::MutexLocker(QMutex * aMutex) :
 
 		if (matchedThread != currentThread)
 		{
-			mMutex->lockInline();
+			mMutex->lock();
 
 			{
 				QMutexLocker locker(&mResourceMutex);
@@ -56,7 +56,7 @@ MutexLocker::~MutexLocker()
 
 		if (mThreadsLocked.contains(mMutex) && (mThreadsLocked[mMutex].first == currentThread))
 		{
-			mMutex->unlockInline();
+			mMutex->unlock();
 			mThreadsLocked[mMutex].second--;
 
 			if (mThreadsLocked[mMutex].second <= 0)

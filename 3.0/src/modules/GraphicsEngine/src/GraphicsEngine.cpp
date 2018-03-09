@@ -7,12 +7,16 @@
 #include <QtCore/QSettings>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QKeySequence>
-#include <QtGui/QApplication>
-#include <QtGui/QWidget>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QGraphicsProxyWidget>
-#include <QtGui/QGraphicsSceneMouseEvent>
-#include <qjson.h>
+#include <QtGui/QWindow>
+#include <QtWidgets/QWidget>
+#include <QtOpenGL/QGLFormat>
+#include <QtOpenGL/QGLWidget>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QGraphicsProxyWidget>
+#include <QtWidgets/QGraphicsSceneMouseEvent>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QDebug>
 #include <Common/QtHeadersEnd.h>
 
 #ifndef _SIZE_T_DEFINED
@@ -48,7 +52,7 @@ namespace CGraphicsEngine
 }
 
 //--------------------------------------------------------------------------
-QString KeyboardContext::identifierName()
+/*QString KeyboardContext::identifierName()
 {
 	return CGraphicsEngine::InputContextName;
 }
@@ -81,16 +85,16 @@ bool KeyboardContext::filterEvent(const QEvent* aEvent)
 
 	return false;
 }
-
+*/
 //---------------------------------------------------------------------------
-GraphicsEngine::GraphicsEngine() : 
+GraphicsEngine::GraphicsEngine() :
 	ILogable("Interface"),
 	mShowingModal(false),
 	mHost(nullptr),
 	mIsVirtualKeyboardVisible(false)
 {
 	QDesktopWidget * desktop = QApplication::desktop();
-	
+
 	for (int i = 0, index = 1; i < desktop->numScreens(); ++i)
 	{
 		SScreen screen;
@@ -103,7 +107,7 @@ GraphicsEngine::GraphicsEngine() :
 	}
 
 	// Наилучшие для QML настройки графической оптимизации (описаны в документации для QDeclarativeView)
-	mView.setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing | QGraphicsView::DontSavePainterState);
+	/*mView.setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing | QGraphicsView::DontSavePainterState);
 	mView.setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 	mView.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::TextAntialiasing);
 	
@@ -113,24 +117,30 @@ GraphicsEngine::GraphicsEngine() :
 
 	mView.setFrameShape(QFrame::NoFrame);
 	mView.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	mView.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	
+	mView.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);*/
+
+	//mView.setResizeMode(QQuickView::SizeRootObjectToView);
+
+	/*Qt::WindowFlags flags = mView.windowFlags();
+	flags = flags & Qt::MSWindowsFixedSizeDialogHint & Qt::CustomizeWindowHint & Qt::FramelessWindowHint;
+	mView.setWindowFlags(flags);*/
+
 	// для перехвата Alt+F4
 	mView.installEventFilter(this);
 
 	// Настраиваем сцену
-	mScene.setItemIndexMethod(QGraphicsScene::NoIndex);
+	/*mScene.setItemIndexMethod(QGraphicsScene::NoIndex);
 	mScene.setStickyFocus(true);
-	mScene.installEventFilter(this);
+	mScene.installEventFilter(this);*/
 
 	// Настраиваем маску
-	mModalBackgroundWidget.setZValue(2);
+	mModalBackgroundWidget.setZ(2);
 	mModalBackgroundWidget.setVisible(false);
 
 	// Настраиваем виртуальную клавиатуру
-	KeyboardContext * keyboardContext = new KeyboardContext;
+	/*KeyboardContext * keyboardContext = new KeyboardContext;
 	qApp->setInputContext(keyboardContext);
-	connect(keyboardContext, SIGNAL(requestSoftwareInputPanel()), this, SLOT(onRequestSoftwareInputPanel()));
+	connect(keyboardContext, SIGNAL(requestSoftwareInputPanel()), this, SLOT(onRequestSoftwareInputPanel()));*/
 }
 
 //---------------------------------------------------------------------------
@@ -139,7 +149,7 @@ GraphicsEngine::~GraphicsEngine()
 }
 
 //---------------------------------------------------------------------------
-bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aShowDebugInfo)
+bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aUseOpenGL, bool aShowDebugInfo)
 {
 	// Если задан отсутствующий в системе дисплей, откатываемся на нулевой
 	if (aDisplay < 0 || aDisplay > mScreens.size() - 1)
@@ -152,11 +162,12 @@ bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aSho
 #else
 	mView.setGeometry(mScreens[aDisplay].geometry);
 
+	//TODO PORT_QT5
 	// Настраиваем масштабирование
-	mView.scale(mScreens[aDisplay].geometry.width() / qreal(aWidth), mScreens[aDisplay].geometry.height() / qreal(aHeight));
+	//mView.scale(mScreens[aDisplay].geometry.width() / qreal(aWidth), mScreens[aDisplay].geometry.height() / qreal(aHeight));
 #endif
 
-	mScene.setSceneRect(0, 0, aWidth, aHeight);
+	/*mScene.setSceneRect(0, 0, aWidth, aHeight);
 
 	mModalBackgroundWidget.setRect(0, 0, aWidth, aHeight);
 	mScene.addItem(&mModalBackgroundWidget);
@@ -165,7 +176,25 @@ bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aSho
 	mScene.addItem(&mDebugWidget);
 	mDebugWidget.setVisible(aShowDebugInfo);
 
+	if (aUseOpenGL)
+	{
+		QGLFormat format = QGLFormat::defaultFormat();
+		QGLWidget* glWidget = new QGLWidget(format);
+		mView.setViewport(glWidget);
+	}
+
 	mView.setScene(&mScene);
+
+	// Настраиваем курсор
+	if (!aShowCursor)
+	{
+		qApp->setOverrideCursor(QCursor(Qt::BlankCursor));
+	}*/
+
+
+	mModalBackgroundWidget.setVisible(false);
+	//mModalBackgroundWidget.setSize(QSizeF(aWidth, aHeight));
+	//mModalBackgroundWidget.setParentItem(mView.QQuickWindow::contentItem());
 
 	// Настраиваем курсор
 	if (!aShowCursor)
@@ -179,7 +208,7 @@ bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aSho
 	mTopWidget = mWidgets.end();
 	mPopupWidget = mWidgets.end();
 
-	foreach (const SWidget & widget, mWidgets)
+	foreach(const SWidget & widget, mWidgets)
 	{
 		if (!mBackends.contains(widget.info.type))
 		{
@@ -194,11 +223,11 @@ bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aSho
 //---------------------------------------------------------------------------
 bool GraphicsEngine::finalize()
 {
-	foreach (const SWidget & widget, mWidgets)
+	foreach(const SWidget & widget, mWidgets)
 	{
-		if (widget.graphics && widget.graphics->isValid() && widget.graphics->getWidget()->scene() == &mScene)
+		if (widget.graphics && widget.graphics->isValid() && widget.graphics->getWidget()->window() == mView.quickWindow())
 		{
-			mScene.removeItem(widget.graphics->getWidget());
+			widget.graphics->getWidget()->setParentItem(0);
 		}
 	}
 
@@ -230,12 +259,12 @@ void GraphicsEngine::stop()
 {
 	mView.hide();
 
-	foreach (SWidget widget, mWidgets.values())
+	foreach(SWidget widget, mWidgets.values())
 	{
 		if (widget.graphics && widget.graphics->isValid())
 		{
 			widget.graphics->getWidget()->setVisible(false);
-			widget.graphics->getWidget()->setZValue(0);
+			widget.graphics->getWidget()->setZ(0);
 		}
 	}
 
@@ -248,7 +277,7 @@ void GraphicsEngine::stop()
 void GraphicsEngine::addContentDirectory(const QString & aDirectory)
 {
 	mContentDirectories << aDirectory;
-	
+
 	bool fromResources = false;
 	if (aDirectory.left(2) == ":/")
 	{
@@ -287,7 +316,7 @@ void GraphicsEngine::addContentDirectory(const QString & aDirectory)
 			{
 				// Читаем специфичные для движка параметры
 				file.beginGroup(widget.info.type);
-				foreach (QString key, file.childKeys())
+				foreach(QString key, file.childKeys())
 				{
 					widget.info.parameters[key] = file.value(key).toString();
 				}
@@ -295,7 +324,7 @@ void GraphicsEngine::addContentDirectory(const QString & aDirectory)
 
 				// Читаем специфичные для виджета параметры
 				file.beginGroup(CGraphicsEngine::SectionContextName);
-				foreach (QString key, file.childKeys())
+				foreach(QString key, file.childKeys())
 				{
 					widget.info.context[key] = file.value(key).toString();
 				}
@@ -356,7 +385,7 @@ QRect GraphicsEngine::getDisplayRectangle(int aIndex) const
 //---------------------------------------------------------------------------
 QPixmap GraphicsEngine::getScreenshot()
 {
-	return QPixmap::grabWidget(&mView);
+	return mView.grab();
 }
 
 //---------------------------------------------------------------------------
@@ -382,7 +411,7 @@ bool GraphicsEngine::showPopup(const QString & aWidget, const QVariantMap & aPar
 
 //---------------------------------------------------------------------------
 QVariantMap GraphicsEngine::showModal(const QString & aWidget, const QVariantMap & aParameters)
-{	
+{
 	if (showPopup(aWidget, aParameters))
 	{
 		mShowingModal = true;
@@ -392,7 +421,7 @@ QVariantMap GraphicsEngine::showModal(const QString & aWidget, const QVariantMap
 			QApplication::processEvents(QEventLoop::WaitForMoreEvents);
 		}
 	}
-	
+
 	return mModalResult;
 }
 
@@ -414,7 +443,7 @@ bool GraphicsEngine::hidePopup(const QVariantMap & aParameters)
 
 	if (mTopWidget != mWidgets.end())
 	{
-		mTopWidget->graphics->getWidget()->setFocus();
+		mTopWidget->graphics->getWidget()->setFocus(true);
 		mTopWidget->graphics->notify(CGraphicsEngine::PopupClosedReason, aParameters);
 	}
 
@@ -432,19 +461,19 @@ void GraphicsEngine::notify(const QString & aEvent, const QVariantMap & aParamet
 	};
 
 	TWidgetList::Iterator w;
-	
+
 	if (mPopupWidget != mWidgets.end())
 	{
 		w = mPopupWidget;
-		mPopupWidget->graphics->notify(aEvent, aParameters);		
+		mPopupWidget->graphics->notify(aEvent, aParameters);
 	}
 	else if (mTopWidget != mWidgets.end())
 	{
 		w = mTopWidget;
 		mTopWidget->graphics->notify(aEvent, aParameters);
 	}
-	
-	toLog(LogLevel::Debug, QString("NOTIFY '%1'. Parameters: %2").arg(w->info.name).arg(formatParams(aParameters)));
+
+	//toLog(LogLevel::Normal, QString("NOTIFY '%1'. Parameters: %2").arg(w->info.name).arg(formatParams(aParameters)));
 }
 
 //---------------------------------------------------------------------------
@@ -469,7 +498,7 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 	{
 		hideVirtualKeyboard();
 	}
-	
+
 	// Если находимся в модальном режиме, то обычный show не отрабатываем
 	if (mShowingModal)
 	{
@@ -493,7 +522,7 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 	{
 		TWidgetList::Iterator widgetWithContext;
 		TWidgetList::Iterator firstWidget = newWidget;
-		
+
 		for (widgetWithContext = firstWidget; widgetWithContext != mWidgets.end(); ++widgetWithContext)
 		{
 			if (widgetWithContext->info.name == aWidget && widgetWithContext->info.context.isEmpty())
@@ -503,7 +532,7 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 			}
 		}
 
-		foreach (QString paramKey, aParameters.keys())
+		foreach(QString paramKey, aParameters.keys())
 		{
 			for (widgetWithContext = firstWidget; widgetWithContext != mWidgets.end(); ++widgetWithContext)
 			{
@@ -512,7 +541,7 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 					continue;
 				}
 
-				foreach (QString contextKey, widgetWithContext->info.context.keys())
+				foreach(QString contextKey, widgetWithContext->info.context.keys())
 				{
 					if (contextKey == paramKey)
 					{
@@ -534,12 +563,12 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 
 	if (newWidget->graphics && newWidget->graphics->isValid())
 	{
-		if (!newWidget->graphics->getWidget()->scene())
+		if (!newWidget->graphics->getWidget()->window())
 		{
-			mScene.addItem(newWidget->graphics->getWidget());
+			newWidget->graphics->getWidget()->setParentItem(mView.quickWindow()->contentItem());
 		}
 	}
-	else 
+	else
 	{
 		toLog(LogLevel::Error, QString("Failed to instanciate widget '%1'.").arg(aWidget));
 		return false;
@@ -573,18 +602,18 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 		// Масштабируем, если надо, всплывающее окно
 		if (aParameters["scaled"].toBool())
 		{
-			QRectF rect = newWidget->graphics->getWidget()->sceneBoundingRect();
-			qreal scale = qMin(mScene.width() / rect.width(), mScene.height() / rect.height());
+			QRectF rect = newWidget->graphics->getWidget()->boundingRect();
+			qreal scale = qMin(mView.width() / rect.width(), mView.height() / rect.height());
 			newWidget->graphics->getWidget()->setScale(scale);
 		}
-		
+
 		//Установим цвет фона модального окна
 		QString popupOverlayColor = aParameters["popup_overlay_color"].toString();
 		if (!popupOverlayColor.isEmpty())
 		{
 			mModalBackgroundWidget.setColor(popupOverlayColor);
 		}
-		
+
 		// Показываем маску
 		mModalBackgroundWidget.setVisible(true);
 
@@ -606,60 +635,60 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 	newWidget->graphics->show();
 
 	// Отрисовка через очередь, чтобы showHandler/resetHandler успели отработать
-	QMetaObject::invokeMethod(this, "setFrontWidget", Qt::QueuedConnection, 
-		Q_ARG(QGraphicsObject *, dynamic_cast<QGraphicsObject *>(newWidget->graphics->getWidget())), 
-		Q_ARG(QGraphicsObject *, (aPopup || oldWidget == mWidgets.end()) ? 0 : dynamic_cast<QGraphicsObject *>(oldWidget->graphics->getWidget())), 
+	QMetaObject::invokeMethod(this, "setFrontWidget", Qt::QueuedConnection,
+		Q_ARG(QQuickItem *, dynamic_cast<QQuickItem *>(newWidget->graphics->getWidget())),
+		Q_ARG(QQuickItem *, (aPopup || oldWidget == mWidgets.end()) ? 0 : dynamic_cast<QQuickItem *>(oldWidget->graphics->getWidget())),
 		Q_ARG(int, level), Q_ARG(bool, aPopup));
 
-	QString popupMessage = 
+	QString popupMessage =
 		aPopup ? QString::fromUtf8(QJsonDocument::fromVariant(aParameters).toJson(QJsonDocument::Compact)) : QString();
-	
+
 	aPopup ?
 		toLog(LogLevel::Normal, QString("SHOW POPUP '%1'. Parameters: %2").arg(aWidget).arg(popupMessage)) :
 		toLog(LogLevel::Normal, QString("SHOW '%1' scene. %2")
-		.arg(aWidget).arg(newWidget->info.context.isEmpty() ? "" : QString("CONTEXT: %1").arg(QStringList(newWidget->info.context.keys()).join(";"))));
+			.arg(aWidget).arg(newWidget->info.context.isEmpty() ? "" : QString("CONTEXT: %1").arg(QStringList(newWidget->info.context.keys()).join(";"))));
 
 	return true;
 }
 
 //---------------------------------------------------------------------------
-void GraphicsEngine::setFrontWidget(QGraphicsObject * aNewWidget, QGraphicsObject * aOldWidget, int aLevel, bool aPopup)
+void GraphicsEngine::setFrontWidget(QQuickItem * aNewWidget, QQuickItem * aOldWidget, int aLevel, bool aPopup)
 {
 	// Всплывающее окно уже могли спрятать
 	if (aPopup && mPopupWidget == mWidgets.end())
 	{
 		return;
 	}
-	
+
 	aNewWidget->setVisible(true);
-	aNewWidget->setFocus();
-	aNewWidget->setZValue(aLevel);
+	aNewWidget->setFocus(true);
+	aNewWidget->setZ(aLevel);
 
 	if (aOldWidget)
 	{
 		aOldWidget->setVisible(false);
-		aOldWidget->setZValue(0);
+		aOldWidget->setZ(0);
 	}
 
 	if (mPopupWidget != mWidgets.end())
 	{
-		QRectF rect(aNewWidget->sceneBoundingRect());
-		qreal scale = qobject_cast<QGraphicsItem *>(aNewWidget)->scale();
-		aNewWidget->setPos((mScene.sceneRect().width() - rect.width() / scale) / 2, (mScene.sceneRect().height() - rect.height() / scale) / 2);
+		QRectF rect(aNewWidget->boundingRect());
+		qreal scale = qobject_cast<QQuickItem *>(aNewWidget)->scale();
+		aNewWidget->setPosition(QPointF((mView.width() - rect.width() / scale) / 2, (mView.height() - rect.height() / scale) / 2));
 	}
 }
 
 //---------------------------------------------------------------------------
 void GraphicsEngine::showVirtualKeyboard()
 {
-	QGraphicsItem * focusItem = mTopWidget->graphics->getWidget();
+	/*QQuickItem * focusItem = mTopWidget->graphics->getWidget();
 	QWidget * focusWidget = static_cast<QGraphicsProxyWidget *>(focusItem)->widget()->focusWidget();
 
 	if (focusWidget == nullptr)
 	{
 		return;
 	}
-	
+
 	// Проверяем существет ли такой виджет
 	TWidgetList::Iterator widget = mWidgets.find(CGraphicsEngine::InputContextName);
 
@@ -707,11 +736,11 @@ void GraphicsEngine::showVirtualKeyboard()
 
 	keyboardRect.moveTopLeft(QPointF(newPos.x(), focusWidget->mapToGlobal(focusWidget->rect().bottomLeft()).y() * focusItemScale));
 	keyboardPositions << keyboardRect;
-	
+
 	keyboardRect.moveBottomLeft(QPointF(newPos.x(), focusWidget->mapToGlobal(focusWidget->rect().topLeft()).y() * focusItemScale));
 	keyboardPositions << keyboardRect;
 
-	foreach (QRectF r, keyboardPositions)
+	foreach(QRectF r, keyboardPositions)
 	{
 		if (sceneRect.contains(r))
 		{
@@ -726,17 +755,17 @@ void GraphicsEngine::showVirtualKeyboard()
 	widget->graphics->getWidget()->setZValue(3);
 	widget->graphics->getWidget()->setVisible(true);
 
-	mIsVirtualKeyboardVisible = true;
+	mIsVirtualKeyboardVisible = true;*/
 }
 
 //---------------------------------------------------------------------------
 void GraphicsEngine::hideVirtualKeyboard()
 {
-	TWidgetList::Iterator widget = mWidgets.find(CGraphicsEngine::InputContextName);
+	/*TWidgetList::Iterator widget = mWidgets.find(CGraphicsEngine::InputContextName);
 	QGraphicsItem * item = widget->graphics->getWidget();
 	item->setVisible(false);
 
-	mIsVirtualKeyboardVisible = false;
+	mIsVirtualKeyboardVisible = false;*/
 }
 
 //---------------------------------------------------------------------------
@@ -747,27 +776,27 @@ bool GraphicsEngine::eventFilter(QObject * aObject, QEvent * aEvent)
 
 	switch (type)
 	{
-	case QEvent::GraphicsSceneMouseMove:
+	case QEvent::MouseMove:
 	{
-		QGraphicsSceneMouseEvent * mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(aEvent);
-		mDebugWidget.updateMousePos(mouseEvent->scenePos().toPoint());
+		QMouseEvent * mouseEvent = static_cast<QMouseEvent *>(aEvent);
+		mDebugWidget.updateMousePos(mouseEvent->screenPos().toPoint());
 
-			if (++intruder >= CGraphicsEngine::IntruderTreshold)
-			{
-				emit intruderActivity();
-			}
+		if (++intruder >= CGraphicsEngine::IntruderTreshold)
+		{
+			emit intruderActivity();
+		}
 	}
-		break;
-	
-	case QEvent::GraphicsSceneWheel:
+	break;
+
+	case QEvent::Wheel:
 		emit intruderActivity();
 		break;
 
-	case QEvent::GraphicsSceneMousePress:
-	case QEvent::GraphicsSceneMouseDoubleClick:
+	case QEvent::MouseButtonPress:
+	case QEvent::MouseButtonDblClick:
 		if (mIsVirtualKeyboardVisible)
 		{
-			QGraphicsSceneMouseEvent * mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(aEvent);
+			/*QGraphicsSceneMouseEvent * mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(aEvent);
 			TWidgetList::Iterator widget = mWidgets.find(CGraphicsEngine::InputContextName);
 			QGraphicsItem * keyboardItem = widget->graphics->getWidget();
 			QRectF keyboardRect(keyboardItem->sceneBoundingRect());
@@ -775,28 +804,28 @@ bool GraphicsEngine::eventFilter(QObject * aObject, QEvent * aEvent)
 			if (!keyboardRect.contains(mouseEvent->scenePos()))
 			{
 				hideVirtualKeyboard();
-			}
+			}*/
 		}
-	case QEvent::GraphicsSceneMouseRelease:
+	case QEvent::MouseButtonRelease:
 		emit userActivity();
 		intruder = 0;
 		break;
 
 	case QEvent::KeyPress:
+	{
+		if (!mHandledKeyList.isEmpty())
 		{
-			if (!mHandledKeyList.isEmpty())
-			{
-				QKeyEvent * keyEvent = static_cast<QKeyEvent *>(aEvent);
+			QKeyEvent * keyEvent = static_cast<QKeyEvent *>(aEvent);
 
-				QString key = QKeySequence(keyEvent->key()).toString();
-				if (mHandledKeyList.indexOf(key) != -1)
-				{
-					emit keyPressed(key);
-					return true;
-				}
+			QString key = QKeySequence(keyEvent->key()).toString();
+			if (mHandledKeyList.indexOf(key) != -1)
+			{
+				emit keyPressed(key);
+				return true;
 			}
 		}
-		break;
+	}
+	break;
 
 	case QEvent::Close:
 		emit closed();

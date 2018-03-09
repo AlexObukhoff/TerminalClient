@@ -6,8 +6,8 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QFutureWatcher>
 #include <QtNetwork/QNetworkProxy>
-#include <QtGui/QAbstractButton>
-#include <QtGui/QButtonGroup>
+#include <QtWidgets/QAbstractButton>
+#include <QtWidgets/QButtonGroup>
 #include "ui_NetworkServiceWindow.h"
 #include <Common/QtHeadersEnd.h>
 

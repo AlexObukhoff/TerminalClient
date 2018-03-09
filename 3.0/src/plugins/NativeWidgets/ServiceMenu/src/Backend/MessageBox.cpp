@@ -2,7 +2,6 @@
 
 // Qt
 #include "Common/QtHeadersBegin.h"
-#include <QtDeclarative/QDeclarativeEngine>
 #include "Common/QtHeadersEnd.h"
 
 // Project

@@ -19,6 +19,26 @@
       <Extensions>ts</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{8d9e20bb-f2b7-4b5e-adb7-3f866fdce3ee}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{bcd6dd45-6460-4c43-b38d-ccce5f2cb5e1}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{20a2158e-f3c4-4480-ba0c-7cdfa9e03f14}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BillAcceptorPlugin.cpp">
@@ -27,6 +47,15 @@
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusesDescriptions.h">
@@ -34,13 +63,18 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\locale\bill_acceptors_ru.ts">
-      <Filter>Translation Files</Filter>
-    </None>
+    <CustomBuild Include="..\src\PluginLibraryDefinition.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\src\locale\bill_acceptors_en.ts">
       <Filter>Translation Files</Filter>
     </None>
     <None Include="..\src\locale\bill_acceptors_kk.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+    <None Include="..\src\locale\bill_acceptors_ru.ts">
       <Filter>Translation Files</Filter>
     </None>
   </ItemGroup>

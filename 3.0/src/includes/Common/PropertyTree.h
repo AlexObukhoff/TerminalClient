@@ -14,7 +14,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QString>
-#include <QtCore/QTime>
 #include <Common/QtHeadersEnd.h>
 
 //---------------------------------------------------------------------------
@@ -166,22 +165,6 @@ inline std::wstring WStringTranslator<bool>::put_value(const bool & aValue) cons
 }
 
 //---------------------------------------------------------------------------
-template<>
-inline QTime WStringTranslator<QTime>::get_value(const std::wstring & aValue) const
-{
-	QString v = QString::fromStdWString(aValue);
-
-	return QTime::fromString(v);
-};
-
-//---------------------------------------------------------------------------
-template<>
-inline std::wstring WStringTranslator<QTime>::put_value(const QTime & aValue) const
-{
-	return aValue.toString("hh:mm:ss").toStdWString();
-}
-
-//---------------------------------------------------------------------------
 // For std::string with utf-8 encoding
 //---------------------------------------------------------------------------
 
@@ -330,22 +313,6 @@ template<>
 inline std::string StringTranslator<bool>::put_value(const bool & aValue) const
 {
 	return aValue ? "true" : "false";
-}
-
-//---------------------------------------------------------------------------
-template<>
-inline QTime StringTranslator<QTime>::get_value(const std::string & aValue) const
-{
-	QString v = QString::fromUtf8(aValue.c_str());
-
-	return QTime::fromString(v);
-};
-
-//---------------------------------------------------------------------------
-template<>
-inline std::string StringTranslator<QTime>::put_value(const QTime & aValue) const
-{
-	return aValue.toString("hh:mm:ss").toStdString();
 }
 
 //---------------------------------------------------------------------------

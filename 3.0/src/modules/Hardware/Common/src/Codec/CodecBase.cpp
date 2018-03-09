@@ -6,7 +6,7 @@
 #include "CodecBase.h"
 
 //---------------------------------------------------------------------------
-CodecBase::CodecBase() : mMIB(3000), mMinValueActive(0x0080), mName("Base")
+CodecBase::CodecBase() : mMIB(0), mMinValueActive(0x0080)
 {
 }
 

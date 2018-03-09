@@ -43,7 +43,7 @@
     <name>PrintPayment</name>
     <message>
         <location filename="../Services/PrintingCommands.cpp" line="244"/>
-        <source>#tax_system</source>
+        <source>#taxation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

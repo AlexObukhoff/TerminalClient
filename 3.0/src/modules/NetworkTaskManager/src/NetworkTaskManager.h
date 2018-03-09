@@ -9,6 +9,7 @@
 #include <QtCore/QList>
 #include <QtCore/QMap>
 #include <QtCore/QSharedPointer>
+#include <QtCore/QPointer>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkProxy>
 #include <QtNetwork/QNetworkReply>
@@ -93,7 +94,7 @@ signals:
 	void networkTaskStatus(bool aFailure);
 
 private:
-	typedef QMap<QNetworkReply *, QWeakPointer<NetworkTask>> TTaskMap;
+	typedef QMap<QNetworkReply *, QPointer<NetworkTask>> TTaskMap;
 
 	TTaskMap mTasks;
 	QSharedPointer<QNetworkAccessManager> mNetwork;

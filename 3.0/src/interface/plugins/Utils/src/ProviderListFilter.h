@@ -4,7 +4,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QSortFilterProxyModel>
+#include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStringList>
 #include <Common/QtHeadersEnd.h>
 

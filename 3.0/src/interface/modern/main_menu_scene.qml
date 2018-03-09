@@ -1,6 +1,6 @@
 ﻿/* @file Экран меню выбора оператора. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import Core.Types 1.0
 import "controls" 1.0 as Controls
 import "widgets" 1.0 as Widgets
@@ -56,6 +56,8 @@ Widgets.SceneBase {
 
 		anchors { fill: parent; leftMargin: 30; rightMargin: 30; topMargin: 34; bottomMargin: 150 }
 		visible: global.menuLevel == 0
+
+		onHeightChanged: GUI.log(MenuWalker.model)
 	}
 
 	// Выбор группы/оператора
@@ -155,8 +157,6 @@ Widgets.SceneBase {
 
 	// Переход в категорию/подкатегорию
 	function goToCategory(aId, aIsGroup, aSelectedIndex) {
-		GUI.log("GO TO CATEGORY: ", aId, aIsGroup, aSelectedIndex)
-
 		if (aIsGroup) {
 			global.menuLevel = MenuWalker.go(aId, operatorSelector.getCurrentPosition());
 			Utils.playSound(Scenario.Sound.ChooseOperator);
@@ -292,7 +292,9 @@ Widgets.SceneBase {
 		// Если название профиля в config.xml отсутствует, то загружаем дефолтный
 		var profiles = ["top5_noad", "top5", "top10", "top10_noad", "top20_noad"];
 		var current = Core.environment.terminal.adProfile;
-		SceneFactory.load("scripts/" + (profiles.indexOf(current) != -1 ? current : "top5_noad") + ".json", rootColumn);
+
+		var json = JSON.parse(Utils.readFile(Core.environment.terminal.interfacePath + "/scripts/" + (profiles.indexOf(current) != -1 ? current : "top5_noad") + ".json"));
+		SceneFactory.createMainScene(json, rootColumn);
 
 		//Сохраним цвет фона всплывающего окна в глобальном пространстве
 		Core.userProperties.set("color.popup.overlay", Utils.ui.color("color.popup.overlay"));

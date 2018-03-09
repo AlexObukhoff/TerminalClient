@@ -24,11 +24,23 @@ public:
 	/// Устанавливает конфигурацию устройству.
 	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
 
+	/// Завершение инициализации.
+	virtual void finaliseInitialization();
+
 	/// Готов ли к печати.
 	virtual bool isDeviceReady(bool aOnline);
 
 	/// Готов ли к обработке данной фискальной команды.
 	virtual bool isFiscalReady(bool aOnline, SDK::Driver::EFiscalPrinterCommand::Enum aCommand = SDK::Driver::EFiscalPrinterCommand::Sale);
+
+	/// Запрос статуса.
+	virtual bool processStatus(TStatusCodes & aStatusCodes);
+
+	/// Проверить установки сервера ОФД.
+	bool checkOFDData(const QByteArray & aAddressData, const QByteArray & aPortData);
+
+	/// Проверить возможность использования фискального реквизита.
+	bool checkFiscalField(int aField, bool & aResult);
 
 	/// Печать фискального чека.
 	virtual bool printFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
@@ -43,6 +55,9 @@ public:
 	virtual bool printEncashment(const QStringList & aReceipt);
 	virtual bool printEncashment(const QStringList & aReceipt, double aAmount);
 
+	/// Открыта ли сессия.
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
+
 	/// Находится ли в фискальном режиме.
 	virtual bool isFiscal() const;
 
@@ -50,27 +65,6 @@ public:
 	virtual bool isOnline() const;
 
 protected:
-	/// Завершение инициализации.
-	virtual void finaliseInitialization();
-
-	/// Запрос статуса.
-	virtual bool processStatus(TStatusCodes & aStatusCodes);
-
-	/// Проверить установки сервера ОФД.
-	bool checkOFDData(const QByteArray & aAddressData, const QByteArray & aPortData);
-
-	/// Проверить возможность использования фискального реквизита.
-	bool checkFiscalField(int aField, bool & aResult);
-
-	/// Открыта ли сессия.
-	virtual SDK::Driver::ESessionState::Enum getSessionState();
-
-	/// Открыть смену.
-	virtual bool openSession() { return false; }
-
-	/// Открыть смену.
-	bool openFRSession();
-
 	/// Установить начальные параметры.
 	virtual void setInitialData();
 
@@ -84,16 +78,10 @@ protected:
 	virtual int getSessionNumber() { return 0; }
 
 	/// Загрузить СНО.
-	bool checkTaxSystems(char aData);
-
-	/// Проверить корректность СНО дилера.
-	bool checkDealerTaxSystems(bool aCanLog = false);
+	bool checkTaxationData(char aData);
 
 	/// Загрузить признаки агента.
 	bool checkAgentFlags(char aData);
-
-	/// Проверить корректность признаков агента дилера.
-	bool checkDealerAgentFlags(bool aCanLog = false);
 
 	/// Загрузить режимы работы.
 	bool checkOperationModes(char aData);
@@ -113,11 +101,8 @@ protected:
 	/// Установить реквизиты ОФД.
 	bool setOFDParameters();
 
-	/// Установить реквизиты ОФД на продаже.
-	bool setOFDParametersOnSale(const SDK::Driver::SAmountData & aAmountData);
-
 	/// Установить TLV-параметр.
-	virtual bool setTLV(int /*aField*/, bool /*aForSale*/ = false) { return true; }
+	virtual bool setTLV(int /*aField*/) { return true; }
 
 	/// Распарсить TLV-параметр.
 	bool parseTLV(const QByteArray & aData, CFR::STLV & aTLV);
@@ -185,11 +170,8 @@ protected:
 	/// Получить все налоговые ставки платежа.
 	SDK::Driver::TVATs getVATs(const SDK::Driver::SPaymentData & aPaymentData) const;
 
-	/// Логгировать данные налогов.
+	/// Получить все налоговые ставки платежа.
 	QString getVATLog(const SDK::Driver::TVATs & aVATs) const;
-
-	/// Получить лог фискальных данных платежа.
-	QString getFPDataLog(const SDK::Driver::TFiscalPaymentData & aFPData) const;
 
 	/// Наличие ЭКЛЗ.
 	bool mEKLZ;
@@ -245,9 +227,6 @@ protected:
 	/// Реквизиты ОФД для установки в момент печати фискального чека.
 	QSet<int> mOFDFiscalParameters;
 
-	/// Реквизиты ОФД для установки в момент печати фискального чека на продаже.
-	QSet<int> mOFDFiscalParametersOnSale;
-
 	/// Количество неотправленных документов в ОФД.
 	int mOFDNotSentCount;
 
@@ -260,9 +239,9 @@ protected:
 	/// Данные типов оплаты.
 	CFR::PayTypeData mPayTypeData;
 
-	/// Системы налогообложения (СНО).
-	typedef QList<char> TTaxSystems;
-	TTaxSystems mTaxSystems;
+	/// Система налогообложения (СНО).
+	typedef QList<char> TTaxations;
+	TTaxations mTaxations;
 
 	/// Признаки агента.
 	typedef QList<char> TAgentFlags;
@@ -295,9 +274,6 @@ protected:
 
 	/// Может работать с буфером Z-отчетов.
 	bool mCanProcessZBuffer;
-
-	/// Параметры фискализации некорректны?
-	bool mWrongFiscalizationSettings;
 };
 
 //--------------------------------------------------------------------------------

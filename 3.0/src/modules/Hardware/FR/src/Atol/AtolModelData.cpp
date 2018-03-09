@@ -44,16 +44,16 @@ CModelData::CModelData()
 	/// Онлайн.
 	addOnlineTrade(67, 32, Models::Atol11F, false, 3);
 	addOnlineTrade(78, 32, Models::Atol15F, false, 3);
-	addOnlineTrade(57, 48, Models::Atol25F, true,  3);
+	addOnlineTrade(57, 48, Models::Atol25F,  true, 3);
 	addOnlineTrade(61, 32, Models::Atol30F, false, 3);
-	addOnlineTrade(64, 36, Models::Atol52F, true,  6, CAtolFR::OnlineTradeBuild, false);
-	addOnlineTrade(62, 36, Models::Atol55F, true,  6);
-	addOnlineTrade(69, 48, Models::Atol77F, true,  6, CAtolFR::OnlineTradeBuild, false);
+	addOnlineTrade(64, 36, Models::Atol52F,  true, 6, false);
+	addOnlineTrade(62, 36, Models::Atol55F,  true, 6);
+	addOnlineTrade(69, 48, Models::Atol77F,  true, 6, false);
 
-	addOnlineTrade(63, 48, Models::FPrint22PTK, true, 6, CAtolFR::OnlineTradeBuild, false);
+	addOnlineTrade(63, 48, Models::FPrint22PTK, true, 6, false);
 
 	addOnlineTerminal(76, 67, Models::Paymaster, true, 0, 32);
-	addOnlineTerminal(77, 32, Models::Atol42FC,  true, 0, 32, CAtolFR::OnlineTerminalBuild, false);
+	addOnlineTerminal(77, 32, Models::Atol42FC,  true, 0, 32, false);
 
 	setDefault(SModelData(0, 32, "ATOL device", false, false, false, EFRType::FS, 0, false, true, 0, 0, true));
 }
@@ -95,21 +95,21 @@ void CModelData::addTrade(int aModelId, int aMaxStringSize, QString aName, bool 
 }
 
 //--------------------------------------------------------------------------------
-void CModelData::addTerminal(int aModelId, int aMaxStringSize, const QString & aName, int aBuild, bool aEjector, int aFeedingAmount, int aZBufferSize)
+void CModelData::addTerminal(int aModelId, int aMaxStringSize, const QString & aName, int aBuildVersion, bool aEjector, int aFeedingAmount, int aZBufferSize)
 {
-	append(TModelKey(aModelId, EFRType::EKLZ), SModelData(aModelId, aMaxStringSize, aName, false, true, true, EFRType::EKLZ, aBuild, aEjector, true, aFeedingAmount, aZBufferSize, true));
+	append(TModelKey(aModelId, EFRType::EKLZ), SModelData(aModelId, aMaxStringSize, aName, false, true, true, EFRType::EKLZ, aBuildVersion, aEjector, true, aFeedingAmount, aZBufferSize, true));
 }
 
 //--------------------------------------------------------------------------------
-void CModelData::addOnlineTrade(int aModelId, int aMaxStringSize, QString aName, bool aCutter, int aFeedingAmount, int aBuild, bool aVerified)
+void CModelData::addOnlineTrade(int aModelId, int aMaxStringSize, QString aName, bool aCutter, int aFeedingAmount, bool aVerified)
 {
-	append(TModelKey(aModelId, EFRType::FS), SModelData(aModelId, aMaxStringSize, aName, false, false, aVerified, EFRType::FS, aBuild, false, aCutter, aFeedingAmount, 0, true));
+	append(TModelKey(aModelId, EFRType::FS), SModelData(aModelId, aMaxStringSize, aName, false, false, aVerified, EFRType::FS, 0, false, aCutter, aFeedingAmount, 0, true));
 }
 
 //--------------------------------------------------------------------------------
-void CModelData::addOnlineTerminal(int aModelId, int aMaxStringSize, const QString & aName, bool aEjector, int aFeedingAmount, int aZBufferSize, int aBuild, bool aVerified)
+void CModelData::addOnlineTerminal(int aModelId, int aMaxStringSize, const QString & aName, bool aEjector, int aFeedingAmount, int aZBufferSize, bool aVerified)
 {
-	append(TModelKey(aModelId, EFRType::FS), SModelData(aModelId, aMaxStringSize, aName, false, true, aVerified, EFRType::FS, aBuild, aEjector, true, aFeedingAmount, aZBufferSize, true));
+	append(TModelKey(aModelId, EFRType::FS), SModelData(aModelId, aMaxStringSize, aName, false, true, aVerified, EFRType::FS, 0, aEjector, true, aFeedingAmount, aZBufferSize, true));
 }
 
 //--------------------------------------------------------------------------------

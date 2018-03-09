@@ -1,9 +1,14 @@
-/* @file Сканер Honeywell Metrologic на OPOS-драйвере. */
+﻿/* @file Сканер Honeywell Metrologic на OPOS-драйвере. */
 
 #import "OPOSScanner.tlb"
 
 // Windows
 #include <objbase.h>
+
+#pragma push_macro("min")
+#pragma push_macro("max")
+#undef min
+#undef max
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -17,6 +22,9 @@
 
 // Project
 #include "OPOSMetrologicScanner.h"
+
+#pragma pop_macro("max")
+#pragma pop_macro("min")
 
 //--------------------------------------------------------------------------------
 OPOSMetrologicScanner::OPOSMetrologicScanner()

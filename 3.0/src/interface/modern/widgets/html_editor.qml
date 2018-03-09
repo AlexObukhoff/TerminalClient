@@ -1,6 +1,6 @@
 ﻿/* @file Редактор с цифровой клавиатурой. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import QtWebKit 1.1
 import Core.Types 1.0
 import "." 1.0 as Widgets

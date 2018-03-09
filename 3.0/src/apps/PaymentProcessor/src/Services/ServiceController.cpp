@@ -255,7 +255,7 @@ bool ServiceController::finalizeServices(const char * aRetrySlot)
 		// Если не получилось, повторяем попытку через некоторое время.
 		mFinalizeTimer = new QTimer(this);
 		mFinalizeTimer->setSingleShot(true);
-		connect(mFinalizeTimer, SIGNAL(timeout()), this, aRetrySlot);
+		QObject::connect(mFinalizeTimer, SIGNAL(timeout()), this, aRetrySlot);
 
 		mFinalizeTimer->start(CServiceController::ShutdownRetryInterval);
 		return false;
@@ -303,13 +303,18 @@ bool ServiceController::finalizeServices(const char * aRetrySlot)
 //---------------------------------------------------------------------------
 void ServiceController::finalizeCoreItems()
 {
-	auto pluginLoader = PluginService::instance(mApplication)->getPluginLoader();
-
-	foreach(auto coreItem, mCorePluginList)
+	PluginService * ps = PluginService::instance(mApplication);
+	
+	if (ps)
 	{
-		LOG(mApplication->getLog(), LogLevel::Normal, QString("Destroy core item: %1.").arg(coreItem->getPluginName()));
+		auto pluginLoader = ps->getPluginLoader();
 
-		pluginLoader->destroyPlugin(coreItem);
+		foreach(auto coreItem, mCorePluginList)
+		{
+			LOG(mApplication->getLog(), LogLevel::Normal, QString("Destroy core item: %1.").arg(coreItem->getPluginName()));
+
+			pluginLoader->destroyPlugin(coreItem);
+		}
 	}
 
 	mCorePluginList.clear();
@@ -515,6 +520,11 @@ SDK::PaymentProcessor::ITerminalService * ServiceController::getTerminalService(
 //---------------------------------------------------------------------------
 SDK::PaymentProcessor::IService * ServiceController::getService(const QString & aServiceName) const
 {
+	if (mRegisteredServices.isEmpty())
+	{
+		return nullptr;
+	}
+	
 	if (mRegisteredServices.contains(aServiceName))
 	{
 		return mRegisteredServices.value(aServiceName);

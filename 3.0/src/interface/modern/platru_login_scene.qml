@@ -1,6 +1,6 @@
 ﻿/* @file Экран авторизации платежной книжки. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
@@ -109,7 +109,7 @@ Widgets.SceneBase {
 				easing.type: changeEditorAnimation.showing ? Easing.OutBack : Easing.Linear
 				easing.overshoot: 1
 			}
-			onCompleted: {
+			onRunningChanged: if(!running) {
 				showing = !showing;
 
 				// После завершения первой итерации меняем редактор и показываем его

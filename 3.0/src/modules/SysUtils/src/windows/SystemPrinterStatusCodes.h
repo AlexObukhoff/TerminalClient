@@ -1,6 +1,7 @@
 /* @file Спецификация статусов системного приннтера. */
 
 // windows
+#define NOMINMAX
 #include <windows.h>
 
 // Modules

@@ -3,7 +3,7 @@
 #pragma once
 
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QCloseEvent>
 #include "ui_SplashScreen.h"
 #include <Common/QtHeadersEnd.h>

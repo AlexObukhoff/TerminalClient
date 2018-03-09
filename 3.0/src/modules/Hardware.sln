@@ -278,6 +278,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		QtVersion = $(DefaultQtVersion)
+		Qt5Version = $(DefaultQtVersion)
 	EndGlobalSection
 	GlobalSection(Qt) = preSolution
 		Integration = True

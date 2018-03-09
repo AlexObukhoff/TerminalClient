@@ -375,14 +375,14 @@ void CashDispenserManager::loadCashList()
 }
 
 //---------------------------------------------------------------------------
-bool CashDispenserManager::getItemData(PPSDK::TPaymentAmount aAmount, const TItemDataSet & aItemDataSet, TItemDataSetIt & aItemDataSetIt)
+bool CashDispenserManager::getItemData(SDK::PaymentProcessor::TPaymentAmount aAmount, TItemDataSet & aItemData, TItemDataSetIt & aItemDataSetIt)
 {
-	if (aItemDataSet.isEmpty())
+	if (aItemData.isEmpty())
 	{
 		return false;
 	}
 
-	QList<int> nominals = aItemDataSet.keys();
+	QList<int> nominals = aItemData.keys();
 
 	if (*std::min_element(nominals.begin(), nominals.end()) > aAmount)
 	{
@@ -405,7 +405,7 @@ bool CashDispenserManager::getItemData(PPSDK::TPaymentAmount aAmount, const TIte
 		}
 	}
 
-	aItemDataSetIt = TItemDataSetIt(aItemDataSet.find(nominal));
+	aItemDataSetIt = TItemDataSetIt(aItemData.find(nominal));
 
 	return true;
 }

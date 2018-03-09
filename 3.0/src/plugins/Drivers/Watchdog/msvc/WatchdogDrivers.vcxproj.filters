@@ -19,6 +19,26 @@
       <Extensions>ts</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithDebugInfo">
+      <UniqueIdentifier>{0b93c8d2-31bb-42b8-8f87-967c9ac0c7cc}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{20713067-720d-4dde-80ee-1f1b80fced8e}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{9c309277-724c-4490-affe-2c57633dcc0c}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
@@ -26,6 +46,15 @@
     </ClCompile>
     <ClCompile Include="..\src\WatchdogsPlugin.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,5 +72,10 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Watchdogs\WatchdogStatusesDescriptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\PluginLibraryDefinition.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

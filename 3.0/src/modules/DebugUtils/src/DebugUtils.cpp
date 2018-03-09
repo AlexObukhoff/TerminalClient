@@ -5,6 +5,7 @@
 #include <DebugUtils/DebugUtils.h>
 
 #ifdef Q_OS_WIN
+#define NOMINMAX // HACK for QDateTime Qt 5.0.0
 #include <windows.h>
 #include "QStackWalker.h"
 #endif

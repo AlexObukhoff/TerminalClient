@@ -6,15 +6,15 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QWidget>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 #include <QtGui/QImage>
-#include <QtGui/QFileDialog>
 #include <QtGui/QClipboard>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QFileDialog>
 #include <QtCore/QDebug>
 #include <Common/QtHeadersEnd.h>
 

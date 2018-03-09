@@ -59,6 +59,9 @@
     <Filter Include="POS\EjectorPOS">
       <UniqueIdentifier>{7521f91b-6a8a-47d8-aa9f-8afa3060f6a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="POS\CitizenPPU231">
+      <UniqueIdentifier>{89d81058-9366-4d23-b311-81ee1467f351}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Base">
       <UniqueIdentifier>{0e672ad4-6b61-4fbc-9f89-926d2c796f84}</UniqueIdentifier>
     </Filter>
@@ -77,21 +80,6 @@
     </Filter>
     <Filter Include="Base\Port\Serial">
       <UniqueIdentifier>{2e544532-b61b-487d-b9fc-32ed72e0d186}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="POS\Citizen">
-      <UniqueIdentifier>{897999e0-df6b-484a-af86-d2e4602c8f63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="POS\Custom">
-      <UniqueIdentifier>{fbd1be4c-7695-457d-b1e5-64726883dbc3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="POS\Citizen\CitizenPPU231">
-      <UniqueIdentifier>{89d81058-9366-4d23-b311-81ee1467f351}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="POS\Citizen\CitizenPPU700">
-      <UniqueIdentifier>{34e3caa9-3f99-47e9-8bcf-904b7e1eb947}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="POS\Custom\CustomVKP">
-      <UniqueIdentifier>{6de47b8e-fda3-4c91-a9f8-6dbb5d95e887}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +110,9 @@
     <ClCompile Include="..\src\POSPrinters\Common\POSPrinter.cpp">
       <Filter>POS\Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\EjectorPOS\Common\EjectorPOS.cpp">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Star\EjectorStarPrinters.cpp">
       <Filter>STAR\Ejector</Filter>
     </ClCompile>
@@ -131,8 +122,20 @@
     <ClCompile Include="..\src\POSPrinters\Common\POSParameters.cpp">
       <Filter>POS\Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\CitizenPPU231\CitizenPPU231.cpp">
+      <Filter>POS\CitizenPPU231</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\EjectorPOS\CitizenPPU700.cpp">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\EjectorPOS\CustomVKP80III.cpp">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Base\PrinterBase.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\CustomPrinters.cpp">
+      <Filter>POS</Filter>
     </ClCompile>
     <ClCompile Include="..\src\POSPrinters\Epson\EpsonEUT400.cpp">
       <Filter>POS\Epson</Filter>
@@ -140,23 +143,8 @@
     <ClCompile Include="..\src\Base\Port\PortPrinterBase.cpp">
       <Filter>Base\Port</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\POSPrinters\EjectorPOS\EjectorPOS.cpp">
+    <ClCompile Include="..\src\POSPrinters\EjectorPOS\CustomVKP80.cpp">
       <Filter>POS\EjectorPOS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\POSPrinters\Citizen\CitizenPPU231\CitizenPPU231.cpp">
-      <Filter>POS\Citizen\CitizenPPU231</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\POSPrinters\Citizen\CitizenPPU700\CitizenPPU700.cpp">
-      <Filter>POS\Citizen\CitizenPPU700</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\POSPrinters\Custom\CustomVKP\CustomVKP80.cpp">
-      <Filter>POS\Custom\CustomVKP</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\POSPrinters\Custom\CustomVKP\CustomVKP80III.cpp">
-      <Filter>POS\Custom\CustomVKP</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\POSPrinters\Custom\CustomPrinters.cpp">
-      <Filter>POS\Custom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +177,27 @@
     </ClInclude>
     <ClInclude Include="..\src\POSPrinters\Common\POSParameters.h">
       <Filter>POS\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\EjectorPOS\CustomVKP80.h">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\EjectorPOS\CitizenPPU700.h">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\EjectorPOS\Common\EjectorPOS.h">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CustomPrinters.h">
+      <Filter>POS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenCTS2000.h">
+      <Filter>POS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenCPP8001.h">
+      <Filter>POS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenCBM1000II.h">
+      <Filter>POS</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\Printers\POSPrinterData.h">
       <Filter>POS\Common</Filter>
@@ -226,6 +235,18 @@
     <ClInclude Include="..\src\SystemPrinter\SystemPrinters.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenPPU231\CitizenPPU231.h">
+      <Filter>POS\CitizenPPU231</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenPPU231\CitizenPPU231Constants.h">
+      <Filter>POS\CitizenPPU231</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\EjectorPOS\CustomVKP80III.h">
+      <Filter>POS\EjectorPOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CitizenCTS310II.h">
+      <Filter>POS</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Base\PrinterBase.h">
       <Filter>Base</Filter>
     </ClInclude>
@@ -250,50 +271,11 @@
     <ClInclude Include="..\src\POSPrinters\Epson\EpsonConstants.h">
       <Filter>POS\Epson</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\CustomTG2480H.h">
+      <Filter>POS</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Base\Port\PortPrinterBase.h">
       <Filter>Base\Port</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\EjectorPOS\EjectorPOS.h">
-      <Filter>POS\EjectorPOS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenPPU231\CitizenPPU231.h">
-      <Filter>POS\Citizen\CitizenPPU231</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenPPU231\CitizenPPU231Constants.h">
-      <Filter>POS\Citizen\CitizenPPU231</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenPPU700\CitizenPPU700.h">
-      <Filter>POS\Citizen\CitizenPPU700</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Custom\CustomVKP\CustomVKP80.h">
-      <Filter>POS\Custom\CustomVKP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Custom\CustomVKP\CustomVKP80III.h">
-      <Filter>POS\Custom\CustomVKP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Custom\CustomPrinters.h">
-      <Filter>POS\Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Custom\CustomTG2480H.h">
-      <Filter>POS\Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenBase.h">
-      <Filter>POS\Citizen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenCBM1000II.h">
-      <Filter>POS\Citizen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenCPP8001.h">
-      <Filter>POS\Citizen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenCTS310II.h">
-      <Filter>POS\Citizen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenCTS2000.h">
-      <Filter>POS\Citizen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\POSPrinters\Custom\CustomKZTCodec.h">
-      <Filter>POS\Custom</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,12 +1,12 @@
-/* @file Менеджер для работы со звуком. */
+﻿/* @file Менеджер для работы со звуком. */
 
 #pragma once
 
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QSharedPointer>
-#include <Phonon/MediaSource>
-#include <Phonon/MediaObject>
+#include <QtMultimedia/QMediaPlayer>
+#include <QtMultimedia/QMediaPlaylist>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
@@ -69,12 +69,12 @@ public:
 
 private slots:
 	/// Изменение состояния проигрывателя музыки
-	void stateChanged(Phonon::State aNewstate, Phonon::State);
+	void stateChanged(QMediaPlayer::State aState);
 
 private:
 	IApplication * mApplication;
 	QString mInterfacePath;
-	QSharedPointer<Phonon::MediaObject> mMusic;
+	QSharedPointer<QMediaPlayer> mPlayer;
 };
 
 //---------------------------------------------------------------------------

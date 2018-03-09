@@ -21,15 +21,6 @@ class PortFRBase : public FRBase<T>
 public:
 	PortFRBase();
 
-	/// Печать фискального чека.
-	virtual bool printFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
-
-	/// Выполнить Z-отчет [и распечатать отложенные Z-отчеты].
-	virtual bool printZReport(bool aPrintDeferredReports);
-
-	/// Выполнить X-отчет [и распечатать нефискальный чек - баланс].
-	virtual bool printXReport(const QStringList & aReceipt);
-
 protected:
 	/// Идентификация.	
 	virtual bool checkExistence();

@@ -1,6 +1,6 @@
 ﻿/* @file Экран ввода реквизитов платежа. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
@@ -50,7 +50,7 @@ Widgets.SceneBase2 {
 				easing.overshoot: 1
 			}
 
-			onCompleted: {
+			onRunningChanged: if(!running) {
 				showing = !showing;
 
 				// После завершения первой итерации меняем редактор и показываем его
@@ -155,7 +155,12 @@ Widgets.SceneBase2 {
 		global.provider = Core.payment.getProvider(aParameters.id);
 		global.printerIsReady = aParameters.printerIsReady;
 
-		Editor.setup(editArea, global.provider.fields, aParameters.fields);
+		//TODO: Cyberpay
+		//Editor.setup(editArea, aParameters.hasOwnProperty("cyberpay") ? Core.payment.getProvider(aParameters.templateId).fields : global.provider.fields, aParameters.fields);
+
+		GUI.log(editArea, global.provider.fields, aParameters.fields);
+
+		Editor.setup(global.provider.fields, aParameters.fields);
 		changeEditorAnimation.leftToRight = true;
 		changeEditorAnimation.showing = true;
 		changeEditorAnimation.nextIndex = Editor.getNextField(true);
@@ -164,7 +169,7 @@ Widgets.SceneBase2 {
 	}
 
 	function notifyHandler(aEvent, aParameters) {
-		if (aEvent === "append_fields") {
+		if (aEvent === "update_fields") {
 			Editor.save();
 			global.rightButtonDisabled = false;
 			changeEditorAnimation.leftToRight = aParameters.forward;
@@ -178,13 +183,8 @@ Widgets.SceneBase2 {
 				global.lastIndex = next - 1;
 			}
 		}
-		else if (aEvent === "update_fields") {
-			Editor.updateFields(aParameters.fields)
-		}
-		else if (aEvent === "reset_fields") {
-			Editor.updateFields(aParameters.fields, true)
-		}
-		else if (aEvent === Scenario.Payment.Event.HIDUpdated) {
+
+		if (aEvent === Scenario.Payment.Event.HIDUpdated) {
 			var hidFields = {};
 
 			// Если данные только для одного поля, то обновим значение текущего редактора

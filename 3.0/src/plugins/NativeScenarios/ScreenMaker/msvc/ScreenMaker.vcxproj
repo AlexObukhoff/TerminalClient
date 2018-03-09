@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -16,22 +16,22 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>screen_maker_scenario</ProjectName>
-    <ProjectGuid>{1E957C35-C767-4943-816F-E644C6949332}</ProjectGuid>
+    <ProjectGuid>{FD6A54F7-0822-4C8A-BDB2-2DECD3E110E4}</ProjectGuid>
     <RootNamespace>UADispenser</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -60,8 +60,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);$(ProjectDir)\..\thirdparty\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(THIRDPARTY_DIR);$(THIRDPARTY_DIR)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;TESTPLUGIN_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);$(ProjectDir)\..\thirdparty\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(THIRDPARTY_DIR);$(THIRDPARTY_DIR)\boost;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;TESTPLUGIN_LIB;QT_CORE_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
@@ -71,7 +71,7 @@
       <DisableSpecificWarnings>4290</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QtNetwork4.lib;QtDeclarative4.lib;QtScript4.lib;Application.lib;Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;GUISDK.lib;ScenarioEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Application.lib;Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;GUISDK.lib;ScenarioEngine.lib;Qt5Core.lib;Qt5Widgets.lib;Qt5Gui.lib;Qt5Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -89,8 +89,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);$(ProjectDir)\..\thirdparty\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(THIRDPARTY_DIR);$(THIRDPARTY_DIR)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;TESTPLUGIN_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);$(ProjectDir)\..\thirdparty\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(THIRDPARTY_DIR);$(THIRDPARTY_DIR)\boost;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;TESTPLUGIN_LIB;QT_CORE_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
@@ -99,7 +99,7 @@
       <DisableSpecificWarnings>4290</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QtNetwork4.lib;QtDeclarative4.lib;QtScript4.lib;Application.lib;Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;GUISDK.lib;ScenarioEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Application.lib;Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;GUISDK.lib;ScenarioEngine.lib;Qt5Core.lib;Qt5Widgets.lib;Qt5Gui.lib;Qt5Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -116,8 +116,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);$(ProjectDir)\..\thirdparty\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(THIRDPARTY_DIR);$(THIRDPARTY_DIR)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_CORE_LIB;TESTPLUGIN_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);$(ProjectDir)\..\thirdparty\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(THIRDPARTY_DIR);$(THIRDPARTY_DIR)\boost;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;TESTPLUGIN_LIB;QT_CORE_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level4</WarningLevel>
@@ -125,7 +125,7 @@
       <DisableSpecificWarnings>4290</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCored4.lib;QtGuid4.lib;QtNetworkd4.lib;QtDeclaratived4.lib;QtScriptd4.lib;Applicationd.lib;Logd.lib;PluginSDKd.lib;NetworkTaskManagerd.lib;PaymentProcessorSDKd.lib;GUISDKd.lib;ScenarioEngined.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Applicationd.lib;Logd.lib;PluginSDKd.lib;NetworkTaskManagerd.lib;PaymentProcessorSDKd.lib;GUISDKd.lib;ScenarioEngined.lib;Qt5Cored.lib;Qt5Widgetsd.lib;Qt5Guid.lib;Qt5Networkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -146,11 +146,23 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PluginLibraryDefinition.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_MainScenario.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_PluginLibraryDefinition.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_MainScenario.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PluginLibraryDefinition.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -160,18 +172,32 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing MainScenario.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DTESTPLUGIN_LIB -DQT_NETWORK_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(THIRDPARTY_DIR)\." "-I$(THIRDPARTY_DIR)\boost"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DTESTPLUGIN_LIB -DQT_CORE_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(THIRDPARTY_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtNetwork"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing MainScenario.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DTESTPLUGIN_LIB -DQT_NETWORK_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(THIRDPARTY_DIR)\." "-I$(THIRDPARTY_DIR)\boost"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DTESTPLUGIN_LIB -DQT_CORE_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(THIRDPARTY_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtNetwork"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing MainScenario.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DTESTPLUGIN_LIB -DQT_NETWORK_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(THIRDPARTY_DIR)\." "-I$(THIRDPARTY_DIR)\boost"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DTESTPLUGIN_LIB -DQT_CORE_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(THIRDPARTY_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtNetwork"</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="..\src\PluginLibraryDefinition.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing PluginLibraryDefinition.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DTESTPLUGIN_LIB -DQT_CORE_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(THIRDPARTY_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtNetwork"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing PluginLibraryDefinition.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DTESTPLUGIN_LIB -DQT_CORE_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(THIRDPARTY_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtNetwork"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing PluginLibraryDefinition.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DTESTPLUGIN_LIB -DQT_CORE_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(THIRDPARTY_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtNetwork"</Command>
+    </CustomBuild>
     <ClInclude Include="..\src\ScenarioPlugin.h" />
   </ItemGroup>
   <ItemGroup>

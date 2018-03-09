@@ -232,9 +232,6 @@ bool ProtoShtrihFR<T>::performFiscal(const QStringList & aReceipt, const SPaymen
 
 	result = result && setOFDParameters() && closeDocument(getTotalAmount(aPaymentData), aPaymentData.payType);
 
-	waitForPrintingEnd(true);
-	//isFiscalDocumentOpened();
-
 	if (!result && aPaymentData.back && (mLastError == CShtrihFR::Errors::NotEnoughMoney))
 	{
 		emitStatusCode(FRStatusCode::Error::NoMoney, EFRStatus::NoMoneyForSellingBack);
@@ -587,21 +584,24 @@ bool ProtoShtrihFR<T>::closeDocument(double aSum, EPayTypes::Enum aPayType)
 {
 	QByteArray commandData;
 
-	for (int i = 1; i <= CShtrihFR::PayTypeQuantity; ++i)
+	for (int i = 1; i <= 4; ++i)
 	{
 		double sum = (i == mPayTypeData[aPayType].value) ? aSum : 0;
 		commandData.append(getHexReverted(sum, 5, 2));    // сумма
 	}
 
-	commandData.append(getHexReverted(0, 2, 2));          // скидка
-	commandData.append(CShtrihFR::ClosingFiscalTaxes);    // налоги
-	commandData.append(CShtrihFR::UnitName);              // текст продажи
+	commandData.append(getHexReverted(0, 2, 2));    // скидка
+	commandData.append(getHexReverted(0, 4));       // налоги
+	commandData.append(CShtrihFR::UnitName);        // текст продажи
 
 	if (!processCommand(CShtrihFR::Commands::CloseDocument, commandData))
 	{
 		toLog(LogLevel::Error, "ShtrihFR: Failed to close document, feed, cut and exit");
 		return false;
 	}
+
+	waitForPrintingEnd(true);
+	//isFiscalDocumentOpened();
 
 	return true;
 }

@@ -6,6 +6,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QStringList>
+#include <QtCore/QSharedPointer>
 #include <Common/QtHeadersEnd.h>
 
 // SDK

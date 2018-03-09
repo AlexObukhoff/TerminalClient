@@ -4,7 +4,6 @@
 
 #include "Hardware/FR/AtolCodec.h"
 #include "Hardware/FR/SparkCodec.h"
-#include "Hardware/Printers/CustomKZTCodec.h"
 
 //---------------------------------------------------------------------------
 #define APPEND_CODEC(aName, aCodec) append(CHardware::Codepages::aName, QTextCodec::codecForName(#aCodec))
@@ -16,7 +15,6 @@ public:
 	{
 		static AtolTextCodec atolCodec;
 		static SparkTextCodec sparkCodec;
-		static CustomKZTCodec customKZTCodec;
 		static CodecBase baseCodec;
 
 		APPEND_CODEC(CP850, IBM 850);
@@ -26,7 +24,6 @@ public:
 		APPEND_CODEC(Win1252, Windows-1252);
 		APPEND_CODEC(ATOL, ATOL);
 		APPEND_CODEC(SPARK, SPARK);
-		APPEND_CODEC(CustomKZT, CP866 (Kazakhstan));
 		APPEND_CODEC(Base, Base);
 	}
 };

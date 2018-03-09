@@ -5,8 +5,8 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtWebkit/QWebElement>
-#include <QtWebkit/QWebFrame>
-#include <QtWebkit/QWebPage>
+#include <QtWebKitWidgets/QWebFrame>
+#include <QtWebKitWidgets/QWebPage>
 #include <QtCore/QVariantMap>
 #include <QtCore/QString>
 #include <Common/QtHeadersEnd.h>

@@ -4,7 +4,7 @@ StaticLibrary {
 	name: "GUISDK"
 
 	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "gui"] }
+	Depends { name: "Qt"; submodules: ["core", "gui", "quick"] }
 
 	Depends { name: "Core" }
 

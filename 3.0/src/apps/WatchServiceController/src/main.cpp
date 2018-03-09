@@ -6,7 +6,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTranslator>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QSingleApplication/QtSingleApplication>
 #include <QBreakpadHandler.h>
 #include <Common/QtHeadersEnd.h>

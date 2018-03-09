@@ -4,7 +4,7 @@ CppApplication {
 	name: "composer"
 	consoleApplication: true
    
-	Depends { name: "Qt"; submodules: ["core", "xml", "network", "script", "widgets"] }
+	Depends { name: "Qt"; submodules: ["core", "xml", "network", "qml", "widgets"] }
 
 	Depends { name: "Core" }
 	Depends { name: "NetworkTaskManager" }

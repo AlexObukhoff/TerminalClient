@@ -8,7 +8,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QStringList>
 #include <QtCore/QSettings>
-#include <QtCore/QtConcurrentRun>
+#include <QtConcurrent/QtConcurrentRun>
 #include <Common/QtHeadersEnd.h>
 
 // Modules

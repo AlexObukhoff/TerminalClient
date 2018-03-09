@@ -33,11 +33,3 @@ bool FileDataStream::write(const QByteArray & aData)
 }
 
 //------------------------------------------------------------------------
-qint64 FileDataStream::size() const
-{
-	QFile * file = dynamic_cast<QFile *>(m_stream.data());
-
-	return file->size();
-}
-
-//------------------------------------------------------------------------

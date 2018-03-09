@@ -1,1 +1,1 @@
-#include "../../../modules/Hardware/Printers/src/POSPrinters/Custom/CustomVKP/CustomVKP80.h"
+#include "../../../modules/Hardware/Printers/src/POSPrinters/EjectorPOS/CustomVKP80.h"

@@ -7,6 +7,7 @@
 #include <Common/QtHeadersEnd.h>
 
 #ifdef Q_OS_WIN
+#define NOMINMAX
 #include <windows.h>
 typedef LPTOP_LEVEL_EXCEPTION_FILTER TExceptionHandler;
 #else

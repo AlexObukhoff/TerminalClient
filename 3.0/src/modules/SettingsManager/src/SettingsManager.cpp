@@ -1,4 +1,4 @@
-/* @file Интерфейс менеджера настроек. */
+﻿/* @file Интерфейс менеджера настроек. */
 
 // stl
 #include <vector>
@@ -16,8 +16,8 @@
 #include <QtCore/QSettings>
 #include <QtCore/QDateTime>
 #include <QtCore/QElapsedTimer>
-#include <QtXml/QXmlStreamReader>
-#include <QtXml/QXmlStreamWriter>
+#include <QtCore/QXmlStreamReader>
+#include <QtCore/QXmlStreamWriter>
 #include <Common/QtHeadersEnd.h>
 
 // Project

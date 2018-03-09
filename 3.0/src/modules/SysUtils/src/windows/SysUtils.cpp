@@ -1,6 +1,7 @@
-/* @file Реализация интерфейса SysUtils. */
+﻿/* @file Реализация интерфейса SysUtils. */
 
 // windows
+#define NOMINMAX // HACK for QDateTime Qt 5.1.0
 #include <windows.h>
 #include <psapi.h>
 #include <TlHelp32.h>
@@ -230,23 +231,23 @@ bool ISysUtils::getProcessMemoryUsage(MemoryInfo & aMemoryInfo, const QProcess *
 //---------------------------------------------------------------------------------
 bool ISysUtils::bringWindowToFront(WId aWindow)
 {
-	if (!::IsWindow(aWindow))
+	if (!::IsWindow((HWND)aWindow))
 	{
 		return false;
 	}
 
-	DWORD dwThreadID = GetWindowThreadProcessId(aWindow, NULL);
+	DWORD dwThreadID = GetWindowThreadProcessId((HWND)aWindow, NULL);
 	if (dwThreadID)
 	{
 		AttachThreadInput(dwThreadID, GetCurrentThreadId(), true);
 	}
 
 	// Прописываем окну флаг HWND_TOPMOST
-	SetWindowPos(aWindow, HWND_TOPMOST, NULL, NULL, NULL, NULL, SWP_NOMOVE | SWP_NOSIZE);
+	SetWindowPos((HWND)aWindow, HWND_TOPMOST, NULL, NULL, NULL, NULL, SWP_NOMOVE | SWP_NOSIZE);
 
-	SetForegroundWindow(aWindow);
-	SetActiveWindow(aWindow);
-	SetFocus(aWindow);
+	SetForegroundWindow((HWND)aWindow);
+	SetActiveWindow((HWND)aWindow);
+	SetFocus((HWND)aWindow);
 
 	if (dwThreadID)
 	{
@@ -265,7 +266,7 @@ bool ISysUtils::bringWindowToFront(const QString & aWindowTitle)
 	HWND hwnd = ::FindWindowW(NULL, array);
 	delete[] array;
 
-	return bringWindowToFront(hwnd);
+	return bringWindowToFront((WId)hwnd);
 }
 
 //---------------------------------------------------------------------------------

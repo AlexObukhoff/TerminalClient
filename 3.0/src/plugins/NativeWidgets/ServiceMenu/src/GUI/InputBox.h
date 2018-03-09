@@ -8,7 +8,7 @@
 // Qt
 #include "Common/QtHeadersBegin.h"
 #include <QtCore/QTimer>
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include "ui_InputBox.h"
 #include "Common/QtHeadersEnd.h"
 

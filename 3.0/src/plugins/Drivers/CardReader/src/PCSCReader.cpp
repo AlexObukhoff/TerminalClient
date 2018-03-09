@@ -1,4 +1,4 @@
-/* @file Реализация интерфейса работы с PC/SC API. */
+﻿/* @file Реализация интерфейса работы с PC/SC API. */
 
 // Modules
 #include "Hardware/Protocols/Common/ProtocolUtils.h"
@@ -57,7 +57,7 @@ QStringList PCSCReader::getReaderList()
 
 	while ('\0' != *pReader)
 	{
-		readers << QString::fromUtf16(pReader);
+		readers << QString::fromWCharArray(pReader);
 		// Advance to the next value.
 		pReader = pReader + wcslen(pReader) + 1;
 	}
@@ -89,7 +89,7 @@ bool PCSCReader::handleResult(const QString & aFunctionName, HRESULT aResultCode
 
 	if (hlocal != NULL)
 	{
-		log = QString::fromUtf16((const wchar_t *)LocalLock(hlocal));
+		log = QString::fromWCharArray((const wchar_t *)LocalLock(hlocal));
 		LocalFree(hlocal);
 	}
 
@@ -115,7 +115,8 @@ TStatusCodes PCSCReader::getStatusCodes()
 //--------------------------------------------------------------------------------
 bool PCSCReader::connect(const QString & aReaderName)
 {
-	if (!CHECK_SCARD_ERROR(SCardConnect, mContext, aReaderName.utf16(), SCARD_SHARE_SHARED, SCARD_PROTOCOL_Tx, &mCard, (LPDWORD)&mActiveProtocol))
+	// TOSO PORT_QT5 (const wchar_t *)aReaderName.utf16()???
+	if (!CHECK_SCARD_ERROR(SCardConnect, mContext, (const wchar_t *)aReaderName.utf16(), SCARD_SHARE_SHARED, SCARD_PROTOCOL_Tx, &mCard, (LPDWORD)&mActiveProtocol))
 	{
 		return false;
 	}

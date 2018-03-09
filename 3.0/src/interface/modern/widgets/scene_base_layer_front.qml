@@ -56,5 +56,29 @@ Rectangle {
 						pace: 100
 				}
 		}
+
+		Image {
+			anchors.centerIn: parent
+			source: "../skins/default/images/bonus/1.png"
+			visible: false
+
+			Timer {
+				id: showTime
+				interval: (Math.floor(Math.random() * 10) + 1) * 60 * 1000;
+				repeat: true
+				running: true
+
+				onIntervalChanged: Core.log.normal(interval)
+
+				onTriggered: { parent.visible = true; hideTime.start(); }
+			}
+
+			Timer {
+				id: hideTime
+				interval: 100
+
+				onTriggered: { parent.visible = false;  showTime.interval = (Math.floor(Math.random() * 10) + 1) * 60 * 1000; }
+			}
+		}
 }
 

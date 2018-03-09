@@ -5,7 +5,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QSignalMapper>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include "ui_WizardFrame.h"
 #include <Common/QtHeadersEnd.h>
 

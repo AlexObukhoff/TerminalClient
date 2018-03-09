@@ -247,7 +247,7 @@ function fillEnterHandler(aParameters) {
 
 		GUI.hide();
 		GUI.show("EditPaymentScene", {reset: false});
-		GUI.notify("append_fields", {forward: forward});
+		GUI.notify("update_fields", {forward: forward});
 	}
 	else {
 		printerIsReady = Core.printer.checkPrinter(false);

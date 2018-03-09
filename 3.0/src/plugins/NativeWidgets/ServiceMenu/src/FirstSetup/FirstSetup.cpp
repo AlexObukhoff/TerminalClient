@@ -2,7 +2,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QGraphicsScene>
+#include <QtWidgets/QGraphicsScene>
 #include <Common/QtHeadersEnd.h>
 
 // Plugin SDK
@@ -149,9 +149,11 @@ void FirstSetup::reset(const QVariantMap & /*aParameters*/)
 }
 
 //---------------------------------------------------------------------------
-QGraphicsItem * FirstSetup::getWidget() const
+QQuickItem * FirstSetup::getWidget() const
 {
-	return mMainWidget;
+	//return mMainWidget;
+	//FIXME
+	return nullptr;
 }
 
 //---------------------------------------------------------------------------

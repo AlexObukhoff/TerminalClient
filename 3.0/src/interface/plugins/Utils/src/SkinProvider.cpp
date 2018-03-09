@@ -2,9 +2,11 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtDeclarative/QtDeclarative>
+#include <QtQuick/QQuickImageProvider>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
+#include <QtGui/QPainter>
+#include <QtGui/QTextLayout>
 #include <Common/QtHeadersEnd.h>
 
 // Проект
@@ -14,7 +16,7 @@
 
 //------------------------------------------------------------------------------
 SkinProvider::SkinProvider(const QString & aInterfacePath, const QString & aContentPath, const QString & aUserPath, const Skin * aSkin) :
-	QDeclarativeImageProvider(QDeclarativeImageProvider::Image),
+	QQuickImageProvider(QQmlImageProviderBase::Image),
 	mLogoPath(aContentPath + "/logo"),
 	mUserLogoPath(aUserPath + "/logo"),
 	mInterfacePath(aInterfacePath)

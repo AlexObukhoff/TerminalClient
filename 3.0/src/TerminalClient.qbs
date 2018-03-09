@@ -50,7 +50,7 @@ Project {
 				product.sourceDirectory + "/includes"
 			]
 			cpp.defines: {
-				var defList = ["_UNICODE", "UNICODE"];
+				var defList = ["_UNICODE", "UNICODE", "_ATL_XP_TARGETING", "PSAPI_VERSION=1"];
 			
 				if (product.TC_USE_TOKEN > 0) defList.push("TC_USE_TOKEN");
 				if (product.TC_USE_MD5 > 0) defList.push("TC_USE_MD5");
@@ -74,7 +74,7 @@ Project {
 			}
 
 			Properties {
-				condition: product.TC_DEBUG_BUILD || product.TC_BRANCH == "release"
+				condition: product.TC_DEBUG_BUILD || (product.TC_BRANCH == "release")
 				cpp.debugInformation: true
 				cpp.separateDebugInformation: true
 		   }			

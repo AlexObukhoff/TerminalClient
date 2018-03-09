@@ -464,10 +464,6 @@ SCommonSettings TerminalSettings::getCommonSettings() const
 	settings.printFailedReceipts = mProperties.get("config.hardware.printer_settings.print_failed_receipts", settings.printFailedReceipts);
 	settings.randomReceiptsID = mProperties.get("config.hardware.printer_settings.random_receipts_id", settings.randomReceiptsID);
 
-	QString defaultZReportTime = (!settings.autoZReportTime.isNull() && settings.autoZReportTime.isValid()) ?
-		settings.autoZReportTime.toString("hh:mm") : "";
-	settings.autoZReportTime = QTime::fromString(mProperties.get("config.hardware.printer_settings.auto_z_report_time", defaultZReportTime), "hh:mm");
-
 	settings.timeZoneOffset = mProperties.get_optional<int>("config.terminal.timezone");
 
 	// Получаем минимальный разрешенный номинал.

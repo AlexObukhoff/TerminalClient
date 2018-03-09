@@ -2,7 +2,10 @@
 
 #pragma once
 
-#include "Hardware/Common/Specifications.h"
+#include "Common/QtHeadersBegin.h"
+#include <QtCore/QString>
+#include <QtCore/QByteArray>
+#include "Common/QtHeadersEnd.h"
 
 //--------------------------------------------------------------------------------
 namespace CPrinters
@@ -32,33 +35,6 @@ namespace CPrinters
 			Retract     /// Забрать в ретрактор.
 		};
 	}
-
-	/// Автозамена символов.
-	class CAutoCorrection: public CSpecification<QChar, QChar>
-	{
-	public:
-		CAutoCorrection::CAutoCorrection()
-		{
-			add("«", "\"");
-			add("»", "\"");
-			add("˝", "\"");
-			add("˵", "\"");
-			add("˶", "\"");
-			add("″", "\"");
-			add("“", "\"");
-			add("”", "\"");
-			add("і", "i");    // кириллическая буква, украинский и белорусский языки.
-			add("І", "I");    // кириллическая буква, украинский и белорусский языки.
-		}
-
-	private:
-		void add(const char * aKey, const char * aValue)
-		{
-			mBuffer.insert(QString::fromUtf8(aKey)[0], QString::fromUtf8(aValue)[0]);
-		}
-	};
-
-	static CAutoCorrection AutoCorrection;
 }
 
 //--------------------------------------------------------------------------------

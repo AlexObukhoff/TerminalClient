@@ -1,4 +1,4 @@
-/* @file Асинхронная Windows-реализация COM-порта. */
+﻿/* @file Асинхронная Windows-реализация COM-порта. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -126,7 +126,7 @@ void AsyncSerialPort::setDeviceConfiguration(const QVariantMap & aConfiguration)
 		mType = EPortTypes::COMEmulator;
 	}
 
-	if (!mExist && !mSystemName.isEmpty())
+	if (!mExist)
 	{
 		checkExistence();
 	}
@@ -605,8 +605,8 @@ bool AsyncSerialPort::write(const QByteArray & aData)
 	{
 		DWORD singlePacketSize = DWORD(mDCB.ByteSize + int(mDCB.fParity && (mDCB.Parity != NOPARITY)) + qCeil(double(mDCB.StopBits) / 2 + 1));
 		DWORD requiredTime = qCeil((aData.size() * singlePacketSize * 8 * 1000) / mDCB.BaudRate);
-		DWORD expectedTimeout = max(IIOPort::DefaultWriteTimeout, DWORD(requiredTime * CAsyncSerialPort::KSafety));
-		result = ::WaitForSingleObject(mWriteOverlapped.hEvent, max(IIOPort::DefaultWriteTimeout, expectedTimeout));
+		DWORD expectedTimeout = qMax(DWORD(IIOPort::DefaultWriteTimeout), DWORD(requiredTime * CAsyncSerialPort::KSafety));
+		result = ::WaitForSingleObject(mWriteOverlapped.hEvent, qMax(DWORD(IIOPort::DefaultWriteTimeout), expectedTimeout));
 
 		switch(result)
 		{

@@ -5,7 +5,7 @@ Project {
 		name: "HardwarePrinters"
 
 		Depends { name: 'cpp' }
-		Depends { name: "Qt"; submodules: ["core"] }
+		Depends { name: "Qt"; submodules: ["core", "printsupport"] }
 
 		Depends { name: "Core" }
 

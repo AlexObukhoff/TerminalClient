@@ -23,7 +23,8 @@ namespace Plugin {
 class PluginFactory : public QObject, public IPluginFactory, public IEnvironment
 {
 	Q_OBJECT
-	Q_INTERFACES(SDK::Plugin::IPluginFactory)
+//	Q_PLUGIN_METADATA(IID "Cyberplat.*.System.PluginFactory")
+	//Q_INTERFACES(SDK::Plugin::IPluginFactory)
 
 public:
 	PluginFactory();

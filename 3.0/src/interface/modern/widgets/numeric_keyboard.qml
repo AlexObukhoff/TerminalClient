@@ -1,6 +1,6 @@
 ﻿/* @file Цифровая клавиатура. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "../controls" 1.0 as Controls
 
 Controls.KeyboardBase {

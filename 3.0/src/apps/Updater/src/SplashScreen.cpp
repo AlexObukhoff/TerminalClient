@@ -11,7 +11,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTimer>
 #include <QtCore/QDir>
-#include <QtGui/QHBoxLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtGui/QMovie>
 #include <Common/QtHeadersEnd.h>
 

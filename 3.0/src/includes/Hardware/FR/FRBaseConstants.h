@@ -99,19 +99,6 @@ namespace CFR
 	/// Количество миллисекунд в сутках.
 	const int MSecsInDay = SecsInDay * 1000;
 
-	/// Способ оплаты по умолчанию для платежей (не интернет-магазинов).
-	const SDK::Driver::EPayOffSubjectMethodTypes::Enum PayOffSubjectMethodType = SDK::Driver::EPayOffSubjectMethodTypes::Full;
-
-	/// Размеры ИНН.
-	namespace INNSize
-	{
-		/// Для юридического лица.
-		const int LegalPerson = 10;
-
-		/// Для физического лица.
-		const int NaturalPerson = 12;
-	}
-
 	/// Константные данные ФФД.
 	struct SFFDData
 	{
@@ -156,12 +143,6 @@ namespace CFR
 
 	/// Таймаут соединения с ОФД, [с].
 	const int OFDConnectionTimeout = 3 * 60;
-
-	/// Смержить данные (СНО, флаги агента).
-	inline char joinData(const QList<char> & aData)
-	{
-		return std::accumulate(aData.begin(), aData.end(), ASCII::NUL, [] (char aResult, char aLocalData) -> char { return aResult | aLocalData; });
-	}
 
 	/// Преобразование байт-массива данных в формат ФФД
 	inline QString dataToString(const QByteArray & aData, int aBase, int aSize)
@@ -281,51 +262,13 @@ namespace CFR
 	};
 
 	//--------------------------------------------------------------------------------
-	/// Признак способа расчета (1214).
-	class CPayOffSubjectMethodTypes : public CDescription<char>
+	/// Типы систем налогообложения
+	class CTaxations : public CBitmapDescription<char>
 	{
 	public:
-		CPayOffSubjectMethodTypes()
+		CTaxations()
 		{
-			using namespace SDK::Driver::EPayOffSubjectMethodTypes;
-
-			append(Prepayment100,  "ПРЕДОПЛАТА 100%");
-			append(Prepayment,     "ПРЕДОПЛАТА");
-			append(PostPayment,    "АВАНС");
-			append(Full,           "ПОЛНЫЙ РАСЧЕТ");
-			append(Part,           "ЧАСТИЧНЫЙ РАСЧЕТ И КРЕДИТ");
-			append(CreditTransfer, "ПЕРЕДАЧА В КРЕДИТ");
-			append(CreditPayment,  "ОПЛАТА КРЕДИТА");
-		}
-	};
-
-	static CPayOffSubjectMethodTypes PayOffSubjectMethodTypes;
-
-	//--------------------------------------------------------------------------------
-	/// Признак предмета расчета (1212).
-	class CPayOffSubjectTypes : public CDescription<char>
-	{
-	public:
-		CPayOffSubjectTypes()
-		{
-			using namespace SDK::Driver::EPayOffSubjectTypes;
-
-			append(Unit,     "ТОВАР");
-			append(Payment,  "ПЛАТЕЖ");
-			append(AgentFee, "АГЕНТСКОЕ ВОЗНАГРАЖДЕНИЕ");
-		}
-	};
-
-	static CPayOffSubjectTypes PayOffSubjectTypes;
-
-	//--------------------------------------------------------------------------------
-	/// Типы систем налогообложения (1062, 1055)
-	class CTaxSystems : public CBitmapDescription<char>
-	{
-	public:
-		CTaxSystems()
-		{
-			using namespace SDK::Driver::ETaxSystems;
+			using namespace SDK::Driver::ETaxations;
 
 			append(Main,                         "ОСН");
 			append(SimplifiedIncome,             "УСН доход");
@@ -336,10 +279,10 @@ namespace CFR
 		}
 	};
 
-	static CTaxSystems TaxSystems;
+	static CTaxations Taxations;
 
 	//--------------------------------------------------------------------------------
-	/// Признаки платежного агента (1057, 1222).
+	/// Признаки платежного агента.
 	class CAgentFlags : public CBitmapDescription<char>
 	{
 	public:
@@ -377,7 +320,7 @@ namespace CFR
 	static CFSFlagData FSFlagData;
 
 	//--------------------------------------------------------------------------------
-	/// Признаки расчета (1054).
+	/// Признаки расчета.
 	class CPayOffTypes : public CDescription<SDK::Driver::EPayOffTypes::Enum>
 	{
 	public:
@@ -395,28 +338,8 @@ namespace CFR
 	static CPayOffTypes PayOffTypes;
 
 	//--------------------------------------------------------------------------------
-	/// Ставка НДС (1199).
-	class CVATRates: public CDescription<char>
-	{
-	public:
-		CVATRates::CVATRates()
-		{
-			append(1, "НДС 18%");
-			append(2, "НДС 10%");
-			append(3, "НДС 18/118");
-			append(4, "НДС 10/110");
-			append(5, "НДС 0%");
-			append(6, "");
-		}
-	};
-
-	static CVATRates VATRates;
-
-	//--------------------------------------------------------------------------------
-	const QString FDName            = QString::fromUtf8("КАССОВЫЙ ЧЕК");                /// ПФ тега 1000 (Наименование фискального документа).
-	const QString LotteryMode       = QString::fromUtf8("ПРОВЕДЕНИЕ ЛОТЕРЕИ");          /// ПФ тега 1126 (Признак проведения лотереи).
-	const QString GamblingMode      = QString::fromUtf8("ПРОВЕДЕНИЕ АЗАРТНОЙ ИГРЫ");    /// ПФ тега 1193 (Признак проведения азартных игр).
-	const QString ExcisableUnitMode = QString::fromUtf8("ПОДАКЦИЗНЫЕ ТОВАРЫ");          /// ПФ тега 1207 (Признак торговли подакцизными товарами).
+	/// Наименование фискального чека.
+	const QString CashFDName = QString::fromUtf8("КАССОВЫЙ ЧЕК");
 
 	//--------------------------------------------------------------------------------
 	/// Режимы работы.

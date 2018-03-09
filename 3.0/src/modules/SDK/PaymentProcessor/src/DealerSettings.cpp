@@ -14,15 +14,13 @@
 #include <QtCore/QStringList>
 #include <QtCore/QStack>
 #include <QtCore/QElapsedTimer>
-#include <QtXml/QXmlStreamReader>
+#include <QtCore/QXmlStreamReader>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
 #include <Common/ILog.h>
 
 // Project
-#include "Range.h"
-#include "Commissions.h"
 #include "DealerSettings.h"
 
 namespace SDK {

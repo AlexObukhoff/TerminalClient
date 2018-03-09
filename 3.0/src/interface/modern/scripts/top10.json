@@ -1,6 +1,6 @@
 {
 	"name": "main_menu_scene",
-	spacing: 0,
+	"spacing": "0",
 	"items": [
 	{  path: "spacer.qml", parameters: { height: 26 } },
 	{

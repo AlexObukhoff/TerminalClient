@@ -4,10 +4,9 @@ StaticLibrary {
 	name: "PPSDK"
 
 	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "widgets"] }
+	Depends { name: "Qt"; submodules: ["core", "widgets", "qml"] }
 
 	Depends { name: "Core" }
-	Depends { name: "qt5port" }
 	Depends { name: "boost" }
 
 	files: [

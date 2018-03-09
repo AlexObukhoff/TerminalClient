@@ -1,5 +1,5 @@
 rem Setting Qt variables to use QLinguist commands
-call %QTDIR%\bin\qtvars.bat
+rem call %QTDIR%\bin\qtenv2.bat
 
 lupdate ..\src -ts "%~3\paymentprocessor_ru.ts"
 lrelease "%~3\paymentprocessor_ru.ts" -qm "%~1\%~2_ru.qm"

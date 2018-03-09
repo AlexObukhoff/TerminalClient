@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -23,15 +23,15 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -60,8 +60,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;TESTPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);$(QTDIR)\include\ActiveQt;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;TESTPLUGIN_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level4</WarningLevel>
@@ -70,7 +70,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;QAxContainer.lib;QtGui4.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Core.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Widgets.lib;Qt5Gui.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/ACR120U/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -87,8 +87,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;TESTPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);$(QTDIR)\include\ActiveQt;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;TESTPLUGIN_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level4</WarningLevel>
@@ -96,7 +96,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;QAxContainer.lib;QtGui4.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Core.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Widgets.lib;Qt5Gui.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/ACR120U/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -112,8 +112,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_CORE_LIB;TESTPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);$(QTDIR)\include\ActiveQt;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_CORE_LIB;TESTPLUGIN_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level4</WarningLevel>
@@ -121,7 +121,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCored4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;Scannersd.lib;OPOSSDKd.lib;QAxContainerd.lib;QtGuid4.lib;ACR120U.lib;IOPortsd.lib;Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Cored.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;Scannersd.lib;OPOSSDKd.lib;ACR120U.lib;IOPortsd.lib;Setupapi.lib;Qt5AxContainerd.lib;Qt5AxBased.lib;Qt5Widgetsd.lib;Qt5Guid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/ACR120U/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -135,11 +135,39 @@
   <ItemGroup>
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp" />
     <ClCompile Include="..\src\ScannerPlugin.cpp" />
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PluginLibraryDefinition.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_PluginLibraryDefinition.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PluginLibraryDefinition.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\locale\scanners_en.ts" />
     <None Include="..\src\locale\scanners_kk.ts" />
     <None Include="..\src\locale\scanners_ru.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\PluginLibraryDefinition.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing PluginLibraryDefinition.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DTESTPLUGIN_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(TC_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing PluginLibraryDefinition.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DTESTPLUGIN_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(TC_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing PluginLibraryDefinition.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DTESTPLUGIN_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I." "-I$(TC_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui"</Command>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

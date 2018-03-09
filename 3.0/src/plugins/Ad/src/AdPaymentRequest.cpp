@@ -1,4 +1,4 @@
-/* @file Реализация платёжного запроса к серверу. */
+﻿/* @file Реализация платёжного запроса к серверу. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -133,7 +133,7 @@ QString AdPaymentRequest::toLogString() const
 	QStringList result;
 
 	// Значения зашифрованных полей мы должны скрывать.
-	for (QVariantMap::iterator it = getParameters().begin(); it != getParameters().end(); ++it)
+	for (QVariantMap::const_iterator it = getParameters().begin(); it != getParameters().end(); ++it)
 	{
 		result << QString("%1 = \"%2\"").arg(it.key()).arg(mCryptedFields.contains(it.key()) ? "**CRYPTED**" : it.value().toString());
 	}

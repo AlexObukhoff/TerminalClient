@@ -1,12 +1,13 @@
-/* @file Класс, реализующий приложение для системы обновления. */
+﻿/* @file Класс, реализующий приложение для системы обновления. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QMovie>
 #include <QtCore/QProcess>
 #include <QtCore/QDateTime>
 #include <QtCore/QTimer>
+#include <QtCore/QDir>
 #include <QSingleApplication/qtlocalpeer.h>
 #include <Common/QtHeadersEnd.h>
 
@@ -605,26 +606,37 @@ bool UpdaterApp::CopyToTempPath()
 		<< updaterFileInfo.absoluteDir().entryList(QStringList() << updaterFileInfo.baseName() + "*.qm")
 		<< updaterFileInfo.absoluteDir().entryList(QStringList() << updaterFileInfo.baseName() + ".*") // for pdb
 		<< "7za.exe"
-		<< "QtCore4.dll"
-		<< "QtGui4.dll"
-		<< "QtXml4.dll"
-		<< "QtNetwork4.dll"
+		<< "Qt5Core.dll"
+		<< "Qt5Gui.dll"
+		<< "Qt5Widgets.dll"
+		<< "Qt5Xml.dll"
+		<< "Qt5Network.dll"
 		<< "ssleay32.dll"
-		<< "libeay32.dll";
+		<< "libeay32.dll"
+		<< "icudt51.dll"
+		<< "icuin51.dll"
+		<< "icuuc51.dll"
+		<< "libEGL.dll"
+		<< "libGLESv2.dll";	
 
 	foreach (auto file, QDir(QCoreApplication::applicationDirPath()).entryInfoList(needFiles, QDir::Files))
 	{
-		QString dstFileName = tempDirPath + QDir::separator() + file.fileName();
-		getLog()->write(LogLevel::Normal, QString("Copy: '%1'.").arg(file.fileName()));
-		if (!QFile::copy(file.filePath(), dstFileName))
+		QString fileName = QFileInfo(file).fileName();
+		QString dstFileName = tempDirPath + QDir::separator() + fileName;
+		getLog()->write(LogLevel::Normal, QString("Copy: '%1'.").arg(fileName));
+		
+		if (!QFile::copy(QCoreApplication::applicationDirPath() + QDir::separator() + fileName, dstFileName))
 		{
 			getLog()->write(LogLevel::Fatal, QString("Error copy from '%1' to '%2'.").arg(file.fileName()).arg(dstFileName));
 			return false;
 		}
 	}
 
+	QDir(tempDirPath).mkdir("platforms");
 	QDir(tempDirPath).mkdir("imageformats");
-	return copyFiles(QCoreApplication::applicationDirPath() + "/imageformats", "*.dll", tempDirPath + "/imageformats");
+
+	return copyFiles(updaterFileInfo.path() + "/platforms", "*.dll", tempDirPath + "/platforms") && 
+		copyFiles(updaterFileInfo.path() + "/imageformats", "*.dll", tempDirPath + "/imageformats");
 }
 
 //---------------------------------------------------------------------------
@@ -647,11 +659,11 @@ bool UpdaterApp::copyFiles(const QString & from, const QString & mask, const QSt
 }
 
 //------------------------------------------------------------------------
-void UpdaterApp::qtMessageHandler(QtMsgType /*aType*/, const char * aMessage)
+void UpdaterApp::qtMessageHandler(QtMsgType aType, const QMessageLogContext & aContext, const QString & aMessage)
 {
 	static ILog * log = ILog::getInstance(CUpdater::Name);
 
-	log->write(LogLevel::Normal, "QtMessages: " + QString::fromLatin1(aMessage));
+	log->write(LogLevel::Normal, QString("QtMessages: %1").arg(aMessage));
 }
 
 //---------------------------------------------------------------------------

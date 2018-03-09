@@ -1,4 +1,4 @@
-/* @file Реализация платёжного запроса к серверу. */
+﻿/* @file Реализация платёжного запроса к серверу. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -57,7 +57,7 @@ PaymentRequest::PaymentRequest(Payment * aPayment, const QString & aName) :
 
 	if (!states.isEmpty())
 	{
-		addParameter("CRC", QString::fromLatin1(CCryptographicHash::hash(states.join(";").toLatin1(), CCryptographicHash::Sha256).toHex()));
+		addParameter("CRC", QString::fromLatin1(QCryptographicHash::hash(states.join(";").toLatin1(), QCryptographicHash::Sha256).toHex()));
 	}
 }
 

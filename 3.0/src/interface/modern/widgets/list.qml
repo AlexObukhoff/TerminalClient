@@ -1,6 +1,6 @@
 ﻿/* @file Список с прокруткой. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "../scripts/gui.js" 1.0 as GUI
 import "../scenario/constants.js" 1.0 as Scenario
 
@@ -29,8 +29,6 @@ Item {
 
 	// Выбрать значение
 	signal selected(string aValue)
-
-	property bool readonly: false
 
 	// Длина текста, вмещающаяся в стандартный элемент списка
 	property int __maxTextLength: 100
@@ -73,7 +71,6 @@ Item {
 				height: rootItem.__doubleHeightMode ? sourceSize.width * 2 : sourceSize.width
 				border { left: 18; top: 100; right: 100; bottom: 18 }
 				source: model.checked ? "image://ui/enum.check" : "image://ui/enum.normal"
-				opacity: rootItem.readonly && !model.checked  ? 0.5 : 1
 
 				Text {
 					id: textItem
@@ -91,7 +88,6 @@ Item {
 			}
 
 			MouseArea {
-				visible: !rootItem.readonly
 				anchors.fill: parent
 				onClicked: {
 					var index = view.indexAt(view.contentX + mouseX, view.contentY + mouseY);
@@ -213,7 +209,7 @@ Item {
 
 		// Скрывает/отображает скроллер
 		function adjustScroller() {
-			scroller.visible = (view.height < view.contentHeight) && !rootItem.readonly
+			scroller.visible = view.height < view.contentHeight;
 		}
 	}
 
@@ -263,6 +259,5 @@ Item {
 		view.currentIndex = -1;
 		rootItem.__doubleHeightMode = false;
 		rootItem.__halfFontHeightMode = false;
-		rootItem.readonly = false
 	}
 }

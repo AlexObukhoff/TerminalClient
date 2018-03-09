@@ -21,14 +21,13 @@ namespace CPrintConstants
 	const char * const DealerSupportPhone    = "DEALER_SUPPORT_PHONE";
 	const char * const DealerVAT             = "DEALER_NDS";
 	const char * const DealerAgentFlag       = "DEALER_AGENT_FLAG";
-	const char * const DealerTaxSystem       = "DEALER_SNO";
+	const char * const DealerTaxation        = "DEALER_SNO";
 	const char * const MtRegistrationAddress = "MT_REGISTRATION_ADDRESS";
 	const char * const PointAddress          = "POINT_ADDRESS";
 	const char * const PointName             = "POINT_NAME";
 	const char * const PointExternalID       = "POINT_EXTERNAL_ID";
 	const char * const OpBrand               = "OPERATOR_BRAND";
 	const char * const OpName                = "OPERATOR_NAME";
-	const char * const OpINN                 = "OPERATOR_INN";
 	const char * const RecipientInn          = "RECIPIENT_INN";
 	const char * const RecipientName         = "RECIPIENT_NAME";
 	const char * const ServiceType           = "SERVICE_TYPE";
@@ -41,7 +40,7 @@ namespace CPrintConstants
 
 	namespace KKM
 	{
-		const char * const TaxSystem      = "TAXSYSTEM";               // система налогообложения (СНО)
+		const char * const Taxation       = "TAXATION";                // система налогообложения (СНО)
 		const char * const DateTimeStamp  = "KKM_DATETIME_STAMP";      // дата и время получения фискального документа
 		const char * const SerialNumber   = "KKM_SERIAL_NUMBER";       // серийный номер фискальника (заводской номер ККТ)
 		const char * const RNM            = "KKM_RNM";                 // регистрационный номер ККТ (РНМ)

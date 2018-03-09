@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -101,43 +101,43 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing Package.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing Package.h...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing Package.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
     </CustomBuild>
     <CustomBuild Include="..\src\Component.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing Component.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing Component.h...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing Component.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
     </CustomBuild>
     <CustomBuild Include="..\src\Folder.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing Folder.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing Folder.h...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing Folder.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
     </CustomBuild>
     <ClInclude Include="..\src\File.h" />
     <ClInclude Include="..\src\Misc.h" />
@@ -145,15 +145,15 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing Updater.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing Updater.h...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing Updater.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_DLL  "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I.\..\src" "-I$(QTDIR)\include\QtCore"</Command>
     </CustomBuild>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -164,15 +164,15 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -202,10 +202,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;..\src;$(QTDIR)\include\QtCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>
@@ -217,7 +216,7 @@
       <ResourceOutputFileName>$(IntDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>NetworkTaskManager.lib;QtNetwork4.lib;QtCore4.lib;QtGui4.lib;Log.lib</AdditionalDependencies>
+      <AdditionalDependencies>NetworkTaskManager.lib;Qt5Network.lib;Qt5Core.lib;Qt5Gui.lib;Log.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -239,10 +238,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;..\src;$(QTDIR)\include\QtCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -252,7 +250,7 @@
       <ResourceOutputFileName>$(IntDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>NetworkTaskManager.lib;QtNetwork4.lib;QtCore4.lib;QtGui4.lib;Log.lib</AdditionalDependencies>
+      <AdditionalDependencies>NetworkTaskManager.lib;Qt5Network.lib;Qt5Core.lib;Qt5Gui.lib;Log.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -274,10 +272,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;.\GeneratedFiles\$(ProjectName)\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;..\src;$(QTDIR)\include\QtCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_CORE_LIB;QT_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4290;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -287,7 +284,7 @@
       <ResourceOutputFileName>$(IntDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>NetworkTaskManagerd.lib;QtNetworkd4.lib;QtCored4.lib;QtGuid4.lib;Logd.lib;Applicationd.lib</AdditionalDependencies>
+      <AdditionalDependencies>NetworkTaskManagerd.lib;Qt5Networkd.lib;Qt5Cored.lib;Qt5Guid.lib;Logd.lib;Applicationd.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

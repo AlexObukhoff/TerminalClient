@@ -4,7 +4,7 @@ import "../pluginTemplate.qbs" as PluginTemplate
 PluginTemplate {
 	name: "ad"
 
-	Depends { name: "Qt"; submodules: ["sql", "network"] }
+	Depends { name: "Qt"; submodules: ["sql", "network", "qml"] }
 
 	Depends { name: "PaymentBase" }
 	Depends { name: "NetworkTaskManager" }

@@ -1,6 +1,6 @@
 ﻿/* @file Редактор списка значенией. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "../scripts/gui.js" as GUI
 
 Item {
@@ -73,10 +73,7 @@ Item {
 		global.id = aField.id;
 
 		try {
-			var readonly = aField.hasOwnProperty("behavior") && aField.behavior == "readonly"
-
 			description.title = aField.title + (aField.isRequired ? "" : Utils.locale.tr(QT_TRANSLATE_NOOP("editor", "editor#not_required")));
-			description.title += readonly ? Utils.locale.tr(QT_TRANSLATE_NOOP("editor", "editor#readonly")) : ""
 			description.comment = aField.extendedComment ? "" : Utils.toPlain(aField.comment);
 
 			// TODO сделать js прототип ListModel чтобы использовать model = aField.values;
@@ -104,8 +101,6 @@ Item {
 					list.setCurrent(aValue.rawValue);
 				}
 			}
-
-			list.readonly = readonly
 		} catch (e) {
 			Core.log.error("Failed to setup editor for field %1: %2.".arg(aField.id).arg(e.message));
 		}

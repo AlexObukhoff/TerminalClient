@@ -1,4 +1,4 @@
-/* @file Обработчик команд работы с устройствами выдачи наличных. */
+﻿/* @file Обработчик команд работы с устройствами выдачи наличных. */
 
 #pragma once
 
@@ -106,7 +106,7 @@ private:
 	TItemDataSet getItemDataSet(SDK::PaymentProcessor::TPaymentAmount aAmount);
 
 	/// Получить данные объектa для выдачи
-	bool getItemData(SDK::PaymentProcessor::TPaymentAmount aAmount, const TItemDataSet & aItemData, TItemDataSetIt & aItemDataSetIt);
+	bool getItemData(SDK::PaymentProcessor::TPaymentAmount aAmount, TItemDataSet & aItemData, TItemDataSetIt & aItemDataSetIt);
 
 	/// Проверить сигнал о результате выдачи денег
 	SDK::PaymentProcessor::SCashUnit * checkSignal(QObject * aSender, const QString & aSignalName, int aUnit);

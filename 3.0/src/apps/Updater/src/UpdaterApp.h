@@ -2,7 +2,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtCore/QPointer>
 #include <QtCore/QSharedPointer>
 #include <Common/QtHeadersEnd.h>
@@ -70,7 +70,7 @@ public:
 	/// Возвращает рабочий каталог приложения (может быть задан в .ini файле).
 	virtual QString getWorkingDirectory() const;
 
-	static void qtMessageHandler(QtMsgType aType, const char * aMessage);
+	static void qtMessageHandler(QtMsgType aType, const QMessageLogContext & aContext, const QString & aMessage);
 
 private slots:
 	/// Система обновления в прочцессе работы, ожидаем следующей попытки

@@ -41,11 +41,10 @@ function countdown(aText, aTimeout) {
 }
 
 //------------------------------------------------------------------------------
-function notification(aText, aTimeout, aResult, aHandler) {
-	log(typeof aHandler)
+function notification(aText, aTimeout, aResult) {
 	popup("InfoPopup", {reset: true,
 					message: aText, timeout: __isValid(aTimeout) ? aTimeout : 10000,
-					cancelable: true, result: __isValid(aResult) ? aResult : "", handler: aHandler});
+					cancelable: true, result: __isValid(aResult) ? aResult : ""});
 }
 
 // button: { result: "", text: "", ... }

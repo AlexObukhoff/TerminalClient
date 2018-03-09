@@ -1,6 +1,6 @@
 ﻿/* @file Русская раскладка клавиатуры. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "../controls" 1.0 as Controls
 import "../widgets" 1.0 as Widgets
 

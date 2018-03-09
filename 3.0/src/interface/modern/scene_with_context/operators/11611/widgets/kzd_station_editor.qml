@@ -12,84 +12,15 @@ FocusScope {
 
 	// Показывает содержит ли редактор допустимое значение. Если поле обязательно, то руководствуемся флагом inputField.
 	// Если поле необязательно, то допустимыми значениями являются только пустота и корректное значение в inputField.
-	property bool acceptable: stationsModel.contains(inputField.text)
+	property bool acceptable: global.enabled ? (global.required ? inputField.textAcceptable : (inputField.empty || inputField.textAcceptable)) : global.savedState
 
 	signal showComment
-
-	//property alias title: description.title
 
 	width: 1221
 	height: 630
 
-	Component {
-		id: autocomleter
-
-		BorderImage {
-			property alias text: text.text
-
-			visible: text.text
-
-			width: 404
-			height: 120
-
-			source: "image://ui/button.secondary.normal"
-			border { left: 21; top: 84; right: 84; bottom: 21 }
-			horizontalTileMode: BorderImage.Stretch
-			verticalTileMode: BorderImage.Stretch
-
-			Text {
-				id: text
-
-				width: parent.width
-				height: parent.height
-				verticalAlignment: Text.AlignVCenter
-				horizontalAlignment: Text.AlignHCenter
-				color: Utils.ui.color("color.button")
-				font: Utils.ui.font("font.button")
-				maximumLineCount: 1
-				elide: Text.ElideRight
-				text: stationName
-				wrapMode: Text.WordWrap
-			}
-
-			MouseArea {
-				anchors.fill: parent
-				onPressed: inputField.text = text.text
-			}
-		}
-	}
-
-	ListModel {
-		id: stationsModel
-
-		function contains(aName) {
-			for (var i=0; i < count; i++) {
-				if (get(i).stationName.toLowerCase() == aName.toLowerCase()) return true
-			}
-
-			return false
-		}
-	}
-
 	Column {
 		anchors { left: parent.left; right: parent.right; top: parent.top }
-
-		Widgets.Spacer {
-
-			anchors { left: parent.left; right: parent.right }
-			height: 120;
-
-			Row {
-				id: stationsList
-
-				anchors.centerIn: parent
-
-				Repeater {
-					model: stationsModel
-					delegate: autocomleter
-				}
-			}
-		}
 
 		Widgets.EditorDescription {
 			id: description
@@ -98,8 +29,6 @@ FocusScope {
 			height: 120
 
 			onClicked: rootItem.showComment()
-
-			visible: false
 		}
 
 		// Поле ввода
@@ -128,12 +57,6 @@ FocusScope {
 			onTriggered: {
 				Backend$KZD.stations.filter = inputField.text;
 				keyboard.filter = Backend$KZD.stations.availableChars;
-
-				stationsModel.clear()
-				var st = Backend$KZD.stations.actualStations.split(";")
-				for (var i in st) {
-					stationsModel.append({stationName: st[i]})
-				}
 			}
 		}
 	}

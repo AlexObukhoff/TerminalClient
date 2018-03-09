@@ -5,7 +5,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QDateTime>
 #include <QtCore/QList>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QCloseEvent>
 #include "ui_SplashScreen.h"
 #include <Common/QtHeadersEnd.h>

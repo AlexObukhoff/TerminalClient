@@ -8,7 +8,7 @@ Project {
 
 		Depends {
 			name: "Qt";
-			submodules: ["sql", "phonon", "gui", "widgets", "declarative", "quick", "multimedia"]
+			submodules: ["sql", "gui", "widgets", "qml", "quick", "multimedia", "script", "quickwidgets"]
 		}
 
 		Depends { name: "QtSingleApplication" }

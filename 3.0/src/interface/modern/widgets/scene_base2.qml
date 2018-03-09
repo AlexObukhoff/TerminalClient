@@ -1,6 +1,6 @@
 ﻿/* @file Базовый экран с кнопкой возврата, названием и нижней панелью управления. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "../controls" as Controls
 
 SceneBase {

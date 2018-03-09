@@ -10,7 +10,6 @@
 #include "PrimOnlineFRConstants.h"
 
 using namespace SDK::Driver;
-using namespace ProtocolUtils;
 
 //--------------------------------------------------------------------------------
 PrimOnlineFRBase::PrimOnlineFRBase()
@@ -70,10 +69,10 @@ bool PrimOnlineFRBase::updateParameters()
 		return false;
 	}
 
-	char taxSystemData     = char(data[8].toInt(0, 16));
-	char operationModeData = char(data[9].toInt(0, 16));
+	char taxationData   = char(data[8].toInt(0, 16));
+	char operationModes = char(data[9].toInt(0, 16));
 
-	if (!checkTaxSystems(taxSystemData) || !checkOperationModes(operationModeData))
+	if (!checkTaxationData(taxationData) || !checkOperationModes(operationModes))
 	{
 		return false;
 	}
@@ -142,7 +141,7 @@ void PrimOnlineFRBase::processDeviceData()
 			setDeviceParameter(CDeviceData::FS::ValidityData, date.toString(CFR::DateLogFormat));
 		}
 
-		setDeviceParameter(CDeviceData::FS::Version, QString("%1, type %2").arg(clean(data[14]).data()).arg(data[15].toUInt() ? "serial" : "debug"));
+		setDeviceParameter(CDeviceData::FS::Version, data[14]);
 
 		uint sessionCount = qToBigEndian(data[16].toUInt(&OK, 16));
 
@@ -155,7 +154,7 @@ void PrimOnlineFRBase::processDeviceData()
 	checkDateTime();
 
 	mOFDDataError = !processCommand(CPrimOnlineFR::Commands::GetOFDData, &data) || (data.size() < 9) ||
-		!checkOFDData(data[9], getBufferFromString(data[5].right(2) + data[5].left(2)));
+		!checkOFDData(data[9], ProtocolUtils::getBufferFromString(data[5].right(2) + data[5].left(2)));
 }
 
 //--------------------------------------------------------------------------------
@@ -186,7 +185,7 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 		}
 	}
 
-	int taxData = int(aPaymentData.taxSystem);
+	int taxData = int(aPaymentData.taxation);
 
 	if (taxData)
 	{
@@ -284,7 +283,7 @@ TResult PrimOnlineFRBase::doZReport(bool aAuto)
 }
 
 //--------------------------------------------------------------------------------
-bool PrimOnlineFRBase::openSession()
+TResult PrimOnlineFRBase::openFRSession()
 {
 	CPrimFR::TData commandData = CPrimFR::TData() << CPrimFR::OperatorID << "" << "" << "";    // + сообщение оператору, доп. реквизит и реквизиты смены
 

@@ -1,6 +1,6 @@
 ﻿/* @file Экран ожидания печати чека */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import Core.Types 1.0
 import "scripts/gui.js" 1.0 as GUI
 import "widgets" 1.0 as Widgets

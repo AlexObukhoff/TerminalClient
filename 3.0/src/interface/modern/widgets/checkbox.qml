@@ -1,6 +1,6 @@
-/* @file Чекбокс */
+﻿/* @file Чекбокс */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "../scenario/constants.js" 1.0 as Scenario
 
 Item {

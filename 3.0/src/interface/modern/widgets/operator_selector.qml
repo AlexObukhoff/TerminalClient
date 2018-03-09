@@ -1,6 +1,6 @@
 /* Компонент для выбора оператора с постраничной листалкой */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "../scenario/constants.js" as Scenario
 
 Item {

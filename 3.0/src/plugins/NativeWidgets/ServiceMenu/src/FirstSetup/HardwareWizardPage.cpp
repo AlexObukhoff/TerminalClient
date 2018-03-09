@@ -3,7 +3,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTimer>
-#include <QtGui/QStackedLayout>
+#include <QtWidgets/QStackedLayout>
 #include <Common/QtHeadersEnd.h>
 
 // SDK

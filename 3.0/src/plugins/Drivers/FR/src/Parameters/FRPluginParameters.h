@@ -15,7 +15,4 @@ SDK::Plugin::SPluginParameter setDocumentCap();
 // Разрешение автозакрывать смену на инициализации.
 SDK::Plugin::SPluginParameter setAutoCloseSessionAbility();
 
-// Время автозакрытия смены.
-SDK::Plugin::SPluginParameter setSessionOpeningTime();
-
 //------------------------------------------------------------------------------

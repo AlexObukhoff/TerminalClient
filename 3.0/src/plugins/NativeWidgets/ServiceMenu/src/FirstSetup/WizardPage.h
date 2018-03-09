@@ -4,7 +4,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QFrame>
+#include <QtWidgets/QFrame>
 #include <Common/QtHeadersEnd.h>
 
 // Project

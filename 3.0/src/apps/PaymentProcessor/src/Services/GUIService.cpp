@@ -3,7 +3,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QDir>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -158,6 +158,7 @@ bool GUIService::initialize()
 
 	bool showCursor = mConfig.value("interface/show_mouse_cursor", false).toBool();
 	bool showDebugInfo = mConfig.value("interface/show_debug_info", false).toBool();
+	bool useOpengl = mConfig.value("interface/use_opengl", false).toBool();
 
 	QVariantMap scenarios = getUiSettings("scenarios");
 	if (!scenarios.isEmpty())
@@ -174,7 +175,7 @@ bool GUIService::initialize()
 		mGraphicsEngine.addHandledKeys(handledKeyList);
 	}
 
-	if (!mGraphicsEngine.initialize(display, mWidth, mHeight, showCursor, showDebugInfo))
+	if (!mGraphicsEngine.initialize(display, mWidth, mHeight, showCursor, useOpengl, showDebugInfo))
 	{
 		LOG(mApplication->getLog(), LogLevel::Error, "Failed to initialize graphics engine.");
 
@@ -647,7 +648,8 @@ void GUIService::loadScriptObjects()
 
 				QString objectName = CGUIService::BackedObjectPrefix + scriptObject->getName();
 				mScenarioEngine.injectScriptObject(objectName, scriptObject);
-				mBackendScenarioObjects.insert(objectName, QWeakPointer<QObject>(scriptObject));
+				// TODO PORT_QT5
+				//mBackendScenarioObjects.insert(objectName, QWeakPointer<QObject>(scriptObject));
 			}
 		}
 		else

@@ -40,7 +40,7 @@ namespace CPOSPrinter
 		}
 	}
 
-	const char RussianCodePage = '\x11';    /// Номер русской кодовой страницы.
+	const char RussianCodePage = '\x07';    /// Номер русской кодовой страницы.
 	const char USACharacters   = '\x30';    /// Спец. международный набор символов, принятый в США.
 	const char DefaultName[] = "Unknown POS Printer";    /// Имя принтера по умолчанию.
 

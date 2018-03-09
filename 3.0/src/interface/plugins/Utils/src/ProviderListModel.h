@@ -61,6 +61,10 @@ public slots:
 	void getNextProviderInfo();
 
 private:
+	QHash<int, QByteArray> mRoles;
+	virtual QHash<int, QByteArray> roleNames() const;
+
+private:
 	QList<qint64> mProvidersId;
 	QList<SProvider> mProviderList;
 	QPointer<QObject> mPaymentService;

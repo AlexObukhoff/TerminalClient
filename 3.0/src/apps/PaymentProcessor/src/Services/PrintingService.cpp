@@ -3,17 +3,18 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QRegExp>
-#include <QtCore/QtConcurrentRun>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QFuture>
 #include <QtCore/QMutexLocker>
 #include <QtCore/QDir>
 #include <QtCore/QDate>
 #include <QtCore/QBuffer>
 #include <QtCore/QTextStream>
-#include <QtScript/QScriptEngine>
+#include <QtQml/QJSEngine>
+#include <QtQml/QJSValue>
 #include <QtCore/QTextCodec>
 #include <QtXML/QDomDocument>
-#include <QtXML/QXmlStreamWriter>
+#include <QtCore/QXmlStreamWriter>
 #include <Common/QtHeadersEnd.h>
 
 // Thirdparty
@@ -143,6 +144,9 @@ bool PrintingService::initialize()
 //------------------------------------------------------------------------------
 void PrintingService::finishInitialize()
 {
+	auto settings = SettingsService::instance(mApplication)->getAdapter<SDK::PaymentProcessor::TerminalSettings>();
+
+	mRandomReceiptsID = settings->getCommonSettings().randomReceiptsID;
 }
 
 //---------------------------------------------------------------------------
@@ -1156,17 +1160,9 @@ void PrintingService::expandTags(QStringList & aReceipt, const QVariantMap & aPa
 		if (it->contains(CPrintingService::ConditionTag))
 		{
 			QStringList l = it->split(CPrintingService::ConditionTag);
-			
-			toLog(LogLevel::Debug, QString("Evaluate receipt condition %1").arg(l.join(";")));
-			
-			if (QScriptEngine().evaluate(l.first()).toBool())
+			if (QJSEngine().evaluate(l.first()).toBool())
 			{
-				toLog(LogLevel::Debug, QString("Evaluate receipt result %1").arg(l.last()));
 				result.append(l.last());
-			}
-			else
-			{
-				toLog(LogLevel::Debug, QString("Evaluate condition nothing for %1").arg(l.last()));
 			}
 
 			continue;
@@ -1401,11 +1397,12 @@ void PrintingService::updateHardwareConfiguration()
 		.arg(DSDK::CComponents::Printer).arg(DSDK::CComponents::DocumentPrinter).arg(DSDK::CComponents::FiscalRegistrator);
 	QStringList printerNames = settings->getDeviceList().filter(QRegExp(regExpData));
 
-	mRandomReceiptsID = settings->getCommonSettings().randomReceiptsID;
-	QTime autoZReportTime = settings->getCommonSettings().autoZReportTime;
-
 	mPrinterDevices.clear();
 	mAvailablePrinters.clear();
+
+	QVariantMap delalerSettings;
+	delalerSettings.insert(CHardwareSDK::FR::DealerTaxation,  mStaticParameters.value(CPrintConstants::DealerTaxation));
+	delalerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters.value(CPrintConstants::DealerAgentFlag));
 
 	// Запрашиваем устройства.
 	foreach (const QString & printerName, printerNames)
@@ -1414,10 +1411,6 @@ void PrintingService::updateHardwareConfiguration()
 
 		if (device)
 		{
-			QVariantMap dealerSettings;
-			if (mStaticParameters.contains(CPrintConstants::DealerTaxSystem)) dealerSettings.insert(CHardwareSDK::FR::DealerTaxSystem, mStaticParameters[CPrintConstants::DealerTaxSystem]);
-			if (mStaticParameters.contains(CPrintConstants::DealerAgentFlag)) dealerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters[CPrintConstants::DealerAgentFlag]);
-
 			mPrinterDevices.append(device);
 
 			// Подписываемся на события принтера.
@@ -1427,16 +1420,9 @@ void PrintingService::updateHardwareConfiguration()
 			if (dynamic_cast<DSDK::IFiscalPrinter *>(device))
 			{
 				device->subscribe(SDK::Driver::IFiscalPrinter::FRSessionClosedSignal, this, SLOT(onFRSessionClosed(const QVariantMap &)));
-
-				if (autoZReportTime.isValid() && !autoZReportTime.isNull())
-				{
-					toLog(LogLevel::Normal, QString("Setup auto z-report time: %1.").arg(autoZReportTime.toString("hh:mm:ss")));
-
-					dealerSettings.insert(CHardwareSDK::FR::ZReportTime, autoZReportTime);
-				}
 			}
 
-			device->setDeviceConfiguration(dealerSettings);
+			device->setDeviceConfiguration(delalerSettings);
 		}
 		else
 		{

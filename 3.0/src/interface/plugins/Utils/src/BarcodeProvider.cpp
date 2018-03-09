@@ -2,7 +2,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtDeclarative/QtDeclarative>
+#include <QtQuick/QQuickImageProvider>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <Common/QtHeadersEnd.h>
@@ -16,7 +16,7 @@
 
 //------------------------------------------------------------------------------
 BarcodeProvider::BarcodeProvider() :
-	QDeclarativeImageProvider(QDeclarativeImageProvider::Image),
+	QQuickImageProvider(QQmlImageProviderBase::Image),
 	mDefaultBarcodeSize(200, 200)
 {
 }

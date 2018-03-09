@@ -3,8 +3,8 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QSet>
-#include <QtCore/QtConcurrentRun>
-#include <QtGui/QVBoxLayout>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QtWidgets/QVBoxLayout>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -314,6 +314,7 @@ void HardwareWindow::onRemove()
 void HardwareWindow::removeDeviceSlot(DeviceSlot * aSlot, bool aUpdateConfig)
 {
 	ui.slotsWidget->layout()->removeWidget(aSlot->getWidget());
+	ui.slotsWidget->setFocus();
 
 	if (aUpdateConfig)
 	{

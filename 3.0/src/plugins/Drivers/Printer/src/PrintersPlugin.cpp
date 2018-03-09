@@ -93,8 +93,7 @@ TParameterList CustomVKP80Parameters(const QString & aModel)
 	return CommonCustomVKP80Parameters<T>(aModel)
 		<< setLoopEnabled("", false)
 		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, true, Values::NoChange)
-		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, true, Values::NoChange)
-		<< setCustomCodepage();
+		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, true, Values::NoChange);
 }
 
 //------------------------------------------------------------------------------

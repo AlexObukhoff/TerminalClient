@@ -67,52 +67,43 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 
 	if (amountList.isNull())
 	{
-		QString operatorINN = aParameters.value(CPrintConstants::OpINN).toString();
 		QString paymentTitle = QString("%1 (%2)")
 			.arg(aParameters[CPrintConstants::ServiceType].toString())
 			.arg(aParameters[CPrintConstants::OpBrand].toString());
 
-		fiscalAmountList << DSDK::SAmountData(amount, vat, paymentTitle, operatorINN, DSDK::EPayOffSubjectTypes::Payment);
+		fiscalAmountList << DSDK::SAmountData(amount, vat, paymentTitle, DSDK::EPayOffSubjectTypes::Payment);
 	}
 	else
 	{
 		QVariantList amounts = amountList.toList();
 		QVariantList amountTitles = aParameters.value("[AMOUNT_TITLE]").toList();
 		QVariantList amountsVAT = aParameters.value("[AMOUNT_VAT]").toList();
-		QVariantList operatorINNs = aParameters.value("[OPERATOR_INN]").toList();
 
 		// amount содержит список сумм для печати реестра нераспечатанных чеков
 		for (int i = 0; i < amounts.size(); i++)
 		{
-			fiscalAmountList << DSDK::SAmountData(
-				amounts.value(i).toDouble(), 
-				amountsVAT.value(i).toInt(), 
-				amountTitles.value(i).toString(), 
-				operatorINNs.value(i).toString(), 
-				DSDK::EPayOffSubjectTypes::Payment);
+			fiscalAmountList << DSDK::SAmountData(amounts[i].toDouble(), amountsVAT[i].toInt(), amountTitles[i].toString(), DSDK::EPayOffSubjectTypes::Payment);
 		}
 	}
 
 	if (!qFuzzyIsNull(fee))
 	{
-		QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
 		fiscalAmountList << (dealerIsBank ?
-			DSDK::SAmountData(fee, dealerVAT, tr("#bank_fee"),   dealerINN, DSDK::EPayOffSubjectTypes::Payment) :
-			DSDK::SAmountData(fee, dealerVAT, tr("#dealer_fee"), dealerINN, DSDK::EPayOffSubjectTypes::AgentFee));
+			DSDK::SAmountData(fee, dealerVAT, tr("#bank_fee"), DSDK::EPayOffSubjectTypes::Payment) :
+			DSDK::SAmountData(fee, dealerVAT, tr("#dealer_fee"), DSDK::EPayOffSubjectTypes::AgentFee));
 	}
 
 	if (!qFuzzyIsNull(processingFee))
 	{
-		QString bankINN = aParameters.value(CPrintConstants::BankInn).toString();
-		fiscalAmountList << DSDK::SAmountData(processingFee, 0, tr("#processing_fee"), bankINN, DSDK::EPayOffSubjectTypes::Payment);
+		fiscalAmountList << DSDK::SAmountData(processingFee, 0, tr("#processing_fee"), DSDK::EPayOffSubjectTypes::Payment);
 	}
 
 	bool EMoney = aParameters.value(PPSDK::CPayment::Parameters::PayTool).toInt() > 0;
 	auto payType = EMoney ? DSDK::EPayTypes::EMoney : DSDK::EPayTypes::Cash;
-	auto taxSystem = aParameters.contains(CPrintConstants::DealerTaxSystem) ? static_cast<DSDK::ETaxSystems::Enum>(aParameters.value(CPrintConstants::DealerTaxSystem).toInt()) : DSDK::ETaxSystems::None;
+	auto taxation  = aParameters.contains(CPrintConstants::DealerTaxation)  ? static_cast<DSDK::ETaxations::Enum> (aParameters.value(CPrintConstants::DealerTaxation).toInt()) : DSDK::ETaxations::None;
 	auto agentFlag = aParameters.contains(CPrintConstants::DealerAgentFlag) ? static_cast<DSDK::EAgentFlags::Enum>(aParameters.value(CPrintConstants::DealerAgentFlag).toInt()) : DSDK::EAgentFlags::None;
 
-	DSDK::SPaymentData result(fiscalAmountList, false, payType, taxSystem, agentFlag);
+	DSDK::SPaymentData result(fiscalAmountList, false, payType, taxation, agentFlag);
 
 	QVariantMap upperKeyParameters = toUpperCaseKeys(aParameters);
 	QRegExp phoneRegexp("^9\\d{9}$");
@@ -238,16 +229,14 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 	{
 		DSDK::SPaymentData paymentData = getPaymentData(actualParameters);
 
+		static_cast<DSDK::IFiscalPrinter *>(aPrinter)->setDeviceConfiguration(paymentData.fiscalParameters);
 		result = static_cast<DSDK::IFiscalPrinter *>(aPrinter)->printFiscal(receipt, paymentData, mFiscalPaymentData, mPayOffSubjectData);
 
 		if (!mFiscalPaymentData.isEmpty())
 		{
-			#define ADD_FISCAL_TAG(aTranstation, aFiscalTag) \
-				if (DSDK::FiscalFields::isMoney(DSDK::FiscalFields::aFiscalTag)) \
-				     { receipt << QString("%1:  %2").arg(aTranstation).arg(mFiscalPaymentData[DSDK::FiscalFields::aFiscalTag].toInt() / 100.0, 0, 'f', 2); } \
-				else { receipt << QString("%1:  %2").arg(aTranstation).arg(mFiscalPaymentData[DSDK::FiscalFields::aFiscalTag].toString()); }
+			#define ADD_FISCAL_TAG(aTranstation, aFiscalTag) receipt << aTranstation + ":  " + mFiscalPaymentData[DSDK::FiscalFields::aFiscalTag].toString();
 
-			ADD_FISCAL_TAG(tr("#tax_system"),    TaxSystem);
+			ADD_FISCAL_TAG(tr("#taxation"),      TaxSystem);
 			ADD_FISCAL_TAG(tr("#kkt_timestamp"), FDDateTime);
 			ADD_FISCAL_TAG(tr("#kkt_znm"),       SerialFRNumber);
 			ADD_FISCAL_TAG(tr("#kkt_rnm"),       RNM);

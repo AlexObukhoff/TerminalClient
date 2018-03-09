@@ -88,9 +88,7 @@ namespace CShtrihFR
 				const QDate & aDate = QDate::currentDate().addYears(100), int aBuild = 0);
 
 			void addNew(int aNumber, const char * aId, const QString & aName, bool aVerified = false, bool aEjector = false, int aZReportQuantity = 0, int aFeed = 6,
-				const QDate & aDate = QDate(), int aLinePrintingTimeout = 0);
-
-			QDate mDefaultFWDate;
+				const QDate & aDate = QDate::currentDate().addYears(100), int aBuild = 0, int aLinePrintingTimeout = 0);
 		};
 	}
 

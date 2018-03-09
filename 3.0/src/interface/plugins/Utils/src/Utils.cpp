@@ -1,14 +1,23 @@
-/* @file Набор вспомогательных функций для qml. */
+﻿/* @file Набор вспомогательных функций для qml. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtDeclarative/QtDeclarative>
 #include <QtCore/QSettings>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonValue>
+#include <QtCore/QJsonObject>
 #include <QtCore/QByteArray>
 #include <QtCore/QScopedPointer>
-#include <qjson.h>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QWidget>
+#include <QtGui/QKeyEvent>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlContext>
+#include <QtMultimedia/QSound>
 #include <Common/QtHeadersEnd.h>
 
 // Проект
@@ -30,7 +39,7 @@ namespace CUtils
 }
 
 //------------------------------------------------------------------------------
-Utils::Utils(QDeclarativeEngine * aEngine, const QString & aInterfacePath, const QString & aUserPath) :
+Utils::Utils(QQmlEngine * aEngine, const QString & aInterfacePath, const QString & aUserPath) :
 	mEngine(aEngine),
 	mInterfacePath(aInterfacePath),
 	mUserPath(aUserPath),

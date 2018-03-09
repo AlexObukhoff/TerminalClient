@@ -4,11 +4,14 @@ StaticLibrary {
 	name: "GraphicsEngine"
 
 	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "concurrent"] }
+	Depends { name: "Qt"; submodules: ["core", "quick", "script", "quickwidgets"] }
 
 	Depends { name: "Core" }
-	Depends { name: "qt5port" }
 
 	files: [ "src/*.cpp", "src/*.h" ]
+
+	Export {
+		Depends { name: "Qt"; submodules: ["opengl"] }
+	}
 }
 

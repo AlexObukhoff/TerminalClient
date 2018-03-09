@@ -1,10 +1,10 @@
-/* @file Плагин автоинскасации терминала */
+﻿/* @file Плагин автоинскасации терминала */
 
 #pragma once
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QGraphicsProxyWidget>
+#include <QtWidgets/QGraphicsProxyWidget>
 #include <Common/QtHeadersEnd.h>
 
 // Plugin SDK
@@ -65,7 +65,7 @@ public:
 	virtual QString getError() const;
 
 	// Возвращает виджет.
-	virtual QGraphicsItem * getWidget() const;
+	virtual QQuickItem * getWidget() const;
 
 	// возвращает нативный виджет.
 	virtual QWidget * getNativeWidget() const { return mAutoEncashmentWindow; }

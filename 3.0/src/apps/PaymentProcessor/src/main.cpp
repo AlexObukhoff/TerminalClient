@@ -1,6 +1,9 @@
-﻿/* @file Mainline. */
+/* @file Mainline. */
 
+#ifdef Q_OS_WIN
+#define NOMINMAX
 #include <windows.h>
+#endif
 
 // stl
 #include <iostream>
@@ -26,10 +29,11 @@ int main(int argc, char ** argv)
 
 	try
 	{
-		qInstallMsgHandler(PPApplication::qtMessageHandler);
+		qInstallMessageHandler(PPApplication::qtMessageHandler);
 
 		// Чтобы заставить работать QPixmap в потоке, отличном от потока gui (см. qt_pixmap_thread_test() в qpixmap.cpp)
-		QApplication::setGraphicsSystem("raster");
+		// TODO PORT_QT5
+		//QApplication::setGraphicsSystem("raster");
 		
 		PPApplication application(Cyberplat::Application, Cyberplat::getVersion(), argc, argv);
 
@@ -56,7 +60,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	qInstallMsgHandler(0);
+	qInstallMessageHandler(0);
 
 	ILog::getInstance(Cyberplat::Application)->write(LogLevel::Debug, QString("Exit main() with %1 result.").arg(result));
 

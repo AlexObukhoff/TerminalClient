@@ -1,12 +1,12 @@
-/* @file Виджет виртуальной клавиатуры */
+﻿/* @file Виджет виртуальной клавиатуры */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QGraphicsScene>
-#include <QtGui/QGraphicsView>
-#include <QtGui/QGraphicsItem>
-#include <QtGui/QGraphicsProxyWidget>
+#include <QtWidgets/QGraphicsScene>
+#include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QGraphicsItem>
+#include <QtWidgets/QGraphicsProxyWidget>
 #include <Common/QtHeadersEnd.h>
 
 // SDK

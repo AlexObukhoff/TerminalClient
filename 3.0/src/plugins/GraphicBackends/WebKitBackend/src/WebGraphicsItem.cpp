@@ -2,15 +2,15 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtWebkit/QWebPage>
-#include <QtWebkit/QWebFrame>
-#include <QtWebkit/QWebElementCollection>
+#include <QtWebKitWidgets/QWebPage>
+#include <QtWebKitWidgets/QWebFrame>
+#include <QtWebKit/QWebElementCollection>
 #include <QtCore/QMetaEnum>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QSettings>
-#include <QtGui/QAction>
-#include <QtGui/QGraphicsRectItem>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QGraphicsRectItem>
 #include <Common/QtHeadersEnd.h>
 
 // Проект
@@ -119,8 +119,8 @@ void WebGraphicsItem::onJavaScriptWindowObjectCleared()
 	{
 		// Добавляем типы событий.
 		frame->addToJavaScriptWindowObject(SDK::PaymentProcessor::Scripting::CProxyNames::EventType, &mEventTypeMetaInfo);
-		frame->addToJavaScriptWindowObject(SDK::PaymentProcessor::Scripting::CProxyNames::Core, mCoreProxy, QScriptEngine::QtOwnership);
-		frame->addToJavaScriptWindowObject(CWebGraphicsItem::ContainerScriptObject, this, QScriptEngine::QtOwnership);
+		frame->addToJavaScriptWindowObject(SDK::PaymentProcessor::Scripting::CProxyNames::Core, mCoreProxy, QWebFrame::QtOwnership); //TODO QJSEngine->QWebFrame ?
+		frame->addToJavaScriptWindowObject(CWebGraphicsItem::ContainerScriptObject, this, QWebFrame::QtOwnership); //TODO QJSEngine->QWebFrame ?
 
 		connect(frame, SIGNAL(loadFinished(bool)), SLOT(onFrameLoaded(bool)), Qt::UniqueConnection);
 	}
@@ -197,9 +197,10 @@ void WebGraphicsItem::notify(const QString & aReason, const QVariantMap & aParam
 }
 
 //---------------------------------------------------------------------------
-QGraphicsItem * WebGraphicsItem::getWidget() const
+QQuickItem * WebGraphicsItem::getWidget() const
 {
-	return mWebView.data();
+	//FIXME !!!
+	return nullptr;//mWebView.data();
 }
 
 //---------------------------------------------------------------------------

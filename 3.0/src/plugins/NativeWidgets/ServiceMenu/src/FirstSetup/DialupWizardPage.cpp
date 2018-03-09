@@ -6,7 +6,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QtConcurrentRun>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QFuture>
 #include <Common/QtHeadersEnd.h>
 

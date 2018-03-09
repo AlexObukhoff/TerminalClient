@@ -3,7 +3,7 @@
 // Qt
 #include "Common/QtHeadersBegin.h"
 #include <QtCore/QDateTime>
-#include <QtGui/QInputDialog>
+#include <QtWidgets/QInputDialog>
 #include "Common/QtHeadersEnd.h"
 
 // SDK

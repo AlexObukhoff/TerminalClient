@@ -1,4 +1,4 @@
-/* @file Модель для отображения списка провайдеров. */
+﻿/* @file Модель для отображения списка провайдеров. */
 #pragma once
 
 // Qt
@@ -25,6 +25,7 @@ class GroupModel : public QAbstractListModel
 	Q_PROPERTY(QString categoryName READ getCategoryName NOTIFY categoryNameChanged)
 	Q_PROPERTY(qint64 rootElement READ getRootElement WRITE setRootElement)
 	Q_PROPERTY(QStringList elementFilter READ getElementFilter WRITE setElementFilter)
+	Q_PROPERTY(quint16 maxNameLength READ getMaxNameLength)
 
 	enum EntryRoles {
 		IdRole = Qt::UserRole + 1,
@@ -97,7 +98,11 @@ private:
 
 	const ItemList & getItemList(qint64 aGroupID);
 
+	virtual QHash<int, QByteArray> roleNames() const;
+
 private:
+	QHash<int, QByteArray> mRoles;
+
 	/// Имя xml файла с списком групп
 	QString mSource;
 

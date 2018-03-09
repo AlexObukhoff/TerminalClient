@@ -4,7 +4,7 @@ StaticLibrary {
 	name: "PaymentBase"
 
 	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "script"] }
+	Depends { name: "Qt"; submodules: ["core", "qml"] }
 
 	Depends { name: "Core" }
 	Depends { name: "boost" }

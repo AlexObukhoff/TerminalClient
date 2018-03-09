@@ -1,6 +1,6 @@
 /* @Виджет для отображения плашки с иконкой и описанием. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "widgets" 1.0 as Widgets
 
 Item {

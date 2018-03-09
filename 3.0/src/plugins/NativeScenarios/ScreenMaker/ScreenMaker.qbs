@@ -6,7 +6,7 @@ Project {
 	PluginTemplate {
 		name: "screen_maker_scenario"
 
-		Depends { name: "Qt"; submodules: ["gui", "network", "declarative", "concurrent"] }
+		Depends { name: "Qt"; submodules: ["gui", "core", "widgets"] }
 
 		Depends { name: "App" }
 		Depends { name: "Log" }

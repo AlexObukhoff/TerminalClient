@@ -2,7 +2,9 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtDeclarative/QtDeclarative>
+#include <QtCore/QDir>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlContext>
 #include <Common/QtHeadersEnd.h>
 
 // Проект
@@ -12,15 +14,13 @@
 #include "BarcodeProvider.h"
 #include "Utils.h"
 
-Q_EXPORT_PLUGIN2(utils, UtilsPlugin)
-
 //------------------------------------------------------------------------------
 void UtilsPlugin::registerTypes(const char * /*aUri*/)
 {
 }
 
 //------------------------------------------------------------------------------
-void UtilsPlugin::initializeEngine(QDeclarativeEngine * aEngine, const char * /*aUri*/)
+void UtilsPlugin::initializeEngine(QQmlEngine * aEngine, const char * /*aUri*/)
 {
 	QObject * application = aEngine->rootContext()->contextProperty("Core").value<QObject *>();
 	QString logoPath = ".";

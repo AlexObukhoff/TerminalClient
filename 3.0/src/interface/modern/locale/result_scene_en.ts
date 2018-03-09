@@ -5,7 +5,7 @@
     <name>result_scene</name>
     <message>
         <location filename="../result_scene.qml" line="14"/>
-        <location filename="../result_scene.qml" line="246"/>
+        <location filename="../result_scene.qml" line="245"/>
         <source>result_scene#back</source>
         <translation>Back</translation>
     </message>
@@ -46,7 +46,7 @@ To have a copy of the receipt emailed to you click &quot;E-MAIL&quot;</translati
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="244"/>
+        <location filename="../result_scene.qml" line="243"/>
         <source>result_scene#take_change_receipt2</source>
         <translation>Click &quot;Confirm&quot; to print out the receipt to claim your change. To get your change contact the helpdesk.&lt;br&gt;Find contact details in the upper part of the screen.</translation>
     </message>
@@ -56,13 +56,13 @@ To have a copy of the receipt emailed to you click &quot;E-MAIL&quot;</translati
         <translation>Receive %1 %2 in cash</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="238"/>
+        <location filename="../result_scene.qml" line="237"/>
         <source>result_scene#take_change_receipt</source>
         <translation>Click &quot;Close&quot; to print out the receipt to claim your change. To get your change contact the helpdesk.&lt;br&gt;Find contact details in the upper part of the screen.</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="239"/>
-        <location filename="../result_scene.qml" line="245"/>
+        <location filename="../result_scene.qml" line="238"/>
+        <location filename="../result_scene.qml" line="244"/>
         <source>result_scene#take_change_receipt_error</source>
         <translation>To get your change contact the helpdesk.&lt;br&gt;Find contact details in the upper part of the screen.</translation>
     </message>
@@ -77,12 +77,12 @@ To have a copy of the receipt emailed to you click &quot;E-MAIL&quot;</translati
         <translation>Top up your paybook</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="153"/>
+        <location filename="../result_scene.qml" line="152"/>
         <source>result_scene#cash</source>
         <translation>Cash</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="247"/>
+        <location filename="../result_scene.qml" line="246"/>
         <source>result_scene#confirm</source>
         <translation>Confirm</translation>
     </message>
@@ -137,7 +137,7 @@ To have a copy of the receipt emailed to you click &quot;E-MAIL&quot;</translati
         <translation>To activate a CyberChange Pay simply hold it against the bar-code reader.</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="272"/>
+        <location filename="../result_scene.qml" line="271"/>
         <source>result_scene#enter_phone_number</source>
         <translation>Enter your phone number</translation>
     </message>

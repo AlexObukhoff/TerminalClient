@@ -1,4 +1,4 @@
-/* @file Реализация фабрики плагинов. */
+﻿/* @file Реализация фабрики плагинов. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -8,6 +8,7 @@
 #include <Common/QtHeadersEnd.h>
 
 #ifdef Q_OS_WIN
+#define NOMINMAX
 #include <windows.h>
 #endif
 
@@ -144,7 +145,7 @@ int PluginLoader::addDirectory(const QString & aDirectory)
 
 #ifdef Q_OS_WIN
 		// Путь для неявной загрузки сторонних dll, которые лежат не в корне дистрибутива
-		::SetDllDirectory(dirEntry.fileInfo().absolutePath().toStdWString().data());
+		SetDllDirectory(dirEntry.fileInfo().absolutePath().toStdWString().data());
 #else
 	#error Handling path for implicit dll loading is not implemented for this platform!
 #endif
@@ -211,13 +212,13 @@ int PluginLoader::addDirectory(const QString & aDirectory)
 		}
 		else
 		{
-			mKernel->getLog()->write(LogLevel::Warning, QString("Skipping %1: %2.").arg(dirEntry.filePath()).arg(library->errorString()));
+			mKernel->getLog()->write(LogLevel::Warning, QString("Skipping %1: %2").arg(dirEntry.filePath()).arg(library->errorString()));
 		}
 	}
 
 #ifdef Q_OS_WIN
 	// Сбрасываем локальные пути для неявной загрузки сторонних dll, которые лежат не в корне дистрибутива
-	::SetDllDirectory(0);
+	SetDllDirectory(0);
 #else
 	#error Handling path for implicit dll loading is not implemented for this platform!
 #endif

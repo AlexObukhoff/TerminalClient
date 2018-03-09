@@ -1,6 +1,6 @@
 ﻿/* @file Виджет для отображения табличных данных. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 
 FocusScope {
 	id: rootItem

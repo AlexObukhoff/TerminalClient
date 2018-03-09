@@ -4,18 +4,20 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtDeclarative/QDeclarativeExtensionPlugin>
-#include <QtDeclarative/QDeclarativeImageProvider>
+#include <QtQml/QQmlExtensionPlugin>
 #include <Common/QtHeadersEnd.h>
 
+class QQmlEngine;
+
 //------------------------------------------------------------------------------
-class UtilsPlugin : public QDeclarativeExtensionPlugin
+class UtilsPlugin : public QQmlExtensionPlugin
 {
 	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "com.cyberplat.graphics.utils")
 
 public:
 	virtual void registerTypes(const char * aUri);
-	virtual void initializeEngine(QDeclarativeEngine * aEngine, const char * aUri);
+	virtual void initializeEngine(QQmlEngine * aEngine, const char * aUri);
 };
 
 //------------------------------------------------------------------------------

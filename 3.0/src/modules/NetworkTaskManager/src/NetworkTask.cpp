@@ -1,4 +1,4 @@
-/* @file Реализация базового класса для сетевого запроса. */
+﻿/* @file Реализация базового класса для сетевого запроса. */
 
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QMutexLocker>
@@ -115,9 +115,9 @@ void NetworkTask::setProcessing(NetworkTaskManager * aManager, bool aProcessing)
 	{
 		mTimer.stop();
 
-		if (!mParentThread.isNull() && mParentThread.data()->isRunning())
+		if (mParentThread != nullptr && mParentThread->isRunning())
 		{
-			this->moveToThread(mParentThread.data());
+			this->moveToThread(mParentThread);
 		}
 
 		if (mVerifier)
@@ -140,7 +140,6 @@ void NetworkTask::setProcessing(NetworkTaskManager * aManager, bool aProcessing)
 
 		emit onComplete();
 
-		mProcessingMutex.unlock();
 		mProcessingCondition.wakeAll();
 	}
 }
@@ -285,8 +284,11 @@ void NetworkTask::waitForFinished()
 	if (mProcessing)
 	{
 		mProcessingCondition.wait(&mProcessingMutex);
-		mProcessingMutex.unlock();
 	}
+
+	// �������������� ������������ ������, ��� ������� � ��������� ��������������
+	mProcessingMutex.tryLock();
+	mProcessingMutex.unlock();
 }
 
 //------------------------------------------------------------------------

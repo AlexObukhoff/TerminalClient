@@ -1,6 +1,6 @@
 ﻿/* @file Поле ввода. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 
 FocusScope {
 	id: rootItem

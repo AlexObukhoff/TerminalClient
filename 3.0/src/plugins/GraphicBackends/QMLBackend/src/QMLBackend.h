@@ -6,11 +6,12 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QObject>
 #include <QtCore/QSharedPointer>
-#include <QtDeclarative/QDeclarativeEngine>
+#include <QtQml/QQmlEngine>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
 #include <SDK/Plugins/IPlugin.h>
+#include <SDK/Plugins/IPluginFactory.h>
 #include <SDK/PaymentProcessor/Core/ICore.h>
 #include <SDK/PaymentProcessor/Scripting/Core.h>
 #include <SDK/GUI/IGraphicsBackend.h>
@@ -68,7 +69,7 @@ public:
 	#pragma endregion
 
 private slots:
-	void onWarnings(const QList<QDeclarativeError> & aWarnings);
+	void onWarnings(const QList<QQmlError> & aWarnings);
 
 private:
 	typedef QMap<QString, QSharedPointer<QMLGraphicsItem> > TGraphicItemsCache;
@@ -80,7 +81,7 @@ private:
 	SDK::GUI::IGraphicsEngine * mEngine;
 	SDK::PaymentProcessor::ICore * mCore;
 
-	QDeclarativeEngine mQMLEngine;
+	QQmlEngine mQMLEngine;
 	TGraphicItemsCache mCachedItems;
 };
 

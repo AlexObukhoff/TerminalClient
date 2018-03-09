@@ -4,7 +4,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtCore/QString>
 #include <QtCore/QSettings>
 #include <QtCore/QSharedPointer>
@@ -94,7 +94,6 @@ template<typename T>
 BasicQtApplication<T>::BasicQtApplication(const QString & aName, const QString & aVersion, int aArgumentCount, char ** aArguments)
 	: BasicApplication(aName, aVersion, aArgumentCount, aArguments), mQtApplication(aArgumentCount, aArguments)
 {
-	mQtApplication.setOrganizationName("CyberPlat");
 	mQtApplication.setApplicationName(aName);
 	mQtApplication.setApplicationVersion(aVersion);
 

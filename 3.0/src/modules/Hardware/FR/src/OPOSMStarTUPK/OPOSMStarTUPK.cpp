@@ -3,12 +3,20 @@
 // windows
 #include <objbase.h>
 
+#pragma push_macro("min")
+#pragma push_macro("max")
+#undef min
+#undef max
+
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QUuid>
 #include <QtCore/QRegExp>
 #include <QtCore/QSettings>
 #include <Common/QtHeadersEnd.h>
+
+#pragma pop_macro("max")
+#pragma pop_macro("min")
 
 // Project
 #include "OPOSMStarTUPK.h"

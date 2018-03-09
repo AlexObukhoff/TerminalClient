@@ -1,6 +1,6 @@
 ﻿/* @file Контейнер с двумя изменяемыми и одной статичной раскладкой. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "../scripts/gui.js" as GUI
 
 // Клавиатура

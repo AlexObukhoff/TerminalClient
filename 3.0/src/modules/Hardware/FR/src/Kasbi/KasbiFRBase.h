@@ -69,7 +69,7 @@ protected:
 	virtual bool execZReport(bool aAuto);
 
 	/// Открыть смену.
-	virtual bool openSession();
+	bool openSession();
 
 	/// Продажа.
 	bool sale(const SDK::Driver::SAmountData & aAmountData);

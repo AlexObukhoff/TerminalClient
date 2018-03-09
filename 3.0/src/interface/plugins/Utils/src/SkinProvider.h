@@ -5,14 +5,13 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QMap>
-#include <QtDeclarative/QDeclarativeExtensionPlugin>
-#include <QtDeclarative/QDeclarativeImageProvider>
+#include <QtQuick/QQuickImageProvider>
 #include <Common/QtHeadersEnd.h>
 
 class Skin;
 
 //------------------------------------------------------------------------------
-class SkinProvider : public QDeclarativeImageProvider
+class SkinProvider : public QQuickImageProvider
 {
 public:
 	SkinProvider(const QString & aInterfacePath, const QString & aLogoPath, const QString & aUserLogoPath, const Skin * aSkin);

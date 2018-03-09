@@ -5,8 +5,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QProcess>
-#include <QtGui/QMessageBox>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QPushButton>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
@@ -67,8 +67,8 @@ WatchServiceController::WatchServiceController()
 	connect(&mIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayIconActivated(QSystemTrayIcon::ActivationReason)));
 
 	mIcon.setContextMenu(&mMenu);
-	mIcon.show();
 	mIcon.setIcon(QIcon(":/icons/tray.png"));
+	mIcon.show();
 
 	LOG(getLog(), LogLevel::Normal, "WatchServiceController started.");
 }

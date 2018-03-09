@@ -7,7 +7,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QSharedPointer>
 #include <QtCore/QPointer>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include "ui_DeviceSlot.h"
 #include <Common/QtHeadersEnd.h>
 

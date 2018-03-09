@@ -3,7 +3,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QObject>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <Common/QtHeadersEnd.h>
 
 // Plugin SDK
@@ -132,9 +132,11 @@ void Keyboard::reset(const QVariantMap & /*aParameters*/)
 }
 
 //---------------------------------------------------------------------------
-QGraphicsItem * Keyboard::getWidget() const
+QQuickItem * Keyboard::getWidget() const
 {
-	return mMainWidget;
+	//return mMainWidget;
+	//FIXME
+	return nullptr;
 }
 
 //---------------------------------------------------------------------------

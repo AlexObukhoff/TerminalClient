@@ -119,7 +119,7 @@ void Package::deploy(const TFileList & aFiles, const QString & aDestination) thr
 		}
 		else
 		{
-			if (!unzip.extract(QDir::toNativeSeparators(getTemporaryFolder() + "/" + getId() + ".zip"), QDir::toNativeSeparators(aDestination), mSkipExisting))
+			if (!unzip.unpack(QDir::toNativeSeparators(getTemporaryFolder() + "/" + getId() + ".zip"), QDir::toNativeSeparators(aDestination), mSkipExisting))
 			{
 				throw Exception(QString("Failed to unzip archive %1.zip error %2. Output: %3").arg(getId()).arg(unzip.exitCode()).arg(QString(unzip.messages())));
 			}
@@ -141,7 +141,7 @@ void Package::applyPostActions(const QString & aWorkingDir) throw (std::exceptio
 
 		Packer unzip("", Log());
 
-		if (!unzip.extract(QDir::toNativeSeparators(getTemporaryFolder() + "/" + getId() + ".zip"), QDir::toNativeSeparators(getTemporaryFolder()), false, postActions))
+		if (!unzip.unpack(QDir::toNativeSeparators(getTemporaryFolder() + "/" + getId() + ".zip"), QDir::toNativeSeparators(getTemporaryFolder()), false, postActions))
 		{
 			throw Exception(QString("Failed to unzip files from archive %1.zip error %2. Output: %3.").arg(getId()).arg(unzip.exitCode()).arg(QString(unzip.messages())));
 		}

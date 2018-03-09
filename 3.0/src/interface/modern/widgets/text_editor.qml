@@ -1,6 +1,6 @@
-﻿/* @file Редактор с буквенно-цифровой клавиатурой. */
+﻿﻿/* @file Редактор с буквенно-цифровой клавиатурой. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 
 FocusScope {
 	id: rootItem

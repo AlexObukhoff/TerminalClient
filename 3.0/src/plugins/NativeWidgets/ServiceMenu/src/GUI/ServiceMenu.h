@@ -1,11 +1,11 @@
-/* @file Виджет сервисного меню */
+﻿/* @file Виджет сервисного меню */
 
 #pragma once
 
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QSharedPointer>
-#include <QtGui/QGraphicsProxyWidget>
+#include <QtWidgets/QGraphicsProxyWidget>
 #include <Common/QtHeadersEnd.h>
 
 // Plugin SDK
@@ -66,7 +66,7 @@ public:
 	virtual QString getError() const;
 
 	// Возвращает виджет.
-	virtual QGraphicsItem * getWidget() const;
+	virtual QQuickItem * getWidget() const;
 
 	virtual QWidget * getNativeWidget() const { return mMainServiceWindow; }
 

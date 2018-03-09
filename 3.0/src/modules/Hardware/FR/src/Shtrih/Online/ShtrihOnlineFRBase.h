@@ -45,7 +45,7 @@ protected:
 	virtual bool prepareFiscal();
 
 	/// Установить TLV-параметр.
-	virtual bool setTLV(int aField, bool aForSale = false);
+	virtual bool setTLV(int aField);
 
 	/// Проверить название продажи.
 	virtual void checkSalesName(QString & aName);
@@ -55,9 +55,6 @@ protected:
 
 	/// Продажа.
 	virtual bool sale(const SDK::Driver::SAmountData & aAmountData, bool aBack);
-
-	/// Закрыть чек.
-	virtual bool closeDocument(double aSum, SDK::Driver::EPayTypes::Enum aPayType);
 
 	/// Отмена фискального чека.
 	virtual bool cancelFiscal();
@@ -75,7 +72,7 @@ protected:
 	bool getPrinterStatus(TStatusCodes & aStatusCodes);
 
 	/// Открыть смену.
-	virtual bool openSession();
+	bool openSession();
 
 	/// Включить автообновление прошивок.
 	bool enableFirmwareUpdating();

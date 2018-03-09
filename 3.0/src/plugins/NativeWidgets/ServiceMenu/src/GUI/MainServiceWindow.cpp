@@ -2,7 +2,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QStatusBar>
+#include <QtWidgets/QStatusBar>
 #include <QtCore/QDateTime>
 #include <Common/QtHeadersEnd.h>
 

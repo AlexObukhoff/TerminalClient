@@ -8,7 +8,6 @@ StaticLibrary {
 
 	Depends { name: "Core" }
 	Depends { name: "NetworkTaskManager" }
-	Depends { name: "qt5port" }
 
 	files: [ "src/*.cpp", "src/*.h" ]
 }

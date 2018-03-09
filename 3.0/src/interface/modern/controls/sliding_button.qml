@@ -1,6 +1,6 @@
 ﻿/* @file Кнопка со скользящей анимацией. */
 
-import QtQuick 1.1
+import QtQuick 2.2
 
 Button {
 	id: rootItem

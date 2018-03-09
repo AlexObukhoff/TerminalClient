@@ -1,26 +1,13 @@
 /* @file Парсер и загрузчик json-описаний компонентов главного экрана*/
 
 //------------------------------------------------------------------------------
-function load(aPath, aParent) {
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == XMLHttpRequest.DONE) {
-			loaded(eval('(' + xhr.responseText + ')'), aParent);
-		}
-	}
-
-	xhr.open("GET", aPath);
-	xhr.send();
-}
-
-//------------------------------------------------------------------------------
-function loaded(aObject, aParent) {
+function createMainScene(aObject, aParent) {
 	aParent.spacing = aObject.spacing;
 
 	var items = {};
 
 	for (var item in aObject.items) {
-		var component = Qt.createComponent("widgets/" + aObject.items[item].path);
+		var component = Qt.createComponent("../widgets/" + aObject.items[item].path);
 		if (component.status == Component.Ready) {
 			var object = component.createObject(aParent, aObject.items[item].parameters);
 

@@ -1,4 +1,4 @@
-/* @file Реализация запроса статуса платежа. */
+﻿/* @file Реализация запроса статуса платежа. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -151,7 +151,7 @@ QString PaymentResponse::toLogString() const
 	QStringList result;
 
 	// Значения зашифрованных полей мы должны скрывать.
-	for (QVariantMap::iterator it = getParameters().begin(); it != getParameters().end(); ++it)
+	for (auto it = getParameters().begin(); it != getParameters().end(); ++it)
 	{
 		result << QString("%1 = \"%2\"").arg(it.key()).arg(mCryptedFields.contains(it.key()) ? "**CRYPTED**" : it.value().toString());
 	}

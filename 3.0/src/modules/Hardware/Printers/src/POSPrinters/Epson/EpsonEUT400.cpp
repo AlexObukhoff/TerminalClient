@@ -42,6 +42,7 @@ EpsonEUT400::EpsonEUT400()
 	// параметры моделей
 	mDeviceName = "Epson EU-T400";
 	mModelID = '\x27';
+	mRussianCodePage = '\x11';
 	mIOMessageLogging = ELoggingType::Write;
 	setConfigParameter(CHardware::Printer::FeedingAmount, 0);
 	setConfigParameter(CHardware::Printer::Commands::Cutting, CEpsonEUT400::Command::CutBackFeed);

@@ -5,7 +5,7 @@
     <name>result_scene</name>
     <message>
         <location filename="../result_scene.qml" line="14"/>
-        <location filename="../result_scene.qml" line="246"/>
+        <location filename="../result_scene.qml" line="245"/>
         <source>result_scene#back</source>
         <translation>Zurück</translation>
     </message>
@@ -46,7 +46,7 @@ Bitte drücken Sie &quot;E-MAIL&quot; um eine elektronische Rechnung zu erhalten
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="244"/>
+        <location filename="../result_scene.qml" line="243"/>
         <source>result_scene#take_change_receipt2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -56,13 +56,13 @@ Bitte drücken Sie &quot;E-MAIL&quot; um eine elektronische Rechnung zu erhalten
         <translation>Rückgelderstattung in Bar %1 %2</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="238"/>
+        <location filename="../result_scene.qml" line="237"/>
         <source>result_scene#take_change_receipt</source>
         <translation>Druecken Sie „Schließen“, um den Vorgang abzuschließen.&lt;br&gt;Um das Rückgeld zu erhalten, wenden Sie sich bitte an die Kasse.</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="239"/>
-        <location filename="../result_scene.qml" line="245"/>
+        <location filename="../result_scene.qml" line="238"/>
+        <location filename="../result_scene.qml" line="244"/>
         <source>result_scene#take_change_receipt_error</source>
         <translation>Um das Rückgeld zu erhalten, wenden Sie sich bitte an den Anbieter.</translation>
     </message>
@@ -122,17 +122,17 @@ Bitte drücken Sie &quot;E-MAIL&quot; um eine elektronische Rechnung zu erhalten
         <translation>Zur Aktivierung der Karte &quot;CyberZahlung&quot; einfach die Karte vor den Barcode-Scanner halten.</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="153"/>
+        <location filename="../result_scene.qml" line="152"/>
         <source>result_scene#cash</source>
         <translation>Bargeld</translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="247"/>
+        <location filename="../result_scene.qml" line="246"/>
         <source>result_scene#confirm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../result_scene.qml" line="272"/>
+        <location filename="../result_scene.qml" line="271"/>
         <source>result_scene#enter_phone_number</source>
         <translation>Geben Sie Ihre Handynummer ein.</translation>
     </message>

@@ -3,7 +3,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtGui/QPainter>
-#include <QtGui/QItemDelegate>
+#include <QtWidgets/QItemDelegate>
 #include <Common/QtHeadersEnd.h>
 
 //---------------------------------------------------------------------------

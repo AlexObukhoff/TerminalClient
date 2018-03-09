@@ -14,7 +14,7 @@ Item {
 	// Показывает содержит ли редактор допустимое значение
 	property bool acceptable: global.enabled
 
-	property bool rollup: true
+	property bool rollup: false
 
 	property bool setupDefaultValue: true
 
@@ -122,7 +122,6 @@ Item {
 		var errmsg = aResult.hasOwnProperty("ERRMSG");
 
 		global.enabled = !errmsg;
-		rootItem.rollup = !global.enabled
 
 		bookingResult.text = errmsg ? aResult.ERRMSG : ""
 
@@ -175,8 +174,6 @@ Item {
 
 		var $ = function (aKey, aIndex, aUseRaw) { return eval("fields.%1%2.%3".arg(aKey).arg(aIndex ? aIndex : "").arg(aUseRaw ? "rawValue" : "value")) }
 
-		var woBedding = !JSON.parse($("wo_bedding", 0, true))
-
 		var blanks = [];
 
 		for (var num = 1; num <= $("ticket_num"); num++) {
@@ -196,7 +193,7 @@ Item {
 															doc: $("doc", num),
 															docType: $("doc_type", num, true),
 															sex: $("sex", num, true),
-															citizenship: $("citizenship", num, true),
+															citizenship: $("citizenship", num),
 															childBirthday: fields.hasOwnProperty("birthday%1".arg(num)) ? $("birthday", num) : "",
 															needPlace: fields.hasOwnProperty("need_place%1".arg(num)) ? $("need_place", num, true) : 1,
 															phone: fields.hasOwnProperty("phone%1".arg(num)) ? $("phone", num) : ""
@@ -215,7 +212,6 @@ Item {
 
 					Railway.$.updateTicket("orderId", "");
 					Backend$KZD.bookingFinished.connect(onBookingFinished);
-					Railway.$.updateTicket("woBedding", woBedding);
 					Railway.$.updateTicket("blanks", blanks);
 					Backend$KZD.booking(Railway.$.ticket());
 				}

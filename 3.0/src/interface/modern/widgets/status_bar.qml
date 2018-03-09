@@ -1,6 +1,7 @@
-/* @file Информационная строка. */
+﻿/* @file Информационная строка. */
 
-import QtQuick 1.1
+import QtQuick 2.2
+
 
 Item {
 	id: rootItem
@@ -125,13 +126,15 @@ Item {
 			repeat: true
 			triggeredOnStart: true
 
-			onTriggered: phone.text = function() {
+			function updatePhone() {
 				var result = phoneList[currentIndex++];
 				if (currentIndex >= phoneList.length) {
 					currentIndex = 0;
 				}
 				return result;
 			}
+
+			onTriggered: phone.text = updatePhone()
 
 			Component.onCompleted: {
 				phoneList = Core.environment.dealer.phone.replace(", ", ",").split(",");

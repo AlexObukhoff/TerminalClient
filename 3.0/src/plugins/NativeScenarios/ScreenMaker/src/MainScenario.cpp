@@ -2,13 +2,12 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QGraphicsSceneMouseEvent>
-#include <QtGui/QWidget>
+#include <QtWidgets/QGraphicsSceneMouseEvent>
+#include <QtWidgets/QWidget>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 #include <QtGui/QImage>
-#include <QtGui/QFileDialog>
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
 #include <Common/QtHeadersEnd.h>

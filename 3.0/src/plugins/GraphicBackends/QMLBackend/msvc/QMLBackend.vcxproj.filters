@@ -39,9 +39,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\PluginFactoryDefinition.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\QMLBackend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -57,6 +54,18 @@
     <ClCompile Include="GeneratedFiles\qml_backend\ReleaseWithDebugInfo\moc_QMLBackend.cpp">
       <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PluginLibraryDefinition.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\QMLGraphicsItem.h">
@@ -66,6 +75,9 @@
   <ItemGroup>
     <CustomBuild Include="..\src\QMLBackend.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\PluginLibraryDefinition.h">
+      <Filter>Source Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

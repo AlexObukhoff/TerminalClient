@@ -1,4 +1,4 @@
-/* @file Набор функционала для работы с системными ресурсами с использованием SetupDi. */
+﻿/* @file Набор функционала для работы с системными ресурсами с использованием SetupDi. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -257,7 +257,7 @@ bool SystemDeviceUtils::enumerateSystemDevices(const QUuid & aUuid, TWinDevicePr
 			}
 
 			QString pathProperty = getProperty(deviceInfo, deviceData, aPathProperty);
-			QString path = QString::fromUtf16(detailedData->DevicePath);
+			QString path = QString::fromWCharArray(detailedData->DevicePath);
 			aDeviceProperties[pathProperty].path = path;
 
 			QRegExp regexp("vid_([0-9a-fA-F]+)");

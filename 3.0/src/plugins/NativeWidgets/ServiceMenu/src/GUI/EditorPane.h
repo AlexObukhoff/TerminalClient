@@ -6,7 +6,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QPointer>
 #include <QtCore/QObject>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include "ui_EditorPane.h"
 #include <QtCore/QDebug>
 #include <Common/QtHeadersEnd.h>

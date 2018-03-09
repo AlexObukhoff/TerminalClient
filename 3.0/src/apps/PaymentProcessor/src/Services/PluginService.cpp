@@ -1,4 +1,4 @@
-﻿/* @file Реализация менеджера плагинов. */
+/* @file Реализация менеджера плагинов. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -6,7 +6,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDirIterator>
-#include <QtCore/QtConcurrentRun>
+#include <QtConcurrent/QtConcurrentRun>
 #include <Common/QtHeadersEnd.h>
 
 #ifdef Q_OS_WIN

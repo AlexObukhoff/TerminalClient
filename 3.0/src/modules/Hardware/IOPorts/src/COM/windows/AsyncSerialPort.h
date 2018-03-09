@@ -1,8 +1,11 @@
-/* @file Асинхронная Windows-реализация COM-порта. */
+﻿/* @file Асинхронная Windows-реализация COM-порта. */
 
 #pragma once
 
 // Windows
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
 
 // Qt

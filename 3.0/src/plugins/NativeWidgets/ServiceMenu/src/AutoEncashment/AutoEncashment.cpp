@@ -2,7 +2,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QGraphicsScene>
+#include <QtWidgets/QGraphicsScene>
 #include <Common/QtHeadersEnd.h>
 
 // Plugin SDK
@@ -151,9 +151,11 @@ void AutoEncashment::reset(const QVariantMap & /*aParameters*/)
 }
 
 //---------------------------------------------------------------------------
-QGraphicsItem * AutoEncashment::getWidget() const
+QQuickItem * AutoEncashment::getWidget() const
 {
-	return mMainWidget;
+	//return mMainWidget;
+	//FIXME
+	return nullptr;
 }
 
 //---------------------------------------------------------------------------

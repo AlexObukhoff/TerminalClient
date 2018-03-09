@@ -1,6 +1,6 @@
 ﻿/* @file Всплывающее окно выбора провайдера */
 
-import QtQuick 1.1
+import QtQuick 2.2
 import "plugins" 1.0
 import "controls" 1.0 as Controls
 import "widgets" 1.0 as Widgets
@@ -74,7 +74,7 @@ Item {
 			from: 197
 			to: 1025
 
-			onCompleted: Core.graphics.hidePopup()
+			onRunningChanged: if(!running) { Core.graphics.hidePopup() }
 		}
 
 		NumberAnimation {

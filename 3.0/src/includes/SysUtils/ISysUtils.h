@@ -1,4 +1,4 @@
-/* @file Интерфейс к SysUtils. Нужно для функций, специфичных для конкретной ОС. */
+﻿/* @file Интерфейс к SysUtils. Нужно для функций, специфичных для конкретной ОС. */
 
 #pragma once
 
@@ -10,7 +10,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QDebug>
 #include <QtCore/QVariantMap>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <Common/QtHeadersEnd.h>
 
 // Modules

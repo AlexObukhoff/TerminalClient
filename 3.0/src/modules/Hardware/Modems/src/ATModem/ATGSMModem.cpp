@@ -1,4 +1,4 @@
-/* @file AT-совместимый модем. */
+﻿/* @file AT-совместимый модем. */
 
 // STL
 #include <algorithm>

@@ -10,9 +10,10 @@
 #include <QtCore/QStack>
 #include <QtCore/QSharedPointer>
 #include <QtGui/QInputEvent>
-#include <QtGui/QGraphicsView>
-#include <QtGui/QGraphicsScene>
-#include <QtGui/QInputContext>
+#include <QtQuick/QQuickView>
+#include <QtQuickWidgets/QQuickWidget>
+#include <QtQuick/QQuickItem>
+//#include <QtGui/QInputContext>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -32,76 +33,82 @@ namespace
 	const QString DefaultBackgroundColor = "#003e75";
 	const int DefaultAlpha = 0xd8;
 
-class ModalBackgroundWidget: public QGraphicsRectItem
-{
-public:
-	ModalBackgroundWidget()
+	class ModalBackgroundWidget : public QQuickItem
 	{
-		setBrush(ModalBackgroundWidget::getBrush(DefaultBackgroundColor));
-	}
+	public:
+		ModalBackgroundWidget()
+		{
+			if (window())
+			{
+				window()->setColor(ModalBackgroundWidget::getColor(DefaultBackgroundColor));
+			}
+		}
 
-public:
-	void setColor(const QString & aColor, int aAlpha = DefaultAlpha)
+	public:
+		void setColor(const QString & aColor, int aAlpha = DefaultAlpha)
+		{
+			if (window())
+			{
+				window()->setColor(ModalBackgroundWidget::getColor(aColor.isEmpty() ? DefaultBackgroundColor : aColor, aAlpha));
+			}
+		}
+
+	private:
+		virtual bool sceneEvent(QEvent * aEvent)
+		{
+			return dynamic_cast<QInputEvent *>(aEvent) == 0;
+		}
+
+		static QColor getColor(const QString & aColor, int aAlpha = DefaultAlpha)
+		{
+			QColor color(aColor);
+			color.setAlpha(aAlpha);
+
+			return color;
+		}
+	};
+
+	class DebugWidget : public QQuickItem
 	{
-		setBrush(ModalBackgroundWidget::getBrush(aColor.isEmpty() ? DefaultBackgroundColor : aColor, aAlpha));
-	}
+	public:
+		DebugWidget()
+		{
+			/*setBrush(QBrush(QColor(255, 0, 255)));
+			setPen(QPen(QColor(255, 255, 0)));
+			setZValue(10);*/
+		}
 
-private:
-	virtual bool sceneEvent(QEvent * aEvent)
-	{
-		return dynamic_cast<QInputEvent *>(aEvent) == 0;
-	}
+	protected:
+		/*virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
+		{
+			QQuickItem::paint(painter, option, widget);
 
-	static QBrush getBrush(const QString & aColor, int aAlpha = DefaultAlpha)
-	{
-		QColor color(aColor);
-		color.setAlpha(aAlpha);
+			painter->setFont(QFont("Arial", 12));
+			painter->drawText(rect(), Qt::AlignCenter, getDebugInfo());
+		}*/
 
-		return QBrush(color);
-	}
-};
+	public:
+		void setPosition(const QPoint & aLeftBottomPoint)
+		{
+			//setRect(QRect(aLeftBottomPoint.x(), aLeftBottomPoint.y() - 20, 100, 20));
+		}
 
-class DebugWidget : public QGraphicsRectItem
-{
-public:
-	DebugWidget()
-	{
-		setBrush(QBrush(QColor(255, 0, 255)));
-		setPen(QPen(QColor(255, 255, 0)));
-		setZValue(10);
-	}
+		void updateMousePos(const QPoint & aPos) { mMousePos = aPos; update(); }
 
-protected:
-	virtual void	paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
-	{
-		QGraphicsRectItem::paint(painter, option, widget);
+	private:
+		QString getDebugInfo() const
+		{
+			return QString("(%1; %2)").arg(mMousePos.x()).arg(mMousePos.y());
+		}
 
-		painter->setFont(QFont("Arial", 12));
-		painter->drawText(rect(), Qt::AlignCenter, getDebugInfo());
-	}
-
-public:
-	void setPosition(const QPoint & aLeftBottomPoint)
-	{
-		setRect(QRect(aLeftBottomPoint.x(), aLeftBottomPoint.y() - 20, 100, 20));
-	}
-
-	void updateMousePos(const QPoint & aPos) { mMousePos = aPos; update(); }
-
-private:
-	QString getDebugInfo() const
-	{
-		return QString("(%1; %2)").arg(mMousePos.x()).arg(mMousePos.y());
-	}
-
-private:
-	QPoint mMousePos;
-};
+	private:
+		QPoint mMousePos;
+	};
 
 }
 
 //---------------------------------------------------------------------------
-class KeyboardContext: public QInputContext
+/*class KeyboardContext : public QInputContext
 {
 	Q_OBJECT
 
@@ -114,7 +121,7 @@ public:
 
 signals:
 	void requestSoftwareInputPanel();
-};
+};*/
 
 //---------------------------------------------------------------------------
 /// Графический интерфейс (канва + контейнер графических движков).
@@ -128,7 +135,7 @@ public:
 
 	/// Инициализация. Вызывается после addContentDirectory() и addEngine(), 
 	/// инициализирует экран.
-	bool initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aShowDebugInfo = false);
+	bool initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aUseOpenGL = false, bool aShowDebugInfo = false);
 
 	/// Освобождение ресурсов
 	bool finalize();
@@ -186,7 +193,7 @@ public:
 
 private slots:
 	void onRequestSoftwareInputPanel();
-	void setFrontWidget(QGraphicsObject * aNewWidget, QGraphicsObject * aOldWidget, int aLevel, bool aPopup);
+	void setFrontWidget(QQuickItem * aNewWidget, QQuickItem * aOldWidget, int aLevel, bool aPopup);
 
 signals:
 	/// Сигнал об активности пользователя.
@@ -201,7 +208,7 @@ signals:
 	void keyPressed(QString aText);
 
 private: // Методы
-	// Перехватываем события активности пользователя и закрытия окна.
+			// Перехватываем события активности пользователя и закрытия окна.
 	virtual bool eventFilter(QObject * aObject, QEvent * aEvent);
 	bool showWidget(const QString & aScene, bool aPopup, const QVariantMap & aParameters);
 
@@ -210,7 +217,7 @@ private: // Методы
 	void hideVirtualKeyboard();
 
 private: // Типы
-	/// Параметры дисплея.
+			/// Параметры дисплея.
 	struct SScreen
 	{
 		int   number;     /// Номер дисплея.
@@ -231,15 +238,14 @@ private: // Типы
 	typedef QMap<QString, SWidget> TWidgetList;
 
 private: // Данные
-	// Интерфейс приложения.
+			// Интерфейс приложения.
 	SDK::GUI::IGraphicsHost * mHost;
 
 	/// Список доступных экранов.
 	QMap<int, SScreen> mScreens;
 
 	// Холст.
-	QGraphicsView mView;
-	QGraphicsScene mScene;
+	QQuickWidget mView;
 
 	// Список каталогов с контентом.
 	QStringList mContentDirectories;

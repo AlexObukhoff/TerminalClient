@@ -2,7 +2,9 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include "qjson.h"
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QDebug>
 #include <Common/QtHeadersEnd.h>
 

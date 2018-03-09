@@ -6,15 +6,16 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTimer>
-#include <QtCore/QtConcurrentRun>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QFuture>
 #include <QtCore/QDateTime>
 #include <QtCore/QSettings>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QLayout>
-#include <QtGui/QCheckBox>
-#include <QtGui/QButtonGroup>
+#include <QtCore/QItemSelectionModel>
+#include <QtCore/QSortFilterProxyModel>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QButtonGroup>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -54,8 +55,8 @@ PaymentServiceWindow::PaymentServiceWindow(ServiceMenuBackend * aBackend, QWidge
 	mProxyModel->setSourceModel(mModel);
 	tvPayments->setModel(mProxyModel);
 
-	tvPayments->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-	tvPayments->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+	tvPayments->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+	tvPayments->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 	connect(mProxyModel, SIGNAL(layoutChanged()), tvPayments, SLOT(resizeRowsToContents()), Qt::QueuedConnection);
 
 	createColumnWidgets();

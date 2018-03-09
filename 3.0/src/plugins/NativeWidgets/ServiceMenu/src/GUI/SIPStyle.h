@@ -4,7 +4,7 @@
 
 // Qt
 #include "Common/QtHeadersBegin.h"
-#include <QtGui/QProxyStyle>
+#include <QtWidgets/QProxyStyle>
 #include "Common/QtHeadersEnd.h"
 
 //------------------------------------------------------------------------

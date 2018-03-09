@@ -3,7 +3,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtCore/QTimer>
 #include <Common/QtHeadersEnd.h>
 

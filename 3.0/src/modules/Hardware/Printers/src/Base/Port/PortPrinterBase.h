@@ -50,9 +50,6 @@ public:
 	/// Инициализация устройства.
 	virtual bool updateParametersOut() { return true; };
 
-	/// Напечатать массив строк.
-	virtual bool print(const QStringList & aReceipt);
-
 	/// Напечатать массив строк из другого драйвера.
 	virtual bool printOut(const SPrintingOutData & aPrintingOutData);
 
@@ -65,6 +62,9 @@ protected:
 
 	/// Возможна ли печать.
 	virtual bool isPossible(bool aOnline, QVariant aCommand = QVariant());
+
+	/// Выполнить нереентерабельную команду.
+	virtual bool processNonReentrant(TBoolMethod aCommand);
 
 	/// Напечатать чек.
 	virtual bool printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt);

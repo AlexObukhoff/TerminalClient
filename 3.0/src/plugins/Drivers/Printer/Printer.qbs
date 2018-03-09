@@ -6,7 +6,7 @@ Project {
 	DriverTemplate {
 		name: "printers"
 
-		Depends { name: "Qt"; submodules: ["axcontainer", "gui"] }
+		Depends { name: "Qt"; submodules: ["axcontainer", "gui", "printsupport"] }
 
 		Depends { name: "DriversSDK" }
 		Depends { name: "HardwareCommon" }

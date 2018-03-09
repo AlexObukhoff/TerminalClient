@@ -137,7 +137,7 @@ void LogArchiver::packLogs(QDate aDate)
 	QStringList archiveWildcards;
 	archiveWildcards << "*.zip" << "*.7z";
 
-	if (!mPacker.compress(logArchiveFileName(aDate), mKernelPath, toCompress, archiveWildcards).isEmpty())
+	if (!mPacker.pack(logArchiveFileName(aDate), mKernelPath, toCompress, archiveWildcards).isEmpty())
 	{
 		if (!mPacker.exitCode())
 		{

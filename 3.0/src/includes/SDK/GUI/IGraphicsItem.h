@@ -1,4 +1,4 @@
-/* @file Интерфейс графического объекта. */
+﻿/* @file Интерфейс графического объекта. */
 
 #pragma once
 
@@ -6,7 +6,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QString>
 #include <QtCore/QVariantMap>
-#include <QtGui/QGraphicsItem>
+#include <QtQuick/QQuickItem>
 #include <Common/QtHeadersEnd.h>
 
 namespace SDK { 
@@ -36,7 +36,7 @@ public:
 	virtual QString getError() const = 0;
 
 	/// Возвращает объект сцены.
-	virtual QGraphicsItem * getWidget() const = 0;
+	virtual QQuickItem * getWidget() const = 0;
 
 	// Возвращает нативный виджет.
 	virtual QWidget * getNativeWidget() const = 0;

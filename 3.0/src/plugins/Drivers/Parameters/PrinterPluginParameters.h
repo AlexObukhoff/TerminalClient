@@ -40,7 +40,7 @@ SDK::Plugin::SPluginParameter setLeftReceiptAction(const QString & aParameter, b
 SDK::Plugin::SPluginParameter setPresentationLength(const QString & aOptionalTranslation = "", int aMin = -1, int aMax = -1);
 
 /// Длина презентации чека.
-SDK::Plugin::SPluginParameter setCustomCodepage();
+SDK::Plugin::SPluginParameter setCodepage();
 
 /// Способ формирования фискального чека.
 SDK::Plugin::SPluginParameter setFiscalChequeCreation();

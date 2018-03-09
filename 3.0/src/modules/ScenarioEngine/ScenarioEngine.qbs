@@ -4,7 +4,7 @@ StaticLibrary {
 	name: "ScenarioEngine"
 
 	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "concurrent"] }
+	Depends { name: "Qt"; submodules: ["core", "concurrent", "script"] }
 
 	Depends { name: "Core" }
 

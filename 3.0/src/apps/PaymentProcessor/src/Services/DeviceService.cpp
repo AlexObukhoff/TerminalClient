@@ -2,8 +2,8 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QtConcurrentRun>
 #include <QtCore/QFileInfo>
+#include <QtConcurrent/QtConcurrentRun>
 #include <Common/QtHeadersEnd.h>
 
 // STL
