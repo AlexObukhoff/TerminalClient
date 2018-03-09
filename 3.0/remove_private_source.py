@@ -36,6 +36,7 @@ def is_dir(p):
 
 	
 public_files = set(get_public_filenames())
+removed_counter = 0
 
 for f in get_all_files():
 
@@ -57,14 +58,8 @@ for f in get_all_files():
 	if is_public:
 		continue
 		
-	print("Remove ", f)
 	os.remove(os.getcwd() + f.replace("/", "\\"))
+	removed_counter += 1
 
-
-
-
-
-
-
-
+print("Files removed: {}".format(removed_counter))
 
