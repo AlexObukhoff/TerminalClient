@@ -1,7 +1,7 @@
 /filelist.txt
 /gpl-2.0.txt
 /license.txt
-/remove_private_source.py
+/update_gpl_source.py
 /doc/Schemas/
 /scripts/build/runtimes/common.xml
 /scripts/build/runtimes/terminal_common.xml

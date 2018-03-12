@@ -4,6 +4,7 @@ import argparse
 import git  # GitPython module
 import hashlib
 from shutil import copyfile
+import pathlib
 
 
 class PublicFiles(object):
@@ -116,6 +117,7 @@ def main(gpl_path, internal_path):
             if gpl_files.file_content_hash(i) != internal_files.file_content_hash(i):
                 print("Updating {}".format(internal_files.original_name(i)))
                 dst = gpl_files.absolute_path(internal_files.original_name(i))
+                pathlib.Path(os.path.dirname(dst)).mkdir(parents=True, exist_ok=True)
                 copyfile(internal_files.absolute_path(i), dst)
                 gpl_files.git_repo.index.add([dst])
                 updated_counter += 1
@@ -139,8 +141,10 @@ def main(gpl_path, internal_path):
 
     if removed_counter or updated_counter:
         message = "refs #1 Syncronizing with {branch} commit: {c}".format(branch="release", c=internal_files.git_sha())
-        commit = gpl_files.git_repo.index.commit(message)
-        print("Commit GPL repo: {}".format(commit.hexsha))
+        print("Sources changed. Please review changes, commit and push.")
+        print("Cooment: {}".format(message))
+        # commit = gpl_files.git_repo.index.commit(message)
+        #print("Commit GPL repo: {}".format(commit.hexsha))
 
 
 if __name__ == '__main__':
