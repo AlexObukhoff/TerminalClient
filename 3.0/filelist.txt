@@ -1,15 +1,13 @@
+/doc/Schemas/
 /filelist.txt
 /gpl-2.0.txt
 /license.txt
-/update_gpl_source.py
-/doc/Schemas/
-/scripts/build/runtimes/common.xml
-/scripts/build/runtimes/terminal_common.xml
-/scripts/build/runtimes/terminal_ru.xml
 /scripts/build/qbs/modules/CoreVersion/
 /scripts/build/qbs/modules/MultiLocale/
 /scripts/build/qbs/modules/VersionUpdater/
-/src/TerminalClient.qbs
+/scripts/build/runtimes/common.xml
+/scripts/build/runtimes/terminal_common.xml
+/scripts/build/runtimes/terminal_ru.xml
 /src/apps/apps.qbs
 /src/apps/Apps.sln
 /src/apps/appTemplate.qbs
@@ -42,7 +40,6 @@
 /src/interface/modern/
 /src/interface/plugins/
 /src/interface/qmlcontrols/
-/src/modules/modules.qbs
 /src/modules/AdBackend/
 /src/modules/Common/
 /src/modules/Connection/
@@ -57,6 +54,7 @@
 /src/modules/Hardware/
 /src/modules/KeysUtils/
 /src/modules/MessageQueue/
+/src/modules/modules.qbs
 /src/modules/Modules.sln
 /src/modules/NetworkTaskManager/
 /src/modules/Packer/
@@ -70,9 +68,9 @@
 /src/modules/WatchServiceClient/
 /src/plugins/Ad/
 /src/plugins/Drivers.sln
-/src/plugins/Drivers/CardReader/
 /src/plugins/Drivers/BillAcceptor/
 /src/plugins/Drivers/BillDispensers/
+/src/plugins/Drivers/CardReader/
 /src/plugins/Drivers/CoinAcceptor/
 /src/plugins/Drivers/FR/
 /src/plugins/Drivers/HID/
@@ -87,6 +85,9 @@
 /src/plugins/NativeWidgets/ServiceMenu/
 /src/plugins/Payments/Cyberplat/
 /src/plugins/Plugins.sln
+/src/qbs/libTemplate.qbs
 /src/runtimes/common/
 /src/runtimes/ru/common/
+/src/TerminalClient.qbs
 /src/tools/Composer/
+/update_gpl_source.py
