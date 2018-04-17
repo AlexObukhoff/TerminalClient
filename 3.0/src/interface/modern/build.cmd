@@ -6,6 +6,8 @@ set LOCALE_DIR=locale
 rem Каталог с файлами локализации
 set BUILD_DIR=build
 
+rmdir /S /Q %BUILD_DIR%
+
 if not exist "%BUILD_DIR%\%LOCALE_DIR%" (
 	mkdir "%BUILD_DIR%\%LOCALE_DIR%"
 )

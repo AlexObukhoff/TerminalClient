@@ -395,7 +395,7 @@ void AtolFRBase::setErrorFlags(char aError, const QByteArray & /*aCommand*/)
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::openFRSession()
+bool AtolFRBase::openSession()
 {
 	if (getSessionState() == ESessionState::Opened)
 	{
@@ -587,7 +587,7 @@ bool AtolFRBase::getStatus(TStatusCodes & aStatusCodes)
 		return false;
 	}
 
-	bool buildOK = !mFRBuild || (mFRBuild >= mModelData.buildVersion);
+	bool buildOK = !mFRBuild || (mFRBuild >= mModelData.build);
 
 	if (!buildOK)
 	{
@@ -645,9 +645,9 @@ bool AtolFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 
 	if (result)
 	{
-		foreach (auto amountData, aPaymentData.amountDataList)
+		foreach (auto unitData, aPaymentData.unitDataList)
 		{
-			result = result && sale(amountData);
+			result = result && sale(unitData);
 		}
 
 		if (result)
@@ -852,33 +852,33 @@ bool AtolFRBase::closeDocument(EPayTypes::Enum aPayType)
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::sale(const SAmountData & aAmountData)
+bool AtolFRBase::sale(const SUnitData & aUnitData)
 {
-	if (!aAmountData.name.isEmpty())
+	if (!aUnitData.name.isEmpty())
 	{
-		printLine(mCodec->fromUnicode(aAmountData.name));
+		printLine(mCodec->fromUnicode(aUnitData.name));
 	}
 
-	if (!aAmountData.VAT)
+	if (!aUnitData.VAT)
 	{
 		QString withoutTaxes = getConfigParameter(CHardware::FR::Strings::WithoutTaxes).toString();
 		printLine(mCodec->fromUnicode(withoutTaxes));
 	}
 
-	int taxGroup = (aAmountData.section == -1) ? mTaxData[aAmountData.VAT].group : aAmountData.section;
+	int taxGroup = (aUnitData.section == -1) ? mTaxData[aUnitData.VAT].group : aUnitData.section;
 
 	QByteArray commandData;
-	commandData.append(CAtolFR::SaleFlags);                         // флаги
-	commandData.append(getBCD(aAmountData.sum / 10.0, 5, 2, 3));    // сумма
-	commandData.append(getBCD(10, 5, 2));                           // количество = 1 штука
-	commandData.append(uchar(taxGroup));                            // отдел (== налоговая ставка)
+	commandData.append(CAtolFR::SaleFlags);                       // флаги
+	commandData.append(getBCD(aUnitData.sum / 10.0, 5, 2, 3));    // сумма
+	commandData.append(getBCD(10, 5, 2));                         // количество = 1 штука
+	commandData.append(uchar(taxGroup));                          // отдел (== налоговая ставка)
 
 	if (processCommand(CAtolFR::Commands::Sale, commandData))
 	{
 		return true;
 	}
 
-	toLog(LogLevel::Error, QString("%1: Failed to sale for %2 (%3, VAT = %4)").arg(mDeviceName).arg(aAmountData.sum, 0, 'f', 2).arg(aAmountData.name).arg(aAmountData.VAT));
+	toLog(LogLevel::Error, QString("%1: Failed to sale for %2 (%3, VAT = %4)").arg(mDeviceName).arg(aUnitData.sum, 0, 'f', 2).arg(aUnitData.name).arg(aUnitData.VAT));
 
 	EFiscalDocumentState::Enum state = EFiscalDocumentState::Other;
 	bool documentOpened = !getFiscalDocumentState(state) || (state == EFiscalDocumentState::Opened) || (state == EFiscalDocumentState::Sale);
@@ -952,6 +952,8 @@ void AtolFRBase::processDeviceData()
 
 	// Вытаскиваем инфо по софта ФР и БЛ запросами версий софта
 	CAtolFR::SSoftInfo softInfo;
+	removeDeviceParameter(CDeviceData::Firmware);
+	removeDeviceParameter(CDeviceData::BootFirmware);
 
 	if (getSoftVersion(CAtolFR::FRSubSystems::FR, softInfo))
 	{
@@ -985,6 +987,8 @@ void AtolFRBase::processDeviceData()
 
 	bool sessionOpened;
 	QDateTime lastOpenedSessionDT;
+
+	removeDeviceParameter(CDeviceData::FR::Session);
 
 	if (getSessionInfo(sessionOpened, lastOpenedSessionDT))
 	{
@@ -1240,12 +1244,12 @@ bool AtolFRBase::enterInnerMode(char aInnerMode)
 	}
 	else if (mMode)
 	{
-		bool resultExitMode = exitInnerMode();
+		bool result = exitInnerMode();
 
 		// если хотим войти в режим выбора, либо не вышло выйти из режима - выходим
-		if ((!resultExitMode) || (aInnerMode == CAtolFR::InnerModes::Choice))
+		if (!result || (aInnerMode == CAtolFR::InnerModes::Choice))
 		{
-			return resultExitMode;
+			return result;
 		}
 	}
 
@@ -1258,14 +1262,14 @@ bool AtolFRBase::enterInnerMode(char aInnerMode)
 	commandData.append(ASCII::NUL);
 	commandData.append(CAtolFR::Users::SysAdmin);
 
-	bool processSuccess = processCommand(CAtolFR::Commands::EnterToMode, commandData);
+	bool result = processCommand(CAtolFR::Commands::EnterToMode, commandData);
 
-	if (processSuccess)
+	if (result)
 	{
 		mMode = aInnerMode;
 	}
 
-	return processSuccess;
+	return result;
 }
 
 //--------------------------------------------------------------------------------

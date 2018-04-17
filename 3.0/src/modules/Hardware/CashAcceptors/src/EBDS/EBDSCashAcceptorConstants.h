@@ -2,9 +2,12 @@
 
 #pragma once
 
+// Modules
 #include "Hardware/Common/ASCII.h"
-#include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
 #include "Hardware/Common/DeviceCodeSpecification.h"
+
+// Project
+#include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
 
 //--------------------------------------------------------------------------------
 namespace CEBDS

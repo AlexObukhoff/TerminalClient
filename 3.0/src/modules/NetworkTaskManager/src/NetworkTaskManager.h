@@ -85,6 +85,8 @@ private slots:
 	void onTaskSslErrors(const QList<QSslError> & aErrors);
 	void onTaskComplete();
 
+	void replaceHostToIP(QNetworkRequest & aRequest);
+
 private:
 	/// Рабочая процедура нити.
 	void run();
@@ -99,6 +101,8 @@ private:
 	TTaskMap mTasks;
 	QSharedPointer<QNetworkAccessManager> mNetwork;
 	QString mUserAgent;
+	QSet<quint32> mNonRespondingAddresses;
+	QMap<quint32, QString> mHostNameCashe;
 };
 
 //------------------------------------------------------------------------

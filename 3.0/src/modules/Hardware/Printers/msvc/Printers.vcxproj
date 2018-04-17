@@ -110,14 +110,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Base\Port\PortPrinterBase.cpp" />
-    <ClCompile Include="..\src\POSPrinters\CitizenPPU231\CitizenPPU231.cpp" />
+    <ClCompile Include="..\src\POSPrinters\Citizen\CitizenPPU231\CitizenPPU231.cpp" />
+    <ClCompile Include="..\src\POSPrinters\Citizen\CitizenPPU700\CitizenPPU700.cpp" />
     <ClCompile Include="..\src\POSPrinters\Common\POSParameters.cpp" />
     <ClCompile Include="..\src\POSPrinters\Common\POSPrinter.cpp" />
-    <ClCompile Include="..\src\POSPrinters\CustomPrinters.cpp" />
-    <ClCompile Include="..\src\POSPrinters\EjectorPOS\CitizenPPU700.cpp" />
-    <ClCompile Include="..\src\POSPrinters\EjectorPOS\CustomVKP80.cpp" />
-    <ClCompile Include="..\src\POSPrinters\EjectorPOS\CustomVKP80III.cpp" />
     <ClCompile Include="..\src\Base\PrinterBase.cpp" />
+    <ClCompile Include="..\src\POSPrinters\Custom\CustomPrinters.cpp" />
+    <ClCompile Include="..\src\POSPrinters\Custom\CustomVKP\CustomVKP80.cpp" />
+    <ClCompile Include="..\src\POSPrinters\Custom\CustomVKP\CustomVKP80III.cpp" />
+    <ClCompile Include="..\src\POSPrinters\EjectorPOS\EjectorPOS.cpp" />
     <ClCompile Include="..\src\POSPrinters\Epson\EpsonEUT400.cpp" />
     <ClCompile Include="..\src\Star\EjectorStarPrinters.cpp" />
     <ClCompile Include="..\src\Star\StarMemorySwitchesBase.cpp" />
@@ -129,7 +130,6 @@
     <ClCompile Include="..\src\SwecoinTTP20XXBase\SwecoinTTP20XXBase.cpp" />
     <ClCompile Include="..\src\Star\StarPrinters.cpp" />
     <ClCompile Include="..\src\SystemPrinter\SystemPrinter.cpp" />
-    <ClCompile Include="..\src\POSPrinters\EjectorPOS\Common\EjectorPOS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\Printers\POSPrinterData.h" />
@@ -137,17 +137,26 @@
     <ClInclude Include="..\src\AV268\AV268.h" />
     <ClInclude Include="..\src\AV268\AV268Constants.h" />
     <ClInclude Include="..\src\Base\Port\PortPrinterBase.h" />
-    <ClInclude Include="..\src\POSPrinters\CitizenCTS310II.h" />
-    <ClInclude Include="..\src\POSPrinters\CitizenPPU231\CitizenPPU231.h" />
-    <ClInclude Include="..\src\POSPrinters\CitizenPPU231\CitizenPPU231Constants.h" />
     <ClInclude Include="..\src\Fujitsu\FujitsuPrinterData.h" />
     <ClInclude Include="..\src\Fujitsu\FujitsuPrinters.h" />
     <ClInclude Include="..\src\GeBe\GeBe.h" />
     <ClInclude Include="..\src\GeBe\GeBEData.h" />
+    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenBase.h" />
+    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenCBM1000II.h" />
+    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenCPP8001.h" />
+    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenCTS2000.h" />
+    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenCTS310II.h" />
+    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenPPU231\CitizenPPU231.h" />
+    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenPPU231\CitizenPPU231Constants.h" />
+    <ClInclude Include="..\src\POSPrinters\Citizen\CitizenPPU700\CitizenPPU700.h" />
     <ClInclude Include="..\src\POSPrinters\Common\POSParameters.h" />
     <ClInclude Include="..\src\POSPrinters\Common\POSPrinter.h" />
-    <ClInclude Include="..\src\POSPrinters\CustomTG2480H.h" />
-    <ClInclude Include="..\src\POSPrinters\EjectorPOS\CustomVKP80III.h" />
+    <ClInclude Include="..\src\POSPrinters\Custom\CustomKZTCodec.h" />
+    <ClInclude Include="..\src\POSPrinters\Custom\CustomPrinters.h" />
+    <ClInclude Include="..\src\POSPrinters\Custom\CustomTG2480H.h" />
+    <ClInclude Include="..\src\POSPrinters\Custom\CustomVKP\CustomVKP80.h" />
+    <ClInclude Include="..\src\POSPrinters\Custom\CustomVKP\CustomVKP80III.h" />
+    <ClInclude Include="..\src\POSPrinters\EjectorPOS\EjectorPOS.h" />
     <ClInclude Include="..\src\POSPrinters\Epson\EpsonConstants.h" />
     <ClInclude Include="..\src\POSPrinters\Epson\EpsonEUT400.h" />
     <ClInclude Include="..\src\PrimexNP2511\PrimexNP2511.h" />
@@ -162,13 +171,6 @@
     <ClInclude Include="..\src\SwecoinTTP20XXBase\SwecoinPrinterData.h" />
     <ClInclude Include="..\src\SwecoinTTP20XXBase\SwecoinTTP20XXBase.h" />
     <ClInclude Include="..\src\Star\StarPrinters.h" />
-    <ClInclude Include="..\src\POSPrinters\EjectorPOS\CitizenPPU700.h" />
-    <ClInclude Include="..\src\POSPrinters\EjectorPOS\Common\EjectorPOS.h" />
-    <ClInclude Include="..\src\POSPrinters\EjectorPOS\CustomVKP80.h" />
-    <ClInclude Include="..\src\POSPrinters\CustomPrinters.h" />
-    <ClInclude Include="..\src\POSPrinters\CitizenCTS2000.h" />
-    <ClInclude Include="..\src\POSPrinters\CitizenCBM1000II.h" />
-    <ClInclude Include="..\src\POSPrinters\CitizenCPP8001.h" />
     <ClInclude Include="..\src\SystemPrinter\SystemPrinters.h" />
     <ClInclude Include="..\src\SystemPrinter\SystemPrinter.h" />
     <ClInclude Include="..\src\Base\PrinterBase.h" />
@@ -181,7 +183,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

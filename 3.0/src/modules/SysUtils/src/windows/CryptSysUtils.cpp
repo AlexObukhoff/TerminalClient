@@ -47,31 +47,30 @@ BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO *pC
 //--------------------------------------------------------------------------------
 qlonglong ISysUtils::verifyTrust(const QString & aFile)
 {
-	GUID WVTPolicyGUID = WINTRUST_ACTION_GENERIC_VERIFY_V2;
-	WINTRUST_DATA trustData;
-
-	memset(&trustData, 0, sizeof(trustData));
-	trustData.cbStruct = sizeof(trustData);
-	trustData.pPolicyCallbackData = 0;
-	trustData.pSIPClientData = 0;
-	trustData.dwUIChoice = WTD_UI_NONE;
-	trustData.fdwRevocationChecks = WTD_REVOKE_NONE;
-	trustData.dwUnionChoice = WTD_CHOICE_FILE;
-	trustData.dwStateAction = 0;
-	trustData.hWVTStateData = 0;
-	trustData.pwszURLReference = 0;
-	trustData.dwUIContext = 0;
-
-	WINTRUST_FILE_INFO fileData;
-	memset(&fileData, 0, sizeof(fileData));
-	fileData.cbStruct = sizeof(WINTRUST_FILE_INFO);
-	fileData.hFile = 0;
-	fileData.pgKnownSubject = 0;
-
 	LONG status = ERROR_SUCCESS;
 
 	try
 	{
+		GUID WVTPolicyGUID = WINTRUST_ACTION_GENERIC_VERIFY_V2;
+		WINTRUST_DATA trustData;
+		memset(&trustData, 0, sizeof(trustData));
+		trustData.cbStruct = sizeof(trustData);
+		trustData.pPolicyCallbackData = 0;
+		trustData.pSIPClientData = 0;
+		trustData.dwUIChoice = WTD_UI_NONE;
+		trustData.fdwRevocationChecks = WTD_REVOKE_NONE;
+		trustData.dwUnionChoice = WTD_CHOICE_FILE;
+		trustData.dwStateAction = 0;
+		trustData.hWVTStateData = 0;
+		trustData.pwszURLReference = 0;
+		trustData.dwUIContext = 0;
+
+		WINTRUST_FILE_INFO fileData;
+		memset(&fileData, 0, sizeof(fileData));
+		fileData.cbStruct = sizeof(WINTRUST_FILE_INFO);
+		fileData.hFile = 0;
+		fileData.pgKnownSubject = 0;
+
 		TCHAR path[MAX_PATH] = {'\0'};
 
 		aFile.toWCharArray(path);
@@ -291,7 +290,6 @@ BOOL GetDateOfTimeStamp(PCMSG_SIGNER_INFO pSignerInfo, SYSTEMTIME *st)
 //--------------------------------------------------------------------------------
 BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO *pCounterSignerInfo)
 {
-	PCCERT_CONTEXT pCertContext = NULL;
 	BOOL fReturn = FALSE;
 	BOOL fResult;
 	DWORD dwSize;
@@ -359,9 +357,6 @@ BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO *pC
 		qCritical() << e.GetMessage();
 	}
 
-	// Clean up.
-	if (pCertContext != NULL) crypt::CertFreeCertificateContext(pCertContext);
-
 	return fReturn;
 }
 
@@ -374,7 +369,6 @@ bool ISysUtils::getSignerInfo(const QString & aFile, SSignerInfo & aSigner)
 	BOOL fResult = false;
 	DWORD dwEncoding, dwContentType, dwFormatType;
 	PCMSG_SIGNER_INFO pSignerInfo = NULL;
-	PCMSG_SIGNER_INFO pCounterSignerInfo = NULL;
 	DWORD dwSignerInfo;
 	CERT_INFO CertInfo;
 	LPTSTR szSignerName = NULL;
@@ -544,7 +538,6 @@ bool ISysUtils::getSignerInfo(const QString & aFile, SSignerInfo & aSigner)
 	
 	// Clean up.
 	if (pSignerInfo != NULL) LocalFree(pSignerInfo);
-	if (pCounterSignerInfo != NULL) LocalFree(pCounterSignerInfo);
 	if (pCertContext != NULL) crypt::CertFreeCertificateContext(pCertContext);
 	if (hStore != NULL) crypt::CertCloseStore(hStore, 0);
 	if (hMsg != NULL) crypt::CryptMsgClose(hMsg);

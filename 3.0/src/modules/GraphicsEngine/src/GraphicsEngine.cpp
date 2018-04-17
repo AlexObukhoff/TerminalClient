@@ -1,4 +1,4 @@
-/* @file Графический интерфейс. */
+﻿/* @file Графический интерфейс. */
 
 
 // Qt
@@ -149,7 +149,7 @@ GraphicsEngine::~GraphicsEngine()
 }
 
 //---------------------------------------------------------------------------
-bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aUseOpenGL, bool aShowDebugInfo)
+bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aShowDebugInfo)
 {
 	// Если задан отсутствующий в системе дисплей, откатываемся на нулевой
 	if (aDisplay < 0 || aDisplay > mScreens.size() - 1)
@@ -175,13 +175,6 @@ bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aSho
 	mDebugWidget.setPosition(QPoint(0, aHeight));
 	mScene.addItem(&mDebugWidget);
 	mDebugWidget.setVisible(aShowDebugInfo);
-
-	if (aUseOpenGL)
-	{
-		QGLFormat format = QGLFormat::defaultFormat();
-		QGLWidget* glWidget = new QGLWidget(format);
-		mView.setViewport(glWidget);
-	}
 
 	mView.setScene(&mScene);
 
@@ -472,8 +465,8 @@ void GraphicsEngine::notify(const QString & aEvent, const QVariantMap & aParamet
 		w = mTopWidget;
 		mTopWidget->graphics->notify(aEvent, aParameters);
 	}
-
-	//toLog(LogLevel::Normal, QString("NOTIFY '%1'. Parameters: %2").arg(w->info.name).arg(formatParams(aParameters)));
+	
+	toLog(LogLevel::Normal, QString("NOTIFY '%1'. Parameters: %2").arg(w->info.name).arg(formatParams(aParameters)));
 }
 
 //---------------------------------------------------------------------------

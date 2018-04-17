@@ -23,12 +23,13 @@ namespace PaymentProcessor {
 //----------------------------------------------------------------------------
 Commission::Commission()
 	: mValue(0.0),
-	  mAbove(CCommissions::DefaultAboveValue),
-	  mBelow(CCommissions::DefaultBelowValue),
-	  mMinCharge(CCommissions::MinChargeValue),
-	  mMaxCharge(CCommissions::MaxChargeValue),
-	  mType(Absolute),
-	  mRound(Bank)
+	mAbove(CCommissions::DefaultAboveValue),
+	mBelow(CCommissions::DefaultBelowValue),
+	mMinCharge(CCommissions::MinChargeValue),
+	mMaxCharge(CCommissions::MaxChargeValue),
+	mType(Absolute),
+	mRound(Bank),
+	mBase(AmountAll)
 {
 }
 

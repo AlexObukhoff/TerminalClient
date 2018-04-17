@@ -63,11 +63,17 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
+	/// Запрос статуса.
+	virtual bool processStatus(TStatusCodes & aStatusCodes);
+
 	/// Включает/выключает устройство.
 	bool setAvailable(bool aEnable);
 
 	/// Мьютекс для операций со считанными данными.
 	QMutex mDataMutex;
+
+	/// Был включен извне.
+	bool mExEnabled;
 };
 
 //--------------------------------------------------------------------------------

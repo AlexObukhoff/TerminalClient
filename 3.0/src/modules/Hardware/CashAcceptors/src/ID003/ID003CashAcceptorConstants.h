@@ -2,17 +2,20 @@
 
 #pragma once
 
-#include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
+// Modules
+#include "Hardware/Common/ASCII.h"
 #include "Hardware/Common/DeviceCodeSpecification.h"
+#include "Hardware/Common/WaitingData.h"
+
+// Project
+#include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
+#include "Hardware/CashAcceptors/CashAcceptorBaseConstants.h"
 
 //--------------------------------------------------------------------------------
 namespace CID003
 {
 	/// ACK.
 	const char ACK = '\x50';
-
-	/// Таймаут на выход купюрника из анабиоза, [мс].
-	const int IdentificationTimeout = 2200;
 
 	/// Пауза при автопоиске для MFL.
 	const int IdentificationPause = 2000;
@@ -28,6 +31,9 @@ namespace CID003
 
 	/// Размер блока данных 1 номинала в ответе на запрос номиналов.
 	const int NominalSize = 4;
+
+	/// Ожидание выхода из анабиоза, [мс].
+	const SWaitingData AvailableWaiting = SWaitingData(CCashAcceptorsPollingInterval::Enabled, 2200);
 
 	//--------------------------------------------------------------------------------
 	/// Команды.

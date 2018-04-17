@@ -67,6 +67,9 @@ PaymentResponse::PaymentResponse(const Request & aRequest, const QString & aResp
 				// проверка наличия поля в ответе
 				if (!value.isValid())
 				{
+					// В платеже может сохраниться значение поля от предыдущего запроса. Сбросим.
+					request->getPayment()->setParameter(Payment::SParameter(field.name, QString(), true));
+					
 					if (field.required)
 					{
 						toLog(LogLevel::Error, QString("Payment %1. Can't find expected param '%2' in server response.")

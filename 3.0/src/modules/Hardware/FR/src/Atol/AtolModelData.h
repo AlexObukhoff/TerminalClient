@@ -25,6 +25,12 @@ namespace CAtolFR
 	typedef QSet<char> TEKLZPostfixes;
 	const TEKLZPostfixes EKLZPostfixes = TEKLZPostfixes() << EKLZPostfix << 'k' << '\x8A' << '\xAA';
 
+	/// Актуальная версия прошивки для торговых ФР.
+	const int OnlineTradeBuild = 5199;
+
+	/// Актуальная версия прошивки для терминальных ФР.
+	const int OnlineTerminalBuild = 5652;
+
 	namespace Models
 	{
 		const char TriumF[]      = "ATOL Trium-F";
@@ -86,13 +92,13 @@ namespace CAtolFR
 		void addTrade(int aModelId, int aMaxStringSize, QString aName, bool aCutter = true, bool aVerified = false, int aFeedingAmount = 0);
 
 		/// Добавить терминальный ФР.
-		void addTerminal(int aModelId, int aMaxStringSize, const QString & aName, int aBuildVersion, bool aEjector, int aFeedingAmount = 0, int aZBufferSize = 0);
+		void addTerminal(int aModelId, int aMaxStringSize, const QString & aName, int aBuild, bool aEjector, int aFeedingAmount = 0, int aZBufferSize = 0);
 
 		/// Добавить онлайновый кассовый ФР.
-		void addOnlineTrade(int aModelId, int aMaxStringSize, QString aName, bool aCutter = true, int aFeedingAmount = 0, bool aVerified = true);
+		void addOnlineTrade(int aModelId, int aMaxStringSize, QString aName, bool aCutter, int aFeedingAmount = 0, int aBuild = OnlineTradeBuild, bool aVerified = true);
 
 		/// Добавить онлайновый терминальный ФР.
-		void addOnlineTerminal(int aModelId, int aMaxStringSize, const QString & aName, bool aEjector, int aFeedingAmount = 0, int aZBufferSize = 0, bool aVerified = true);
+		void addOnlineTerminal(int aModelId, int aMaxStringSize, const QString & aName, bool aEjector, int aFeedingAmount, int aZBufferSize = 0, int aBuild = OnlineTerminalBuild, bool aVerified = true);
 	};
 }
 

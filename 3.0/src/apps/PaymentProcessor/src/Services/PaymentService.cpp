@@ -79,6 +79,8 @@ PaymentService::PaymentService(IApplication * aApplication)
 	: ILogable("Payments"),
 	  mApplication(aApplication),
 	  mEnabled(false),
+	  mDBUtils(nullptr),
+	  mCommandIndex(0),
 	  mPaymentLock(QMutex::Recursive),
 	  mOfflinePaymentID(-1),
 	  mOfflinePaymentLock(QMutex::Recursive),

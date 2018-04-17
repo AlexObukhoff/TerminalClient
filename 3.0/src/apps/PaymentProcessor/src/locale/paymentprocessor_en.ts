@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.0" language="en_US">
 <context>
     <name>DeviceService</name>
     <message>
@@ -12,7 +12,7 @@
 <context>
     <name>GUIService</name>
     <message>
-        <location filename="../Services/GUIService.cpp" line="498"/>
+        <location filename="../Services/GUIService.cpp" line="497"/>
         <source>#penetration_detected</source>
         <translation>Remote control attempt.</translation>
     </message>
@@ -20,86 +20,18 @@
 <context>
     <name>PrintFiscalCommand</name>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="92"/>
+        <location filename="../Services/PrintingCommands.cpp" line="100"/>
         <source>#bank_fee</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="93"/>
+        <location filename="../Services/PrintingCommands.cpp" line="101"/>
         <source>#dealer_fee</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="98"/>
+        <location filename="../Services/PrintingCommands.cpp" line="107"/>
         <source>#processing_fee</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PrintPayment</name>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="239"/>
-        <source>#taxation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="240"/>
-        <source>#kkt_timestamp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="241"/>
-        <source>#kkt_znm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="242"/>
-        <source>#kkt_rnm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="243"/>
-        <source>#kkt_session</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="244"/>
-        <source>#kkt_fd_serial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="245"/>
-        <source>#kkt_fn</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="246"/>
-        <source>#kkt_fd</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="247"/>
-        <source>#kkt_fp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="249"/>
-        <source>#tax_amount_02</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="250"/>
-        <source>#tax_amount_03</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="251"/>
-        <source>#tax_amount_04</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="252"/>
-        <source>#tax_amount_05</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -352,8 +352,8 @@ Widgets.SceneBase2 {
 				limits = Utils.locale.tr(i > 0 ? QT_TR_NOOP("pay_scene#for_rest") : QT_TR_NOOP("pay_scene#for_any_amount"));
 			}
 
-			var value = fees[i].value +
-					(fees[i].isPercent ? "%" : (" " + Core.environment.terminal.currencyName)) +
+			var value =
+					(fees[i].value ? (fees[i].isPercent ? "%1%".arg(fees[i].value) : (" " + Core.environment.terminal.currencyName)) : "") +
 					(fees[i].minCharge > 0 ? (" " + Utils.locale.tr(QT_TR_NOOP("pay_scene#min_charge")).arg(fees[i].minCharge).arg(Core.environment.terminal.currencyName)) : "")
 
 			feeModel.append({limits: limits, value: value});

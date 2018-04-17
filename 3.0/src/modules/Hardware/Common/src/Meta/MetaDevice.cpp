@@ -14,13 +14,11 @@ using namespace SDK::Driver;
 
 //-------------------------------------------------------------------------------
 MetaDevice::MetaDevice() :
-	mConfigurationGuard(QReadWriteLock::Recursive),
 	mDeviceName(CMetaDevice::DefaultName),
 	mLogDate(QDate::currentDate()),
 	mOperatorPresence(false),
 	mDetectingPosition(0),
 	mInitialized(ERequestStatus::Fail),
-	mLog(nullptr),
 	mExitTimeout(ULONG_MAX)
 {
 }
@@ -108,47 +106,7 @@ QVariantMap MetaDevice::getDeviceConfiguration() const
 }
 
 //--------------------------------------------------------------------------------
-void MetaDevice::setConfigParameter(const QString & aName, const QVariant & aValue)
-{
-	QWriteLocker lock(&mConfigurationGuard);
-
-	mConfiguration.insert(aName, aValue);
-}
-
-//--------------------------------------------------------------------------------
-QVariant MetaDevice::getConfigParameter(const QString & aName) const
-{
-	QReadLocker lock(&mConfigurationGuard);
-
-	return mConfiguration.value(aName);
-}
-
-//--------------------------------------------------------------------------------
-QVariant MetaDevice::getConfigParameter(const QString & aName, const QVariant & aDefault) const
-{
-	QReadLocker lock(&mConfigurationGuard);
-
-	return mConfiguration.value(aName, aDefault);
-}
-
-//--------------------------------------------------------------------------------
-void MetaDevice::removeConfigParameter(const QString & aName)
-{
-	QWriteLocker lock(&mConfigurationGuard);
-
-	mConfiguration.remove(aName);
-}
-
-//--------------------------------------------------------------------------------
-bool MetaDevice::containsConfigParameter(const QString & aName) const
-{
-	QReadLocker lock(&mConfigurationGuard);
-
-	return mConfiguration.contains(aName);
-}
-
-//--------------------------------------------------------------------------------
-void MetaDevice::setDeviceParameter(const QString & aName, const QVariant & aValue, const QString & aExtensibleName)
+void MetaDevice::setDeviceParameter(const QString & aName, const QVariant & aValue, const QString & aExtensibleName, bool aUpdateExtensible)
 {
 	QString value = aValue.toString().simplified();
 	QVariant::Type type = aValue.type();
@@ -176,6 +134,7 @@ void MetaDevice::setDeviceParameter(const QString & aName, const QVariant & aVal
 	{
 		value.prepend(aName + " ");
 
+		if (!aUpdateExtensible)
 		{
 			QReadLocker locker(&mConfigurationGuard);
 
@@ -196,6 +155,14 @@ void MetaDevice::setDeviceParameter(const QString & aName, const QVariant & aVal
 }
 
 //--------------------------------------------------------------------------------
+QVariant MetaDevice::getDeviceParameter(const QString & aName) const
+{
+	QReadLocker lock(&mConfigurationGuard);
+
+	return mDeviceData.value(aName);
+}
+
+//--------------------------------------------------------------------------------
 bool MetaDevice::containsDeviceParameter(const QString & aName) const
 {
 	QReadLocker lock(&mConfigurationGuard);
@@ -203,26 +170,28 @@ bool MetaDevice::containsDeviceParameter(const QString & aName) const
 	return mDeviceData.contains(aName) && !mDeviceData.value(aName).isEmpty();
 }
 
+//--------------------------------------------------------------------------------
+void MetaDevice::removeDeviceParameter(const QString & aName)
+{
+	QWriteLocker lock(&mConfigurationGuard);
+
+	mDeviceData.remove(aName);
+}
+
 //---------------------------------------------------------------------------
 void MetaDevice::logDeviceData(const SLogData & aData) const
 {
 	toLog(LogLevel::Normal, "Plugin path: " + getConfigParameter(CHardware::PluginPath).toString());
 
-	if (!aData.pluginConfig.isEmpty())
-	{
-		toLog(LogLevel::Normal, "Plugin data:" + aData.pluginConfig);
-	}
-
-	if (!aData.device.isEmpty())
-	{
-		toLog(LogLevel::Normal, "Device data:" + aData.device);
-	}
+	if (!aData.plugin.isEmpty()) toLog(LogLevel::Normal, "Plugin data:" + aData.plugin);
+	if (!aData.device.isEmpty()) toLog(LogLevel::Normal, "Device data:" + aData.device);
+	if (!aData.config.isEmpty()) toLog(LogLevel::Normal, "Config data:" + aData.config);
 
 	QReadLocker lock(&mConfigurationGuard);
 
-	if (mConfiguration[CHardwareSDK::RequiredDevice].value<IDevice *>() && !aData.requiedDevicePluginConfig.isEmpty())
+	if (mConfiguration[CHardwareSDK::RequiredDevice].value<IDevice *>() && !aData.requiedDevice.isEmpty())
 	{
-		toLog(LogLevel::Normal, "Requied device data:" + aData.requiedDevicePluginConfig);
+		toLog(LogLevel::Normal, "Requied device data:" + aData.requiedDevice);
 	}
 }
 
@@ -246,7 +215,7 @@ SLogData MetaDevice::getDeviceData() const
 			data.insert(key, configuration[key].toString());
 		}
 
-		result.requiedDevicePluginConfig = getPartDeviceData(data);
+		result.requiedDevice = getPartDeviceData(data);
 	}
 
 	TDeviceData data;
@@ -258,8 +227,20 @@ SLogData MetaDevice::getDeviceData() const
 		data.insert(key, getConfigParameter(key).toString());
 	}
 
-	result.pluginConfig = getPartDeviceData(data);
+	result.plugin = getPartDeviceData(data);
 	result.device = getPartDeviceData(mDeviceData, false);
+
+	QVariantMap dealerSettings = getConfigParameter(CHardware::ConfigData).toMap();
+	names = dealerSettings.keys();
+	data.clear();
+
+	foreach(const QString & name, names)
+	{
+		QString key = name.toLower().replace(ASCII::Space, ASCII::Underscore);
+		data.insert(key, dealerSettings[key].toString());
+	}
+
+	result.config = getPartDeviceData(data);
 
 	return result;
 }
@@ -294,14 +275,6 @@ QString MetaDevice::getPartDeviceData(const TDeviceData & aData, bool aHideEmpty
 }
 
 //--------------------------------------------------------------------------------
-QVariant MetaDevice::getDeviceParameter(const QString & aName) const
-{
-	QReadLocker lock(&mConfigurationGuard);
-
-	return mDeviceData.value(aName);
-}
-
-//--------------------------------------------------------------------------------
 IDevice::IDetectingIterator * MetaDevice::getDetectingIterator()
 {
 	mDetectingPosition = 0;
@@ -331,19 +304,6 @@ void MetaDevice::setLog(ILog * aLog)
 bool MetaDevice::isWorkingThread()
 {
 	return &mThread == QThread::currentThread();
-}
-
-//--------------------------------------------------------------------------------
-void MetaDevice::toLog(LogLevel::Enum aLevel, const QString & aMessage) const
-{
-	if (mLog)
-	{
-		mLog->write(aLevel, aMessage);
-	}
-	else
-	{
-		qCritical("Log pointer is empty. Message:%s.", aMessage.toLocal8Bit().data());
-	}
 }
 
 //--------------------------------------------------------------------------------

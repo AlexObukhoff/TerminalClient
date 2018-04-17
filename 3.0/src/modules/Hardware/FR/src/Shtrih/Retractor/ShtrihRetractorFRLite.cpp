@@ -25,7 +25,13 @@ bool ShtrihRetractorFRLite<T>::updateParameters()
 	using namespace CHardware::Printer;
 
 	//17. Авторетракция чеков - нет
-	setFRParameter(mParameters.autoRetractingCheques, false);
+	QByteArray data;
+
+	if ((!getFRParameter(mParameters.autoRetractingCheques, data) || data.isEmpty() || bool(data[0])) &&
+	      setFRParameter(mParameters.autoRetractingCheques, false))
+	{
+		mNeedReboot = true;
+	}
 
 	//18. Авторетракция отчетов - нет
 	setFRParameter(mParameters.autoRetractingReports, false);
@@ -47,8 +53,13 @@ bool ShtrihRetractorFRLite<T>::updateParameters()
 	//21. Петля
 	if (containsConfigParameter(Settings::Loop))
 	{
-		bool loop = getConfigParameter(Settings::Loop).toString() == CHardware::Values::Use;
-		setFRParameter(mParameters.loop, char(loop));
+		char loop = char(getConfigParameter(Settings::Loop).toString() == CHardware::Values::Use);
+
+		if ((!getFRParameter(mParameters.loop, data) || data.isEmpty() || (data[0] != loop)) &&
+		      setFRParameter(mParameters.loop, loop))
+		{
+			mNeedReboot = true;
+		}
 	}
 
 	return true;

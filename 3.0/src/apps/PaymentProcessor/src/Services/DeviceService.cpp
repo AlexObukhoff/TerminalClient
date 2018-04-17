@@ -16,10 +16,10 @@
 #include <SDK/Drivers/DeviceStatus.h>
 #include <SDK/Drivers/Components.h>
 #include <SDK/Drivers/HardwareConstants.h>
+#include <SDK/Drivers/FR/FiscalFields.h>
 
 // Modules
 #include "DeviceManager/DeviceManager.h"
-#include "Hardware/FR/FiscalFieldDescriptions.h"
 
 // Project
 #include "DatabaseUtils/IHardwareDatabaseUtils.h"
@@ -76,10 +76,11 @@ bool DeviceService::Status::isMatched(SDK::Driver::EWarningLevel::Enum aLevel) c
 
 //------------------------------------------------------------------------------
 DeviceService::DeviceService(IApplication * aApplication)
-	: mAccessMutex(QMutex::Recursive),
-	mLog(aApplication->getLog()),
+	: mDeviceManager(nullptr),
+	mAccessMutex(QMutex::Recursive),
 	mApplication(aApplication),
-	mDeviceManager(0)
+	mLog(aApplication->getLog()),
+	mDatabaseUtils(nullptr)
 {
 	connect(&mDetectionResult, SIGNAL(finished()), this, SLOT(onDetectionFinished()));
 
@@ -287,7 +288,7 @@ DSDK::IDevice * DeviceService::acquireDevice(const QString & aInstancePath)
 			if (keys.contains(0))
 			{
 				QVariantMap configuration;
-				configuration.insert(CHardware::FiscalFields::AutomaticNumber, keys.value(0).ap);
+				configuration.insert(CFiscalSDK::AutomaticNumber, keys.value(0).ap);
 				device->setDeviceConfiguration(configuration);
 			}
 
@@ -364,7 +365,7 @@ QString DeviceService::createDevice(const QString & aDriverPath, const QVariantM
 		if (keys.contains(0))
 		{
 			QVariantMap configuration;
-			configuration.insert(CHardware::FiscalFields::AutomaticNumber, keys.value(0).ap);
+			configuration.insert(CFiscalSDK::AutomaticNumber, keys.value(0).ap);
 			result.second->setDeviceConfiguration(configuration);
 		}
 

@@ -5,6 +5,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTextCodec>
+#include <QtCore/QReadWriteLock>
 #include <Common/QtHeadersEnd.h>
 
 // Project
@@ -24,6 +25,7 @@ struct SCharData
 	bool main;    /// Признак основного символа при обратной перекодировке.
 
 	SCharData() : character(QChar(CCodec::DefaultCharacter)), main(false) {}
+	SCharData(const QString & aCharacter, bool aMain) : character(aCharacter), main(aMain) {}
 	SCharData(const char * aCharacter, bool aMain) : character(QString::fromUtf8(aCharacter)), main(aMain) {}
 	SCharData(const QChar & aCharacter, bool aMain) : character(aCharacter), main(aMain) {}
 
@@ -40,6 +42,11 @@ public:
 	CharacterData()
 	{
 		setDefault(SCharData());
+	}
+
+	void add(char aCode, const QString & aCharacter, bool aMain = true)
+	{
+		append(aCode, SCharData(aCharacter, aMain));
 	}
 
 	void add(char aCode, const char * aCharacter, bool aMain = true)
@@ -83,6 +90,9 @@ protected:
 
 	/// Массив данных для перекодировки.
 	CharacterData mData;
+
+	/// Сторож данных.
+	mutable QReadWriteLock mDataGuard;
 
 	/// Минимальное значение unicode-символа для использования кодека для перекодировки.
 	ushort mMinValueActive;

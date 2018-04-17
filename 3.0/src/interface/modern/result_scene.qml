@@ -78,7 +78,10 @@ Widgets.SceneBase2 {
 			// Результат печати чека
 			ResultSceneItem {
 				icon: global.isReceiptPrinted ? 25 : 27
-				text: Utils.locale.tr(global.isReceiptPrinted ? QT_TR_NOOP("result_scene#receipt_printed") : QT_TR_NOOP("result_scene#failed_to_print_receipt"))
+				text: {
+					return Utils.locale.tr(global.isReceiptPrinted ? QT_TR_NOOP("result_scene#receipt_printed") : QT_TR_NOOP("result_scene#failed_to_print_receipt"))
+						+ (Core.printer.checkReceiptMail() ? ("<br/>" + Utils.locale.tr(QT_TR_NOOP("result_scene#send_email"))) : "")
+				}
 				width: 814
 			}
 

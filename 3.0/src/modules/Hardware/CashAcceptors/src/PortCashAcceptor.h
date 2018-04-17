@@ -8,7 +8,6 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
-#include "Hardware/Common/PollingExpector.h"
 #include "Hardware/Common/DeviceCodeSpecification.h"
 
 // Project
@@ -23,6 +22,13 @@ namespace EResetWaiting
 		Available,
 		Full
 	};
+}
+
+//--------------------------------------------------------------------------------
+namespace CPortCashAcceptor
+{
+	/// Ожидание завершения выполнения функционала для фильтрации/отправки накопленных статусов.
+	const SWaitingData RestoreStatusesWaiting = SWaitingData(1, 10 * 1000);
 }
 
 //--------------------------------------------------------------------------------

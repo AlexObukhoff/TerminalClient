@@ -37,6 +37,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\MifareReader.cpp">
       <Filter>PC/SC Reader</Filter>
     </ClCompile>
@@ -45,18 +48,6 @@
     </ClCompile>
     <ClCompile Include="..\src\CardReaderPlugin.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_PluginLibraryDefinition.cpp">
-      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PluginLibraryDefinition.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PluginLibraryDefinition.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
-      <Filter>Generated Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,9 +60,6 @@
     <CustomBuild Include="..\src\MifareReaderModelData.h">
       <Filter>PC/SC Reader</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\src\PluginLibraryDefinition.h">
-      <Filter>Generated Files</Filter>
-    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\locale\card_readers_en.ts">
@@ -81,6 +69,9 @@
       <Filter>Translation Files</Filter>
     </None>
     <None Include="..\src\locale\card_readers_ru.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+    <None Include="..\src\locale\card_readers_de.ts">
       <Filter>Translation Files</Filter>
     </None>
   </ItemGroup>

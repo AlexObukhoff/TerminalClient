@@ -23,15 +23,6 @@ PortPrinterBase<T>::PortPrinterBase()
 
 //--------------------------------------------------------------------------------
 template <class T>
-void PortPrinterBase<T>::setLConfigParameter(const QString & aName, const QByteArray & aData)
-{
-	QByteArray data = ProtocolUtils::clean(aData.simplified());
-	QString value = mCodec ? mCodec->toUnicode(data) : data;
-	setConfigParameter(aName, value);
-}
-
-//--------------------------------------------------------------------------------
-template <class T>
 void PortPrinterBase<T>::finaliseInitialization()
 {
 	addPortData();
@@ -71,9 +62,9 @@ bool PortPrinterBase<T>::isPossible(bool aOnline, QVariant aCommand)
 
 //---------------------------------------------------------------------------
 template <class T>
-bool PortPrinterBase<T>::processNonReentrant(TBoolMethod aCommand)
+bool PortPrinterBase<T>::print(const QStringList & aReceipt)
 {
-	bool result = T::processNonReentrant(aCommand);
+	bool result = T::print(aReceipt);
 
 	if (mOperatorPresence)
 	{

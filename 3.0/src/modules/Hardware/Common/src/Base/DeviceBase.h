@@ -8,6 +8,7 @@
 #include <Common/QtHeadersEnd.h>
 
 // Project
+#include "Hardware/Common/PollingExpector.h"
 #include "Hardware/Common/BaseStatusDescriptions.h"
 #include "Hardware/Common/BaseStatusTypes.h"
 #include "Hardware/Common/HystoryList.h"
@@ -151,6 +152,9 @@ protected:
 
 	/// Состояние окружения устройства изменилось.
 	virtual bool environmentChanged();
+
+	/// Подождать готовность.
+	bool waitReady(const SWaitingData & aWaitingData);
 
 	/// Получить уровень тревожности по буферу статус-кодов.
 	virtual SDK::Driver::EWarningLevel::Enum getWarningLevel(const TStatusCollection & aStatusCollection);

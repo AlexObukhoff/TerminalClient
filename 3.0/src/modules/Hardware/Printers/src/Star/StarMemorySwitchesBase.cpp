@@ -66,7 +66,6 @@ bool BaseMemorySwitchUtils::update(TMemorySwitches & aMemorySwitches)
 //--------------------------------------------------------------------------------
 SMSWParameter BaseMemorySwitchUtils::getMSWParameter(ESTARMemorySwitchTypes::Enum aParameterType)
 {
-	CSTAR::TMemorySwitchTypes memorySwitchTypes;
 	bool modelsCoincided = false;
 
 	for (auto it = mData.begin(); it != mData.end(); ++it)

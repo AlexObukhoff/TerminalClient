@@ -3,9 +3,6 @@
 // STL
 #include <cmath>
 
-// Modules
-#include "Hardware/Common/PollingExpector.h"
-
 // Project
 #include "SparkFR.h"
 #include "SparkFRConstants.h"

@@ -62,7 +62,7 @@ protected:
 	virtual TResult doZReport(bool aAuto);
 
 	/// Открыть смену.
-	virtual TResult openFRSession();
+	virtual bool openSession();
 
 	/// Локальная печать X-отчета.
 	virtual bool processXReport();
@@ -106,6 +106,19 @@ protected:
 	/// Выполнить команду.
 	TResult processCommand(char aCommand, CPrimFR::TData * aAnswer = nullptr);
 	TResult processCommand(char aCommand, const CPrimFR::TData & aCommandData, CPrimFR::TData * aAnswer = nullptr);
+
+	template <class T>
+	TResult processCommand(char aCommand, int aIndex, const QString & aLog, T & aResult);
+	template <class T>
+	TResult processCommand(char aCommand, const CPrimFR::TData & aCommandData, int aIndex, const QString & aLog, T & aResult);
+
+	/// Распарсить данные ответа.
+	template <class T>
+	bool parseAnswerData(const CPrimFR::TData & aAnswer, int aIndex, const QString & aLog, T & aResult);
+
+	/// Загрузить данные устройства.
+	template <class T>
+	void loadDeviceData(const CPrimFR::TData & aAnswer, const QString & aName, const QString & aLog, int aIndex, const QString & aExtensibleName = "");
 
 	/// Проверить ответ.
 	TResult checkAnswer(TResult aResult, const QByteArray & aAnswer, CPrimFR::TData & aAnswerData);

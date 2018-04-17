@@ -226,6 +226,11 @@ class Commissions
 	{
 		static bool sortByMinLimit(const Commission & aFirst, const Commission & aSecond);
 
+		SComplexCommissions()
+		{
+			vat = 0;
+		}
+
 		TCommissions getCommissions() const;
 
 		Commission query(double aSum) const;

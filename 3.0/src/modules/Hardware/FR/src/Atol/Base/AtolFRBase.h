@@ -23,7 +23,7 @@ public:
 	AtolFRBase();
 
 	/// Готов ли к обработке данной фискальной команды.
-	virtual bool isFiscalReady(bool aOnline, SDK::Driver::EFiscalPrinterCommand::Enum aCommand);
+	virtual bool isFiscalReady(bool aOnline, SDK::Driver::EFiscalPrinterCommand::Enum aCommand = SDK::Driver::EFiscalPrinterCommand::Sale);
 
 protected:
 	/// Попытка самоидентификации.
@@ -75,7 +75,7 @@ protected:
 	virtual void execTags(Tags::SLexeme & aTagLexeme, QVariant & aLine);
 
 	/// Открыть смену.
-	bool openFRSession();
+	virtual bool openSession();
 
 	/// Отрезка.
 	virtual bool cut();
@@ -99,7 +99,7 @@ protected:
 	bool closeDocument(SDK::Driver::EPayTypes::Enum aPayType);
 
 	/// Продажа.
-	virtual bool sale(const SDK::Driver::SAmountData & aAmountData);
+	virtual bool sale(const SDK::Driver::SUnitData & aUnitData);
 
 	/// Установка количества строк шапки.
 	bool setDocumentCapAmount(char aAmount);

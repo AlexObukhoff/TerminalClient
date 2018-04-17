@@ -17,7 +17,7 @@ class WorkingThreadProxy : public QObject
 	Q_OBJECT
 
 public:
-	WorkingThreadProxy();
+	WorkingThreadProxy(QThread * aWorkingThread);
 
 	/// Вызывает метод в рабочем потоке и возвращает результат.
 	template <class T>
@@ -40,8 +40,13 @@ protected slots:
 	void onInvoke(TStringMethod aMethod, QString * aResult);
 
 protected:
+	WorkingThreadProxy() {}
+
 	/// Из рабочего ли потока происходит вызов.
 	bool isWorkingThread();
+
+	/// Поток, который будет считаться рабочим.
+	QThread * mWorkingThread;
 };
 
 //---------------------------------------------------------------------------

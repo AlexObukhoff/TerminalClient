@@ -15,7 +15,7 @@ public:
 	MStarTK2FR()
 	{
 		mDeviceName = CShtrihFR::Models::CData()[CShtrihFR::Models::ID::MStarTK2].name;
-		mOFDFiscalParameters << SDK::Driver::FiscalFields::Cashier;
+		mOFDFiscalParameters << CFR::FiscalFields::Cashier;
 		mPrinterStatusEnabled = false;
 
 		mSupportedModels = getModelList();

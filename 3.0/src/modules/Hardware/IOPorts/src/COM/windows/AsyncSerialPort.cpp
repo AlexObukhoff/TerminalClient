@@ -126,7 +126,7 @@ void AsyncSerialPort::setDeviceConfiguration(const QVariantMap & aConfiguration)
 		mType = EPortTypes::COMEmulator;
 	}
 
-	if (!mExist)
+	if (!mExist && !mSystemName.isEmpty())
 	{
 		checkExistence();
 	}
@@ -894,12 +894,20 @@ AsyncSerialPort::TData AsyncSerialPort::getSystemData(bool aForce)
 
 		for (auto it = deviceProperties.begin(); it != deviceProperties.end(); ++it)
 		{
-			if (regExp.indexIn(it.key()) != -1)
+			int index = -1;
+
+			do
 			{
-				EPortTypes::Enum portType = isMatched(it->data, CAsyncSerialPort::Tags::Virtual()) ? EPortTypes::VirtualCOM :
-					(isMatched(it->data, CAsyncSerialPort::Tags::Emulator()) ? EPortTypes::COMEmulator : EPortTypes::Unknown);
-				data.insert(regExp.capturedTexts()[0], portType);
+				index = regExp.indexIn(it.key(), ++index);
+
+				if (index != -1)
+				{
+					EPortTypes::Enum portType = isMatched(it->data, CAsyncSerialPort::Tags::Virtual()) ? EPortTypes::VirtualCOM :
+						(isMatched(it->data, CAsyncSerialPort::Tags::Emulator()) ? EPortTypes::COMEmulator : EPortTypes::Unknown);
+					data.insert(regExp.capturedTexts()[0], portType);
+				}
 			}
+			while (index != -1);
 		}
 
 		/*

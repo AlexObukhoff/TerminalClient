@@ -24,17 +24,17 @@
         <translation>Язык</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="164"/>
+        <location filename="../main_menu_scene.qml" line="166"/>
         <source>main_menu_scene#invalid_provider</source>
         <translation>Извините, оплата в пользу данного оператора временно невозможна. Попробуйте позже.</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="274"/>
+        <location filename="../main_menu_scene.qml" line="276"/>
         <source>main_menu_scene#rest_howto_title</source>
         <translation>Остаток средств %REST% %CURRENCY%</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="275"/>
+        <location filename="../main_menu_scene.qml" line="277"/>
         <source>main_menu_scene#rest_howto_description</source>
         <translation>Нажмите «Закрыть» и выберите любого оператора для оплаты.</translation>
     </message>

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Hardware/FR/FRBaseConstants.h"
 #include "../PrimFRConstants.h"
 
 //--------------------------------------------------------------------------------
@@ -22,15 +23,69 @@ namespace CPrimOnlineFR
 	/// Формат представления даты и времени в ответе на запрос статуса ФН-а.
 	const char DateTimeFormat[] = "ddMMyyyyhhmm";
 
-	/// Актуальные версии прошивок для разных версий ФФД.
-	inline int getActualFirmware(EFFD::Enum aFFD) { if (aFFD == EFFD::F10) return 64; if (aFFD == EFFD::F105) return 03; return 0; }
+	/// По умолчанию использовать последнюю регистрацию.
+	const char LastRegistration[] = "00";
 
-	//----------------------------------------------------------------------------	
+	/// Количество типов оплаты.
+	const int PayTypeAmount = '\x0F';
+
+	/// Получить версию ФФД по номеру билда прошивки.
+	inline EFFD::Enum getFFD(int aBuild)
+	{
+		if (aBuild <  60) return EFFD::F10Beta;
+		if (aBuild < 100) return EFFD::F10;
+		if (aBuild < 200) return EFFD::F105;
+		if (aBuild < 300) return EFFD::F11;
+
+		return EFFD::Unknown;
+	}
+
+	/// Получить актуальные версии прошивок для разных версий ФФД.
+	inline int getActualFirmware(EFFD::Enum aFFD)
+	{
+		if (aFFD == EFFD::F10)  return  64;
+		if (aFFD == EFFD::F105) return 104;
+
+		return 0;
+	}
+
+	/// Получить варианты поддержки кодов (Bar- и QR-).
+	inline QString getCodes(const QString & aFirmware)
+	{
+		int digit = aFirmware.left(1).toInt();
+
+		if (digit == 1) return "PFD417";
+		if (digit == 2) return "QR";
+		if (digit == 3) return "PFD417 and QR";
+
+		return "";
+	}
+
+	//----------------------------------------------------------------------------
+	/// Спецификация типов оплаты по тегам итогов типов оплаты.
+	class CPayTypeData: public CSpecification<int, SDK::Driver::EPayTypes::Enum>
+	{
+	public:
+		CPayTypeData()
+		{
+			append(CFR::FiscalFields::CashFiscalTotal,         SDK::Driver::EPayTypes::Cash);
+			append(CFR::FiscalFields::CardFiscalTotal,         SDK::Driver::EPayTypes::EMoney);
+			append(CFR::FiscalFields::PrePaymentFiscalTotal,   SDK::Driver::EPayTypes::PrePayment);
+			append(CFR::FiscalFields::PostPaymentFiscalTotal,  SDK::Driver::EPayTypes::PostPayment);
+			append(CFR::FiscalFields::CounterOfferFiscalTotal, SDK::Driver::EPayTypes::CounterOffer);
+		}
+	};
+
+	static CPayTypeData PayTypeData;
+
+	//----------------------------------------------------------------------------
 	/// Команды.
 	namespace Commands
 	{
 		const char GetFSStatus          = '\x29';    /// Получить статус ФН.
+		const char GetPayTypeData       = '\x4B';    /// Получить данные о виде платежа.
 		const char GetOFDData           = '\x67';    /// Получить параметры обмена с ОФД.
+		const char GetRegTLVData        = '\x88';    /// Получить TLV-параметр регистрации.
 		const char GetRegistrationTotal = '\x8F';    /// Получить итоги регистрации.
 	}
 

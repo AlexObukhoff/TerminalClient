@@ -131,7 +131,7 @@ bool DeviceBase<T>::isPowerReboot()
 
 	return mStatusCollectionHistory.isEmpty() ||
 		(statusCollection2.contains(DeviceStatusCode::Error::NotAvailable) &&
-		!statusCollection2.contains(DeviceStatusCode::Error::NotAvailable));
+		!statusCollection1.contains(DeviceStatusCode::Error::NotAvailable));
 }
 
 //--------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ bool DeviceBase<T>::checkExistence()
 
 	if (!mModelCompatibility && autoDetecting)
 	{
-		toLog(LogLevel::Error, mDeviceName + " can not be found via autodetecting as unsupported by current plugin.");
+		toLog(LogLevel::Error, mDeviceName + " can not be found via autodetecting as unsupported by plugin " + getConfigParameter(CHardware::PluginPath).toString());
 		return false;
 	}
 	else if (!mVerified && autoDetecting)
@@ -267,7 +267,7 @@ void DeviceBase<T>::initialize()
 
 	QString pluginPath = QString("\n%1 : %2").arg(CHardware::PluginPath).arg(getConfigParameter(CHardware::PluginPath).toString());
 	SLogData logData = getDeviceData();
-	setConfigParameter(CHardwareSDK::DeviceData, pluginPath + logData.pluginConfig + logData.device + logData.requiedDevicePluginConfig);
+	setConfigParameter(CHardwareSDK::DeviceData, pluginPath + logData.plugin + logData.device + logData.config + logData.requiedDevice);
 	logDeviceData(logData);
 	removeConfigParameter(CHardware::CallingType);
 
@@ -501,6 +501,16 @@ void DeviceBase<T>::applyStatusBuffer(TStatusCodes & aStatusCodes)
 	{
 		mBadAnswerCounter = 0;
 	}
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool DeviceBase<T>::waitReady(const SWaitingData & aWaitingData)
+{
+	TStatusCodes statusCodes;
+	auto poll = [&] () -> bool { statusCodes.clear(); return getStatus(std::ref(statusCodes)) && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable); };
+
+	return PollingExpector().wait(poll, aWaitingData);
 }
 
 //---------------------------------------------------------------------------

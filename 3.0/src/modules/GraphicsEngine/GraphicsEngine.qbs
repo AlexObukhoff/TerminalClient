@@ -1,4 +1,4 @@
-import qbs 1.0
+﻿import qbs 1.0
 
 StaticLibrary {
 	name: "GraphicsEngine"
@@ -9,9 +9,5 @@ StaticLibrary {
 	Depends { name: "Core" }
 
 	files: [ "src/*.cpp", "src/*.h" ]
-
-	Export {
-		Depends { name: "Qt"; submodules: ["opengl"] }
-	}
 }
 

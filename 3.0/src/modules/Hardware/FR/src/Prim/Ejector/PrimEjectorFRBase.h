@@ -6,7 +6,7 @@
 
 //--------------------------------------------------------------------------------
 // Получить модели данной реализации.
-namespace CPrimFR {	inline TModels EjectorModels()
+namespace CPrimFR { inline TModels EjectorModels()
 {
 	return TModels()
 		<< CPrimFR::Models::PRIM_21K_03;

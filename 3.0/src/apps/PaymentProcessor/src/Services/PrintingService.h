@@ -75,7 +75,7 @@ public:
 	/// Завершение работы, освобождение ресурсов.
 	virtual bool shutdown();
 
-	/// Поулчение списка зависимостей.
+	/// Получение списка зависимостей.
 	virtual const QSet<QString> & getRequiredServices() const;
 
 	/// Получить параметры сервиса.

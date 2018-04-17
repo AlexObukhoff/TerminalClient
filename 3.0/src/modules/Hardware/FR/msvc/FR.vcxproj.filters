@@ -96,6 +96,9 @@
     <Filter Include="Kasbi">
       <UniqueIdentifier>{97f80e30-5ca8-4504-9171-9f5d4be1e110}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Base\FFEngine">
+      <UniqueIdentifier>{6aee6f81-9763-4754-8cb3-54cae0db1339}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Base\FRBase.cpp">
@@ -175,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="..\src\Kasbi\KasbiFRBase.cpp">
       <Filter>Kasbi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Base\FFEngine.cpp">
+      <Filter>Base\FFEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +378,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base\FFEngine.h">
+      <Filter>Base\FFEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\AtolOnlinePrinters.h">
+      <Filter>ATOL\Online</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

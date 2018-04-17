@@ -179,8 +179,6 @@ namespace EParameters
 
 inline static QString parameterDescription(int aParameter, int aValue)
 {
-	QString result;
-
 	switch (aParameter)
 	{
 		case EParameters::BaudRate    : return EBaudRate::EnumToString(aValue);

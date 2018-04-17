@@ -111,6 +111,9 @@
 
 	<!-- Token plugin -->
 	<file if="{TC_USE_TOKEN} &amp;&amp; {CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/drivers/token.dll" target="drivers/plugins/drivers/token.dll"/>
+
+	<!-- Fiscal client plugin -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/fiscal_client.dll" target="plugins/plugins/fiscal_client.dll"/>
 	
 	<!-- ######################################################################################  -->
 	

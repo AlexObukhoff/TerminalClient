@@ -12,9 +12,12 @@
 
 namespace CPollingDeviceBase
 {
-	/// Таймаут остановки поллинга по-умолчанию, [мс].
-	const int DefaultStopTimeout = 15 * 1000;
+	/// Ожидание останова поллинга, [мс].
+	const SWaitingData StopWaiting = SWaitingData(1, 15 * 1000);
 }
+
+/// Список задач.
+typedef QList<TVoidMethod> TTaskList;
 
 //---------------------------------------------------------------------------
 template <class T>
@@ -30,6 +33,9 @@ protected:
 	/// Завершение инициализации.
 	virtual void finaliseInitialization();
 
+	/// Фоновая логика при появлении определенных состояний устройства.
+	virtual void postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection);
+
 	/// Есть ли ошибка инициализации при фильтрации статусов.
 	bool isInitializationError(TStatusCodes & aStatusCodes);
 
@@ -43,7 +49,7 @@ protected:
 	void setPollingInterval(int aPollingInterval);
 
 	/// Ожидание состояния или выполнения полла.
-	bool waitCondition(TBoolMethod aCondition, int aPollingInterval, int aTimeout);
+	bool waitCondition(TBoolMethod aCondition, const SWaitingData & aWaitingData);
 
 	/// Запуск/останов поллинга.
 	virtual void setPollingActive(bool aActive);
@@ -62,6 +68,9 @@ protected:
 
 	/// Поллинг активирован. QTimer::isActive() не всегда работает корректно.
 	bool mPollingActive;
+
+	/// Список задач для выполнения после поллинга, если нет ошибкок.
+	TTaskList mPPTaskList;
 };
 
 //--------------------------------------------------------------------------------

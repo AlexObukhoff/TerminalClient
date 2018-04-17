@@ -16,8 +16,18 @@ template bool WorkingThreadProxy::invokeMethod<bool>(std::function<bool()> aMeth
 template QString WorkingThreadProxy::invokeMethod<QString>(std::function<QString()> aMethod);
 
 //-------------------------------------------------------------------------------
-WorkingThreadProxy::WorkingThreadProxy()
+WorkingThreadProxy::WorkingThreadProxy(QThread * aWorkingThread): mWorkingThread(aWorkingThread)
 {
+	if (mWorkingThread)
+	{
+		if (!mWorkingThread->isRunning())
+		{
+			mWorkingThread->start();
+		}
+
+		moveToThread(mWorkingThread);
+	}
+
 	connect(this, SIGNAL(invoke(TVoidMethod)), SLOT(onInvoke(TVoidMethod)), Qt::BlockingQueuedConnection);
 	connect(this, SIGNAL(invoke(TBoolMethod, bool *)), SLOT(onInvoke(TBoolMethod, bool *)), Qt::BlockingQueuedConnection);
 	connect(this, SIGNAL(invoke(TIntMethod, int *)), SLOT(onInvoke(TIntMethod, int *)), Qt::BlockingQueuedConnection);
@@ -76,7 +86,7 @@ void WorkingThreadProxy::onInvoke(TStringMethod aMethod, QString * aResult)
 //--------------------------------------------------------------------------------
 bool WorkingThreadProxy::isWorkingThread()
 {
-	return this->thread() == QThread::currentThread();
+	return !mWorkingThread || (mWorkingThread == QThread::currentThread());
 }
 
 //--------------------------------------------------------------------------------

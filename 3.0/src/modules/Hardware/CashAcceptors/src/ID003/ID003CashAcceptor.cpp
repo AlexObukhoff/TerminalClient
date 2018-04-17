@@ -146,9 +146,9 @@ bool ID003CashAcceptor::isConnected()
 		SleepHelper::msleep(CID003::IdentificationPause);
 	}
 
-	auto poll = [&] () -> bool { TStatusCodes statusCodes; return getStatus(std::ref(statusCodes)); };
+	removeDeviceParameter(CDeviceData::Firmware);
 
-	if (!PollingExpector().wait(poll, CCashAcceptorsPollingInterval::Enabled, CID003::IdentificationTimeout))
+	if (!waitReady(CID003::AvailableWaiting))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to wait any available status from the cash acceptor.");
 		return false;

@@ -74,7 +74,7 @@ bool CitizenPPU231::getStatus(TStatusCodes & aStatusCodes)
 	PollingExpector expector;
 	auto poll = [&] () -> bool { return mIOPort->write(CPOSPrinter::Command::GetPaperStatus) && getAnswer(answer, 50); };
 
-	if (!expector.wait<bool>(poll, [&answer]() -> bool { return !answer.isEmpty(); }, CCitizenPPU231::PollIntervals::Status, CCitizenPPU231::Timeouts::Status, true))
+	if (!expector.wait<bool>(poll, [&answer] () -> bool { return !answer.isEmpty(); }, CCitizenPPU231::PaperStatusWaiting))
 	{
 		return false;
 	}

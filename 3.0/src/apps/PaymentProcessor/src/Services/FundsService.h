@@ -63,7 +63,7 @@ public:
 	/// Получить параметры сервиса.
 	virtual QVariantMap getParameters() const;
 
-	/// Поулчение списка зависимостей.
+	/// Получение списка зависимостей.
 	virtual const QSet<QString> & getRequiredServices() const;
 
 	/// Сброс служебной информации.

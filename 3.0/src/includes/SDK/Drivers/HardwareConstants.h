@@ -51,14 +51,17 @@ namespace CAllHardware
 	namespace FR
 	{
 		const char FSSerialNumber[] = "fs_serial_number";
-		const char Taxations[] = "taxations";
+		const char TaxSystems[] = "tax_systems";
 		const char AgentFlags[] = "agent_flags";
 		const char SectionNames[] = "section_names";
-		const char DealerTaxation[] = "dealer_taxation";
+		const char DealerTaxSystem[] = "dealer_tax_system";
 		const char DealerAgentFlag[] = "dealer_agent_flag";
 		const char UserPhone[] = "user_phone";
 		const char UserMail[] = "user_mail";
 		const char ZReportTime[] = "z_report_time";
+		const char FiscalFieldData[] = "fiscal_field_data";
+		const char WithoutPrinting[] = "without_printing";
+		const char CanWithoutPrinting[] = "can_without_printing";
 	}
 
 	/// Константы принтера.

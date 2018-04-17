@@ -8,10 +8,6 @@
 #include <QtCore/qmath.h>
 #include <Common/QtHeadersEnd.h>
 
-// Modules
-#include "PaymentProcessor/PrintConstants.h"
-#include "Hardware/Common/PollingExpector.h"
-
 // Project
 #include "SparkFR.h"
 #include "AdaptiveFiscalLogic.h"
@@ -26,6 +22,7 @@ SparkFR::SparkFR()
 
 	// кодек
 	mCodec = CodecByName[CHardware::Codepages::SPARK];
+	mFFEngine.setCodec(mCodec);
 
 	// данные устройства
 	mDeviceName = CSparkFR::Models::Default;
@@ -430,7 +427,7 @@ bool SparkFR::processAnswer(char aError)
 					return false;
 				}
 
-				return execZReport();
+				return execZReport(true);
 			}
 		}
 		//--------------------------------------------------------------------------------
@@ -676,9 +673,9 @@ bool SparkFR::performFiscal(const QStringList & aReceipt, const SPaymentData & a
 
 	if (result)
 	{
-		foreach(auto amountData, aPaymentData.amountDataList)
+		foreach(auto unitData, aPaymentData.unitDataList)
 		{
-			result = result && sale(amountData);
+			result = result && sale(unitData);
 		}
 
 		result = result && processCommand(CSparkFR::Commands::CloseFiscal, QByteArray::number(CSparkFR::CashPaymentType));
@@ -697,14 +694,14 @@ bool SparkFR::performFiscal(const QStringList & aReceipt, const SPaymentData & a
 	return result;
 }
 
-#define CHECK_SPARK_TAX(aNumber) if ((mTaxes.size() >= aNumber) && (aAmountData.VAT == mTaxes[aNumber - 1])) command = CSparkFR::Commands::Sale##aNumber;
+#define CHECK_SPARK_TAX(aNumber) if ((mTaxes.size() >= aNumber) && (aUnitData.VAT == mTaxes[aNumber - 1])) command = CSparkFR::Commands::Sale##aNumber;
 
 //--------------------------------------------------------------------------------
-bool SparkFR::sale(const SAmountData & aAmountData)
+bool SparkFR::sale(const SUnitData & aUnitData)
 {
 	QByteArray command = CSparkFR::Commands::Sale0;
 
-	int index = mTaxes.indexOf(aAmountData.VAT);
+	int index = mTaxes.indexOf(aUnitData.VAT);
 
 	if (index == 0) command = CSparkFR::Commands::Sale1;
 	if (index == 1) command = CSparkFR::Commands::Sale2;
@@ -712,14 +709,14 @@ bool SparkFR::sale(const SAmountData & aAmountData)
 	if (index == 3) command = CSparkFR::Commands::Sale4;
 
 	QByteArray commandData =
-		QByteArray::number(qRound64(aAmountData.sum * 100.0)).rightJustified(8, ASCII::Zero) +
+		QByteArray::number(qRound64(aUnitData.sum * 100.0)).rightJustified(8, ASCII::Zero) +
 		QByteArray::number(1 * 1000).rightJustified(8, ASCII::Zero) +
 		QByteArray::number(1).rightJustified(2, ASCII::Zero) +
-		mCodec->fromUnicode(aAmountData.name.leftJustified(CSparkFR::LineSize, ASCII::Space, true));
+		mCodec->fromUnicode(aUnitData.name.leftJustified(CSparkFR::LineSize, ASCII::Space, true));
 
 	if (!processCommand(command, commandData))
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to sale for %2 (%3, VAT = %4)").arg(mDeviceName).arg(aAmountData.sum, 0, 'f', 2).arg(aAmountData.name).arg(aAmountData.VAT));
+		toLog(LogLevel::Error, QString("%1: Failed to sale for %2 (%3, VAT = %4)").arg(mDeviceName).arg(aUnitData.sum, 0, 'f', 2).arg(aUnitData.name).arg(aUnitData.VAT));
 		return false;
 	}
 
@@ -818,7 +815,7 @@ bool SparkFR::performZReport(bool aPrintDeferredReports)
 		printZBufferOK = processCommand(CSparkFR::Commands::PrintZBuffer, CSparkFR::PushZReport, nullptr, timeout);
 	}
 
-	bool printZReport = execZReport() && processCommand(CSparkFR::Commands::PrintZBuffer, CSparkFR::PushZReport, nullptr, CSparkFR::Timeouts::Report);
+	bool printZReport = execZReport(false) && processCommand(CSparkFR::Commands::PrintZBuffer, CSparkFR::PushZReport, nullptr, CSparkFR::Timeouts::Report);
 
 	return (printZBufferOK && aPrintDeferredReports) || printZReport;
 }
@@ -872,7 +869,7 @@ void SparkFR::processDeviceData()
 	{
 		setDeviceParameter(CDeviceData::FR::TotalPaySum,        data[1].toInt());
 		setDeviceParameter(CDeviceData::FR::FiscalDocuments,    data[2].toInt());
-		setDeviceParameter(CDeviceData::FR::SessionCount,       data[3].toInt());
+		setDeviceParameter(CDeviceData::Count,                  data[3].toInt(), CDeviceData::FR::Session);
 		setDeviceParameter(CDeviceData::FR::NonFiscalDocuments, data[4].toInt());
 		setDeviceParameter(CDeviceData::FR::OwnerId,            data[6].toInt());
 
@@ -885,6 +882,8 @@ void SparkFR::processDeviceData()
 		qulonglong EKLZSerial = fromBCD<qulonglong>(answer.mid(32, 10));
 		setDeviceParameter(CDeviceData::EKLZ::Serial, EKLZSerial);
 	}
+
+	removeDeviceParameter(CDeviceData::FR::EKLZ);
 
 	if (processCommand(CSparkFR::Commands::GetEKLZError, &answer) && !answer.isEmpty())
 	{
@@ -979,7 +978,7 @@ ESessionState::Enum SparkFR::getSessionState()
 }
 
 //--------------------------------------------------------------------------------
-bool SparkFR::execZReport()
+bool SparkFR::execZReport(bool /*aAuto*/)
 {
 	toLog(LogLevel::Normal, QString("%1: Begin processing %2-report").arg(mDeviceName).arg(CSparkFR::ZReport));
 
@@ -1007,7 +1006,7 @@ bool SparkFR::waitEjectorReady()
 	auto poll = [&] () -> bool { pollled = true; statusCodes.clear(); return getStatus(statusCodes); };
 	auto condition = [&] () -> bool { return pollled && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable) && !statusCodes.contains(PrinterStatusCode::OK::PaperInPresenter); };
 
-	return PollingExpector().wait<bool>(poll, condition, CSparkFR::WaitingInterval, CSparkFR::Timeouts::Ejector, true);// || retract();
+	return PollingExpector().wait<bool>(poll, condition, CSparkFR::EjectorWaiting);// || retract();
 }
 
 //--------------------------------------------------------------------------------
@@ -1018,7 +1017,7 @@ bool SparkFR::waitNextPrinting()
 	auto poll = [&] () -> bool { pollled = true; statusCodes.clear(); return getStatus(statusCodes); };
 	auto condition = [&] () -> bool { return pollled && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable) && !statusCodes.contains(DeviceStatusCode::Error::Unknown); };
 
-	return PollingExpector().wait<bool>(poll, condition, CSparkFR::WaitingInterval, CSparkFR::Timeouts::Printing);
+	return PollingExpector().wait<bool>(poll, condition, CSparkFR::PrintingWaiting);
 }
 
 //--------------------------------------------------------------------------------

@@ -7,9 +7,6 @@
 #include <Common/QtHeadersEnd.h>
 
 // Project
-#include "Hardware/Common/CodecDescriptions.h"
-#include "Hardware/Common/PollingExpector.h"
-
 #include "StarPrinters.h"
 #include "StarPrinterData.h"
 #include "ModelData.h"
@@ -797,7 +794,7 @@ bool StarPrinter::waitEjectorState(bool aBusy)
 	TStatusCodes statusCodes;
 	auto condition = [&] () -> bool { return !statusCodes.isEmpty() && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable) &&
 		(aBusy == statusCodes.contains(PrinterStatusCode::OK::PaperInPresenter)); };
-	bool result = PollingExpector().wait<void>(std::bind(&StarPrinter::doPoll, this, std::ref(statusCodes)), condition, CSTAR::Timeouts::Ejector, CSTAR::Timeouts::EjectorProcessing);
+	bool result = PollingExpector().wait<void>(std::bind(&StarPrinter::doPoll, this, std::ref(statusCodes)), condition, CSTAR::EjectorWaiting);
 
 	if (!aBusy && !result)
 	{

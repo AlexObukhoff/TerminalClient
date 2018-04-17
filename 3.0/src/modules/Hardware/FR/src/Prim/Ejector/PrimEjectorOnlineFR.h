@@ -9,7 +9,7 @@
 namespace CPrimFR {	inline TModels OnlineEjectorModels()
 {
 	return TModels()
-		<< CPrimFR::Models::PRIM_21_FA;
+		<< CPrimFR::Models::PRIM_21FA;
 }}
 
 class PrimEjectorOnlineFR : public PrimEjectorFR<PrimOnlineFRBase>
@@ -18,7 +18,7 @@ public:
 	PrimEjectorOnlineFR()
 	{
 		mModels = CPrimFR::OnlineEjectorModels();
-		mDeviceName = CPrimFR::ModelData[CPrimFR::Models::PRIM_21_FA].name;
+		mDeviceName = CPrimFR::ModelData[CPrimFR::Models::PRIM_21FA].name;
 	}
 
 	/// Возвращает список поддерживаемых устройств.

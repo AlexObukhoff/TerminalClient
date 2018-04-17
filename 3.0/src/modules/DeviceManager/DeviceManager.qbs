@@ -1,13 +1,8 @@
 import qbs 1.0
 
-StaticLibrary {
-	name: "DeviceManager"
+import "../../qbs/libTemplate.qbs" as TCLib
 
-	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "concurrent"] }
-
-	Depends { name: "Core" }
-
-	files: [ "src/*.cpp", "src/*.h" ]
+TCLib {
+	name: "DeviceManager"	
+	Depends { name: "Qt"; submodules: ["concurrent"] }
 }
-

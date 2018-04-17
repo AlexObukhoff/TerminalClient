@@ -1,14 +1,9 @@
 import qbs 1.0
 
-StaticLibrary {
+import "../../qbs/libTemplate.qbs" as TCLib
+
+TCLib {
 	name: "DebugUtils"
-
-	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core"] }
-
-	Depends { name: "Core" }
-
-	files: [ "src/*.cpp", "src/*.h" ]
 
 	cpp.platformDefines: base.concat(['_UNICODE', 'UNICODE'])
 	
@@ -17,4 +12,3 @@ StaticLibrary {
 		cpp.staticLibraries: ["Advapi32", "User32" ]
 	}
 }
-

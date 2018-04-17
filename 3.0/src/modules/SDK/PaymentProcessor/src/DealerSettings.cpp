@@ -319,7 +319,7 @@ bool DealerSettings::loadProvidersFromBuffer(const std::string & aBuffer, SProvi
 
 		boost::property_tree::read_xml(stream, operators);
 	}
-	catch (boost::property_tree::xml_parser_error e)
+	catch (boost::property_tree::xml_parser_error & e)
 	{
 		toLog(LogLevel::Error, QString("XML parser error: %1.").arg(QString::fromStdString(e.message())));
 

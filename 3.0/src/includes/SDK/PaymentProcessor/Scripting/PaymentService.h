@@ -86,9 +86,8 @@ class ProviderField : public QObject
 
 public:
 	ProviderField(const SProviderField & aField, QObject * aParent = 0)
-		: QObject(aParent)
+		: QObject(aParent), mField(aField)
 	{
-		mField = aField;
 	}
 
 private:

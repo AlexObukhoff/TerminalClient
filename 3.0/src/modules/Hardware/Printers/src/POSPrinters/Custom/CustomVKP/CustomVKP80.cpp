@@ -71,7 +71,7 @@ bool CustomVKP80::printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt)
 		PollingExpector expector;
 		QByteArray data;
 
-		if (!expector.wait([&]() -> bool { return getAnswer(data, 10) && data.contains(ASCII::XOn); }, CCustomVKP80::PollingInterval, CCustomVKP80::XOnXOffTimeout))
+		if (!expector.wait([&]() -> bool { return getAnswer(data, 10) && data.contains(ASCII::XOn); }, CCustomVKP80::XOnWaiting))
 		{
 			return false;
 		}
@@ -84,7 +84,7 @@ bool CustomVKP80::printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt)
 	if (!getConfigParameter(CHardware::Printer::OutCall).toBool())
 	{
 		auto condition = [&]() -> bool {TStatusCodes statusCodes; return getStatus(statusCodes) && !statusCodes.contains(PrinterStatusCode::OK::MotorMotion); };
-		PollingExpector().wait(condition, CCustomVKP80::PollingInterval, CCustomVKP80::PrintingEndTimeout);
+		PollingExpector().wait(condition, CCustomVKP80::PrintingWaiting);
 	}
 
 	return result;

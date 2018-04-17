@@ -2,6 +2,10 @@
 
 #pragma once
 
+// Modules
+#include "Hardware/Common/WaitingData.h"
+
+// Project
 #include "../ShtrihFRConstants.h"
 
 //--------------------------------------------------------------------------------
@@ -19,8 +23,18 @@ namespace CShtrihOnlineFR
 	/// Статус SD - недоступна.
 	const char SDNotConnected = '\xFE';
 
-	/// Минимальная дата прошивки, начиная с которой возможно снятие Z-отчетов в буфер.
-	const QDate MinZBufferFirmwareDate = QDate(2017, 6, 29);
+	/// Минимальные даты прошивкок, начиная с которых возможно выполнение определенного функционала.
+	namespace MinFWDate
+	{
+		/// Снятие Z-отчетов в буфер.
+		const QDate ZBuffer = QDate(2017, 6, 29);
+
+		/// Флаги агента для продажи.
+		const QDate AgentFlagOnSale = QDate(2017, 12, 29);
+
+		/// Операции V2.
+		const QDate V2 = QDate(2017, 5, 17);
+	}
 
 	/// Данные налога для продажи - налог вычисляется ФР.
 	const char FiscalTaxData[] = "\xFF\xFF\xFF\xFF\xFF";
@@ -37,38 +51,48 @@ namespace CShtrihOnlineFR
 	/// Печатать все реквизиты пользователя (название юр. лица, адрес и место расчетов).
 	const int PrintFullUserData = 7;
 
-	/// Параметры автообновления.
-	namespace FirmwareUpdating
+	/// Ряд кассира по умолчанию (сисадмин).
+	const int CashierSeries = 30;
+
+	/// Количество типов оплаты.
+	const int PayTypeQuantity = 16;
+
+	/// Налоги на закрытии чека по количеству налоговых  групп. Фиктивные, т.к. используются налоги на позицию.
+	const QByteArray ClosingFiscalTaxes = QByteArray(6 * 5, ASCII::NUL);
+
+	/// Ожидание готовности, [мс].
+	const SWaitingData ReadyWaiting = SWaitingData(200, 15 * 1000);
+
+	/// Типы фискальных чеков.
+	namespace DocumentTypes
 	{
-		const int Working  = 1;      /// Работать с сервером автообновления.
-		const int Enabling = 1;      /// Разрешить автообновление.
-		const int Interval = 600;    /// Интервал опроса сервера автообновления, [c].
-		const int Single   = 0;      /// Многократное обновление.
+		const char Sale     = '\x01';    /// Продажа.
+		const char SaleBack = '\x02';    /// Возврат продажи.
 	}
 
 	/// Параметры ФР.
 	namespace FRParameters
 	{
-		const int CashierSeries = 30;    /// Ряд кассира по умолчанию (сисадмин).
-
 		using namespace CShtrihFR::FRParameters;
 
 		const SData Cashier             = SData( 2,  2);    /// Кассир по умолчанию (сисадмин).
 		const SData NotPrintDocument    = SData( 7, 17);    /// Настройка печати любого документа.
 		const SData PrintEndToEndNumber = SData( 9, 17);    /// Печатать сквозной номер документа.
 		const SData PrintOFDData        = SData(10, 17);    /// Печатать данные ОФД.
-		const SData PrintUserData       = SData(12, 17);    /// Печатать реквизитов [суб]дилера.
+		const SData PrintUserData       = SData(12, 17);    /// Печатать реквизиты [суб]дилера.
 		const SData FFDFR               = SData(17, 17);    /// ФФД ФР.
+		const SData PrintCustomFields   = SData(25, 17);    /// Автопечать тегов, вводимых на платеже.
 		const SData SerialNumber        = SData( 1, 18);    /// Серийный номер.
 		const SData INN                 = SData( 2, 18);    /// ИНН.
 		const SData RNM                 = SData( 3, 18);    /// РНМ.
-		const SData Taxation            = SData( 5, 18);    /// СНО.
+		const SData TaxSystem           = SData( 5, 18);    /// СНО.
 		const SData LegalOwner          = SData( 7, 18);    /// Наименование юр. лица владельца.
 		const SData PayOffAddress       = SData( 9, 18);    /// Адрес расчетов.
 		const SData OFDName             = SData(10, 18);    /// Наименование ОФД.
 		const SData OFDURL              = SData(11, 18);    /// Aдрес сайта ОФД.
 		const SData FTSURL              = SData(13, 18);    /// Адрес сайта ФНС.
 		const SData PayOffPlace         = SData(14, 18);    /// Место расчетов.
+		const SData AgentFlag           = SData(16, 18);    /// Признак агента.
 		const SData OFDAddress          = SData( 1, 19);    /// Aдрес ОФД.
 		const SData OFDPort             = SData( 2, 19);    /// Порт ОФД.
 		const SData AutomaticNumber     = SData( 1, 24);    /// Номер автомата.
@@ -96,6 +120,15 @@ namespace CShtrihOnlineFR
 		}
 	}
 
+	/// Параметры автообновления.
+	namespace FirmwareUpdating
+	{
+		const int Working  = 1;      /// Работать с сервером автообновления.
+		const int Interval = 600;    /// Интервал опроса сервера автообновления, [c].
+		const int Enabling = 1;      /// Разрешить автообновление.
+		const int Single   = 0;      /// Многократное обновление.
+	}
+
 	/// Коды команд.
 	namespace Commands
 	{
@@ -116,7 +149,9 @@ namespace CShtrihOnlineFR
 			const char StartFiscalTLVData[]      = "\xFF\x3A";    /// Начать получение данных фискального документа в TLV-формате.
 			const char GetFiscalTLVData[]        = "\xFF\x3B";    /// Получить данные фискального документа в TLV-формате.
 			const char GetSessionParameters[]    = "\xFF\x40";    /// Получить параметры текущей смены.
+			const char CloseDocument[]           = "\xFF\x45";    /// Закрыть фискальный чек.
 			const char Sale[]                    = "\xFF\x46";    /// Продажа.
+			const char SetOFDParameterLinked[]   = "\xFF\x4D";    /// Передать произвольную TLV структуру (реквизит для ОФД), привязанную к операции.
 		}
 	}
 

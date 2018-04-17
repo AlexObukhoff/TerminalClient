@@ -12,6 +12,15 @@ using namespace SDK::Driver;
 using namespace SDK::Driver::IOPort::COM;
 
 //--------------------------------------------------------------------------------
+template TResult PrimFRBase::processCommand<uchar> (char, int, const QString &, uchar  &);
+template TResult PrimFRBase::processCommand<ushort>(char, int, const QString &, ushort &);
+template TResult PrimFRBase::processCommand<int>   (char, int, const QString &, int    &);
+
+template void PrimFRBase::loadDeviceData<uchar> (const CPrimFR::TData &, const QString &, const QString &, int, const QString &);
+template void PrimFRBase::loadDeviceData<ushort>(const CPrimFR::TData &, const QString &, const QString &, int, const QString &);
+template void PrimFRBase::loadDeviceData<uint>  (const CPrimFR::TData &, const QString &, const QString &, int, const QString &);
+
+//--------------------------------------------------------------------------------
 PrimFRBase::PrimFRBase() : mMode(EFRMode::Fiscal)
 {
 	// теги
@@ -29,7 +38,7 @@ PrimFRBase::PrimFRBase() : mMode(EFRMode::Fiscal)
 	// типы оплаты
 	mPayTypeData.add(EPayTypes::Cash,         0);
 	mPayTypeData.add(EPayTypes::EMoney,       1);
-	mPayTypeData.add(EPayTypes::PostPayment,  2);
+	mPayTypeData.add(EPayTypes::PrePayment,   2);
 
 	// данные команд
 	mCommandTimouts.append(CPrimFR::Commands::SetFRParameters,  3 * 1000);
@@ -443,19 +452,64 @@ TResult PrimFRBase::processCommand(char aCommand, const CPrimFR::TData & aComman
 }
 
 //--------------------------------------------------------------------------------
+template <class T>
+TResult PrimFRBase::processCommand(char aCommand, int aIndex, const QString & aLog, T & aResult)
+{
+	CPrimFR::TData commandData;
+
+	return processCommand(aCommand, commandData, aIndex, aLog, aResult);
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+TResult PrimFRBase::processCommand(char aCommand, const CPrimFR::TData & aCommandData, int aIndex, const QString & aLog, T & aResult)
+{
+	CPrimFR::TData data;
+	TResult result = processCommand(aCommand, aCommandData, &data);
+
+	if (!result)
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to process command to get " + aLog);
+		return result;
+	}
+
+	return parseAnswerData<T>(data, aIndex, aLog, aResult) ? CommandResult::OK : CommandResult::Device;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool PrimFRBase::parseAnswerData(const CPrimFR::TData & aAnswer, int aIndex, const QString & aLog, T & aResult)
+{
+	if (aAnswer.size() <= aIndex)
+	{
+		toLog(LogLevel::Error, QString("%1: Failed to parse %2 data due to answer size = %3, need %4 minimum").arg(mDeviceName).arg(aLog).arg(aAnswer.size()).arg(aIndex + 1));
+		return false;
+	}
+
+	bool OK;
+	QByteArray data = aAnswer[aIndex];
+	aResult = qToBigEndian(T(data.toLongLong(&OK, 16)));
+
+	if ((data.size() != (sizeof(T) * 2)) || !OK)
+	{
+		toLog(LogLevel::Error, QString("%1: Failed to parse %2 data, answer = %3 (%4)").arg(mDeviceName).arg(aLog).arg(mCodec->toUnicode(data)).arg(data.toHex().data()));
+		return false;
+	}
+
+	return true;
+};
+
+//--------------------------------------------------------------------------------
 ESessionState::Enum PrimFRBase::getSessionState()
 {
-	CPrimFR::TData answer;
+	ushort state;
 
-	if (!processCommand(CPrimFR::Commands::GetDateTime, &answer))
+	if (!processCommand(CPrimFR::Commands::GetDateTime, 2, "session state", state))
 	{
 		return ESessionState::Error;
 	}
 
-	ushort state = QString(answer[2]).toUShort(0, 16);
-	bool result = qToBigEndian(state) & CPrimFR::SessionOpenedMask;
-
-	return result ? ESessionState::Opened : ESessionState::Closed;
+	return (state & CPrimFR::SessionOpenedMask) ? ESessionState::Opened : ESessionState::Closed;
 }
 
 //--------------------------------------------------------------------------------
@@ -663,15 +717,14 @@ bool PrimFRBase::getStatus(TStatusCodes & aStatusCodes)
 //--------------------------------------------------------------------------------
 int PrimFRBase::getVerificationCode()
 {
-	CPrimFR::TData answer;
+	int result;
 
-	if (!processCommand(CPrimFR::Commands::GetLastCVCNumber, &answer) || (answer.size() < 6))
+	if (!processCommand(CPrimFR::Commands::GetLastCVCNumber, 5, "last CVC number", result))
 	{
-		toLog(LogLevel::Error, "PrimPrinters: Failed to get last CVC number");
 		return 0;
 	}
 
-	return answer[5].toHex().toInt(0, 16);
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -727,7 +780,7 @@ void PrimFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDataList
 	QString amount         = getConfigParameter(CHardware::FR::Strings::Amount).toString();
 
 	QByteArray sum = QString::number(qRound64(getTotalAmount(aPaymentData) * 100.0) / 100.0, '0', 2).toLatin1();
-	QString cashier = getConfigParameter(CHardware::FiscalFields::Cashier).toString();
+	QString cashier = mFFEngine.getConfigParameter(CFiscalSDK::Cashier).toString();
 	QString operatorId = cashier.isEmpty() ? CPrimFR::OperatorID : cashier;
 
 	// обязательные G-поля
@@ -884,27 +937,16 @@ int PrimFRBase::getStartZReportNumber(CPrimFR::TData & aExtraData)
 //--------------------------------------------------------------------------------
 int PrimFRBase::getEndZReportNumber()
 {
-	toLog(LogLevel::Normal, "PrimPrinters: Get end Z-report number");
-	CPrimFR::TData answer;
+	ushort result;
 
-	if (!processCommand(CPrimFR::Commands::GetStatus, &answer) || (answer.size() < 8))
+	if (!processCommand(CPrimFR::Commands::GetStatus, 7, "end Z-report number", result))
 	{
-		toLog(LogLevel::Error, "PrimPrinters: Failed to get end number of Z-report");
 		return -1;
 	}
 
-	bool isOK;
-	int endZReport = qToBigEndian(answer[7].toUShort(&isOK, 16));
+	toLog(LogLevel::Normal, "End Z-report number: " + QString::number(result));
 
-	if (!isOK)
-	{
-		toLog(LogLevel::Error, "PRIM: Wrong end number of ZReport = %1" + QString(answer[7]));
-		return -1;
-	}
-
-	toLog(LogLevel::Normal, "End Z-report number: " + QString::number(endZReport));
-
-	return endZReport;
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -1107,7 +1149,7 @@ bool PrimFRBase::processAnswer(char aError)
 }
 
 //--------------------------------------------------------------------------------
-TResult PrimFRBase::openFRSession()
+bool PrimFRBase::openSession()
 {
 	CPrimFR::TData commandData = CPrimFR::TData() << "";    // реквизиты смены
 
@@ -1170,6 +1212,18 @@ QString PrimFRBase::int2String(int aValue)
 QByteArray PrimFRBase::int2ByteArray(int aValue)
 {
 	return int2String(aValue).toLatin1();
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+void PrimFRBase::loadDeviceData(const CPrimFR::TData & aAnswer, const QString & aName, const QString & aLog, int aIndex, const QString & aExtensibleName)
+{
+	T answerData;
+
+	if (parseAnswerData(aAnswer, aIndex, aLog, answerData))
+	{
+		setDeviceParameter(aName, answerData, aExtensibleName);
+	}
 }
 
 //--------------------------------------------------------------------------------

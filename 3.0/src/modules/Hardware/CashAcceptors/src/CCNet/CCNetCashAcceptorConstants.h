@@ -5,6 +5,7 @@
 // Modules
 #include "Hardware/Common/ASCII.h"
 #include "Hardware/Common/DeviceCodeSpecification.h"
+#include "Hardware/Common/WaitingData.h"
 
 // Project
 #include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
@@ -30,23 +31,11 @@ namespace CCCNet
 	/// Таймауты, [мс].
 	namespace Timeouts
 	{
-		/// После Busy.
-		const int Busy = 4000;
-
 		/// После Reset-а.
 		const int Reset = 3000;
 
 		/// Выход из initilaize-а (SL).
 		const int ExitInitialize = 40 * 1000;
-
-		/// Ожидание выхода купюрника из анабиоза.
-		const int Available = 500;
-
-		/// Ожидание на отсеивание других устройств на автоопределении.
-		const int FalseAutodetection = 1000;
-
-		/// Ожидание выхода купюрника из PowerUp-а.
-		const int PowerUp = 4000;
 
 		/// Ожидание выхода из Busy при обработке блока данных в процессе обновления прошивки.
 		const int BusyUpdatingStatus = 30 * 1000;
@@ -54,6 +43,21 @@ namespace CCCNet
 		/// Ожидание получения полла от купюрника перед перепрошивкой.
 		const int UpdatingAvailable = 1000;
 	}
+
+	/// Ожидание выхода из Busy-подобных состояний, [мс].
+	const SWaitingData NotBusyPowerUpWaiting = SWaitingData(100, 4 * 1000);
+
+	/// Ожидание выхода из анабиоза, [мс].
+	const SWaitingData AvailableWaiting = SWaitingData(100, 500);
+
+	/// Ожидание на отсеивание других устройств на автоопределении, [мс].
+	const SWaitingData FalseAutoDetectionWaiting = SWaitingData(100, 1000);
+
+	/// Ожидание выхода из Busy, [мс].
+	const SWaitingData NotBusyWaiting = SWaitingData(100, 4000);
+
+	/// Ожидание выхода из Enabled, [мс].
+	const SWaitingData NotEnabled = SWaitingData(100, 1000);
 
 	/// Пауза между командами обновления прошивки, [мс].
 	const int UpdatingPause = 200;

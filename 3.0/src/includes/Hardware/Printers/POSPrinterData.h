@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Hardware/Common/WaitingData.h"
+
 //--------------------------------------------------------------------------------
 /// Константы, команды и коды состояний POS-принтеров.
 namespace CPOSPrinter
@@ -40,7 +42,7 @@ namespace CPOSPrinter
 		}
 	}
 
-	const char RussianCodePage = '\x07';    /// Номер русской кодовой страницы.
+	const char RussianCodePage = '\x11';    /// Номер русской кодовой страницы.
 	const char USACharacters   = '\x30';    /// Спец. международный набор символов, принятый в США.
 	const char DefaultName[] = "Unknown POS Printer";    /// Имя принтера по умолчанию.
 
@@ -66,12 +68,14 @@ namespace CPOSPrinter
 	namespace Timeouts
 	{
 		const int Status   = 200;     /// Статус.
-		const int Statuses = 800;     /// Статусы на идентификации.
 		const int Info     = 1000;    /// Информация о модели.
 	}
 
-	const int StatusPause  = 10;      /// Пауза между запросами статусов.
-	const int Interval     = 350;     /// Интервал запроса статуса на идентификации.
+	/// Ожидание выхода из анабиоза, [мс].
+	const SWaitingData AvailableWaiting = SWaitingData(350, 800);
+
+	/// Пауза между запросами статусов.
+	const int StatusPause  = 10;
 
 	/// Пауза после инициализации.
 	const int InitializationPause = 1000;

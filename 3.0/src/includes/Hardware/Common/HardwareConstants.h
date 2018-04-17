@@ -17,6 +17,7 @@ namespace CHardware
 	const char PluginParameterNames[] = "plugin_parameter_names";
 	const char RequiredResourceNames[] = "required_resource_names";
 	const char PluginPath[] = "plugin_path";
+	const char ConfigData[] = "config_data";
 
 	/// Типы вызова функционала драйвера.
 	namespace CallingTypes
@@ -46,6 +47,7 @@ namespace CHardware
 		const char Base[] = "Base";
 		const char SPARK[] = "SPARK";
 		const char ATOL[] = "ATOL";
+		const char CustomKZT[] = "CP866 (Kazakhstan)";
 	}
 
 	/// Варинатны использования настроек.
@@ -228,6 +230,7 @@ namespace CHardware
 		const char FiscalMode[] = "fiscal_mode";
 		const char CanAutoCloseSession[] = "can_auto_close_session";
 		const char FiscalChequeCreation[] = "fiscal_cheque_creation";
+		const char SessionOpeningTime[] = "session_opening_time";
 		const char Amount[] = "amount";
 		const char StartZReportNumber[] = "begin_z_report_number";
 		const char ZReportNumber[] = "z_report_number";
@@ -236,6 +239,7 @@ namespace CHardware
 		const char EKLZStatus[] = "EKLZ_status";
 		const char CVCNumber[] = "cvc_number";
 		const char ForcePerformZReport[] = "force_perform_z_report";
+		const char PrinterModel[] = "printer_model";
 
 		/// Команды.
 		namespace Commands

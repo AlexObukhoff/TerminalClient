@@ -124,9 +124,20 @@ Widgets.SceneBase2 {
 
 			var parameters = {};
 
+			var findFieldType = function(aProvider, aId) {
+				var result = {};
+				try {
+					aProvider.fields.forEach(function (aField) {
+						if (aField.id == aId) { result = aField; throw BreakException; }
+					});
+				} catch (e) {}
+
+				return result.type;
+			}
+
 			for (var id in Editor.values) {
+				parameters[id] =  findFieldType(global.provider.id, id) == "enum" ? Editor.values[id].rawValue : Editor.values[id].value;
 				parameters[id + "_DISPLAY"] = Editor.values[id].value;
-				parameters[id] = Editor.values[id].value;
 
 				if (Editor.values[id].rawValue !== Editor.values[id].value) {
 					parameters[id + "_RAW"] = Editor.values[id].rawValue;
@@ -142,17 +153,21 @@ Widgets.SceneBase2 {
 			Core.payment.setParameters(params)
 
 			var ext = [];
+			var ext2 = []
 
 			for (var i in Editor.values) {
 				// Пропустим редактор с addinfo
 				if (i == "9999") continue;
 
 				ext.push(("%1:%2").arg(i).arg(Editor.values[i].rawValue));
+				ext2.push(i)
 			}
 
 			// "101" обновляем только если есть поле add_fileds
+			// PROVIDER_FIELDS_EXT нужен для того, чтобы мониторинг смог перепровести платеж
 			if (global.useAddFields) {
 				Core.payment.setParameter("101", ext.join("|"));
+				Core.payment.setParameter("PROVIDER_FIELDS_EXT", ext2.join("#"));
 			}
 
 			if (global.needChooseService) {

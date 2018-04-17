@@ -361,7 +361,8 @@ bool PaymentBase::calculateLimits()
 
 	const bool isFixedAmount = qFuzzyCompare(minAmount, maxAmount);
 	const auto provider = getMNPProviderSettings();
-	double systemMax = qMin(provider.limits.system.toDouble(), maxAmount);
+	double systemMax = provider.limits.system.toDouble();
+	systemMax = maxAmount > systemMax ? systemMax : maxAmount;
 
 	if (!isFixedAmount)
 	{
@@ -443,7 +444,7 @@ bool PaymentBase::calculateLimits()
 	auto calcAmountAllByAmountAll = [&com, &provider](double & aAmount) -> double {
 		double amountAll = 0.0;
 
-		if (com.getType() == PPSDK::Commission::Percent)
+		if (com.getType() == PPSDK::Commission::Percent && com.getValue())
 		{
 			double amountAllLimit1 = 0.0;
 
@@ -472,10 +473,14 @@ bool PaymentBase::calculateLimits()
 				amountAll = qMax(amountAllLimit3, amountAll);
 			}
 		}
-		else
+		else if (com.getType() == PPSDK::Commission::Absolute && com.getValue())
 		{
 			aAmount -= com.getValue();
 			amountAll = aAmount;
+		}
+		else if (com.getMinCharge() || com.getMinCharge())
+		{
+			amountAll = aAmount - com.getMinCharge();
 		}
 
 		return amountAll;
@@ -486,7 +491,7 @@ bool PaymentBase::calculateLimits()
 
 	if (isFixedAmount)
 	{
-		// если лимиты равны и комиссия больше системного лимита то пропускаем эти лимиты дальше.
+		// если лимиты равны и комиссия больше системного лимита, то пропускаем эти лимиты дальше.
 		maxAmountAll = localAmountAllLimit;
 	}
 	else if (localAmountAllLimit > systemMax)

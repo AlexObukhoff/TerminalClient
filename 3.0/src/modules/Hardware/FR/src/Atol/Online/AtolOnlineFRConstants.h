@@ -2,6 +2,10 @@
 
 #pragma once
 
+// Models
+#include "Hardware/Common/WaitingData.h"
+
+// Project
 #include "../AtolFRConstants.h"
 
 //--------------------------------------------------------------------------------
@@ -22,9 +26,6 @@ namespace CAtolOnlineFR
 	/// Печать X- и Z-отчетов - презентовать.
 	const char PresentReports = '\x00';
 
-	/// Пауза после перезагрузки по питанию, [мс].
-	const int RebootPause = 10 * 1000;
-
 	/// Печатать ОФД-реквизит.
 	const char PrintOFDParameter = '\x01';
 
@@ -43,6 +44,19 @@ namespace CAtolOnlineFR
 	/// Формат представления даты для вывода в лог.
 	const char TimeLogFormat[] = "hh:mm";
 
+	/// Ожидание оживания ФР при получении фискальных данных после закрытия чека, [мс].
+	const SWaitingData GetFiscalWaiting = SWaitingData(200, 1000);
+
+	/// Максимальное количество повторов при ожидании оживания ФР при получении фискальных данных после закрытия чека.
+	const int MaxRepeatingFiscalData = 3;
+
+	/// Пауза после перезагрузки по питанию, [мс].
+	const int RebootPause = 1000;
+
+	/// Ожидание выхода из анабиоза, [мс].
+	const SWaitingData RebootWaiting = SWaitingData(1000, 20000);
+
+	//------------------------------------------------------------------------------------------------
 	namespace FRParameters
 	{
 		using namespace CAtolFR::FRParameters;

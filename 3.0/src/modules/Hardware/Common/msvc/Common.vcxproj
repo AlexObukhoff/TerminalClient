@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Codec\CodecBase.cpp" />
+    <ClCompile Include="..\src\ConfigManager\DeviceConfigManager.cpp" />
     <ClCompile Include="..\src\Meta\MetaDevice.cpp" />
     <ClCompile Include="..\src\OPOS\OPOSPollingDeviceBase.cpp" />
     <ClCompile Include="..\src\Polling\PollingDeviceBase.cpp" />
@@ -287,11 +288,14 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\BaseStatusTypes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceCodeSpecification.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceDataConstants.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceLogicManager.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\FunctionTypes.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceLogManager.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ProtocolBase.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ProtoDevices.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\CommandResultData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\StatusCache.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\WaitingData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Plugins\CommonParameters.h" />
     <CustomBuild Include="..\src\WorkingThreadProxy.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -352,6 +356,7 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\USBDeviceModelData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Plugins\DevicePluginBase.h" />
     <ClInclude Include="..\src\Codec\CodecBase.h" />
+    <ClInclude Include="..\src\ConfigManager\DeviceConfigManager.h" />
     <ClInclude Include="..\src\OPOS\OPOSPollingDeviceBase.h" />
     <ClInclude Include="..\src\PortPolling\PortPollingDeviceBase.h" />
     <ClInclude Include="..\src\Port\PortDeviceBase.h" />
@@ -508,7 +513,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

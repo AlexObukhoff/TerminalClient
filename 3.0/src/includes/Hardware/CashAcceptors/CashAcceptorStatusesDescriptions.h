@@ -163,12 +163,12 @@ namespace BillAcceptorStatusCode
 			ADD_CA_SENSOR_ERROR(Rim,         QCoreApplication::translate("ValidatorStatuses", "#rim_sensors_are_faulted"));
 
 			/// Ошибка, при платеже не может быть потери денег в купюрнике.
-			ADD_CA_ERROR(WrongCurrency,       QCoreApplication::translate("ValidatorStatuses", "#currency_is_not_supported"));
-			ADD_CA_ERROR(NoParsAvailable,     QCoreApplication::translate("ValidatorStatuses", "#no_pars_available"));
-			ADD_CA_ERROR(ParTableLoading,     QCoreApplication::translate("ValidatorStatuses", "#par_table_loading"));
-			ADD_CA_ERROR(Firmware,            QCoreApplication::translate("ValidatorStatuses", "#firmware_error"));
-			ADD_CA_ERROR(Clock,               QCoreApplication::translate("ValidatorStatuses", "#realtime_clock_error"));
-			ADD_CA_ERROR(Calibration,         QCoreApplication::translate("ValidatorStatuses", "#calibration_error"));
+			ADD_CA_ERROR(WrongCurrency,      QCoreApplication::translate("ValidatorStatuses", "#currency_is_not_supported"));
+			ADD_CA_ERROR(NoParsAvailable,    QCoreApplication::translate("ValidatorStatuses", "#no_pars_available"));
+			ADD_CA_ERROR(ParTableLoading,    QCoreApplication::translate("ValidatorStatuses", "#par_table_loading"));
+			ADD_CA_ERROR(Firmware,           QCoreApplication::translate("ValidatorStatuses", "#firmware_error"));
+			ADD_CA_ERROR(Clock,              QCoreApplication::translate("ValidatorStatuses", "#realtime_clock_error"));
+			ADD_CA_ERROR(Calibration,        QCoreApplication::translate("ValidatorStatuses", "#calibration_error"));
 
 			/// Выбросы (в большинстве случае - нормальное состояние).
 			ADD_CA_REJECT(Insertion);

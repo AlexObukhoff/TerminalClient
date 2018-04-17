@@ -4,10 +4,18 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QDebug>
 #include <QtCore/QThread>
+#include <QtCore/QFileInfo>
+#include <QtCore/QSettings>
 #include <Common/QtHeadersEnd.h>
 
-// Modules
-#include <Common/Application.h>
+#ifdef Q_OS_WIN
+#include <windows.h>
+#include <Shlwapi.h>
+
+#pragma comment(lib, "Shlwapi.lib")
+#endif
+
+#include <Common/Version.h>
 
 // Проект
 #include "SimpleLog.h"
@@ -89,7 +97,7 @@ void SimpleLog::setLevel(LogLevel::Enum aLevel)
 //---------------------------------------------------------------------------
 void SimpleLog::adjustPadding(int aStep)
 {
-	mPadding = std::max(0, mPadding + aStep);
+	mPadding = qMax(0, mPadding + aStep);
 }
 
 //---------------------------------------------------------------------------
@@ -161,9 +169,34 @@ bool SimpleLog::init()
 		}
 		else
 		{
-			QString logPath =
-				BasicApplication::getInstance()->getWorkingDirectory() + "/logs/" +
-				QDate::currentDate().toString("yyyy.MM.dd ") + mDestination + ".log";
+			QString logPath;
+			QString workingDirectory;
+
+#ifdef Q_OS_WIN			
+			TCHAR szPath[MAX_PATH] = { 0 };
+			
+			if (GetModuleFileName(0, szPath, MAX_PATH))
+			{
+				QFileInfo info(QDir::toNativeSeparators(QString::fromWCharArray(szPath)));
+				QString settingsFilePath = QDir::toNativeSeparators(info.absolutePath() + "/" + info.completeBaseName() + ".ini");
+				QSettings mSettings(settingsFilePath, QSettings::IniFormat);
+				mSettings.setIniCodec("UTF-8");
+				
+
+				if (mSettings.contains("common/working_directory"))
+				{
+					QString directory = mSettings.value("common/working_directory").toString();
+					workingDirectory = QDir::toNativeSeparators(QDir::cleanPath((QDir::isAbsolutePath(directory) ? "" : (info.absolutePath() + "/")) + directory));
+				}
+				else
+				{
+					workingDirectory = info.absolutePath();
+				}
+			}			
+#else
+#pragma error
+#endif
+			logPath = workingDirectory + "/logs/" + QDate::currentDate().toString("yyyy.MM.dd ") + mDestination + ".log";
 
 			QFileInfo logPathInfo(logPath);
 
@@ -224,11 +257,9 @@ bool SimpleLog::isInitiated()
 //---------------------------------------------------------------------------
 void SimpleLog::writeHeader()
 {
-	BasicApplication * app = BasicApplication::getInstance();
-
 	write(LogLevel::Normal, QString("%1 LOG [%2] STARTED. %3 %4.")
 		.arg(QString("*").repeated(32)).arg(getName())
-		.arg(app ? app->getName() : "").arg(app ? app->getVersion() : ""));
+		.arg(Cyberplat::Application).arg(Cyberplat::getVersion()));
 }
 
 //---------------------------------------------------------------------------

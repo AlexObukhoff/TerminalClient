@@ -69,7 +69,7 @@ Item {
 		animation.start();
 		global.previousLayout = global.currentLayout;
 		global.currentLayout = aName;
-		global.currentLayou.filter = rootItem.filter.toLowerCase()
+		global.currentLayout.filter = rootItem.filter.toLowerCase()
 	}
 
 	function reset(aDefault, aLayouts) {

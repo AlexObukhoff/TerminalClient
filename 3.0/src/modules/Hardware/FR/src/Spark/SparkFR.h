@@ -89,7 +89,7 @@ protected:
 	bool processAnswer(char aError);
 
 	/// Выполнить Z-отчет.
-	virtual bool execZReport();
+	virtual bool execZReport(bool aAuto);
 
 	/// Узнать, открыта ли смена.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
@@ -107,7 +107,7 @@ protected:
 	bool payIO(double aAmount, bool aIn);
 
 	/// Продажа.
-	bool sale(const SDK::Driver::SAmountData & aAmountData);
+	bool sale(const SDK::Driver::SUnitData & aUnitData);
 
 	/// Извлечь данные из специфичного BCD-формата.
 	template <class T>

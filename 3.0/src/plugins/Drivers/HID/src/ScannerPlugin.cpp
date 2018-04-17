@@ -17,7 +17,7 @@ IPlugin * CreatePlugin(IEnvironment * aEnvironment, const QString & aInstanceNam
 //--------------------------------------------------------------------------------
 TParameterList OPOSParameters(const QString & aModel)
 {
-	return createNamedList<OPOSMetrologicScanner>(aModel, QString("OPOS ") + CComponents::Scanner)
+	return modifyPriority(createNamedList<OPOSMetrologicScanner>(aModel, QString("OPOS ") + CComponents::Scanner), EDetectingPriority::Fallback)
 		// Удалять префикс полученных данных.
 		<< SPluginParameter(CHardware::Scanner::Prefix, SPluginParameter::Bool, true, QT_TRANSLATE_NOOP("ScannerParameters", "ScannerParameters#prefix"), QString(), false);
 }

@@ -19,7 +19,15 @@ void LogRotate::execute()
 {
 	IApplication * app = dynamic_cast<IApplication *>(BasicApplication::getInstance());
 
-	dynamic_cast<TerminalService *>(app->getCore()->getTerminalService())->getClient()->execute("close_logs");
+	if (app)
+	{
+		auto terminalService = dynamic_cast<TerminalService *>(app->getCore()->getTerminalService());
+
+		if (terminalService)
+		{
+			terminalService->getClient()->execute("close_logs");
+		}
+	}
 
 	ILog::logRotateAll();
 

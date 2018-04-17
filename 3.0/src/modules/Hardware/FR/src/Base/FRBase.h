@@ -9,7 +9,7 @@
 
 // Project
 #include "Hardware/FR/FRBaseConstants.h"
-#include "Hardware/FR/FiscalFieldDescriptions.h"
+#include "FFEngine.h"
 
 //--------------------------------------------------------------------------------
 template <class T>
@@ -24,23 +24,11 @@ public:
 	/// Устанавливает конфигурацию устройству.
 	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
 
-	/// Завершение инициализации.
-	virtual void finaliseInitialization();
-
 	/// Готов ли к печати.
 	virtual bool isDeviceReady(bool aOnline);
 
 	/// Готов ли к обработке данной фискальной команды.
 	virtual bool isFiscalReady(bool aOnline, SDK::Driver::EFiscalPrinterCommand::Enum aCommand = SDK::Driver::EFiscalPrinterCommand::Sale);
-
-	/// Запрос статуса.
-	virtual bool processStatus(TStatusCodes & aStatusCodes);
-
-	/// Проверить установки сервера ОФД.
-	bool checkOFDData(const QByteArray & aAddressData, const QByteArray & aPortData);
-
-	/// Проверить возможность использования фискального реквизита.
-	bool checkFiscalField(int aField, bool & aResult);
 
 	/// Печать фискального чека.
 	virtual bool printFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
@@ -55,9 +43,6 @@ public:
 	virtual bool printEncashment(const QStringList & aReceipt);
 	virtual bool printEncashment(const QStringList & aReceipt, double aAmount);
 
-	/// Открыта ли сессия.
-	virtual SDK::Driver::ESessionState::Enum getSessionState();
-
 	/// Находится ли в фискальном режиме.
 	virtual bool isFiscal() const;
 
@@ -65,6 +50,27 @@ public:
 	virtual bool isOnline() const;
 
 protected:
+	/// Попытка самоидентификации.
+	virtual bool isConnected();
+
+	/// Завершение инициализации.
+	virtual void finaliseInitialization();
+
+	/// Запрос статуса.
+	virtual bool processStatus(TStatusCodes & aStatusCodes);
+
+	/// Проверить установки сервера ОФД.
+	bool checkOFDData(const QByteArray & aAddressData, const QByteArray & aPortData);
+
+	/// Открыта ли сессия.
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
+
+	/// Открыть смену.
+	virtual bool openSession() { return false; }
+
+	/// Открыть смену.
+	bool openFRSession();
+
 	/// Установить начальные параметры.
 	virtual void setInitialData();
 
@@ -78,13 +84,28 @@ protected:
 	virtual int getSessionNumber() { return 0; }
 
 	/// Загрузить СНО.
-	bool checkTaxationData(char aData);
+	bool checkTaxSystems(char aData);
 
 	/// Загрузить признаки агента.
 	bool checkAgentFlags(char aData);
 
 	/// Загрузить режимы работы.
 	bool checkOperationModes(char aData);
+
+	/// Проверить суммы на платеже.
+	bool checkAmountsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
+
+	/// Проверить сумму в кассе на платеже.
+	bool checkSumInCash(const SDK::Driver::SPaymentData & aPaymentData);
+
+	/// Проверить налоги на платеже.
+	bool checkVATsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
+
+	/// Добавить фискальные теги в платеж.
+	void addFiscalFieldsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
+
+	/// Проверить тип оплаты на платеже.
+	bool checkPayType(const SDK::Driver::SPaymentData & aPaymentData);
 
 	/// Проверить параметры налогов.
 	virtual bool checkTaxes();
@@ -101,26 +122,11 @@ protected:
 	/// Установить реквизиты ОФД.
 	bool setOFDParameters();
 
+	/// Установить реквизиты ОФД на продаже.
+	bool setOFDParametersOnSale(const SDK::Driver::SUnitData & aUnitData);
+
 	/// Установить TLV-параметр.
-	virtual bool setTLV(int /*aField*/) { return true; }
-
-	/// Распарсить TLV-параметр.
-	bool parseTLV(const QByteArray & aData, CFR::STLV & aTLV);
-
-	/// Распарсить массив байтов STLV-структуры.
-	CFR::TTLVList parseSTLV(const QByteArray & aData);
-
-	/// Распарсить значение TLV-структуры.
-	void parseTLVData(int aField, const QByteArray & aData, SDK::Driver::TFiscalPaymentData & aFPData);
-
-	/// Распарсить значение STLV-структуры.
-	void parseSTLVData(const CFR::STLV & aTLV, SDK::Driver::TComplexFiscalPaymentData & aPSData);
-
-	/// Получить массив байтов TLV-структуры для установки тега.
-	QByteArray getTLVData(int aField, const QVariant & aValue, QString * aLog = nullptr);
-
-	/// Получить массив байтов TLV-структуры для установки тега VLN-типа.
-	QByteArray getDigitTLVData(qulonglong aValue);
+	virtual bool setTLV(int /*aField*/, bool /*aForSale*/ = false) { return true; }
 
 	/// Проверить Z-отчет по таймеру.
 	void checkZReportOnTimer();
@@ -170,8 +176,14 @@ protected:
 	/// Получить все налоговые ставки платежа.
 	SDK::Driver::TVATs getVATs(const SDK::Driver::SPaymentData & aPaymentData) const;
 
-	/// Получить все налоговые ставки платежа.
+	/// Логгировать данные налогов.
 	QString getVATLog(const SDK::Driver::TVATs & aVATs) const;
+
+	/// Включить/выключить режим непечати документов.
+	virtual bool setNotPrintDocument(bool aEnabled);
+
+	/// Проверить непечать документа.
+	bool checkNotPrinting(bool aEnabled = false);
 
 	/// Наличие ЭКЛЗ.
 	bool mEKLZ;
@@ -227,6 +239,9 @@ protected:
 	/// Реквизиты ОФД для установки в момент печати фискального чека.
 	QSet<int> mOFDFiscalParameters;
 
+	/// Реквизиты ОФД для установки в момент печати фискального чека на продаже.
+	QSet<int> mOFDFiscalParametersOnSale;
+
 	/// Количество неотправленных документов в ОФД.
 	int mOFDNotSentCount;
 
@@ -239,16 +254,13 @@ protected:
 	/// Данные типов оплаты.
 	CFR::PayTypeData mPayTypeData;
 
-	/// Система налогообложения (СНО).
-	typedef QList<char> TTaxations;
-	TTaxations mTaxations;
+	/// Системы налогообложения (СНО).
+	TTaxSystems mTaxSystems;
 
 	/// Признаки агента.
-	typedef QList<char> TAgentFlags;
 	TAgentFlags mAgentFlags;
 
 	/// Режимы работы.
-	typedef QList<char> TOperationModes;
 	TOperationModes mOperationModes;
 
 	/// Серийный номер ФР.
@@ -274,6 +286,15 @@ protected:
 
 	/// Может работать с буфером Z-отчетов.
 	bool mCanProcessZBuffer;
+
+	/// Параметры фискализации некорректны?
+	bool mWrongFiscalizationSettings;
+
+	/// Экземляр движка фискальных тегов.
+	FFEngine mFFEngine;
+
+	/// Ошибка установки непечати.
+	bool mNotPrintingError;
 };
 
 //--------------------------------------------------------------------------------

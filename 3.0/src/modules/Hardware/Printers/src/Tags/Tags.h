@@ -104,7 +104,7 @@ namespace Tags
 		QByteArray close;
 		bool bitField;
 
-		STagData() {}
+		STagData() : bitField(false) {}
 		STagData(bool aBitField, const QByteArray & aPrefix, const QByteArray & aOpen, const QByteArray & aClose) :
 			bitField(aBitField), prefix(aPrefix), open(aOpen), close(aClose) {}
 	};

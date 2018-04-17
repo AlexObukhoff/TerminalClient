@@ -2,8 +2,11 @@
 
 #pragma once
 
-#include "Hardware/Common/CommandResults.h"
+// Modules
 #include "Hardware/Common/DeviceCodeSpecification.h"
+#include "Hardware/Common/WaitingData.h"
+
+// Project
 #include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
 
 //--------------------------------------------------------------------------------
@@ -58,11 +61,8 @@ namespace CSSP
 	/// Таймаут после Reset-а, [мс].
 	const double NominalMultiplier = 0.01;
 
-	/// Интервал поллинга после Reset-а, [мс].
-	const int ResetPollingInterval = 150;
-
-	/// Таймаут после Reset-а, [мс].
-	const int ResetTimeout = 3000;
+	/// Ожидание готовности, [мс].
+	const SWaitingData ReadyWaiting = SWaitingData(150, 3 * 1000);
 
 	/// Виртуальный статус Enabled.
 	const char EnabledStatus[] = "Enabled status";

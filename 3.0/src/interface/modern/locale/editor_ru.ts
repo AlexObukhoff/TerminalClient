@@ -6,7 +6,7 @@
     <message>
         <location filename="../widgets/text_editor.qml" line="94"/>
         <location filename="../widgets/number_editor.qml" line="85"/>
-        <location filename="../widgets/enum_editor.qml" line="76"/>
+        <location filename="../widgets/enum_editor.qml" line="78"/>
         <source>editor#not_required</source>
         <translation> &lt;i&gt;(можно пропустить)&lt;/i&gt;</translation>
     </message>
@@ -34,6 +34,11 @@
         <location filename="../widgets/table_editor.qml" line="93"/>
         <source>editor#payment_number_status</source>
         <translation>Номер платежа&lt;br /&gt;статус</translation>
+    </message>
+    <message>
+        <location filename="../widgets/enum_editor.qml" line="79"/>
+        <source>editor#readonly</source>
+        <translation> &lt;i&gt;(только для чтения)&lt;/i&gt;</translation>
     </message>
 </context>
 </TS>

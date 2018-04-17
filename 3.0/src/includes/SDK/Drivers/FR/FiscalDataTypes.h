@@ -14,6 +14,19 @@ namespace SDK {
 namespace Driver {
 
 //--------------------------------------------------------------------------------
+// Структура описателя фискальных тегов.
+struct SFiscalFieldData
+{
+	QString translationPF;
+	bool isMoney;
+
+	SFiscalFieldData(): isMoney(false) {}
+	SFiscalFieldData(const QString & aTranslationPF, bool aIsMoney): translationPF(aTranslationPF), isMoney(aIsMoney) {}
+};
+
+typedef QMap<QString, SFiscalFieldData> TFiscalFieldData;
+
+//--------------------------------------------------------------------------------
 namespace EFiscalAmount
 {
 	enum Enum
@@ -26,7 +39,7 @@ namespace EFiscalAmount
 
 //--------------------------------------------------------------------------------
 /// Системы налогообложения - СНО (1062 в ФР, 1055 в чеке).
-namespace ETaxations
+namespace ETaxSystems
 {
 	enum Enum
 	{
@@ -41,7 +54,7 @@ namespace ETaxations
 }
 
 /// Описатель списка СНО
-typedef QMap<ETaxations::Enum, QString> TTaxationData;
+typedef QMap<ETaxSystems::Enum, QString> TTaxSystemData;
 
 //--------------------------------------------------------------------------------
 /// Признаки агента (1057 в ФР, 1222 в чеке).
@@ -72,15 +85,15 @@ namespace EPayTypes
 		None,           /// Отсутствует
 		Cash,           /// Наличными
 		EMoney,         /// Электронными
-		PostPayment,    /// Аванс
-		Credit,         /// Кредит
+		PrePayment,     /// Аванс
+		PostPayment,    /// Кредит
 		CounterOffer    /// Встречное предоставление
 	};
 }
 
 //--------------------------------------------------------------------------------
 /// Признак способа расчета (1214).
-namespace EPayOffMethodTypes
+namespace EPayOffSubjectMethodTypes
 {
 	enum Enum
 	{
@@ -91,7 +104,7 @@ namespace EPayOffMethodTypes
 		Full,              /// Полный расчет
 		Part,              /// Частичный расчет и кредит
 		CreditTransfer,    /// Передача в кредит
-		Credit             /// Оплата кредита
+		CreditPayment      /// Оплата кредита
 	};
 }
 
@@ -102,6 +115,7 @@ namespace EPayOffSubjectTypes
 	enum Enum
 	{
 		None = 0,        /// Отсутствует
+		Unit,            /// Товар
 		Payment = 10,    /// Платеж
 		AgentFee         /// Агентское вознаграждение
 	};
@@ -146,38 +160,40 @@ typedef int TVAT;
 typedef QSet<TVAT> TVATs;
 typedef double TSum;
 
-struct SAmountData
+struct SUnitData
 {
-	TSum sum;        /// Сумма платежа.
-	TVAT VAT;        /// НДС (value added tax).
-	QString name;    /// Локализованное название платежа (товар).
+	TSum sum;                                       /// Сумма платежа.
+	TVAT VAT;                                       /// НДС (value added tax).
+	QString name;                                   /// Локализованное название платежа (товар).
+	QString providerINN;                            /// ИНН поставщика товара (оператор/дилер/Платина).
 	EPayOffSubjectTypes::Enum payOffSubjectType;    /// Признак предмета расчета.
-	int section;     /// Отдел.
+	int section;                                    /// Отдел.
 
-	SAmountData() : sum(0), VAT(0), section(-1) {}
-	SAmountData(double aSum, TVAT aVAT, const QString & aName, EPayOffSubjectTypes::Enum aPayOffSubjectType, int aSection = -1):
-		sum(aSum), VAT(aVAT), name(aName), payOffSubjectType(aPayOffSubjectType), section(aSection) {}
+	SUnitData() : sum(0), VAT(0), payOffSubjectType(EPayOffSubjectTypes::None), section(-1) {}
+	SUnitData(double aSum, TVAT aVAT, const QString & aName, const QString & aProviderINN, EPayOffSubjectTypes::Enum aPayOffSubjectType, int aSection = -1):
+		sum(aSum), VAT(aVAT), name(aName), providerINN(aProviderINN), payOffSubjectType(aPayOffSubjectType), section(aSection) {}
 };
 
-typedef QList<SAmountData> TAmountDataList;
+typedef QList<SUnitData> TUnitDataList;
 
+/// Фискальные данные платежа
 struct SPaymentData
 {
-	TAmountDataList amountDataList;    /// Список данных товара
-	bool back;                         /// Признак возврата товара
-	EPayTypes::Enum payType;           /// Тип оплаты
-	ETaxations::Enum taxation;         /// Система налогообложения (СНО)
-	EAgentFlags::Enum agentFlag;       /// Флаг агента
-	QVariantMap fiscalParameters;      /// Параметры для фискальной печати (см. CHardware::FiscalFields)
+	TUnitDataList unitDataList;      /// Список данных товара
+	bool back;                       /// Признак возврата товара
+	EPayTypes::Enum payType;         /// Тип оплаты
+	ETaxSystems::Enum taxSystem;     /// Система налогообложения (СНО)
+	EAgentFlags::Enum agentFlag;     /// Флаг агента
+	QVariantMap fiscalParameters;    /// Параметры платежа - теги или имеют к ним отношение
 
-	SPaymentData(): back(false), payType(EPayTypes::None), taxation(ETaxations::None), agentFlag(EAgentFlags::None) {}
-	SPaymentData(const TAmountDataList & aAmountDataList, bool aBack, EPayTypes::Enum aPayType = EPayTypes::None, ETaxations::Enum aTaxation = ETaxations::None, EAgentFlags::Enum aAgentFlag = EAgentFlags::None):
-		back(aBack), amountDataList(aAmountDataList), taxation(aTaxation), payType(aPayType), agentFlag(aAgentFlag) {}
+	SPaymentData(): back(false), payType(EPayTypes::None), taxSystem(ETaxSystems::None), agentFlag(EAgentFlags::None) {}
+	SPaymentData(const TUnitDataList & aUnitDataList, bool aBack, EPayTypes::Enum aPayType = EPayTypes::None, ETaxSystems::Enum aTaxSystem = ETaxSystems::None, EAgentFlags::Enum aAgentFlag = EAgentFlags::None):
+		back(aBack), unitDataList(aUnitDataList), taxSystem(aTaxSystem), payType(aPayType), agentFlag(aAgentFlag) {}
 };
 
 //--------------------------------------------------------------------------------
 /// Параметры платежа
-typedef QMap<int, QVariant> TFiscalPaymentData;
+typedef QVariantMap TFiscalPaymentData;
 
 /// Параметры сумм платежа
 typedef QList<TFiscalPaymentData> TComplexFiscalPaymentData;
@@ -187,8 +203,9 @@ typedef QMap<int, QString> TSectionNames;
 
 }} // namespace SDK::Driver
 
-Q_DECLARE_METATYPE(SDK::Driver::TTaxationData);
+Q_DECLARE_METATYPE(SDK::Driver::TTaxSystemData);
 Q_DECLARE_METATYPE(SDK::Driver::TAgentFlagsData);
 Q_DECLARE_METATYPE(SDK::Driver::TSectionNames);
+Q_DECLARE_METATYPE(SDK::Driver::TFiscalFieldData);
 
 //--------------------------------------------------------------------------------

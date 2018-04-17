@@ -166,13 +166,14 @@
     <None Include="..\src\locale\ioports_en.ts" />
     <None Include="..\src\locale\ioports_ru.ts" />
     <None Include="..\src\locale\ioports_kk.ts" />
+    <None Include="..\src\locale\ioports_de.ts" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties lupdateOnBuild="1" MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties lupdateOnBuild="1" MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

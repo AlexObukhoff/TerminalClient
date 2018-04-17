@@ -3,6 +3,8 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QHostInfo>
+#include <QtCore/QStringList>
 #include <Common/QtHeadersEnd.h>
 
 // Project
@@ -112,7 +114,9 @@ void NetworkTaskManager::onAddTask(NetworkTask * aTask)
 
 	aTask->getResponseHeader().clear();
 
-	QNetworkReply * reply = 0;
+	replaceHostToIP(request);
+
+	QNetworkReply * reply = nullptr;
 
 	switch (aTask->getType())
 	{
@@ -250,27 +254,36 @@ void NetworkTaskManager::onTaskReadyRead()
 					}
 
 					case 200: // Успех.
-					case 206: // Успех частичнного скачивания.
+					case 206: // Успех частичного скачивания.
 					{
-						if (task->getSize() == 0)
+						if (task->getSize() == 0) // выполняем этот код, только в момент получения первого пакета данных
 						{
-							if (statusCode == 200)
+							QString contentRange = QString::fromLatin1(reply->rawHeader("Content-Range"));
+
+							if (contentRange.isEmpty())
 							{
 								// Если запрашивали кусок данных, а пришел файл целиком - нужно начинать писать поток с 0-го байта
 								task->getDataStream()->clear();
 							}
-							else 
+							else
 							{
-								// Если запрашивали кусок данных позиционируем на начало передаваемого диапазона
+								// Если запрашивали кусок данных, позиционируем на начало передаваемого диапазона
 								// http://tools.ietf.org/html/rfc2616#section-14.16
 								QRegExp rx("(\\d+)\\-\\d+/\\d+");
 
-								if (rx.indexIn(QString::fromLatin1(reply->rawHeader("Content-Range"))) > 0)
+								if (rx.indexIn(contentRange) > 0)
 								{
-									task->getDataStream()->seek(rx.cap(1).toLongLong());
+									qint64 pos = rx.cap(1).toLongLong();
+
+									if (!task->getDataStream()->seek(pos))
+									{
+										toLog(LogLevel::Error, QString("Content-Range: %1. Error seek stream to position: %2.").arg(contentRange).arg(pos));
+									}
 								}
 								else
 								{
+									toLog(LogLevel::Error, QString("Can't parse Content-Range: %1.").arg(contentRange));
+
 									task->getDataStream()->clear();
 								}
 							}
@@ -291,7 +304,7 @@ void NetworkTaskManager::onTaskReadyRead()
 					}
 
 					default:
-						toLog(LogLevel::Error, QString("Data is ready for read, but responce code is incorrect: %1").arg(httpStatusCode.toString()));
+						toLog(LogLevel::Error, QString("Data is ready for read, but response code is incorrect: %1").arg(httpStatusCode.toString()));
 						reply->abort();
 				}
 			}
@@ -310,13 +323,24 @@ void NetworkTaskManager::onTaskError(QNetworkReply::NetworkError aError)
 
 			switch (aError)
 			{
-			case QNetworkReply::ConnectionRefusedError:
-			case QNetworkReply::RemoteHostClosedError:
 			case QNetworkReply::HostNotFoundError:
 			case QNetworkReply::TimeoutError:
+			{
+				QHostAddress addr(it.key()->url().host());
+
+				if (!addr.isNull() && addr.toIPv4Address())
+				{
+					mNonRespondingAddresses.insert(addr.toIPv4Address());
+				}
+			}
+			// NO break !
+
+			case QNetworkReply::ConnectionRefusedError:
+			case QNetworkReply::RemoteHostClosedError:
 			case QNetworkReply::TemporaryNetworkFailureError:
 			case QNetworkReply::ProxyNotFoundError:
 			case QNetworkReply::ProxyTimeoutError:
+
 				emit networkTaskStatus(true);
 				break;
 			}
@@ -329,17 +353,39 @@ void NetworkTaskManager::onTaskError(QNetworkReply::NetworkError aError)
 //------------------------------------------------------------------------
 void NetworkTaskManager::onTaskSslErrors(const QList<QSslError> & aErrors)
 {
-	QString errorString;
+	QNetworkReply * reply = dynamic_cast<QNetworkReply *>(sender());
+	quint32 ip = QHostAddress(reply->url().host()).toIPv4Address();
+
+	QList<QSslError> errorsIgnored;
+	QStringList errorStrings;
 
 	foreach (const QSslError & error, aErrors)
 	{
-		if (!errorString.isEmpty())
-			errorString += ", ";
+		if (ip && error.error() == QSslError::HostNameMismatch)
+		{
+			QString hostName = mHostNameCashe.value(ip, "");
 
-		errorString += error.errorString();
+			QRegExp exp(error.certificate().subjectInfo(QSslCertificate::CommonName), Qt::CaseInsensitive, QRegExp::Wildcard);
+
+			if (exp.exactMatch(hostName))
+			{
+				errorsIgnored << error;
+				continue;
+			}
+		}
+
+		errorStrings << error.errorString();
 	}
 
-	toLog(LogLevel::Warning, QString("One or more SSL errors has occurred: %1").arg(errorString));
+	if (!errorsIgnored.isEmpty())
+	{
+		reply->ignoreSslErrors(errorsIgnored);
+	}
+
+	if (!errorStrings.isEmpty())
+	{
+		toLog(LogLevel::Warning, QString("One or more SSL errors has occurred: %1.").arg(errorStrings.join(", ")));
+	}
 
 #if defined(_DEBUG) || defined(DEBUG_INFO)
 	dynamic_cast<QNetworkReply *>(sender())->ignoreSslErrors();
@@ -397,6 +443,54 @@ void NetworkTaskManager::onTaskComplete()
 			return;
 		}
 	}
+}
+
+//------------------------------------------------------------------------
+void NetworkTaskManager::replaceHostToIP(QNetworkRequest & aRequest)
+{
+	QUrl url = aRequest.url();
+	QString hostName = url.host();
+	QHostInfo info = QHostInfo::fromName(hostName);
+
+	if (info.addresses().size() < 2)
+	{
+		return;
+	}
+
+	QHostAddress addr;
+
+	foreach (auto a, info.addresses())
+	{
+		if (a.protocol() == QAbstractSocket::IPv4Protocol)
+		{
+			if (!mNonRespondingAddresses.contains(a.toIPv4Address()))
+			{
+				addr = a;
+				break;
+			}
+		}
+	}
+
+	if (addr.isNull())
+	{
+		// Чистим список неответивших и берем первый адрес сервера
+		foreach (auto a, info.addresses())
+		{
+			mNonRespondingAddresses.remove(a.toIPv4Address());
+
+			if (a.protocol() == QAbstractSocket::IPv4Protocol && addr.isNull())
+			{
+				addr = a;
+			}
+		}
+	}
+
+	toLog(LogLevel::Debug, QString("Connect to '%1' via '%2'.").arg(hostName).arg(addr.toString()));
+
+	mHostNameCashe.insert(addr.toIPv4Address(), hostName);
+	url.setHost(addr.toString());
+	aRequest.setUrl(url);
+	aRequest.setRawHeader("Host", hostName.toUtf8());
 }
 
 //------------------------------------------------------------------------

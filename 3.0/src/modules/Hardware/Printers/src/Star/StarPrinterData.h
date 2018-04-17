@@ -4,6 +4,7 @@
 
 // Modules
 #include "Hardware/Common/HardwareConstants.h"
+#include "Hardware/Common/WaitingData.h"
 #include "Hardware/Protocols/Common/ProtocolUtils.h"
 
 // Project
@@ -45,12 +46,6 @@ namespace CSTAR
 		/// Ожидание допечати чека.
 		const int ReceiptProcessing = 5 * 1000;
 
-		/// Ожидание операций с чеком для принтеров с эжектором.
-		const int EjectorProcessing = 20 * 1000;
-
-		/// Поллинг при ожидании операций с чеком для принтеров с эжектором.
-		const int Ejector = 300;
-
 		/// Повторное чтение мем-свича при приходе ASB-статуса.
 		const int MSWGettingASB = 100;
 
@@ -63,6 +58,9 @@ namespace CSTAR
 		/// Пауза поллинга в период печати.
 		const int Printing = 10 * 1000;
 	}
+
+	/// Ожидание операций с чеком для принтеров с эжектором.
+	const SWaitingData EjectorWaiting = SWaitingData(300, 20 * 1000);
 
 	//----------------------------------------------------------------------------
 	/// Команды.

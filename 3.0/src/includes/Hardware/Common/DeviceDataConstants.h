@@ -36,6 +36,8 @@ namespace CDeviceData
 	const char Token[] = "token_data";
 	const char InternalFirmware[] = "device_id_key";
 	const char InternalHardware[] = "device_id_value";
+	const char ControllerBuild[] = "controller_build";
+	const char Count[] = "count";
 
 	/// Общие значения.
 	namespace Values
@@ -102,6 +104,8 @@ namespace CDeviceData
 		const char Font[] = "font";
 		const char Presenter[] = "presenter";
 		const char PaperSupply[] = "paper_supply";
+		const char Codes[] = "codes";
+		const char PNESensor[] = "pne_sensor";
 	}
 
 	/// Фискальные регистраторы
@@ -111,12 +115,11 @@ namespace CDeviceData
 		const char INN[] = "inn";
 		const char RNM[] = "rnm";
 		const char AgentFlags[] = "agent_flags";
-		const char Taxations[] = "taxations";
+		const char TaxSystems[] = "tax_systems";
 		const char FFDFR[] = "ffd_fr";
 		const char FFDFS[] = "ffd_fs";
 		const char OFDServer[] = "ofd_server";
 		const char TotalPaySum[] = "total_pay_sum";
-		const char SessionCount[] = "session_count";
 		const char Session[] = "session";
 		const char OwnerId[] = "owner_id";
 		const char ReregistrationNumber[] = "reregistration_number";
@@ -126,6 +129,7 @@ namespace CDeviceData
 		const char CurrentDate[] = "fr_current_date";
 		const char FutureClosingDate[] = "future_closing_date";
 		const char LastClosingDate[] = "last_closing_date";
+		const char OpeningDate[] = "opening_date";
 		const char FiscalDocuments[] = "fiscal_documents";
 		const char NonFiscalDocuments[] = "non_fiscal_document";
 		const char Printer[] = "printer";
@@ -133,6 +137,7 @@ namespace CDeviceData
 		const char EKLZ[] = "eklz";
 		const char OperationModes[] = "operation_modes";
 		const char AutomaticNumber[] = "automatic_number";
+		const char DTDBuild[] = "dtd_build";    // data transfer device
 	}
 
 	/// ЭКЛЗ.
@@ -156,9 +161,7 @@ namespace CDeviceData
 		const char SerialNumber[] = "fs_serial_number";
 		const char ValidityData[] = "fs_validity_data";
 		const char DifferenceDT[] = "fs_difference_date_time";
-		const char Type[] = "fs_type";
 		const char Version[] = "fs_version";
-		const char Firmware[] = "fs_firmware";
 	}
 
 	/// Сторожевые таймеры.

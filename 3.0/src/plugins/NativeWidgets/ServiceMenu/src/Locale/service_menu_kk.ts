@@ -1737,7 +1737,7 @@
     <message>
         <location filename="../FirstSetup/FirstSetup.cpp" line="68"/>
         <source>#cyberplat_copyright</source>
-        <translation>ЗАО &quot;КиберПлат&quot;, тел. техподдержки: +7 (495) 967-02-20</translation>
+        <translation>ООО &quot;КиберПлат&quot;, тел. техподдержки: +7 (495) 967-02-20</translation>
     </message>
     <message>
         <source>#password_not_set</source>

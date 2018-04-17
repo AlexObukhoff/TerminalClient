@@ -81,7 +81,7 @@ IDevice::IDetectingIterator * TCPDeviceBase<T>::getDetectingIterator()
 {
 	if (!mAutoDetectable)
 	{
-		return false;
+		return nullptr;
 	}
 
 	mSearchingPortParameters.clear();

@@ -1,4 +1,4 @@
-/* @file Сервис печати и формирования чеков. */
+﻿/* @file Сервис печати и формирования чеков. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -68,6 +68,8 @@ namespace CPrintingService
 //---------------------------------------------------------------------------
 PrintingService::PrintingService(IApplication * aApplication) :
 	mApplication(aApplication),
+	mDatabaseUtils(nullptr),
+	mDeviceService(nullptr),
 	mContinuousMode(false),
 	mServiceOperation(false),
 	mRandomReceiptsID(false),
@@ -144,9 +146,6 @@ bool PrintingService::initialize()
 //------------------------------------------------------------------------------
 void PrintingService::finishInitialize()
 {
-	auto settings = SettingsService::instance(mApplication)->getAdapter<SDK::PaymentProcessor::TerminalSettings>();
-
-	mRandomReceiptsID = settings->getCommonSettings().randomReceiptsID;
 }
 
 //---------------------------------------------------------------------------
@@ -225,27 +224,31 @@ int PrintingService::printReceipt(const QString & aReceiptType, const QVariantMa
 	mContinuousMode = aContinuousMode;
 	mServiceOperation = aServiceOperation;
 
-	QString receiptTemplate = (QString("%1_%2").arg(aParameters[PPSDK::CPayment::Parameters::Type].toString()).arg(aReceiptTemplate)).toLower();
-
-	// Извлекаем шаблон 'PROCESSING_TYPE'_aReceiptTemplate
-	if (!mCachedReceipts.contains(receiptTemplate))
-	{
-		receiptTemplate = aReceiptTemplate.toLower();
-
+	QStringList receiptTemplates;
+	receiptTemplates
+		// Извлекаем шаблон 'PROCESSING_TYPE'_aReceiptTemplate
+		<< (QString("%1_%2").arg(aParameters[PPSDK::CPayment::Parameters::Type].toString()).arg(aReceiptTemplate)).toLower()
 		// Извлекаем обычный шаблон для чека нужного типа.
-		if (!mCachedReceipts.contains(receiptTemplate))
-		{
-			toLog(LogLevel::Error, QString("Failed to print receipt. Missing receipt template : %1.").arg(receiptTemplate));
+		<< aReceiptTemplate.toLower()
+		// Резервный шаблон
+		<< SDK::PaymentProcessor::CReceiptType::Payment;
 
-			QMetaObject::invokeMethod(this, "printEmptyReceipt", Qt::QueuedConnection, Q_ARG(int, 0), Q_ARG(bool, true));
-			return 0;
+	foreach (auto templateName, receiptTemplates)
+	{
+		if (mCachedReceipts.contains(templateName))
+		{
+			auto printCommand = getPrintCommand(aReceiptType);
+			printCommand->setReceiptTemplate(templateName);
+
+			return performPrint(printCommand, aParameters, mCachedReceipts[templateName]);
 		}
 	}
 
-	auto printCommand = getPrintCommand(aReceiptType);
-	printCommand->setReceiptTemplate(aReceiptTemplate);
+	toLog(LogLevel::Error, QString("Failed to print receipt. Missing receipt template : %1.").arg(aReceiptTemplate));
 
-	return performPrint(printCommand, aParameters, mCachedReceipts[receiptTemplate]);
+	QMetaObject::invokeMethod(this, "printEmptyReceipt", Qt::QueuedConnection, Q_ARG(int, 0), Q_ARG(bool, true));
+
+	return 0;
 }
 
 //---------------------------------------------------------------------------
@@ -1160,9 +1163,17 @@ void PrintingService::expandTags(QStringList & aReceipt, const QVariantMap & aPa
 		if (it->contains(CPrintingService::ConditionTag))
 		{
 			QStringList l = it->split(CPrintingService::ConditionTag);
+			
+			toLog(LogLevel::Debug, QString("Evaluate receipt condition %1").arg(l.join(";")));
+			
 			if (QJSEngine().evaluate(l.first()).toBool())
 			{
+				toLog(LogLevel::Debug, QString("Evaluate receipt result %1").arg(l.last()));
 				result.append(l.last());
+			}
+			else
+			{
+				toLog(LogLevel::Debug, QString("Evaluate condition nothing for %1").arg(l.last()));
 			}
 
 			continue;
@@ -1397,12 +1408,11 @@ void PrintingService::updateHardwareConfiguration()
 		.arg(DSDK::CComponents::Printer).arg(DSDK::CComponents::DocumentPrinter).arg(DSDK::CComponents::FiscalRegistrator);
 	QStringList printerNames = settings->getDeviceList().filter(QRegExp(regExpData));
 
+	mRandomReceiptsID = settings->getCommonSettings().randomReceiptsID;
+	QTime autoZReportTime = settings->getCommonSettings().autoZReportTime;
+
 	mPrinterDevices.clear();
 	mAvailablePrinters.clear();
-
-	QVariantMap delalerSettings;
-	delalerSettings.insert(CHardwareSDK::FR::DealerTaxation,  mStaticParameters.value(CPrintConstants::DealerTaxation));
-	delalerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters.value(CPrintConstants::DealerAgentFlag));
 
 	// Запрашиваем устройства.
 	foreach (const QString & printerName, printerNames)
@@ -1411,6 +1421,10 @@ void PrintingService::updateHardwareConfiguration()
 
 		if (device)
 		{
+			QVariantMap dealerSettings;
+			if (mStaticParameters.contains(CPrintConstants::DealerTaxSystem)) dealerSettings.insert(CHardwareSDK::FR::DealerTaxSystem, mStaticParameters[CPrintConstants::DealerTaxSystem]);
+			if (mStaticParameters.contains(CPrintConstants::DealerAgentFlag)) dealerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters[CPrintConstants::DealerAgentFlag]);
+
 			mPrinterDevices.append(device);
 
 			// Подписываемся на события принтера.
@@ -1420,9 +1434,16 @@ void PrintingService::updateHardwareConfiguration()
 			if (dynamic_cast<DSDK::IFiscalPrinter *>(device))
 			{
 				device->subscribe(SDK::Driver::IFiscalPrinter::FRSessionClosedSignal, this, SLOT(onFRSessionClosed(const QVariantMap &)));
+
+				if (autoZReportTime.isValid() && !autoZReportTime.isNull())
+				{
+					toLog(LogLevel::Normal, QString("Setup auto z-report time: %1.").arg(autoZReportTime.toString("hh:mm:ss")));
+
+					dealerSettings.insert(CHardwareSDK::FR::ZReportTime, autoZReportTime);
+				}
 			}
 
-			device->setDeviceConfiguration(delalerSettings);
+			device->setDeviceConfiguration(dealerSettings);
 		}
 		else
 		{

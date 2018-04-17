@@ -158,7 +158,6 @@ bool GUIService::initialize()
 
 	bool showCursor = mConfig.value("interface/show_mouse_cursor", false).toBool();
 	bool showDebugInfo = mConfig.value("interface/show_debug_info", false).toBool();
-	bool useOpengl = mConfig.value("interface/use_opengl", false).toBool();
 
 	QVariantMap scenarios = getUiSettings("scenarios");
 	if (!scenarios.isEmpty())
@@ -175,7 +174,7 @@ bool GUIService::initialize()
 		mGraphicsEngine.addHandledKeys(handledKeyList);
 	}
 
-	if (!mGraphicsEngine.initialize(display, mWidth, mHeight, showCursor, useOpengl, showDebugInfo))
+	if (!mGraphicsEngine.initialize(display, mWidth, mHeight, showCursor, showDebugInfo))
 	{
 		LOG(mApplication->getLog(), LogLevel::Error, "Failed to initialize graphics engine.");
 

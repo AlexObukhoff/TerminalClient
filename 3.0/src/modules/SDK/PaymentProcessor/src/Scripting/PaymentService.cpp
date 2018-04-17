@@ -147,7 +147,7 @@ QString Provider::xmlFields2Json(const QString & aXmlFields)
 	{
 		boost::property_tree::read_xml(stream, ptFields);
 	}
-	catch (boost::property_tree::xml_parser_error e)
+	catch (boost::property_tree::xml_parser_error & e)
 	{
 		qDebug() << QString("xmlFields2Json: XML parser error: %1.").arg(QString::fromStdString(e.message()));
 

@@ -507,14 +507,14 @@ bool OPOSMStarTUPK::makeFiscal(const SPaymentData & aPaymentData)
 	{
 		setEnable(COPOSMStarTUPK::Parameters::AutoCutter, true);
 
-		foreach (auto amountData, aPaymentData.amountDataList)
+		foreach (auto unitData, aPaymentData.unitDataList)
 		{
-			int nameSize = amountData.name.size();
+			int nameSize = unitData.name.size();
 			wchar_t * name = new wchar_t[nameSize + 1];
 			memset(name, ASCII::NUL, sizeof(wchar_t) * (nameSize + 1));
-			amountData.name.toWCharArray(name);
+			unitData.name.toWCharArray(name);
 
-			result = result && OPOS_SUCCESS(INT_CALL_NATIVE(PrintRecItem, name, sum2CY(amountData.sum), 1 * 10000, mTaxData[amountData.VAT].group, sum2CY(amountData.sum), L""));
+			result = result && OPOS_SUCCESS(INT_CALL_NATIVE(PrintRecItem, name, sum2CY(unitData.sum), 1 * 10000, mTaxData[unitData.VAT].group, sum2CY(unitData.sum), L""));
 
 			delete [] name;
 		}

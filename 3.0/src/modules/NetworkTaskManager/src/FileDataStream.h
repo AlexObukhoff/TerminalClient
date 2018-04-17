@@ -15,6 +15,8 @@ public:
 
 	virtual bool clear();
 	virtual bool write(const QByteArray & aData);
+
+	virtual qint64 size() const;
 };
 
 //------------------------------------------------------------------------

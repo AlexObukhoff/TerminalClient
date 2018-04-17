@@ -12,7 +12,7 @@
 class VirtualButton
 {
 public:
-	VirtualButton() {}
+	VirtualButton() : mKey(Qt::Key_unknown), mShiftKey(Qt::Key_unknown) {}
 	VirtualButton(Qt::Key aKey, const QString & aText, Qt::Key aShiftKey, const QString & aShiftText):
 		mKey(aKey), mText(aText), mShiftKey(aShiftKey), mShiftText(aShiftText) {}
 	

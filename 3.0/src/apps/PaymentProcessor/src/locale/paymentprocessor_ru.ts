@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.0" language="ru_RU">
 <context>
     <name>DeviceService</name>
     <message>
@@ -12,7 +12,7 @@
 <context>
     <name>GUIService</name>
     <message>
-        <location filename="../Services/GUIService.cpp" line="498"/>
+        <location filename="../Services/GUIService.cpp" line="497"/>
         <source>#penetration_detected</source>
         <translation>Попытка удаленного управления</translation>
     </message>
@@ -20,91 +20,19 @@
 <context>
     <name>PrintFiscalCommand</name>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="92"/>
+        <location filename="../Services/PrintingCommands.cpp" line="100"/>
         <source>#bank_fee</source>
         <translation>Комиссия БПА</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="93"/>
+        <location filename="../Services/PrintingCommands.cpp" line="101"/>
         <source>#dealer_fee</source>
         <translation>Комиссия субагента</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="98"/>
+        <location filename="../Services/PrintingCommands.cpp" line="107"/>
         <source>#processing_fee</source>
         <translation>Комиссия КБ Платина</translation>
-    </message>
-</context>
-<context>
-    <name>PrintPayment</name>
-    <message>
-        <source>#payment_amount</source>
-        <translation type="obsolete">К зачислению</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="239"/>
-        <source>#taxation</source>
-        <translation>СНО</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="240"/>
-        <source>#kkt_timestamp</source>
-        <translation>ВРЕМЯ ККТ</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="241"/>
-        <source>#kkt_znm</source>
-        <translation>ЗН ККТ</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="242"/>
-        <source>#kkt_rnm</source>
-        <translation>РН ККТ</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="243"/>
-        <source>#kkt_session</source>
-        <translation>СМЕНА</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="244"/>
-        <source>#kkt_fd_serial</source>
-        <translation>ЧЕК</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="245"/>
-        <source>#kkt_fn</source>
-        <translation>ФН</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="246"/>
-        <source>#kkt_fd</source>
-        <translation>ФД</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="247"/>
-        <source>#kkt_fp</source>
-        <translation>ФП</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="249"/>
-        <source>#tax_amount_02</source>
-        <translation>НДС 18%</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="250"/>
-        <source>#tax_amount_03</source>
-        <translation>НДС 10%</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="251"/>
-        <source>#tax_amount_04</source>
-        <translation>НДС 0%</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="252"/>
-        <source>#tax_amount_05</source>
-        <translation>БЕЗ НДС</translation>
     </message>
 </context>
 <context>

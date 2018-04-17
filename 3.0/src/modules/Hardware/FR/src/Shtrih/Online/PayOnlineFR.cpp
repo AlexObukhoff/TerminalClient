@@ -10,10 +10,10 @@ template class PayOnlineFR<ShtrihOnlineFRBase<ShtrihSerialFRBase>>;
 
 //--------------------------------------------------------------------------------
 template<class T>
-PayOnlineFR<T>::PayOnlineFR()
+PayOnlineFR<T>::PayOnlineFR(): mPrinterModelId(0)
 {
 	mDeviceName = CShtrihFR::Models::OnlineRetractorDefault;
-	mOFDFiscalParameters << SDK::Driver::FiscalFields::Cashier;
+	mOFDFiscalParameters << CFR::FiscalFields::Cashier;
 
 	mSupportedModels = getModelList();
 }
@@ -54,12 +54,30 @@ void PayOnlineFR<T>::processDeviceData()
 {
 	ShtrihRetractorFRLite<T>::processDeviceData();
 
-	mCanProcessZBuffer = mModelData.date >= CShtrihOnlineFR::MinZBufferFirmwareDate;
+	mCanProcessZBuffer = mModelData.date >= CShtrihOnlineFR::MinFWDate::ZBuffer;
 	QByteArray data;
 
 	if (getFRParameter(CShtrihOnlineFR::FRParameters::PrinterModel, data) && CPayOnlineFR::PrinterModels.data().contains(data[0]))
 	{
-		setDeviceParameter(CDeviceData::FR::Printer, CPayOnlineFR::PrinterModels[data[0]]);
+		mPrinterModelId = uchar(data[0]);
+		setDeviceParameter(CDeviceData::FR::Printer, CPayOnlineFR::PrinterModels[mPrinterModelId].name);
+	}
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+void PayOnlineFR<T>::appendStatusCodes(ushort aFlags, TStatusCodes & aStatusCodes)
+{
+	ShtrihRetractorFRLite<T>::appendStatusCodes(aFlags, aStatusCodes);
+
+	bool paperWeightSensor = (~aFlags & CShtrihFR::Statuses::WeightSensor::NoChequePaper);
+	bool useRemotePaperSensor = getConfigParameter(CHardware::Printer::Settings::RemotePaperSensor).toString() == CHardware::Values::Use;
+	bool hasPNESensor = CPayOnlineFR::PrinterModels[mPrinterModelId].hasPNESensor;
+
+	if (paperWeightSensor && useRemotePaperSensor && hasPNESensor)
+	{
+		aStatusCodes.insert(PrinterStatusCode::Warning::PaperNearEnd);
+		toLog(LogLevel::Warning, "ShtrihFR: Paper near end, report weight sensor");
 	}
 }
 

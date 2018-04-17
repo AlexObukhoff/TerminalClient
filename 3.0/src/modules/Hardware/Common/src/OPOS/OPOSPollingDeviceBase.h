@@ -60,10 +60,10 @@ struct SOPOSResult
 #define OPOS_DEBUG_LOG(aMethod) std::bind(&MetaDevice::toLog, this, LogLevel::Debug, QString("    call IOPOSFiscalPrinter::%1,%2line %3").arg(#aMethod).arg(' ', 25 - QString(#aMethod).size()).arg(__LINE__))
 #define OPOS_BIND(aMethod, aType, ...) COPOS::getFunction<aType>(std::bind(&TOPOSDriver::aMethod, mDriver.data(), __VA_ARGS__), OPOS_DEBUG_LOG(aMethod))
 
-#define     INT_CALL_OPOS(aMethod,   ...) processIntMethod(OPOS_BIND(aMethod, int, __VA_ARGS__), #aMethod##"("##""#__VA_ARGS__##")")
-#define    VOID_CALL_OPOS(aMethod,   ...) mThreadProxy.invokeMethod<  void >(OPOS_BIND(aMethod,   void , __VA_ARGS__))
-#define    BOOL_CALL_OPOS(aMethod,   ...) mThreadProxy.invokeMethod<  bool >(OPOS_BIND(aMethod,   bool , __VA_ARGS__))
-#define  STRING_CALL_OPOS(aMethod,   ...) mThreadProxy.invokeMethod<QString>(OPOS_BIND(aMethod, QString, __VA_ARGS__))
+#define     INT_CALL_OPOS(aMethod, ...) processIntMethod(OPOS_BIND(aMethod, int, __VA_ARGS__), #aMethod##"("##""#__VA_ARGS__##")")
+#define    VOID_CALL_OPOS(aMethod, ...) mThreadProxy.invokeMethod<  void >(OPOS_BIND(aMethod,   void , __VA_ARGS__))
+#define    BOOL_CALL_OPOS(aMethod, ...) mThreadProxy.invokeMethod<  bool >(OPOS_BIND(aMethod,   bool , __VA_ARGS__))
+#define  STRING_CALL_OPOS(aMethod, ...) mThreadProxy.invokeMethod<QString>(OPOS_BIND(aMethod, QString, __VA_ARGS__))
 
 #define    INT_OPOS_PROPERTY(aProperty) mThreadProxy.invokeMethod<  int  >(OPOS_BIND(aProperty, int))
 #define STRING_OPOS_PROPERTY(aProperty) mThreadProxy.invokeMethod<QString>(OPOS_BIND(aProperty, QString))

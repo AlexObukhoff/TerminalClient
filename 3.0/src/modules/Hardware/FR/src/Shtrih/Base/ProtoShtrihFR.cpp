@@ -23,6 +23,7 @@ ProtoShtrihFR<T>::ProtoShtrihFR()
 {
 	// кодек
 	mCodec = CodecByName[CHardware::Codepages::Win1251];
+	mFFEngine.setCodec(mCodec);
 
 	// параметры семейства ФР
 	mNextReceiptProcessing = false;
@@ -225,12 +226,15 @@ bool ProtoShtrihFR<T>::performFiscal(const QStringList & aReceipt, const SPaymen
 
 	bool result = true;
 
-	foreach (auto amountData, aPaymentData.amountDataList)
+	foreach (auto unitData, aPaymentData.unitDataList)
 	{
-		result = result && sale(amountData, aPaymentData.back);
+		result = result && sale(unitData, aPaymentData.back);
 	}
 
 	result = result && setOFDParameters() && closeDocument(getTotalAmount(aPaymentData), aPaymentData.payType);
+
+	waitForPrintingEnd(true);
+	//isFiscalDocumentOpened();
 
 	if (!result && aPaymentData.back && (mLastError == CShtrihFR::Errors::NotEnoughMoney))
 	{
@@ -584,24 +588,21 @@ bool ProtoShtrihFR<T>::closeDocument(double aSum, EPayTypes::Enum aPayType)
 {
 	QByteArray commandData;
 
-	for (int i = 1; i <= 4; ++i)
+	for (int i = 1; i <= CShtrihFR::PayTypeQuantity; ++i)
 	{
 		double sum = (i == mPayTypeData[aPayType].value) ? aSum : 0;
 		commandData.append(getHexReverted(sum, 5, 2));    // сумма
 	}
 
-	commandData.append(getHexReverted(0, 2, 2));    // скидка
-	commandData.append(getHexReverted(0, 4));       // налоги
-	commandData.append(CShtrihFR::UnitName);        // текст продажи
+	commandData.append(getHexReverted(0, 2, 2));          // скидка
+	commandData.append(CShtrihFR::ClosingFiscalTaxes);    // налоги
+	commandData.append(CShtrihFR::UnitName);              // текст продажи
 
 	if (!processCommand(CShtrihFR::Commands::CloseDocument, commandData))
 	{
 		toLog(LogLevel::Error, "ShtrihFR: Failed to close document, feed, cut and exit");
 		return false;
 	}
-
-	waitForPrintingEnd(true);
-	//isFiscalDocumentOpened();
 
 	return true;
 }
@@ -620,25 +621,25 @@ void ProtoShtrihFR<T>::checkSalesName(QString & aName)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ProtoShtrihFR<T>::sale(const SAmountData & aAmountData, bool aBack)
+bool ProtoShtrihFR<T>::sale(const SUnitData & aUnitData, bool aBack)
 {
-	int taxIndex = mTaxData[aAmountData.VAT].group;
-	QString name = aAmountData.name;
-	char section = (aAmountData.section == -1) ? CShtrihFR::SectionNumber : char(aAmountData.section);
+	int taxIndex = mTaxData[aUnitData.VAT].group;
+	QString name = aUnitData.name;
+	char section = (aUnitData.section == -1) ? CShtrihFR::SectionNumber : char(aUnitData.section);
 	checkSalesName(name);
 
 	QByteArray commandData;
-	commandData.append(getHexReverted(1, 5, 3));                  // количество
-	commandData.append(getHexReverted(aAmountData.sum, 5, 2));    // сумма
-	commandData.append(section);                                  // отдел
-	commandData.append(getHexReverted(taxIndex, 4));              // налоги
-	commandData.append(mCodec->fromUnicode(name));                // текст продажи
+	commandData.append(getHexReverted(1, 5, 3));                // количество
+	commandData.append(getHexReverted(aUnitData.sum, 5, 2));    // сумма
+	commandData.append(section);                                // отдел
+	commandData.append(getHexReverted(taxIndex, 4));            // налоги
+	commandData.append(mCodec->fromUnicode(name));              // текст продажи
 
 	char command = aBack ? CShtrihFR::Commands::SaleBack : CShtrihFR::Commands::Sale;
 
 	if (!processCommand(command, commandData))
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to sale for %2 (%3, VAT = %4), feed, cut and exit").arg(mDeviceName).arg(aAmountData.sum, 0, 'f', 2).arg(name).arg(aAmountData.VAT));
+		toLog(LogLevel::Error, QString("%1: Failed to sale for %2 (%3, VAT = %4), feed, cut and exit").arg(mDeviceName).arg(aUnitData.sum, 0, 'f', 2).arg(name).arg(aUnitData.VAT));
 		return false;
 	}
 
@@ -665,9 +666,10 @@ void ProtoShtrihFR<T>::parseDeviceData(const QByteArray & aData)
 
 	mOldFirmware = (mModelData.build && (FRInfo.build != mModelData.build)) || ((mModelData.date < QDate::currentDate()) && (FRInfo.date < mModelData.date));
 
-	setDeviceParameter(CDeviceData::Version, FRInfo.version, CDeviceData::Firmware);
+	setDeviceParameter(CDeviceData::Version, FRInfo.version, CDeviceData::Firmware, true);
 	setDeviceParameter(CDeviceData::Build, FRInfo.build, CDeviceData::Firmware);
 	setDeviceParameter(CDeviceData::Date, FRInfo.date.toString(CFR::DateLogFormat), CDeviceData::Firmware);
+
 	setDeviceParameter(CDeviceData::FR::FreeReregistrations, uchar(aData[41]));
 }
 
@@ -1101,9 +1103,9 @@ bool ProtoShtrihFR<T>::processAnswer(const QByteArray & aCommand)
 					}
 					case CShtrihFR::InnerModes::SessionOpened :
 					{
-						bool rightCommand = (aCommand[0] == CShtrihFR::Commands::Encashment) || (aCommand[0] == CShtrihFR::Commands::SetFRParameter);
+						bool trueCommand = (aCommand[0] == CShtrihFR::Commands::Encashment) || (aCommand[0] == CShtrihFR::Commands::SetFRParameter);
 
-						return rightCommand && execZReport(true);
+						return trueCommand && execZReport(true);
 					}
 					case CShtrihFR::InnerModes::DocumentOpened :
 					{

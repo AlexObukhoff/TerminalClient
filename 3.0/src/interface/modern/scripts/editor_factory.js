@@ -63,6 +63,45 @@ function popFields()
 }
 
 //------------------------------------------------------------------------------
+function updateFields(aFields, aReset)
+{
+	var $ = []
+
+	// Сбросим у всех свойств {configurable: false}, чтобы можно было обновлять
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+	for (var i in _fields) {
+		var $$ = {}
+		for (var k in _fields[i]) {
+			$$[k] = _fields[i][k]
+		}
+		$[i] = $$
+	}
+
+	for (var i in $) {
+		for (var k in aFields) {
+			if ($[i].id == aFields[k].id) {
+
+				if (aReset !== undefined && aReset) {
+					delete values[$[i].id]
+					continue
+				}
+
+				for (var p in aFields[k]) {
+					if (p == "id") {
+						continue
+					}
+
+					$[i][p] = aFields[k][p]
+				}
+			}
+		}
+	}
+
+	_fields = $
+}
+
+
+//------------------------------------------------------------------------------
 // Возвращает редактор для поля и индексом aIndex
 function getEditor(aIndex)
 {

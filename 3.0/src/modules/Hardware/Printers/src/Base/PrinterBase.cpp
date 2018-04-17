@@ -60,7 +60,6 @@ PrinterBase<T>::PrinterBase()
 	mPaperInPresenter = QDateTime::currentDateTime();
 	mActualStringCount = 0;
 	mNextDocument = false;
-	mCodec = nullptr;
 
 	// настройки для плагинов
 	setConfigParameter(CHardware::Printer::NeedSeparating, true);
@@ -147,6 +146,11 @@ void PrinterBase<T>::cleanReceipt(QStringList & aReceipt)
 	for (int i = 0; i < aReceipt.size(); ++i)
 	{
 		aReceipt[i] = aReceipt[i].replace(ASCII::TAB, ASCII::Space);
+
+		for (auto it = CPrinters::AutoCorrection.data().begin(); it != CPrinters::AutoCorrection.data().end(); ++it)
+		{
+			aReceipt[i] = aReceipt[i].replace(it.key(), it.value());
+		}
 	}
 
 	for (int i = 0; i < aReceipt.size(); ++i)
@@ -243,6 +247,13 @@ bool PrinterBase<T>::processReceipt(const QStringList & aReceipt, bool aProcessi
 
 	if (receipt.isEmpty())
 	{
+		return true;
+	}
+
+	if (getConfigParameter(CHardwareSDK::FR::CanWithoutPrinting).toBool() &&
+	   (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardware::Values::Use))
+	{
+		toLog(LogLevel::Normal, "Receipt has not been printed:\n" + aReceipt.join("\n"));
 		return true;
 	}
 

@@ -11,11 +11,8 @@ namespace CICTBase
 	/// Таймаут после Reset-а, [мс].
 	const int ResetTimeout = 200;
 
-	/// Таймаут после перезагрузки по питанию, [мс].
-	const int PowerRebootTimeout = 5 * 1000;
-
-	/// Интервал поллинга для ожидания статуса PowerUp после перезагрузки по питанию, [мс].
-	const int PowerRebootInterval = 100;
+	/// Ожидание PowerUp-а, [мс].
+	const SWaitingData PowerUpWaiting = SWaitingData(100, 5 * 1000);
 
 	//--------------------------------------------------------------------------------
 	/// Команды.

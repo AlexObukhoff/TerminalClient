@@ -157,6 +157,8 @@
     <CustomBuild Include="..\src\CashDispenser\VirtualCashDispenser.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\src\locale\virtual_devices_de.ts" />
+    <None Include="..\src\locale\virtual_devices_en.ts" />
     <None Include="..\src\locale\virtual_devices_ru.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -180,7 +182,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties lupdateOnBuild="1" MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties lupdateOnBuild="1" MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

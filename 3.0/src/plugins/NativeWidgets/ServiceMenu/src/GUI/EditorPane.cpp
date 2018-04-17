@@ -135,9 +135,10 @@ void EditorPane::selectEmptyParameter()
 	foreach (const SDK::Plugin::SPluginParameter & parameter, mParameters)
 	{
 		// TODO parameter.required завязать логику на требуемый ресурс
-		if (mValues[parameter.name].isNull() && !parameter.readOnly && parameter.defaultValue.isNull())
+		if (mValues.value(parameter.name).isNull() && !parameter.readOnly && parameter.defaultValue.isNull())
 		{
 			QList<QListWidgetItem *> items = mUi.lwParameters->findItems(parameter.title, Qt::MatchCaseSensitive | Qt::MatchStartsWith);
+
 			if (!items.isEmpty())
 			{
 				mUi.lwParameters->setCurrentItem(items.first());

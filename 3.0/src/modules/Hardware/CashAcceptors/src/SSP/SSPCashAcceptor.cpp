@@ -115,13 +115,7 @@ TResult SSPCashAcceptor::execCommand(const QByteArray & aCommand, const QByteArr
 //--------------------------------------------------------------------------------
 bool SSPCashAcceptor::processReset()
 {
-	bool result = processCommand(CSSP::Commands::Reset);
-
-	TStatusCodes statusCodes;
-	auto poll = [&] () -> bool { return getStatus(std::ref(statusCodes)) && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable); };
-	bool wait = PollingExpector().wait(poll, CSSP::ResetPollingInterval, CSSP::ResetTimeout);
-
-	return result && wait;
+	return processCommand(CSSP::Commands::Reset) && waitReady(CSSP::ReadyWaiting);
 }
 
 //--------------------------------------------------------------------------------

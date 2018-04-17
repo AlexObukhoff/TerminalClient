@@ -167,8 +167,6 @@ namespace CShtrihFR
 
 			SFields(const TFields & aFields)
 			{
-				SFields(aFields, TTables());
-
 				TData data;
 
 				for (int i = 0; i < aFields.size(); ++i)

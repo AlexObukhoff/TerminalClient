@@ -269,7 +269,7 @@ void PortCashAcceptor<T>::restoreStatuses()
 	auto canRestore = [&] () -> bool { return !mCheckDisable && mPostPollingAction; };
 	TStatusHistory statusHistory;
 
-	if (mPollingActive && waitCondition(canRestore, 1, 10000) && !mStatusHistory.isEmpty())
+	if (mPollingActive && waitCondition(canRestore, CPortCashAcceptor::RestoreStatusesWaiting) && !mStatusHistory.isEmpty())
 	{
 		EWarningLevel::Enum warningLevel = mStatusHistory.lastValue().warningLevel;
 

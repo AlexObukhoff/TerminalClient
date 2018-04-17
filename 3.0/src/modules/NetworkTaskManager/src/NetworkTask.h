@@ -87,7 +87,9 @@ public:
 	void setTag(const QVariant & aTag);
 	const QVariant & getTag() const;
 
+	/// Возвращает размер скачиваемого контента в байтах. Будет не нулевым после получения первого пакета с данными.
 	qint64 getSize() const;
+
 	qint64 getCurrentSize() const;
 
 	/// Указатель забирает внутрь, память освобождает самостоятельно.

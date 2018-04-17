@@ -9,6 +9,7 @@
 
 // STL
 #include <numeric>
+#include <functional>
 
 // SDK
 #include <SDK/Drivers/FR/FiscalFields.h>
@@ -16,9 +17,12 @@
 
 // Modules
 #include "Hardware/Common/ASCII.h"
+#include "Hardware/Common/HardwareConstants.h"
+#include "Hardware/Common/DeviceConfigManager.h"
 
 // Project
 #include "Hardware/FR/FRStatusesDescriptions.h"
+#include "Hardware/FR/FiscalFieldDescriptions.h"
 
 //--------------------------------------------------------------------------------
 /// Режим работы ФР
@@ -99,6 +103,19 @@ namespace CFR
 	/// Количество миллисекунд в сутках.
 	const int MSecsInDay = SecsInDay * 1000;
 
+	/// Признак способа расчета по умолчанию для платежей (не интернет-магазинов) - Полный расчет.
+	const SDK::Driver::EPayOffSubjectMethodTypes::Enum PayOffSubjectMethodType = SDK::Driver::EPayOffSubjectMethodTypes::Full;
+
+	/// Размеры ИНН.
+	namespace INNSize
+	{
+		/// Для юридического лица.
+		const int LegalPerson = 10;
+
+		/// Для физического лица.
+		const int NaturalPerson = 12;
+	}
+
 	/// Константные данные ФФД.
 	struct SFFDData
 	{
@@ -143,6 +160,12 @@ namespace CFR
 
 	/// Таймаут соединения с ОФД, [с].
 	const int OFDConnectionTimeout = 3 * 60;
+
+	/// Смержить данные (СНО, флаги агента).
+	inline char joinData(const QList<char> & aData)
+	{
+		return std::accumulate(aData.begin(), aData.end(), ASCII::NUL, [] (char aResult, char aLocalData) -> char { return aResult | aLocalData; });
+	}
 
 	/// Преобразование байт-массива данных в формат ФФД
 	inline QString dataToString(const QByteArray & aData, int aBase, int aSize)
@@ -244,8 +267,8 @@ namespace CFR
 
 			append(Cash,         QString::fromUtf8("НАЛИЧНЫМИ"));
 			append(EMoney,       QString::fromUtf8("КАРТОЙ"));
-			append(PostPayment,  QString::fromUtf8("АВАНС"));
-			append(Credit,       QString::fromUtf8("КРЕДИТ"));
+			append(PrePayment,   QString::fromUtf8("АВАНС"));
+			append(PostPayment,  QString::fromUtf8("КРЕДИТ"));
 			append(CounterOffer, QString::fromUtf8("ВСТРЕЧНОЕ ПРЕДОСТАВЛЕНИЕ"));
 		}
 	};
@@ -262,13 +285,51 @@ namespace CFR
 	};
 
 	//--------------------------------------------------------------------------------
-	/// Типы систем налогообложения
-	class CTaxations : public CBitmapDescription<char>
+	/// Признак способа расчета (1214).
+	class CPayOffSubjectMethodTypes : public CDescription<char>
 	{
 	public:
-		CTaxations()
+		CPayOffSubjectMethodTypes()
 		{
-			using namespace SDK::Driver::ETaxations;
+			using namespace SDK::Driver::EPayOffSubjectMethodTypes;
+
+			append(Prepayment100,  "ПРЕДОПЛАТА 100%");
+			append(Prepayment,     "ПРЕДОПЛАТА");
+			append(PostPayment,    "АВАНС");
+			append(Full,           "ПОЛНЫЙ РАСЧЕТ");
+			append(Part,           "ЧАСТИЧНЫЙ РАСЧЕТ И КРЕДИТ");
+			append(CreditTransfer, "ПЕРЕДАЧА В КРЕДИТ");
+			append(CreditPayment,  "ОПЛАТА КРЕДИТА");
+		}
+	};
+
+	static CPayOffSubjectMethodTypes PayOffSubjectMethodTypes;
+
+	//--------------------------------------------------------------------------------
+	/// Признак предмета расчета (1212).
+	class CPayOffSubjectTypes : public CDescription<char>
+	{
+	public:
+		CPayOffSubjectTypes()
+		{
+			using namespace SDK::Driver::EPayOffSubjectTypes;
+
+			append(Unit,     "ТОВАР");
+			append(Payment,  "ПЛАТЕЖ");
+			append(AgentFee, "АГЕНТСКОЕ ВОЗНАГРАЖДЕНИЕ");
+		}
+	};
+
+	static CPayOffSubjectTypes PayOffSubjectTypes;
+
+	//--------------------------------------------------------------------------------
+	/// Типы систем налогообложения (1062, 1055)
+	class CTaxSystems : public CBitmapDescription<char>
+	{
+	public:
+		CTaxSystems()
+		{
+			using namespace SDK::Driver::ETaxSystems;
 
 			append(Main,                         "ОСН");
 			append(SimplifiedIncome,             "УСН доход");
@@ -279,10 +340,10 @@ namespace CFR
 		}
 	};
 
-	static CTaxations Taxations;
+	static CTaxSystems TaxSystems;
 
 	//--------------------------------------------------------------------------------
-	/// Признаки платежного агента.
+	/// Признаки платежного агента (1057, 1222).
 	class CAgentFlags : public CBitmapDescription<char>
 	{
 	public:
@@ -320,7 +381,7 @@ namespace CFR
 	static CFSFlagData FSFlagData;
 
 	//--------------------------------------------------------------------------------
-	/// Признаки расчета.
+	/// Признаки расчета (1054).
 	class CPayOffTypes : public CDescription<SDK::Driver::EPayOffTypes::Enum>
 	{
 	public:
@@ -338,40 +399,113 @@ namespace CFR
 	static CPayOffTypes PayOffTypes;
 
 	//--------------------------------------------------------------------------------
-	/// Наименование фискального чека.
-	const QString CashFDName = QString::fromUtf8("КАССОВЫЙ ЧЕК");
+	/// Ставка НДС (1199).
+	class CVATRates: public CDescription<char>
+	{
+	public:
+		CVATRates::CVATRates()
+		{
+			append(1, "НДС 18%");
+			append(2, "НДС 10%");
+			append(3, "НДС 18/118");
+			append(4, "НДС 10/110");
+			append(5, "НДС 0%");
+			append(6, "");
+		}
+	};
+
+	static CVATRates VATRates;
 
 	//--------------------------------------------------------------------------------
 	/// Режимы работы.
-	namespace OperationModes
+	class COperationModeData: public CSpecification<char, int>
 	{
-		struct SData
+	public:
+		COperationModeData()
 		{
-			int field;
-			QString description;
+			#define ADD_OPERATION_MODE(aName) append(SDK::Driver::EOperationModes::aName, CFR::FiscalFields::aName##Mode)
 
-			SData(): field(0) {}
-			SData(int aField, const QString & aDescription): field(aField), description(aDescription) {}
-		};
+			ADD_OPERATION_MODE(Encryption);
+			ADD_OPERATION_MODE(Autonomous);
+			ADD_OPERATION_MODE(Automatic);
+			ADD_OPERATION_MODE(ServiceArea);
+			ADD_OPERATION_MODE(FixedReporting);
+			ADD_OPERATION_MODE(Internet);
+		}
+	};
 
-		#define ADD_OPERATION_MODE(aName, aDescription) append(SDK::Driver::EOperationModes::aName, SData(SDK::Driver::FiscalFields::aName##Mode, QString::fromUtf8(aDescription)))
+	static COperationModeData OperationModeData;
 
-		class CData: public CSpecification<char, SData>
+	//---------------------------------------------------------------------------
+	class ConfigCleaner
+	{
+	public:
+		ConfigCleaner(DeviceConfigManager * aConfigManager) : mPerformer(aConfigManager) {}
+
+		~ConfigCleaner()
 		{
-		public:
-			CData()
+			if (mPerformer)
 			{
-				ADD_OPERATION_MODE(Encryption,     "ШФД");
-				ADD_OPERATION_MODE(Autonomous,     "АВТОНОМН. РЕЖИМ");
-				ADD_OPERATION_MODE(Automatic,      "АВТОМАТ. РЕЖИМ");
-				ADD_OPERATION_MODE(ServiceArea,    "ККТ ДЛЯ УСЛУГ");
-				ADD_OPERATION_MODE(FixedReporting, "АС БСО");
-				ADD_OPERATION_MODE(Internet,       "ККТ ДЛЯ ИНТЕРНЕТ");
-			}
-		};
+				QStringList fieldNames = QStringList()
+					<< CFiscalSDK::Cashier
+					<< CFiscalSDK::CashierINN
+					<< CFiscalSDK::UserContact
+					<< CFiscalSDK::TaxSystem
+					<< CFiscalSDK::AgentFlag;
 
-		static CData Data;
-	}
+				foreach (const QString & fieldName, fieldNames)
+				{
+					mPerformer->removeConfigParameter(fieldName);
+				}
+			}
+		}
+
+	private:
+		DeviceConfigManager * mPerformer;
+	};
+
+	//---------------------------------------------------------------------------
+	class DealerDataManager
+	{
+	public:
+		DealerDataManager(DeviceConfigManager * aConfigManager, const QString & aKey) : mPerformer(aConfigManager), mKey(aKey)
+		{
+			QString value;
+
+			if (mPerformer)
+			{
+				mConfigData = mPerformer->getConfigParameter(CHardware::ConfigData).toMap();
+				value = mPerformer->getConfigParameter(mKey).toString().simplified();
+			}
+
+			if (value.isEmpty())
+			{
+				mConfigData.remove(mKey);
+			}
+			else
+			{
+				mConfigData.insert(mKey, value);
+			}
+		}
+
+		~DealerDataManager()
+		{
+			if (mPerformer)
+			{
+				mPerformer->setConfigParameter(CHardware::ConfigData, mConfigData);
+			}
+		}
+
+		void setValue(const QString & aValue)
+		{
+			mConfigData.insert(mKey, aValue);
+		}
+
+	private:
+		DeviceConfigManager * mPerformer;
+		QVariantMap mConfigData;
+		QString mKey;
+	};
 }
 
 //--------------------------------------------------------------------------------

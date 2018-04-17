@@ -99,7 +99,7 @@ public:
 	/// Возвращает имя сервиса.
 	virtual QString getName() const;
 
-	/// Поулчение списка зависимостей.
+	/// Получение списка зависимостей.
 	virtual const QSet<QString> & getRequiredServices() const;
 
 	/// Получить параметры сервиса.
@@ -140,7 +140,7 @@ public:
 	/// Получение списка параметров драйвера.
 	virtual SDK::Plugin::TParameterList getDriverParameters(const QString & aDriverPath) const;
 
-	/// Получить конфигурацию утройства и всех, связынных с ним.
+	/// Получить конфигурацию утройства и всех, связанных с ним.
 	virtual QVariantMap getDeviceConfiguration(const QString & aConfigName);
 
 	/// Устанавливает конфигурацию устройству.

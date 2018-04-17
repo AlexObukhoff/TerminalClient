@@ -135,7 +135,7 @@ public:
 
 	/// Инициализация. Вызывается после addContentDirectory() и addEngine(), 
 	/// инициализирует экран.
-	bool initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aUseOpenGL = false, bool aShowDebugInfo = false);
+	bool initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aShowDebugInfo = false);
 
 	/// Освобождение ресурсов
 	bool finalize();

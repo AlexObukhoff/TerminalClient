@@ -52,7 +52,7 @@ struct SKeySettings
 	QString secretKeyPath;  /// Путь к закрытому ключу терминала.
 	QString secretPassword; /// Кодовая фраза.
 
-	SKeySettings() : isValid(false), id(-100), engine(0) {}
+	SKeySettings() : isValid(false), id(-100), engine(0), serialNumber(0), bankSerialNumber(0) {}
 };
 
 //----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ struct SBlockByNote
 	quint32 interval;
 	quint32 repeat;
 
-	SBlockByNote() : interval(0), repeat(0) {}
+	SBlockByNote() : nominal(0), interval(0), repeat(0) {}
 	explicit SBlockByNote(quint32 aNominal, quint32 aInterval, quint32 aRepeat) : nominal(aNominal), interval(aInterval), repeat(aRepeat) {}
 };
 
@@ -104,8 +104,6 @@ struct SCommonSettings
 	QList<SBlockByNote> blockNotes; /// Блокировка по номиналам
 	bool blockCheatedPayment; /// Блокировка при подозрении на манипуляции с устройством
 	bool autoEncachement;
-	bool printFailedReceipts;        /// Распечатывать не напечатанные фискальные чеки при инкассации
-	bool randomReceiptsID;
 	Currency::Nominal minPar;
 	QSet<Currency::Nominal> enabledParNotesList; /// Список разрешенных купюр.
 	QSet<Currency::Nominal> enabledParCoinsList; /// Список разрешенных монет.
@@ -115,16 +113,21 @@ struct SCommonSettings
 	bool disableAmountOverflow; /// Не допускать появление сдачи путем отбраковки купюр сверх лимита.
 	EEventType::Enum penetrationEventLevel;
 
+	// Printer
+	bool printFailedReceipts;  /// Распечатывать не напечатанные фискальные чеки при инкассации
+	bool randomReceiptsID;     /// Номера чеков в рандомном порядке
+	QTime autoZReportTime;     /// Автоматичекое закрытие смены ККТ в определенное время
+
 	SCommonSettings() : 
 		blockCheatedPayment(false),
 		autoEncachement(false),
-		printFailedReceipts(true),
-		randomReceiptsID(false),
 		minPar(10),
 		skipCheckWhileNetworkError(false),
 		isValid(true),
 		disableAmountOverflow(false),
-		penetrationEventLevel(EEventType::OK)
+		penetrationEventLevel(EEventType::OK),
+		printFailedReceipts(true),
+		randomReceiptsID(false)
 	{
 		_blockOn
 			<< ValidatorError

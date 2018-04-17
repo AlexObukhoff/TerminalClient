@@ -44,7 +44,7 @@ QDateTime KasbiFRBase::getDateTime()
 
 	if (processCommand(CKasbiFR::Commands::GetFRDateTime, &data))
 	{
-		CFR::TTLVList TLVs = parseSTLV(data);
+		CFR::TTLVList TLVs = mFFEngine.parseSTLV(data);
 
 		if (TLVs.contains(CKasbiFR::FiscalFields::FRDateTime) && (TLVs[CKasbiFR::FiscalFields::FRDateTime].size() == 5))
 		{
@@ -103,7 +103,7 @@ bool KasbiFRBase::updateParameters()
 		return false;
 	}
 
-	if (!checkOperationModes(data[32]) || !checkTaxationData(data[33]) || !checkAgentFlags(data[34]))
+	if (!checkOperationModes(data[32]) || !checkTaxSystems(data[33]) || !checkAgentFlags(data[34]))
 	{
 		return false;
 	}
@@ -119,7 +119,7 @@ bool KasbiFRBase::updateParameters()
 
 	if (processCommand(CKasbiFR::Commands::GetOFDData, &data))
 	{
-		CFR::TTLVList TLVs = parseSTLV(data);
+		CFR::TTLVList TLVs = mFFEngine.parseSTLV(data);
 
 		if (TLVs.contains(CKasbiFR::FiscalFields::OFDAddress) && TLVs.contains(CKasbiFR::FiscalFields::OFDPort))
 		{
@@ -141,7 +141,7 @@ bool KasbiFRBase::checkPrintingParameters()
 		return false;
 	}
 
-	CFR::TTLVList TLVs = parseSTLV(data);
+	CFR::TTLVList TLVs = mFFEngine.parseSTLV(data);
 
 	QByteArray fontSizeData     = TLVs.value(CKasbiFR::FiscalFields::FontSize);
 	QByteArray optionalFPData   = TLVs.value(CKasbiFR::FiscalFields::OptionalFiscalParameter);
@@ -165,10 +165,10 @@ bool KasbiFRBase::checkPrintingParameters()
 	if ((fontSize != CKasbiFR::FontSize) || wrongRetraction)
 	{
 		QByteArray commandData = QByteArray() +
-			getTLVData(CKasbiFR::FiscalFields::PrinterModel, printerModelData) +
-			getTLVData(CKasbiFR::FiscalFields::FontSize, CKasbiFR::FontSize) +
-			getTLVData(CKasbiFR::FiscalFields::SessionReportRetraction, CKasbiFR::NoSessionReportRetraction) +
-			getTLVData(CKasbiFR::FiscalFields::OptionalFiscalParameter, optionalFPData);
+			mFFEngine.getTLVData(CKasbiFR::FiscalFields::PrinterModel, printerModelData) +
+			mFFEngine.getTLVData(CKasbiFR::FiscalFields::FontSize, CKasbiFR::FontSize) +
+			mFFEngine.getTLVData(CKasbiFR::FiscalFields::SessionReportRetraction, CKasbiFR::NoSessionReportRetraction) +
+			mFFEngine.getTLVData(CKasbiFR::FiscalFields::OptionalFiscalParameter, optionalFPData);
 
 		if (!processCommand(CKasbiFR::Commands::SetPrintingParameters, commandData))
 		{
@@ -208,9 +208,9 @@ void KasbiFRBase::processDeviceData(const QByteArray & aRegistrationData)
 		mFSSerialNumber = CFR::FSSerialToString(data);
 	}
 
-	if (processCommand(CKasbiFR::Commands::GetFSFirmware, &data))
+	if (processCommand(CKasbiFR::Commands::GetFSVersion, &data))
 	{
-		setDeviceParameter(CDeviceData::FS::Firmware, data);
+		setDeviceParameter(CDeviceData::FS::Version, clean(data));
 	}
 
 	if (processCommand(CKasbiFR::Commands::GetFSData, &data) && (data.size() >= 5))
@@ -329,15 +329,19 @@ bool KasbiFRBase::processAnswer(char aCommand, char aError)
 		{
 			mProcessingErrors.append(aError);
 
-			return execZReport(true) && openSession();
+			return execZReport(true) && openFRSession();
 		}
 		case CKasbiFR::Errors::UnknownCommand:
 		{
 			mOldFirmware = mOldFirmware || (aCommand == CKasbiFR::Commands::GetVersion);
+
+			break;
 		}
 		case CKasbiFR::Errors::WrongVATForAgent:
 		{
 			mOldFirmware = true;
+
+			break;
 		}
 	}
 
@@ -493,24 +497,24 @@ bool KasbiFRBase::performZReport(bool /*aPrintDeferredReports*/)
 }
 
 //--------------------------------------------------------------------------------
-bool KasbiFRBase::sale(const SAmountData & aAmountData)
+bool KasbiFRBase::sale(const SUnitData & aUnitData)
 {
-	int section = (aAmountData.section == -1) ? mTaxData[aAmountData.VAT].group : aAmountData.section;
+	int section = (aUnitData.section == -1) ? mTaxData[aUnitData.VAT].group : aUnitData.section;
 
 	QByteArray commandData = QByteArray() +
-		getTLVData(FiscalFields::UnitName, aAmountData.name) +
-		getTLVData(FiscalFields::PayOffSubjectUnitPrice, qRound64(aAmountData.sum * 100.0)) +
-		getTLVData(FiscalFields::PayOffSubjectQuantity, 1.0) +
-		getTLVData(FiscalFields::VATRate, char(section)) +
-		getTLVData(FiscalFields::PayOffMethodType, CKasbiFR::FullPrepaymentSettlement);
+		mFFEngine.getTLVData(CFR::FiscalFields::UnitName, aUnitData.name) +
+		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectUnitPrice, qRound64(aUnitData.sum * 100.0)) +
+		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectQuantity, 1.0) +
+		mFFEngine.getTLVData(CFR::FiscalFields::VATRate, char(section)) +
+		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectMethodType, CKasbiFR::FullPrepaymentSettlement);
 
-	return processCommand(CKasbiFR::Commands::Sale, getTLVData(FiscalFields::PayOffSubject, commandData));
+	return processCommand(CKasbiFR::Commands::Sale, mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubject, commandData));
 }
 
 //--------------------------------------------------------------------------------
 bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
 {
-	if ((getSessionState() == ESessionState::Closed) && !openSession())
+	if ((getSessionState() == ESessionState::Closed) && !openFRSession())
 	{
 		return false;
 	}
@@ -529,27 +533,27 @@ bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData
 
 	bool result = true;
 
-	foreach (auto amountData, aPaymentData.amountDataList)
+	foreach (auto unitData, aPaymentData.unitDataList)
 	{
-		result = result && sale(amountData);
+		result = result && sale(unitData);
 	}
 
-	QString userContact = getConfigParameter(CHardware::FiscalFields::UserContact).toString();
+	QString userContact = mFFEngine.getConfigParameter(CFiscalSDK::UserContact).toString();
 	uint totalSum = uint(getTotalAmount(aPaymentData) * 100);
 
 	QByteArray commandData = QByteArray() +
-		getTLVData(FiscalFields::TaxSystem, char(aPaymentData.taxation)) +
-		getTLVData(FiscalFields::CashFiscalTotal, totalSum) +
-		getTLVData(FiscalFields::CardFiscalTotal, 0) +
-		getTLVData(FiscalFields::PrePaymentFiscalTotal, 0) +
-		getTLVData(FiscalFields::PostPaymentFiscalTotal, 0) +
-		getTLVData(FiscalFields::CounterOfferFiscalTotal, 0) +
-		getTLVData(FiscalFields::UserContact, userContact);
+		mFFEngine.getTLVData(CFR::FiscalFields::TaxSystem, char(aPaymentData.taxSystem)) +
+		mFFEngine.getTLVData(CFR::FiscalFields::CashFiscalTotal, totalSum) +
+		mFFEngine.getTLVData(CFR::FiscalFields::CardFiscalTotal, 0) +
+		mFFEngine.getTLVData(CFR::FiscalFields::PrePaymentFiscalTotal, 0) +
+		mFFEngine.getTLVData(CFR::FiscalFields::PostPaymentFiscalTotal, 0) +
+		mFFEngine.getTLVData(CFR::FiscalFields::CounterOfferFiscalTotal, 0) +
+		mFFEngine.getTLVData(CFR::FiscalFields::UserContact, userContact);
 
 	result = result && processCommand(CKasbiFR::Commands::Total, commandData);
 
 	char command = aPaymentData.back ? CKasbiFR::SettlementTypes::IncomeReturning : CKasbiFR::SettlementTypes::Income;
-	commandData = getDigitTLVData(totalSum).left(5);
+	commandData = mFFEngine.getDigitTLVData(totalSum).left(5);
 	commandData = QByteArray(1, command) + commandData + QByteArray(5 - commandData.size(), ASCII::NUL);
 	bool closingResult = processCommand(CKasbiFR::Commands::CloseDocument, commandData);
 

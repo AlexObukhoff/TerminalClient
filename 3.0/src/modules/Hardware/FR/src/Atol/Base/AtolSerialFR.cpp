@@ -106,6 +106,7 @@ void AtolSerialFR::processDeviceData()
 	mCanProcessZBuffer = mModelData.ZBufferSize;
 
 	CAtolFR::SSoftInfo softInfo;
+	removeDeviceParameter(CDeviceData::FM::Firmware);
 
 	if (getSoftVersion(CAtolFR::FRSubSystems::FM, softInfo))
 	{

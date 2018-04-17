@@ -110,24 +110,24 @@ struct SBalance
 						default: type = "BILL";
 					}
 
-					foreach (auto amount, sum.amounts)
+					foreach (auto a, sum.amounts)
 					{
-						fields[aPrefix + amount.value.toString() + "_" + type + "_COUNT"] = amount.count;
-						fields[aPrefix + amount.value.toString() + "_" + type + "_SUM"] = amount.value.toDouble() * amount.count;
+						fields[aPrefix + a.value.toString() + "_" + type + "_COUNT"] = a.count;
+						fields[aPrefix + a.value.toString() + "_" + type + "_SUM"] = a.value.toDouble() * a.count;
 
 						// Увеличиваем общее количество купюр одного типа.
-						fields[aPrefix + type + "_COUNT"] = fields[aPrefix + type + "_COUNT"].toInt() + amount.count;
+						fields[aPrefix + type + "_COUNT"] = fields[aPrefix + type + "_COUNT"].toInt() + a.count;
 
 						// Добавляем детализацию по купюрам (номера купюр каждого номинала).
-						fields[aPrefix + amount.value.toString() + "_" + type + "_DETAILS"] = amount.serials;
+						fields[aPrefix + a.value.toString() + "_" + type + "_DETAILS"] = a.serials;
 
 						if (sumByType.contains(sum.type))
 						{
-							sumByType[sum.type] += amount.value.toDouble() * amount.count;
+							sumByType[sum.type] += a.value.toDouble() * a.count;
 						}
 						else
 						{
-							sumByType[sum.type] = amount.value.toDouble() * amount.count;
+							sumByType[sum.type] = a.value.toDouble() * a.count;
 						}
 					}
 				}

@@ -7,8 +7,11 @@
 #include <QtCore/QByteArray>
 #include <Common/QtHeadersEnd.h>
 
-// Project
+// Modules
+#include "Hardware/Common/WaitingData.h"
 #include "Hardware/Common/Specifications.h"
+
+// Project
 #include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
 
 /// Константы, команды и коды состояний устройств на протоколе ccTalk.
@@ -52,6 +55,9 @@ namespace CCCTalk
 		/// Период переинициализации.
 		const int ReInitialize = 5 * 1000;
 	}
+
+	/// Ожидание успешного выполнения теста соленоидов.
+	const SWaitingData TestCoilsWaiting = SWaitingData(Timeouts::TestCoils, 2 * Timeouts::TestCoils);
 
 	/// Команды.
 	namespace Command

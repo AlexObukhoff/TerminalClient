@@ -77,6 +77,9 @@
     <Filter Include="Port\TCP">
       <UniqueIdentifier>{6481669b-1344-4431-a495-6ae3553f9296}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ConfigManager">
+      <UniqueIdentifier>{949a5d73-ebbe-4fe3-9da0-8aebc2fbac42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PollingExpector.cpp">
@@ -226,6 +229,9 @@
     <ClCompile Include="..\..\Protocols\Common\ProtocolUtils.cpp">
       <Filter>Protocols</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ConfigManager\DeviceConfigManager.cpp">
+      <Filter>ConfigManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ASCII.h">
@@ -326,6 +332,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceDataConstants.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ConfigManager\DeviceConfigManager.h">
+      <Filter>ConfigManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceLogManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceLogicManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\WaitingData.h">
+      <Filter>Polling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

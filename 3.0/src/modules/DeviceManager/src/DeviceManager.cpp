@@ -260,7 +260,7 @@ TNamedDevice DeviceManager::createDevice(const QString & aDriverPath, const QVar
 	if (mRDSystemNames.contains(aDriverPath))
 	{
 		// Удаляем системное имя из списка доступных.
-		QString systemName = aConfig[CHardwareSDK::SystemName].toString();
+		QString systemName = config[CHardwareSDK::SystemName].toString();
 
 		if (!systemName.isEmpty() && !mFreeSystemNames.contains(systemName))
 		{
@@ -279,7 +279,7 @@ TNamedDevice DeviceManager::createDevice(const QString & aDriverPath, const QVar
 
 	if (!requiredResourcePath.isEmpty())
 	{
-		TNamedDevice requiredDevice = createDevice(requiredResourcePath, aConfig, aDetecting);
+		TNamedDevice requiredDevice = createDevice(requiredResourcePath, config, aDetecting);
 
 		if (!requiredDevice.second)
 		{

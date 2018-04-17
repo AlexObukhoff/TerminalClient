@@ -24,17 +24,17 @@
         <translation>Sprache</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="164"/>
+        <location filename="../main_menu_scene.qml" line="166"/>
         <source>main_menu_scene#invalid_provider</source>
         <translation>Zahlung zugunsten dieses Betreibers ist leider momentan nicht möglich. Versuchen Sie es bitte später.</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="274"/>
+        <location filename="../main_menu_scene.qml" line="276"/>
         <source>main_menu_scene#rest_howto_title</source>
         <translation>Balance %REST% %CURRENCY%</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="275"/>
+        <location filename="../main_menu_scene.qml" line="277"/>
         <source>main_menu_scene#rest_howto_description</source>
         <translation>Drücken Sie „Schließen“ und setzen Sie Ihren Einkauf fort.</translation>
     </message>

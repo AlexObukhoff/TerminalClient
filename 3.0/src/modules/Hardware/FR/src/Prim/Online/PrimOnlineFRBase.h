@@ -32,12 +32,12 @@ protected:
 	virtual TResult doZReport(bool aAuto);
 
 	/// Открыть смену.
-	virtual TResult openFRSession();
+	virtual bool openSession();
 
 	/// Получить проверочный код последнего фискального документа - номер КПК.
 	virtual int getVerificationCode();
 
-	/// Сформировать необязательное G-поле произвольного фискального документа (ПФД), содержащее фискальный реквизит
+	/// Сформировать необязательное G-поле произвольного фискального документа (ПФД), содержащее фискальный реквизит.
 	CPrimFR::TData addFiscalField(int aX, int aY, int aFiscalField = 0, const QString & aData = "");
 };
 

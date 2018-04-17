@@ -8,14 +8,11 @@
 /// Константы принтера Custom VKP-80.
 namespace CCustomVKP80
 {
-	/// Интервал поллинга при ожидании, [мс].
-	const int PollingInterval = 100;
+	/// Ожидание прихода XOn после XOff, [мс].
+	const SWaitingData XOnWaiting = SWaitingData(100, 60 * 1000);
 
-	/// Таймаут ожидания наступления XOn после XOff, [мс].
-	const int XOnXOffTimeout = 60 * 1000;
-
-	/// Таймаут ожидания окончания печати, [мс].
-	const int PrintingEndTimeout = 10 * 1000;
+	/// Ожидание окончания печати, [мс].
+	const SWaitingData PrintingWaiting = SWaitingData(100, 10 * 1000);
 }
 
 //--------------------------------------------------------------------------------

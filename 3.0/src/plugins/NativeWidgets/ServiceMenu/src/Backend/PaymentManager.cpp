@@ -183,6 +183,7 @@ bool PaymentManager::printUnprintedReceiptsRegistry(const QSet<qint64> & aPaymen
 		QStringList registry;
 		QStringList paymentTitles;
 		QVariantList paymentsVAT;
+		QStringList paymentInn;
 
 		PaymentAmounts()
 		{
@@ -232,10 +233,13 @@ bool PaymentManager::printUnprintedReceiptsRegistry(const QSet<qint64> & aPaymen
 
 		if (!qFuzzyIsNull(amountAll.toDouble()))
 		{
+			auto provider = mDealerSettings->getMNPProvider(providerId, getewayIn, getewayOut);
+
 			amounts[payTool].summAmountAll += amountAll.toDouble();
 			amounts[payTool].summAmounts << amount;
-			amounts[payTool].paymentTitles << formatPaymentTitle(mDealerSettings->getMNPProvider(providerId, getewayIn, getewayOut));
+			amounts[payTool].paymentTitles << formatPaymentTitle(provider);
 			amounts[payTool].paymentsVAT << vat;
+			amounts[payTool].paymentInn << provider.receiptParameters.value("OPERATOR_INN").toString();
 			amounts[payTool].summDealerFee += dealerFee;
 			amounts[payTool].summProcessingFee += processingFee;
 
@@ -255,6 +259,7 @@ bool PaymentManager::printUnprintedReceiptsRegistry(const QSet<qint64> & aPaymen
 			receiptParameters[QString("[%1]").arg(CPayment::Amount)] = amounts[payTool].summAmounts;
 			receiptParameters["[AMOUNT_TITLE]"] = amounts[payTool].paymentTitles;
 			receiptParameters["[AMOUNT_VAT]"] = amounts[payTool].paymentsVAT;
+			receiptParameters["[OPERATOR_INN]"] = amounts[payTool].paymentInn;
 			receiptParameters[CPayment::PayTool] = payTool;
 			receiptParameters[CPayment::DealerFee] = amounts[payTool].summDealerFee;
 			receiptParameters[CPayment::Fee] = amounts[payTool].summDealerFee + amounts[payTool].summProcessingFee;

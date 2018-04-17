@@ -212,7 +212,6 @@ IPlugin * PluginFactory::createPlugin(const QString & aInstancePath, const QStri
 				QString configInstance = aConfigInstancePath.section(CPlugin::InstancePathSeparator, 1, 1);
 
 				QVariantMap configuration = getPluginInstanceConfiguration(configPath, configInstance.isEmpty() ? instance : configInstance);
-				QVariantMap oldConfiguration = configuration;
 
 				// Синхронизируем настройки конфига и плагина, если плагин новее, чем конфиг
 				TParameterList & parameterList = mTranslatedParameters[path];

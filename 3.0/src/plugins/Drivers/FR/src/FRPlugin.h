@@ -7,6 +7,7 @@
 #include "../../../../modules/Hardware/FR/src/Prim/PrimFRBase.h"
 #include "../../../../modules/Hardware/FR/src/Prim/Presenter/PrimPresenterFR.h"
 #include "../../../../modules/Hardware/FR/src/Prim/Ejector/PrimEjectorFRBase.h"
+#include "../../../../modules/Hardware/FR/src/Prim/Online/PrimOnlineFRBase.h"
 #include "../../../../modules/Hardware/FR/src/Prim/Ejector/PrimEjectorOnlineFR.h"
 #include "../../../../modules/Hardware/FR/src/Shtrih/Base/ShtrihSerialFR.h"
 #include "../../../../modules/Hardware/FR/src/Shtrih/Base/ShtrihRetractorFR.h"

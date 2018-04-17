@@ -164,9 +164,9 @@ bool CCTalkCoinAcceptorBase::processReset()
 		return false;
 	}
 
-	auto testCoils = [&]() -> TResult { return processCommand(CCCTalk::Command::TestCoils, QByteArray(1, CCCTalk::CoilMask::Accept)); };
+	auto testCoils = [&] () -> TResult { return processCommand(CCCTalk::Command::TestCoils, QByteArray(1, CCCTalk::CoilMask::Accept)); };
 
-	if (!PollingExpector().wait(testCoils, CCCTalk::Timeouts::TestCoils, 2 * CCCTalk::Timeouts::TestCoils))
+	if (!PollingExpector().wait(testCoils, CCCTalk::TestCoilsWaiting))
 	{
 		return false;
 	}
@@ -415,6 +415,8 @@ bool CCTalkCoinAcceptorBase::isConnected()
 	{
 		setDeviceParameter(CDeviceData::CashAcceptors::Database, uchar(answer[0]));
 	}
+
+	removeDeviceParameter(CDeviceData::Firmware);
 
 	if (processCommand(CCCTalk::Command::CorePlus::SoftVersion, &answer))
 	{

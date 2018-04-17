@@ -116,7 +116,7 @@ void ShtrihSerialFR::parseDeviceData(const QByteArray & aData)
 	QString FMDate = ProtocolUtils::hexToBCD(aData.mid(22, 3)).insert(4, "20");
 	FMInfo.date    = QDate::fromString(FMDate, CFR::DateFormat);
 
-	setDeviceParameter(CDeviceData::Version, FMInfo.version, CDeviceData::FM::Firmware);
+	setDeviceParameter(CDeviceData::Version, FMInfo.version, CDeviceData::FM::Firmware, true);
 	setDeviceParameter(CDeviceData::Build, FMInfo.build, CDeviceData::FM::Firmware);
 	setDeviceParameter(CDeviceData::Date, FMInfo.date.toString(CFR::DateLogFormat), CDeviceData::FM::Firmware);
 

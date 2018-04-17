@@ -69,10 +69,10 @@ protected:
 	virtual bool execZReport(bool aAuto);
 
 	/// Открыть смену.
-	bool openSession();
+	virtual bool openSession();
 
 	/// Продажа.
-	bool sale(const SDK::Driver::SAmountData & aAmountData);
+	bool sale(const SDK::Driver::SUnitData & aUnitData);
 
 	/// Проверить настройки печати.
 	bool checkPrintingParameters();

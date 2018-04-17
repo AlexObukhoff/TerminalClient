@@ -15,4 +15,13 @@ SDK::Plugin::SPluginParameter setDocumentCap();
 // Разрешение автозакрывать смену на инициализации.
 SDK::Plugin::SPluginParameter setAutoCloseSessionAbility();
 
+// Время автозакрытия смены.
+SDK::Plugin::SPluginParameter setSessionOpeningTime();
+
+// Печатать/не печатать.
+SDK::Plugin::SPluginParameter setNotPrinting();
+
+// Модель подключенного принтера для Казначея.
+SDK::Plugin::SPluginParameter setPaymasterPrinterModel();
+
 //------------------------------------------------------------------------------
