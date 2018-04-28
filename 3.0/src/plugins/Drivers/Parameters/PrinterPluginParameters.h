@@ -28,13 +28,13 @@ SDK::Plugin::SPluginParameter setLineSpacing(int aMin, int aMax, int aDefault, i
 SDK::Plugin::SPluginParameter setFeedingFactor();
 
 /// Петля.
-SDK::Plugin::SPluginParameter setLoopEnabled(const QString & aOptionalTranslation = "", bool aNoChange = true);
+SDK::Plugin::SPluginParameter setLoopEnabled(const QString & aOptionalTranslation = "", bool aAuto = true);
 
 /// Таймаут для действия с незабранным чеком.
 SDK::Plugin::SPluginParameter setLeftReceiptTimeout(bool aZero = false);
 
 /// Действие с незабранным чеком по таймауту.
-SDK::Plugin::SPluginParameter setLeftReceiptAction(const QString & aParameter, bool aRetract, bool aPush, const QString aDefault, bool aNoChange = true, const QString & aOptionalTranslation = "");
+SDK::Plugin::SPluginParameter setLeftReceiptAction(const QString & aParameter, bool aRetract, bool aPush, const QString aDefault, bool aAuto = true, const QString & aOptionalTranslation = "");
 
 /// Длина презентации чека.
 SDK::Plugin::SPluginParameter setPresentationLength(const QString & aOptionalTranslation = "", int aMin = -1, int aMax = -1);

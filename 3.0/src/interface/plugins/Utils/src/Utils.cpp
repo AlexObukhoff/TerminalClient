@@ -71,8 +71,6 @@ Utils::Utils(QQmlEngine * aEngine, const QString & aInterfacePath, const QString
 	mProviderListFilter = QSharedPointer<ProviderListFilter>(new ProviderListFilter(this));
 	mProviderListFilter->setSourceModel(mProviderListModel.data());
 	mProviderListFilter->setDynamicSortFilter(true);
-
-	mSkin = QSharedPointer<Skin>(new Skin(mInterfacePath, mUserPath));
 }
 
 //------------------------------------------------------------------------------
@@ -329,9 +327,9 @@ QObject * Utils::getProviderList()
 }
 
 //------------------------------------------------------------------------------
-QObject * Utils::getSkin()
+Utils::TSkinConfig Utils::getSkinConfig() const
 {
-	return mSkin.data();
+	return mSkinConfig;
 }
 
 // Файлы для воспроизведения должны лежать в соответствующих папках: common, narrator, etc
@@ -467,6 +465,32 @@ void Utils::loadConfiguration()
 		foreach(QString key, userSettings.allKeys())
 		{
 			configuration.insert(key, userSettings.value(key));
+		}
+	}
+
+	// Сохраним отдельно настройки скинов
+	
+	// Основной скин
+	mSkinConfig.insert(-1, configuration.value("ui/skin").toString());
+	
+	// Скины для операторов хранятся в секции [skin]
+	// имя_скина=оператор1б оператор2...
+	foreach (QString key, configuration.keys())
+	{
+		if (key == "ui/skin")
+		{
+			continue;
+		}
+		
+		if (key.contains("skin"))
+		{
+			QString skin = key.split("/").last();
+			QStringList pp = configuration.value(key).toStringList();
+
+			foreach (QString p, pp)
+			{
+				mSkinConfig.insert(p.toInt(), skin);
+			}
 		}
 	}
 

@@ -80,8 +80,7 @@ inline QStringList sortParameters(QStringList (* aGetParameters)())
 template <class T>
 inline TParameterList createNamedList(const QStringList & aModels, const QString & aDefault)
 {
-	return SNamedList<T, T::TIType>().create(aModels, aDefault)
-		<< setNormalPriority();
+	return SNamedList<T, T::TIType>().create(aModels, aDefault);
 }
 
 //------------------------------------------------------------------------------
@@ -89,10 +88,14 @@ template <class T>
 inline TParameterList createSimpleNamedList(const QStringList & aModels, const QString & aDefault)
 {
 	QString interactionType = T::getInteractionType();
+	QVariantMap modifiedValues;
+	modifiedValues.insert("no change", CHardwareSDK::Values::Auto);
+	modifiedValues.insert("not use",   CHardwareSDK::Values::NotUse);
 
 	return TParameterList()
 		<< SPluginParameter(CHardwareSDK::ModelName, false, CPPT::ModelName, QString(), aDefault, aModels, true)
 		<< SPluginParameter(CHardwareSDK::InteractionType, true, CPPT::InteractionType, QString(), interactionType, QStringList() << interactionType)
+		<< setModifiedValues("", modifiedValues)
 		<< setNormalPriority();
 }
 

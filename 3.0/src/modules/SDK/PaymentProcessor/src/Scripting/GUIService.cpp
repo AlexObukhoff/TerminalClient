@@ -27,6 +27,13 @@ GUIService::GUIService(ICore * aCore)
 //------------------------------------------------------------------------------
 bool GUIService::show(const QString & aWidget, const QVariantMap & aParameters)
 {
+	if (mTopWidgetName != aWidget)
+	{
+		emit topSceneChanged();
+	}
+
+	mTopWidgetName = aWidget;
+
 	return mGUIService->show(aWidget, aParameters);
 }
 
@@ -46,6 +53,12 @@ bool GUIService::hidePopup(const QVariantMap & aParameters)
 void GUIService::notify(const QString & aEvent, const QVariantMap & aParameters)
 {
 	return mGUIService->notify(aEvent, aParameters);
+}
+
+//------------------------------------------------------------------------------
+QString GUIService::getTopWidget() const
+{
+	return mTopWidgetName;
 }
 
 //------------------------------------------------------------------------------

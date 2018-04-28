@@ -3,16 +3,15 @@
 #pragma once
 
 // Modules
-#include "Hardware/CashAcceptors/PortCashAcceptor.h"
 #include "Hardware/Protocols/CashAcceptor/CCTalk.h"
 
 // Project
+#include "Hardware/CoinAcceptors/CoinAcceptorBase.h"
 #include "CCTalkModelData.h"
 
 //--------------------------------------------------------------------------------
-class CCTalkCoinAcceptorBase : public TSerialCashAcceptor
+class CCTalkCoinAcceptorBase : public CoinAcceptorBase
 {
-	SET_DEVICE_TYPE(CoinAcceptor)
 	SET_SERIES("ccTalk")
 
 public:
@@ -20,12 +19,6 @@ public:
 
 	/// Возвращает список поддерживаемых устройств.
 	static QStringList getModelList();
-
-	/// Принять купюру.
-	virtual bool stack();
-
-	/// Вернуть купюру. Правильный термин - return (ключевое слово).
-	virtual bool reject();
 
 protected:
 	/// Получение статуса.

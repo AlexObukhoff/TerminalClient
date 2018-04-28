@@ -166,7 +166,7 @@ struct SUnitData
 	TVAT VAT;                                       /// НДС (value added tax).
 	QString name;                                   /// Локализованное название платежа (товар).
 	QString providerINN;                            /// ИНН поставщика товара (оператор/дилер/Платина).
-	EPayOffSubjectTypes::Enum payOffSubjectType;    /// Признак предмета расчета.
+	EPayOffSubjectTypes::Enum payOffSubjectType;    /// Признак предмета расчета (1212).
 	int section;                                    /// Отдел.
 
 	SUnitData() : sum(0), VAT(0), payOffSubjectType(EPayOffSubjectTypes::None), section(-1) {}

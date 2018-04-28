@@ -13,7 +13,7 @@ Widgets.SceneBase2 {
 	leftButtonEnabled: true
 	rightButtonEnabled: !global.rightButtonDisabled
 
-	BorderImage {
+	Widgets.BorderImage2 {
 		anchors { horizontalCenter: parent.horizontalCenter }
 		width: 1218
 		height: 657
@@ -32,8 +32,8 @@ Widgets.SceneBase2 {
 		Text {
 			horizontalAlignment: Text.AlignHCenter
 			width: parent.width
-			font: Utils.ui.font("font.message")
-			color: Utils.ui.color("color.message")
+			font: Skin.ui.font("font.message")
+			color: Skin.ui.color("color.message")
 			wrapMode: Text.WordWrap
 			text: {
 				if (flowNotes.hasChildren && flowCoins.hasChildren) {

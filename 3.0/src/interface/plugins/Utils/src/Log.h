@@ -13,7 +13,7 @@ class Log
 public:
 	enum LogLevel
 	{
-		Normal, Warning, Error
+		Debug, Normal, Warning, Error
 	};
 
 	Log(LogLevel aLevel) : mLevel(aLevel)
@@ -27,6 +27,7 @@ public:
 		{
 			switch (mLevel)
 			{
+				case Debug: QMetaObject::invokeMethod(logger, "debug", Q_ARG(const QString &, mMessage)); break;
 				case Normal: QMetaObject::invokeMethod(logger, "normal", Q_ARG(const QString &, mMessage)); break;
 				case Warning: QMetaObject::invokeMethod(logger, "warning", Q_ARG(const QString &, mMessage)); break;
 				case Error: QMetaObject::invokeMethod(logger, "error", Q_ARG(const QString &, mMessage)); break;
@@ -36,6 +37,7 @@ public:
 		{
 			switch (mLevel)
 			{
+				case Debug:
 				case Normal: qDebug() << mMessage; break;
 				case Warning:
 				case Error: qWarning() << mMessage; break;

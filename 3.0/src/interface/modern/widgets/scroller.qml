@@ -23,7 +23,7 @@ Item {
 		id: upButton
 
 		anchors { left: parent.left; top:  parent.top }
-		icon: Image {
+		icon: Image2 {
 			source: upButton.pressed ? "image://ui/scroll.up.pressed" : "image://ui/scroll.up.normal"
 		}
 		onClicked: rootItem.up()
@@ -34,7 +34,7 @@ Item {
 		id: downButton
 
 		anchors { right: parent.right; bottom: parent.bottom }
-		icon: Image {
+		icon: Image2 {
 			source: downButton.pressed ? "image://ui/scroll.down.pressed" : "image://ui/scroll.down.normal"
 		}
 		onClicked: rootItem.down()

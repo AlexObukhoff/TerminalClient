@@ -29,7 +29,6 @@ class Utils : public QObject
 	Q_PROPERTY(QObject * GroupModel READ getGroupModel NOTIFY updateGroupModel);
 	Q_PROPERTY(QObject * RootGroupModel READ getRootGroupModel NOTIFY updateRootGroupModel);
 	Q_PROPERTY(QObject * ProviderList READ getProviderList NOTIFY updateProviderList);
-	Q_PROPERTY(QObject * ui READ getSkin CONSTANT);
 
 public:
 	Utils(QQmlEngine * aEngine, const QString & aInterfacePath, const QString & aUserPath);
@@ -76,6 +75,9 @@ public slots:
 	QString json2str(const QObject * aJSON) const { Q_UNUSED(aJSON); return QString(); }
 
 public:
+	typedef QMap<qint64, QString> TSkinConfig;
+
+public:
 	/// Возвращает транслятор.
 	QObject * getTranslator();
 
@@ -88,8 +90,8 @@ public:
 	/// Возвращает модель с фильтрованным списком провайдеров.
 	QObject * getProviderList();
 
-	/// Возвращает конструктор объектов для поддержки скинов.
-	QObject * getSkin();
+	// Возвращает пары id оператора - имя скина
+	TSkinConfig getSkinConfig() const;
 
 signals:
 	void updateTranslator();
@@ -113,7 +115,6 @@ private:
 	QQmlEngine * mEngine;
 	mutable QMap<QString, QTextCodec *> mCodecCache;
 
-	QSharedPointer<Skin> mSkin;
 	QSharedPointer<Translator> mTranslator;
 	QSharedPointer<GroupModel> mGroupModel; /// Модель иконок внутри корневых групп
 	QSharedPointer<GroupModel> mRootGroupModel; /// Модель иконок корневых групп
@@ -122,6 +123,7 @@ private:
 
 	QString mInterfacePath;
 	QString mUserPath;
+	TSkinConfig mSkinConfig;
 
 	bool mUseCommonSounds;
 	bool mUseNarratorSounds;

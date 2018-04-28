@@ -15,7 +15,7 @@ using namespace SDK::Driver;
 namespace PrinterSettings = CHardware::Printer::Settings;
 namespace PrinterValues = CHardware::Printer::Values;
 namespace FRValues = CHardware::FR::Values;
-namespace Values = CHardware::Values;
+namespace Values = CHardwareSDK::Values;
 namespace PPT = PluginParameterTranslations;
 
 //------------------------------------------------------------------------------
@@ -101,8 +101,8 @@ template <class T>
 TParameterList ShtrihRetractorFRParameters(const QStringList & aModels)
 {
 	return ShtrihParameters<T>(aModels)
-		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, false, Values::NoChange)
-		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, false, Values::NoChange)
+		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, false, Values::Auto)
+		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, false, Values::Auto)
 		<< setLeftReceiptTimeout();
 }
 
@@ -119,8 +119,8 @@ template <class T>
 TParameterList ShtrihKioskFRKParameters(const QStringList & aModels)
 {
 	return ShtrihParameters<T>(aModels)
-		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, true, Values::NoChange)
-		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, true, Values::NoChange)
+		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, true, Values::Auto)
+		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, true, Values::Auto)
 		<< setLeftReceiptTimeout();
 }
 

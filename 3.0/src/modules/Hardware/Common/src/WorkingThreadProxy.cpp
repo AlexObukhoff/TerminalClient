@@ -20,11 +20,6 @@ WorkingThreadProxy::WorkingThreadProxy(QThread * aWorkingThread): mWorkingThread
 {
 	if (mWorkingThread)
 	{
-		if (!mWorkingThread->isRunning())
-		{
-			mWorkingThread->start();
-		}
-
 		moveToThread(mWorkingThread);
 	}
 
@@ -39,6 +34,8 @@ WorkingThreadProxy::WorkingThreadProxy(QThread * aWorkingThread): mWorkingThread
 template <class T>
 T WorkingThreadProxy::invokeMethod(std::function<T()> aMethod)
 {
+	checkThreadStarted();
+
 	T result;
 
 	isWorkingThread() ? onInvoke(aMethod, &result) : emit invoke(aMethod, &result);
@@ -50,6 +47,8 @@ T WorkingThreadProxy::invokeMethod(std::function<T()> aMethod)
 template <>
 void WorkingThreadProxy::invokeMethod(TVoidMethod aMethod)
 {
+	checkThreadStarted();
+
 	isWorkingThread() ? onInvoke(aMethod) : emit invoke(aMethod);
 }
 
@@ -87,6 +86,25 @@ void WorkingThreadProxy::onInvoke(TStringMethod aMethod, QString * aResult)
 bool WorkingThreadProxy::isWorkingThread()
 {
 	return !mWorkingThread || (mWorkingThread == QThread::currentThread());
+}
+
+//--------------------------------------------------------------------------------
+void WorkingThreadProxy::checkThreadStarted()
+{
+	if (mWorkingThread)
+	{
+		if (!mWorkingThread->isRunning())
+		{
+			bool res = connect(mWorkingThread, SIGNAL(started()), this, SLOT(checkThreadStarted()), Qt::UniqueConnection);
+			mWorkingThread->start();
+
+			QMutexLocker locker(&mStartMutex);
+
+			mStartCondition.wait(&mStartMutex);
+		}
+
+		mStartCondition.wakeAll();
+	}
 }
 
 //--------------------------------------------------------------------------------

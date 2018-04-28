@@ -22,16 +22,16 @@ SPluginParameter setFiscalModeEnabled()
 //------------------------------------------------------------------------------
 SPluginParameter setDocumentCap()
 {
-	return SPluginParameter(PrinterSettings::DocumentCap, false, PPT::DocumentCap, QString(), CHardware::Values::NoChange, QStringList()
-		<< CHardware::Values::Use
-		<< CHardware::Values::NotUse
-		<< CHardware::Values::NoChange, false);
+	return SPluginParameter(PrinterSettings::DocumentCap, false, PPT::DocumentCap, QString(), CHardwareSDK::Values::Auto, QStringList()
+		<< CHardwareSDK::Values::Use
+		<< CHardwareSDK::Values::NotUse
+		<< CHardwareSDK::Values::Auto, false);
 }
 
 //------------------------------------------------------------------------------
 SPluginParameter setAutoCloseSessionAbility()
 {
-	return SPluginParameter(CHardware::FR::CanAutoCloseSession, false, PPT::AutoCloseSessionAbility, QString(), CHardware::Values::Auto, QStringList() << CHardware::Values::Use << CHardware::Values::NotUse, true);
+	return SPluginParameter(CHardware::FR::CanAutoCloseSession, false, PPT::AutoCloseSessionAbility, QString(), CHardwareSDK::Values::Auto, QStringList() << CHardwareSDK::Values::Use << CHardwareSDK::Values::NotUse, true);
 }
 
 //------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ SPluginParameter setSessionOpeningTime()
 //------------------------------------------------------------------------------
 SPluginParameter setNotPrinting()
 {
-	return SPluginParameter(CHardwareSDK::FR::WithoutPrinting, false, QString(), QString(), CHardware::Values::Auto, QStringList() << CHardware::Values::Use << CHardware::Values::NotUse, true);
+	return SPluginParameter(CHardwareSDK::FR::WithoutPrinting, false, QString(), QString(), CHardwareSDK::Values::Auto, QStringList() << CHardwareSDK::Values::Use << CHardwareSDK::Values::NotUse, true);
 }
 
 //------------------------------------------------------------------------------

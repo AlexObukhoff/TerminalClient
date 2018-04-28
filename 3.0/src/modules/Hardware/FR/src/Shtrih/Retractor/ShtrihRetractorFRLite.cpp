@@ -53,7 +53,7 @@ bool ShtrihRetractorFRLite<T>::updateParameters()
 	//21. Петля
 	if (containsConfigParameter(Settings::Loop))
 	{
-		char loop = char(getConfigParameter(Settings::Loop).toString() == CHardware::Values::Use);
+		char loop = char(getConfigParameter(Settings::Loop).toString() == CHardwareSDK::Values::Use);
 
 		if ((!getFRParameter(mParameters.loop, data) || data.isEmpty() || (data[0] != loop)) &&
 		      setFRParameter(mParameters.loop, loop))

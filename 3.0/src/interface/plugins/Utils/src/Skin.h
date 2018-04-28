@@ -14,7 +14,7 @@ class Skin : public QObject
 	Q_OBJECT
 
 public:
-	Skin(const QString & aInterfacePath, const QString & aUserPath);
+	Skin(const QString & aInterfacePath, const QString & aSkinName);
 
 public:
 	/// Получить имя скина
@@ -29,7 +29,7 @@ public slots:
 
 private:
 	/// Возвращает 
-	QString skinConfigFileName(const QString & aName) const;
+	QString fullPath(const QString & aName) const;
 
 	/// Загрузить конфигурацию скина
 	bool loadSkinConfig(bool aMerge = false);
@@ -38,6 +38,7 @@ private:
 	QString mName;
 	QVariantMap mConfig;
 	QString mInterfacePath;
+	QMap <QString, QStringList> mOperatorsSkin;
 };
 
 //------------------------------------------------------------------------------

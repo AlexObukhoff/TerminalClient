@@ -48,7 +48,7 @@ FocusScope {
 	height: 1024
 
 	// Фон.
-	Image {
+	Image2 {
 		id: backgroundImage
 
 		anchors.fill: parent
@@ -75,7 +75,7 @@ FocusScope {
 		onClicked: rootItem.back()
 	}
 
-	BorderImage {
+	BorderImage2 {
 		id: topPanel
 
 		anchors { left: sceneButton.right; right: info.visible ? info.left : parent.right; rightMargin: info.visible ? 0 : 30; verticalCenter: sceneButton.verticalCenter }
@@ -106,8 +106,8 @@ FocusScope {
 				width: info.visible ? 730 : 850
 				height: parent.height
 				clip: true
-				font: Utils.ui.font("font.title")
-				color: Utils.ui.color("color.title")
+				font: Skin.ui.font("font.title")
+				color: Skin.ui.color("color.title")
 				wrapMode: Text.WordWrap
 				verticalAlignment: Text.AlignVCenter
 				elide: Text.ElideRight

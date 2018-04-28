@@ -18,7 +18,7 @@ Item {
 	height: 428
 	clip: true
 
-	BorderImage {
+	BorderImage2 {
 		anchors.fill: parent
 		border { left: 55; top: 100; right: 55; bottom: 18 }
 		source: "image://ui/panel.keyboard"

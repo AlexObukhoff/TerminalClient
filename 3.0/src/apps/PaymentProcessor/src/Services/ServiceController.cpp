@@ -1,4 +1,4 @@
-/* @file Инициализация и получение сервисов. */
+﻿/* @file Инициализация и получение сервисов. */
 
 // Boost
 #include <boost/cast.hpp>
@@ -303,6 +303,11 @@ bool ServiceController::finalizeServices(const char * aRetrySlot)
 //---------------------------------------------------------------------------
 void ServiceController::finalizeCoreItems()
 {
+	if (mCorePluginList.isEmpty())
+	{
+		return;
+	}
+
 	PluginService * ps = PluginService::instance(mApplication);
 	
 	if (ps)

@@ -144,6 +144,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_SkinProvider.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Translator.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
@@ -172,6 +176,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_SkinProvider.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_GroupModel.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
@@ -185,8 +193,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Skin.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_SkinProvider.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Translator.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -214,6 +226,34 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="..\src\Skin.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing Skin.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0501 -D_WIN32_WINNT=0x0501 -DUNICODE -DWIN32 -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DECLARATIVE_LIB -DLOGOPROVIDER_LIB -DQT_XML_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtDeclarative" "-I.\..\src" "-I$(THIRDPARTY_DIR)\zint\backend_qt4" "-I$(THIRDPARTY_DIR)\Qt5port"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing Skin.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0501 -D_WIN32_WINNT=0x0501 -DUNICODE -DWIN32 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DECLARATIVE_LIB -DLOGOPROVIDER_LIB -DQT_XML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtDeclarative" "-I.\..\src" "-I$(THIRDPARTY_DIR)\zint\backend_qt4" "-I$(THIRDPARTY_DIR)\Qt5port"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing Skin.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0501 -D_WIN32_WINNT=0x0501 -DUNICODE -DWIN32 -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DECLARATIVE_LIB -DLOGOPROVIDER_LIB -DQT_XML_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtDeclarative" "-I.\..\src" "-I$(THIRDPARTY_DIR)\zint\backend_qt4" "-I$(THIRDPARTY_DIR)\Qt5port"</Command>
+    </CustomBuild>
+    <CustomBuild Include="..\src\SkinProvider.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing SkinProvider.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0501 -D_WIN32_WINNT=0x0501 -DUNICODE -DWIN32 -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DECLARATIVE_LIB -DLOGOPROVIDER_LIB -DQT_XML_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtDeclarative" "-I.\..\src" "-I$(THIRDPARTY_DIR)\zint\backend_qt4" "-I$(THIRDPARTY_DIR)\Qt5port"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing SkinProvider.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0501 -D_WIN32_WINNT=0x0501 -DUNICODE -DWIN32 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DECLARATIVE_LIB -DLOGOPROVIDER_LIB -DQT_XML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtDeclarative" "-I.\..\src" "-I$(THIRDPARTY_DIR)\zint\backend_qt4" "-I$(THIRDPARTY_DIR)\Qt5port"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing SkinProvider.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0501 -D_WIN32_WINNT=0x0501 -DUNICODE -DWIN32 -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DECLARATIVE_LIB -DLOGOPROVIDER_LIB -DQT_XML_LIB -D_WINDLL "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtDeclarative" "-I.\..\src" "-I$(THIRDPARTY_DIR)\zint\backend_qt4" "-I$(THIRDPARTY_DIR)\Qt5port"</Command>
+    </CustomBuild>
     <CustomBuild Include="..\src\GroupModel.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing GroupModel.h...</Message>
@@ -229,22 +269,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0501 -D_WIN32_WINNT=0x0501 -DUNICODE -DWIN32 -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DECLARATIVE_LIB -DLOGOPROVIDER_LIB -DQT_XML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtDeclarative" "-I.\..\src" "-I$(THIRDPARTY_DIR)\zint\backend_qt4" "-I$(THIRDPARTY_DIR)\Qt5port"</Command>
     </CustomBuild>
     <ClInclude Include="..\src\BarcodeProvider.h" />
-    <ClInclude Include="..\src\SkinProvider.h" />
     <ClInclude Include="..\src\ProviderConstants.h" />
-    <CustomBuild Include="..\src\Skin.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing Skin.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0501 -D_WIN32_WINNT=0x0501 -DUNICODE -DWIN32 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DECLARATIVE_LIB -DLOGOPROVIDER_LIB -DQT_XML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtDeclarative" "-I.\..\src" "-I$(THIRDPARTY_DIR)\zint\backend_qt4" "-I$(THIRDPARTY_DIR)\Qt5port"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing Skin.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0501 -D_WIN32_WINNT=0x0501 -DUNICODE -DWIN32 -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DECLARATIVE_LIB -DLOGOPROVIDER_LIB -DQT_XML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtDeclarative" "-I.\..\src" "-I$(THIRDPARTY_DIR)\zint\backend_qt4" "-I$(THIRDPARTY_DIR)\Qt5port"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing Skin.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0501 -D_WIN32_WINNT=0x0501 -DUNICODE -DWIN32 -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DECLARATIVE_LIB -DLOGOPROVIDER_LIB -DQT_XML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtDeclarative" "-I.\..\src" "-I$(THIRDPARTY_DIR)\zint\backend_qt4" "-I$(THIRDPARTY_DIR)\Qt5port"</Command>
-    </CustomBuild>
     <CustomBuild Include="..\src\ProviderListFilter.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ProviderListFilter.h...</Message>

@@ -58,7 +58,7 @@ FRBase<T>::FRBase(): mFFEngine(mLog)
 	mFFEngine.setCodec(mCodec);
 
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, false);
-	setConfigParameter(CHardwareSDK::FR::WithoutPrinting, CHardware::Values::Auto);
+	setConfigParameter(CHardwareSDK::FR::WithoutPrinting, CHardwareSDK::Values::Auto);
 
 	mOFDFiscalParameters
 		<< CFR::FiscalFields::Cashier
@@ -87,6 +87,7 @@ void FRBase<T>::setInitialData()
 	mNeedCloseSession  = false;
 	mNotPrintingError  = false;
 	mWrongFiscalizationSettings = false;
+	mCashierINNError   = false;
 
 	mEKLZ              = true;
 	mWhiteSpaceZBuffer = -1;
@@ -143,12 +144,24 @@ void FRBase<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 	{
 		QString withoutPrinting = aConfiguration.value(CHardwareSDK::FR::WithoutPrinting).toString();
 
-		if (withoutPrinting != CHardware::Values::Auto)
+		if (withoutPrinting != CHardwareSDK::Values::Auto)
 		{
 			emit configurationChanged();
 
-			checkNotPrinting();
+			if (mConnected && (mInitialized == ERequestStatus::Success))
+			{
+				checkNotPrinting();
+			}
 		}
+	}
+
+	if (aConfiguration.contains(CFiscalSDK::CashierINN))
+	{
+		QString cashierINN = getConfigParameter(CFiscalSDK::CashierINN).toString().simplified();
+		setConfigParameter(CFiscalSDK::CashierINN, cashierINN);
+		mFFEngine.setConfigParameter(CFiscalSDK::CashierINN, cashierINN);
+
+		mCashierINNError = mFFEngine.checkINN(cashierINN, CFR::INN::Person::Natural);
 	}
 
 	if (aConfiguration.contains(CHardwareSDK::FR::DealerTaxSystem)) mFFEngine.setConfigParameter(CHardwareSDK::FR::DealerTaxSystem, getConfigParameter(CHardwareSDK::FR::DealerTaxSystem));
@@ -437,7 +450,7 @@ template <class T>
 bool FRBase<T>::setNotPrintDocument(bool /*aEnabled*/)
 {
 	return !getConfigParameter(CHardwareSDK::FR::CanWithoutPrinting).toBool() ||
-	       (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardware::Values::Auto);
+	       (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardwareSDK::Values::Auto);
 }
 
 //---------------------------------------------------------------------------
@@ -451,7 +464,7 @@ bool FRBase<T>::checkNotPrinting(bool aEnabled)
 		return true;
 	}
 
-	bool notPrintDocument = aEnabled || (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardware::Values::Use);
+	bool notPrintDocument = aEnabled || (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardwareSDK::Values::Use);
 
 	if (!WorkingThreadProxy(&mThread).invokeMethod<bool>(std::bind(&FRBase<T>::setNotPrintDocument, this, notPrintDocument)))
 	{
@@ -782,7 +795,7 @@ bool FRBase<T>::setOFDParametersOnSale(const SUnitData & aUnitData)
 {
 	if (mOFDFiscalParametersOnSale.contains(CFR::FiscalFields::ProviderINN))
 	{
-		QString providerINN = aUnitData.providerINN.simplified().leftJustified(CFR::INNSize::NaturalPerson);
+		QString providerINN = aUnitData.providerINN.simplified().leftJustified(CFR::INN::Person::Natural);
 		mFFEngine.setConfigParameter(CFiscalSDK::ProviderINN, providerINN);
 	}
 
@@ -1003,6 +1016,7 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 	if (mFiscalCollapse)   aStatusCodes.insert(FRStatusCode::Error::FiscalCollapse);
 	if (mNeedCloseSession) aStatusCodes.insert(FRStatusCode::Error::NeedCloseSession);
 	if (mNotPrintingError) aStatusCodes.insert(DeviceStatusCode::Error::Initialization);
+	if (mCashierINNError)  aStatusCodes.insert(FRStatusCode::Error::CashierINN);
 
 	if (mIsOnline)
 	{

@@ -240,7 +240,7 @@ QObjectList Provider::getFields()
 
 	QString currentStep = paymentService->currentStep();
 
-	if (mProvider.processor.type == CMultistage::Type && paymentService)
+	if (mProvider.processor.type == CMultistage::Type)
 	{
 		TProviderFields fields;
 		if (paymentService->loadFieldsForStep(fields))
@@ -401,13 +401,13 @@ QVariantMap PaymentService::calculateLimits(const QString & aAmount)
 
 			amountAll = amountAllLimit1;
 
-			if (com.getMinCharge())
+			if (!qFuzzyIsNull(com.getMinCharge()))
 			{
 				double amountAllLimit2 = aAmount + com.getMinCharge();
 				amountAll = amountAllLimit1 > amountAllLimit2 ? amountAllLimit1 : amountAllLimit2;
 			}
 
-			if (com.getMaxCharge())
+			if (!qFuzzyIsNull(com.getMaxCharge()))
 			{
 				double amountAllLimit3 = aAmount + com.getMaxCharge();
 				amountAll = amountAll > amountAllLimit3 ? amountAllLimit3 : amountAll;

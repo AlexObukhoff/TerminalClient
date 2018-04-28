@@ -72,14 +72,14 @@ Widgets.SceneBase2 {
 
 		// Min
 		Text {
-			font: Utils.ui.font("font.tariff")
-			color: Utils.ui.color("color.tariff.min")
+			font: Skin.ui.font("font.tariff")
+			color: Skin.ui.color("color.tariff.min")
 			text: Utils.locale.tr(QT_TR_NOOP("platru_fill_amount_scene#min_amount")).arg(global.minAmount).arg(Core.environment.terminal.currencyName)
 		}
 
 		Text {
-			font: Utils.ui.font("font.tariff")
-			color: Utils.ui.color("color.tariff.max")
+			font: Skin.ui.font("font.tariff")
+			color: Skin.ui.color("color.tariff.max")
 			text: Utils.locale.tr(QT_TR_NOOP("platru_fill_amount_scene#max_amount")).arg(global.maxAmount).arg(Core.environment.terminal.currencyName)
 		}
 	}

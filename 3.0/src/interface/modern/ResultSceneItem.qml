@@ -11,7 +11,7 @@ Item {
 
 	height: 120
 
-	BorderImage {
+	Widgets.BorderImage2 {
 		anchors.fill: parent
 		border { left: 30; top: 84; right: 84; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
@@ -30,8 +30,8 @@ Item {
 
 				anchors.verticalCenter: parent.verticalCenter
 				width: parent.width - (i.width + spacer.width) - 20
-				font: Utils.ui.font("font.panel.secondary")
-				color: Utils.ui.color("color.panel.primary")
+				font: Skin.ui.font("font.panel.secondary")
+				color: Skin.ui.color("color.panel.primary")
 				wrapMode: Text.WordWrap
 				verticalAlignment: Text.AlignVCenter
 			}

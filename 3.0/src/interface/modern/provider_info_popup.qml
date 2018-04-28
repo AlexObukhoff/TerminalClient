@@ -18,7 +18,7 @@ Item {
 		width: 1211
 		height: 657
 
-		BorderImage {
+		Widgets.BorderImage2 {
 			anchors.fill: parent
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
@@ -51,8 +51,8 @@ Item {
 					width: view.flickArea.width - scroller.width
 					wrapMode: Text.WordWrap
 					horizontalAlignment: Text.AlignHCenter
-					font: Utils.ui.font("font.message.secondary")
-					color: Utils.ui.color("color.message")
+					font: Skin.ui.font("font.message.secondary")
+					color: Skin.ui.color("color.message")
 					lineHeight: 1.2
 				}
 			}
@@ -93,7 +93,7 @@ Item {
 		anchors { horizontalCenter: parent.horizontalCenter; top: messagePanel.bottom; topMargin: 21 }
 		icon: 18
 		text: Utils.locale.tr(QT_TR_NOOP("provider_info_popup#close"))
-		color: Utils.ui.color("color.button.secondary")
+		color: Skin.ui.color("color.button.secondary")
 		texture: "image://ui/button.secondary.normal"
 		texturePressed: "image://ui/button.secondary.pressed"
 

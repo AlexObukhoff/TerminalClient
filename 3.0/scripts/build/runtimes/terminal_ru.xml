@@ -54,6 +54,7 @@
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/cyberchange.dll" target="plugins/plugins/cyberchange.dll"/>
 
 	<!-- Uniteller plugin -->
+	<!-- <option target="user/user/plugins/uniteller.ini" key="PaymentProcessor.ChargeProvider.UnitellerChargeProvider.configuration_singleton/uniteller_runtime_path" value="C:/EFTPOS_3.0" /> -->
 	<!-- <file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/uniteller.dll" target="plugins/plugins/uniteller.dll"/> -->
 
 	<!-- Драйверы, компонент drivers -->

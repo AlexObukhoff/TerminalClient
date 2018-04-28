@@ -51,6 +51,7 @@ namespace FRStatusCode
 			ADD_FR_ERROR(NoMoney,              QCoreApplication::translate("FRStatuses", "#no_money"));
 			ADD_FR_ERROR(WrongDealerTaxSystem, QCoreApplication::translate("FRStatuses", "#wrong_dealer_tax_system"));
 			ADD_FR_ERROR(WrongDealerAgentFlag, QCoreApplication::translate("FRStatuses", "#wrong_dealer_agent_flag"));
+			ADD_FR_ERROR(CashierINN,           QCoreApplication::translate("FRStatuses", "#cashier_inn"));
 		}
 
 		TStatusCodes getFiscalStatusCodes()

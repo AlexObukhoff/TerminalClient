@@ -145,6 +145,8 @@ function onStart() {
 function onStop() {
 	disconnectAll();
 
+	Core.userProperties.set("operator_id", -1);
+
 	// Сбрасываем состояние платёжной логики
 	Core.payment.reset();
 }

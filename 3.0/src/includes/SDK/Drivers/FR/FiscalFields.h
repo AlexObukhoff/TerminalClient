@@ -62,12 +62,12 @@ namespace SDK { namespace Driver { namespace CAllHardware { namespace FiscalFiel
 	const char CounterOfferFiscalTotal[] = "counter_offer_fiscal_total";    // 1217 (Сумма по чеку (БСО) встречным предоставлением).
 
 	// Налоги (на весь чек)
-	const char TaxAmount02[] = "tax_amount_03";    // 1102 (Сумма НДС чека по ставке 18%).
-	const char TaxAmount03[] = "tax_amount_04";    // 1103 (Сумма НДС чека по ставке 10%).
-	const char TaxAmount04[] = "tax_amount_05";    // 1104 (Сумма расчета по чеку с НДС по ставке 0%).
-	const char TaxAmount05[] = "tax_amount_06";    // 1105 (Сумма расчета по чеку без НДС).
-	const char TaxAmount06[] = "tax_amount_07";    // 1106 (Сумма НДС чека по расчетной ставке 18/118).
-	const char TaxAmount07[] = "tax_amount_08";    // 1107 (Сумма НДС чека по расчетной ставке 10/110).
+	const char TaxAmount02[] = "tax_amount_02";    // 1102 (Сумма НДС чека по ставке 18%).
+	const char TaxAmount03[] = "tax_amount_03";    // 1103 (Сумма НДС чека по ставке 10%).
+	const char TaxAmount04[] = "tax_amount_04";    // 1104 (Сумма расчета по чеку с НДС по ставке 0%).
+	const char TaxAmount05[] = "tax_amount_05";    // 1105 (Сумма расчета по чеку без НДС).
+	const char TaxAmount06[] = "tax_amount_06";    // 1106 (Сумма НДС чека по расчетной ставке 18/118).
+	const char TaxAmount07[] = "tax_amount_07";    // 1107 (Сумма НДС чека по расчетной ставке 10/110).
 
 }}}}
 

@@ -50,17 +50,6 @@ namespace CHardware
 		const char CustomKZT[] = "CP866 (Kazakhstan)";
 	}
 
-	/// Варинатны использования настроек.
-	namespace Values
-	{
-		const char Use[] = "use";
-		const char NotUse[] = "not use";
-		const char NoChange[] = "no change";
-		const char Auto[] = "auto";
-		const char More[] = "more";
-		const char Less[] = "less";
-	}
-
 	/// Константы порта.
 	namespace Port
 	{

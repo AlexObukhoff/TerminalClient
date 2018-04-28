@@ -19,7 +19,7 @@ Item {
 		height: 657
 		clip: true
 
-		BorderImage {
+		Widgets.BorderImage2 {
 			anchors.fill: parent
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
@@ -37,8 +37,8 @@ Item {
 				id: message
 
 				anchors { horizontalCenter: parent.horizontalCenter }
-				font: Utils.ui.font("font.title")
-				color: Utils.ui.color("color.title")
+				font: Skin.ui.font("font.title")
+				color: Skin.ui.color("color.title")
 			}
 
 			Grid {
@@ -50,7 +50,7 @@ Item {
 					id: providerRepeater
 
 					// Логотип/название
-					delegate: Image {
+					delegate: Widgets.Image2 {
 						source: "image://ui/logoprovider/" + modelData.id + "/button.operator.normal/" + modelData.name
 
 						MouseArea {
@@ -87,7 +87,7 @@ Item {
 	Widgets.Button {
 		icon: 13
 		text: Utils.locale.tr(QT_TR_NOOP("provider_selector_popup#close"))
-		color: Utils.ui.color("color.button.primary")
+		color: Skin.ui.color("color.button.primary")
 		texture: "image://ui/button.notice.normal"
 		texturePressed: "image://ui/button.notice.pressed"
 

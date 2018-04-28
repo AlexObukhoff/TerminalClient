@@ -31,9 +31,6 @@ CCTalkCoinAcceptorBase::CCTalkCoinAcceptorBase() : mEventIndex(0), mEnabled(fals
 	mDeviceName = CCCTalk::DefaultDeviceName;
 	mMaxBadAnswers = 5;
 
-	//TODO: надо для всех монетников
-	setConfigParameter(CHardware::CashAcceptor::DisablingTimeout, CCCTalk::DisablingTimeout);
-	setConfigParameter(CHardware::CashAcceptor::StackedFilter, true);
 	mModels = getModelList();
 	mCurrency = Currency::NoCurrency;
 }
@@ -138,20 +135,6 @@ TResult CCTalkCoinAcceptorBase::execCommand(const QByteArray & aCommand, const Q
 	}
 
 	return CommandResult::OK;
-}
-
-//---------------------------------------------------------------------------
-bool CCTalkCoinAcceptorBase::stack()
-{
-	// у монетоприемника нет стека
-	return true;
-}
-
-//---------------------------------------------------------------------------
-bool CCTalkCoinAcceptorBase::reject()
-{
-	// у монетоприемника нет режекта
-	return true;
 }
 
 //---------------------------------------------------------------------------

@@ -54,31 +54,19 @@ public slots:
 class Properties : public QObject
 {
 	Q_OBJECT
+	Q_PROPERTY(QVariantMap clone READ getAll CONSTANT)
 
 public:
 	Properties(QVariantMap & aProperties): mProperties(aProperties) {}
 
 public slots:
-	QVariant get(const QString & aName)
-	{
-		if (has(aName))
-		{
-			return mProperties[aName];
-		}
+	QVariant get(const QString & aName);
 
-		return QVariant();
-	}
+	void set(const QString & aName, const QVariant & aValue);
 
-	void set(const QString & aName, const QVariant & aValue)
-	{
-		mProperties[aName] = aValue;
-		emit updated();
-	}
+	bool has(const QString & aName);
 
-	bool has(const QString & aName)
-	{
-		return mProperties.contains(aName);
-	}
+	QVariantMap getAll() const;
 
 signals:
 	void updated();
@@ -185,5 +173,6 @@ private:
 };
 
 //------------------------------------------------------------------------------
-}}} // SDK::PaymentProcessor::SDK
+}}} // SDK::PaymentProcessor
+
 

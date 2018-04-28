@@ -127,6 +127,7 @@
     <ClInclude Include="..\src\CCTalk\CCTalkCurrencyData.h" />
     <ClInclude Include="..\src\CCTalk\CCTalkModelData.h" />
     <ClInclude Include="..\src\CCTalk\CCTalkCoinAcceptorConstants.h" />
+    <ClInclude Include="..\src\CoinAcceptorBase.h" />
     <ClInclude Include="..\src\NPSTalk\NPSTalkCoinAcceptor.h" />
     <ClInclude Include="..\src\CCTalk\ComplexEnable.h" />
     <ClInclude Include="..\src\NPSTalk\NPSTalkCoinAcceptorConstants.h" />

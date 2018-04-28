@@ -111,6 +111,11 @@
         <source>FRParameters#ejector_parameters</source>
         <translation>Параметры эжектора</translation>
     </message>
+    <message>
+        <location filename="../Parameters/FRPluginParameterTranslations.h" line="16"/>
+        <source>FRParameters#printer_model</source>
+        <translation>Модель принтера</translation>
+    </message>
 </context>
 <context>
     <name>FRStatuses</name>
@@ -215,6 +220,11 @@
         <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="51"/>
         <source>#no_money</source>
         <translation>не хватает денег</translation>
+    </message>
+    <message>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="54"/>
+        <source>#cashier_inn</source>
+        <translation>Неправильный ИНН кассира</translation>
     </message>
     <message>
         <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="31"/>

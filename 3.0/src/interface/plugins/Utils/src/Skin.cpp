@@ -23,64 +23,28 @@ namespace CSkin
 }
 
 //------------------------------------------------------------------------------
-Skin::Skin(const QString & aInterfacePath, const QString & aUserPath)
-	: mName(CSkin::DefaultSkinName),
-	  mInterfacePath(aInterfacePath)
+Skin::Skin(const QString & aInterfacePath, const QString & aSkinName)
+	: mName(aSkinName), mInterfacePath(aInterfacePath)
 	  
 {
 	auto skinExist = [&](const QString & aName) -> bool
 	{
-		return QFile::exists(skinConfigFileName(aName));
+		return QFile::exists(fullPath(aName));
 	};
-
-	auto getSkinName = [](const QString & aIniFile) -> QString
-	{
-		QSettings settings(aIniFile, QSettings::IniFormat);
-		settings.setIniCodec("UTF-8");
-		settings.beginGroup("ui");
-
-		return settings.value("skin", "").toString();
-	};
-
-	// Получаем имя скина
-	QString userSkinName = getSkinName(aUserPath + QDir::separator() + "user.ini");
-	QString systemSkinName = getSkinName(mInterfacePath + QDir::separator() + "interface.ini");
-
+	
 	// Системный(по умолчанию) скин загружаем всегда
-	mName = skinExist(systemSkinName) ? systemSkinName : CSkin::DefaultSkinName;
+	mName = skinExist(mName) ? mName : CSkin::DefaultSkinName;
 
 	loadSkinConfig();
 
-	if (skinExist(userSkinName))
-	{
-		mName = userSkinName;
-
-		if (!loadSkinConfig(true))
-		{
-			mName = systemSkinName;
-		}
-	}
-
-	Log(Log::Normal) << QString("SET SKIN '%1'.").arg(mName);
-
-	// Зарегистрируем шрифты всех скинов
-	QDirIterator dirEntry(QString("%1/skins").arg(mInterfacePath), QString("*.ttf*;*.otf").split(";"), QDir::Files, QDirIterator::Subdirectories);
-	while(dirEntry.hasNext())
-	{
-		dirEntry.next();
-		
-		if (QFontDatabase::addApplicationFont(dirEntry.filePath()) == -1)
-		{
-			Log(Log::Error) << QString("Failed to add font '%1'.").arg(dirEntry.fileName());
-		}
-	}
+	Log(Log::Normal) << QString("LOAD SKIN '%1'.").arg(mName);
 }
 
 //------------------------------------------------------------------------------
 bool Skin::loadSkinConfig(bool aMerge)
 {
 	// Загружаем настройки интерфейса.
-	QFile json(skinConfigFileName(mName));
+	QFile json(fullPath(mName));
 
 	if (json.open(QIODevice::ReadOnly))
 	{
@@ -95,7 +59,7 @@ bool Skin::loadSkinConfig(bool aMerge)
 			{
 				foreach(QString key, config.keys())
 				{
-					mConfig.insert(key, config.value(key));
+					mConfig.insert(key.toLower(), config.value(key));
 				}
 			}
 			else
@@ -107,12 +71,12 @@ bool Skin::loadSkinConfig(bool aMerge)
 		}
 		else
 		{
-			Log(Log::Error) << QString("Skin: failed to parse skin config '%1(%2)': %3.").arg(skinConfigFileName(mName)).arg(error.offset).arg(error.errorString());
+			Log(Log::Error) << QString("Skin: failed to parse skin config '%1(%2)': %3.").arg(fullPath(mName)).arg(error.offset).arg(error.errorString());
 		}
 	}
 	else
 	{
-		Log(Log::Error) << QString("Skin: failed to open skin config file '%1'.").arg(skinConfigFileName(mName));
+		Log(Log::Error) << QString("Skin: failed to open skin config file '%1'.").arg(fullPath(mName));
 	}
 
 	return false;
@@ -135,7 +99,7 @@ QFont Skin::font(const QString & aFontName) const
 		return f;
 	}
 
-	Log(Log::Error) << QString("Failed to load font '%1'.").arg(aFontName);
+	Log(Log::Debug) << QString("Failed to load font '%1'.").arg(aFontName);
 	return QFont();
 }
 
@@ -149,7 +113,7 @@ QString Skin::color(const QString & aColorName) const
 	}
 	else
 	{
-		Log(Log::Error) << QString("Failed to load color '%1'.").arg(aColorName);
+		Log(Log::Debug) << QString("Failed to load color '%1'.").arg(aColorName);
 		return ("#FF00FF");
 	} 
 }
@@ -167,7 +131,7 @@ QVariantMap Skin::getConfiguration() const
 }
 
 //------------------------------------------------------------------------------
-QString Skin::skinConfigFileName(const QString & aName) const
+QString Skin::fullPath(const QString & aName) const
 {
 	return mInterfacePath + "/skins/" + aName + "/config.json";
 }

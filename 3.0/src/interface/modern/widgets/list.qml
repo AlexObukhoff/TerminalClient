@@ -68,7 +68,7 @@ Item {
 			width: scrollBar.visible ? 1131 : 1222
 			model: em
 
-			delegate: BorderImage {
+			delegate: BorderImage2 {
 				width: parent.width
 				height: rootItem.__doubleHeightMode ? sourceSize.width * 2 : sourceSize.width
 				border { left: 18; top: 100; right: 100; bottom: 18 }
@@ -83,8 +83,8 @@ Item {
 					text: model.name
 					verticalAlignment: Text.AlignVCenter
 					wrapMode: Text.Wrap
-					color: model.checked ? Utils.ui.color("color.list.check") : Utils.ui.color("color.list.normal")
-					font: rootItem.__halfFontHeightMode ? Utils.ui.font("font.enum") : Utils.ui.font("font.panel.title")
+					color: model.checked ? Skin.ui.color("color.list.check") : Skin.ui.color("color.list.normal")
+					font: rootItem.__halfFontHeightMode ? Skin.ui.font("font.enum") : Skin.ui.font("font.panel.title")
 					elide: Text.ElideRight
 					maximumLineCount: 3
 				}

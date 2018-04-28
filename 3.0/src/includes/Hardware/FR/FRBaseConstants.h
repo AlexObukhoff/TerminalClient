@@ -103,17 +103,30 @@ namespace CFR
 	/// Количество миллисекунд в сутках.
 	const int MSecsInDay = SecsInDay * 1000;
 
-	/// Признак способа расчета по умолчанию для платежей (не интернет-магазинов) - Полный расчет.
+	/// Признак способа расчета по умолчанию для платежей (тег 1214) (не интернет-магазинов) - Полный расчет.
 	const SDK::Driver::EPayOffSubjectMethodTypes::Enum PayOffSubjectMethodType = SDK::Driver::EPayOffSubjectMethodTypes::Full;
 
-	/// Размеры ИНН.
-	namespace INNSize
+	/// ИНН.
+	namespace INN
 	{
-		/// Для юридического лица.
-		const int LegalPerson = 10;
+		/// Лицо и его размер.
+		namespace Person
+		{
+			const int Unknown =  0;    /// Неизвестное.
+			const int Legal   = 10;    /// Юридическое.
+			const int Natural = 12;    /// Физическое.
+		}
 
-		/// Для физического лица.
-		const int NaturalPerson = 12;
+		/// Коэффициенты контрольных чисел (КЧ)
+		namespace Factors
+		{
+			const int Legal[]    = {2, 4, 10,  3,  5, 9, 4, 6, 8};          /// Коэффициенты КЧ для ИНН юр. лица.
+			const int Natural1[] = {7, 2,  4, 10,  3, 5, 9, 4, 6, 8};       /// Коэффициенты 1-го КЧ для ИНН физ. лица.
+			const int Natural2[] = {3, 7,  2,  4, 10, 3, 5, 9, 4, 6, 8};    /// Коэффициенты 2-го КЧ для ИНН физ. лица.
+		}
+
+		/// Делитель для вычисления проверочного числа.
+		const int Divider = 11;
 	}
 
 	/// Константные данные ФФД.
@@ -421,7 +434,7 @@ namespace CFR
 	class COperationModeData: public CSpecification<char, int>
 	{
 	public:
-		COperationModeData()
+		COperationModeData() : TrashMask('\x40')
 		{
 			#define ADD_OPERATION_MODE(aName) append(SDK::Driver::EOperationModes::aName, CFR::FiscalFields::aName##Mode)
 
@@ -432,6 +445,9 @@ namespace CFR
 			ADD_OPERATION_MODE(FixedReporting);
 			ADD_OPERATION_MODE(Internet);
 		}
+
+		/// Константа для очистки режимов работы от мусора из ФН (ранее это был призак банковского агента).
+		const char TrashMask;
 	};
 
 	static COperationModeData OperationModeData;

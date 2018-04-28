@@ -26,13 +26,13 @@ Widgets.SceneBase2 {
 	// Название сцены
 	Text {
 		anchors { left: parent.left; leftMargin: 41; top: parent.top; topMargin: 230 }
-		font: Utils.ui.font("font.title")
-		color: Utils.ui.color("color.main.primary")
+		font: Skin.ui.font("font.title")
+		color: Skin.ui.color("color.main.primary")
 		text: Utils.locale.tr(QT_TR_NOOP("pay_scene#scene_caption"))
 	}
 
 	// Лимиты вноса
-	BorderImage {
+	Widgets.BorderImage2 {
 		anchors { right: parent.right; rightMargin: 30; top: parent.top; topMargin: 313 }
 		border { left: 104; top: 100; right: 18; bottom: 18 }
 		source: "image://ui/comment.left"
@@ -44,8 +44,8 @@ Widgets.SceneBase2 {
 
 			anchors { left: parent.left; leftMargin: 40; right: parent.right; rightMargin: 40; verticalCenter: parent.verticalCenter }
 			wrapMode: Text.WordWrap
-			font: Utils.ui.font("font.tooltip")
-			color: Utils.ui.color("color.tooltip.simple")
+			font: Skin.ui.font("font.tooltip")
+			color: Skin.ui.color("color.tooltip.simple")
 		}
 	}
 
@@ -55,10 +55,10 @@ Widgets.SceneBase2 {
 
 		// Внесено
 		PaySceneItem {
-			amount: {"color": Utils.ui.color("color.entry.primary"), "text": Number(global.acceptedAmount).toFixed(2)}
-			currency.color: Utils.ui.color("color.entry.secondary")
+			amount: {"color": Skin.ui.color("color.entry.primary"), "text": Number(global.acceptedAmount).toFixed(2)}
+			currency.color: Skin.ui.color("color.entry.secondary")
 			currency.text: Core.environment.terminal.currencyName
-			description.color: Utils.ui.color("color.entry.secondary")
+			description.color: Skin.ui.color("color.entry.secondary")
 			description.text: Utils.locale.tr(QT_TR_NOOP("pay_scene#accepted_amount"))
 
 			anchors { left: parent.left; right: parent.right }
@@ -68,10 +68,10 @@ Widgets.SceneBase2 {
 
 		// Остаток
 		PaySceneItem {
-			amount: {"color": Utils.ui.color("color.panel.primary"), "text": Number(global.change).toFixed(2)}
-			currency.color: Utils.ui.color("color.panel.primary")
+			amount: {"color": Skin.ui.color("color.panel.primary"), "text": Number(global.change).toFixed(2)}
+			currency.color: Skin.ui.color("color.panel.primary")
 			currency.text: Core.environment.terminal.currencyName
-			description.color: Utils.ui.color("color.panel.primary")
+			description.color: Skin.ui.color("color.panel.primary")
 			description.text: Utils.locale.tr(QT_TR_NOOP("pay_scene#change"))
 
 			anchors { left: parent.left; right: parent.right }
@@ -81,10 +81,10 @@ Widgets.SceneBase2 {
 
 		// К оплате
 		PaySceneItem {
-			amount: { "color": Utils.ui.color("color.panel.primary"), "text": Number(global.requiredAmount).toFixed(2) }
-			currency.color: Utils.ui.color("color.panel.secondary")
+			amount: { "color": Skin.ui.color("color.panel.primary"), "text": Number(global.requiredAmount).toFixed(2) }
+			currency.color: Skin.ui.color("color.panel.secondary")
 			currency.text: Core.environment.terminal.currencyName
-			description.color: Utils.ui.color("color.panel.tertiary")
+			description.color: Skin.ui.color("color.panel.tertiary")
 			description.text: Utils.locale.tr(QT_TR_NOOP("pay_scene#required_amount"))
 
 			anchors { left: parent.left; right: parent.right }
@@ -94,11 +94,11 @@ Widgets.SceneBase2 {
 
 		// К зачислению
 		PaySceneItem {
-			amount: {"color": Utils.ui.color("color.panel.primary"), "text": Number(global.transferAmount).toFixed(2)}
-			currency.color: Utils.ui.color("color.panel.secondary")
+			amount: {"color": Skin.ui.color("color.panel.primary"), "text": Number(global.transferAmount).toFixed(2)}
+			currency.color: Skin.ui.color("color.panel.secondary")
 			currency.text: Core.environment.terminal.currencyName
 			description.text: Utils.locale.tr(QT_TR_NOOP("pay_scene#transfer_amount"))
-			description.color: Utils.ui.color("color.panel.tertiary")
+			description.color: Skin.ui.color("color.panel.tertiary")
 			source: "image://ui/panel.payment"
 
 			anchors { left: parent.left; right: parent.right }
@@ -107,11 +107,11 @@ Widgets.SceneBase2 {
 
 		// Текущаяя комиссия
 		PaySceneItem {
-			amount: {"color": Utils.ui.color("color.panel.primary"), "text": Number(global.minAmount == global.maxAmount ? global.requiredAmount - global.maxAmount : global.fee).toFixed(2)}
+			amount: {"color": Skin.ui.color("color.panel.primary"), "text": Number(global.minAmount == global.maxAmount ? global.requiredAmount - global.maxAmount : global.fee).toFixed(2)}
 			currency.text: Core.environment.terminal.currencyName
-			currency.color: Utils.ui.color("color.panel.secondary")
+			currency.color: Skin.ui.color("color.panel.secondary")
 			description.text: Utils.locale.tr(global.minAmount == global.maxAmount ? QT_TR_NOOP("pay_scene#fee_amount_all") : QT_TR_NOOP("pay_scene#fee_amount"))
-			description.color: Utils.ui.color("color.panel.tertiary")
+			description.color: Skin.ui.color("color.panel.tertiary")
 
 			anchors { left: parent.left; right: parent.right }
 			source: "image://ui/panel.commission"
@@ -140,13 +140,13 @@ Widgets.SceneBase2 {
 					id: feeLimits
 
 					anchors.left: parent.left
-					color: wrapper.ListView.isCurrentItem ? Utils.ui.color("color.main.primary") : Utils.ui.color("color.main.secondary")
-					font: Utils.ui.font("font.main")
+					color: wrapper.ListView.isCurrentItem ? Skin.ui.color("color.main.primary") : Skin.ui.color("color.main.secondary")
+					font: Skin.ui.font("font.main")
 					wrapMode: Text.WordWrap
 					text: limits
 				}
 
-				Image {
+				Widgets.Image2 {
 					anchors { left: feeLimits.right; leftMargin: 5; right: feeValue.left; rightMargin: 5 }
 					visible: !!feeLimits.text
 					//width: feeList.width - feeValue.width - feeLimits.width - 8
@@ -158,8 +158,8 @@ Widgets.SceneBase2 {
 					id: feeValue
 
 					anchors.right: parent.right
-					color: wrapper.ListView.isCurrentItem ? Utils.ui.color("color.main.primary") : Utils.ui.color("color.main.secondary")
-					font: Utils.ui.font("font.main")
+					color: wrapper.ListView.isCurrentItem ? Skin.ui.color("color.main.primary") : Skin.ui.color("color.main.secondary")
+					font: Skin.ui.font("font.main")
 					text: value
 				}
 			}
@@ -167,7 +167,7 @@ Widgets.SceneBase2 {
 	}
 
 	// Кнопка, открывающая окно с полным списком комиссий
-	BorderImage {
+	Widgets.BorderImage2 {
 		anchors { right: parent.right; rightMargin: 30; top: parent.top; topMargin: 552 }
 		border { left: 104; top: 100; right: 18; bottom: 18 }
 		source: handler.pressed ? "image://ui/comment.left.pressed" : "image://ui/comment.left.button"
@@ -178,8 +178,8 @@ Widgets.SceneBase2 {
 			verticalAlignment: Text.AlignVCenter
 			horizontalAlignment: Text.AlignHCenter
 			wrapMode: Text.WordWrap
-			font: Utils.ui.font("font.tooltip.attention")
-			color: Utils.ui.color("color.tooltip.button")
+			font: Skin.ui.font("font.tooltip.attention")
+			color: Skin.ui.color("color.tooltip.button")
 			text: Utils.locale.tr(QT_TR_NOOP("pay_scene#about_fee"))
 		}
 

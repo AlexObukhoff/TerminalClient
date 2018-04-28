@@ -18,7 +18,7 @@ Widgets.SceneBase {
 	rightButtonBackground: rightButton.pressed ? "image://ui/button.secondary.pressed" : "image://ui/button.secondary.normal"*/
 	topPanelEnabled: false
 
-	BorderImage {
+	Widgets.BorderImage2 {
 		anchors { left: sceneButton.right; right: parent.right; rightMargin: 30; verticalCenter: sceneButton.verticalCenter }
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
@@ -28,7 +28,7 @@ Widgets.SceneBase {
 			anchors { left: parent.left; leftMargin: 10 }
 			height: parent.height
 
-			Image {
+			Widgets.Image2 {
 				id: logo
 
 				anchors.verticalCenter: parent.verticalCenter
@@ -44,8 +44,8 @@ Widgets.SceneBase {
 			Text {
 				visible: global.currentIndex == 0
 				anchors.verticalCenter: parent.verticalCenter
-				font: Utils.ui.font("font.button")
-				color: Utils.ui.color("color.title")
+				font: Skin.ui.font("font.button")
+				color: Skin.ui.color("color.title")
 				text: Utils.locale.tr(QT_TR_NOOP("platru_login_scene#scene_caption"))
 			}
 
@@ -62,15 +62,15 @@ Widgets.SceneBase {
 					anchors { verticalCenter: parent.verticalCenter }
 
 					Text {
-						color: Utils.ui.color("color.subtitle")
+						color: Skin.ui.color("color.subtitle")
 						text: Utils.locale.tr(QT_TR_NOOP("platru_login_scene#phone_number"))
-						font: Utils.ui.font("font.secondary")
+						font: Skin.ui.font("font.secondary")
 					}
 
 					Text {
-						color: Utils.ui.color("color.title")
+						color: Skin.ui.color("color.title")
 						text: global.user
-						font: Utils.ui.font("font.title")
+						font: Skin.ui.font("font.title")
 					}
 				}
 			}
@@ -142,7 +142,7 @@ Widgets.SceneBase {
 		width: 407
 		icon: 19
 		text: Utils.locale.tr(QT_TR_NOOP("platru_login_scene#topup"))
-		color: Utils.ui.color("color.button.primary")
+		color: Skin.ui.color("color.button.primary")
 		texture: "image://ui/button.paybook.normal"
 		texturePressed: "image://ui/button.paybook.pressed"
 		onClicked: {
@@ -166,7 +166,7 @@ Widgets.SceneBase {
 
 		icon: 16
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#back"))
-		color: Utils.ui.color("color.button.secondary")
+		color: Skin.ui.color("color.button.secondary")
 		texture: "image://ui/button.secondary.normal"
 		texturePressed: "image://ui/button.secondary.pressed"
 
@@ -191,7 +191,7 @@ Widgets.SceneBase {
 		icon: 17
 		enabled: global.currentEditor === null ? false : global.currentEditor.acceptable
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#forward"))
-		color: Utils.ui.color("color.button")
+		color: Skin.ui.color("color.button")
 		texture: "image://ui/button.secondary.normal"
 		texturePressed: "image://ui/button.secondary.pressed"
 

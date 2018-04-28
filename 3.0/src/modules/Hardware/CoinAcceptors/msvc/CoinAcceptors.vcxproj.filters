@@ -15,6 +15,9 @@
     <Filter Include="NPSTalk">
       <UniqueIdentifier>{280aaddf-704e-4d50-bc15-85a5af346b31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{deb13fcd-8568-41da-88c7-4a130193e74a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\CCTalk\CCTalkCoinAcceptorBase.cpp">
@@ -69,6 +72,9 @@
     </ClInclude>
     <ClInclude Include="..\src\CCTalk\CCTalkCoinAcceptorConstants.h">
       <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CoinAcceptorBase.h">
+      <Filter>Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

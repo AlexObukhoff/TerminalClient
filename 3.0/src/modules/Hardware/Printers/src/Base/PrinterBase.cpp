@@ -251,7 +251,7 @@ bool PrinterBase<T>::processReceipt(const QStringList & aReceipt, bool aProcessi
 	}
 
 	if (getConfigParameter(CHardwareSDK::FR::CanWithoutPrinting).toBool() &&
-	   (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardware::Values::Use))
+	   (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardwareSDK::Values::Use))
 	{
 		toLog(LogLevel::Normal, "Receipt has not been printed:\n" + aReceipt.join("\n"));
 		return true;
@@ -352,7 +352,7 @@ bool PrinterBase<T>::receiptProcessing()
 	bool feeding = feed();
 	bool cutting = !getConfigParameter(CHardware::Printer::NeedCutting).toBool() || cut();
 	bool presenting = getConfigParameter(CHardware::Printer::Commands::Presentation).toByteArray().isEmpty() ||
-	                 (getConfigParameter(CHardware::Printer::Settings::Loop) != CHardware::Values::Use) ||
+	                 (getConfigParameter(CHardware::Printer::Settings::Loop) != CHardwareSDK::Values::Use) ||
 	                 !getConfigParameter(CHardware::Printer::Settings::PresentationLength).toInt() || present();
 
 	return feeding && cutting && presenting;
@@ -579,12 +579,12 @@ void PrinterBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 		aStatusCodes -= availableErrors;
 	}
 
-	if (containsConfigParameter(CHardware::Printer::Settings::PaperJamSensor) && (getConfigParameter(CHardware::Printer::Settings::PaperJamSensor) == CHardware::Values::NotUse))
+	if (containsConfigParameter(CHardware::Printer::Settings::PaperJamSensor) && (getConfigParameter(CHardware::Printer::Settings::PaperJamSensor) == CHardwareSDK::Values::NotUse))
 	{
 		aStatusCodes.remove(Error::PaperJam);
 	}
 
-	if (containsConfigParameter(CHardware::Printer::Settings::RemotePaperSensor) && (getConfigParameter(CHardware::Printer::Settings::RemotePaperSensor) == CHardware::Values::NotUse))
+	if (containsConfigParameter(CHardware::Printer::Settings::RemotePaperSensor) && (getConfigParameter(CHardware::Printer::Settings::RemotePaperSensor) == CHardwareSDK::Values::NotUse))
 	{
 		aStatusCodes.remove(Warning::PaperNearEnd);
 	}

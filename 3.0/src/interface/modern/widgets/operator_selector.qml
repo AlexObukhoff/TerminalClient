@@ -64,7 +64,7 @@ Item {
 			height: 1
 		}
 
-		BorderImage {
+		BorderImage2 {
 			width: 1097
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
@@ -84,14 +84,14 @@ Item {
 					width: logoGroup.width
 
 					// Подложка для иконки корневой группы
-					Image {
+					Image2 {
 						visible: logoGroup.sourceSize.width
 						anchors.left: parent.left
 						anchors.verticalCenter: parent.verticalCenter
 						source: "image://ui/panel.iconsback." + Core.graphics.ui["icon_set"]
 					}
 					// Иконка корневой группы
-					Image {
+					Image2 {
 						id: logoGroup
 
 						anchors.left: parent.left
@@ -111,8 +111,8 @@ Item {
 					width: logoGroup.status == Image.Error ? parent.width : 800
 					anchors.verticalCenter: parent.verticalCenter
 					horizontalAlignment: logoGroup.status == Image.Error ? Text.AlignHCenter : Text.AlignLeft
-					font: Utils.ui.font("font.panel.title")
-					color: Utils.ui.color("color.title")
+					font: Skin.ui.font("font.panel.title")
+					color: Skin.ui.color("color.title")
 					wrapMode: Text.WordWrap
 				}
 			}
@@ -166,8 +166,8 @@ Item {
 			Text {
 				anchors { verticalCenter: separator.verticalCenter; right: separator.left; rightMargin: 40 }
 				text: Utils.locale.tr(QT_TR_NOOP("operator_selector#page"))
-				font: Utils.ui.font("font.main.accent")
-				color: Utils.ui.color("color.main.secondary")
+				font: Skin.ui.font("font.main.accent")
+				color: Skin.ui.color("color.main.secondary")
 			}
 
 			// текущая
@@ -175,12 +175,12 @@ Item {
 				anchors { verticalCenter: separator.verticalCenter; right: separator.left }
 				visible: pageModel.count > 1
 				text: rootItem.__currentPage + 1
-				font: Utils.ui.font("font.main.accent")
-				color: Utils.ui.color("color.main.primary")
+				font: Skin.ui.font("font.main.accent")
+				color: Skin.ui.color("color.main.primary")
 			}
 
 			// разделитель
-			Image {
+			Image2 {
 				id: separator
 
 				anchors.verticalCenter: parent.verticalCenter
@@ -193,8 +193,8 @@ Item {
 				anchors { verticalCenter: separator.verticalCenter; left: separator.right }
 				visible: pageModel.count > 1
 				text: pageModel.count
-				font: Utils.ui.font("font.main.accent")
-				color: Utils.ui.color("color.main.primary")
+				font: Skin.ui.font("font.main.accent")
+				color: Skin.ui.color("color.main.primary")
 			}
 		}
 	}
@@ -206,7 +206,7 @@ Item {
 		width: 407
 		icon: 6
 		text: Utils.locale.tr(QT_TR_NOOP("operator_selector#search"))
-		color: Utils.ui.color("color.button.primary")
+		color: Skin.ui.color("color.button.primary")
 		texture: "image://ui/button.primary.normal"
 		texturePressed: "image://ui/button.primary.pressed"
 		onClicked: rootItem.search()
@@ -217,7 +217,7 @@ Item {
 
 		icon: 16
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#back"))
-		color: Utils.ui.color("color.button.secondary")
+		color: Skin.ui.color("color.button.secondary")
 		texture: "image://ui/button.secondary.normal"
 		texturePressed: "image://ui/button.secondary.pressed"
 
@@ -232,7 +232,7 @@ Item {
 		icon: 17
 		enabled: !rootItem.atYEnd
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#forward"))
-		color: Utils.ui.color("color.button")
+		color: Skin.ui.color("color.button")
 		texture: "image://ui/button.secondary.normal"
 		texturePressed: "image://ui/button.secondary.pressed"
 

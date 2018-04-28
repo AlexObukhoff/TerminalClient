@@ -27,7 +27,7 @@ Item {
 			width: rootItem.cellWidth
 			height: rootItem.cellHeight
 
-			BorderImage {
+			BorderImage2 {
 				id: image
 
 				anchors.fill: parent
@@ -38,7 +38,7 @@ Item {
 					anchors { horizontalCenter: parent.horizontalCenter; top: parent.top; topMargin: 9 }
 
 					// Лого группы
-					Image {
+					Image2 {
 						id: logo
 
 						anchors.horizontalCenter: parent.horizontalCenter
@@ -56,8 +56,8 @@ Item {
 						wrapMode: Text.WordWrap
 						horizontalAlignment: Text.AlignHCenter
 						verticalAlignment: Text.AlignVCenter
-						font: Utils.ui.font(rootItem.font)
-						color: Utils.ui.color("color.group")
+						font: Skin.ui.font(rootItem.font)
+						color: Skin.ui.color("color.group")
 
 						text: Utils.locale.tr("root_groups#" + id) === ("root_groups#" + id) ? name : Utils.locale.tr("root_groups#" + id);
 					}
@@ -89,7 +89,7 @@ Item {
 
 			anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 8 }
 			visible: !categoryView.atXBeginning
-			background: Image {
+			background: Image2 {
 				source: back.pressed ? "image://ui/scroll.left.pressed" : "image://ui/scroll.left.normal"
 			}
 			onClicked: categoryView.decrementCurrentIndex()
@@ -127,7 +127,7 @@ Item {
 
 			anchors { verticalCenter: parent.verticalCenter; right: parent.right; rightMargin: 8 }
 			visible: !categoryView.atXEnd
-			background: Image {
+			background: Image2 {
 				source: fwd.pressed ? "image://ui/scroll.right.pressed" : "image://ui/scroll.right.normal"
 			}
 			onClicked: categoryView.incrementCurrentIndex()

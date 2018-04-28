@@ -22,7 +22,7 @@ FocusScope {
 	Item {
 		anchors.fill: parent
 
-		BorderImage {
+		BorderImage2 {
 			anchors.fill: parent
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
@@ -52,7 +52,7 @@ FocusScope {
 				preferredWidth: view.flickArea.width
 				preferredHeight: view.flickArea.height
 				transformOrigin: Item.TopLeft
-				backgroundColor:  Utils.ui.color("color.message.background")
+				backgroundColor:  Skin.ui.color("color.message.background")
 
 				onLoadFinished: if (html.indexOf("%SKIN_DIR%") !== -1) { html = html.replace("%SKIN_DIR%", Core.environment.terminal.skinPath) }
 			}

@@ -23,14 +23,14 @@ TParameterList defaultParameters(const QString & aModel)
 //------------------------------------------------------------------------------
 SPluginParameter addSensor(const QString & aName, const QString & aTranslation)
 {
-	return SPluginParameter(aName, false, aTranslation, QString(), CHardware::Values::Auto, QStringList() << CHardware::Values::Use << CHardware::Values::NotUse, false);
+	return SPluginParameter(aName, false, aTranslation, QString(), CHardwareSDK::Values::Auto, QStringList() << CHardwareSDK::Values::Use << CHardwareSDK::Values::NotUse, false);
 }
 
 //------------------------------------------------------------------------------
 SPluginParameter addSensorAction(const QString & aName, const QString & aTranslation)
 {
-	return SPluginParameter(aName, false, aTranslation, QString(), CHardware::Values::NotUse, QStringList()
-		<< CHardware::Values::NotUse
+	return SPluginParameter(aName, false, aTranslation, QString(), CHardwareSDK::Values::NotUse, QStringList()
+		<< CHardwareSDK::Values::NotUse
 		<< CHardware::Watchdog::Sensor::ActionValue::LockTerminal
 		<< CHardware::Watchdog::Sensor::ActionValue::EnterServiceMenu, false);
 }

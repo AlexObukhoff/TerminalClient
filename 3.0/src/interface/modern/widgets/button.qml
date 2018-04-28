@@ -4,7 +4,7 @@ import QtQuick 2.2
 import "../scenario/constants.js" 1.0 as Scenario
 import "../plugins"
 
-BorderImage {
+BorderImage2 {
 	id: rootItem
 
 	// Путь к фону кнопки
@@ -44,7 +44,7 @@ BorderImage {
 		onClicked: { connections.target = null; rootItem.clicked() }
 	}
 
-	BorderImage {
+	BorderImage2 {
 		id: buttonImageNormal
 
 		anchors.fill: parent
@@ -56,7 +56,7 @@ BorderImage {
 		visible: rootItem.enabled
 	}
 
-	BorderImage {
+	BorderImage2 {
 		id: buttonImagePressed
 
 		anchors.fill: parent
@@ -80,8 +80,8 @@ BorderImage {
 
 			height: rootItem.height
 			verticalAlignment: Text.AlignVCenter
-			color: Utils.ui.color("color.button")
-			font: Utils.ui.font("font.button")
+			color: Skin.ui.color("color.button")
+			font: Skin.ui.font("font.button")
 			wrapMode: Text.WordWrap
 			text: rootItem.text
 			lineHeightMode: Text.FixedHeight
@@ -106,7 +106,7 @@ BorderImage {
 		}
 	}
 
-	BorderImage {
+	BorderImage2 {
 		id: buttonImageDisabled
 
 		anchors.fill: parent

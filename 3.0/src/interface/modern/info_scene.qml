@@ -30,7 +30,7 @@ Widgets.SceneBase2 {
 		anchors { fill: parent; leftMargin: 30; rightMargin: 30; topMargin: 190 }
 		interactive: false
 
-		delegate: BorderImage {
+		delegate: Widgets.BorderImage2 {
 			width: parent.width
 			height: 120
 
@@ -46,8 +46,8 @@ Widgets.SceneBase2 {
 				clip: true
 				verticalAlignment: Text.AlignVCenter
 				wrapMode: Text.WordWrap
-				color: Utils.ui.color("color.main.primary")
-				font: Utils.ui.font("font.panel.title")
+				color: Skin.ui.color("color.main.primary")
+				font: Skin.ui.font("font.panel.title")
 				elide: Text.ElideRight
 				maximumLineCount: 1
 				text: Utils.locale.tr(modelData.name)
@@ -102,11 +102,11 @@ Widgets.SceneBase2 {
 				preferredHeight: 657
 			}
 
-            BorderImage {
-                width: parent.width
-                height: parent.height
-                border { left: 40; top: 40; right: 40; bottom: 40 }
-                source: "image://ui/webview.angles"
+			Widgets.BorderImage2 {
+				width: parent.width
+				height: parent.height
+				border { left: 40; top: 40; right: 40; bottom: 40 }
+				source: "image://ui/webview.angles"
 				z: 1
 			}
 		}

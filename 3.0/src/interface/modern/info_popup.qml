@@ -32,7 +32,7 @@ Item {
 		height: global.waiting ? 564 : 657
 		y: global.waiting ? 289 : 197
 
-		BorderImage {
+		Widgets.BorderImage2 {
 			anchors.fill: parent
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
@@ -78,8 +78,8 @@ Item {
 					property int elapsed
 
 					anchors { horizontalCenter: parent.horizontalCenter }
-					font: Utils.ui.font("font.key.number")
-					color: Utils.ui.color("color.main.secondary")
+					font: Skin.ui.font("font.key.number")
+					color: Skin.ui.color("color.main.secondary")
 					text: "00:%1".arg(elapsed < 10 ? "0%1".arg(elapsed) : elapsed)
 					visible: global.countdown
 					height: 50
@@ -111,8 +111,8 @@ Item {
 					width: view.flickArea.width - scroller.width
 					wrapMode: Text.WordWrap
 					horizontalAlignment: Text.AlignHCenter
-					font: Utils.ui.font("font.message")
-					color: Utils.ui.color("color.message")
+					font: Skin.ui.font("font.message")
+					color: Skin.ui.color("color.message")
 					lineHeight: 1.2
 				}
 			}
@@ -160,7 +160,7 @@ Item {
 			icon: 18
 			text: ((typeof global.button1) != "undefined" && global.button1.text) ? (typeof global.button1.text === "object" ?
 																																								 Utils.locale.tr(global.button1.text.tr) : global.button1.text) : Utils.locale.tr(QT_TR_NOOP("info_popup#close"))
-			color: Utils.ui.color("color.button.secondary")
+			color: Skin.ui.color("color.button.secondary")
 			texture: "image://ui/button.secondary.normal"
 			texturePressed: "image://ui/button.secondary.pressed"
 
@@ -185,7 +185,7 @@ Item {
 				icon: 18
 				text: ((typeof global.button2) != "undefined" && global.button2.text) ? (typeof global.button2.text === "object" ?
 																																									 Utils.locale.tr(global.button2.text.tr) : global.button2.text) : Utils.locale.tr(QT_TR_NOOP("info_popup#retry"))
-				color: Utils.ui.color("color.button.primary")
+				color: Skin.ui.color("color.button.primary")
 				texture: "image://ui/button.primary.normal"
 				texturePressed: "image://ui/button.primary.pressed"
 

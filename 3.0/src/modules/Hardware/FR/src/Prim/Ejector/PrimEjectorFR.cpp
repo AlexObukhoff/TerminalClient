@@ -138,12 +138,12 @@ bool PrimEjectorFR<T>::setPresentationMode()
 {
 	QString loop = getConfigParameter(CHardware::Printer::Settings::Loop).toString();
 
-	if (loop == CHardware::Values::NoChange)
+	if (loop == CHardwareSDK::Values::Auto)
 	{
 		return true;
 	}
 
-	bool loopEnable = loop == CHardware::Values::Use;
+	bool loopEnable = loop == CHardwareSDK::Values::Use;
 
 	if (mMode == EFRMode::Printer)
 	{

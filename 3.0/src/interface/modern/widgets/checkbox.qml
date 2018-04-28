@@ -13,7 +13,7 @@ Item {
 
 	height: 120
 
-	BorderImage {
+	BorderImage2 {
 		id: buttonImageOn
 
 		width: 120
@@ -25,7 +25,7 @@ Item {
 		visible: rootItem.checked
 	}
 
-	BorderImage {
+	BorderImage2 {
 		id: buttonImagePressed
 
 		width: 120
@@ -37,7 +37,7 @@ Item {
 		visible: false
 	}
 
-	BorderImage {
+	BorderImage2 {
 		id: buttonImageOff
 
 		width: 120
@@ -54,8 +54,8 @@ Item {
 		height: rootItem.height
 		width: rootItem.width - 120
 		verticalAlignment: Text.AlignVCenter
-		color: Utils.ui.color("color.main.primary")
-		font: Utils.ui.font("font.checkbox")
+		color: Skin.ui.color("color.main.primary")
+		font: Skin.ui.font("font.checkbox")
 		wrapMode: Text.WordWrap
 		text: rootItem.text
 	}

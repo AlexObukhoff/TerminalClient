@@ -234,6 +234,8 @@ IPlugin * PluginFactory::createPlugin(const QString & aInstancePath, const QStri
 					}
 				}
 
+				IPluginLoader * pluginLoader = getPluginLoader();
+
 				for (auto it = parameterList.begin(); it != parameterList.end(); ++it)
 				{
 					bool isSet = !it->possibleValues.isEmpty();
@@ -250,18 +252,13 @@ IPlugin * PluginFactory::createPlugin(const QString & aInstancePath, const QStri
 					{
 						QString newValue = it->defaultValue.toString();
 
-						if (!notContains && (it->name != CPlugin::ModifiedValues))
+						if (pluginLoader && !notContains && (it->name != CPlugin::ModifiedValues))
 						{
-							IPluginLoader * pluginLoader = getPluginLoader();
-
-							if (pluginLoader)
+							for (auto jt = parameterList.begin(); jt != parameterList.end(); ++jt)
 							{
-								TParameterList parameters = getPluginLoader()->getPluginParametersDescription(path);
-								SPluginParameter modifiedValues = findParameter(CPlugin::ModifiedValues, parameters);
-
-								if (modifiedValues.isValid() && (modifiedValues.title == it->name))
+								if (jt->isValid() && (jt->name == CPlugin::ModifiedValues) && (jt->title.isEmpty() || (jt->title == it->name)))
 								{
-									QString modifiedValue = modifiedValues.possibleValues[configValue.toString()].toString();
+									QString modifiedValue = jt->possibleValues.value(configValue.toString()).toString();
 
 									if (!modifiedValue.isEmpty())
 									{

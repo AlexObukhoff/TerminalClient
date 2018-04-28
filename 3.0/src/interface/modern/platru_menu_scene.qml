@@ -25,7 +25,7 @@ Widgets.SceneBase2 {
 
 	property int itemsOnPage: 8
 
-	BorderImage {
+	Widgets.BorderImage2 {
 		anchors { left: sceneButton.right; verticalCenter: sceneButton.verticalCenter; right: setupButton.left }
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
@@ -35,7 +35,7 @@ Widgets.SceneBase2 {
 			anchors { left: parent.left; leftMargin: 10 }
 			height: parent.height
 
-			Image {
+			Widgets.Image2 {
 				id: logo
 
 				anchors.verticalCenter: parent.verticalCenter
@@ -53,9 +53,9 @@ Widgets.SceneBase2 {
 				anchors { verticalCenter: parent.verticalCenter }
 
 				Text {
-					color: Utils.ui.color("color.subtitle")
+					color: Skin.ui.color("color.subtitle")
 					text: formatter.displayText
-					font: Utils.ui.font("font.secondary")
+					font: Skin.ui.font("font.secondary")
 
 					TextInput {
 						id: formatter
@@ -67,9 +67,9 @@ Widgets.SceneBase2 {
 				}
 
 				Text {
-					color: Utils.ui.color("color.title")
+					color: Skin.ui.color("color.title")
 					text: Number(global.balance).toFixed(2) + " " + Core.environment.terminal.currencyName
-					font: Utils.ui.font("font.title")
+					font: Skin.ui.font("font.title")
 				}
 			}
 		}
@@ -102,15 +102,15 @@ Widgets.SceneBase2 {
 		flow: GridView.TopToBottom
 		model: entryModel
 
-		delegate: Image {
+		delegate: Widgets.Image2 {
 			source: !operatorId ? "image://ui/button.paybook.add" : "image://ui/button.paybook.bookmark"
 
 			Text {
 				anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 25 }
 				visible: !operatorId
 				verticalAlignment: Text.AlignVCenter
-				font: Utils.ui.font("font.main.accent")
-				color: Utils.ui.color("color.main.primary")
+				font: Skin.ui.font("font.main.accent")
+				color: Skin.ui.color("color.main.primary")
 
 				text: Utils.locale.tr(QT_TR_NOOP("platru_menu_scene#add_entry"))
 			}
@@ -119,7 +119,7 @@ Widgets.SceneBase2 {
 				visible: operatorId
 				anchors.fill: parent
 
-				Image {
+				Widgets.Image2 {
 					visible: !global.editMode
 					source: "image://ui/logoprovider/" + operatorId + "/button.operator.blank/" + name
 					anchors { left: parent.left; leftMargin: 33; verticalCenter: parent.verticalCenter }
@@ -133,12 +133,12 @@ Widgets.SceneBase2 {
 					// Комментарий
 					Text {
 						width: parent.width
-						font: Utils.ui.font("font.bookmark.primary")
+						font: Skin.ui.font("font.bookmark.primary")
 						wrapMode: Text.WordWrap
 						lineHeight: 0.8
 						elide: Text.ElideRight
 						maximumLineCount: 2
-						color: Utils.ui.color("color.bookmark.primary")
+						color: Skin.ui.color("color.bookmark.primary")
 						text: comment ? comment : ""
 					}
 
@@ -147,12 +147,12 @@ Widgets.SceneBase2 {
 					// Номер
 					Text {
 						width: parent.width
-						font: Utils.ui.font("font.bookmark.secondary")
+						font: Skin.ui.font("font.bookmark.secondary")
 						wrapMode: Text.WordWrap
 						lineHeight: 0.8
 						elide: Text.ElideRight
 						maximumLineCount: 2
-						color: Utils.ui.color("color.bookmark.secondary")
+						color: Skin.ui.color("color.bookmark.secondary")
 						text: parameters ? (parameters.hasOwnProperty("100") ? parameters["100"] : "") : ""
 					}
 				}
@@ -268,7 +268,7 @@ Widgets.SceneBase2 {
 
 		anchors { right: view.left; rightMargin: 18; verticalCenter: view.verticalCenter }
 		visible: entryModel.count > 8 && !view.atXBeginning
-		background: Image {
+		background: Widgets.Image2 {
 			source: back.pressed ? "image://ui/scroll.left.pressed" : "image://ui/scroll.left.normal"
 		}
 
@@ -281,7 +281,7 @@ Widgets.SceneBase2 {
 
 		anchors { left: view.right; leftMargin: 18; verticalCenter: view.verticalCenter }
 		visible: entryModel.count > 8 && !view.atXEnd
-		background: Image {
+		background: Widgets.Image2 {
 			source: fwd.pressed ? "image://ui/scroll.right.pressed" : "image://ui/scroll.right.normal"
 		}
 		onClicked: view.scrollForward()

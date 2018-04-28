@@ -2,12 +2,16 @@
 
 #pragma once
 
-#include "Hardware/CashAcceptors/PortCashAcceptor.h"
+// Modules
 #include "Hardware/Protocols/CashAcceptor/NPSTalk.h"
 
+// Project
+#include "Hardware/CoinAcceptors/CoinAcceptorBase.h"
+
 //--------------------------------------------------------------------------------
-class NPSTalkCoinAcceptor : public TSerialCashAcceptor
+class NPSTalkCoinAcceptor : public CoinAcceptorBase
 {
+	SET_SERIES("NPS")
 
 	typedef QMap<uchar, uchar> TCoinsByChannel;
 
@@ -19,12 +23,6 @@ public:
 
 	/// Получение статуса.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
-
-	/// Принять купюру.
-	virtual bool stack();
-
-	/// Вернуть купюру. Правильный термин - return (ключевое слово).
-	virtual bool reject();
 
 protected:
 	/// Попытка самоидентификации.

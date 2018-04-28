@@ -19,7 +19,7 @@ Widgets.SceneBase2 {
 	rightButtonBackground: rightButton.pressed ? ((global.needPhone || Core.graphics.ui["show_platru"] !== "true") ? "image://ui/button.primary.pressed" : "image://ui/button.paybook.pressed") :
 																							 ((global.needPhone || Core.graphics.ui["show_platru"] !== "true") ? "image://ui/button.primary.normal" : "image://ui/button.paybook.normal")
 
-	rightButtonTextColor: Utils.ui.color("color.button.primary")
+	rightButtonTextColor: Skin.ui.color("color.button.primary")
 
 	topPanelImage: global.provider ? ("image://ui/logoprovider/" + global.provider.id + "/button.operator.blank/" + global.provider.name) : ""
 	topPanelText: String(global.provider ? (global.provider.processorType == "multistage" ?
@@ -28,8 +28,8 @@ Widgets.SceneBase2 {
 	Text {
 		anchors { left: parent.left; leftMargin: 40; right: parent.right; rightMargin: 30; top: parent.top; topMargin: 200 }
 		visible: !global.needPhone
-		font: Utils.ui.font("font.title")
-		color: global.paymentOK ? Utils.ui.color("color.main.primary") : Utils.ui.color("color.contrast")
+		font: Skin.ui.font("font.title")
+		color: global.paymentOK ? Skin.ui.color("color.main.primary") : Skin.ui.color("color.contrast")
 		text: global.paymentOK ?
 						(global.change > 0.0 ? "<span style='text-transform: uppercase'>%1</span>".arg(Utils.locale.tr(QT_TR_NOOP("result_scene#how_to_use_change"))) :
 																	 Utils.locale.tr(QT_TR_NOOP("result_scene#scene_caption"))) :
@@ -61,13 +61,13 @@ Widgets.SceneBase2 {
 				width: 814
 			}
 
-			BorderImage {
+			Widgets.BorderImage2 {
 				anchors { right: parent.right }
 				border { left: 104; top: 100; right: 18; bottom: 18 }
 				source: "image://ui/comment.left"
 				width: 412
 
-				Image {
+				Widgets.Image2 {
 					anchors.centerIn: parent
 					source: global.cyberChangeType ? "image://ui/cyberchange.logo" + global.cyberChangeType : ""
 				}

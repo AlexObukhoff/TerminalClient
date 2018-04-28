@@ -131,7 +131,7 @@ Widgets.SceneBase {
 		Widgets.Button {
 			width: 407
 			text: Utils.locale.tr(QT_TR_NOOP("main_menu_scene#platru"))
-			color: Utils.ui.color("color.button.primary")
+			color: Skin.ui.color("color.button.primary")
 			texture: "image://ui/button.paybook.normal"
 			texturePressed: "image://ui/button.paybook.pressed"
 			visible: Core.graphics.ui["show_platru"] === "true"
@@ -299,6 +299,6 @@ Widgets.SceneBase {
 		SceneFactory.createMainScene(json, rootColumn);
 
 		//Сохраним цвет фона всплывающего окна в глобальном пространстве
-		Core.userProperties.set("color.popup.overlay", Utils.ui.color("color.popup.overlay"));
+		Core.userProperties.set("color.popup.overlay", Skin.ui.color("color.popup.overlay"));
 	}
 }

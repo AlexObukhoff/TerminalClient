@@ -36,8 +36,8 @@ Item {
 				delegate: Text {
 					width: view.flickArea.width
 					wrapMode: Text.WordWrap
-					font: Utils.ui.font("font.secondary")
-					color: Utils.ui.color("color.main.primary")
+					font: Skin.ui.font("font.secondary")
+					color: Skin.ui.color("color.main.primary")
 					text: modelData
 
 					MouseArea {

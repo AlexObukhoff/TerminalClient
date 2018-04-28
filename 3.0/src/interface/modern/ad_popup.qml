@@ -55,7 +55,7 @@ Item {
 
 			icon: 18
 			text: Utils.locale.tr(QT_TR_NOOP("info_popup#close"))
-			color: Utils.ui.color("color.button.secondary")
+			color: Skin.ui.color("color.button.secondary")
 			texture: "image://ui/button.secondary.normal"
 			texturePressed: "image://ui/button.secondary.pressed"
 

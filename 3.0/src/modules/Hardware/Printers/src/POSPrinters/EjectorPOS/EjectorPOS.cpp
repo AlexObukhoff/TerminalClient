@@ -47,12 +47,12 @@ bool EjectorPOS::updateParameters()
 
 	QString loop = getConfigParameter(CHardware::Printer::Settings::Loop).toString();
 
-	if (loop == CHardware::Values::NoChange)
+	if (loop == CHardwareSDK::Values::Auto)
 	{
 		return true;
 	}
 
-	return mIOPort->write((loop == CHardware::Values::Use) ? CPOSPrinter::Command::LoopEnable : CPOSPrinter::Command::LoopDisable);
+	return mIOPort->write((loop == CHardwareSDK::Values::Use) ? CPOSPrinter::Command::LoopEnable : CPOSPrinter::Command::LoopDisable);
 }
 
 //--------------------------------------------------------------------------------

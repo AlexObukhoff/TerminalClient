@@ -8,7 +8,7 @@ Button {
 
 	property int __duration: 150
 
-	BorderImage {
+	BorderImage2 {
 		id: buttonImageHighLight
 
 		anchors.fill: parent

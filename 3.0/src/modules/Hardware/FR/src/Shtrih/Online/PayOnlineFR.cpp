@@ -71,7 +71,7 @@ void PayOnlineFR<T>::appendStatusCodes(ushort aFlags, TStatusCodes & aStatusCode
 	ShtrihRetractorFRLite<T>::appendStatusCodes(aFlags, aStatusCodes);
 
 	bool paperWeightSensor = (~aFlags & CShtrihFR::Statuses::WeightSensor::NoChequePaper);
-	bool useRemotePaperSensor = getConfigParameter(CHardware::Printer::Settings::RemotePaperSensor).toString() == CHardware::Values::Use;
+	bool useRemotePaperSensor = getConfigParameter(CHardware::Printer::Settings::RemotePaperSensor).toString() == CHardwareSDK::Values::Use;
 	bool hasPNESensor = CPayOnlineFR::PrinterModels[mPrinterModelId].hasPNESensor;
 
 	if (paperWeightSensor && useRemotePaperSensor && hasPNESensor)

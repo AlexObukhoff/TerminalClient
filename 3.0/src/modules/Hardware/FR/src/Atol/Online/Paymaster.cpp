@@ -26,7 +26,7 @@ void Paymaster::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	TPaymaster::setDeviceConfiguration(aConfiguration);
 
-	bool notPrinting = getConfigParameter(CHardwareSDK::FR::WithoutPrinting) == CHardware::Values::Use;
+	bool notPrinting = getConfigParameter(CHardwareSDK::FR::WithoutPrinting) == CHardwareSDK::Values::Use;
 	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel, CAtolOnlinePrinters::Default).toString();
 
 	if (aConfiguration.contains(CHardware::FR::PrinterModel) && (printerModel != CAtolOnlinePrinters::Default) && !notPrinting)

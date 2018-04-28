@@ -24,6 +24,7 @@ class GUIService : public QObject
 	Q_PROPERTY(bool isDisabled READ isDisabled)
 	Q_PROPERTY(int width READ getWidth CONSTANT)
 	Q_PROPERTY(int height READ getHeight CONSTANT)
+	Q_PROPERTY(QString topScene READ getTopWidget CONSTANT)
 	Q_PROPERTY(QVariantMap ui READ getParametersUI CONSTANT)
 	Q_PROPERTY(QVariantMap ad READ getParametersAd CONSTANT)
 
@@ -43,6 +44,12 @@ public slots:
 	/// Оповещает виджет.
 	void notify(const QString & aEvent, const QVariantMap & aParameters);
 
+	/// Вовзращает имя топового виджета
+	QString getTopWidget() const;
+
+signals:
+	void topSceneChanged();
+
 private:
 	QVariantMap getParametersUI() const;
 	QVariantMap getParametersAd() const;
@@ -55,6 +62,7 @@ private:
 private:
 	ICore * mCore;
 	IGUIService * mGUIService;
+	QString mTopWidgetName;
 };
 
 //------------------------------------------------------------------------------

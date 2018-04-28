@@ -27,6 +27,14 @@ namespace CAllHardware
 	const char SerialNumber[] = "serial_number";
 	const char CanOnline[] = "can_online";
 
+	/// Значения настроек.
+	namespace Values
+	{
+		const char Use[] = "use";
+		const char NotUse[] = "not_use";
+		const char Auto[] = "auto";
+	}
+
 	/// Типы поиска устройств.
 	namespace SearchingTypes
 	{

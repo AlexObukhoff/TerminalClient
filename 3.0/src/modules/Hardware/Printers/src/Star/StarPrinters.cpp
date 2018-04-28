@@ -284,8 +284,8 @@ bool StarPrinter::isConnected()
 	CSTAR::TMemorySwitches memorySwitches(mMemorySwitches);
 	mMemorySwitchUtils.setConfiguration(mMemorySwitches);
 
-	configuration.insert(CHardware::AutomaticStatus, CHardware::Values::Use);
-	configuration.insert(CHardware::Printer::VerticalMountMode, CHardware::Values::NotUse);
+	configuration.insert(CHardware::AutomaticStatus, CHardwareSDK::Values::Use);
+	configuration.insert(CHardware::Printer::VerticalMountMode, CHardwareSDK::Values::NotUse);
 
 	CSTAR::TMemorySwitchTypes memorySwitchTypes = CSTAR::TMemorySwitchTypes()
 		//<< ESTARMemorySwitchTypes::ASB
@@ -513,7 +513,7 @@ bool StarPrinter::updateParameters()
 	/*
 	// логика отключена, т.к. вместо ASB (единственный параметр) устанавливаем регистр
 	QVariantMap configuration;
-	configuration.insert(CHardware::AutomaticStatus, CHardware::Values::Use);
+	configuration.insert(CHardware::AutomaticStatus, CHardwareSDK::Values::Use);
 
 	CSTAR::TMemorySwitchTypes memorySwitchTypes;
 	memorySwitchTypes.append(ESTARMemorySwitchTypes::ASB);

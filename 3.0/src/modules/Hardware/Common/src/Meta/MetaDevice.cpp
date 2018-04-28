@@ -227,7 +227,7 @@ SLogData MetaDevice::getDeviceData() const
 		data.insert(key, getConfigParameter(key).toString());
 	}
 
-	result.plugin = getPartDeviceData(data);
+	result.plugin = getPartDeviceData(data, false);
 	result.device = getPartDeviceData(mDeviceData, false);
 
 	QVariantMap dealerSettings = getConfigParameter(CHardware::ConfigData).toMap();

@@ -42,6 +42,7 @@ namespace FRStatusCode
 		const int NoMoney              = 280;    /// Не хватает денег для какой-либо операции.
 		const int WrongDealerTaxSystem = 281;    /// Неверно настроена СНО.
 		const int WrongDealerAgentFlag = 282;    /// Неверно настроен признак агента.
+		const int CashierINN           = 283;    /// Неправильный ИНН кассира.
 	}
 }
 

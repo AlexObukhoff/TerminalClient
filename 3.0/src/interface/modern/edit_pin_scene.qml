@@ -19,8 +19,8 @@ Widgets.SceneBase2 {
 	// Название сцены
 	Text {
 		anchors { left: parent.left; leftMargin: 41; top: parent.top; topMargin: 230 }
-		font: Utils.ui.font("font.title")
-		color: Utils.ui.color("color.main.primary")
+		font: Skin.ui.font("font.title")
+		color: Skin.ui.color("color.main.primary")
 		text: Utils.locale.tr(QT_TR_NOOP("edit_pin_scene#description"))
 	}
 
@@ -35,7 +35,7 @@ Widgets.SceneBase2 {
 			backspace: Item {}
 		}
 
-		Image {
+		Widgets.Image2 {
 			source: "image://ui/pinpad"
 			anchors.horizontalCenter: parent.horizontalCenter
 		}

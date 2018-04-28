@@ -329,7 +329,7 @@ bool ProtoShtrihFR<T>::isPaperWeightSensor() const
 	               (mModel == CShtrihFR::Models::ID::PayVKP80KFA))));
 
 	bool weightSensorsEnabled = !containsConfigParameter(CHardware::Printer::Settings::PaperWeightSensors) ||
-		(getConfigParameter(CHardware::Printer::Settings::PaperWeightSensors).toString() == CHardware::Values::Use);
+		(getConfigParameter(CHardware::Printer::Settings::PaperWeightSensors).toString() == CHardwareSDK::Values::Use);
 
 	return result && weightSensorsEnabled;
 }

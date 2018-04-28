@@ -19,7 +19,7 @@ Item {
 		width: parent.width
 		spacing: 16
 
-		BorderImage {
+		BorderImage2 {
 			id: background
 
 			border { left: 30; top: 30; right: 30; bottom: 30 }
@@ -33,15 +33,13 @@ Item {
 			}
 		}
 
-		AnimatedImage{}
-
 		Text {
 			id: message
 
 			anchors.verticalCenter: parent.verticalCenter
 			width: text ? (rootItem.width - background.width) : 0
-			font: Utils.ui.font("font.secondary")
-			color: Utils.ui.color("color.main.primary")
+			font: Skin.ui.font("font.secondary")
+			color: Skin.ui.color("color.main.primary")
 			wrapMode: Text.WordWrap
 		}
 	}

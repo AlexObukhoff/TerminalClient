@@ -15,7 +15,7 @@ Item {
 
 	clip: true
 
-	Image {
+	Image2 {
 		id: image
 
 		y: -rootItem.height * rootItem._currentFrame

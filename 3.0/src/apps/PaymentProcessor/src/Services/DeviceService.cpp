@@ -333,8 +333,6 @@ PPSDK::IDeviceService::UpdateFirmwareResult DeviceService::updateFirmware(const 
 		return IDeviceService::NoDevice;
 	}
 
-	QVariantMap config = device->getDeviceConfiguration();
-
 	if (!device->canUpdateFirmware())
 	{
 		LOG(mLog, LogLevel::Error, "The device cannot be updated.");

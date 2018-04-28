@@ -1,4 +1,4 @@
-﻿/* @file Контейнер для swf. */
+﻿﻿/* @file Контейнер для swf. */
 
 import QtQuick 2.2
 import QtWebKit 3.0
@@ -21,7 +21,7 @@ Item {
 	signal popuped(variant aParameters)
 
 	// Фон
-	Image {
+	Image2 {
 		id: background
 	}
 

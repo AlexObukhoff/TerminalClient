@@ -475,6 +475,7 @@ bool FFEngine::checkAgentFlags(char aData, TAgentFlags & aAgentFlags)
 bool FFEngine::checkOperationModes(char aData, TOperationModes & aOperationModes)
 {
 	QStringList errorLog;
+	aData &= ~CFR::OperationModeData.TrashMask;
 
 	for (int i = 0; i < (sizeof(aData) * 8); ++i)
 	{
@@ -724,18 +725,8 @@ bool FFEngine::checkAgentFlagOnPayment(SPaymentData & aPaymentData)
 	{
 		foreach (const SUnitData & unitData, aPaymentData.unitDataList)
 		{
-			QString providerINN = unitData.providerINN;
-			QString log = QString("%1: Failed to sale%2 for %3 (sum = %4) due to ").arg(mDeviceName).arg(aPaymentData.back ? " back" : "").arg(unitData.name).arg(unitData.sum, 0, 'f', 2);
-			int size = providerINN.size();
-
-			if (!size)
+			if (!checkINN(unitData.providerINN))
 			{
-				toLog(LogLevel::Error, log + "provider INN is empty");
-				return false;
-			}
-			else if (((size != CFR::INNSize::LegalPerson) && (size != CFR::INNSize::NaturalPerson)) || (QRegExp("[0-9]+").indexIn(providerINN) == -1))
-			{
-				toLog(LogLevel::Error, log + "wrong provider INN = " + providerINN);
 				return false;
 			}
 		}
@@ -870,6 +861,83 @@ void FFEngine::filterAfterPayment(const SPaymentData & aPaymentData, TFiscalPaym
 		ADD_SPEC_DFIELD_SAME(aPSData[i], VATRate);
 		ADD_SPEC_DFIELD_SAME(aPSData[i], AgentFlag);
 	}
+}
+
+//--------------------------------------------------------------------------------
+bool FFEngine::checkINN(const QString & aINN, int aType)
+{
+	int size = aINN.size();
+	bool wrongSize = (size != CFR::INN::Person::Legal) && (size != CFR::INN::Person::Natural);
+
+	if (wrongSize || (aType && (aType != size)))
+	{
+		QString log = QString("%1: Wrong INN size = %2, need ").arg(mDeviceName).arg(size);
+		QString legalLog   = QString("%1 for legal person").arg(CFR::INN::Person::Legal);
+		QString naturalLog = QString("%1 for natural person").arg(CFR::INN::Person::Natural);
+
+		     if (aType == CFR::INN::Person::Unknown) log += legalLog + " or " + naturalLog;
+		else if (aType == CFR::INN::Person::Legal)   log += legalLog;
+		else if (aType == CFR::INN::Person::Natural) log += naturalLog;
+
+		toLog(LogLevel::Error, log);
+
+		return false;
+	}
+
+	if (QRegExp("^[0-9]+$").indexIn(aINN) == -1)
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Wrong INN = " + aINN);
+		return false;
+	}
+
+	if (size == CFR::INN::Person::Legal)
+	{
+		qlonglong data = 0;
+
+		for (int i = 0; i < aINN.size() - 1; ++i)
+		{
+			int digit = aINN[i].digitValue();
+			data += digit * CFR::INN::Factors::Legal[i];
+		}
+
+		int digit = (data % CFR::INN::Divider) % 10;
+		int dataDigit = aINN[CFR::INN::Person::Legal - 1].digitValue();
+
+		if (digit != dataDigit)
+		{
+			toLog(LogLevel::Error, mDeviceName + ": Control numbers are not equal for INN " + aINN);
+			return false;
+		}
+	}
+	else if (size == CFR::INN::Person::Natural)
+	{
+		qlonglong data1 = 0;
+		qlonglong data2 = 0;
+
+		for (int i = 0; i < aINN.size() - 1; ++i)
+		{
+			int digit = aINN[i].digitValue();
+			data2 += digit * CFR::INN::Factors::Natural2[i];
+
+			if (i < aINN.size() - 2)
+			{
+				data1 += digit * CFR::INN::Factors::Natural1[i];
+			}
+		}
+
+		int digit1 = (data1 % CFR::INN::Divider) % 10;
+		int digit2 = (data2 % CFR::INN::Divider) % 10;
+		int dataDigit1 = aINN[CFR::INN::Person::Natural - 2].digitValue();
+		int dataDigit2 = aINN[CFR::INN::Person::Natural - 1].digitValue();
+
+		if ((digit1 != dataDigit1) || (digit2 != dataDigit2))
+		{
+			toLog(LogLevel::Error, mDeviceName + ": Control numbers are not equal for INN " + aINN);
+			return false;
+		}
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------

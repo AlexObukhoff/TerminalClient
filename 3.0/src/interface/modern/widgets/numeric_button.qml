@@ -22,12 +22,12 @@ Controls.Button {
 	label: Text {
 		id: text
 
-		color: rootItem.pressed ? Utils.ui.color("color.key.normal") : Utils.ui.color("color.key.pressed")
-		font: Utils.ui.font("font.key.number")
+		color: rootItem.pressed ? Skin.ui.color("color.key.normal") : Skin.ui.color("color.key.pressed")
+		font: Skin.ui.font("font.key.number")
 		text: !rootItem.standalone && rootItem.parent.handler.altMode ? rootItem.altText : rootItem.text
 	}
 
-	background: Image {
+	background: Image2 {
 		source: backgroundSource == "" ? (rootItem.pressed ? "image://ui/button.number.pressed" : "image://ui/button.number.normal") :
 																		 ("image://ui/" + backgroundSource + (rootItem.pressed ? "pressed" : "normal"))
 	}

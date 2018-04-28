@@ -31,6 +31,7 @@ PrimFRBase::PrimFRBase() : mMode(EFRMode::Fiscal)
 	mModels = CPrimFR::CommonModels();
 	mModel = CPrimFR::Models::Unknown;
 	mOffline = true;
+	mAFDFont = CPrimFR::AFD::Font::Default;
 
 	setConfigParameter(CHardware::Printer::Commands::Cutting, CPOSPrinter::Command::Cut);
 	mErrorData = PErrorData(new CPrimFR::Errors::Specification);
@@ -71,6 +72,8 @@ PrimFRBase::PrimFRBase() : mMode(EFRMode::Fiscal)
 //--------------------------------------------------------------------------------
 bool PrimFRBase::updateParameters()
 {
+	mAFDFont = CPrimFR::AFD::Font::Default;
+
 	if (!mOperatorPresence && isFiscal() && !checkParameters())
 	{
 		return false;
@@ -127,8 +130,8 @@ bool PrimFRBase::checkParameters()
 	QString printDocumentCap = getConfigParameter(Settings::DocumentCap).toString();
 	parameter2 &= ~CPrimFR::NeedPrintFiscalCapMask;
 
-	if ((printDocumentCap == CHardware::Values::Use) ||
-	   ((printDocumentCap == CHardware::Values::NoChange) && (FRParameter2 & CPrimFR::NeedPrintFiscalCapMask)))
+	if ((printDocumentCap == CHardwareSDK::Values::Use) ||
+	   ((printDocumentCap == CHardwareSDK::Values::Auto) && (FRParameter2 & CPrimFR::NeedPrintFiscalCapMask)))
 	{
 		parameter2 |= CPrimFR::NeedPrintFiscalCapMask;
 	}
@@ -429,13 +432,13 @@ TResult PrimFRBase::processCommand(char aCommand, const CPrimFR::TData & aComman
 
 	if ((error == CPrimFR::Errors::NeedZReport) && (mInitialized == ERequestStatus::InProcess))
 	{
-		if (canAutoCloseSession == CHardware::Values::Auto)
+		if (canAutoCloseSession == CHardwareSDK::Values::Auto)
 		{
-			setConfigParameter(CHardware::FR::CanAutoCloseSession, CHardware::Values::NotUse);
+			setConfigParameter(CHardware::FR::CanAutoCloseSession, CHardwareSDK::Values::NotUse);
 
 			emit configurationChanged();
 		}
-		else if (canAutoCloseSession == CHardware::Values::NotUse)
+		else if (canAutoCloseSession == CHardwareSDK::Values::NotUse)
 		{
 			return CommandResult::OK;
 		}
@@ -1094,7 +1097,7 @@ CPrimFR::TData PrimFRBase::addGFieldToBuffer(int aX, int aY)
 	return CPrimFR::TData()
 		<< QString("%1").arg(qToBigEndian(unsigned short(aX)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по X
 		<< QString("%1").arg(qToBigEndian(unsigned short(aY)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по Y
-		<< "01"; // шрифт, см. ESC !
+		<< int2String(mAFDFont).toLatin1();   // шрифт, см. ESC !
 }
 
 //--------------------------------------------------------------------------------
@@ -1103,10 +1106,10 @@ CPrimFR::TData PrimFRBase::addArbitraryFieldToBuffer(int aX, int aY, const QStri
 	return CPrimFR::TData()
 		<< QString("%1").arg(qToBigEndian(unsigned short(aX)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по X
 		<< QString("%1").arg(qToBigEndian(unsigned short(aY)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по Y
-		<< "01"    // шрифт, см. ESC !
-		<< "01"    // Печать произвольного реквизита
-		<< "00"    // N вывода на контрольную ленту
-		<< mCodec->fromUnicode(aData);    // данные
+		<< int2String(mAFDFont).toLatin1()    // шрифт, см. ESC !
+		<< "01"                               // Печать произвольного реквизита
+		<< "00"                               // N вывода на контрольную ленту
+		<< mCodec->fromUnicode(aData);        // данные
 }
 
 //--------------------------------------------------------------------------------

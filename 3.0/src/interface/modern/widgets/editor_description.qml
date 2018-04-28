@@ -1,4 +1,4 @@
-﻿/* @file Название поля оператора и комментарий к нему */
+﻿﻿/* @file Название поля оператора и комментарий к нему */
 
 import QtQuick 2.2
 import "../controls" 1.0 as Controls
@@ -18,14 +18,14 @@ Row {
 		anchors { verticalCenter: parent.verticalCenter }
 		width: comment.text != "" ? 796 : parent.width
 		wrapMode: Text.WordWrap
-		font: Utils.ui.font("font.title")
-		color: Utils.ui.color("color.main.primary")
+		font: Skin.ui.font("font.title")
+		color: Skin.ui.color("color.main.primary")
 		elide: Text.ElideRight
 		maximumLineCount: 2
 	}
 
 	// Комментарий к полю
-	BorderImage {
+	BorderImage2 {
 		anchors { top: parent.top }
 		width: 408
 		border { left: 100; top: 100; right: 18; bottom: 22 }
@@ -36,8 +36,8 @@ Row {
 			id: comment
 
 			anchors { fill: parent; margins: 20; leftMargin: 40 }
-			font: Utils.ui.font("font.tooltip.secondary")
-            color: Utils.ui.color("color.tooltip.button")
+			font: Skin.ui.font("font.tooltip.secondary")
+			color: Skin.ui.color("color.tooltip.button")
 			wrapMode: Text.WordWrap
 			verticalAlignment: Text.AlignVCenter
 			elide: Text.ElideRight

@@ -16,7 +16,7 @@ Widgets.SceneBase2 {
 	rightButtonEnabled: false
 	topPanelEnabled: false
 
-	BorderImage {
+	Widgets.BorderImage2 {
 		anchors { left: sceneButton.right; right: parent.right; rightMargin: 30; verticalCenter: sceneButton.verticalCenter }
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
@@ -26,7 +26,7 @@ Widgets.SceneBase2 {
 			anchors { left: parent.left; leftMargin: 10 }
 			height: parent.height
 
-			Image {
+			Widgets.Image2 {
 				id: logo
 
 				anchors.verticalCenter: parent.verticalCenter
@@ -45,7 +45,7 @@ Widgets.SceneBase2 {
 
 				Text {
 					text: formatter.displayText
-					font: Utils.ui.font("font.panel.secondary")
+					font: Skin.ui.font("font.panel.secondary")
 
 					TextInput {
 						id: formatter
@@ -58,7 +58,7 @@ Widgets.SceneBase2 {
 
 				Text {
 					text: Number(global.balance).toFixed(2) + " " + Core.environment.terminal.currencyName
-					font: Utils.ui.font("font.balance")
+					font: Skin.ui.font("font.balance")
 				}
 			}
 		}

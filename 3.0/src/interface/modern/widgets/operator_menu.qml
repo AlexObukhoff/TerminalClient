@@ -44,7 +44,7 @@ GridView {
 		height: cellHeight
 
 		// Логотип/название
-		BorderImage {
+		BorderImage2 {
 			anchors.fill: parent
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			source: cellWidth == __minCellWidth ? getLogo(model, handler.pressed && (handler.id === model.id && handler.name === model.name)) :
@@ -57,7 +57,7 @@ GridView {
 			anchors.verticalCenter: parent.verticalCenter
 
 			// Логотип
-			Image {
+			Image2 {
 				id: logotype
 
 				anchors.verticalCenter: parent.verticalCenter
@@ -78,8 +78,8 @@ GridView {
 					Text {
 						width: parent.width
 						wrapMode: Text.Wrap
-						color: Utils.ui.color("color.operator")
-						font: Utils.ui.font("font.wide.group.title")
+						color: Skin.ui.color("color.operator")
+						font: Skin.ui.font("font.wide.group.title")
 						text: title
 						maximumLineCount: 1
 					}
@@ -87,8 +87,8 @@ GridView {
 					Text {
 						width: parent.width
 						wrapMode: Text.Wrap
-						color: Utils.ui.color("color.bookmark.secondary")
-						font: Utils.ui.font("font.wide.group.description")
+						color: Skin.ui.color("color.bookmark.secondary")
+						font: Skin.ui.font("font.wide.group.description")
 						text: descr
 						lineHeight: 0.8
 						maximumLineCount: 2
@@ -108,8 +108,8 @@ GridView {
 					elide: Text.ElideRight
 					wrapMode: Text.Wrap
 					verticalAlignment: Text.AlignVCenter
-					color: Utils.ui.color("color.operator")
-					font: isGroup ? Utils.ui.font("font.wide.group.title") : Utils.ui.font("font.wide.group.name")
+					color: Skin.ui.color("color.operator")
+					font: isGroup ? Skin.ui.font("font.wide.group.title") : Skin.ui.font("font.wide.group.name")
 					text: "<p style='line-height:80%'>%1</p>".arg(name.replace(new RegExp("\\[\\[([^>]*)\\]\\]", "g"), "<font color='%1'>$1</font>".arg("#F15A24")))
 
 					Component.onCompleted: {
@@ -220,7 +220,7 @@ GridView {
 	}
 
 	function getColor(aProvider, aPressed) {
-		return Utils.ui.color("color.operator.normal");
+		return Skin.ui.color("color.operator.normal");
 	}
 
 	function gotoPage(aPage) {

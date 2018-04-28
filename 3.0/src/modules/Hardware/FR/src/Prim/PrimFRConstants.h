@@ -112,6 +112,18 @@ namespace CPrimFR
 	const char EndPrinterModeText[] = "           PRINTER MODE";
 
 	//----------------------------------------------------------------------------
+	/// Настройки для ПФД.
+	namespace AFD
+	{
+		/// Шрифт.
+		namespace Font
+		{
+			const char Default = '\x01';
+			const char Narrow  = '\x00';
+		}
+	}
+
+	//----------------------------------------------------------------------------
 	/// Паузы, [мс].
 	namespace Pause
 	{

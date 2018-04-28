@@ -33,13 +33,13 @@ Widgets.SceneBase {
 		model: Utils.ProviderList
 
 		delegate: Column {
-			Image {
+			Widgets.Image2 {
 				id: logo
 				source: "image://ui/logoprovider/" + id + "/button.operator.normal/" + name;
 			}
 
 			Row {
-				Image {
+				Widgets.Image2 {
 					source: "image://ui/search.spacer"
 				}
 
@@ -55,8 +55,8 @@ Widgets.SceneBase {
 					elide: Text.ElideRight
 					maximumLineCount: 3
 					text: model.name
-					font: Utils.ui.font("font.search.label")
-					color: Utils.ui.color("color.main.primary")
+					font: Skin.ui.font("font.search.label")
+					color: Skin.ui.color("color.main.primary")
 					clip: true
 				}
 			}
@@ -119,7 +119,7 @@ Widgets.SceneBase {
 
 		anchors { left: parent.left; leftMargin: 42; top: view.top; topMargin: 20 }
 		visible: view.count > 4 && !view.atXBeginning && !global.addButtonClicked
-		background: Image {
+		background: Widgets.Image2 {
 			source: back.pressed ? "image://ui/scroll.left.pressed" : "image://ui/scroll.left.normal"
 		}
 		onClicked: view.scrollBack()
@@ -131,7 +131,7 @@ Widgets.SceneBase {
 
 		anchors { right: parent.right; rightMargin: 42; top: view.top; topMargin: 20 }
 		visible: view.count > 4 && !view.atXEnd && !global.addButtonClicked
-		background: Image {
+		background: Widgets.Image2 {
 			source: fwd.pressed ? "image://ui/scroll.right.pressed" : "image://ui/scroll.right.normal"
 		}
 		onClicked: view.scrollForward()
@@ -142,8 +142,8 @@ Widgets.SceneBase {
 		anchors { horizontalCenter: parent.horizontalCenter }
 		y: 294
 
-		font: Utils.ui.font("font.title")
-		color: Utils.ui.color("color.main.primary")
+		font: Skin.ui.font("font.title")
+		color: Skin.ui.color("color.main.primary")
 		visible: inputField.empty && !global.addButtonClicked
 		text: Utils.locale.tr(QT_TR_NOOP("search_scene#hint"))
 	}
@@ -156,8 +156,8 @@ Widgets.SceneBase {
 		visible: global.showSendRequest
 
 		Text {
-			font: Utils.ui.font("font.title")
-			color: Utils.ui.color("color.main.primary")
+			font: Skin.ui.font("font.title")
+			color: Skin.ui.color("color.main.primary")
 			text: Utils.locale.tr(QT_TR_NOOP("search_scene#not_found"))
 		}
 	}

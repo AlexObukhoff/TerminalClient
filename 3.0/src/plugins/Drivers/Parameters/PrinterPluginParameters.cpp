@@ -11,7 +11,7 @@ using namespace SDK::Plugin;
 
 namespace PrinterSettings = CHardware::Printer::Settings;
 namespace PrinterValues = CHardware::Printer::Values;
-namespace Values = CHardware::Values;
+namespace Values = CHardwareSDK::Values;
 namespace PPT = PluginParameterTranslations;
 
 //------------------------------------------------------------------------------
@@ -92,13 +92,13 @@ SPluginParameter setFeedingFactor()
 }
 
 //------------------------------------------------------------------------------
-SPluginParameter setLoopEnabled(const QString & aOptionalTranslation, bool aNoChange)
+SPluginParameter setLoopEnabled(const QString & aOptionalTranslation, bool aAuto)
 {
 	QStringList values;
 
-	if (aNoChange)
+	if (aAuto)
 	{
-		values << Values::NoChange;
+		values << Values::Auto;
 	}
 
 	values << Values::Use << Values::NotUse;
@@ -126,13 +126,13 @@ SPluginParameter setLeftReceiptTimeout(bool aZero)
 }
 
 //------------------------------------------------------------------------------
-SPluginParameter setLeftReceiptAction(const QString & aParameter, bool aRetract, bool aPush, const QString aDefault, bool aNoChange, const QString & aOptionalTranslation)
+SPluginParameter setLeftReceiptAction(const QString & aParameter, bool aRetract, bool aPush, const QString aDefault, bool aAuto, const QString & aOptionalTranslation)
 {
 	QStringList values;
 
-	if (aNoChange)
+	if (aAuto)
 	{
-		values << Values::NoChange;
+		values << Values::Auto;
 	}
 
 	if (aRetract)
@@ -201,7 +201,7 @@ SPluginParameter setBackFeed(const QString & aOptionalTranslation)
 		translation += " " + aOptionalTranslation;
 	}
 
-	return SPluginParameter(PrinterSettings::BackFeed, false, translation, QString(), Values::NotUse , QStringList() << Values::Use << Values::NotUse << Values::NoChange, false);
+	return SPluginParameter(PrinterSettings::BackFeed, false, translation, QString(), Values::NotUse , QStringList() << Values::Use << Values::NotUse << Values::Auto, false);
 }
 
 //------------------------------------------------------------------------------

@@ -14,12 +14,6 @@ namespace CPrimOnlineFR
 	/// Параметр снятия Z-отчета в буфер.
 	const char ZReportInBuffer[] = "01";
 
-	/// Длина произвольного поля фискальных данных (ПРИМ 21-ФА).
-	const int FiscalLineSize = 41;
-
-	/// Длина произвольного поля фискальных данных (ПРИМ 21-ФА).
-	const int UnitLineSize = FiscalLineSize - 1;
-
 	/// Формат представления даты и времени в ответе на запрос статуса ФН-а.
 	const char DateTimeFormat[] = "ddMMyyyyhhmm";
 
@@ -28,6 +22,18 @@ namespace CPrimOnlineFR
 
 	/// Количество типов оплаты.
 	const int PayTypeAmount = '\x0F';
+
+	//----------------------------------------------------------------------------
+	/// Настройки для ПФД.
+	namespace AFD
+	{
+		/// Длина поля
+		namespace LineSize
+		{
+			const int GField = 40;    /// Произвольное поле.
+			const int Unit   = 39;    /// Названия товара.
+		}
+	}
 
 	/// Получить версию ФФД по номеру билда прошивки.
 	inline EFFD::Enum getFFD(int aBuild)
@@ -219,7 +225,7 @@ namespace CPrimOnlineFR
 				}
 				else if (mBuffer[errorCode].extraData)
 				{
-					result += QString::number(errorReason);
+					result += QString::number(uchar(errorReason));
 				}
 
 				return result;

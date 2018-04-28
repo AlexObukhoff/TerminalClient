@@ -222,7 +222,7 @@ void BaseMemorySwitchUtils::setConfiguration(const QVariantMap & aConfiguration)
 	{
 		QString value = it.value().toString();
 
-		if (value != CHardware::Values::NoChange)
+		if (value != CHardwareSDK::Values::Auto)
 		{
 			mConfiguration.insert(it.key(), value);
 		}
@@ -292,8 +292,8 @@ void BaseMemorySwitchUtils::add(ESTARMemorySwitchTypes::Enum aParameterType, int
 void BaseMemorySwitchUtils::add(ESTARMemorySwitchTypes::Enum aParameterType, int aNumber, int aIndex, bool aInvert, const QString & aDataName, const QString & aDescription, const TModels & models)
 {
 	TMSWParameters parameters;
-	parameters.insert("0", QStringList() << ( aInvert ? CHardware::Values::Use : CHardware::Values::NotUse));
-	parameters.insert("1", QStringList() << (!aInvert ? CHardware::Values::Use : CHardware::Values::NotUse));
+	parameters.insert("0", QStringList() << ( aInvert ? CHardwareSDK::Values::Use : CHardwareSDK::Values::NotUse));
+	parameters.insert("1", QStringList() << (!aInvert ? CHardwareSDK::Values::Use : CHardwareSDK::Values::NotUse));
 
 	add(aParameterType, aNumber, aIndex, QStringList() << aDataName, parameters, aDescription, models);
 }

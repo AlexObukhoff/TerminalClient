@@ -13,7 +13,7 @@ Controls.Button {
 	property string text
 
 	// Цвет текста кнопки
-	property string color: rootItem.disabled ? "transparent" : (rootItem.pressed ? Utils.ui.color("color.key.pressed") : Utils.ui.color("color.key.normal"))
+	property string color: rootItem.disabled ? "transparent" : (rootItem.pressed ? Skin.ui.color("color.key.pressed") : Skin.ui.color("color.key.normal"))
 
 	// Подложка кнопки без расширения
 	property string backgroundSource: ""
@@ -46,11 +46,11 @@ Controls.Button {
 		id: text
 
 		color: rootItem.color
-		font: Utils.ui.font("font.key")
+		font: Skin.ui.font("font.key")
 		text: !rootItem.standalone && rootItem.parent.handler.altMode ? rootItem.altText : rootItem.text
 	}
 
-	background: BorderImage {
+	background: BorderImage2 {
 		border { left: 10; top: 10; right: 10; bottom: 10 }
 		source: backgroundSource == "" ? (rootItem.disabled ? "image://ui/button.disabled" :
 																													(rootItem.pressed ? "image://ui/button.key.pressed" : "image://ui/button.key.normal")) :

@@ -256,7 +256,7 @@ bool OPOSMStarTUPK::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 
 	if (BOOL_CALL_OPOS(DayOpened))
 	{
-		if (canAutoCloseSession == CHardware::Values::Auto)
+		if (canAutoCloseSession == CHardwareSDK::Values::Auto)
 		{
 			toLog(LogLevel::Normal, "Going to autoclosing session before checking the tax");
 
@@ -265,11 +265,11 @@ bool OPOSMStarTUPK::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 				return false;
 			}
 
-			setConfigParameter(CHardware::FR::CanAutoCloseSession, CHardware::Values::NotUse);
+			setConfigParameter(CHardware::FR::CanAutoCloseSession, CHardwareSDK::Values::NotUse);
 
 			emit configurationChanged();
 		}
-		else if (canAutoCloseSession == CHardware::Values::NotUse)
+		else if (canAutoCloseSession == CHardwareSDK::Values::NotUse)
 		{
 			toLog(LogLevel::Debug, "Don`t need to check the tax due to it was done earlier");
 			return true;

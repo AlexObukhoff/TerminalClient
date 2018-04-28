@@ -35,7 +35,7 @@ void AtolVKP80BasedFR<T>::setDeviceConfiguration(const QVariantMap & aConfigurat
 		setConfigParameter(PresentationLength, presentationLength);
 	}
 
-	bool loopEnable = getConfigParameter(Loop).toString() == CHardware::Values::Use;
+	bool loopEnable = getConfigParameter(Loop).toString() == CHardwareSDK::Values::Use;
 	char previousPush = char(getConfigParameter(PreviousReceipt).toString() == CHardware::Printer::Values::Push);
 	char presentation = char(presentationLength) % ~CEjectorAtolFR::SpecialSettingMask;
 

@@ -22,9 +22,6 @@ namespace CCCTalk
 	/// Регулярка для парсинга название типа устройства.
 	const char DeviceTypeRegexp[] = "[cC]oin ?[aA]cceptor";
 
-	/// Таймаут отсылки сигнала об отключении монетника, [мс].
-	const int DisablingTimeout = 600;
-
 	/// Маска для сортировщика по умолчанию (исполтзовать предустановленные настройки).
 	const char DefaultSorterMask = '\xFF';
 

@@ -34,7 +34,7 @@ Item {
 			onClicked: rootItem.showComment()
 		}
 
-		Image {
+		Widgets.Image2 {
 			anchors { top: parent.top; topMargin: 112 }
 			width: 1220
 			height: 498

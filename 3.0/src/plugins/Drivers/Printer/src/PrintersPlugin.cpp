@@ -9,7 +9,7 @@ using namespace SDK::Driver;
 
 namespace PrinterSettings = CHardware::Printer::Settings;
 namespace PrinterValues = CHardware::Printer::Values;
-namespace Values = CHardware::Values;
+namespace Values = CHardwareSDK::Values;
 
 //------------------------------------------------------------------------------
 template <class T>
@@ -92,8 +92,8 @@ TParameterList CustomVKP80Parameters(const QString & aModel)
 {
 	return CommonCustomVKP80Parameters<T>(aModel)
 		<< setLoopEnabled("", false)
-		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, true, Values::NoChange)
-		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, true, Values::NoChange)
+		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, true, Values::Auto)
+		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, true, Values::Auto)
 		<< setCustomCodepage();
 }
 

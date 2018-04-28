@@ -15,7 +15,7 @@ Controls.KeyboardBase {
 	width: 407
 	height: 428
 
-	BorderImage {
+	BorderImage2 {
 		id: panel
 
 		anchors.fill: parent
