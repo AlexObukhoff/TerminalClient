@@ -13,6 +13,8 @@ import "plugins" 1.0
 Widgets.SceneBase {
 	id: rootItem
 
+	property QtObject adBanner
+
 	sceneButton.visible: global.menuLevel > 0
 	topPanelEnabled: false
 	changeValue: Number(global.change).toFixed(2);
@@ -94,8 +96,8 @@ Widgets.SceneBase {
 			width: 407
 			icon: 6
 			text: Utils.locale.tr(QT_TR_NOOP("main_menu_scene#search"))
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 			visible: Core.graphics.ui["show_search"] === "true"
 
 			onClicked: Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Search)
@@ -106,8 +108,8 @@ Widgets.SceneBase {
 			width: 407
 			icon: 15
 			text: Utils.locale.tr(QT_TR_NOOP("main_menu_scene#info"))
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 			visible: Core.graphics.ui["show_info"] === "true"
 
 			onClicked: Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Info)
@@ -118,8 +120,8 @@ Widgets.SceneBase {
 			width: 407
 			icon: 12
 			text: Utils.locale.tr(QT_TR_NOOP("main_menu_scene#language"))
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 			visible: Core.graphics.ui["show_language"] === "true"
 
 			onClicked: Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Language)
@@ -130,8 +132,8 @@ Widgets.SceneBase {
 			width: 407
 			text: Utils.locale.tr(QT_TR_NOOP("main_menu_scene#platru"))
 			color: Utils.ui.color("color.button.primary")
-			texture: "image://ui/button.paybook.normal"
-			texturePressed: "image://ui/button.paybook.pressed"
+			texture: Utils.ui.image("button.paybook.normal")
+			texturePressed: Utils.ui.image("button.paybook.pressed")
 			visible: Core.graphics.ui["show_platru"] === "true"
 
 			onClicked: Core.postEvent(EventType.StartScenario, { name: Scenario.Platru.Name });
@@ -157,9 +159,24 @@ Widgets.SceneBase {
 	function goToCategory(aId, aIsGroup, aSelectedIndex) {
 		GUI.log("GO TO CATEGORY: ", aId, aIsGroup, aSelectedIndex)
 
+		if (!rootItem.adBanner) {
+			for(var i = 0; i < rootItem.children.length; ++i)
+			{
+				if (rootItem.children[i].objectName == "Ad") {
+					rootItem.adBanner = rootItem.children[i]
+				}
+			}
+		}
+
+		Core.userProperties.set("operator_id", aId);
+
 		if (aIsGroup) {
 			global.menuLevel = MenuWalker.go(aId, operatorSelector.getCurrentPosition());
 			Utils.playSound(Scenario.Sound.ChooseOperator);
+
+			if (rootItem.adBanner) {
+				rootItem.adBanner.visible = false
+			}
 		} else {
 			var provider = Core.payment.getProvider(aId);
 			if (provider.isNull()) {
@@ -235,6 +252,12 @@ Widgets.SceneBase {
 		for(var i in rootColumn.items) {
 			rootColumn.items[i].reset();
 		}
+
+		Core.graphics.reload({});
+
+		if (rootItem.adBanner) {
+			rootItem.adBanner.visible = true
+		}
 	}
 
 	// Обработчики вызовов графического движка
@@ -290,7 +313,7 @@ Widgets.SceneBase {
 
 		// Загрузка и инициализация комонентов главного экрана.
 		// Если название профиля в config.xml отсутствует, то загружаем дефолтный
-		var profiles = ["top5_noad", "top5", "top10", "top10_noad", "top20_noad"];
+		var profiles = ["top5_noad", "top5", "top5_full", "top10_noad", "top10", "top10_full", "top20_noad"];
 		var current = Core.environment.terminal.adProfile;
 		SceneFactory.load("scripts/" + (profiles.indexOf(current) != -1 ? current : "top5_noad") + ".json", rootColumn);
 

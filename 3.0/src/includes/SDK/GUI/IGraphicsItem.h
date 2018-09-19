@@ -45,7 +45,17 @@ public:
 	virtual QVariantMap getContext() const = 0;
 
 protected:
+	friend class GraphicsItemDeleter;
 	virtual ~IGraphicsItem() {};
+};
+
+
+//---------------------------------------------------------------------------
+/// Удалятор для смарт-поинтера
+class GraphicsItemDeleter
+{
+public:
+	void operator()(IGraphicsItem * aGraphicsItem) { delete aGraphicsItem; }
 };
 
 }} // namespace SDK::GUI

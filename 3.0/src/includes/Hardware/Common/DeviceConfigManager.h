@@ -1,0 +1,1 @@
+#include "../../../modules/Hardware/Common/src/ConfigManager/DeviceConfigManager.h"

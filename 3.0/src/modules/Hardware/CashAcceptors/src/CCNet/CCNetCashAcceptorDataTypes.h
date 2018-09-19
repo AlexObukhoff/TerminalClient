@@ -18,9 +18,6 @@ namespace CCCNet
 	/// Интервалы поллинга, [мс].
 	namespace PollingIntervals
 	{
-		/// При ожидании на идентификации.
-		const int Identification = 100;
-
 		/// При выключении на прием денег.
 		const int Disabled = 800;
 

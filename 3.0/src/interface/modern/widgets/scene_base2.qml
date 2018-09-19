@@ -48,7 +48,7 @@ SceneBase {
 	// Клик по левой кнопке
 	signal leftClick
 
-	background: "image://ui/background"
+	background: Utils.ui.image("background")
 
 	// Кнопка назад
 	Button {
@@ -59,8 +59,8 @@ SceneBase {
 		icon: 16
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#back"))
 		color: Utils.ui.color("color.button.secondary")
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 		onClicked: rootItem.leftClick()
 	}
 
@@ -73,8 +73,8 @@ SceneBase {
 		icon: 17
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#forward"))
 		color: Utils.ui.color("color.button.primary")
-		texture: "image://ui/button.primary.normal"
-		texturePressed: "image://ui/button.primary.pressed"
+		texture: Utils.ui.image("button.primary.normal")
+		texturePressed: Utils.ui.image("button.primary.pressed")
 		onClicked: rootItem.rightClick()
 	}
 }

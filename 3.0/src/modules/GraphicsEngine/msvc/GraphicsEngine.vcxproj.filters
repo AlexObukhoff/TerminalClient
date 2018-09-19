@@ -27,14 +27,14 @@
     <ClCompile Include="..\src\GraphicsEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_GraphicsEngine.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_GraphicsEngine.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_GraphicsEngine.cpp">
       <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\GraphicsEngine\ReleaseWithDebugInfo\moc_GraphicsEngine.cpp">
-      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

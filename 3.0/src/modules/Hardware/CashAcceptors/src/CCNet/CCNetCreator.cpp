@@ -63,6 +63,9 @@ void CCNetCreator::processDeviceData(QByteArray & aAnswer)
 {
 	QString firmware = parseDeviceData(aAnswer.left(15), "[\\w]+([\\d]+)$");
 
+	removeDeviceParameter(CDeviceData::Firmware);
+	removeDeviceParameter(CDeviceData::InternalFirmware);
+
 	if (firmware.size() == 6)
 	{
 		QString logDate = QDate::fromString(firmware.left(4).prepend("20"), CCCNetCreator::DateFormat).toString(CCCNetCreator::DateLogFormat);

@@ -15,14 +15,14 @@ Widgets.SceneBase {
 	/*leftButton.width: 407
 	rightButtonEnabled: global.currentEditor === null ? false : global.currentEditor.acceptable
 	rightButton.width: 407
-	rightButtonBackground: rightButton.pressed ? "image://ui/button.secondary.pressed" : "image://ui/button.secondary.normal"*/
+	rightButtonBackground: rightButton.pressed ? Utils.ui.image("button.secondary.pressed") : Utils.ui.image("button.secondary.normal")*/
 	topPanelEnabled: false
 
 	BorderImage {
 		anchors { left: sceneButton.right; right: parent.right; rightMargin: 30; verticalCenter: sceneButton.verticalCenter }
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
-		source: "image://ui/panel.operator"
+		source: Utils.ui.image("panel.operator")
 
 		Row {
 			anchors { left: parent.left; leftMargin: 10 }
@@ -33,7 +33,7 @@ Widgets.SceneBase {
 
 				anchors.verticalCenter: parent.verticalCenter
 				width: 100
-				source: "image://ui/paybook.logo"
+				source: Utils.ui.image("paybook.logo")
 			}
 
 			Item {
@@ -127,8 +127,8 @@ Widgets.SceneBase {
 			visible: global.currentIndex == 1
 			icon: 4
 			text: Utils.locale.tr(QT_TR_NOOP("platru_login_scene#get_pincode"))
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 			onClicked: {
 				var fields = {"100": {"rawValue": global.rawUser}};
 				Core.postEvent(EventType.UpdateScenario, {signal: Scenario.Platru.Event.SendPin, fields: fields});
@@ -143,8 +143,8 @@ Widgets.SceneBase {
 		icon: 19
 		text: Utils.locale.tr(QT_TR_NOOP("platru_login_scene#topup"))
 		color: Utils.ui.color("color.button.primary")
-		texture: "image://ui/button.paybook.normal"
-		texturePressed: "image://ui/button.paybook.pressed"
+		texture: Utils.ui.image("button.paybook.normal")
+		texturePressed: Utils.ui.image("button.paybook.pressed")
 		onClicked: {
 			Editor.save();
 
@@ -167,8 +167,8 @@ Widgets.SceneBase {
 		icon: 16
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#back"))
 		color: Utils.ui.color("color.button.secondary")
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 
 		anchors { left: parent.left; leftMargin: 30; bottom: parent.bottom; bottomMargin: 30 }
 		width: 407
@@ -192,8 +192,8 @@ Widgets.SceneBase {
 		enabled: global.currentEditor === null ? false : global.currentEditor.acceptable
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#forward"))
 		color: Utils.ui.color("color.button")
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 
 		width: 407
 		anchors { right: parent.right; rightMargin: 29; bottom: parent.bottom; bottomMargin: 30 }

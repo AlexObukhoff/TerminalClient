@@ -22,11 +22,11 @@ public:
 	ProtoShtrihFR();
 
 protected:
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Получить длинный статус.
-	TResult getLongStatus(QByteArray & aAnswer);
+	TResult getLongStatus(QByteArray & aData);
 	TResult getLongStatus();
 
 	/// Добавить общие статусы.
@@ -75,7 +75,7 @@ protected:
 	bool openDocument(bool aBack);
 
 	/// Продажа.
-	virtual bool sale(const SDK::Driver::SAmountData & aAmountData, bool aBack);
+	virtual bool sale(const SDK::Driver::SUnitData & aUnitData, bool aBack);
 
 	/// Закрыть чек.
 	virtual bool closeDocument(double aSum, SDK::Driver::EPayTypes::Enum aPayType);
@@ -95,8 +95,11 @@ protected:
 	/// Снять Z-отчет.
 	virtual bool execZReport(bool aAuto);
 
+	/// Проверка готовности фискальника к Z-отчету.
+	virtual bool prepareZReport(bool aAuto, QVariantMap & aOutData);
+
 	/// Собрать данные о сессии перед выполнением Z-отчета.
-	QVariantMap getSessionOutData(const QByteArray & aAnswer);
+	QVariantMap getSessionOutData(const QByteArray & aLongStatusData);
 
 	/// Локальная печать X-отчета.
 	virtual bool processXReport();
@@ -189,6 +192,9 @@ protected:
 
 	/// Номер шрифта.
 	char mFontNumber;
+
+	/// Таймаут технологических посылок.
+	int mTransportTimeout;
 };
 
 //--------------------------------------------------------------------------------

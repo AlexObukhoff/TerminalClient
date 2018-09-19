@@ -55,7 +55,7 @@ public:
 #pragma endregion
 
 protected:
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Список найденных в системе ридеров

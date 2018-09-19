@@ -12,7 +12,7 @@ Widgets.SceneBase2 {
 
 	rightButtonEnabled: editor.acceptable && !global.rightButtonDisabled
 	topPanelImage: global.provider ? ("image://ui/logoprovider/" + global.provider.id + "/button.operator.blank/" + global.provider.name) : ""
-	topPanelText: Utils.locale.tr(QT_TR_NOOP("payment_method_selector_scene#select_payment_method"))
+	topPanelText: Utils.locale.tr(QT_TR_NOOP("edit_amount_scene#select_payment_method"))
 	infoButtonEnabled: true
 
 	Widgets.MultiEditorWrapper {
@@ -47,7 +47,7 @@ Widgets.SceneBase2 {
 		// Иначе от введенной суммы
 		// Поле ввода суммы пропускаем
 		if (editor.id() == "amount") {
-			Core.userProperties.set("payment.amounts", Core.payment.calculateLimits(editor.values().amount.rawValue));
+			Core.userProperties.set("payment.amounts", Core.payment.calculateLimits(editor.values().amount.rawValue, true));
 		}
 		else if (editor.id() == "confirm") {
 			if (global.fixedPayment) {
@@ -87,7 +87,7 @@ Widgets.SceneBase2 {
 
 		var methods = [];
 
-		var trs = {card: QT_TR_NOOP("payment_method_selector_scene#card"), cash: QT_TR_NOOP("payment_method_selector_scene#cash")};
+		var trs = {card: QT_TR_NOOP("edit_amount_scene#card"), cash: QT_TR_NOOP("edit_amount_scene#cash")};
 
 		Core.charge.getPaymentMethods().forEach(function(aMethod) {
 			methods.push({"name": Utils.locale.tr(trs[aMethod]), "value": aMethod});
@@ -98,21 +98,22 @@ Widgets.SceneBase2 {
 		global.maxAmount = Math.min(Core.payment.getParameter(Scenario.Payment.Parameters.MaxAmountAll) ? Core.payment.getParameter(Scenario.Payment.Parameters.MaxAmountAll) :  Number(global.provider.systemLimit),
 																					 global.provider.systemLimit ? global.provider.systemLimit : Core.payment.getParameter(Scenario.Payment.Parameters.MaxAmountAll));
 
-		var minAmounts = Core.payment.calculateLimits(global.minAmount);
-		global.minAmount = global.minAmount + (Number(minAmounts[Scenario.Payment.Parameters.MaxAmountAll]) - Number(minAmounts[Scenario.Payment.Parameters.MaxAmount]))
-		global.maxAmount = Core.payment.calculateLimits(global.maxAmount)[Scenario.Payment.Parameters.MaxAmount];
+
+		global.minAmount = Core.payment.calculateLimits(global.minAmount, true)[Scenario.Payment.Parameters.MaxAmount]
+
+		global.maxAmount = Core.payment.calculateLimits(global.maxAmount, global.fixedPayment)[Scenario.Payment.Parameters.MaxAmount];
 
 		// Поле для редактора суммы
 		var e2 = {
 			type: "number:float", id: global.amountField,
-			title: Utils.locale.tr(QT_TR_NOOP("payment_method_selector_scene#enter_amount")).arg(formatNumber(global.minAmount)).arg(formatNumber(global.maxAmount)),
+			title: Utils.locale.tr(QT_TR_NOOP("edit_amount_scene#enter_amount")).arg(formatNumber(global.minAmount)).arg(formatNumber(global.maxAmount)).arg(global.minAmount).arg(global.maxAmount),
 			minAmount: global.minAmount, maxAmount: global.maxAmount
 		};
 
 		// Подверждение оплаты
 		var e3 = {
 			type: "pay_confirm", id: "confirm",
-			title: Utils.locale.tr(QT_TR_NOOP("payment_method_selector_scene#confirm_payment"))
+			title: Utils.locale.tr(QT_TR_NOOP("edit_amount_scene#confirm_payment"))
 		};
 
 		// Если лимит не сконвертировался - значит сумма придет из редактора/сервера

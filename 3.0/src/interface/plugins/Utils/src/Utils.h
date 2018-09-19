@@ -74,6 +74,9 @@ public slots:
 
 	QString json2str(const QObject * aJSON) const { Q_UNUSED(aJSON); return QString(); }
 
+private slots:
+	void onReloadSkin(const QVariantMap & aParams);
+
 public:
 	/// Возвращает транслятор.
 	QObject * getTranslator();
@@ -125,6 +128,8 @@ private:
 	bool mUseCommonSounds;
 	bool mUseNarratorSounds;
 	bool mUseAutoOrderProviders;
+
+	QPointer<QObject> mGuiService;
 };
 
 //------------------------------------------------------------------------------

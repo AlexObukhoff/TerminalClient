@@ -5,28 +5,15 @@
 #include "AtolOnlineFRBase.h"
 #include "../Ejector/AtolVKP80BasedFR.h"
 
-//--------------------------------------------------------------------------------
+/// Константы Казначея.
 namespace CPaymaster
 {
-	class CPrinterModels: public CDescription<char>
+	/// Ошибки короткого статуса.
+	namespace ShortStatusError
 	{
-	public:
-		CPrinterModels()
-		{
-			append( 1, "ATOL");
-			append( 2, "Custom VKP-80");
-			append( 3, "Citizen PPU-700");
-			append( 4, "Citizen CT-S2000");
-			append( 5, "Custom TG-2480");
-			append( 6, "Epson");
-			append( 7, "Memory");
-			append( 8, "Custom VKP-80SX");
-			append( 9, "SNBC BT-080");
-			append(10, "SNBC BK-T680");
-		}
-	};
-
-	static CPrinterModels PrinterModels;
+		const char PaperJam  = '\x20';    /// Замятие бумаги.
+		const char Presenter = '\x40';    /// Только для PPU-700: Ошибка презентера или в презентере осталась бумага.
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -39,12 +26,18 @@ class Paymaster : public TPaymaster
 public:
 	Paymaster();
 
+	/// Устанавливает конфигурацию устройству.
+	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
+
 protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
 	/// Запросить и вывести в лог критичные параметры ФР.
 	virtual void processDeviceData();
+
+	/// Распарсить флаги короткого статуса.
+	virtual void parseShortStatusFlags(char aFlags, TStatusCodes & aStatusCodes);
 
 	/// Установить параметры ФР.
 	virtual bool setFRParameters();
@@ -57,6 +50,12 @@ protected:
 
 	/// Печать Z отчета.
 	virtual bool performZReport(bool aPrintDeferredReports);
+
+	/// Включить/выключить режим непечати документов.
+	virtual bool setNotPrintDocument(bool aEnabled, bool aZReport = false);
+
+	/// Получить Id принтера.
+	virtual char getPrinterId();
 };
 
 //--------------------------------------------------------------------------------

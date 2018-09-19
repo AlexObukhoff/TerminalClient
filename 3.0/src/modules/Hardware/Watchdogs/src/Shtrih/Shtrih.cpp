@@ -44,7 +44,7 @@ namespace EShtrihCommands
 }
 
 //--------------------------------------------------------------------------------
-Shtrih::Shtrih() : mPowerControlLogicEnable(false), mAdvancedPowerLogicEnable(false)
+Shtrih::Shtrih() : mPowerControlLogicEnable(false), mAdvancedPowerLogicEnable(false), mMessageNumber(0)
 {
 	// Параметры порта.
 	mPortParameters[EParameters::BaudRate].append(EBaudRate::BR9600);    // default
@@ -235,7 +235,7 @@ bool Shtrih::unpackData(const QByteArray & aPacket,
 		// Счетчик посылок.
 		if (aPacket[position] != aAnswer[position++])
 		{
-			toLog(LogLevel::Error, QString("Shtrih: message counter unpacked error, value = %1, need = %2").arg(int(aAnswer[position - 1])).arg(int(aPacket[position - 1])));
+			toLog(LogLevel::Error, QString("Shtrih: message counter unpacked error, value = %1, need = %2").arg(uchar(aAnswer[position - 1])).arg(int(aPacket[position - 1])));
 			return false;
 		}
 
@@ -536,7 +536,7 @@ void Shtrih::setDeviceDataByType(CShtrih::Devices::Type::Enum aType)
 	QString key = mDeviceData[aType].name;
 
 	QString addressLog = QString("0x%1").arg(uchar(mDeviceData[aType].address), 2, 16, QChar(ASCII::Zero)).toUpper();
-	setDeviceParameter(CDeviceData::Address, addressLog, key);
+	setDeviceParameter(CDeviceData::Address, addressLog, key, true);
 	setDeviceParameter(CDeviceData::SerialNumber, mDeviceData[aType].serial, key);
 
 	CShtrih::Devices::SSoftInfo & softInfo = mDeviceData[aType].softInfo;

@@ -54,7 +54,12 @@
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/cyberchange.dll" target="plugins/plugins/cyberchange.dll"/>
 
 	<!-- Uniteller plugin -->
+	<!-- <option target="user/user/plugins/uniteller.ini" key="PaymentProcessor.ChargeProvider.UnitellerChargeProvider.configuration_singleton/uniteller_runtime_path" value="C:/EFTPOS_3.0" /> -->
 	<!-- <file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/uniteller.dll" target="plugins/plugins/uniteller.dll"/> -->
+
+	<!-- UCS plugin -->
+	<option target="user/user/plugins/ucs.ini" key="PaymentProcessor.ChargeProvider.UcsChargeProvider.configuration_singleton/ucs_runtime_path" value="C:/UCS/BIN" />
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/ucs.dll" target="plugins/plugins/ucs.dll"/>
 
 	<!-- Драйверы, компонент drivers -->
 	<file source="{QBS_RESULT_PATH}/plugins/drivers/fr.dll" target="drivers/plugins/drivers/fr.dll"/>
@@ -86,6 +91,7 @@
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/platru_ru.qm" target="locale/plugins/platru_ru.qm"/>
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/cyberchange_ru.qm" target="locale/plugins/cyberchange_ru.qm"/>
 	<!-- <file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/uniteller_ru.qm" target="locale/plugins/uniteller_ru.qm"/> -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/ucs_ru.qm" target="locale/plugins/ucs_ru.qm"/> -->
 	
 	<!-- ######################################################################################  -->
 
@@ -111,6 +117,9 @@
 
 	<!-- Token plugin -->
 	<file if="{TC_USE_TOKEN} &amp;&amp; {CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/drivers/token.dll" target="drivers/plugins/drivers/token.dll"/>
+
+	<!-- Fiscal client plugin -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/fiscal_client.dll" target="plugins/plugins/fiscal_client.dll"/>
 	
 	<!-- ######################################################################################  -->
 	

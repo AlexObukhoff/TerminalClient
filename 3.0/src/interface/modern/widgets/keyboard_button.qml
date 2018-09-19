@@ -52,9 +52,9 @@ Controls.Button {
 
 	background: BorderImage {
 		border { left: 10; top: 10; right: 10; bottom: 10 }
-		source: backgroundSource == "" ? (rootItem.disabled ? "image://ui/button.disabled" :
-																													(rootItem.pressed ? "image://ui/button.key.pressed" : "image://ui/button.key.normal")) :
-																		 ("image://ui/" + backgroundSource + "." + (rootItem.disabled ? "disabled" : (rootItem.pressed ? "pressed" : "normal")))
+		source: backgroundSource == "" ? (rootItem.disabled ? Utils.ui.image("button.disabled") :
+																													(rootItem.pressed ? Utils.ui.image("button.key.pressed") : Utils.ui.image("button.key.normal"))) :
+																		 Utils.ui.image(backgroundSource + "." + (rootItem.disabled ? "disabled" : (rootItem.pressed ? "pressed" : "normal")))
 	}
 
 	icon: Icon { icon: iconId }

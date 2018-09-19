@@ -27,7 +27,7 @@ public:
 	virtual bool release();
 
 protected:
-	/// Запрос статуса.
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Фильтр событий, для отслеживаения нажатия кнопок.

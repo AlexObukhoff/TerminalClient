@@ -37,7 +37,7 @@ Item {
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
 			verticalTileMode: BorderImage.Stretch
-			source: "image://ui/webview.angles.overlay"
+			source: Utils.ui.image("webview.angles.overlay")
 			z: 2
 		}
 
@@ -69,7 +69,7 @@ Item {
 					anchors { horizontalCenter: parent.horizontalCenter }
 					visible: global.waiting && !global.countdown
 					height: frameSize
-					source: "image://ui/waiting"
+					source: Utils.ui.image("waiting")
 				}
 
 				Text {
@@ -161,8 +161,8 @@ Item {
 			text: ((typeof global.button1) != "undefined" && global.button1.text) ? (typeof global.button1.text === "object" ?
 																																								 Utils.locale.tr(global.button1.text.tr) : global.button1.text) : Utils.locale.tr(QT_TR_NOOP("info_popup#close"))
 			color: Utils.ui.color("color.button.secondary")
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 
 			width: 407
 			visible: global.cancelable
@@ -186,8 +186,8 @@ Item {
 				text: ((typeof global.button2) != "undefined" && global.button2.text) ? (typeof global.button2.text === "object" ?
 																																									 Utils.locale.tr(global.button2.text.tr) : global.button2.text) : Utils.locale.tr(QT_TR_NOOP("info_popup#retry"))
 				color: Utils.ui.color("color.button.primary")
-				texture: "image://ui/button.primary.normal"
-				texturePressed: "image://ui/button.primary.pressed"
+				texture: Utils.ui.image("button.primary.normal")
+				texturePressed: Utils.ui.image("button.primary.pressed")
 
 				width: 407
 				onClicked: { global.result = applyButton(global.button2); hideAnimation.start(); }

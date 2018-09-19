@@ -22,7 +22,11 @@ function loaded(aObject, aParent) {
 	for (var item in aObject.items) {
 		var component = Qt.createComponent("widgets/" + aObject.items[item].path);
 		if (component.status == Component.Ready) {
-			var object = component.createObject(aParent, aObject.items[item].parameters);
+			// "Одиночек" в сетку объектов не добавляем
+			var parent = aObject.items[item].hasOwnProperty("standalone") && Boolean(aObject.items[item]["standalone"]) ?
+						aParent.parent : aParent
+
+			var object = component.createObject(parent, aObject.items[item].parameters);
 
 			if (aObject.items[item].hasOwnProperty("name")) {
 				object.objectName = aObject.items[item].name;

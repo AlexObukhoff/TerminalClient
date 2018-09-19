@@ -33,6 +33,7 @@ public:
 	virtual bool last();
 
 	virtual bool isValid();
+	virtual int  numRowsAffected() const;
 
 	virtual QVariant value(int i) const;
 

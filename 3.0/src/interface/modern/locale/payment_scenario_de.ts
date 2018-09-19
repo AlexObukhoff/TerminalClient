@@ -16,7 +16,7 @@
         <translation>Während der Prüfung ist ein Fehler aufgetreten.</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="256"/>
+        <location filename="../scenario/payment_scenario.js" line="258"/>
         <source>payment_scenario#cannot_use_provider_without_printer</source>
         <translation>Diese Zahlung kann leider wegen eines Druckerfehlers nicht entgegengenommen werden. Versuchen Sie es bitte später.</translation>
     </message>

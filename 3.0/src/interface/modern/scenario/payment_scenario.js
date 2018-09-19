@@ -145,6 +145,8 @@ function onStart() {
 function onStop() {
 	disconnectAll();
 
+	Core.userProperties.set("operator_id", -1);
+
 	// Сбрасываем состояние платёжной логики
 	Core.payment.reset();
 }
@@ -452,7 +454,7 @@ function addinfoEnterHandler(aParameters) {
 		GUI.show("AddInfoScene",
 						 {
 							 reset: true, id: p.id, addInfo: info, addFields: fields.length ? fields : "", needChooseService: needChooseService,
-							 canPayProcess: aParameters.hasOwnProperty("canPayProcess") ? aParameters.canPayProcess : true
+																																								canPayProcess: aParameters.hasOwnProperty("canPayProcess") ? aParameters.canPayProcess : true
 						 });
 
 		return;
@@ -624,10 +626,18 @@ function onPaymentStepCompleted(aPayment, aStep, aError) {
 
 //------------------------------------------------------------------------------
 function finishEnterHandler(aParameters) {
+	function changeback_ok() {
+		return GUI.toBool(GUI.ui("use_auto_changeback")) || GUI.toInt(GUI.ui("use_auto_changeback"))
+	}
+
+	function disable_show_change() {
+		return (!GUI.ui("show_get_change") || GUI.toInt(GUI.ui("show_get_change")) === 0 || GUI.toBool(GUI.ui("show_get_change")) === false)
+	}
+
 	useAutoChangeback =
 			Core.payment.getParameter("CONTACT")
-			&& Core.graphics.ui["use_auto_changeback"] === "true"
-			&& (!Core.graphics.ui["show_get_change"] || Core.graphics.ui["show_get_change"] === "0" || Core.graphics.ui["show_get_change"] === "false")
+			&& changeback_ok()
+			&& disable_show_change()
 			&& Core.payment.getChangeAmount() > 0;
 
 	// Скорректируем время ожидания для сцены("пропустим")
@@ -677,7 +687,8 @@ function finishExitHandler(aParameters) {
 
 	if (useAutoChangeback) {
 		var phone = Core.payment.getParameter("CONTACT");
-		var operatorMnp = Scenario.CyberService.ChangebackProvider;
+		var operatorMnp = GUI.toInt(GUI.ui("use_auto_changeback")) ?
+					GUI.toInt(GUI.ui("use_auto_changeback")) : Scenario.CyberService.ChangebackProvider;
 
 		Core.userProperties.set("operator.fields", {100: {value: phone, rawValue: phone}});
 		Core.userProperties.set("run.topup.payment", operatorMnp);

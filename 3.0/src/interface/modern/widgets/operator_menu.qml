@@ -48,7 +48,7 @@ GridView {
 			anchors.fill: parent
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			source: cellWidth == __minCellWidth ? getLogo(model, handler.pressed && (handler.id === model.id && handler.name === model.name)) :
-																						(handler.pressed && (handler.id === model.id) ? "image://ui/button.operator.pressed" : "image://ui/button.operator.normal")
+																						(handler.pressed && (handler.id === model.id) ? Utils.ui.image("button.operator.pressed") : Utils.ui.image("button.operator.normal"))
 		}
 
 		Item {

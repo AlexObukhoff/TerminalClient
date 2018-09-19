@@ -86,9 +86,8 @@ class ProviderField : public QObject
 
 public:
 	ProviderField(const SProviderField & aField, QObject * aParent = 0)
-		: QObject(aParent)
+		: QObject(aParent), mField(aField)
 	{
-		mField = aField;
 	}
 
 private:
@@ -269,7 +268,7 @@ public slots:
 	QVariantMap calculateCommission(const QVariantMap & aParameters);
 
 	/// Вычислить для активного платежа, без записи результата в параметры платежа, лимиты комиссию для произвольной суммы 
-	QVariantMap calculateLimits(const QString & aAmount);
+	QVariantMap calculateLimits(const QString & aAmount, bool aFixedAmount = false);
 
 	/// Возвращает список купюр текущего платежа.
 	QObject * getPaymentNotes();

@@ -6,7 +6,7 @@
 	{
 		name: "Ad",
 		path: "ad.qml",
-		parameters: { source: "banner.swf", width: 1280, height: 200, x: -30 }
+		parameters: { source: "banner.swf", width: 1280, height: 200, sourceWidth: 1280, sourceHeight: 200, x: -30 }
 	},
 	{  path: "spacer.qml", parameters: { height: 24 } },
 	{

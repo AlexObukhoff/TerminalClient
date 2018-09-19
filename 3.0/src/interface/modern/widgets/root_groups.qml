@@ -32,7 +32,7 @@ Item {
 
 				anchors.fill: parent
 				border { left: 20; top: 25; right: 20; bottom: 25 }
-				source: handler.pressed ? "image://ui/button.group.pressed" : "image://ui/button.group.normal"
+				source: handler.pressed ? Utils.ui.image("button.group.pressed") : Utils.ui.image("button.group.normal")
 
 				Column {
 					anchors { horizontalCenter: parent.horizontalCenter; top: parent.top; topMargin: 9 }
@@ -90,7 +90,7 @@ Item {
 			anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 8 }
 			visible: !categoryView.atXBeginning
 			background: Image {
-				source: back.pressed ? "image://ui/scroll.left.pressed" : "image://ui/scroll.left.normal"
+				source: back.pressed ? Utils.ui.image("scroll.left.pressed") : Utils.ui.image("scroll.left.normal")
 			}
 			onClicked: categoryView.decrementCurrentIndex()
 		}
@@ -128,7 +128,7 @@ Item {
 			anchors { verticalCenter: parent.verticalCenter; right: parent.right; rightMargin: 8 }
 			visible: !categoryView.atXEnd
 			background: Image {
-				source: fwd.pressed ? "image://ui/scroll.right.pressed" : "image://ui/scroll.right.normal"
+				source: fwd.pressed ? Utils.ui.image("scroll.right.pressed") : Utils.ui.image("scroll.right.normal")
 			}
 			onClicked: categoryView.incrementCurrentIndex()
 		}

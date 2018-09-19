@@ -4,23 +4,33 @@
 
 #include "Hardware/Plugins/DevicePluginBase.h"
 
+// ПРИМы
 #include "../../../../modules/Hardware/FR/src/Prim/PrimFRBase.h"
 #include "../../../../modules/Hardware/FR/src/Prim/Presenter/PrimPresenterFR.h"
 #include "../../../../modules/Hardware/FR/src/Prim/Ejector/PrimEjectorFRBase.h"
-#include "../../../../modules/Hardware/FR/src/Prim/Ejector/PrimEjectorOnlineFR.h"
+#include "../../../../modules/Hardware/FR/src/Prim/Online/PrimOnlineFRBase.h"
+#include "../../../../modules/Hardware/FR/src/Prim/Online/PrimOnlineFR68.h"
+#include "../../../../modules/Hardware/FR/src/Prim/Online/PrimOnlineFRSpecial.h"
+
+// Штрихи
 #include "../../../../modules/Hardware/FR/src/Shtrih/Base/ShtrihSerialFR.h"
 #include "../../../../modules/Hardware/FR/src/Shtrih/Base/ShtrihRetractorFR.h"
 #include "../../../../modules/Hardware/FR/src/Shtrih/Base/Yarus01K.h"
 #include "../../../../modules/Hardware/FR/src/Shtrih/Base/ShtrihKiosk.h"
-#include "../../../../modules/Hardware/FR/src/Shtrih/Online/PayOnlineFR.h"
+#include "../../../../modules/Hardware/FR/src/Shtrih/Online/Pay/PayOnline.h"
+#include "../../../../modules/Hardware/FR/src/Shtrih/Online/Pay/PayVKP80FA.h"
 #include "../../../../modules/Hardware/FR/src/Shtrih/Online/ShtrihOnlineFRBase.h"
 #include "../../../../modules/Hardware/FR/src/Shtrih/Online/MStarTK2.h"
 #include "../../../../modules/Hardware/FR/src/Shtrih/Base/VirtualShtrihFR.h"
+
+// АТОЛы
 #include "../../../../modules/Hardware/FR/src/Atol/Base/AtolFR.h"
 #include "../../../../modules/Hardware/FR/src/Atol/Base/Ejector/PayVKP80.h"
 #include "../../../../modules/Hardware/FR/src/Atol/Base/Ejector/PayPPU700.h"
 #include "../../../../modules/Hardware/FR/src/Atol/Online/AtolOnlineFRBase.h"
 #include "../../../../modules/Hardware/FR/src/Atol/Online/Paymaster.h"
+
+// остальные
 //#include "../../../../modules/Hardware/FR/src/MStar/MStarPrinters.h"
 #include "../../../../modules/Hardware/FR/src/OPOSMStarTUPK/OPOSMStarTUPK.h"
 #include "../../../../modules/Hardware/FR/src/Spark/SparkFR.h"

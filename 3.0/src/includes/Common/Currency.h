@@ -17,13 +17,17 @@ namespace Currency
 class Nominal
 {
 public:
+	typedef int RawType;
+
 	explicit Nominal(int aValue) : mNominal(aValue * 100) { }
 	explicit Nominal(double aValue) : mNominal(qFloor((aValue * 1000 + 0.001) / 10.0)) { }
+
+	static Nominal fromRawValue(RawType aRawValue) { Nominal n(0); n.mNominal = aRawValue; return n; }
 
 	operator int() const { return mNominal / 100; }
 	operator double() const { return toDouble(); }
 
-	int rawValue() const { return mNominal; }
+	RawType rawValue() const { return mNominal; }
 	double toDouble() const { return mNominal / 100.; }
 
 	bool operator ==(const Nominal & aNominal) const { return this->mNominal == aNominal.mNominal; }
@@ -39,7 +43,7 @@ public:
 	}
 
 private:
-	int mNominal;
+	RawType mNominal;
 };
 
 } // end namespace Currency

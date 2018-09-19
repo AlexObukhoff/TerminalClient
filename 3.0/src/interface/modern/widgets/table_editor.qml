@@ -29,7 +29,7 @@ FocusScope {
 				width: parent.width
 				height: 120
 				border { left: 100; top: 18; right: 18; bottom: 100 }
-				source: "image://ui/comment.bottom.simple"
+				source: Utils.ui.image("comment.bottom.simple")
 
 				Row {
 					anchors { fill: parent; leftMargin: 40 }
@@ -107,7 +107,7 @@ FocusScope {
 					width: parent.width
 					height: 120
 					border { left: 18; top: 100; right: 100; bottom: 18 }
-					source: ListView.isCurrentItem ? "image://ui/enum.pressed" : "image://ui/enum.normal"
+					source: ListView.isCurrentItem ? Utils.ui.image("enum.pressed") : Utils.ui.image("enum.normal")
 
 					property string textColor: ListView.isCurrentItem ? Utils.ui.color("color.entry.secondary") : Utils.ui.color("color.main.primary")
 

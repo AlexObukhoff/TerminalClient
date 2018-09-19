@@ -131,7 +131,7 @@ bool DeviceBase<T>::isPowerReboot()
 
 	return mStatusCollectionHistory.isEmpty() ||
 		(statusCollection2.contains(DeviceStatusCode::Error::NotAvailable) &&
-		!statusCollection2.contains(DeviceStatusCode::Error::NotAvailable));
+		!statusCollection1.contains(DeviceStatusCode::Error::NotAvailable));
 }
 
 //--------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ bool DeviceBase<T>::checkExistence()
 
 	if (!mModelCompatibility && autoDetecting)
 	{
-		toLog(LogLevel::Error, mDeviceName + " can not be found via autodetecting as unsupported by current plugin.");
+		toLog(LogLevel::Error, mDeviceName + " can not be found via autodetecting as unsupported by plugin " + getConfigParameter(CHardware::PluginPath).toString());
 		return false;
 	}
 	else if (!mVerified && autoDetecting)
@@ -267,7 +267,7 @@ void DeviceBase<T>::initialize()
 
 	QString pluginPath = QString("\n%1 : %2").arg(CHardware::PluginPath).arg(getConfigParameter(CHardware::PluginPath).toString());
 	SLogData logData = getDeviceData();
-	setConfigParameter(CHardwareSDK::DeviceData, pluginPath + logData.pluginConfig + logData.device + logData.requiedDevicePluginConfig);
+	setConfigParameter(CHardwareSDK::DeviceData, pluginPath + logData.plugin + logData.device + logData.config + logData.requiedDevice);
 	logDeviceData(logData);
 	removeConfigParameter(CHardware::CallingType);
 
@@ -388,15 +388,10 @@ void DeviceBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 	{
 		aStatusCodes.insert(DeviceStatusCode::Warning::ModelNotCompatible);
 	}
-	
+
 	if (!mOperatorPresence && isPluginMismatch())
 	{
 		aStatusCodes.insert(DeviceStatusCode::Warning::Compatibility);
-	}
-	
-	if ((aStatusCodes.size() > 1) && (aStatusCodes.contains(DeviceStatusCode::Warning::OperationError)))
-	{
-		aStatusCodes.remove(DeviceStatusCode::Warning::OperationError);
 	}
 
 	if ((aStatusCodes.size() > 1) && (aStatusCodes.contains(DeviceStatusCode::OK::OK)))
@@ -406,14 +401,19 @@ void DeviceBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 
 	TStatusCollection statusCollection = getStatusCollection(aStatusCodes);
 
-	if ((statusCollection.size(EWarningLevel::Error) > 1) && (aStatusCodes.contains(DeviceStatusCode::Error::Unknown)))
-	{
-		aStatusCodes.remove(DeviceStatusCode::Error::Unknown);
-	}
-
 	if ((statusCollection.size(EWarningLevel::OK) > 1) && (aStatusCodes.contains(DeviceStatusCode::OK::Unknown)))
 	{
 		aStatusCodes.remove(DeviceStatusCode::OK::Unknown);
+	}
+
+	if ((aStatusCodes.size() > 1) && (aStatusCodes.contains(DeviceStatusCode::Warning::OperationError)))
+	{
+		aStatusCodes.remove(DeviceStatusCode::Warning::OperationError);
+	}
+
+	if ((statusCollection.size(EWarningLevel::Error) > 1) && (aStatusCodes.contains(DeviceStatusCode::Error::Unknown)))
+	{
+		aStatusCodes.remove(DeviceStatusCode::Error::Unknown);
 	}
 }
 
@@ -503,6 +503,16 @@ void DeviceBase<T>::applyStatusBuffer(TStatusCodes & aStatusCodes)
 	}
 }
 
+//--------------------------------------------------------------------------------
+template <class T>
+bool DeviceBase<T>::waitReady(const SWaitingData & aWaitingData)
+{
+	TStatusCodes statusCodes;
+	auto poll = [&] () -> bool { statusCodes.clear(); return getStatus(std::ref(statusCodes)) && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable); };
+
+	return PollingExpector().wait(poll, aWaitingData);
+}
+
 //---------------------------------------------------------------------------
 template <class T>
 bool DeviceBase<T>::getStatus(TStatusCodes & /*aStatuses*/)
@@ -569,14 +579,14 @@ void DeviceBase<T>::doPoll(TStatusCodes & aStatusCodes)
 
 //--------------------------------------------------------------------------------
 template <class T>
-SStatusCodeSpecification DeviceBase<T>::getStatusCodeSpecification(int aStatusCode)
+SStatusCodeSpecification DeviceBase<T>::getStatusCodeSpecification(int aStatusCode) const
 {
 	return mStatusCodesSpecification->value(aStatusCode);
 }
 
 //--------------------------------------------------------------------------------
 template <class T>
-QString DeviceBase<T>::getStatusTranslations(const TStatusCodes & aStatusCodes, bool aLocale)
+QString DeviceBase<T>::getStatusTranslations(const TStatusCodes & aStatusCodes, bool aLocale) const
 {
 	TStatusCodesBuffer statusCodesBuffer = aStatusCodes.toList();
 	qSort(statusCodesBuffer);
@@ -588,7 +598,7 @@ QString DeviceBase<T>::getStatusTranslations(const TStatusCodes & aStatusCodes, 
 		translations << (aLocale ? codeSpecification.translation : codeSpecification.description);
 	}
 
-	return translations.join("; ");
+	return translations.join(CDevice::StatusSeparator);
 }
 
 //--------------------------------------------------------------------------------

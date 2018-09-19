@@ -44,6 +44,9 @@ public:
 	/// Создаёт плагин по заданному пути.
 	virtual IPlugin * createPlugin(const QString & aInstancePath, const QString & aConfigPath = "");
 
+	/// Создаёт плагин по заданному пути.
+	virtual std::weak_ptr<IPlugin> createPluginPtr(const QString & aInstancePath, const QString & aConfigPath = "");
+
 	virtual TParameterList getPluginParametersDescription(const QString & aPath) const;
 
 	/// Возвращает параметры для данного плагина, загруженные из конфигурационного файла или внешнего хранилища.
@@ -51,6 +54,9 @@ public:
 
 	/// Удаляет плагин.
 	virtual bool destroyPlugin(IPlugin * aPlugin);
+
+	/// Удаляет плагин.
+	virtual bool destroyPluginPtr(const std::weak_ptr<IPlugin> & aPlugin);
 
 	#pragma endregion
 
@@ -69,6 +75,11 @@ private:
 
 	/// Список созданных плагинов.
 	QMap<SDK::Plugin::IPlugin *, SDK::Plugin::IPluginFactory *> mCreatedPlugins;
+
+	/// Список созданных плагинов.
+	typedef std::shared_ptr<IPlugin> TPluginPtr;
+	typedef std::map<TPluginPtr, SDK::Plugin::IPluginFactory *> TPluginMapPtr;
+	TPluginMapPtr mCreatedPluginsPtr;
 
 	/// Синхронизация создания/удаления плагина.
 	mutable QMutex mAccessMutex;

@@ -108,28 +108,41 @@ bool QMLBackend::isReady() const
 }
 
 //------------------------------------------------------------------------------
-SDK::GUI::IGraphicsItem * QMLBackend::getItem(const SDK::GUI::GraphicsItemInfo & aInfo)
+std::weak_ptr<SDK::GUI::IGraphicsItem> QMLBackend::getItem(const SDK::GUI::GraphicsItemInfo & aInfo)
 {
 	TGraphicItemsCache::iterator it = mCachedItems.find(aInfo.name);
 
-	if (it != mCachedItems.end() && it.value().data()->getContext() == aInfo.context)
+	if (it != mCachedItems.end() && it.value()->getContext() == aInfo.context)
 	{
-		return it.value().data();
+		return it.value();
 	}
 
-	QSharedPointer<QMLGraphicsItem> item(new QMLGraphicsItem(aInfo, &mQMLEngine, mEngine->getLog()));
+	std::shared_ptr<QMLGraphicsItem> item(new QMLGraphicsItem(aInfo, &mQMLEngine, mEngine->getLog()), SDK::GUI::GraphicsItemDeleter());
 
 	if (item->isValid())
 	{
-		mCachedItems.insertMulti(aInfo.name, item);
+		mCachedItems.insert(aInfo.name, item);
 	}
 	else
 	{
 		mEngine->getLog()->write(LogLevel::Error, item->getError());
-		return 0;
 	}
 
-	return item.data();
+	return item;
+}
+
+//------------------------------------------------------------------------------
+bool QMLBackend::removeItem(const SDK::GUI::GraphicsItemInfo & aInfo)
+{
+	foreach (auto item, mCachedItems.values(aInfo.name))
+	{
+		if (item->getContext() == aInfo.context)
+		{
+			return mCachedItems.remove(aInfo.name, item) != 0;
+		}
+	}
+
+	return false;
 }
 
 //------------------------------------------------------------------------------

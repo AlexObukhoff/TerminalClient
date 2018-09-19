@@ -12,6 +12,7 @@
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsSceneMouseEvent>
+#include <QtCore/QMetaEnum>
 #include <qjson.h>
 #include <Common/QtHeadersEnd.h>
 
@@ -123,6 +124,8 @@ GraphicsEngine::GraphicsEngine() :
 	mScene.setStickyFocus(true);
 	mScene.installEventFilter(this);
 
+	mView.setScene(&mScene);
+
 	// Настраиваем маску
 	mModalBackgroundWidget.setZValue(2);
 	mModalBackgroundWidget.setVisible(false);
@@ -165,8 +168,6 @@ bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aSho
 	mScene.addItem(&mDebugWidget);
 	mDebugWidget.setVisible(aShowDebugInfo);
 
-	mView.setScene(&mScene);
-
 	// Настраиваем курсор
 	if (!aShowCursor)
 	{
@@ -196,9 +197,9 @@ bool GraphicsEngine::finalize()
 {
 	foreach (const SWidget & widget, mWidgets)
 	{
-		if (widget.graphics && widget.graphics->isValid() && widget.graphics->getWidget()->scene() == &mScene)
+		if (!widget.graphics.expired() && widget.graphics.lock()->isValid() && widget.graphics.lock()->getWidget()->scene() == &mScene)
 		{
-			mScene.removeItem(widget.graphics->getWidget());
+			mScene.removeItem(widget.graphics.lock()->getWidget());
 		}
 	}
 
@@ -232,13 +233,52 @@ void GraphicsEngine::stop()
 
 	foreach (SWidget widget, mWidgets.values())
 	{
-		if (widget.graphics && widget.graphics->isValid())
+		if (!widget.graphics.expired() && widget.graphics.lock()->isValid())
 		{
-			widget.graphics->getWidget()->setVisible(false);
-			widget.graphics->getWidget()->setZValue(0);
+			widget.graphics.lock()->getWidget()->setVisible(false);
+			widget.graphics.lock()->getWidget()->setZValue(0);
 		}
 	}
 
+	mTopWidget = mWidgets.end();
+	mPopupWidget = mWidgets.end();
+	mModalBackgroundWidget.setVisible(false);
+}
+
+//---------------------------------------------------------------------------
+void GraphicsEngine::reset(EWidgetType aType)
+{
+	auto getWidgetType = [](GraphicsEngine::EWidgetType aType) -> QString
+	{
+		const QMetaObject metaObject = GraphicsEngine::staticMetaObject;
+		int enumIndex = metaObject.indexOfEnumerator("EWidgetType");
+		if (enumIndex == -1) {
+			return "";
+		}
+
+		QMetaEnum en = metaObject.enumerator(enumIndex);
+		return QString(en.valueToKey(aType));
+	};
+
+	QString widgetType = getWidgetType(aType).toLower();
+
+	foreach(const SWidget & widget, mWidgets)
+	{
+		if (widget.info.type != widgetType && aType != GraphicsEngine::All)
+		{
+			continue;
+		}
+		
+		if (!widget.graphics.expired() && 
+			widget.graphics.lock()->isValid() && 
+			widget.graphics.lock()->getWidget()->scene() == &mScene)
+		{
+			mScene.removeItem(widget.graphics.lock()->getWidget());
+			mBackends[widget.info.type]->removeItem(widget.info);
+			toLog(LogLevel::Debug, QString("REMOVE widget '%1'").arg(widget.info.name));
+		}
+	}
+	
 	mTopWidget = mWidgets.end();
 	mPopupWidget = mWidgets.end();
 	mModalBackgroundWidget.setVisible(false);
@@ -271,7 +311,6 @@ void GraphicsEngine::addContentDirectory(const QString & aDirectory)
 		{
 			SWidget widget;
 
-			widget.graphics = 0;
 			widget.info.name = file.value(CGraphicsEngine::NameKey).toString();
 			widget.info.type = file.value(CGraphicsEngine::TypeKey).toString();
 
@@ -407,15 +446,15 @@ bool GraphicsEngine::hidePopup(const QVariantMap & aParameters)
 	mModalResult = aParameters;
 	mModalBackgroundWidget.setVisible(false);
 
-	mPopupWidget->graphics->getWidget()->setVisible(false);
-	mPopupWidget->graphics->getWidget()->setScale(1.0);
-	mPopupWidget->graphics->hide();
+	mPopupWidget->graphics.lock()->getWidget()->setVisible(false);
+	mPopupWidget->graphics.lock()->getWidget()->setScale(1.0);
+	mPopupWidget->graphics.lock()->hide();
 	mPopupWidget = mWidgets.end();
 
 	if (mTopWidget != mWidgets.end())
 	{
-		mTopWidget->graphics->getWidget()->setFocus();
-		mTopWidget->graphics->notify(CGraphicsEngine::PopupClosedReason, aParameters);
+		mTopWidget->graphics.lock()->getWidget()->setFocus();
+		mTopWidget->graphics.lock()->notify(CGraphicsEngine::PopupClosedReason, aParameters);
 	}
 
 	mShowingModal = false;
@@ -431,20 +470,27 @@ void GraphicsEngine::notify(const QString & aEvent, const QVariantMap & aParamet
 		return QString::fromUtf8(QJsonDocument::fromVariant(aParameters).toJson(QJsonDocument::Compact));
 	};
 
-	TWidgetList::Iterator w;
+	TWidgetList::Iterator w = mWidgets.end();
 	
 	if (mPopupWidget != mWidgets.end())
 	{
 		w = mPopupWidget;
-		mPopupWidget->graphics->notify(aEvent, aParameters);		
+		mPopupWidget->graphics.lock()->notify(aEvent, aParameters);		
 	}
 	else if (mTopWidget != mWidgets.end())
 	{
 		w = mTopWidget;
-		mTopWidget->graphics->notify(aEvent, aParameters);
+		mTopWidget->graphics.lock()->notify(aEvent, aParameters);
 	}
 	
-	toLog(LogLevel::Debug, QString("NOTIFY '%1'. Parameters: %2").arg(w->info.name).arg(formatParams(aParameters)));
+	if (w != mWidgets.end())
+	{
+		toLog(LogLevel::Debug, QString("NOTIFY '%1'. Parameters: %2").arg(w->info.name).arg(formatParams(aParameters)));
+	}
+	else
+	{
+		toLog(LogLevel::Debug, QString("NOTIFY WIDGET NOT FOUND. Parameters: %1").arg(formatParams(aParameters)));
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -453,7 +499,7 @@ void GraphicsEngine::popupNotify(const QString & aEvent, const QVariantMap & aPa
 	if (mTopWidget != mWidgets.end())
 	{
 		// Оповещаем виджет, который находится под всплывающим окном
-		mTopWidget->graphics->notify(aEvent, aParameters);
+		mTopWidget->graphics.lock()->notify(aEvent, aParameters);
 
 		toLog(LogLevel::Normal, QString("NOTIFY_BY_POPUP '%1'. Parameters: %2")
 			.arg(mTopWidget->info.name)
@@ -527,16 +573,16 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 	}
 
 	// Если ещё не создан - создаём
-	if (newWidget->graphics == 0)
+	if (newWidget->graphics.expired())
 	{
 		newWidget->graphics = mBackends[newWidget->info.type]->getItem(newWidget->info);
 	}
 
-	if (newWidget->graphics && newWidget->graphics->isValid())
+	if (!newWidget->graphics.expired() && newWidget->graphics.lock()->isValid())
 	{
-		if (!newWidget->graphics->getWidget()->scene())
+		if (!newWidget->graphics.lock()->getWidget()->scene())
 		{
-			mScene.addItem(newWidget->graphics->getWidget());
+			mScene.addItem(newWidget->graphics.lock()->getWidget());
 		}
 	}
 	else 
@@ -557,13 +603,13 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 	// Если нужно, инициализируем новый виджет
 	if (aParameters.contains("reset") ? aParameters["reset"].toBool() : true)
 	{
-		newWidget->graphics->reset(aParameters);
+		newWidget->graphics.lock()->reset(aParameters);
 	}
 
 	// Если виджет уже отображается, то только вызываем обработчк showHandler
 	if (newWidget == mTopWidget)
 	{
-		mTopWidget->graphics->show();
+		mTopWidget->graphics.lock()->show();
 		return true;
 	}
 
@@ -573,9 +619,9 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 		// Масштабируем, если надо, всплывающее окно
 		if (aParameters["scaled"].toBool())
 		{
-			QRectF rect = newWidget->graphics->getWidget()->sceneBoundingRect();
+			QRectF rect = newWidget->graphics.lock()->getWidget()->sceneBoundingRect();
 			qreal scale = qMin(mScene.width() / rect.width(), mScene.height() / rect.height());
-			newWidget->graphics->getWidget()->setScale(scale);
+			newWidget->graphics.lock()->getWidget()->setScale(scale);
 		}
 		
 		//Установим цвет фона модального окна
@@ -597,18 +643,23 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 		if (mTopWidget != mWidgets.end())
 		{
 			oldWidget = mTopWidget;
-			oldWidget->graphics->hide();
+			oldWidget->graphics.lock()->hide();
 		}
 
 		mTopWidget = newWidget;
 	}
 
-	newWidget->graphics->show();
+	if (!aPopup && newWidget->graphics.expired())
+	{
+		return false;
+	}
+
+	newWidget->graphics.lock()->show();
 
 	// Отрисовка через очередь, чтобы showHandler/resetHandler успели отработать
 	QMetaObject::invokeMethod(this, "setFrontWidget", Qt::QueuedConnection, 
-		Q_ARG(QGraphicsObject *, dynamic_cast<QGraphicsObject *>(newWidget->graphics->getWidget())), 
-		Q_ARG(QGraphicsObject *, (aPopup || oldWidget == mWidgets.end()) ? 0 : dynamic_cast<QGraphicsObject *>(oldWidget->graphics->getWidget())), 
+		Q_ARG(QGraphicsObject *, dynamic_cast<QGraphicsObject *>(newWidget->graphics.lock()->getWidget())),
+		Q_ARG(QGraphicsObject *, (aPopup || oldWidget == mWidgets.end()) ? 0 : dynamic_cast<QGraphicsObject *>(oldWidget->graphics.lock()->getWidget())),
 		Q_ARG(int, level), Q_ARG(bool, aPopup));
 
 	QString popupMessage = 
@@ -652,7 +703,7 @@ void GraphicsEngine::setFrontWidget(QGraphicsObject * aNewWidget, QGraphicsObjec
 //---------------------------------------------------------------------------
 void GraphicsEngine::showVirtualKeyboard()
 {
-	QGraphicsItem * focusItem = mTopWidget->graphics->getWidget();
+	QGraphicsItem * focusItem = mTopWidget->graphics.lock()->getWidget();
 	QWidget * focusWidget = static_cast<QGraphicsProxyWidget *>(focusItem)->widget()->focusWidget();
 
 	if (focusWidget == nullptr)
@@ -670,21 +721,21 @@ void GraphicsEngine::showVirtualKeyboard()
 	}
 
 	// Если ещё не создан - создаём
-	if (widget->graphics == 0)
+	if (widget->graphics.expired())
 	{
 		widget->graphics = mBackends[widget->info.type]->getItem(widget->info);
 	}
 
-	if (widget->graphics && widget->graphics->isValid())
+	if (!widget->graphics.expired() && widget->graphics.lock()->isValid())
 	{
-		if (!widget->graphics->getWidget()->scene())
+		if (!widget->graphics.lock()->getWidget()->scene())
 		{
-			mScene.addItem(widget->graphics->getWidget());
+			mScene.addItem(widget->graphics.lock()->getWidget());
 		}
 	}
 
 	// Формируем список всех возможных положений виртуальной клавиатуры
-	QGraphicsItem * keyboardItem = widget->graphics->getWidget();
+	QGraphicsItem * keyboardItem = widget->graphics.lock()->getWidget();
 	qreal focusItemScale = focusItem->scale();
 
 	QRectF sceneRect(mScene.sceneRect());
@@ -723,8 +774,8 @@ void GraphicsEngine::showVirtualKeyboard()
 
 	keyboardItem->setPos(newPos.x(), newPos.y());
 
-	widget->graphics->getWidget()->setZValue(3);
-	widget->graphics->getWidget()->setVisible(true);
+	widget->graphics.lock()->getWidget()->setZValue(3);
+	widget->graphics.lock()->getWidget()->setVisible(true);
 
 	mIsVirtualKeyboardVisible = true;
 }
@@ -733,7 +784,7 @@ void GraphicsEngine::showVirtualKeyboard()
 void GraphicsEngine::hideVirtualKeyboard()
 {
 	TWidgetList::Iterator widget = mWidgets.find(CGraphicsEngine::InputContextName);
-	QGraphicsItem * item = widget->graphics->getWidget();
+	QGraphicsItem * item = widget->graphics.lock()->getWidget();
 	item->setVisible(false);
 
 	mIsVirtualKeyboardVisible = false;
@@ -769,7 +820,7 @@ bool GraphicsEngine::eventFilter(QObject * aObject, QEvent * aEvent)
 		{
 			QGraphicsSceneMouseEvent * mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(aEvent);
 			TWidgetList::Iterator widget = mWidgets.find(CGraphicsEngine::InputContextName);
-			QGraphicsItem * keyboardItem = widget->graphics->getWidget();
+			QGraphicsItem * keyboardItem = widget->graphics.lock()->getWidget();
 			QRectF keyboardRect(keyboardItem->sceneBoundingRect());
 
 			if (!keyboardRect.contains(mouseEvent->scenePos()))

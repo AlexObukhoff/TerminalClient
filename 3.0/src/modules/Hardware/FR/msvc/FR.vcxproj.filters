@@ -96,6 +96,15 @@
     <Filter Include="Kasbi">
       <UniqueIdentifier>{97f80e30-5ca8-4504-9171-9f5d4be1e110}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Base\FFEngine">
+      <UniqueIdentifier>{6aee6f81-9763-4754-8cb3-54cae0db1339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shtrih\Online\Pay">
+      <UniqueIdentifier>{1250f3f6-feac-44ef-abff-64c76dbd920b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shtrih\Online\MStar">
+      <UniqueIdentifier>{2086b9ba-7384-40c8-81e8-9bf07f730afe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Base\FRBase.cpp">
@@ -170,11 +179,20 @@
     <ClCompile Include="..\src\Shtrih\ModelData.cpp">
       <Filter>Shtrih</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Shtrih\Online\PayOnlineFR.cpp">
-      <Filter>Shtrih\Online</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Kasbi\KasbiFRBase.cpp">
       <Filter>Kasbi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Base\FFEngine.cpp">
+      <Filter>Base\FFEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Online\Pay\PayFRBase.cpp">
+      <Filter>Shtrih\Online\Pay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Online\Pay\PayOnline.cpp">
+      <Filter>Shtrih\Online\Pay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Online\MStarTK2.cpp">
+      <Filter>Shtrih\Online\MStar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -328,12 +346,6 @@
     <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFRBase.h">
       <Filter>PRIM\Ejector</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Prim\Ejector\PrimEjectorOnlineFR.h">
-      <Filter>PRIM\Ejector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Shtrih\Online\PayOnlineFR.h">
-      <Filter>Shtrih\Online</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Shtrih\Retractor\ShtrihRetractorFRLite.h">
       <Filter>Shtrih\Base\Ejector</Filter>
     </ClInclude>
@@ -348,9 +360,6 @@
     </ClInclude>
     <ClInclude Include="..\src\Shtrih\Base\ShtrihSerialFRBase.h">
       <Filter>Shtrih\Base\Serial</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Shtrih\Online\MStarTK2.h">
-      <Filter>Shtrih\Online</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRBaseConstants.h">
       <Filter>Base</Filter>
@@ -371,7 +380,37 @@
       <Filter>Shtrih\Online</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h">
-      <Filter>Header Files</Filter>
+      <Filter>Base\FFEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base\FFEngine.h">
+      <Filter>Base\FFEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\AtolOnlinePrinters.h">
+      <Filter>ATOL\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\Online\PrimOnlineFR68.h">
+      <Filter>PRIM\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\KasbiPrinters.h">
+      <Filter>Kasbi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Online\Pay\PayFRBase.h">
+      <Filter>Shtrih\Online\Pay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Online\Pay\PayOnline.h">
+      <Filter>Shtrih\Online\Pay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Online\Pay\PayVKP80FA.h">
+      <Filter>Shtrih\Online\Pay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\PayPrinters.h">
+      <Filter>Shtrih\Online\Pay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Prim\Online\PrimOnlineFRSpecial.h">
+      <Filter>PRIM\Online</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Shtrih\Online\MStarTK2.h">
+      <Filter>Shtrih\Online\MStar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -119,7 +119,7 @@ def main(gpl_path, internal_path):
                 dst = gpl_files.absolute_path(internal_files.original_name(i))
                 pathlib.Path(os.path.dirname(dst)).mkdir(parents=True, exist_ok=True)
                 copyfile(internal_files.absolute_path(i), dst)
-                gpl_files.git_repo.index.add([dst])
+                # gpl_files.git_repo.index.add([dst])
                 updated_counter += 1
             else:
                 dont_changed_counter += 1

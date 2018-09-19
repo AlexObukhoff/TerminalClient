@@ -14,12 +14,12 @@
         <translation>Извините, оплата в пользу данного оператора временно невозможна. Попробуйте позже.</translation>
     </message>
     <message>
-        <location filename="../search_scene.qml" line="148"/>
+        <location filename="../search_scene.qml" line="149"/>
         <source>search_scene#hint</source>
         <translation>Для поиска начните набирать ключевое слово</translation>
     </message>
     <message>
-        <location filename="../search_scene.qml" line="161"/>
+        <location filename="../search_scene.qml" line="162"/>
         <source>search_scene#not_found</source>
         <translation>Ничего не найдено.</translation>
     </message>

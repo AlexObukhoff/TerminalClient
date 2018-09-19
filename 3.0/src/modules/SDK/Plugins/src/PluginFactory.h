@@ -2,6 +2,9 @@
 
 #pragma once
 
+// std
+#include <memory>
+
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QObject>
@@ -55,8 +58,14 @@ public:
 	/// Создаёт плагин.
 	virtual IPlugin * createPlugin(const QString & aInstancePath, const QString & aConfigPath);
 
+	/// Создаёт плагин. Временное решения для работы с плагинами, обернутыми в умный указатель
+	virtual std::weak_ptr<IPlugin> createPluginPtr(const QString & aInstancePath, const QString & aConfigPath);
+
 	/// Удаляет плагин.
 	virtual bool destroyPlugin(IPlugin * aPlugin);
+
+	/// Удаляет плагин.
+	virtual bool destroyPlugin(const std::weak_ptr<IPlugin> & aPlugin);
 
 	/// Возвращает описание параметров плагина.
 	virtual TParameterList getPluginParametersDescription(const QString & aPath) const;
@@ -114,6 +123,10 @@ protected:
 	IKernel * mKernel;
 	QString mDirectory;
 	QMap<IPlugin *, QString> mCreatedPlugins;
+
+	typedef QMap<std::shared_ptr<IPlugin>, QString> TPluginStorage;
+	TPluginStorage mCreatedPluginsPtr;
+	
 	QMap<QString, QVariantMap> mPersistentConfigurations;
 	QMap<QString, TParameterList> mTranslatedParameters;
 };

@@ -15,14 +15,14 @@
         <translation>Кешіріңіз, бұл төлемді қабылдау уақытша мүмкін емес. Кейінірек байқап көріңіз.</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="256"/>
+        <location filename="../scenario/payment_scenario.js" line="258"/>
         <source>payment_scenario#cannot_use_provider_without_printer</source>
         <translation>Кешіріңіз, принтердің істемеуі себебінен бұл төлем қабылданбайды. Кейінірек  қайталап көріңіз.</translation>
     </message>
     <message>
         <location filename="../scenario/payment_scenario.js" line="502"/>
         <source>payment_scenario#submit_ok</source>
-        <translation type="unfinished"></translation>
+        <translation>Сіздің тапсырысыңыз қабылданды</translation>
     </message>
     <message>
         <location filename="../scenario/payment_scenario.js" line="518"/>

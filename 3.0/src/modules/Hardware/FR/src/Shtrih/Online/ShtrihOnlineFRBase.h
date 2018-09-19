@@ -23,7 +23,7 @@ public:
 	static QStringList getModelList();
 
 protected:
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Инициализация устройства.
@@ -54,7 +54,7 @@ protected:
 	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
 
 	/// Продажа.
-	virtual bool sale(const SDK::Driver::SAmountData & aAmountData, bool aBack);
+	virtual bool sale(const SDK::Driver::SUnitData & aUnitData, bool aBack);
 
 	/// Закрыть чек.
 	virtual bool closeDocument(double aSum, SDK::Driver::EPayTypes::Enum aPayType);
@@ -82,6 +82,15 @@ protected:
 
 	/// Проверить параметр автообновления прошивок.
 	bool checkFirmwareUpdatingData(const CShtrihFR::FRParameters::SData & aData, int aValue, const QString & aLogData, bool & aNeedReboot);
+
+	/// Включить/выключить режим непечати документов.
+	virtual bool setNotPrintDocument(bool aEnabled, bool aZReport = false);
+
+	/// Софтварная перезагрузка.
+	bool reboot();
+
+	/// Установка кассира.
+	bool setCashier();
 
 	/// Поддерживается команда запроса статуса принтера.
 	bool mPrinterStatusEnabled;

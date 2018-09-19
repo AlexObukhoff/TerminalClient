@@ -45,9 +45,9 @@ OPOSMStarTUPK::OPOSMStarTUPK() : mNativeDriver(nullptr)
 	mUnnecessaryErrors.insert(EFiscalPrinterCommand::XReport,    TStatusCodes() << DeviceStatusCode::Error::MemoryStorage);
 
 	// налоги
-	mTaxData.add( 0, 0, "БЕЗ НАЛОГА");
-	mTaxData.add(18, 1, "НДС 18%");
-	mTaxData.add(10, 2, "НДС 10%");
+	mTaxData.add( 0, 0);
+	mTaxData.add(18, 1);
+	mTaxData.add(10, 2);
 
 	// теги
 	mTagEngine = Tags::PEngine(new COPOSMStarTUPK::TagEngine());
@@ -233,12 +233,7 @@ bool OPOSMStarTUPK::updateParameters()
 		mFWVersion = firmware[0].remove(".").toInt();
 	}
 
-	if (!checkTaxes())
-	{
-		return false;
-	}
-
-	return true;
+	return !isFiscal() || checkTaxes();
 }
 
 //--------------------------------------------------------------------------------
@@ -248,7 +243,7 @@ bool OPOSMStarTUPK::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 
 	if (BOOL_CALL_OPOS(DayOpened))
 	{
-		if (canAutoCloseSession == CHardware::Values::Auto)
+		if (canAutoCloseSession == CHardwareSDK::Values::Auto)
 		{
 			toLog(LogLevel::Normal, "Going to autoclosing session before checking the tax");
 
@@ -257,11 +252,11 @@ bool OPOSMStarTUPK::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 				return false;
 			}
 
-			setConfigParameter(CHardware::FR::CanAutoCloseSession, CHardware::Values::NotUse);
+			setConfigParameter(CHardware::FR::CanAutoCloseSession, CHardwareSDK::Values::NotUse);
 
 			emit configurationChanged();
 		}
-		else if (canAutoCloseSession == CHardware::Values::NotUse)
+		else if (canAutoCloseSession == CHardwareSDK::Values::NotUse)
 		{
 			toLog(LogLevel::Debug, "Don`t need to check the tax due to it was done earlier");
 			return true;
@@ -499,14 +494,14 @@ bool OPOSMStarTUPK::makeFiscal(const SPaymentData & aPaymentData)
 	{
 		setEnable(COPOSMStarTUPK::Parameters::AutoCutter, true);
 
-		foreach (auto amountData, aPaymentData.amountDataList)
+		foreach (auto unitData, aPaymentData.unitDataList)
 		{
-			int nameSize = amountData.name.size();
+			int nameSize = unitData.name.size();
 			wchar_t * name = new wchar_t[nameSize + 1];
 			memset(name, ASCII::NUL, sizeof(wchar_t) * (nameSize + 1));
-			amountData.name.toWCharArray(name);
+			unitData.name.toWCharArray(name);
 
-			result = result && OPOS_SUCCESS(INT_CALL_NATIVE(PrintRecItem, name, sum2CY(amountData.sum), 1 * 10000, mTaxData[amountData.VAT].group, sum2CY(amountData.sum), L""));
+			result = result && OPOS_SUCCESS(INT_CALL_NATIVE(PrintRecItem, name, sum2CY(unitData.sum), 1 * 10000, mTaxData[unitData.VAT].group, sum2CY(unitData.sum), L""));
 
 			delete [] name;
 		}

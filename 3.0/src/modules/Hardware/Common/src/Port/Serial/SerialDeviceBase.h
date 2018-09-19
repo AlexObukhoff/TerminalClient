@@ -59,7 +59,7 @@ protected:
 	/// Идентификация.	
 	virtual bool checkExistence();
 
-	/// Запрос статуса.
+	/// Получить и обработать статус.
 	virtual bool processStatus(TStatusCodes & aStatusCodes);
 
 	/// Формирует список параметров порта для поиска устройства.

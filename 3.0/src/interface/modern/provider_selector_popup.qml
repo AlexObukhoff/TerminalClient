@@ -24,7 +24,7 @@ Item {
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
 			verticalTileMode: BorderImage.Stretch
-			source: "image://ui/webview.angles.overlay"
+			source: Utils.ui.image("webview.angles.overlay")
 			z: 2
 		}
 
@@ -88,8 +88,8 @@ Item {
 		icon: 13
 		text: Utils.locale.tr(QT_TR_NOOP("provider_selector_popup#close"))
 		color: Utils.ui.color("color.button.primary")
-		texture: "image://ui/button.notice.normal"
-		texturePressed: "image://ui/button.notice.pressed"
+		texture: Utils.ui.image("button.notice.normal")
+		texturePressed: Utils.ui.image("button.notice.pressed")
 
 		width: 407
 		anchors { horizontalCenter: parent.horizontalCenter; top: messagePanel.bottom; topMargin: 21 }

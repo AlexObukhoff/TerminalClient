@@ -16,7 +16,7 @@ Controls.InputField {
 	font: Utils.ui.font("font.textfield")
 
 	background: BorderImage {
-		source: "image://ui/textfield"
+		source: Utils.ui.image("textfield")
 		anchors.fill: parent
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
@@ -24,7 +24,7 @@ Controls.InputField {
 	}
 
 	backspace: Controls.SlidingButton {
-		background: Image {source: pressed ? "image://ui/button.backspace.pressed" : "image://ui/button.backspace.normal"}
+		background: Image {source: pressed ? Utils.ui.image("button.backspace.pressed") : Utils.ui.image("button.backspace.normal")}
 
 		onClicked: Utils.generateKeyEvent(Qt.Key_Backspace, Qt.NoModifier)
 	}

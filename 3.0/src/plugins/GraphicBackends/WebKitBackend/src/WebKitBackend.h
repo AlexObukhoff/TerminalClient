@@ -2,10 +2,11 @@
 
 #pragma once
 
+#include <memory.h>
+
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QObject>
-#include <QtCore/QSharedPointer>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -57,7 +58,10 @@ public:
 	virtual void shutdown();
 
 	/// Создаёт (или возвращает из кэша) графический элемент по описанию.
-	virtual SDK::GUI::IGraphicsItem * getItem(const SDK::GUI::GraphicsItemInfo & aInfo);
+	virtual std::weak_ptr<SDK::GUI::IGraphicsItem> getItem(const SDK::GUI::GraphicsItemInfo & aInfo);
+
+	/// Удаляет графический элемент по описанию
+	virtual bool removeItem(const SDK::GUI::GraphicsItemInfo & aInfo);
 
 	/// Возвращает тип движка.
 	virtual QString getType() const;
@@ -69,7 +73,7 @@ public:
 
 private:
 	QString mInstancePath;
-	QMap<QString, QSharedPointer<WebGraphicsItem> > mItems;
+	QMultiMap<QString, std::shared_ptr<WebGraphicsItem> > mItems;
 
 	QVariantMap mParameters;
 	SDK::Plugin::IEnvironment * mFactory;

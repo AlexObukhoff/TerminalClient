@@ -4,6 +4,11 @@
 #include "ShtrihFRConstants.h"
 
 //--------------------------------------------------------------------------------
+ShtrihFRProtocol::ShtrihFRProtocol(): mTransportTimeout(CShtrihFR::Timeouts::Transport)
+{
+}
+
+//--------------------------------------------------------------------------------
 uchar ShtrihFRProtocol::calcCRC(const QByteArray & aData)
 {
 	if (!aData.size())
@@ -94,7 +99,7 @@ bool ShtrihFRProtocol::openSession()
 
 		QByteArray answerData;
 
-		if (!readData(answerData, CShtrihFR::Timeouts::ENQAnswer))
+		if (!readData(answerData, mTransportTimeout))
 		{
 			return false;
 		}
@@ -211,7 +216,7 @@ bool ShtrihFRProtocol::execCommand(const QByteArray & aCommand, QByteArray & aAn
 			return false;
 		}
 
-		if (!getAnswer(aAnswer, aTimeout))
+		if (!getAnswer(aAnswer, aTimeout + mTransportTimeout))
 		{
 			return false;
 		}
@@ -324,6 +329,12 @@ bool ShtrihFRProtocol::sendENQ()
 	}
 
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+void ShtrihFRProtocol::setTransportTimeout(int aTimeout)
+{
+	mTransportTimeout = aTimeout;
 }
 
 //--------------------------------------------------------------------------------

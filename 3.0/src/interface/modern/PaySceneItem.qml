@@ -10,7 +10,7 @@ BorderImage {
 
 	border { left: 30; top: 30; right: 30; bottom: 30 }
 	horizontalTileMode: BorderImage.Stretch
-	source: "image://ui/panel.operator"
+	source: Utils.ui.image("panel.operator")
 	height: 120
 
 	onAmountChanged: {

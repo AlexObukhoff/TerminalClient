@@ -515,7 +515,7 @@ bool AsyncSerialPort::read(QByteArray & aData, int aTimeout)
 	{
 		toLog(LogLevel::Normal, QString("%1: << {%2}").arg(mConnectedDeviceName).arg(aData.toHex().constData()));
 	}
-	else if (!aData.isEmpty() && !mMaxReadingSize && !aData.isEmpty())
+	else if (!aData.isEmpty() && !mMaxReadingSize)
 	{
 		toLog(LogLevel::Debug, QString("%1 << %2").arg(mSystemName).arg(aData.toHex().data()));
 	}
@@ -540,6 +540,8 @@ bool AsyncSerialPort::processReading(QByteArray & aData, int aTimeout)
 		mReadBytes = 0;
 		BOOL wait = ((result == WAIT_OBJECT_0) || mWaitResult) ? TRUE : FALSE;
 		::GetOverlappedResult(mPortHandle, &mReadOverlapped, &mReadBytes, wait);
+
+		SleepHelper::msleep(CAsyncSerialPort::VCOMReadingPause);
 	}
 
 	DWORD errors = 0;
@@ -894,12 +896,20 @@ AsyncSerialPort::TData AsyncSerialPort::getSystemData(bool aForce)
 
 		for (auto it = deviceProperties.begin(); it != deviceProperties.end(); ++it)
 		{
-			if (regExp.indexIn(it.key()) != -1)
+			int index = -1;
+
+			do
 			{
-				EPortTypes::Enum portType = isMatched(it->data, CAsyncSerialPort::Tags::Virtual()) ? EPortTypes::VirtualCOM :
-					(isMatched(it->data, CAsyncSerialPort::Tags::Emulator()) ? EPortTypes::COMEmulator : EPortTypes::Unknown);
-				data.insert(regExp.capturedTexts()[0], portType);
+				index = regExp.indexIn(it.key(), ++index);
+
+				if (index != -1)
+				{
+					EPortTypes::Enum portType = isMatched(it->data, CAsyncSerialPort::Tags::Virtual()) ? EPortTypes::VirtualCOM :
+						(isMatched(it->data, CAsyncSerialPort::Tags::Emulator()) ? EPortTypes::COMEmulator : EPortTypes::Unknown);
+					data.insert(regExp.capturedTexts()[0], portType);
+				}
 			}
+			while (index != -1);
 		}
 
 		/*

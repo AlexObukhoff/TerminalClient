@@ -4,37 +4,32 @@
 <context>
     <name>WatchdogParameters</name>
     <message>
-        <location filename="../WatchdogsPlugin.cpp" line="31"/>
-        <source>WatchdogParameters#model_name</source>
-        <translation>Modell</translation>
-    </message>
-    <message>
-        <location filename="../WatchdogsPlugin.cpp" line="59"/>
+        <location filename="../WatchdogsPlugin.cpp" line="45"/>
         <source>WatchdogParameters#lower_unit_sensor</source>
         <translation>Türsensor des unteren Moduls</translation>
     </message>
     <message>
-        <location filename="../WatchdogsPlugin.cpp" line="59"/>
+        <location filename="../WatchdogsPlugin.cpp" line="45"/>
         <source>WatchdogParameters#lower_unit_sensor_action</source>
         <translation>Aktion beim Ansprechen des Sensors am unteren Modul</translation>
     </message>
     <message>
-        <location filename="../WatchdogsPlugin.cpp" line="60"/>
+        <location filename="../WatchdogsPlugin.cpp" line="46"/>
         <source>WatchdogParameters#upper_unit_sensor</source>
         <translation>Türsensor des oberen Moduls</translation>
     </message>
     <message>
-        <location filename="../WatchdogsPlugin.cpp" line="60"/>
+        <location filename="../WatchdogsPlugin.cpp" line="46"/>
         <source>WatchdogParameters#upper_unit_sensor_action</source>
         <translation>Aktion beim Ansprechen des Sensors am oberen Modul</translation>
     </message>
     <message>
-        <location filename="../WatchdogsPlugin.cpp" line="61"/>
+        <location filename="../WatchdogsPlugin.cpp" line="47"/>
         <source>WatchdogParameters#safe_unit_sensor</source>
         <translation>Geldschranksensor</translation>
     </message>
     <message>
-        <location filename="../WatchdogsPlugin.cpp" line="61"/>
+        <location filename="../WatchdogsPlugin.cpp" line="47"/>
         <source>WatchdogParameters#safe_unit_sensor_action</source>
         <translation>Aktion beim Ansprechen des Geldschranksensors</translation>
     </message>

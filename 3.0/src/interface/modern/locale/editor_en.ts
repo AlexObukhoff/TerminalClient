@@ -6,7 +6,7 @@
     <message>
         <location filename="../widgets/text_editor.qml" line="94"/>
         <location filename="../widgets/number_editor.qml" line="85"/>
-        <location filename="../widgets/enum_editor.qml" line="77"/>
+        <location filename="../widgets/enum_editor.qml" line="78"/>
         <source>editor#not_required</source>
         <translation> &lt;i&gt;(optional)&lt;/i&gt;</translation>
     </message>
@@ -36,7 +36,7 @@
         <translation>Payment number&lt;br /&gt;status</translation>
     </message>
     <message>
-        <location filename="../widgets/enum_editor.qml" line="78"/>
+        <location filename="../widgets/enum_editor.qml" line="79"/>
         <source>editor#readonly</source>
         <translation type="unfinished"></translation>
     </message>

@@ -60,7 +60,6 @@ PrinterBase<T>::PrinterBase()
 	mPaperInPresenter = QDateTime::currentDateTime();
 	mActualStringCount = 0;
 	mNextDocument = false;
-	mCodec = nullptr;
 
 	// настройки для плагинов
 	setConfigParameter(CHardware::Printer::NeedSeparating, true);
@@ -251,6 +250,13 @@ bool PrinterBase<T>::processReceipt(const QStringList & aReceipt, bool aProcessi
 		return true;
 	}
 
+	if (getConfigParameter(CHardwareSDK::FR::CanWithoutPrinting).toBool() &&
+	   (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardwareSDK::Values::Use))
+	{
+		toLog(LogLevel::Normal, "Receipt has not been printed:\n" + aReceipt.join("\n"));
+		return true;
+	}
+
 	toLog(LogLevel::Normal, "Printing receipt:\n" + aReceipt.join("\n"));
 
 	Tags::TLexemeReceipt lexemeReceipt;
@@ -346,7 +352,7 @@ bool PrinterBase<T>::receiptProcessing()
 	bool feeding = feed();
 	bool cutting = !getConfigParameter(CHardware::Printer::NeedCutting).toBool() || cut();
 	bool presenting = getConfigParameter(CHardware::Printer::Commands::Presentation).toByteArray().isEmpty() ||
-	                 (getConfigParameter(CHardware::Printer::Settings::Loop) != CHardware::Values::Use) ||
+	                 (getConfigParameter(CHardware::Printer::Settings::Loop) != CHardwareSDK::Values::Use) ||
 	                 !getConfigParameter(CHardware::Printer::Settings::PresentationLength).toInt() || present();
 
 	return feeding && cutting && presenting;
@@ -471,6 +477,17 @@ bool PrinterBase<T>::execSpecialTag(const Tags::SLexeme & aTagLexeme)
 
 		if (image.loadFromData(QByteArray::fromBase64(aTagLexeme.data.toLatin1())) && !image.isNull())
 		{
+			for (int i = 0; i < image.width(); ++i)
+			{
+				for (int j = 0; j < image.height(); ++j)
+				{
+					if (!qAlpha(image.pixel(i, j)))
+					{
+						image.setPixel(i, j, CPrinters::White);
+					}
+				}
+			}
+
 			image = image.convertToFormat(QImage::Format_Mono);
 			printImage(image, aTagLexeme.tags);
 		}
@@ -523,10 +540,9 @@ void PrinterBase<T>::separate(QStringList & aReceipt) const
 template <class T>
 bool PrinterBase<T>::canCheckReady(bool aOnline)
 {
-	bool initFailed = mConnected && (mInitialized == ERequestStatus::Fail);
 	bool notConnected = !mConnected && (!mOperatorPresence || !aOnline);
 
-	return (mInitialized != ERequestStatus::InProcess) && !initFailed && !notConnected;
+	return (mInitialized != ERequestStatus::InProcess) && !notConnected;
 }
 
 //---------------------------------------------------------------------------
@@ -540,6 +556,16 @@ bool PrinterBase<T>::isDeviceReady(bool aOnline)
 template <class T>
 bool PrinterBase<T>::isPossible(bool aOnline, QVariant aCommand)
 {
+	if (mConnected && (mInitialized == ERequestStatus::Fail))
+	{
+		MutexLocker locker(&mResourceMutex);
+
+		if (mUnnecessaryErrors[aCommand.toInt()].isEmpty())
+		{
+			return false;
+		}
+	}
+
 	if (aOnline)
 	{
 		if (!checkConnectionAbility())
@@ -573,12 +599,12 @@ void PrinterBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 		aStatusCodes -= availableErrors;
 	}
 
-	if (containsConfigParameter(CHardware::Printer::Settings::PaperJamSensor) && (getConfigParameter(CHardware::Printer::Settings::PaperJamSensor) == CHardware::Values::NotUse))
+	if (containsConfigParameter(CHardware::Printer::Settings::PaperJamSensor) && (getConfigParameter(CHardware::Printer::Settings::PaperJamSensor) == CHardwareSDK::Values::NotUse))
 	{
 		aStatusCodes.remove(Error::PaperJam);
 	}
 
-	if (containsConfigParameter(CHardware::Printer::Settings::RemotePaperSensor) && (getConfigParameter(CHardware::Printer::Settings::RemotePaperSensor) == CHardware::Values::NotUse))
+	if (containsConfigParameter(CHardware::Printer::Settings::RemotePaperSensor) && (getConfigParameter(CHardware::Printer::Settings::RemotePaperSensor) == CHardwareSDK::Values::NotUse))
 	{
 		aStatusCodes.remove(Warning::PaperNearEnd);
 	}

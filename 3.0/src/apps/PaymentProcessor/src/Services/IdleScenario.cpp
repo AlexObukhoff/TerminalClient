@@ -31,7 +31,8 @@ IdleScenario::IdleScenario(IApplication * aApplication)
 	mApplication(aApplication),
 	mCommand(Command::None),
 	mActive(false),
-	mNoGui(false)
+	mNoGui(false),
+	mInterfaceLockedTimer(0)
 {
 	mApplication->getCore()->getEventService()->subscribe(this, SLOT(onEvent(const SDK::PaymentProcessor::Event &)));
 }
@@ -236,8 +237,6 @@ void IdleScenario::updateState(const QString & aSignal, const QVariantMap & aPar
 	                       findFaultyDeviceType(SDK::Driver::CComponents::FiscalRegistrator);
 	bool hasCardReaderError = findFaultyDeviceType(SDK::Driver::CComponents::CardReader);
 
-	namespace DbConstants = PPSDK::CDatabaseConstants;
-
 	auto settings = SettingsService::instance(mApplication)->getAdapter<PPSDK::TerminalSettings>()->getCommonSettings();
 
 	bool hasKeysError = terminalService->isTerminalError(PPSDK::ETerminalError::KeyError);
@@ -293,9 +292,31 @@ void IdleScenario::updateState(const QString & aSignal, const QVariantMap & aPar
 
 		EventService::instance(mApplication)->sendEvent(PPSDK::EEventType::StartScenario, QVariantMap());
 		EventService::instance(mApplication)->sendEvent(SDK::PaymentProcessor::Event(SDK::PaymentProcessor::EEventType::OK, getName(), "OK"));
-	}
+	
+		if (mInterfaceLockedTimer)
+		{
+			killTimer(mInterfaceLockedTimer);
+			mInterfaceLockedTimer = 0;
 
-	// Терминал заблокирован.
+			toLog(LogLevel::Normal, "Interface lock timer killed.");
+		}
+
+		terminalService->setTerminalError(PPSDK::ETerminalError::InterfaceLocked, false);
+		toLog(LogLevel::Normal, QString("GUI unlocked."));
+	}
+	else
+	{
+		toLog(LogLevel::Error, QString("GUI locked by: %1.").arg(QStringList(parameters.keys()).join(",")));
+
+		// Создаём отложенное выставление сигнала о блокировке интерфейса
+		if (mInterfaceLockedTimer == 0 &&
+			!terminalService->isTerminalError(PPSDK::ETerminalError::InterfaceLocked))
+		{
+			mInterfaceLockedTimer = startTimer(1 * 60 * 1000);
+
+			toLog(LogLevel::Normal, "Interface lock timer started.");
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -327,6 +348,22 @@ void IdleScenario::onEvent(const PPSDK::Event & aEvent)
 
 			mCommand = Command::None;
 		}
+	}
+}
+
+//---------------------------------------------------------------------------
+void IdleScenario::timerEvent(QTimerEvent * aEvent)
+{
+	if (aEvent && aEvent->timerId() == mInterfaceLockedTimer)
+	{
+		toLog(LogLevel::Normal, "Interface lock timer triggered.");
+
+		killTimer(mInterfaceLockedTimer);
+		mInterfaceLockedTimer = 0;
+
+		// Терминал заблокирован.
+		auto terminalService = TerminalService::instance(mApplication);
+		terminalService->setTerminalError(PPSDK::ETerminalError::InterfaceLocked, true);
 	}
 }
 

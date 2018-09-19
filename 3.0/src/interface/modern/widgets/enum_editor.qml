@@ -34,7 +34,7 @@ Item {
 			anchors { top: parent.top; topMargin: 112 }
 			width: 1220
 			height: 498
-			source: "image://ui/panel.enum"
+			source: Utils.ui.image("panel.enum")
 
 			List {
 				id: list

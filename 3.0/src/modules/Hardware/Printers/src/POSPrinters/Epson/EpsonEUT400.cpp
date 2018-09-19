@@ -57,7 +57,7 @@ void EpsonEUT400::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	POSPrinter::setDeviceConfiguration(aConfiguration);
 
-	if (getConfigParameter(CHardware::Printer::Settings::BackFeed).toString() != CHardware::Values::NotUse)
+	if (getConfigParameter(CHardware::Printer::Settings::BackFeed).toString() != CHardwareSDK::Values::NotUse)
 	{
 		setConfigParameter(CHardware::Printer::FeedingAmount, 0);
 		setConfigParameter(CHardware::Printer::Commands::Cutting, CEpsonEUT400::Command::CutBackFeed);
@@ -92,9 +92,9 @@ bool EpsonEUT400::updateParametersOut()
 
 	QString loop = getConfigParameter(CHardware::Printer::Settings::Loop).toString();
 
-	if (loop != CHardware::Values::NoChange)
+	if (loop != CHardwareSDK::Values::Auto)
 	{
-		QByteArray loopCommand = (loop == CHardware::Values::Use) ? CEpsonEUT400::Command::LoopEnable : CEpsonEUT400::Command::LoopDisable;
+		QByteArray loopCommand = (loop == CHardwareSDK::Values::Use) ? CEpsonEUT400::Command::LoopEnable : CEpsonEUT400::Command::LoopDisable;
 
 		if (!mIOPort->write(loopCommand))
 		{
@@ -118,9 +118,9 @@ bool EpsonEUT400::updateParameters()
 	QString configBackFeed = getConfigParameter(CHardware::Printer::Settings::BackFeed).toString();
 	bool mswBackFeed = receiptProcessing2 == ProtocolUtils::mask(receiptProcessing2, CEpsonEUT400::MemorySwitch::BackFeedMask);
 
-	if (((configBackFeed == CHardware::Values::NotUse) && mswBackFeed) || (configBackFeed == CHardware::Values::Use) || mswBackFeed)
+	if (((configBackFeed == CHardwareSDK::Values::NotUse) && mswBackFeed) || (configBackFeed == CHardwareSDK::Values::Use) || mswBackFeed)
 	{
-		QString backFeedMask = (configBackFeed == CHardware::Values::NotUse) ? CEpsonEUT400::MemorySwitch::NoBackFeedMask : CEpsonEUT400::MemorySwitch::ReceiptProcessing2Mask;
+		QString backFeedMask = (configBackFeed == CHardwareSDK::Values::NotUse) ? CEpsonEUT400::MemorySwitch::NoBackFeedMask : CEpsonEUT400::MemorySwitch::ReceiptProcessing2Mask;
 		char newReceiptProcessing2 = ProtocolUtils::mask(receiptProcessing2, backFeedMask);
 
 		if ((receiptProcessing2 != newReceiptProcessing2) && !setMemorySwitch(CEpsonEUT400::MemorySwitch::ReceiptProcessing2, newReceiptProcessing2))

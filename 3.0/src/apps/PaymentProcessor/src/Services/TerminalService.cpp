@@ -253,16 +253,48 @@ void TerminalService::resetParameters(const QSet<QString> & aParameters)
 //---------------------------------------------------------------------------
 void TerminalService::writeLockStatus(bool aIsLocked)
 {
+	// Если разблокируем, то все критические ошибки превращаем в некритические (кроме ошибки БД)
+	if (!aIsLocked)
+	{
+		foreach (auto key, mTerminalStatusHash.keys())
+		{
+			if (key != CServices::DatabaseService &&
+				mTerminalStatusHash[key].getType() >= PPSDK::EEventType::Warning)
+			{
+				mTerminalStatusHash.remove(key);
+			}
+			else if (mTerminalStatusHash[key].getData().toString().contains("#alarm"))
+			{
+				PPSDK::Event e = mTerminalStatusHash[key];
+				
+				mTerminalStatusHash[key] = PPSDK::Event(e.getType(), e.getSender(), e.getData().toString().remove("#alarm"));
+			}
+		}
+
+		// Сбрасываем "плохие" статусы при разблокировке
+		TStatusCodes statuses = mDeviceErrorFlags.values(PPSDK::CDatabaseConstants::Devices::Terminal).toSet();
+
+		foreach (auto status, statuses)
+		{
+			if (TerminalStatusCode::Specification[status].warningLevel >= SDK::Driver::EWarningLevel::Warning)
+			{
+				mDeviceErrorFlags.remove(PPSDK::CDatabaseConstants::Devices::Terminal, status);
+			}
+		}
+	}
+
+	updateTerminalStatus();
+
 	// Проверка на "Уже записали статус в БД?", иначе при блокировке по ошибке БД мы зацикливаемся
-	if (!mLocked.is_initialized() || mLocked.get() != aIsLocked)
+	if (mLocked.is_initialized() && mLocked.get() == aIsLocked)
+	{
+		return;
+	}
+	else
 	{
 		mLocked = aIsLocked;
 
-		mDbUtils->setDeviceParam(PPSDK::CDatabaseConstants::Devices::Terminal, PPSDK::CDatabaseConstants::Parameters::DisabledParam, aIsLocked);
-
-		mDbUtils->addDeviceStatus(PPSDK::CDatabaseConstants::Devices::Terminal,
-			aIsLocked ? SDK::Driver::EWarningLevel::Warning : SDK::Driver::EWarningLevel::OK,
-			aIsLocked ? "Locked" : "Unlocked");
+		mDbUtils->setDeviceParam(PPSDK::CDatabaseConstants::Devices::Terminal, PPSDK::CDatabaseConstants::Parameters::DisabledParam, mLocked.get());
 	}
 }
 
@@ -317,28 +349,17 @@ void TerminalService::onEvent(const SDK::PaymentProcessor::Event & aEvent)
 		{
 			mTerminalStatusHash[aEvent.getSender()] = aEvent;
 
-			auto status2LogLevel = [](PPSDK::EEventType::Enum aEventType) -> LogLevel::Enum {
-				switch (aEventType)
-				{
-				case PPSDK::EEventType::Warning: return LogLevel::Warning;
-				case PPSDK::EEventType::Critical: return LogLevel::Error;
-				default: return LogLevel::Normal;
-				}
-			};
-
-			bool writeStatusOK = true;
-			auto status = getTerminalStatus();
-			if (mTerminalStatusCache != status)
+			if (aEvent.getSender() == CServices::DatabaseService)
 			{
-				toLog(status2LogLevel(eventType), QString("Terminal change status: %1.").arg(status.second));
-
-				writeStatusOK = mDbUtils->addDeviceStatus(PPSDK::CDatabaseConstants::Devices::Terminal, status.first, status.second);
-				mTerminalStatusCache = status;
+				setTerminalError(PPSDK::ETerminalError::DatabaseError, aEvent.getType() == PPSDK::EEventType::Critical);
 			}
-
-			if (aEvent.getSender() == "AccountBalance")
+			else if (aEvent.getSender() == "AccountBalance")
 			{
 				setTerminalError(PPSDK::ETerminalError::AccountBalanceError, eventType != PPSDK::EEventType::OK);
+			}
+			else
+			{
+				updateTerminalStatus();
 			}
 
 			break;
@@ -350,7 +371,7 @@ void TerminalService::onEvent(const SDK::PaymentProcessor::Event & aEvent)
 QPair<SDK::Driver::EWarningLevel::Enum, QString> TerminalService::getTerminalStatus() const
 {
 	QStringList resultMessage;
-	SDK::Driver::EWarningLevel::Enum result = SDK::Driver::EWarningLevel::OK;
+	SDK::Driver::EWarningLevel::Enum resultLevel = SDK::Driver::EWarningLevel::OK;
 
 	auto convertStatus = [](PPSDK::EEventType::Enum aEventType) -> SDK::Driver::EWarningLevel::Enum {
 		switch (aEventType)
@@ -367,9 +388,9 @@ QPair<SDK::Driver::EWarningLevel::Enum, QString> TerminalService::getTerminalSta
 		i.next();
 
 		auto status = convertStatus(static_cast<PPSDK::EEventType::Enum>(i.value().getType()));
-		if (status > result)
+		if (status > resultLevel)
 		{
-			result = status;
+			resultLevel = status;
 		}
 
 		QString data = i.value().getData().toString();
@@ -381,9 +402,27 @@ QPair<SDK::Driver::EWarningLevel::Enum, QString> TerminalService::getTerminalSta
 		}
 	}
 
-	if (isLocked() && result <= SDK::Driver::EWarningLevel::OK)
+	TStatusCodes statuses = mDeviceErrorFlags.values(PPSDK::CDatabaseConstants::Devices::Terminal).toSet();
+
+	if (statuses.isEmpty())
 	{
-		result = SDK::Driver::EWarningLevel::Warning;
+		statuses << DeviceStatusCode::OK::OK;
+	}
+
+	foreach(int status, statuses)
+	{
+		resultMessage << TerminalStatusCode::Specification[status].translation;
+
+		if (resultLevel < TerminalStatusCode::Specification[status].warningLevel)
+		{
+			resultLevel = TerminalStatusCode::Specification[status].warningLevel;
+		}
+	}
+
+	if (isLocked())
+	{
+		resultMessage << "Locked";
+		resultLevel = SDK::Driver::EWarningLevel::Error;
 	}
 
 	if (resultMessage.isEmpty())
@@ -391,7 +430,7 @@ QPair<SDK::Driver::EWarningLevel::Enum, QString> TerminalService::getTerminalSta
 		resultMessage << "OK";
 	}
 
-	return QPair<SDK::Driver::EWarningLevel::Enum, QString>(result, resultMessage.join("\n"));
+	return QPair<SDK::Driver::EWarningLevel::Enum, QString>(resultLevel, resultMessage.join("\n"));
 }
 
 //---------------------------------------------------------------------------
@@ -469,6 +508,8 @@ void TerminalService::setTerminalError(PPSDK::ETerminalError::Enum aErrorType, b
 	if (changed)
 	{
 		updateGUI();
+
+		updateTerminalStatus();
 	}
 }
 
@@ -476,6 +517,7 @@ void TerminalService::setTerminalError(PPSDK::ETerminalError::Enum aErrorType, b
 void TerminalService::updateGUI()
 {
 	auto guiService = GUIService::instance(mApplication);
+
 	if (guiService)
 	{
 		guiService->disable(!getFaultyDevices(true).isEmpty() || isLocked());
@@ -485,7 +527,30 @@ void TerminalService::updateGUI()
 //---------------------------------------------------------------------------
 bool TerminalService::isTerminalError(PPSDK::ETerminalError::Enum aErrorType) const
 {
-	return mDeviceErrorFlags.values(PPSDK::CDatabaseConstants::Devices::Terminal).contains(aErrorType) == true;
+	return mDeviceErrorFlags.values(PPSDK::CDatabaseConstants::Devices::Terminal).contains(aErrorType);
+}
+
+//---------------------------------------------------------------------------
+void TerminalService::updateTerminalStatus()
+{
+	auto warningLevel2LogLevel = [](SDK::Driver::EWarningLevel::Enum aEventType) -> LogLevel::Enum {
+		switch (aEventType)
+		{
+		case SDK::Driver::EWarningLevel::Warning: return LogLevel::Warning;
+		case SDK::Driver::EWarningLevel::Error: return LogLevel::Error;
+		default: return LogLevel::Normal;
+		}
+	};
+
+	auto status = getTerminalStatus();
+
+	if (mTerminalStatusCache != status)
+	{
+		toLog(warningLevel2LogLevel(status.first), QString("Terminal status: %1.")
+			.arg(status.second.replace("\r", "").replace("\n", ";")));
+
+		mDbUtils->addDeviceStatus(PPSDK::CDatabaseConstants::Devices::Terminal, status.first, status.second);
+	}
 }
 
 //---------------------------------------------------------------------------

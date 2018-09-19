@@ -212,7 +212,6 @@ IPlugin * PluginFactory::createPlugin(const QString & aInstancePath, const QStri
 				QString configInstance = aConfigInstancePath.section(CPlugin::InstancePathSeparator, 1, 1);
 
 				QVariantMap configuration = getPluginInstanceConfiguration(configPath, configInstance.isEmpty() ? instance : configInstance);
-				QVariantMap oldConfiguration = configuration;
 
 				// Синхронизируем настройки конфига и плагина, если плагин новее, чем конфиг
 				TParameterList & parameterList = mTranslatedParameters[path];
@@ -235,6 +234,8 @@ IPlugin * PluginFactory::createPlugin(const QString & aInstancePath, const QStri
 					}
 				}
 
+				IPluginLoader * pluginLoader = getPluginLoader();
+
 				for (auto it = parameterList.begin(); it != parameterList.end(); ++it)
 				{
 					bool isSet = !it->possibleValues.isEmpty();
@@ -251,18 +252,13 @@ IPlugin * PluginFactory::createPlugin(const QString & aInstancePath, const QStri
 					{
 						QString newValue = it->defaultValue.toString();
 
-						if (!notContains && (it->name != CPlugin::ModifiedValues))
+						if (pluginLoader && !notContains && (it->name != CPlugin::ModifiedValues))
 						{
-							IPluginLoader * pluginLoader = getPluginLoader();
-
-							if (pluginLoader)
+							for (auto jt = parameterList.begin(); jt != parameterList.end(); ++jt)
 							{
-								TParameterList parameters = getPluginLoader()->getPluginParametersDescription(path);
-								SPluginParameter modifiedValues = findParameter(CPlugin::ModifiedValues, parameters);
-
-								if (modifiedValues.isValid() && (modifiedValues.title == it->name))
+								if (jt->isValid() && (jt->name == CPlugin::ModifiedValues) && (jt->title.isEmpty() || (jt->title == it->name)))
 								{
-									QString modifiedValue = modifiedValues.possibleValues[configValue.toString()].toString();
+									QString modifiedValue = jt->possibleValues.value(configValue.toString()).toString();
 
 									if (!modifiedValue.isEmpty())
 									{
@@ -336,6 +332,39 @@ bool PluginFactory::destroyPlugin(IPlugin * aPlugin)
 			return true;
 		}
 	}
+
+	return false;
+}
+
+//------------------------------------------------------------------------------
+std::weak_ptr<IPlugin> PluginFactory::createPluginPtr(const QString & aInstancePath, const QString & aConfigPath)
+{
+	IPlugin * plugin = createPlugin(aInstancePath, aConfigPath);
+
+	if (!plugin)
+	{
+		return std::weak_ptr<IPlugin>();
+	}
+
+	auto pluginPtr = std::shared_ptr<IPlugin>(plugin, SDK::Plugin::PluginDeleter());
+	
+	// createPlugin помещает указатель на плагин в отдельную мапу. Поместим плагин в отдельный контейнер.
+	mCreatedPluginsPtr.insert(pluginPtr, mCreatedPlugins[plugin]);	
+	mCreatedPlugins.remove(plugin);
+		
+	return pluginPtr;
+}
+
+//------------------------------------------------------------------------------
+bool PluginFactory::destroyPlugin(const std::weak_ptr<IPlugin> & aPlugin)
+{
+	mKernel->getLog()->write(LogLevel::Normal, QString("Destroying plugin \"%1\".").arg(aPlugin.lock()->getPluginName()));
+
+	if (mCreatedPluginsPtr.contains(aPlugin.lock()))
+	{
+		mCreatedPluginsPtr.remove(aPlugin.lock());
+		return true;
+	}	
 
 	return false;
 }

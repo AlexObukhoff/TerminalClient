@@ -14,7 +14,7 @@ protected:
 	/// Попытка самоидентификации.
 	virtual bool isConnected();
 
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Инициализация устройства.

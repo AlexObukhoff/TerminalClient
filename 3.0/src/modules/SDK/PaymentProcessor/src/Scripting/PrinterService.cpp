@@ -61,10 +61,25 @@ void PrinterService::privateCheckPrinter()
 //------------------------------------------------------------------------------
 void PrinterService::printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aTemplate, bool aContinuousMode)
 {
-	// Отправляем на печать
-	mPrintedJobs.insert(
-		mPrinterService->printReceipt(aReceiptType, aParameters, QString(aTemplate).replace(".xml", ""), aContinuousMode),
-		TJobInfo(mPaymentService->getActivePayment(), aReceiptType));
+	qint64 paymentID = mPaymentService->getActivePayment();
+		
+	if (paymentID > 0 && !aParameters.contains(SDK::PaymentProcessor::CPayment::Parameters::ID))
+	{
+		QVariantMap aNewParameters(aParameters);
+		aNewParameters.insert(SDK::PaymentProcessor::CPayment::Parameters::ID, paymentID);
+
+		// Отправляем на печать с добавлением ID платежа
+		mPrintedJobs.insert(
+			mPrinterService->printReceipt(aReceiptType, aNewParameters, QString(aTemplate).replace(".xml", ""), aContinuousMode),
+			TJobInfo(paymentID, aReceiptType));
+	}
+	else
+	{
+		// Отправляем на печать
+		mPrintedJobs.insert(
+			mPrinterService->printReceipt(aReceiptType, aParameters, QString(aTemplate).replace(".xml", ""), aContinuousMode),
+			TJobInfo(paymentID, aReceiptType));
+	}
 }
 
 //------------------------------------------------------------------------------

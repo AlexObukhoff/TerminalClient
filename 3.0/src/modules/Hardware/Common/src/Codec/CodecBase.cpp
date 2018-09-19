@@ -2,11 +2,18 @@
 
 #pragma once
 
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QDebug>
+#include <Common/QtHeadersEnd.h>
+
+// Project
 #include "Hardware/Common/ASCII.h"
+#include "Hardware/Protocols/Common/ProtocolUtils.h"
 #include "CodecBase.h"
 
 //---------------------------------------------------------------------------
-CodecBase::CodecBase() : mMIB(3000), mMinValueActive(0x0080), mName("Base")
+CodecBase::CodecBase() : mMIB(3000), mMinValueActive(0x0080), mName("Base"), mDataGuard(QReadWriteLock::Recursive)
 {
 }
 
@@ -31,6 +38,8 @@ int CodecBase::mibEnum() const
 //---------------------------------------------------------------------------
 QString CodecBase::convertToUnicode(const char * aBuffer, int aLength, ConverterState * /*aState*/) const
 {
+	QReadLocker lock(&mDataGuard);
+
 	QByteArray buffer = QByteArray::fromRawData(aBuffer, aLength);
 	CharacterData & characterData = const_cast<CharacterData &>(mData);
 	QByteArray defaultBuffer = characterData.getDefault().character.toLatin1();
@@ -70,6 +79,8 @@ QString CodecBase::convertToUnicode(const char * aBuffer, int aLength, Converter
 //---------------------------------------------------------------------------
 QByteArray CodecBase::convertFromUnicode(const QChar * aBuffer, int aLength, ConverterState * /*aState*/) const
 {
+	QReadLocker lock(&mDataGuard);
+
 	QByteArray result;
 	CharacterData & characterData = const_cast<CharacterData &>(mData);
 	QString data(aBuffer, aLength);
@@ -88,7 +99,29 @@ QByteArray CodecBase::convertFromUnicode(const QChar * aBuffer, int aLength, Con
 				characters = characterData.data().keys(SCharData(data[i], false));
 			}
 
-			character = characters.isEmpty() ? CCodec::DefaultCharacter : characters[0];
+			QString log = QString(" for unicode character \"%1\" == %2 (%3)").arg(data[i]).arg(unicode).arg(ProtocolUtils::toHexLog(unicode));
+
+			if (characters.isEmpty())
+			{
+				character = CCodec::DefaultCharacter;
+				qDebug() << "No data" + log;
+			}
+			else
+			{
+				if (characters.size() > 1)
+				{
+					QStringList logData;
+
+					foreach(char ch, characters)
+					{
+						logData << ProtocolUtils::toHexLog(ch);
+					}
+
+					qDebug() << "There are a lot of values " + logData.join(", ") + log;
+				}
+
+				character = characters[0];
+			}
 		}
 
 		result.append(character);

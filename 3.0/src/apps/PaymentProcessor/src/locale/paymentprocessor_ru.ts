@@ -20,91 +20,57 @@
 <context>
     <name>PrintFiscalCommand</name>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="100"/>
+        <location filename="../Services/PrintingCommands.cpp" line="102"/>
         <source>#bank_fee</source>
         <translation>Комиссия БПА</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="101"/>
+        <location filename="../Services/PrintingCommands.cpp" line="103"/>
         <source>#dealer_fee</source>
         <translation>Комиссия субагента</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="107"/>
+        <location filename="../Services/PrintingCommands.cpp" line="109"/>
         <source>#processing_fee</source>
         <translation>Комиссия КБ Платина</translation>
     </message>
 </context>
 <context>
-    <name>PrintPayment</name>
+    <name>TerminalStatuses</name>
     <message>
-        <source>#payment_amount</source>
-        <translation type="obsolete">К зачислению</translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="19"/>
+        <source>#ok</source>
+        <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="245"/>
-        <source>#tax_system</source>
-        <translation>СНО</translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="21"/>
+        <source>#key_error</source>
+        <translation>Ключи повреждены или отсутствуют</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="246"/>
-        <source>#kkt_timestamp</source>
-        <translation>ВРЕМЯ ККТ</translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="22"/>
+        <source>#config_error</source>
+        <translation>Файлы конфигурации повреждены или отсутствуют</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="247"/>
-        <source>#kkt_znm</source>
-        <translation>ЗН ККТ</translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="23"/>
+        <source>#database_error</source>
+        <translation>База данных повреждена</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="248"/>
-        <source>#kkt_rnm</source>
-        <translation>РН ККТ</translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="24"/>
+        <source>#network_error</source>
+        <translation>Ошибка связи</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="249"/>
-        <source>#kkt_session</source>
-        <translation>СМЕНА</translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="25"/>
+        <source>#account_balance_error</source>
+        <translation>Недостаточно средств на счету</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="250"/>
-        <source>#kkt_fd_serial</source>
-        <translation>ЧЕК</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="251"/>
-        <source>#kkt_fn</source>
-        <translation>ФН</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="252"/>
-        <source>#kkt_fd</source>
-        <translation>ФД</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="253"/>
-        <source>#kkt_fp</source>
-        <translation>ФП</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="255"/>
-        <source>#tax_amount_02</source>
-        <translation>НДС 18%</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="256"/>
-        <source>#tax_amount_03</source>
-        <translation>НДС 10%</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="257"/>
-        <source>#tax_amount_04</source>
-        <translation>НДС 0%</translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="258"/>
-        <source>#tax_amount_05</source>
-        <translation>БЕЗ НДС</translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="26"/>
+        <source>#interface_locked</source>
+        <translation>Интерфейс заблокирован</translation>
     </message>
 </context>
 <context>
@@ -112,22 +78,22 @@
     <message>
         <location filename="../SplashScreen/splash_screen_scene.qml" line="48"/>
         <source>#terminal_not_available</source>
-        <translation>Терминал временно не работает.</translation>
+        <translation type="unfinished">Терминал временно не работает.</translation>
     </message>
     <message>
         <location filename="../SplashScreen/splash_screen_scene.qml" line="55"/>
         <source>#dont_power_off_terminal</source>
-        <translation>Проводится обновление ПО. Не выключайте питание!</translation>
+        <translation type="unfinished">Проводится обновление ПО. Не выключайте питание!</translation>
     </message>
     <message>
         <location filename="../SplashScreen/splash_screen_scene.qml" line="65"/>
         <source>#terminal</source>
-        <translation>Терминал: %1</translation>
+        <translation type="unfinished">Терминал: %1</translation>
     </message>
     <message>
         <location filename="../SplashScreen/splash_screen_scene.qml" line="74"/>
         <source>#support</source>
-        <translation>Телефон поддержки: %1</translation>
+        <translation type="unfinished">Телефон поддержки: %1</translation>
     </message>
 </context>
 </TS>

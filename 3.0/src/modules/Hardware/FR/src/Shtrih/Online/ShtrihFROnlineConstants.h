@@ -2,6 +2,10 @@
 
 #pragma once
 
+// Modules
+#include "Hardware/Common/WaitingData.h"
+
+// Project
 #include "../ShtrihFRConstants.h"
 
 //--------------------------------------------------------------------------------
@@ -56,13 +60,16 @@ namespace CShtrihOnlineFR
 	/// Налоги на закрытии чека по количеству налоговых  групп. Фиктивные, т.к. используются налоги на позицию.
 	const QByteArray ClosingFiscalTaxes = QByteArray(6 * 5, ASCII::NUL);
 
-	/// Параметры автообновления.
-	namespace FirmwareUpdating
+	/// Ожидание готовности, [мс].
+	const SWaitingData ReadyWaiting = SWaitingData(200, 15 * 1000);
+
+	/// Маски для парсинга режимо работы.
+	namespace OperationModeMask
 	{
-		const int Working  = 1;      /// Работать с сервером автообновления.
-		const int Enabling = 1;      /// Разрешить автообновление.
-		const int Interval = 600;    /// Интервал опроса сервера автообновления, [c].
-		const int Single   = 0;      /// Многократное обновление.
+		const char ExcisableUnitMode = '\x01';     // Торговля подакцизными товарами (1207).
+		const char GamblingMode      = '\x02';     // Проведение азартных игр (1193).
+		const char LotteryMode       = '\x04';     // Проведение лотереи (1126).
+		const char InAutomateMode    = '\x08';     // Признак установки в автомате (1221).
 	}
 
 	/// Типы фискальных чеков.
@@ -81,7 +88,7 @@ namespace CShtrihOnlineFR
 		const SData NotPrintDocument    = SData( 7, 17);    /// Настройка печати любого документа.
 		const SData PrintEndToEndNumber = SData( 9, 17);    /// Печатать сквозной номер документа.
 		const SData PrintOFDData        = SData(10, 17);    /// Печатать данные ОФД.
-		const SData PrintUserData       = SData(12, 17);    /// Печатать реквизитов [суб]дилера.
+		const SData PrintUserData       = SData(12, 17);    /// Печатать реквизиты [суб]дилера.
 		const SData FFDFR               = SData(17, 17);    /// ФФД ФР.
 		const SData PrintCustomFields   = SData(25, 17);    /// Автопечать тегов, вводимых на платеже.
 		const SData SerialNumber        = SData( 1, 18);    /// Серийный номер.
@@ -95,6 +102,7 @@ namespace CShtrihOnlineFR
 		const SData FTSURL              = SData(13, 18);    /// Адрес сайта ФНС.
 		const SData PayOffPlace         = SData(14, 18);    /// Место расчетов.
 		const SData AgentFlag           = SData(16, 18);    /// Признак агента.
+		const SData OperationModes      = SData(21, 18);    /// Режимы работы.
 		const SData OFDAddress          = SData( 1, 19);    /// Aдрес ОФД.
 		const SData OFDPort             = SData( 2, 19);    /// Порт ОФД.
 		const SData AutomaticNumber     = SData( 1, 24);    /// Номер автомата.
@@ -122,6 +130,15 @@ namespace CShtrihOnlineFR
 		}
 	}
 
+	/// Параметры автообновления.
+	namespace FirmwareUpdating
+	{
+		const int Working  = 1;      /// Работать с сервером автообновления.
+		const int Interval = 600;    /// Интервал опроса сервера автообновления, [c].
+		const int Enabling = 1;      /// Разрешить автообновление.
+		const int Single   = 0;      /// Многократное обновление.
+	}
+
 	/// Коды команд.
 	namespace Commands
 	{
@@ -135,7 +152,7 @@ namespace CShtrihOnlineFR
 			const char GetNumber[]               = "\xFF\x02";    /// Получить номер ФН.
 			const char GetValidity[]             = "\xFF\x03";    /// Получить срок действия ФН.
 			const char GetVersion[]              = "\xFF\x04";    /// Получить версию ФН.
-			const char GetFiscalizationResume[]  = "\xFF\x09";    /// Получить итог фискализации.
+			const char GetFiscalizationTotal[]   = "\xFF\x09";    /// Получить итог фискализации.
 			const char GetFDbyNumber[]           = "\xFF\x0A";    /// Получить фискальный документ по его номеру.
 			const char SetOFDParameter[]         = "\xFF\x0C";    /// Передать произвольную TLV структуру (реквизит для ОФД).
 			const char GetOFDInterchangeStatus[] = "\xFF\x39";    /// Получить статус информационного обмена c ОФД.
@@ -153,6 +170,7 @@ namespace CShtrihOnlineFR
 	{
 		const char WrongFSState      = '\x02';    /// Неверное состояние ФН.
 		const char NoRequiedDataInFS = '\x08';    /// Нет запрошенных данных.
+		const char FSOfflineEnd      = '\x14';    /// ФН Исчерпан ресурс хранения.
 		const char NeedZReport       = '\x16';    /// ФН Продолжительность смены более 24 часов.
 
 		class CData : public FRError::CData

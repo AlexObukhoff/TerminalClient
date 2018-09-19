@@ -21,16 +21,16 @@ SPluginParameter setFiscalModeEnabled()
 //------------------------------------------------------------------------------
 SPluginParameter setDocumentCap()
 {
-	return SPluginParameter(PrinterSettings::DocumentCap, false, PPT::DocumentCap, QString(), CHardware::Values::NoChange, QStringList()
-		<< CHardware::Values::Use
-		<< CHardware::Values::NotUse
-		<< CHardware::Values::NoChange, false);
+	return SPluginParameter(PrinterSettings::DocumentCap, false, PPT::DocumentCap, QString(), CHardwareSDK::Values::Auto, QStringList()
+		<< CHardwareSDK::Values::Use
+		<< CHardwareSDK::Values::NotUse
+		<< CHardwareSDK::Values::Auto, false);
 }
 
 //------------------------------------------------------------------------------
 SPluginParameter setAutoCloseSessionAbility()
 {
-	return SPluginParameter(CHardware::FR::CanAutoCloseSession, false, PPT::AutoCloseSessionAbility, QString(), CHardware::Values::Auto, QStringList() << CHardware::Values::Use << CHardware::Values::NotUse, true);
+	return SPluginParameter(CHardware::FR::CanAutoCloseSession, false, PPT::AutoCloseSessionAbility, QString(), CHardwareSDK::Values::Auto, QStringList() << CHardwareSDK::Values::Use << CHardwareSDK::Values::NotUse, true);
 }
 
 //------------------------------------------------------------------------------
@@ -45,6 +45,33 @@ SPluginParameter setFiscalChequeCreation()
 SPluginParameter setSessionOpeningTime()
 {
 	return SPluginParameter(CHardware::FR::SessionOpeningTime, false, PPT::SessionOpeningTime, QString(), QString(), QStringList(), true);
+}
+
+//------------------------------------------------------------------------------
+SPluginParameter setNotPrinting()
+{
+	return SPluginParameter(CHardwareSDK::FR::WithoutPrinting, false, QString(), QString(), CHardwareSDK::Values::Auto, QStringList() << CHardwareSDK::Values::Use << CHardwareSDK::Values::NotUse, true);
+}
+
+//------------------------------------------------------------------------------
+SPluginParameter setPrinterModel(const QStringList & aModels, const QString & aDefault)
+{
+	return SPluginParameter(CHardware::FR::PrinterModel, false, PPT::PrinterModel, QString(), aDefault, aModels);
+}
+
+//------------------------------------------------------------------------------
+SPluginParameter setPrinterModel(const QString & aModel)
+{
+	return setPrinterModel(QStringList() << aModel, aModel);
+}
+
+//------------------------------------------------------------------------------
+SPluginParameter setNullingSumInCash()
+{
+	return SPluginParameter(CHardwareSDK::FR::NullingSumInCash, false, PPT::NullingSumInCash, QString(), CHardwareSDK::Values::NotUse, QStringList()
+		<< CHardwareSDK::Values::Use
+		<< CHardwareSDK::Values::NotUse
+		<< CHardwareSDK::Values::Auto);
 }
 
 //------------------------------------------------------------------------------

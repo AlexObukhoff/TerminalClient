@@ -24,8 +24,8 @@ Item {
 		icon: 18
 		text: Utils.locale.tr(QT_TR_NOOP("info_popup#close"))
 		color: Utils.ui.color("color.button.secondary")
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 
 		anchors { horizontalCenter: parent.horizontalCenter; top: html.bottom; topMargin: 21 }
 		width: 406

@@ -36,7 +36,7 @@ Widgets.SceneBase2 {
 
 			border { left: 18; top: 100; right: 100; bottom: 18 }
 			// Для ПмщнкАбнт немножко закостылим
-			source: modelData.source === "UserAssistantScene" ? "image://ui/enum.online" : "image://ui/enum.normal"
+			source: modelData.source === "UserAssistantScene" ? Utils.ui.image("enum.online") : Utils.ui.image("enum.normal")
 
 			Text {
 				id: itemText
@@ -106,7 +106,7 @@ Widgets.SceneBase2 {
                 width: parent.width
                 height: parent.height
                 border { left: 40; top: 40; right: 40; bottom: 40 }
-                source: "image://ui/webview.angles"
+                source: Utils.ui.image("webview.angles")
 				z: 1
 			}
 		}

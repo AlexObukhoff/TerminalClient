@@ -36,7 +36,7 @@ Widgets.SceneBase2 {
 		}
 
 		Image {
-			source: "image://ui/pinpad"
+			source: Utils.ui.image("pinpad")
 			anchors.horizontalCenter: parent.horizontalCenter
 		}
 	}

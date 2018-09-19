@@ -271,33 +271,19 @@ bool ISysUtils::bringWindowToFront(const QString & aWindowTitle)
 //---------------------------------------------------------------------------------
 bool ISysUtils::getAllProcessHandleCount(quint32 & aCountOfHandles)
 {
-	aCountOfHandles = 0;
+	QList<SProcessInfo> processes = getAllProcessInfo();
 
-	PROCESSENTRY32 pe32;
-	HANDLE hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	pe32.dwSize = sizeof(PROCESSENTRY32);
-
-	if (!Process32First(hProcessSnap, &pe32))
+	if (processes.isEmpty())
 	{
-		CloseHandle(hProcessSnap);
 		return false;
 	}
 
-	do
+	aCountOfHandles = 0;
+
+	foreach (auto pInfo, processes)
 	{
-		DWORD handleCount = 0;
-		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pe32.th32ProcessID);
-
-		if (hProcess != INVALID_HANDLE_VALUE && hProcess != NULL)
-		{
-			if (GetProcessHandleCount(hProcess, &handleCount))
-			{
-				aCountOfHandles += handleCount;
-			}
-
-			CloseHandle(hProcess);
-		}
-	} while (Process32Next(hProcessSnap, &pe32));
+		aCountOfHandles += pInfo.handlers;
+	}
 
 	return true;
 }
@@ -306,6 +292,53 @@ bool ISysUtils::getAllProcessHandleCount(quint32 & aCountOfHandles)
 void ISysUtils::runScreenSaver()
 {
 	SendMessage(HWND_BROADCAST, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
+}
+
+//--------------------------------------------------------------------------------
+QList<ISysUtils::SProcessInfo> ISysUtils::getAllProcessInfo()
+{
+	QList<SProcessInfo> procesInfos;
+
+	PROCESSENTRY32 pe32;
+	HANDLE hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	pe32.dwSize = sizeof(PROCESSENTRY32);
+
+	if (!Process32First(hProcessSnap, &pe32))
+	{
+		CloseHandle(hProcessSnap);
+		return procesInfos;
+	}
+
+	do
+	{
+		SProcessInfo pInfo;
+		pInfo.id = pe32.th32ProcessID;
+		pInfo.path = QString::fromWCharArray(pe32.szExeFile);
+
+		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pe32.th32ProcessID);
+
+		if (hProcess != INVALID_HANDLE_VALUE && hProcess != NULL)
+		{
+			DWORD handleCount = 0;
+			if (GetProcessHandleCount(hProcess, &handleCount))
+			{
+				pInfo.handlers = handleCount;
+			}
+
+			PROCESS_MEMORY_COUNTERS_EX pmc;
+			if (GetProcessMemoryInfo(hProcess, reinterpret_cast<PROCESS_MEMORY_COUNTERS *>(&pmc), sizeof(pmc)))
+			{
+				pInfo.memoryUsage = pmc.WorkingSetSize;
+			}
+
+			CloseHandle(hProcess);
+		}
+
+		procesInfos << pInfo;
+
+	} while (Process32Next(hProcessSnap, &pe32));
+
+	return procesInfos;
 }
 
 //--------------------------------------------------------------------------------

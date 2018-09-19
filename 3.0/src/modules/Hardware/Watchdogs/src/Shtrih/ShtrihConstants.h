@@ -104,8 +104,8 @@ namespace CShtrih
 			qlonglong serial;
 			SSoftInfo softInfo;
 
-			SData(): address(Constants::NoAddress) {}
-			SData(const QString & aName, uchar aAddress): name(aName), address(aAddress) {}
+			SData(): address(Constants::NoAddress), serial(0) {}
+			SData(const QString & aName, uchar aAddress): name(aName), address(aAddress), serial(0) {}
 
 			void setData(const QString & aName, uchar aAddress, qlonglong aSerial, const SSoftInfo & aSoftInfo)
 			{

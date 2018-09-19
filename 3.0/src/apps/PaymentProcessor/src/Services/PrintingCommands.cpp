@@ -38,6 +38,7 @@ PrintFiscalCommand::PrintFiscalCommand(const QString & aReceiptType, FiscalComma
 {
 }
 
+#if 0
 //---------------------------------------------------------------------------
 QVariantMap toUpperCaseKeys(const QVariantMap & aParameters)
 {
@@ -50,11 +51,12 @@ QVariantMap toUpperCaseKeys(const QVariantMap & aParameters)
 
 	return result;
 }
+#endif
 
 //---------------------------------------------------------------------------
 SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap & aParameters)
 {
-	DSDK::TAmountDataList fiscalAmountList;
+	DSDK::TUnitDataList unitDataList;
 
 	bool dealerIsBank = aParameters.value(CPrintConstants::DealerIsBank, false).toBool();
 	DSDK::TVAT dealerVAT = aParameters.value(CPrintConstants::DealerVAT, 0).toInt();
@@ -72,7 +74,7 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 			.arg(aParameters[CPrintConstants::ServiceType].toString())
 			.arg(aParameters[CPrintConstants::OpBrand].toString());
 
-		fiscalAmountList << DSDK::SAmountData(amount, vat, paymentTitle, operatorINN, DSDK::EPayOffSubjectTypes::Payment);
+		unitDataList << DSDK::SUnitData(amount, vat, paymentTitle, operatorINN, DSDK::EPayOffSubjectTypes::Payment);
 	}
 	else
 	{
@@ -84,7 +86,7 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 		// amount содержит список сумм для печати реестра нераспечатанных чеков
 		for (int i = 0; i < amounts.size(); i++)
 		{
-			fiscalAmountList << DSDK::SAmountData(
+			unitDataList << DSDK::SUnitData(
 				amounts.value(i).toDouble(), 
 				amountsVAT.value(i).toInt(), 
 				amountTitles.value(i).toString(), 
@@ -96,15 +98,15 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 	if (!qFuzzyIsNull(fee))
 	{
 		QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
-		fiscalAmountList << (dealerIsBank ?
-			DSDK::SAmountData(fee, dealerVAT, tr("#bank_fee"),   dealerINN, DSDK::EPayOffSubjectTypes::Payment) :
-			DSDK::SAmountData(fee, dealerVAT, tr("#dealer_fee"), dealerINN, DSDK::EPayOffSubjectTypes::AgentFee));
+		unitDataList << (dealerIsBank ?
+			DSDK::SUnitData(fee, dealerVAT, tr("#bank_fee"),   dealerINN, DSDK::EPayOffSubjectTypes::Payment) :
+			DSDK::SUnitData(fee, dealerVAT, tr("#dealer_fee"), dealerINN, DSDK::EPayOffSubjectTypes::AgentFee));
 	}
 
 	if (!qFuzzyIsNull(processingFee))
 	{
 		QString bankINN = aParameters.value(CPrintConstants::BankInn).toString();
-		fiscalAmountList << DSDK::SAmountData(processingFee, 0, tr("#processing_fee"), bankINN, DSDK::EPayOffSubjectTypes::Payment);
+		unitDataList << DSDK::SUnitData(processingFee, 0, tr("#processing_fee"), bankINN, DSDK::EPayOffSubjectTypes::Payment);
 	}
 
 	bool EMoney = aParameters.value(PPSDK::CPayment::Parameters::PayTool).toInt() > 0;
@@ -112,12 +114,18 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 	auto taxSystem = aParameters.contains(CPrintConstants::DealerTaxSystem) ? static_cast<DSDK::ETaxSystems::Enum>(aParameters.value(CPrintConstants::DealerTaxSystem).toInt()) : DSDK::ETaxSystems::None;
 	auto agentFlag = aParameters.contains(CPrintConstants::DealerAgentFlag) ? static_cast<DSDK::EAgentFlags::Enum>(aParameters.value(CPrintConstants::DealerAgentFlag).toInt()) : DSDK::EAgentFlags::None;
 
-	DSDK::SPaymentData result(fiscalAmountList, false, payType, taxSystem, agentFlag);
-
-	QVariantMap upperKeyParameters = toUpperCaseKeys(aParameters);
-	QRegExp phoneRegexp("^9\\d{9}$");
+	DSDK::SPaymentData result(unitDataList, false, payType, taxSystem, agentFlag);
 
 	result.fiscalParameters[CHardwareSDK::FR::UserPhone] = QString();
+	result.fiscalParameters[CHardwareSDK::FR::UserMail] = QString();
+
+#if 0
+	//TODO - решить как на верхнем уровне в интерфейсе мы будем давать возможность 
+	//       вводить телефон/email для отправки чека ПЕРЕД печатью этого чека.
+	//       Отключено по жалобе дилеров 1 sms = 2руб в счете от ОФД
+	//       #60325 
+	QVariantMap upperKeyParameters = toUpperCaseKeys(aParameters);
+	QRegExp phoneRegexp("^9\\d{9}$");
 
 	foreach (auto fieldName, QStringList() << "100" << "PHONE" << "CONTACT" << "101" << "102" << "103" << "104")
 	{
@@ -127,8 +135,6 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 			break;
 		}
 	}
-
-	result.fiscalParameters[CHardwareSDK::FR::UserMail] = QString();
 
 	foreach (auto fieldName, QStringList() << "PAYER_EMAIL")
 	{
@@ -142,6 +148,7 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 			}
 		}
 	}
+#endif
 
 	return result;
 }
@@ -205,10 +212,6 @@ bool PrintPayment::canPrint(DSDK::IPrinter * aPrinter, bool aRealCheck)
 //---------------------------------------------------------------------------
 bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParameters)
 {
-	QVariantMap parameters = aParameters;
-	QStringList receipt;
-	getFiscalInfo(parameters, receipt);
-
 	// Добавляем строки основного чека
 	QVariantMap configuration = aPrinter->getDeviceConfiguration();
 	bool onlineKKM = configuration[CHardwareSDK::CanOnline].toBool();
@@ -225,42 +228,53 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 	actualParameters.insert(CPrintConstants::KKM::SerialNumber, KKMSerialNumber);
 	actualParameters.insert("ONLINE_KKM", onlineKKM ? 1 : 0);
 
-	receipt.append(mService->getReceipt(mReceiptTemplate, actualParameters));
+	QStringList receipt = mService->getReceipt(mReceiptTemplate, actualParameters);
+
+	QVariantMap parameters = aParameters;
+	QStringList fiscalPart;
+	bool hasFiscalInfo = getFiscalInfo(parameters, fiscalPart);
+	if (hasFiscalInfo)
+	{
+		receipt.append(fiscalPart);
+	}
 
 	bool result = false;
 
 	// Повторно мы печатаем только нефискальные чеки
 	if (!fiscalPrinting)
 	{
-		result = canPrint(aPrinter, false) && aPrinter->print(receipt);
+		// Если есть фискальный сервис, но нет фискальной информации и запрещено печатать чеки без ФП
+		if (!mService->enableBlankFiscalData() && mService->getFiscalRegister() && !hasFiscalInfo)
+		{
+			mService->toLog(LogLevel::Error, QString("[%1] Not print receipt with blank fiscal data.")
+				.arg(aParameters[PPSDK::CPayment::Parameters::ID].toLongLong()));
+		}
+		else
+		{
+			result = canPrint(aPrinter, false) && aPrinter->print(receipt);
+		}
 	}
 	else if (canFiscalPrint(aPrinter, false))
 	{
 		DSDK::SPaymentData paymentData = getPaymentData(actualParameters);
 
+		mFiscalPaymentData.clear();
+		mPayOffSubjectData.clear();
 		result = static_cast<DSDK::IFiscalPrinter *>(aPrinter)->printFiscal(receipt, paymentData, mFiscalPaymentData, mPayOffSubjectData);
 
-		if (!mFiscalPaymentData.isEmpty())
+		if (result)
 		{
-			#define ADD_FISCAL_TAG(aTranstation, aFiscalTag) \
-				if (DSDK::FiscalFields::isMoney(DSDK::FiscalFields::aFiscalTag)) \
-				     { receipt << QString("%1:  %2").arg(aTranstation).arg(mFiscalPaymentData[DSDK::FiscalFields::aFiscalTag].toInt() / 100.0, 0, 'f', 2); } \
-				else { receipt << QString("%1:  %2").arg(aTranstation).arg(mFiscalPaymentData[DSDK::FiscalFields::aFiscalTag].toString()); }
+			if (mFiscalFieldData.isEmpty())
+			{
+				mFiscalFieldData = aPrinter->getDeviceConfiguration().value(CHardwareSDK::FR::FiscalFieldData).value<DSDK::TFiscalFieldData>();
+			}
 
-			ADD_FISCAL_TAG(tr("#tax_system"),    TaxSystem);
-			ADD_FISCAL_TAG(tr("#kkt_timestamp"), FDDateTime);
-			ADD_FISCAL_TAG(tr("#kkt_znm"),       SerialFRNumber);
-			ADD_FISCAL_TAG(tr("#kkt_rnm"),       RNM);
-			ADD_FISCAL_TAG(tr("#kkt_session"),   SessionNumber);
-			ADD_FISCAL_TAG(tr("#kkt_fd_serial"), DocumentNumber);
-			ADD_FISCAL_TAG(tr("#kkt_fn"),        SerialFSNumber);
-			ADD_FISCAL_TAG(tr("#kkt_fd"),        FDNumber);
-			ADD_FISCAL_TAG(tr("#kkt_fp"),        FDSign);
+			addFiscalPaymentData(mFiscalPaymentData, receipt);
 
-			ADD_FISCAL_TAG(tr("#tax_amount_02"), TaxAmount02);
-			ADD_FISCAL_TAG(tr("#tax_amount_03"), TaxAmount03);
-			ADD_FISCAL_TAG(tr("#tax_amount_04"), TaxAmount04);
-			ADD_FISCAL_TAG(tr("#tax_amount_05"), TaxAmount05);
+			for (int i = 0; i < mPayOffSubjectData.size(); ++i)
+			{
+				addFiscalPaymentData(mPayOffSubjectData[i], receipt);
+			}
 		}
 	}
 
@@ -270,6 +284,28 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 	mService->saveReceiptContent(receiptName, receipt);
 
 	return result;
+}
+
+//---------------------------------------------------------------------------
+void PrintPayment::addFiscalPaymentData(const DSDK::TFiscalPaymentData & aFPData, QStringList & aData)
+{
+	for (auto it = aFPData.begin(); it != aFPData.end(); ++it)
+	{
+		DSDK::SFiscalFieldData FFData = mFiscalFieldData.value(it.key());
+
+		QString key = FFData.translationPF;
+		QString value = FFData.isMoney ? QString("%1").arg(it->toInt() / 100.0, 0, 'f', 2) : it->toString();
+		QString text;
+
+		     if (!key.isEmpty() && !value.isEmpty()) text = key + " = " + value;
+		else if (!key.isEmpty())                     text = key;
+		else if (!value.isEmpty())                   text = value;
+
+		if (!text.isEmpty())
+		{
+			aData << text.simplified();
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -423,6 +459,11 @@ bool PrintZReport::print(DSDK::IPrinter * aPrinter, const QVariantMap & /*aParam
 //---------------------------------------------------------------------------
 bool PrintReceipt::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParameters)
 {
+	if (aPrinter == nullptr)
+	{
+		return false;
+	}
+
 	QVariantMap configuration = aPrinter->getDeviceConfiguration();
 	QString KKMSerialNumber = configuration[CHardwareSDK::SerialNumber].toString();
 
@@ -435,9 +476,16 @@ bool PrintReceipt::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 	actualParameters.insert(CPrintConstants::KKM::SerialNumber, KKMSerialNumber);
 	QStringList receipt = mService->getReceipt(mReceiptTemplate, actualParameters);
 
-	mService->saveReceiptContent(QString("%1_%2").arg(QTime::currentTime().toString("hhmmsszzz")).arg(mReceiptTemplate), receipt);
+	QString receiptFileName = QString("%1_%2").arg(QTime::currentTime().toString("hhmmsszzz")).arg(mReceiptTemplate);
 
-	return aPrinter && aPrinter->print(receipt);
+	if (aParameters.contains(SDK::PaymentProcessor::CPayment::Parameters::ID))
+	{
+		receiptFileName += QString("_%1").arg(aParameters[SDK::PaymentProcessor::CPayment::Parameters::ID].toLongLong());
+	}
+
+	mService->saveReceiptContent(receiptFileName, receipt);
+
+	return aPrinter->print(receipt);
 }
 
 //---------------------------------------------------------------------------

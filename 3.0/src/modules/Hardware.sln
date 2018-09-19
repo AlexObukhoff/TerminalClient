@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fiscal printers", "Fiscal printers", "{AA61BBE3-7987-4E4B-9B31-EC490F6004C0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bill acceptors", "Bill acceptors", "{FEE80E00-C155-453F-B1A0-1411BF8A2A54}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cash acceptors", "Cash acceptors", "{FEE80E00-C155-453F-B1A0-1411BF8A2A54}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Printers", "Hardware\Printers\msvc\Printers.vcxproj", "{07EB8837-44E2-4312-A946-64F9C93D3B1B}"
 EndProject
@@ -68,6 +68,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SSPProtocol", "Hardware\Protocols\CashAcceptor\SSP\SSPProtocol.vcxproj", "{6FED182E-51F4-4292-AF7C-8C584B1C708D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KasbiFRProtocol", "Hardware\Protocols\FR\Kasbi\KasbiFRProtocol.vcxproj", "{B5773A56-AE4D-4945-BBFD-5A837DFD2895}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Acceptors", "Hardware\Acceptors\msvc\Acceptors.vcxproj", "{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -247,6 +249,12 @@ Global
 		{B5773A56-AE4D-4945-BBFD-5A837DFD2895}.Release|Win32.Build.0 = Release|Win32
 		{B5773A56-AE4D-4945-BBFD-5A837DFD2895}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
 		{B5773A56-AE4D-4945-BBFD-5A837DFD2895}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
+		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}.Debug|Win32.Build.0 = Debug|Win32
+		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}.Release|Win32.ActiveCfg = Release|Win32
+		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}.Release|Win32.Build.0 = Release|Win32
+		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
+		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -275,6 +283,7 @@ Global
 		{886011DB-0BFC-447D-B553-DC76848133C6} = {15079D62-8D1C-4263-AD17-E82CDA41245D}
 		{6FED182E-51F4-4292-AF7C-8C584B1C708D} = {FEE80E00-C155-453F-B1A0-1411BF8A2A54}
 		{B5773A56-AE4D-4945-BBFD-5A837DFD2895} = {AA61BBE3-7987-4E4B-9B31-EC490F6004C0}
+		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0} = {FEE80E00-C155-453F-B1A0-1411BF8A2A54}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		QtVersion = $(DefaultQtVersion)

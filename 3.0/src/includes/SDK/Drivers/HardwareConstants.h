@@ -27,6 +27,14 @@ namespace CAllHardware
 	const char SerialNumber[] = "serial_number";
 	const char CanOnline[] = "can_online";
 
+	/// Значения настроек.
+	namespace Values
+	{
+		const char Use[] = "use";
+		const char NotUse[] = "not_use";
+		const char Auto[] = "auto";
+	}
+
 	/// Типы поиска устройств.
 	namespace SearchingTypes
 	{
@@ -59,6 +67,10 @@ namespace CAllHardware
 		const char UserPhone[] = "user_phone";
 		const char UserMail[] = "user_mail";
 		const char ZReportTime[] = "z_report_time";
+		const char FiscalFieldData[] = "fiscal_field_data";
+		const char WithoutPrinting[] = "without_printing";
+		const char CanWithoutPrinting[] = "can_without_printing";
+		const char NullingSumInCash[] = "nulling_sum_in_cash";
 	}
 
 	/// Константы принтера.

@@ -7,8 +7,11 @@
 
 // Modules
 #include "Hardware/Common/ASCII.h"
-#include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
 #include "Hardware/Common/DeviceCodeSpecification.h"
+#include "Hardware/Common/WaitingData.h"
+
+// Project
+#include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
 
 //--------------------------------------------------------------------------------
 /// Константы, команды и коды состояний устройств на протоколе V2e.

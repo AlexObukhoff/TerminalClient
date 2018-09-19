@@ -68,7 +68,7 @@ Item {
 			width: 1097
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
-			source: "image://ui/panel.operator"
+			source: Utils.ui.image("panel.operator")
 
 			Row {
 				anchors { left: parent.left; right: parent.right }
@@ -88,7 +88,7 @@ Item {
 						visible: logoGroup.sourceSize.width
 						anchors.left: parent.left
 						anchors.verticalCenter: parent.verticalCenter
-						source: "image://ui/panel.iconsback." + Core.graphics.ui["icon_set"]
+						source: Utils.ui.image("panel.iconsback." + Core.graphics.ui["icon_set"])
 					}
 					// Иконка корневой группы
 					Image {
@@ -185,7 +185,7 @@ Item {
 
 				anchors.verticalCenter: parent.verticalCenter
 				x: 1050
-				source: "image://ui/top.spacer"
+				source: Utils.ui.image("top.spacer")
 			}
 
 			// всего
@@ -207,8 +207,8 @@ Item {
 		icon: 6
 		text: Utils.locale.tr(QT_TR_NOOP("operator_selector#search"))
 		color: Utils.ui.color("color.button.primary")
-		texture: "image://ui/button.primary.normal"
-		texturePressed: "image://ui/button.primary.pressed"
+		texture: Utils.ui.image("button.primary.normal")
+		texturePressed: Utils.ui.image("button.primary.pressed")
 		onClicked: rootItem.search()
 	}
 
@@ -218,8 +218,8 @@ Item {
 		icon: 16
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#back"))
 		color: Utils.ui.color("color.button.secondary")
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 
 		anchors { left: parent.left; bottom: parent.bottom; bottomMargin: 30 }
 		width: 407
@@ -233,8 +233,8 @@ Item {
 		enabled: !rootItem.atYEnd
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#forward"))
 		color: Utils.ui.color("color.button")
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 
 		width: 407
 		anchors { left: searchButton.right; bottom: parent.bottom; bottomMargin: 30 }

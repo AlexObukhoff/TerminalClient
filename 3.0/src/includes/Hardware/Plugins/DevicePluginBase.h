@@ -49,7 +49,7 @@ public:
 							}
 						}
 					}
-					else if (!parameter.readOnly || (parameter.name == CHardwareSDK::ModelName))
+					else
 					{
 						pluginParameterNames << parameter.name;
 					}

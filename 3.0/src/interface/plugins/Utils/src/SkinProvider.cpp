@@ -17,24 +17,21 @@ SkinProvider::SkinProvider(const QString & aInterfacePath, const QString & aCont
 	QDeclarativeImageProvider(QDeclarativeImageProvider::Image),
 	mLogoPath(aContentPath + "/logo"),
 	mUserLogoPath(aUserPath + "/logo"),
-	mInterfacePath(aInterfacePath)
+	mInterfacePath(aInterfacePath),
+	mSkin(aSkin)
 {
-	mSkinName = aSkin->getName();
-	mSkinConfig = aSkin->getConfiguration();
 }
 
 //------------------------------------------------------------------------------
 QImage SkinProvider::requestImage(const QString & aId, QSize * aSize, const QSize & aRequestedSize)
 {
-	if (!aId.contains("logoprovider"))
-	{
-		QString path = mInterfacePath + QDir::separator() + "skins" + QDir::separator() + mSkinName + QDir::separator() + getImagePath(aId);
+	QString skinName = mSkin->getName();
 
-		if (!QFile::exists(path))
-		{
-			Log(Log::Warning) << QString("SkinProvider: failed to load texture '%1' from '%2'. Try loading texture from 'default'.").arg(aId).arg(path);
-			path = mInterfacePath + QDir::separator() + "skins" + QDir::separator() + "default" + QDir::separator() + getImagePath(aId);
-		}
+	if (!aId.contains("logoprovider"))
+	{		
+		QString path = getImagePath(aId);
+
+		Log(Log::Debug) << QString("SkinProvider: LOAD texture %1 from '%2'.").arg(aId).arg(path);
 
 		QImage image;
 
@@ -73,7 +70,7 @@ QImage SkinProvider::requestImage(const QString & aId, QSize * aSize, const QSiz
 		// Загружаем фон
 		if (bimage == mBackgrounds.end() && !background.isEmpty())
 		{
-			QString path = mInterfacePath + QDir::separator() + "skins"+ QDir::separator() + mSkinName + QDir::separator() + getImagePath(background);
+			QString path = getImagePath(background);
 			QImage img;
 
 			if (img.load(path))
@@ -165,9 +162,10 @@ QImage SkinProvider::requestImage(const QString & aId, QSize * aSize, const QSiz
 //------------------------------------------------------------------------------
 QString SkinProvider::getImagePath(const QString & aImageId) const
 {
-	QVariantMap::const_iterator it = mSkinConfig.find(aImageId);
+	QVariantMap skinConfig = mSkin->getConfiguration();
+	QVariantMap::const_iterator it = skinConfig.find(aImageId);	
 	
-	return it != mSkinConfig.end() ? it->toString() : "";
+	return it != skinConfig.end() ? it->toString() : "";
 }
 
 //------------------------------------------------------------------------------

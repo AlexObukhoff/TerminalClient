@@ -5,10 +5,12 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QDateTime>
+#include <QtCore/QRegExp>
 #include <Common/QtHeadersEnd.h>
 
 // STL
 #include <numeric>
+#include <functional>
 
 // SDK
 #include <SDK/Drivers/FR/FiscalFields.h>
@@ -16,9 +18,12 @@
 
 // Modules
 #include "Hardware/Common/ASCII.h"
+#include "Hardware/Common/HardwareConstants.h"
+#include "Hardware/Common/DeviceConfigManager.h"
 
 // Project
 #include "Hardware/FR/FRStatusesDescriptions.h"
+#include "Hardware/FR/FiscalFieldDescriptions.h"
 
 //--------------------------------------------------------------------------------
 /// Режим работы ФР
@@ -99,17 +104,30 @@ namespace CFR
 	/// Количество миллисекунд в сутках.
 	const int MSecsInDay = SecsInDay * 1000;
 
-	/// Способ оплаты по умолчанию для платежей (не интернет-магазинов).
+	/// Признак способа расчета по умолчанию для платежей (тег 1214) (не интернет-магазинов) - Полный расчет.
 	const SDK::Driver::EPayOffSubjectMethodTypes::Enum PayOffSubjectMethodType = SDK::Driver::EPayOffSubjectMethodTypes::Full;
 
-	/// Размеры ИНН.
-	namespace INNSize
+	/// ИНН.
+	namespace INN
 	{
-		/// Для юридического лица.
-		const int LegalPerson = 10;
+		/// Лицо и его размер.
+		namespace Person
+		{
+			const int Unknown =  0;    /// Неизвестное.
+			const int Legal   = 10;    /// Юридическое.
+			const int Natural = 12;    /// Физическое.
+		}
 
-		/// Для физического лица.
-		const int NaturalPerson = 12;
+		/// Коэффициенты контрольных чисел (КЧ)
+		namespace Factors
+		{
+			const int Legal[]    = {2, 4, 10,  3,  5, 9, 4, 6, 8};          /// Коэффициенты КЧ для ИНН юр. лица.
+			const int Natural1[] = {7, 2,  4, 10,  3, 5, 9, 4, 6, 8};       /// Коэффициенты 1-го КЧ для ИНН физ. лица.
+			const int Natural2[] = {3, 7,  2,  4, 10, 3, 5, 9, 4, 6, 8};    /// Коэффициенты 2-го КЧ для ИНН физ. лица.
+		}
+
+		/// Делитель для вычисления проверочного числа.
+		const int Divider = 11;
 	}
 
 	/// Константные данные ФФД.
@@ -148,8 +166,14 @@ namespace CFR
 		<< FRStatusCode::Error::EKLZ
 		<< FRStatusCode::Error::FiscalMemory;
 
+	/// Сменилась ли ставка НДС с 18% на 20% в РФ.
+	inline bool isRFVAT20() { return QDate::currentDate() >= QDate(2019, 1, 1); }
+
 	/// Актуальные ставки НДС в России.
 	const SDK::Driver::TVATs RFActualVATs = SDK::Driver::TVATs() << 18 << 10 << 0;
+
+	/// Актуальные ставки НДС в России начиная с 2019 года.
+	const SDK::Driver::TVATs RFActualVATs20 = SDK::Driver::TVATs() << 20 << 10 << 0;
 
 	/// Актуальные ставки НДС в Казахстане.
 	const SDK::Driver::TVATs KZActualVATs = SDK::Driver::TVATs() << 12 << 0;
@@ -215,6 +239,7 @@ namespace CFR
 		QByteArray data;
 
 		STLV(): field(0) {}
+		STLV(int aField, const QByteArray & aData): field(aField), data(aData) {}
 	};
 
 	/// TLV-пакет
@@ -230,18 +255,23 @@ namespace CFR
 			QString description;
 
 			SData() : group(0) {}
-			SData(int aGroup, const QString & aDescription) : group(aGroup), description(aDescription) {}
+			SData(int aGroup, const QString & aDescription = "") : group(aGroup), description(aDescription) {}
 		};
 
 		class Data : public CSpecification<SDK::Driver::TVAT, SData>
 		{
 		public:
-			void add(SDK::Driver::TVAT aVAT, int aGroup, const char * aDescription)
+			void add(SDK::Driver::TVAT aVAT, int aGroup)
 			{
-				append(aVAT, SData(aGroup, QString::fromUtf8(aDescription)));
+				append(aVAT, SData(aGroup));
 			}
 		};
+
+		typedef QMap<SDK::Driver::TVAT, SData> TData;
 	}
+
+	/// Скорректировать ставку НДС с 18% на 20% в РФ.
+	inline void adjustRFVAT(Taxes::TData & aData) { if (aData.contains(18) && isRFVAT20()) { aData.insert(20, aData[18]); aData.remove(18); }}
 
 	//--------------------------------------------------------------------------------
 	/// Типы оплаты
@@ -263,8 +293,8 @@ namespace CFR
 
 			append(Cash,         QString::fromUtf8("НАЛИЧНЫМИ"));
 			append(EMoney,       QString::fromUtf8("КАРТОЙ"));
-			append(PostPayment,  QString::fromUtf8("АВАНС"));
-			append(Credit,       QString::fromUtf8("КРЕДИТ"));
+			append(PrePayment,   QString::fromUtf8("АВАНС"));
+			append(PostPayment,  QString::fromUtf8("КРЕДИТ"));
 			append(CounterOffer, QString::fromUtf8("ВСТРЕЧНОЕ ПРЕДОСТАВЛЕНИЕ"));
 		}
 	};
@@ -368,7 +398,7 @@ namespace CFR
 		{
 			append('\x01', FRStatusCode::Error::FSEnd);
 			append('\x02', FRStatusCode::Warning::FSNearEnd);
-			append('\x04', FRStatusCode::Error::FSMemoryEnd);
+			append('\x04', FRStatusCode::Error::NeedOFDConnection);    // память ФН переполнена (это не таймаут 30 суток)
 		//	append('\x08', FRStatusCode::Warning::OFDNoConnection);    // не работает либо имеет другое значение
 			append('\x80', FRStatusCode::Error::FS);
 		}
@@ -401,54 +431,132 @@ namespace CFR
 	public:
 		CVATRates::CVATRates()
 		{
-			append(1, "НДС 18%");
+			if (isRFVAT20())
+			{
+				append(1, "НДС 20%");
+				append(3, "НДС 20/120");
+			}
+			else
+			{
+				append(1, "НДС 18%");
+				append(3, "НДС 18/118");
+			}
+
 			append(2, "НДС 10%");
-			append(3, "НДС 18/118");
 			append(4, "НДС 10/110");
 			append(5, "НДС 0%");
-			append(6, "");
+			append(6, "БЕЗ НАЛОГА");
 		}
 	};
 
 	static CVATRates VATRates;
 
 	//--------------------------------------------------------------------------------
-	const QString FDName            = QString::fromUtf8("КАССОВЫЙ ЧЕК");                /// ПФ тега 1000 (Наименование фискального документа).
-	const QString LotteryMode       = QString::fromUtf8("ПРОВЕДЕНИЕ ЛОТЕРЕИ");          /// ПФ тега 1126 (Признак проведения лотереи).
-	const QString GamblingMode      = QString::fromUtf8("ПРОВЕДЕНИЕ АЗАРТНОЙ ИГРЫ");    /// ПФ тега 1193 (Признак проведения азартных игр).
-	const QString ExcisableUnitMode = QString::fromUtf8("ПОДАКЦИЗНЫЕ ТОВАРЫ");          /// ПФ тега 1207 (Признак торговли подакцизными товарами).
+	/// ПФ ставок НДС.
+	class CVATTr: public CDescription<SDK::Driver::TVAT>
+	{
+	public:
+		CVATTr::CVATTr()
+		{
+			append(20, "НДС 20%");
+			append(18, "НДС 18%");
+			append(12, "НДС 12%");
+			append(10, "НДС 10%");
+			append( 0, "БЕЗ НАЛОГА");
+		}
+	};
+
+	static CVATTr VATTr;
 
 	//--------------------------------------------------------------------------------
 	/// Режимы работы.
-	namespace OperationModes
+	class COperationModeData: public CSpecification<char, int>
 	{
-		struct SData
+	public:
+		COperationModeData() : TrashMask('\x40')
 		{
-			int field;
-			QString description;
+			#define ADD_OPERATION_MODE(aName) append(SDK::Driver::EOperationModes::aName, CFR::FiscalFields::aName##Mode)
 
-			SData(): field(0) {}
-			SData(int aField, const QString & aDescription): field(aField), description(aDescription) {}
-		};
+			ADD_OPERATION_MODE(Encryption);
+			ADD_OPERATION_MODE(Autonomous);
+			ADD_OPERATION_MODE(Automatic);
+			ADD_OPERATION_MODE(ServiceArea);
+			ADD_OPERATION_MODE(FixedReporting);
+			ADD_OPERATION_MODE(Internet);
+		}
 
-		#define ADD_OPERATION_MODE(aName, aDescription) append(SDK::Driver::EOperationModes::aName, SData(SDK::Driver::FiscalFields::aName##Mode, QString::fromUtf8(aDescription)))
+		/// Константа для очистки режимов работы от мусора из ФН (ранее это был призак банковского агента).
+		const char TrashMask;
+	};
 
-		class CData: public CSpecification<char, SData>
+	static COperationModeData OperationModeData;
+
+	//---------------------------------------------------------------------------
+	class ConfigCleaner
+	{
+	public:
+		ConfigCleaner(DeviceConfigManager * aConfigManager) : mPerformer(aConfigManager) {}
+
+		~ConfigCleaner()
 		{
-		public:
-			CData()
+			if (mPerformer)
 			{
-				ADD_OPERATION_MODE(Encryption,     "ШФД");
-				ADD_OPERATION_MODE(Autonomous,     "АВТОНОМН. РЕЖИМ");
-				ADD_OPERATION_MODE(Automatic,      "АВТОМАТ. РЕЖИМ");
-				ADD_OPERATION_MODE(ServiceArea,    "ККТ ДЛЯ УСЛУГ");
-				ADD_OPERATION_MODE(FixedReporting, "АС БСО");
-				ADD_OPERATION_MODE(Internet,       "ККТ ДЛЯ ИНТЕРНЕТ");
-			}
-		};
+				QStringList fieldNames = QStringList()
+					<< CFiscalSDK::Cashier
+					<< CFiscalSDK::CashierINN
+					<< CFiscalSDK::UserContact
+					<< CFiscalSDK::TaxSystem
+					<< CFiscalSDK::AgentFlag;
 
-		static CData Data;
-	}
+				foreach (const QString & fieldName, fieldNames)
+				{
+					mPerformer->removeConfigParameter(fieldName);
+				}
+			}
+		}
+
+	private:
+		DeviceConfigManager * mPerformer;
+	};
+
+	//---------------------------------------------------------------------------
+	class DealerDataManager
+	{
+	public:
+		DealerDataManager(DeviceConfigManager * aConfigManager, const QString & aKey) : mPerformer(aConfigManager), mKey(aKey)
+		{
+			if (mPerformer)
+			{
+				QVariantMap configData = mPerformer->getConfigParameter(CHardware::ConfigData).toMap();
+				QString value = mPerformer->getConfigParameter(mKey).toString().simplified();
+
+				if (value.isEmpty())
+				{
+					mData = value;
+				}
+			}
+		}
+
+		~DealerDataManager()
+		{
+			if (mPerformer && mData.isValid())
+			{
+				QVariantMap configData = mPerformer->getConfigParameter(CHardware::ConfigData).toMap();
+				configData.insert(mKey, mData);
+				mPerformer->setConfigParameter(CHardware::ConfigData, configData);
+			}
+		}
+
+		void setValue(const QString & aValue)
+		{
+			mData = aValue;
+		}
+
+	private:
+		DeviceConfigManager * mPerformer;
+		QVariant mData;
+		QString mKey;
+	};
 }
 
 //--------------------------------------------------------------------------------

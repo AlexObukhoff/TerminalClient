@@ -79,7 +79,7 @@ public:
 	/// Устанавливает конфигурацию устройству.
 	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration) = 0;
 
-	/// Возвращает конфигурацию устройства для сохранения.
+	/// Возвращает конфигурацию устройства.
 	virtual QVariantMap getDeviceConfiguration() const = 0;
 
 	/// Обновить прошивку.

@@ -37,5 +37,8 @@
     <None Include="..\src\locale\scanners_kk.ts">
       <Filter>Translation Files</Filter>
     </None>
+    <None Include="..\src\locale\scanners_de.ts">
+      <Filter>Translation Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

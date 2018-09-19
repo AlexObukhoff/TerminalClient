@@ -1,17 +1,14 @@
 import qbs 1.0
 
-StaticLibrary {
+import "../../../qbs/libTemplate.qbs" as TCLib
+
+TCLib {
 	name: "DriversSDK"
 
-	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "widgets"] }
-
-	Depends { name: "Core" }
-
+	Depends { name: "Qt"; submodules: ["widgets"] }
 	files: [
 		"../../../includes/SDK/Drivers/*.h",
 		"../../../includes/SDK/Drivers/*/*.h",
 		"src/*.cpp"
 	]
 }
-

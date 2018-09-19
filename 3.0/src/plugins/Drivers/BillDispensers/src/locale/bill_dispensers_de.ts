@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="de_DE">
 <context>
-    <name>BillDispenser</name>
-    <message>
-        <source>BillDispenser#model_name</source>
-        <translation>Modell</translation>
-    </message>
-</context>
-<context>
     <name>DispenserStatuses</name>
     <message>
         <source>#unit_1_opened</source>
@@ -23,7 +16,7 @@
         <translation>Kassette 3 ist offen</translation>
     </message>
     <message>
-        <source>#rejecting_tray_opened</source>
+        <source>#rejecting_opened</source>
         <translation>Laden für nicht abgeholte Geldscheine ist offen</translation>
     </message>
     <message>

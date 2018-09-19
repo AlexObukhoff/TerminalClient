@@ -25,6 +25,8 @@
 #include <SDK/PaymentProcessor/Payment/Parameters.h>
 #include <SDK/PaymentProcessor/Payment/Security.h>
 #include <SDK/Drivers/Components.h>
+#include <SDK/PaymentProcessor/Core/IEventService.h>
+#include <SDK/PaymentProcessor/Core/Event.h>
 
 // Modules
 #include <Crypt/ICryptEngine.h>
@@ -107,6 +109,8 @@ QVariantMap PaymentManager::getEncashmentInfo(int aIndex) const
 //------------------------------------------------------------------------
 SDK::PaymentProcessor::EncashmentResult::Enum PaymentManager::perform(const QVariantMap & aParameters)
 {
+	mCore->getEventService()->sendEvent(PPSDK::Event(PPSDK::EEventType::ProcessEncashment));
+
 	if (mPaymentService->getBalance().isEmpty())
 	{
 		mEncashment = mPaymentService->getLastEncashment();

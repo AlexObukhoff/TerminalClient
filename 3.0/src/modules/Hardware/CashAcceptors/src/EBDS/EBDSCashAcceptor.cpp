@@ -134,6 +134,13 @@ bool EBDSCashAcceptor::isConnected()
 	setDeviceParameter(CDeviceData::ModelKey, ProtocolUtils::toHexLog(modelKey));
 	setDeviceParameter(CDeviceData::Revision, revision);
 
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+void EBDSCashAcceptor::processDeviceData()
+{
+	QByteArray answer;
 	auto getData = [&] (const QByteArray & aCommand) -> bool { bool result = processCommand(aCommand, &answer); answer.replace(ASCII::NUL, "").replace(ASCII::DEL, ""); return result; };
 
 	if (getData(CEBDS::Commands::GetType))
@@ -146,33 +153,18 @@ bool EBDSCashAcceptor::isConnected()
 		setDeviceParameter(CDeviceData::SerialNumber, answer);
 	}
 
-	auto processSoftData = [&] (const QString & aMainKey) {
+	auto checkSoftData = [&] (const QByteArray & aCommand, const QString & aMainKey) { removeDeviceParameter(aMainKey); if (getData(aCommand)) {
 		setDeviceParameter(CDeviceData::ProjectNumber, answer.left(5).toInt(), aMainKey);
-		setDeviceParameter(CDeviceData::Version, answer.right(3).toDouble() / 100, aMainKey); };
+		setDeviceParameter(CDeviceData::Version, answer.right(3).toDouble() / 100, aMainKey); } };
 
-	if (getData(CEBDS::Commands::GetAppSoftVersion))
-	{
-		processSoftData(CDeviceData::Firmware);
-	}
-
-	if (getData(CEBDS::Commands::GetBootSoftVersion))
-	{
-		processSoftData(CDeviceData::BootVersion);
-	}
-
-	QStringList billSetData;
-
-	if (getData(CEBDS::Commands::GetVariantVersion))
-	{
-		processSoftData(CDeviceData::CashAcceptors::BillSet);
-	}
+	checkSoftData(CEBDS::Commands::GetAppSoftVersion,  CDeviceData::Firmware);
+	checkSoftData(CEBDS::Commands::GetBootSoftVersion, CDeviceData::BootVersion);
+	checkSoftData(CEBDS::Commands::GetVariantVersion,  CDeviceData::CashAcceptors::BillSet);
 
 	if (getData(CEBDS::Commands::GetVariantName))
 	{
 		setDeviceParameter(CDeviceData::Type, answer, CDeviceData::CashAcceptors::BillSet);
 	}
-
-	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -304,7 +296,7 @@ void EBDSCashAcceptor::cleanSpecificStatusCodes(TStatusCodes & aStatusCodes)
 {
 	mStackerNearFull = mStackerNearFull ||
 		(aStatusCodes.contains(BillAcceptorStatusCode::BillOperation::Stacked) &&
-		aStatusCodes.contains(BillAcceptorStatusCode::Warning::Cheated));
+		 aStatusCodes.contains(BillAcceptorStatusCode::Warning::Cheated));
 
 	if (mStackerNearFull)
 	{

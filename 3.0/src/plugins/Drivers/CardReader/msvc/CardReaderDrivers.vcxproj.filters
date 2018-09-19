@@ -71,6 +71,9 @@
     <None Include="..\src\locale\card_readers_ru.ts">
       <Filter>Translation Files</Filter>
     </None>
+    <None Include="..\src\locale\card_readers_de.ts">
+      <Filter>Translation Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\CardReaderStatusesDescriptions.h">

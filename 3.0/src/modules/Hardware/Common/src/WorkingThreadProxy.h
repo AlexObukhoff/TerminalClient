@@ -6,6 +6,8 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QMutex>
+#include <QtCore/QWaitCondition>
 #include <Common/QtHeadersEnd.h>
 
 // Project
@@ -17,7 +19,7 @@ class WorkingThreadProxy : public QObject
 	Q_OBJECT
 
 public:
-	WorkingThreadProxy();
+	WorkingThreadProxy(QThread * aWorkingThread);
 
 	/// Вызывает метод в рабочем потоке и возвращает результат.
 	template <class T>
@@ -39,9 +41,22 @@ protected slots:
 	void onInvoke(TDoubleMethod aMethod, double * aResult);
 	void onInvoke(TStringMethod aMethod, QString * aResult);
 
+	void checkThreadStarted();
+
 protected:
+	WorkingThreadProxy() {}
+
 	/// Из рабочего ли потока происходит вызов.
 	bool isWorkingThread();
+
+	/// Поток, который будет считаться рабочим.
+	QThread * mWorkingThread;
+
+	/// Мьютекс для операций при старте потока.
+	QMutex mStartMutex;
+
+	/// Wait-condition для операций при старте потока.
+	QWaitCondition mStartCondition;
 };
 
 //---------------------------------------------------------------------------

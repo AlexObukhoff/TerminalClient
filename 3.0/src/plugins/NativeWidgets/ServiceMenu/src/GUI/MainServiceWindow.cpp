@@ -121,6 +121,8 @@ bool MainServiceWindow::initialize()
 //------------------------------------------------------------------------
 void MainServiceWindow::shutdown()
 {
+	//TODO FIX CRASH
+	
 	disconnect(twServiceScreens, SIGNAL(currentChanged(int)), this, SLOT(onCurrentPageChanged(int)));
 
 	IServiceWindow * current = dynamic_cast<IServiceWindow *>(twServiceScreens->widget(mCurrentPageIndex));

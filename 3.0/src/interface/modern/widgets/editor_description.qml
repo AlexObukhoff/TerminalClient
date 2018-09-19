@@ -29,7 +29,7 @@ Row {
 		anchors { top: parent.top }
 		width: 408
 		border { left: 100; top: 100; right: 18; bottom: 22 }
-		source: handler.pressed ? "image://ui/comment.bottom.pressed" : "image://ui/comment.bottom.button"
+		source: handler.pressed ? Utils.ui.image("comment.bottom.pressed") : Utils.ui.image("comment.bottom.button")
 		visible: comment.text != ""
 
 		Text {

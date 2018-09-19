@@ -259,7 +259,7 @@ void ICTCashAcceptor::postPollingAction(const TStatusCollection & aNewStatusColl
 		auto isPowerUp = [&] () -> bool {return std::find_if(mDeviceCodeBuffers.begin(), mDeviceCodeBuffers.end(), [&] (const QByteArray & aBuffer) -> bool
 			{ return specification->isPowerUp(aBuffer); }) != mDeviceCodeBuffers.end(); };
 
-		PollingExpector().wait<bool>(poll, isPowerUp, CICTBase::PowerRebootInterval, CICTBase::PowerRebootTimeout);
+		PollingExpector().wait<bool>(poll, isPowerUp, CICTBase::PowerUpWaiting);
 	}
 
 	TSerialCashAcceptor::postPollingAction(aNewStatusCollection, aOldStatusCollection);

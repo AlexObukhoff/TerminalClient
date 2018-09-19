@@ -28,8 +28,8 @@ Controls.Button {
 	}
 
 	background: Image {
-		source: backgroundSource == "" ? (rootItem.pressed ? "image://ui/button.number.pressed" : "image://ui/button.number.normal") :
-																		 ("image://ui/" + backgroundSource + (rootItem.pressed ? "pressed" : "normal"))
+		source: backgroundSource == "" ? (rootItem.pressed ? Utils.ui.image("button.number.pressed") : Utils.ui.image("button.number.normal")) :
+																		 (Utils.ui.image("" + backgroundSource + (rootItem.pressed ? ")pressed" : "normal"))
 	}
 
 	// Обработка клика

@@ -24,7 +24,7 @@ protected:
 	/// Распарсить Id модели.
 	virtual char parseModelId(QByteArray & aAnswer);
 
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Инициализация устройства.

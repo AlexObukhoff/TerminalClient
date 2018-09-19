@@ -21,7 +21,7 @@ Item {
 	BorderImage {
 		anchors.fill: parent
 		border { left: 55; top: 100; right: 55; bottom: 18 }
-		source: "image://ui/panel.keyboard"
+		source: Utils.ui.image("panel.keyboard")
 	}
 
 	SequentialAnimation {
@@ -69,7 +69,7 @@ Item {
 		animation.start();
 		global.previousLayout = global.currentLayout;
 		global.currentLayout = aName;
-		global.currentLayou.filter = rootItem.filter.toLowerCase()
+		global.currentLayout.filter = rootItem.filter.toLowerCase()
 	}
 
 	function reset(aDefault, aLayouts) {

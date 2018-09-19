@@ -303,6 +303,11 @@ bool ServiceController::finalizeServices(const char * aRetrySlot)
 //---------------------------------------------------------------------------
 void ServiceController::finalizeCoreItems()
 {
+	if (mCorePluginList.isEmpty())
+	{
+		return;
+	}
+
 	auto pluginLoader = PluginService::instance(mApplication)->getPluginLoader();
 
 	foreach(auto coreItem, mCorePluginList)

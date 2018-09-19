@@ -21,7 +21,10 @@
     <ClInclude Include="src\ccTalk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\includes\Hardware\Protocols\CashAcceptor\CCTalkConstants.h">
+    <ClInclude Include="src\ccTalkConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\includes\Hardware\Acceptors\CCTalkData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

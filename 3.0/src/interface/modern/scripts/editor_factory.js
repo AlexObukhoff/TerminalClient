@@ -100,6 +100,21 @@ function updateFields(aFields, aReset)
 	_fields = $
 }
 
+//------------------------------------------------------------------------------
+function getField(aId)
+{
+	var result = {};
+	try {
+		_fields.forEach(function (aField) {
+			if (aField.id = aId) {
+				result = aField;
+				throw BreakException;
+			}
+		});
+	} catch (e) {}
+
+	return result
+}
 
 //------------------------------------------------------------------------------
 // Возвращает редактор для поля и индексом aIndex
@@ -199,7 +214,7 @@ function _createEditor(aType)
 	if (Core.userProperties.get("operator_id")) {
 		component = _createComponent("file:///%1/scene_with_context/operators/%2/widgets/%3_editor.qml"
 																 .arg(Core.environment.terminal.interfacePath)
-																 .arg(Core.userProperties.get("operator_id"))
+																 .arg(String(Core.userProperties.get("operator_id")))
 																 .arg(aType));
 	}
 

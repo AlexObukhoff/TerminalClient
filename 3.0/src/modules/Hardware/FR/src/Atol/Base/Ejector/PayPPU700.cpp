@@ -28,7 +28,7 @@ void PayPPU700::setDeviceConfiguration(const QVariantMap & aConfiguration)
 		{
 			ejectorParameters = CHardware::FR::Values::NoLoopAndRetractNotTakenOnTimeout;
 		}
-		else if (loop == CHardware::Values::Use)
+		else if (loop == CHardwareSDK::Values::Use)
 		{
 			ejectorParameters = CHardware::FR::Values::LoopAndPushNotTakenOnTimeout;
 		}

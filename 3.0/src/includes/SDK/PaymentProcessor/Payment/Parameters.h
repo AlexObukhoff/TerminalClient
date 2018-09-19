@@ -22,6 +22,7 @@ namespace CPayment
 		const char InitialSession[] = "INITIAL_SESSION";
 		const char Amount[] = "AMOUNT";
 		const char AmountAll[] = "AMOUNT_ALL";
+		const char CRC[] = "CRC";
 		const char Cheated[] = "CHEATED";
 
 		/// Опциональные параметры.
@@ -58,6 +59,7 @@ namespace CPayment
 		const char MaxAmountAll[] = "MAX_AMOUNT_ALL";
 		const char AcceptAmount[] = "ACCEPT_AMOUNT";
 		const char ProviderFields[] = "PROVIDER_FIELDS";
+		const char ProviderFieldsExt[] = "PROVIDER_FIELDS_EXT";
 		const char ProviderFieldsDelimiter[] = "#";
 		const char ReceiptPrinted[] = "RECEIPT_PRINTED";
 		const char OriginalPayment[] = "ORIGINAL_PAYMENT";

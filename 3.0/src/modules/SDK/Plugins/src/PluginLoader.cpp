@@ -106,6 +106,30 @@ IPlugin * PluginLoader::createPlugin(const QString & aInstancePath, const QStrin
 }
 
 //------------------------------------------------------------------------------
+std::weak_ptr<IPlugin> PluginLoader::createPluginPtr(const QString & aInstancePath, const QString & aConfigInstancePath)
+{
+	QMutexLocker lock(&mAccessMutex);
+
+	QString path = aInstancePath.section(CPlugin::InstancePathSeparator, 0, 0);
+
+	if (mPlugins.contains(path))
+	{
+		QString configInstancePath = aConfigInstancePath.isEmpty() ? aInstancePath : aConfigInstancePath;
+		auto p = mPlugins[path]->createPluginPtr(aInstancePath, configInstancePath);
+		if (!p.expired())
+		{
+			TPluginPtr plugin = p.lock();
+			mCreatedPluginsPtr[plugin] = mPlugins[path];
+			return p;
+		}
+	}
+
+	mKernel->getLog()->write(LogLevel::Error, QString("No such plugin %1.").arg(aInstancePath));
+
+	return std::weak_ptr<IPlugin>();
+}
+
+//------------------------------------------------------------------------------
 bool PluginLoader::destroyPlugin(IPlugin * aPlugin)
 {
 	QMutexLocker lock(&mAccessMutex);
@@ -117,12 +141,31 @@ bool PluginLoader::destroyPlugin(IPlugin * aPlugin)
 
 		return true;
 	}
-	else
-	{
-		mKernel->getLog()->write(LogLevel::Error, QString("Failed to destroy plugin 0x%1, doesn't exist.").arg(qlonglong(aPlugin), 0, 16));
+	
+	mKernel->getLog()->write(LogLevel::Error, QString("Failed to destroy plugin 0x%1, doesn't exist.").arg(qlonglong(aPlugin), 0, 16));
 
-		return false;
+	return false;
+}
+
+//------------------------------------------------------------------------------
+bool PluginLoader::destroyPluginPtr(const std::weak_ptr<IPlugin> & aPlugin)
+{
+	QMutexLocker lock(&mAccessMutex);
+
+	auto ptr = aPlugin.lock();
+
+	if (mCreatedPluginsPtr.find(ptr) != mCreatedPluginsPtr.end())
+	{
+		auto fabric = mCreatedPluginsPtr[ptr];
+		mCreatedPluginsPtr.erase(ptr);
+		fabric->destroyPlugin(ptr);
+
+		return true;
 	}
+
+	mKernel->getLog()->write(LogLevel::Error, QString("Failed to destroy plugin 0x%1, doesn't exist.").arg(qlonglong(ptr.get()), 0, 16));
+
+	return false;
 }
 
 //------------------------------------------------------------------------------

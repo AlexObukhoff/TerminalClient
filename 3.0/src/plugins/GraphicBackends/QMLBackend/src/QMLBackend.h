@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <memory>
+
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QObject>
@@ -57,7 +59,10 @@ public:
 	virtual void shutdown();
 
 	/// Создаёт (или возвращает из кэша) графический элемент по описанию.
-	virtual SDK::GUI::IGraphicsItem * getItem(const SDK::GUI::GraphicsItemInfo & aInfo);
+	virtual std::weak_ptr<SDK::GUI::IGraphicsItem> getItem(const SDK::GUI::GraphicsItemInfo & aInfo);
+
+	/// Удаляет графический элемент по описанию
+	virtual bool removeItem(const SDK::GUI::GraphicsItemInfo & aInfo);
 
 	/// Возвращает тип движка.
 	virtual QString getType() const;
@@ -71,7 +76,7 @@ private slots:
 	void onWarnings(const QList<QDeclarativeError> & aWarnings);
 
 private:
-	typedef QMap<QString, QSharedPointer<QMLGraphicsItem> > TGraphicItemsCache;
+	typedef QMultiMap<QString, std::shared_ptr<QMLGraphicsItem> > TGraphicItemsCache;
 
 	QString mInstancePath;
 	QVariantMap mParameters;

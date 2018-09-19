@@ -24,7 +24,7 @@ Item {
 
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
-			source: "image://ui/panel.warning"
+			source: Utils.ui.image("panel.warning")
 			width: 120
 
 			Icon {

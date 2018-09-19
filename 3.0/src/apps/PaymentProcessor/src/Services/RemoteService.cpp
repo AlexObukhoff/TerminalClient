@@ -105,7 +105,8 @@ RemoteService * RemoteService::instance(IApplication * aApplication)
 RemoteService::RemoteService(IApplication * aApplication)
 	: ILogable(CRemoteService::LogName),
 	  mApplication(aApplication),
-	  mDatabase(0),
+	  mDatabase(nullptr),
+	  mLastCommand(0),
 	  mGenerateKeyCommand(0),
 	  mSettings(aApplication->getWorkingDirectory() + CRemoteService::ConfigFileName, QSettings::IniFormat),
 	  mCommandMutex(QMutex::Recursive)

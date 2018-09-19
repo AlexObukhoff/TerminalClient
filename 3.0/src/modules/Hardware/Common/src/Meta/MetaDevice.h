@@ -5,7 +5,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QDateTime>
-#include <QtCore/QReadWriteLock>
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
 #include <QtCore/QMutexLocker>
@@ -21,10 +20,12 @@
 // Project
 #include "Hardware/Common/HardwareConstants.h"
 #include "Hardware/Common/DeviceDataConstants.h"
+#include "Hardware/Common/DeviceLogicManager.h"
 #include "Hardware/Common/MutexLocker.h"
 #include "Hardware/Common/FunctionTypes.h"
 #include "Hardware/Common/ASCII.h"
 #include "Hardware/Protocols/Common/ProtocolUtils.h"
+#include "Hardware/Common/DeviceUtils.h"
 
 #pragma warning(disable : 4250) // warning 4250: 'class1' : inherits 'class2::member' via dominance
 // Есть ветки наследования, интерфейсная и базовой реализации. Последняя содержит вызываемый функционал и
@@ -38,22 +39,14 @@ namespace CMetaDevice
 	const char DefaultName[] = "Meta device";
 }
 
-/// Обобщенные состояния выполнения запроса.
-namespace ERequestStatus
-{
-	enum Enum
-	{
-		Success = 0,
-		InProcess,
-		Fail
-	};
-}
-
+/// Данные устройства для логгирования и мониторинга.
 struct SLogData
 {
-	QString pluginConfig;
-	QString requiedDevicePluginConfig;
-	QString device;
+	QString plugin;    /// ini плагина устройства.
+	QString device;    /// данные устройства.
+	QString config;    /// данные config.xml, относящиеся к работе устройства.
+
+	QString requiedDevice;    /// ini плагина зависимого устройства.
 };
 
 //--------------------------------------------------------------------------------
@@ -75,7 +68,7 @@ class DefaultSeriesType {};
 typedef QMap<QString, QString> TDeviceData;
 
 //--------------------------------------------------------------------------------
-class MetaDevice : virtual private SDK::Driver::IDevice, public SDK::Driver::IDevice::IDetectingIterator
+class MetaDevice : virtual private SDK::Driver::IDevice, public SDK::Driver::IDevice::IDetectingIterator, public DeviceLogicManager
 {
 	SET_INTERACTION_TYPE(System)
 	SET_SERIES("")
@@ -85,9 +78,6 @@ class MetaDevice : virtual private SDK::Driver::IDevice, public SDK::Driver::IDe
 
 public:
 	MetaDevice();
-
-	/// Логгировать.
-	void toLog(LogLevel::Enum aLevel, const QString & aMessage) const;
 
 #pragma region SDK::Driver::IDevice interface
 	/// Возвращает название устройства.
@@ -108,7 +98,7 @@ public:
 	/// Отсоединяет сигнал данного интерфейса от слота приёмника.
 	virtual bool unsubscribe(const char * aSignal, QObject * aReceiver);
 
-	/// Возвращает конфигурацию устройства для сохранения.
+	/// Возвращает конфигурацию устройства.
 	virtual QVariantMap getDeviceConfiguration() const;
 
 	/// Устанавливает конфигурацию устройству.
@@ -136,34 +126,26 @@ protected:
 	/// Автопоиск?
 	bool isAutoDetecting() const;
 
-	/// Установка параметра устройства.
-	void setConfigParameter(const QString & aName, const QVariant & aValue);
-
-	/// Получение параметра устройства.
-	QVariant getConfigParameter(const QString & aName) const;
-	QVariant getConfigParameter(const QString & aName, const QVariant & aDefault) const;
-
-	/// Удаление параметра устройства.
-	void removeConfigParameter(const QString & aName);
-
-	/// Есть ли параметр у устройства?
-	bool containsConfigParameter(const QString & aName) const;
-
-	/// Установка данных устройства.
-	void setDeviceParameter(const QString & aName, const QVariant & aValue, const QString & aExtensibleName = "");
-
 	/// Получение параметров устройства.
 	SLogData getDeviceData() const;
+
+	/// Установка параметра устройства.
+	void setDeviceParameter(const QString & aName, const QVariant & aValue, const QString & aExtensibleName = "", bool aUpdateExtensible = false);
+
+	/// Получение параметра устройства.
 	QVariant getDeviceParameter(const QString & aName) const;
+
+	/// Есть ли непустой параметр у устройства?
+	bool containsDeviceParameter(const QString & aName) const;
+
+	/// Удалить параметр устройства.
+	void removeDeviceParameter(const QString & aName);
 
 	/// Логгирование параметров устройства.
 	void logDeviceData(const SLogData & aData) const;
 
 	/// Получение заданной компоненты параметров устройства.
 	QString getPartDeviceData(const TDeviceData & aData, bool aHideEmpty = true) const;
-
-	/// Есть ли непустой параметр у устройства?
-	bool containsDeviceParameter(const QString & aName) const;
 
 	/// Из рабочего ли потока происходит вызов.
 	bool isWorkingThread();
@@ -173,10 +155,6 @@ protected:
 
 	/// Название устройства.
 	QString mDeviceName;
-
-	/// Параметры устройства.
-	QVariantMap mConfiguration;
-	mutable QReadWriteLock mConfigurationGuard;
 
 	/// Данные устройства.
 	TDeviceData mDeviceData;
@@ -189,9 +167,6 @@ protected:
 
 	/// Устройство инициализировано.
 	ERequestStatus::Enum mInitialized;
-
-	/// Лог.
-	ILog * mLog;
 
 	/// Драйвера запускаются из под модуля платежей.
 	bool mOperatorPresence;

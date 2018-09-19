@@ -23,15 +23,6 @@ PortPrinterBase<T>::PortPrinterBase()
 
 //--------------------------------------------------------------------------------
 template <class T>
-void PortPrinterBase<T>::setLConfigParameter(const QString & aName, const QByteArray & aData)
-{
-	QByteArray data = ProtocolUtils::clean(aData.simplified());
-	QString value = mCodec ? mCodec->toUnicode(data) : data;
-	setConfigParameter(aName, value);
-}
-
-//--------------------------------------------------------------------------------
-template <class T>
 void PortPrinterBase<T>::finaliseInitialization()
 {
 	addPortData();

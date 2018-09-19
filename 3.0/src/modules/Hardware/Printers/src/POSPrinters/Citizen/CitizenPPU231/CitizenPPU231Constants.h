@@ -2,6 +2,10 @@
 
 #pragma once
 
+// Modules
+#include "Hardware/Common/WaitingData.h"
+
+// Project
 #include "Hardware/Printers/Tags.h"
 
 //--------------------------------------------------------------------------------
@@ -34,23 +38,8 @@ namespace CCitizenPPU231
 		const char Postfix = ASCII::NUL;      /// Постфикс.
 	}
 
-	//--------------------------------------------------------------------------------
-	/// Таймауты, [мс].
-	namespace Timeouts
-	{
-		/// Ожидание прихода XOn-а.
-		const int Full = 30 * 1000;
-
-		/// Ожидание реакции на статус.
-		const int Status = 500;
-	}
-
-	/// Интервалы поллинга, [мс].
-	namespace PollIntervals
-	{
-		/// при ожидании реакции на статус.
-		const int Status = 100;
-	}
+	/// Ожидание прихода статуса бумаги, [мс].
+	const SWaitingData PaperStatusWaiting = SWaitingData(100, 500, true);
 
 	//----------------------------------------------------------------------------
 	/// Теги.

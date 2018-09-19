@@ -20,7 +20,7 @@ Controls.KeyboardBase {
 
 		anchors.fill: parent
 		border { left: 55; top: 100; right: 55; bottom: 18 }
-		source: "image://ui/panel.keyboard"
+		source: Utils.ui.image("panel.keyboard")
 	}
 
 	Column {

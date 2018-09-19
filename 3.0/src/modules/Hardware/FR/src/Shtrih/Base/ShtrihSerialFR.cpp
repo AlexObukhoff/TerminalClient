@@ -19,7 +19,7 @@ ShtrihSerialFR::ShtrihSerialFR()
 	mErrorData = PErrorData(new CShtrihFRBase::Errors::CData);
 
 	// данные налогов
-	mTaxData.add(0, 3, "БЕЗ НАЛОГА");
+	mTaxData.add(0, 3);
 }
 
 //--------------------------------------------------------------------------------
@@ -31,8 +31,6 @@ QStringList ShtrihSerialFR::getModelList()
 //--------------------------------------------------------------------------------
 bool ShtrihSerialFR::updateParameters()
 {
-	mCanProcessZBuffer = mModelData.ZReportQuantity;
-
 	if (!TShtrihSerialFRBase::updateParameters())
 	{
 		return false;
@@ -116,7 +114,7 @@ void ShtrihSerialFR::parseDeviceData(const QByteArray & aData)
 	QString FMDate = ProtocolUtils::hexToBCD(aData.mid(22, 3)).insert(4, "20");
 	FMInfo.date    = QDate::fromString(FMDate, CFR::DateFormat);
 
-	setDeviceParameter(CDeviceData::Version, FMInfo.version, CDeviceData::FM::Firmware);
+	setDeviceParameter(CDeviceData::Version, FMInfo.version, CDeviceData::FM::Firmware, true);
 	setDeviceParameter(CDeviceData::Build, FMInfo.build, CDeviceData::FM::Firmware);
 	setDeviceParameter(CDeviceData::Date, FMInfo.date.toString(CFR::DateLogFormat), CDeviceData::FM::Firmware);
 

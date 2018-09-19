@@ -6,7 +6,7 @@ Item {
 	property int icon: -1
 
 	// Файл с иконками
-	property string icons: "image://ui/icons.primary"
+	property string icons: Utils.ui.image("icons.primary")
 
 	anchors.verticalCenter: parent.verticalCenter
 	width: icon !== -1 ? 94 : 0

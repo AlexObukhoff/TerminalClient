@@ -16,7 +16,7 @@
         <translation>An error occured during the payment check. Please try again later.</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="256"/>
+        <location filename="../scenario/payment_scenario.js" line="258"/>
         <source>payment_scenario#cannot_use_provider_without_printer</source>
         <translation>Sorry, this payment cannot be processed right now due to an unoperating printer. Please try again later.</translation>
     </message>

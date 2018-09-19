@@ -66,7 +66,7 @@ public:
 	/// Получение списка параметров драйвера.
 	virtual SDK::Plugin::TParameterList getDriverParameters(const QString & aDriverPath) const = 0;
 
-	/// Поулчить конфигурацию устройства и всех, связанных с ним.
+	/// Получить конфигурацию устройства и всех, связанных с ним.
 	virtual QVariantMap getDeviceConfiguration(const QString & aConfigName) = 0;
 
 	/// Устанавливает конфигурацию устройству.

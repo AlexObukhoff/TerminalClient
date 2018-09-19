@@ -8,7 +8,6 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
-#include "Hardware/Common/PollingExpector.h"
 #include "Hardware/Common/DeviceCodeSpecification.h"
 
 // Project
@@ -26,6 +25,13 @@ namespace EResetWaiting
 }
 
 //--------------------------------------------------------------------------------
+namespace CPortCashAcceptor
+{
+	/// Ожидание завершения выполнения функционала для фильтрации/отправки накопленных статусов.
+	const SWaitingData RestoreStatusesWaiting = SWaitingData(1, 10 * 1000);
+}
+
+//--------------------------------------------------------------------------------
 template<class T>
 class PortCashAcceptor : public CashAcceptorBase<T>
 {
@@ -39,7 +45,10 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
-	/// Запрос статуса.
+	/// Запросить и сохранить параметры устройства.
+	virtual void processDeviceData() {}
+
+	/// Получить и обработать статус.
 	virtual bool processStatus(TStatusCodes & aStatusCodes);
 
 	/// Получить статус.

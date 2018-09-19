@@ -11,10 +11,12 @@ namespace ETerminalError
 {
 	enum Enum
 	{
-		KeyError,
+		KeyError = 16001,
 		ConfigError,
 		NetworkError,
-		AccountBalanceError
+		DatabaseError,
+		AccountBalanceError,
+		InterfaceLocked
 	};
 }
 

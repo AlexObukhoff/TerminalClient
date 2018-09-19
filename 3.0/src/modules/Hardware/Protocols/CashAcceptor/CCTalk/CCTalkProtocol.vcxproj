@@ -18,8 +18,9 @@
     <ClCompile Include="src\ccTalk.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\includes\Hardware\Protocols\CashAcceptor\CCTalkConstants.h" />
+    <ClInclude Include="..\..\..\..\..\includes\Hardware\Acceptors\CCTalkData.h" />
     <ClInclude Include="src\ccTalk.h" />
+    <ClInclude Include="src\ccTalkConstants.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{49F7BDA7-F055-4586-A9F5-2377044F56E7}</ProjectGuid>
@@ -122,7 +123,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -72,7 +72,7 @@ Widgets.SceneBase2 {
 		var trs = {card: QT_TR_NOOP("payment_method_selector_scene#card"), cash: QT_TR_NOOP("payment_method_selector_scene#cash")};
 
 		Core.charge.getPaymentMethods().forEach(function(aMethod) {
-			methods.push({"name": Utils.locale.tr(trs[aMethod]), "value": aMethod});
+			methods.push({"name": Utils.locale.tr(trs[aMethod.split("_")[0]]), "value": aMethod});
 		});
 
 		var e1 = {

@@ -26,6 +26,7 @@ namespace CCashAcceptor
 		const TStatusSet BadSpecialStatuses = TStatusSet() << Cheated  << StackerFull << StackerOpen;
 		const TStatusSet ErrorStatuses      = TStatusSet() << Error    << StackerFull << StackerOpen << MechanicFailure;
 		const TStatusSet MainStatuses       = GeneralStatuses + SpecialStatuses;
+		const TStatusSet LongStatuses       = NormalStatuses + BadStatuses + ErrorStatuses + (TStatusSet() << Busy << BillOperation << Escrow);
 	}
 
 	/// Таблица соответствия спец. статусов обычным статусам.

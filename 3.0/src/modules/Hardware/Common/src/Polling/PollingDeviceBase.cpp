@@ -10,7 +10,6 @@
 #include "Hardware/Watchdogs/ProtoWatchdog.h"
 
 #include "PollingDeviceBase.h"
-#include "PollingExpector.h"
 
 //--------------------------------------------------------------------------------
 template class PollingDeviceBase<ProtoPrinter>;
@@ -37,7 +36,7 @@ void PollingDeviceBase<T>::releasePolling()
 {
 	if (!isAutoDetecting() && (!mStatusCollection.isEmpty() || (mInitialized == ERequestStatus::InProcess)))
 	{
-		waitCondition([&]() -> bool { return mPollingActive; }, 1, CPollingDeviceBase::DefaultStopTimeout);
+		waitCondition([&] () -> bool { return mPollingActive; }, CPollingDeviceBase::StopWaiting);
 	}
 
 	stopPolling();
@@ -111,7 +110,7 @@ void PollingDeviceBase<T>::stopPolling(bool aWait)
 
 		if (aWait)
 		{
-			waitCondition([&] () -> bool { return !mPollingActive; }, 1, CPollingDeviceBase::DefaultStopTimeout);
+			waitCondition([&] () -> bool { return !mPollingActive; }, CPollingDeviceBase::StopWaiting);
 		}
 	}
 }
@@ -134,7 +133,24 @@ void PollingDeviceBase<T>::setPollingInterval(int aPollingInterval)
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool PollingDeviceBase<T>::waitCondition(TBoolMethod aCondition, int aPollingInterval, int aTimeout)
+void PollingDeviceBase<T>::postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection)
+{
+	if (mConnected)
+	{
+		for (int i = 0; i < mPPTaskList.size(); ++i)
+		{
+				mPPTaskList[i]();
+
+				mPPTaskList.removeAt(i--);
+		}
+	}
+
+	DeviceBase::postPollingAction(aNewStatusCollection, aOldStatusCollection);
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool PollingDeviceBase<T>::waitCondition(TBoolMethod aCondition, const SWaitingData & aWaitingData)
 {
 	if (isWorkingThread())
 	{
@@ -143,7 +159,7 @@ bool PollingDeviceBase<T>::waitCondition(TBoolMethod aCondition, int aPollingInt
 
 	PollingExpector expector;
 
-	return expector.wait(aCondition, aPollingInterval, aTimeout);
+	return expector.wait(aCondition, aWaitingData);
 }
 
 //--------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-﻿/* @file Экран вноса средств. */
+/* @file Экран вноса средств. */
 
 import QtQuick 1.1
 import Core.Types 1.0
@@ -35,7 +35,7 @@ Widgets.SceneBase2 {
 	BorderImage {
 		anchors { right: parent.right; rightMargin: 30; top: parent.top; topMargin: 313 }
 		border { left: 104; top: 100; right: 18; bottom: 18 }
-		source: "image://ui/comment.left"
+		source: Utils.ui.image("comment.left")
 		width: 412
 		visible: global.acceptedAmount >= global.requiredAmount || (typeof(global.provider) != "undefined" && global.provider.minLimit != global.provider.maxLimit)
 
@@ -62,7 +62,7 @@ Widgets.SceneBase2 {
 			description.text: Utils.locale.tr(QT_TR_NOOP("pay_scene#accepted_amount"))
 
 			anchors { left: parent.left; right: parent.right }
-			source: "image://ui/panel.entry"
+			source: Utils.ui.image("panel.entry")
 			visible: !global.change
 		}
 
@@ -75,7 +75,7 @@ Widgets.SceneBase2 {
 			description.text: Utils.locale.tr(QT_TR_NOOP("pay_scene#change"))
 
 			anchors { left: parent.left; right: parent.right }
-			source: "image://ui/button.paybook.alert"
+			source: Utils.ui.image("button.paybook.alert")
 			visible: global.change
 		}
 
@@ -89,7 +89,7 @@ Widgets.SceneBase2 {
 
 			anchors { left: parent.left; right: parent.right }
 			visible: global.minAmount == global.maxAmount
-			source: "image://ui/panel.payment"
+			source: Utils.ui.image("panel.payment")
 		}
 
 		// К зачислению
@@ -99,7 +99,7 @@ Widgets.SceneBase2 {
 			currency.text: Core.environment.terminal.currencyName
 			description.text: Utils.locale.tr(QT_TR_NOOP("pay_scene#transfer_amount"))
 			description.color: Utils.ui.color("color.panel.tertiary")
-			source: "image://ui/panel.payment"
+			source: Utils.ui.image("panel.payment")
 
 			anchors { left: parent.left; right: parent.right }
 			visible: global.minAmount != global.maxAmount
@@ -114,7 +114,7 @@ Widgets.SceneBase2 {
 			description.color: Utils.ui.color("color.panel.tertiary")
 
 			anchors { left: parent.left; right: parent.right }
-			source: "image://ui/panel.commission"
+			source: Utils.ui.image("panel.commission")
 		}
 
 		Widgets.Spacer {
@@ -151,7 +151,7 @@ Widgets.SceneBase2 {
 					visible: !!feeLimits.text
 					//width: feeList.width - feeValue.width - feeLimits.width - 8
 					fillMode: Image.TileHorizontally
-					source: wrapper.ListView.isCurrentItem ? "image://ui/dot.active" : "image://ui/dot"
+					source: wrapper.ListView.isCurrentItem ? Utils.ui.image("dot.active") : Utils.ui.image("dot")
 				}
 
 				Text {
@@ -170,7 +170,7 @@ Widgets.SceneBase2 {
 	BorderImage {
 		anchors { right: parent.right; rightMargin: 30; top: parent.top; topMargin: 552 }
 		border { left: 104; top: 100; right: 18; bottom: 18 }
-		source: handler.pressed ? "image://ui/comment.left.pressed" : "image://ui/comment.left.button"
+		source: handler.pressed ? Utils.ui.image("comment.left.pressed") : Utils.ui.image("comment.left.button")
 		width: 412
 
 		Text {
@@ -352,8 +352,8 @@ Widgets.SceneBase2 {
 				limits = Utils.locale.tr(i > 0 ? QT_TR_NOOP("pay_scene#for_rest") : QT_TR_NOOP("pay_scene#for_any_amount"));
 			}
 
-			var value = fees[i].value +
-					(fees[i].isPercent ? "%" : (" " + Core.environment.terminal.currencyName)) +
+			var value =
+					(fees[i].value ? (fees[i].isPercent ? "%1%".arg(fees[i].value) : ("%1 ".arg(fees[i].value) + Core.environment.terminal.currencyName)) : "") +
 					(fees[i].minCharge > 0 ? (" " + Utils.locale.tr(QT_TR_NOOP("pay_scene#min_charge")).arg(fees[i].minCharge).arg(Core.environment.terminal.currencyName)) : "")
 
 			feeModel.append({limits: limits, value: value});

@@ -75,12 +75,16 @@ private slots:
 	/// Обработчик события.
 	void onEvent(const SDK::PaymentProcessor::Event & aEvent);
 
+protected:
+	void timerEvent(QTimerEvent * aEvent);
+
 private:
 	IApplication * mApplication;
 	QString mDefaultScenario;
 	Command mCommand;
 	bool mActive;
 	bool mNoGui;
+	int mInterfaceLockedTimer;
 };
 
 //---------------------------------------------------------------------------

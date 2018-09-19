@@ -25,6 +25,7 @@ OPOSMetrologicScanner::OPOSMetrologicScanner()
 	mClaimTimeout = 2000;
 	mProfileNames = getProfileNames();
 	mPollingInterval = 500;
+	mExEnabled = false;
 }
 
 //--------------------------------------------------------------------------------
@@ -84,8 +85,27 @@ void OPOSMetrologicScanner::initializeResources()
 }
 
 //--------------------------------------------------------------------------------
+bool OPOSMetrologicScanner::processStatus(TStatusCodes & aStatusCodes)
+{
+	bool result = TPollingOPOSScanner::processStatus(aStatusCodes);
+	bool error = !getStatusCollection(aStatusCodes)[SDK::Driver::EWarningLevel::Error].isEmpty();
+
+	if (result && (mInitialized == ERequestStatus::Success) && !error)
+	{
+		enable(mExEnabled);
+	}
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------
 bool OPOSMetrologicScanner::enable(bool aReady)
 {
+	if (!isWorkingThread())
+	{
+		mExEnabled = aReady;
+	}
+
 	if (!mStatusCollectionHistory.isEmpty() && (!checkConnectionAbility() && (mInitialized == ERequestStatus::Fail)))
 	{
 		toLog(LogLevel::Error, QString("%1: Cannot set possibility of data receiving to %2").arg(mDeviceName).arg(aReady ? "true" : "false"));
@@ -96,7 +116,7 @@ bool OPOSMetrologicScanner::enable(bool aReady)
 	{
 		QMetaObject::invokeMethod(this, "enable", Qt::BlockingQueuedConnection, Q_ARG(bool, aReady));
 	}
-	else 
+	else
 	{
 		bool claimed = BOOL_CALL_OPOS(Claimed);
 		bool enabled = BOOL_CALL_OPOS(DeviceEnabled);
@@ -108,10 +128,17 @@ bool OPOSMetrologicScanner::enable(bool aReady)
 			return !aReady;
 		}
 
-		toLog(LogLevel::Normal, QString("%1: set possibility of data receiving to %2").arg(mDeviceName).arg(aReady ? "true" : "false"));
+		if (BOOL_CALL_OPOS(DataEventEnabled) != aReady)
+		{
+			toLog(LogLevel::Normal, QString("%1: set possibility of data receiving to %2").arg(mDeviceName).arg(aReady ? "true" : "false"));
+			VOID_CALL_OPOS(SetDataEventEnabled, aReady);
+		}
 
-		VOID_CALL_OPOS(SetDataEventEnabled, aReady);
-		VOID_CALL_OPOS(SetDecodeData, aReady);
+		if (BOOL_CALL_OPOS(DecodeData) != aReady)
+		{
+			toLog(LogLevel::Normal, QString("%1: set data decoding to %2").arg(mDeviceName).arg(aReady ? "true" : "false"));
+			VOID_CALL_OPOS(SetDecodeData, aReady);
+		}
 	}
 
 	return (BOOL_CALL_OPOS(DataEventEnabled) == aReady) && (BOOL_CALL_OPOS(DecodeData) == aReady);

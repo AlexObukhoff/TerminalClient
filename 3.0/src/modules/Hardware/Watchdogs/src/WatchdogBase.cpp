@@ -57,19 +57,19 @@ void WatchdogBase::cleanStatusCodes(TStatusCodes & aStatusCodes)
 	for (auto it = CWatchdogs::SensorData.data().begin(); it != CWatchdogs::SensorData.data().end(); ++it)
 	{
 		QString sensor = it.key();
-		QString sensorValue = getConfigParameter(sensor, CHardware::Values::Auto).toString();
+		QString sensorValue = getConfigParameter(sensor, CHardwareSDK::Values::Auto).toString();
 
-		if (containsConfigParameter(sensor) && (sensorValue == CHardware::Values::Auto))
+		if (containsConfigParameter(sensor) && (sensorValue == CHardwareSDK::Values::Auto))
 		{
 			needUpdateConfiguration = true;
 
 			bool sensorActive = aStatusCodes.contains(it->statusCode) != mSensorDisabledValue;
-			sensorValue = sensorActive ? CHardware::Values::Use : CHardware::Values::NotUse;
+			sensorValue = sensorActive ? CHardwareSDK::Values::Use : CHardwareSDK::Values::NotUse;
 
 			setConfigParameter(sensor, sensorValue);
 		}
 
-		if (sensorValue != CHardware::Values::Use)
+		if (sensorValue != CHardwareSDK::Values::Use)
 		{
 			aStatusCodes.remove(it->statusCode);
 		}
@@ -99,7 +99,7 @@ void WatchdogBase::emitStatusCodes(TStatusCollection & aStatusCollection, int aE
 		{
 			QString actionValue = getConfigParameter(it->action).toString();
 
-			if ((actionValue == CHardware::Values::Use) && CWatchdogs::SensorActionData.data().contains(actionValue))
+			if ((actionValue == CHardwareSDK::Values::Use) && CWatchdogs::SensorActionData.data().contains(actionValue))
 			{
 				int extendedStatus = CWatchdogs::SensorActionData[actionValue];
 

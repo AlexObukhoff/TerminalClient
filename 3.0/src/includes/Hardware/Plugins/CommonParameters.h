@@ -24,6 +24,7 @@ namespace CommonPluginParameterTranslations
 	static const char * RequiredResource = QT_TRANSLATE_NOOP("CommonParameters", "CommonParameters#required_resource");
 	static const char * InteractionType  = QT_TRANSLATE_NOOP("CommonParameters", "CommonParameters#interaction_type");
 	static const char * ProtocolName     = QT_TRANSLATE_NOOP("CommonParameters", "CommonParameters#protocol_name");
+	static const char * ProtocolType     = QT_TRANSLATE_NOOP("CommonParameters", "CommonParameters#protocol_type");
 };
 
 namespace CPPT = CommonPluginParameterTranslations;
@@ -80,8 +81,7 @@ inline QStringList sortParameters(QStringList (* aGetParameters)())
 template <class T>
 inline TParameterList createNamedList(const QStringList & aModels, const QString & aDefault)
 {
-	return SNamedList<T, T::TIType>().create(aModels, aDefault)
-		<< setNormalPriority();
+	return SNamedList<T, T::TIType>().create(aModels, aDefault);
 }
 
 //------------------------------------------------------------------------------
@@ -89,10 +89,14 @@ template <class T>
 inline TParameterList createSimpleNamedList(const QStringList & aModels, const QString & aDefault)
 {
 	QString interactionType = T::getInteractionType();
+	QVariantMap modifiedValues;
+	modifiedValues.insert("no change", CHardwareSDK::Values::Auto);
+	modifiedValues.insert("not use",   CHardwareSDK::Values::NotUse);
 
 	return TParameterList()
 		<< SPluginParameter(CHardwareSDK::ModelName, false, CPPT::ModelName, QString(), aDefault, aModels, true)
 		<< SPluginParameter(CHardwareSDK::InteractionType, true, CPPT::InteractionType, QString(), interactionType, QStringList() << interactionType)
+		<< setModifiedValues("", modifiedValues)
 		<< setNormalPriority();
 }
 
@@ -227,6 +231,13 @@ inline SPluginParameter setModifiedKeys(const QString & aOldParameterName, const
 	modifiedKeys.insert(aOldParameterName, aNewParameterName);
 
 	return SPluginParameter(CPlugin::ModifiedKeys, SPluginParameter::Set, false, QString(), QString(), QString(), modifiedKeys, true);
+}
+
+//------------------------------------------------------------------------------
+// Тип протокола.
+inline SPluginParameter setProtocolType(const QString & aDefaultType, const QStringList & aPossibleTypes)
+{
+	return SPluginParameter(CHardware::ProtocolType, false, CPPT::ProtocolType, QString(), aDefaultType, aPossibleTypes);
 }
 
 //------------------------------------------------------------------------------

@@ -16,7 +16,7 @@ Item {
 		width: childrenRect.width + 20
 		height: parent.height
 		visible: rootItem.changeValue > 0.0
-		source: visible ? (time.__blink ? "image://ui/panel.change" : "image://ui/panel.change.empty") : ""
+		source: visible ? (time.__blink ? Utils.ui.image("panel.change") : Utils.ui.image("panel.change.empty")) : ""
 		border { left: 10; top: 10; right: 10; bottom: 10 }
 
 		Row {
@@ -25,7 +25,7 @@ Item {
 			height: parent.height
 
 			Image {
-				source: "image://ui/icons.rest"
+				source: Utils.ui.image("icons.rest")
 			}
 
 			Text {
@@ -49,7 +49,7 @@ Item {
 
 			Image {
 				anchors.verticalCenter: parent.verticalCenter
-				source: "image://ui/top.spacer"
+				source: Utils.ui.image("top.spacer")
 			}
 
 			Text {
@@ -100,7 +100,7 @@ Item {
 		height: parent.height
 
 		Image {
-			source: "image://ui/icons.support"
+			source: Utils.ui.image("icons.support")
 		}
 
 		Text {
@@ -148,7 +148,7 @@ Item {
 		height: parent.height
 
 		Image {
-			source: "image://ui/icons.time"
+			source: Utils.ui.image("icons.time")
 		}
 
 		Spacer { width: 10 }
@@ -232,7 +232,7 @@ Item {
 		spacing: 10
 
 		Image {
-			source: "image://ui/icons.terminal"
+			source: Utils.ui.image("icons.terminal")
 		}
 
 		Text {

@@ -63,7 +63,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtCore;$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName);.\GeneratedFiles\$(ProjectName)\$(Configuration);$(ProjectDir)\..\src;.\..\src\Interface;.\..\src\Interface\FirstSetup;$(THIRDPARTY_DIR)\qntp\include;..\src\System;$(THIRDPARTY_DIR)\zint\backend_qt4;$(THIRDPARTY_DIR)\qBreakpad\handler;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtCore;$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName);.\GeneratedFiles\$(ProjectName)\$(Configuration);$(ProjectDir)\..\src;.\..\src\Interface;.\..\src\Interface\FirstSetup;$(THIRDPARTY_DIR)\qntp\include;..\src\System;$(THIRDPARTY_DIR)\zint\backend_qt4;$(THIRDPARTY_DIR)\qBreakpad\handler;$(THIRDPARTY_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;_SCL_SECURE_NO_WARNINGS;QT_DLL;QT_SCRIPT_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
@@ -107,7 +107,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtCore;$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName);.\GeneratedFiles\$(ProjectName)\$(Configuration);$(ProjectDir)\..\src;.\..\src\Interface;.\..\src\Interface\FirstSetup;$(THIRDPARTY_DIR)\qntp\include;..\src\System;$(THIRDPARTY_DIR)\zint\backend_qt4;$(THIRDPARTY_DIR)\qBreakpad\handler;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtCore;$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName);.\GeneratedFiles\$(ProjectName)\$(Configuration);$(ProjectDir)\..\src;.\..\src\Interface;.\..\src\Interface\FirstSetup;$(THIRDPARTY_DIR)\qntp\include;..\src\System;$(THIRDPARTY_DIR)\zint\backend_qt4;$(THIRDPARTY_DIR)\qBreakpad\handler;$(THIRDPARTY_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;_SCL_SECURE_NO_WARNINGS;QT_DLL;QT_SCRIPT_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
@@ -149,7 +149,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtCore;$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName);.\GeneratedFiles\$(ProjectName)\$(Configuration);$(ProjectDir)\..\src;.\..\src\Interface;.\..\src\Interface\FirstSetup;$(THIRDPARTY_DIR)\qntp\include;$(THIRDPARTY_DIR)\VisualLeakDetector\include;..\src\System;$(THIRDPARTY_DIR)\zint\backend_qt4;$(THIRDPARTY_DIR)\qBreakpad\handler;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtCore;$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR)\QtSolutions;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName);.\GeneratedFiles\$(ProjectName)\$(Configuration);$(ProjectDir)\..\src;.\..\src\Interface;.\..\src\Interface\FirstSetup;$(THIRDPARTY_DIR)\qntp\include;..\src\System;$(THIRDPARTY_DIR)\zint\backend_qt4;$(THIRDPARTY_DIR)\qBreakpad\handler;$(THIRDPARTY_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_CORE_LIB;_SCL_SECURE_NO_WARNINGS;_LIB;QT_DLL;QT_SCRIPT_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
@@ -404,6 +404,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -D_SCL_SECURE_NO_WARNINGS -DQT_DLL -DQT_SCRIPT_LIB "-I$(THIRDPARTY_DIR)\boost" "-I$(QTDIR)\include" "-I$(THIRDPARTY_DIR)\QtSolutions" "-I$(TC_INCLUDE_DIR)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(ProjectDir)\..\src" "-I.\..\src\Interface" "-I.\..\src\Interface\FirstSetup" "-I$(THIRDPARTY_DIR)\qntp\include" "-I.\..\src\System"</Command>
     </CustomBuild>
     <ClInclude Include="..\src\Services\ServiceCommon.h" />
+    <ClInclude Include="..\src\Services\TerminalStatusDescriptions.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="..\src\Services\CryptService.h" />
     <ClInclude Include="..\src\Services\DatabaseService.h" />
@@ -965,10 +966,8 @@
     <None Include="..\src\icons\PaymentProcessor.ico" />
     <None Include="..\src\locale\paymentprocessor_de.ts" />
     <None Include="..\src\locale\paymentprocessor_en.ts" />
-    <None Include="..\src\locale\paymentprocessor_en_bankomat.ts" />
     <None Include="..\src\locale\paymentprocessor_kk.ts" />
     <None Include="..\src\locale\paymentprocessor_ru.ts" />
-    <None Include="..\src\locale\paymentprocessor_ru_bankomat.ts" />
     <None Include="..\src\SplashScreen\blocked.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -1041,7 +1040,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" UicDir=".\GeneratedFiles\$(ProjectName)" RccDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="4.8.7" QtVersion_x0020_Win32="$(DefaultQtVersion)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -38,10 +38,11 @@ CData::CData()
 	mDefaultFWDate = QDate(2017, 12, 29);
 
 	/// Сторонние разработки.
-	addNew( -1, "PAYONLINE",      "PayOnline-01-FA",     true, true,  0, 0);
-	addNew( -2, "PAY VKP-80K-ФА", "PayVKP-80K-FA",       true, true,  0, 0);
-	addNew(-20, "MSTAR-TK.2",     "Multisoft MStar-TK2", true, false, 0, 3, QDate(2017, 12, 14));
+	addNew( -1, "PAYONLINE",      "PayOnline-01-FA",     true, true,  1000, 0);    // определяется размером SD-карты, если она есть
+	addNew( -2, "PAY VKP-80K-ФА", "PayVKP-80K-FA",       true, true,  1000, 0);    // определяется размером SD-карты, если она есть
+	addNew(-30, "MSTAR-TK",       "Multisoft MStar-TK2", true, false, 0, 3, QDate(2017, 12, 14));
 
+	/// Online.
 	addNew(-31, "ШТРИХ-ON-LINE",  "Shtrih-M Shtrih-Online", true, false, 0, 3);
 	addNew(-32, "ШТРИХ-ФР-01Ф",   "Shtrih-M Shtrih-FR-01F", true, false);
 	addNew(-33, "ШТРИХ-ЛАЙТ-01Ф", "Shtrih-M Light-01F",     true, false, 0, 4, mDefaultFWDate, 20);
@@ -56,16 +57,19 @@ CData::CData()
 //--------------------------------------------------------------------------------
 QStringList CData::getNonEjectorModels(bool aOnline)
 {
-	CShtrihFR::Models::CData modelData;
+	QMap<int, CShtrihFR::SModelData> modelData = CShtrihFR::Models::CData().data();
 	QStringList models;
 
-	for (auto it = modelData.data().begin(); it != modelData.data().end(); ++it)
+	for (auto it = modelData.begin(); it != modelData.end(); ++it)
 	{
-		if ((it->id.isEmpty() != aOnline) && !it->ejector &&
-			(it.key() != CShtrihFR::Models::ID::NeoService) &&
-			(it.key() != CShtrihFR::Models::ID::MStarTK2))
+		int id = it.key();
+		CShtrihFR::SModelData & data = *it;
+
+		if ((data.id.isEmpty() != aOnline) && !data.ejector &&
+			(id != CShtrihFR::Models::ID::NeoService) &&
+			(id != CShtrihFR::Models::ID::MStarTK2))
 		{
-			models.append(it->name);
+			models.append(data.name);
 		}
 	}
 

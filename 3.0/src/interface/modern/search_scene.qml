@@ -40,7 +40,7 @@ Widgets.SceneBase {
 
 			Row {
 				Image {
-					source: "image://ui/search.spacer"
+					source: Utils.ui.image("search.spacer")
 				}
 
 				Item {
@@ -82,6 +82,7 @@ Widgets.SceneBase {
 					if (Core.payment.getProvider(id).isNull()) {
 						GUI.notification(Utils.locale.tr(QT_TR_NOOP("search_scene#invalid_provider")));
 					} else {
+						Core.userProperties.set("operator_id", id);
 						Core.postEvent(EventType.StartScenario, {name: Scenario.Payment.Name, id: id});
 					}
 				}
@@ -120,7 +121,7 @@ Widgets.SceneBase {
 		anchors { left: parent.left; leftMargin: 42; top: view.top; topMargin: 20 }
 		visible: view.count > 4 && !view.atXBeginning && !global.addButtonClicked
 		background: Image {
-			source: back.pressed ? "image://ui/scroll.left.pressed" : "image://ui/scroll.left.normal"
+			source: back.pressed ? Utils.ui.image("scroll.left.pressed") : Utils.ui.image("scroll.left.normal")
 		}
 		onClicked: view.scrollBack()
 	}
@@ -132,7 +133,7 @@ Widgets.SceneBase {
 		anchors { right: parent.right; rightMargin: 42; top: view.top; topMargin: 20 }
 		visible: view.count > 4 && !view.atXEnd && !global.addButtonClicked
 		background: Image {
-			source: fwd.pressed ? "image://ui/scroll.right.pressed" : "image://ui/scroll.right.normal"
+			source: fwd.pressed ? Utils.ui.image("scroll.right.pressed") : Utils.ui.image("scroll.right.normal")
 		}
 		onClicked: view.scrollForward()
 	}
@@ -207,5 +208,12 @@ Widgets.SceneBase {
 
 		keyboard.reset();
 		keyboard.altMode = false;
+
+		Utils.ProviderList.filter = ""
+	}
+
+	function showHandler() {
+		GUI.log("#show")
+		GUI.log(inputField.empty,  global.addButtonClicked)
 	}
 }

@@ -11,6 +11,7 @@
 #include "Hardware/Common/Specifications.h"
 #include "Hardware/Common/ASCII.h"
 #include "Hardware/Common/DeviceCodeSpecification.h"
+#include "Hardware/Common/WaitingData.h"
 #include "Hardware/Protocols/FR/FiscalChequeStates.h"
 
 // Project
@@ -33,16 +34,13 @@ namespace CSparkFR
 
 		/// Cнятие Z-отчета
 		const int ZReport = 30 * 1000;
-
-		/// Очистка эжектора
-		const int Ejector = 5 * 1000;
-
-		/// Окончание логики принтера при печати следующего документа
-		const int Printing = 5 * 1000;
 	}
 
-	/// Интервал поллинга при ожидании
-	const int WaitingInterval = 300;
+	/// Ожидание очистки эжектора, [мс].
+	const SWaitingData EjectorWaiting = SWaitingData(300, 5 * 1000, true);
+
+	/// Ожидание очистки эжектора, [мс].
+	const SWaitingData PrintingWaiting = SWaitingData(300, 5 * 1000);
 
 	/// Разделитель в ответе.
 	const char Separator = '\x0A';
@@ -81,8 +79,15 @@ namespace CSparkFR
 	/// Z-отчёт выталкивается вперёд перед печатью следующего.
 	const char PushZReport[] = "2";
 
-	/// Системный флаг системных настроек-2.
-	const int SystemOptions2 = 24;
+	/// Системные флаги.
+	namespace SystemFlags
+	{
+		const int ZReportsAndFiscal =  7;    /// Настройки Z-отчёта и чека.
+		const int SystemOptions2    = 24;    /// Системные настройки-2.
+	}
+
+	/// Маска для длинных отчетов.
+	const char LongReportMask = '\x1F';
 
 	/// Номер кассира.
 	const int CashierNumber = 1;

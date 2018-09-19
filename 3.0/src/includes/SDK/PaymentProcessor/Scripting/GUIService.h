@@ -26,6 +26,7 @@ class GUIService : public QObject
 	Q_PROPERTY(int height READ getHeight CONSTANT)
 	Q_PROPERTY(QVariantMap ui READ getParametersUI CONSTANT)
 	Q_PROPERTY(QVariantMap ad READ getParametersAd CONSTANT)
+	Q_PROPERTY(QString topScene READ getTopScene CONSTANT)
 
 public:
 	GUIService(ICore * aCore);
@@ -43,6 +44,20 @@ public slots:
 	/// Оповещает виджет.
 	void notify(const QString & aEvent, const QVariantMap & aParameters);
 
+	void reset();
+
+	void reload(const QVariantMap & aParams);
+
+	QString getTopScene() const;
+
+	// Когда надо из qml что-то передать в скрипты
+	void notifyScenario(const QVariantMap & aParams) { emit notifyScriptEngine(aParams); }
+
+signals:
+	void topSceneChange();
+	void skinReload(const QVariantMap & aParams);
+	void notifyScriptEngine(const QVariantMap & aParams);
+
 private:
 	QVariantMap getParametersUI() const;
 	QVariantMap getParametersAd() const;
@@ -55,6 +70,7 @@ private:
 private:
 	ICore * mCore;
 	IGUIService * mGUIService;
+	QString mTopWidgetName;
 };
 
 //------------------------------------------------------------------------------

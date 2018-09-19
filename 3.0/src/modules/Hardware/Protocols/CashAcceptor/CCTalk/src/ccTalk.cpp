@@ -4,6 +4,7 @@
 #include <numeric>
 
 // Modules
+#include "Hardware/Common/HardwareConstants.h"
 #include "ccTalkConstants.h"
 
 // Project
@@ -12,20 +13,61 @@
 using namespace SDK::Driver;
 
 //--------------------------------------------------------------------------------
-CCTalkCAProtocol::CCTalkCAProtocol() : mAddress(CCCTalk::Address::Default), mCRCType(CCCTalk::ECRCType::CRC8)
+CCTalkCAProtocol::CCTalkCAProtocol() : mAddress(CCCTalk::Address::Unknown), mType(CCCTalk::UnknownType)
 {
 }
 
 //--------------------------------------------------------------------------------
 void CCTalkCAProtocol::setAddress(uchar aAddress)
 {
-	mAddress = aAddress;
+	if (mAddress != aAddress)
+	{
+		toLog(LogLevel::Normal, "ccTalk: Set device address " + QString::number(aAddress));
+
+		mAddress = aAddress;
+	}
 }
 
 //--------------------------------------------------------------------------------
-void CCTalkCAProtocol::setCRCType(CCCTalk::ECRCType::Enum aType)
+void CCTalkCAProtocol::setType(const QString & aType)
 {
-	mCRCType = aType;
+	if ((mType != aType) && CCCTalk::ProtocolTypes.contains(aType))
+	{
+		toLog(LogLevel::Normal, "ccTalk: Set protocol type " + aType);
+
+		mType = aType;
+	}
+}
+
+//--------------------------------------------------------------------------------
+uchar CCTalkCAProtocol::calcCRC8(const QByteArray & aData)
+{
+	return -uchar(std::accumulate(aData.begin(), aData.end(), 0));
+}
+
+//--------------------------------------------------------------------------------
+ushort CCTalkCAProtocol::calcCRC16(const QByteArray & aData)
+{
+	ushort CRC = 0;
+
+	for (int i = 0; i < aData.size(); ++i)
+	{
+		CRC ^= (aData[i] << 8);
+
+		for (int j = 0; j < 8; ++j)
+		{
+			if (CRC & CCCTalk::LastBit)
+			{
+				CRC = (CRC << 1) ^ CCCTalk::Polynominal;
+			}
+			else
+			{
+				CRC <<= 1;
+			}
+		}
+	}
+
+	return CRC;
 }
 
 //--------------------------------------------------------------------------------
@@ -33,15 +75,15 @@ bool CCTalkCAProtocol::check(QByteArray & aAnswer)
 {
 	if (aAnswer.size() < CCCTalk::MinAnswerSize)
 	{
-		toLog(LogLevel::Error, QString("Too few bytes in answer = %1, need min = %2").arg(aAnswer.size()).arg(CCCTalk::MinAnswerSize));
+		toLog(LogLevel::Error, QString("ccTalk: Too few bytes in answer = %1, need min = %2").arg(aAnswer.size()).arg(CCCTalk::MinAnswerSize));
 		return false;
 	}
 
-	uchar destinationAddress = uchar(aAnswer[0]);
+	char destinationAddress = aAnswer[0];
 
 	if (destinationAddress != CCCTalk::Address::Host)
 	{
-		toLog(LogLevel::Error, QString("Wrong destination address = %1, need = %2").arg(destinationAddress).arg(CCCTalk::Address::Host));
+		toLog(LogLevel::Error, QString("ccTalk: Wrong destination address = %1, need = %2").arg(uchar(destinationAddress)).arg(uchar(CCCTalk::Address::Host)));
 		return false;
 	}
 
@@ -50,35 +92,50 @@ bool CCTalkCAProtocol::check(QByteArray & aAnswer)
 
 	if (length != dataSize)
 	{
-		toLog(LogLevel::Error, QString("Wrong length = %1, need = %2").arg(length).arg(dataSize));
+		toLog(LogLevel::Error, QString("ccTalk: Wrong length = %1, need = %2").arg(length).arg(dataSize));
 		return false;
 	}
 
-	uchar deviceAddress = uchar(aAnswer[2]);
-
-	if (deviceAddress != mAddress)
+	if (mType == CHardware::CashAcceptor::CCTalkTypes::CRC8)
 	{
-		toLog(LogLevel::Error, QString("Wrong length = %1, need = %2").arg(deviceAddress).arg(mAddress));
-		return false;
+		char deviceAddress = aAnswer[2];
+
+		if (deviceAddress != mAddress)
+		{
+			toLog(LogLevel::Error, QString("ccTalk: Wrong address = %1, need = %2").arg(uchar(deviceAddress)).arg(uchar(mAddress)));
+			return false;
+		}
 	}
 
 	uchar header = uchar(aAnswer[3]);
 
 	if (header && (header != CCCTalk::NAK))
 	{
-		toLog(LogLevel::Error, QString("Wrong header = %1, need = 0").arg(header));
+		toLog(LogLevel::Error, QString("ccTalk: Wrong header = %1, need = 0").arg(header));
 		return false;
 	}
 
-	if (length)
+	if (mType == CHardware::CashAcceptor::CCTalkTypes::CRC8)
 	{
 		QByteArray answer = aAnswer.left(aAnswer.size() - 1);
-		uchar dataCRC = uchar(std::accumulate(answer.begin(), answer.end(), 0));
+		uchar dataCRC = calcCRC8(answer);
 		uchar answerCRC = uchar(aAnswer[aAnswer.size() - 1]);
 
-		if (uchar(dataCRC + answerCRC))
+		if (dataCRC != answerCRC)
 		{
-			toLog(LogLevel::Error, QString("Wrong CRC = %1, need = %2.").arg(answerCRC).arg(uchar(0) - dataCRC));
+			toLog(LogLevel::Error, QString("ccTalk: Wrong CRC = %1, need = %2").arg(answerCRC).arg(uchar(uchar(0) - dataCRC)));
+			return false;
+		}
+	}
+	else if (mType == CHardware::CashAcceptor::CCTalkTypes::CRC16)
+	{
+		QByteArray answer = aAnswer.left(2) + aAnswer.mid(3, aAnswer.size() - 4);
+		ushort dataCRC = calcCRC16(answer);
+		ushort answerCRC = uchar(aAnswer[2]) | ushort(aAnswer[aAnswer.size() - 1] << 8);
+
+		if (dataCRC != answerCRC)
+		{
+			toLog(LogLevel::Error, QString("ccTalk: Wrong CRC = %1, need = %2").arg(ProtocolUtils::toHexLog(answerCRC)).arg(ProtocolUtils::toHexLog(dataCRC)));
 			return false;
 		}
 	}
@@ -93,11 +150,36 @@ TResult CCTalkCAProtocol::processCommand(const QByteArray & aCommandData, QByteA
 {
 	aAnswerData.clear();
 
+	if (mAddress == CCCTalk::Address::Unknown)
+	{
+		toLog(LogLevel::Error, "ccTalk: Failed to process command due to address is not set");
+		return CommandResult::Driver;
+	}
+
 	QByteArray request = aCommandData;
-	request.prepend(CCCTalk::Address::Host);
-	request.prepend(uchar(aCommandData.size() - 1));
-	request.prepend(mAddress);
-	request.append(-uchar(std::accumulate(request.begin(), request.end(), 0)));    // CRC 8 бит
+	uchar size = uchar(aCommandData.size() - 1);
+
+	if (mType == CHardware::CashAcceptor::CCTalkTypes::CRC8)
+	{
+		request.prepend(CCCTalk::Address::Host);
+		request.prepend(size);
+		request.prepend(mAddress);
+		request.append(calcCRC8(request));
+	}
+	else if (mType == CHardware::CashAcceptor::CCTalkTypes::CRC16)
+	{
+		request.prepend(size);
+		request.prepend(mAddress);
+
+		ushort CRC = calcCRC16(request);
+		request.insert(2, uchar(CRC));
+		request.append(uchar(CRC >> 8));
+	}
+	else
+	{
+		toLog(LogLevel::Error, "ccTalk: Failed to process command due to unknown ccTalk type " + mType);
+		return CommandResult::Driver;
+	}
 
 	bool nak  = false;
 	bool busy = false;
@@ -131,7 +213,7 @@ TResult CCTalkCAProtocol::processCommand(const QByteArray & aCommandData, QByteA
 
 		if (nak || busy)
 		{
-			toLog(LogLevel::Normal, QString("%1 in answer, %2")
+			toLog(LogLevel::Normal, QString("ccTalk: %1 in answer, %2")
 				.arg(nak ? "NAK" : "BYSY")
 				.arg((busyNAKRepeat <= CCCTalk::MaxBusyNAKRepeats) ? "repeat sending the messsage" : "cancel sending!"));
 		}
@@ -175,7 +257,7 @@ bool CCTalkCAProtocol::getAnswer(QByteArray & aAnswer, const QByteArray & aComma
 			}
 		}
 	}
-	while ((timer.elapsed() < CCCTalk::ReadingTimeout) && ((aAnswer.size() < (length + 5 + int(mCRCType == CCCTalk::ECRCType::CRC16))) || (length == -1)));
+	while ((timer.elapsed() < CCCTalk::Timeouts::Reading) && ((aAnswer.size() < (length + 5)) || (length == -1)));
 
 	toLog(LogLevel::Normal, QString("ccTalk: << {%2}").arg(aAnswer.toHex().data()));
 

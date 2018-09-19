@@ -37,10 +37,10 @@ struct SPluginParameter
 	};
 
 	/// Конструктор.
-	SPluginParameter(): type(Unknown) {}
+	SPluginParameter() : type(Unknown), required(false), readOnly(false) {}
 
 	SPluginParameter(const QString & aName, Type aType, bool aRequired, const QString & aTitle, const QString & aDescription, const QVariant & aDefaultValue, const QVariantMap & aPossibleValues = QVariantMap(), bool aReadOnly = false) :
-		type(aType), required(aRequired), name(aName), title(aTitle), description(aDescription), defaultValue(aDefaultValue), possibleValues(aPossibleValues), readOnly(aReadOnly)
+		type(aType), required(aRequired), readOnly(aReadOnly), name(aName), title(aTitle), description(aDescription), defaultValue(aDefaultValue), possibleValues(aPossibleValues)
 	{
 		if (aType == Type::Bool)
 		{

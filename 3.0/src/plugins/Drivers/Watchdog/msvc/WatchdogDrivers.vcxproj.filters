@@ -38,6 +38,9 @@
     <None Include="..\src\locale\watchdogs_kk.ts">
       <Filter>Translation Files</Filter>
     </None>
+    <None Include="..\src\locale\watchdogs_de.ts">
+      <Filter>Translation Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\Watchdogs\WatchdogStatusesDescriptions.h">

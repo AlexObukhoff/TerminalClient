@@ -126,6 +126,9 @@ namespace CShtrihFR
 
 		/// Минимальный ожидания допечати.
 		const int MinWaitForPrintingEnd = 10 * 1000;
+
+		///Технологических посылок.
+		const int Transport = 100;
 	}
 
 	/// Паузы, [мс].
@@ -173,8 +176,8 @@ namespace CShtrihFR
 		enum Enum
 		{
 			PaperOn              = 0,   /// Бумага есть.
-			PassivePaperOff      = 1,   /// Бумаги нет, ничего не печатали.
-			ActivePaperOff       = 2,   /// Бумаги нет, закончилась при печати.
+			PaperEndPassive      = 1,   /// Бумаги нет, ничего не печатали.
+			PaperEndActive       = 2,   /// Бумаги нет, закончилась при печати.
 			NeedContinuePrinting = 3,   /// Ждем команду возобновления печати.
 			PrintingFullReports  = 4,   /// Идет печать полных Z-отчетов.
 			Printing             = 5    /// Идет печать.
@@ -194,6 +197,7 @@ namespace CShtrihFR
 		const char GetOperationalRegister  = '\x1B';     /// Запросить операционный регистр.
 		const char GetFontSettings         = '\x26';     /// Запрос шрифта.
 		const char Cut                     = '\x25';     /// Отрезка.
+		const char Feed                    = '\x29';     /// Промотка.
 		const char PrintString             = '\x2F';     /// Печать строки данным шрифтом.
 		const char Push                    = '\xF1';     /// Вытолкнуть чек (для моделей с ретрактором).
 		const char SetFRParameter          = '\x1E';     /// Установить параметр таблицы ФР.
@@ -208,6 +212,9 @@ namespace CShtrihFR
 		const char CancelDocument          = '\x88';     /// Аннулировать фискальный чек.
 		const char XReport                 = '\x40';     /// Снятие X отчета.
 		const char ZReport                 = '\x41';     /// Снятие Z отчета.
+		const char SectionReport           = '\x42';     /// Снятие отчета по отделам.
+		const char TaxReport               = '\x43';     /// Снятие отчета по налогам.
+		const char CashierReport           = '\x44';     /// Снятие отчета по кассирам.
 		const char ZReportInBuffer         = '\xC6';     /// Снятие Z отчета в буфер.
 		const char PrintDeferredZReports   = '\xC7';     /// Печать Z отчетов из буфера.
 		const char Encashment              = '\x51';     /// Выплата.
@@ -321,8 +328,8 @@ namespace CShtrihFR
 			SData getInfo(const TRegisterId & aRegister)
 			{
 				QString typeDescription = "Unknown";
-				     if (aRegister.second == ERegisterType::Money) typeDescription = "Money";
-				else if (aRegister.second == ERegisterType::Money) typeDescription = "Operational";
+				     if (aRegister.second == ERegisterType::Money)       typeDescription = "Money";
+				else if (aRegister.second == ERegisterType::Operational) typeDescription = "Operational";
 
 				return SData(data().value(aRegister), typeDescription);
 			}

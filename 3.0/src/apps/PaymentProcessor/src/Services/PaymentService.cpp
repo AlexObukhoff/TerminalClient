@@ -42,6 +42,12 @@
 #include "Services/ServiceCommon.h"
 #include "Services/NetworkService.h"
 
+// Thirdparty
+#if QT_VERSION < 0x050000
+#include <Qt5Port/qt5port.h>
+#endif
+
+
 namespace PPSDK = SDK::PaymentProcessor;
 
 using namespace std::placeholders;
@@ -79,6 +85,8 @@ PaymentService::PaymentService(IApplication * aApplication)
 	: ILogable("Payments"),
 	  mApplication(aApplication),
 	  mEnabled(false),
+	  mDBUtils(nullptr),
+	  mCommandIndex(0),
 	  mPaymentLock(QMutex::Recursive),
 	  mOfflinePaymentID(-1),
 	  mOfflinePaymentLock(QMutex::Recursive),
@@ -375,7 +383,7 @@ void PaymentService::deactivatePayment()
 }
 
 //---------------------------------------------------------------------------
-QString PaymentService::createSignature(PPSDK::IPayment * aPayment)
+QString PaymentService::createSignature(PPSDK::IPayment * aPayment, bool aWithCRC /*= true*/)
 {
 	if (!aPayment)
 	{
@@ -453,9 +461,29 @@ QString PaymentService::createSignature(PPSDK::IPayment * aPayment)
 	signature += "\t";
 	signature += aPayment->getParameter(PPSDK::CPayment::Parameters::Step).value.toString();
 
-#ifndef _DEBUG
-	signature = QString::fromUtf8(QCryptographicHash::hash(signature.toUtf8(), QCryptographicHash::Md5).toHex().toUpper());
+	if (aWithCRC)
+	{
+		signature += QString("\n%1:%2")
+			.arg(PPSDK::CPayment::Parameters::CRC)
+			.arg(aPayment->getParameter(PPSDK::CPayment::Parameters::CRC).value.toString());
 
+#ifdef _DEBUG
+	}
+#else
+
+#if QT_VERSION < 0x050000
+		signature = QString::fromLatin1(CCryptographicHash::hash(signature.toUtf8(), CCryptographicHash::Sha256).toHex());
+#else
+		signature = QString::fromLatin1(QCryptographicHash::hash(signature.toUtf8(), QCryptographicHash::Sha256).toHex());
+#endif
+	}
+	else
+	{
+		signature = QString::fromUtf8(QCryptographicHash::hash(signature.toUtf8(), QCryptographicHash::Md5).toHex().toUpper());
+	}
+#endif
+
+#ifndef _DEBUG
 	ICryptEngine * crypt = static_cast<ICryptEngine *>(CryptService::instance(mApplication)->getCryptEngine());
 
 	QByteArray encodedSignature;
@@ -486,15 +514,15 @@ bool PaymentService::verifySignature(PPSDK::IPayment * aPayment)
 		return false;
 	}
 
-	QString runtimeSignature = createSignature(aPayment);
+	QStringList runtimeSignatures;
+	
+	runtimeSignatures << createSignature(aPayment, true) << createSignature(aPayment, false);
 
 #ifndef _DEBUG
 	ICryptEngine * crypt = static_cast<ICryptEngine *>(CryptService::instance(mApplication)->getCryptEngine());
 
-	QByteArray decodedSignature;
-	QByteArray decodedRuntimeSignature;
-
 	QString error;
+	QByteArray decodedSignature;
 
 	if (!crypt->decryptLong(-1, signature.toUtf8(), decodedSignature, error))
 	{
@@ -503,16 +531,23 @@ bool PaymentService::verifySignature(PPSDK::IPayment * aPayment)
 		return false;
 	}
 
-	if (!crypt->decryptLong(-1, runtimeSignature.toUtf8(), decodedRuntimeSignature, error))
+	foreach (auto runtimeSignature, runtimeSignatures)
 	{
-		toLog(LogLevel::Warning, QString("Payment %1. Failed to decrypt runtime signature. Error: %2.").arg(aPayment->getID()).arg(error));
+		QByteArray decodedRuntimeSignature;
 
-		return false;
+		if (!crypt->decryptLong(-1, runtimeSignature.toUtf8(), decodedRuntimeSignature, error))
+		{
+			toLog(LogLevel::Warning, QString("Payment %1. Failed to decrypt runtime signature. Error: %2.").arg(aPayment->getID()).arg(error));
+		}
+		else if (decodedSignature == decodedRuntimeSignature)
+		{
+			return true;
+		}
 	}
 
-	return (decodedSignature == decodedRuntimeSignature);
+	return false;
 #else
-	return (signature == runtimeSignature);
+	return runtimeSignatures.contains(signature);
 #endif // _DEBUG
 }
 

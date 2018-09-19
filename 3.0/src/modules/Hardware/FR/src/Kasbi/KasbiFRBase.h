@@ -8,6 +8,7 @@
 
 // Project
 #include "KasbiFRConstants.h"
+#include "Hardware/FR/KasbiPrinters.h"
 
 class KasbiSeriesType {};
 
@@ -19,11 +20,14 @@ class KasbiFRBase : public TSerialFRBase
 public:
 	KasbiFRBase();
 
+	/// Устанавливает конфигурацию устройству.
+	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
+
 protected:
 	/// Попытка самоидентификации.
 	virtual bool isConnected();
 
-	/// Получить статусы.
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Инициализация устройства.
@@ -54,7 +58,7 @@ protected:
 	virtual bool processXReport();
 
 	/// Запросить и вывести в лог критичные параметры ФР.
-	void processDeviceData(const QByteArray & aRegistrationData);
+	void processDeviceData();
 
 	/// Открыта ли смена. Если будет ошибка - по умолчанию открыта.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
@@ -72,10 +76,13 @@ protected:
 	virtual bool openSession();
 
 	/// Продажа.
-	bool sale(const SDK::Driver::SAmountData & aAmountData);
+	bool sale(const SDK::Driver::SUnitData & aUnitData);
 
 	/// Проверить настройки печати.
-	bool checkPrintingParameters();
+	bool checkPrintingParameters(const CFR::TTLVList & aRequiredTLVs);
+
+	/// Включить/выключить режим непечати документов.
+	virtual bool setNotPrintDocument(bool aEnabled, bool aZReport = false);
 
 	/// Протокол.
 	KasbiFRProtocol mProtocol;

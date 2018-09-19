@@ -26,11 +26,25 @@ protected:
 	/// Попытка самоидентификации.
 	virtual bool isConnected();
 
-	/// Получить статусы.
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Инициализация устройства.
 	virtual bool updateParameters();
+
+	/// Проверить параметры налогов.
+	typedef QList<QByteArray> TTaxData;
+	bool checkTaxFlags(const TTaxData & aTaxData);
+
+	/// Проверить параметры налогов во флагах.
+	typedef QList<QByteArray> TTaxData;
+	bool checkSystemFlags(QByteArray & aFlagData);
+
+	/// Проверить установки системного флага.
+	bool checkSystemFlag(const QByteArray & aFlagBuffer, int aNumber);
+
+	/// Получить системные флаги.
+	bool getSystemFlags(QByteArray & aData, TTaxData * aTaxes = nullptr);
 
 	/// Получить дату и время ФР.
 	virtual QDateTime getDateTime();
@@ -89,7 +103,7 @@ protected:
 	bool processAnswer(char aError);
 
 	/// Выполнить Z-отчет.
-	virtual bool execZReport();
+	virtual bool execZReport(bool aAuto);
 
 	/// Узнать, открыта ли смена.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
@@ -107,19 +121,12 @@ protected:
 	bool payIO(double aAmount, bool aIn);
 
 	/// Продажа.
-	bool sale(const SDK::Driver::SAmountData & aAmountData);
+	bool sale(const SDK::Driver::SUnitData & aUnitData);
 
 	/// Извлечь данные из специфичного BCD-формата.
 	template <class T>
 	T fromBCD(const QByteArray & aData);
 	char fromBCD(char aData);
-
-	/// Получить системные флаги.
-	typedef QList<QByteArray> TTaxData;
-	bool getSystemFlags(QByteArray & aData, TTaxData * aTaxes = nullptr);
-
-	/// Проверить установки системного флага.
-	bool checkFlag(const QByteArray aFlagData, int aNumber);
 
 	/// Подождать готовность эжектора.
 	bool waitEjectorReady();

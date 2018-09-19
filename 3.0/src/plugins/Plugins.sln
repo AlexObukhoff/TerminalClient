@@ -23,6 +23,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ad", "Ad\msvc\Ad.vcxproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "screen_maker_scenario", "NativeScenarios\ScreenMaker\msvc\ScreenMaker.vcxproj", "{FD6A54F7-0822-4C8A-BDB2-2DECD3E110E4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScenarioBackends", "ScenarioBackends", "{2D1DB18E-6DE6-43FD-A22F-7529743B1E92}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uniteller", "ScenarioBackends\Uniteller\msvc\Uniteller.vcxproj", "{C806ECA3-E905-4097-A3EF-EC246C908228}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -72,6 +76,12 @@ Global
 		{FD6A54F7-0822-4C8A-BDB2-2DECD3E110E4}.Release|Win32.Build.0 = Release|Win32
 		{FD6A54F7-0822-4C8A-BDB2-2DECD3E110E4}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
 		{FD6A54F7-0822-4C8A-BDB2-2DECD3E110E4}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
+		{C806ECA3-E905-4097-A3EF-EC246C908228}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C806ECA3-E905-4097-A3EF-EC246C908228}.Debug|Win32.Build.0 = Debug|Win32
+		{C806ECA3-E905-4097-A3EF-EC246C908228}.Release|Win32.ActiveCfg = Release|Win32
+		{C806ECA3-E905-4097-A3EF-EC246C908228}.Release|Win32.Build.0 = Release|Win32
+		{C806ECA3-E905-4097-A3EF-EC246C908228}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
+		{C806ECA3-E905-4097-A3EF-EC246C908228}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +94,7 @@ Global
 		{506817E2-7806-4EF6-A0F9-8530B95EF7C3} = {AE43DB3E-446C-4EEE-A28C-6CD138E20CBA}
 		{8357F924-86F3-4EF3-AF0E-023C6917E10E} = {9C872006-60FC-477F-B1BA-CD6F264DF6D0}
 		{FD6A54F7-0822-4C8A-BDB2-2DECD3E110E4} = {AE43DB3E-446C-4EEE-A28C-6CD138E20CBA}
+		{C806ECA3-E905-4097-A3EF-EC246C908228} = {2D1DB18E-6DE6-43FD-A22F-7529743B1E92}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		QtVersion = $(DefaultQtVersion)

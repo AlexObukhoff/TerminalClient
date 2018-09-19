@@ -16,7 +16,7 @@ Item {
 		border { left: 30; top: 84; right: 84; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
 		verticalTileMode: BorderImage.Stretch
-		source: "image://ui/panel.secondary"
+		source: Utils.ui.image("panel.secondary")
 
 		Row {
 			anchors { fill: parent; leftMargin: 10 }

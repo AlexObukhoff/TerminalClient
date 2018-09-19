@@ -39,9 +39,17 @@
 		"bold" : "true",
 		"capitalization" : "Font.AllUppercase"
 	},
-	"font.wide.group" : {
+	"font.wide.group.name" : {
 		"family" : "Roboto Condensed",
 		"pixelSize" : "26"
+	},
+	"font.wide.group.title" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "26"
+	},
+	"font.wide.group.description" : {
+		"family" : "Roboto Condensed",
+		"pixelSize" : "19"
 	},
 	"font.secondary" : {
 		"family" : "Roboto Medium",

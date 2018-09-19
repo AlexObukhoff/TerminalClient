@@ -16,7 +16,7 @@ AtolOnlineFRBase::AtolOnlineFRBase()
 	mFRBuildUnifiedTaxes = 3689;
 
 	mOFDFiscalParametersOnSale
-		<< FiscalFields::PayOffSubjectMethodType;
+		<< CFR::FiscalFields::PayOffSubjectMethodType;
 
 	// регистры
 	      mRegisterData.add(CAtolFR::Registers::SerialNumber,      '\x16', 7);
@@ -29,8 +29,8 @@ AtolOnlineFRBase::AtolOnlineFRBase()
 	// типы оплаты
 	mPayTypeData.add(EPayTypes::Cash,         1);
 	mPayTypeData.add(EPayTypes::EMoney,       2);
-	mPayTypeData.add(EPayTypes::PostPayment,  3);
-	mPayTypeData.add(EPayTypes::Credit,       4);
+	mPayTypeData.add(EPayTypes::PrePayment,   3);
+	mPayTypeData.add(EPayTypes::PostPayment,  4);
 	mPayTypeData.add(EPayTypes::CounterOffer, 5);
 
 	// команды
@@ -45,6 +45,12 @@ AtolOnlineFRBase::AtolOnlineFRBase()
 QStringList AtolOnlineFRBase::getModelList()
 {
 	return CAtolFR::CModelData().getModelList(EFRType::FS, false);
+}
+
+//--------------------------------------------------------------------------------
+char AtolOnlineFRBase::getPrinterId()
+{
+	return CAtolOnlinePrinters::Trade;
 }
 
 //--------------------------------------------------------------------------------
@@ -63,29 +69,14 @@ bool AtolOnlineFRBase::updateParameters()
 		return false;
 	}
 
-	int reregistrationNumber = getDeviceParameter(CDeviceData::FR::ReregistrationNumber).toInt();
+	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { mFFEngine.setLConfigParameter(CFiscalSDK::aName, data); \
+		QString value = mFFEngine.getConfigParameter(CFiscalSDK::aName, data).toString(); toLog(LogLevel::Normal, mDeviceName + \
+			QString(": Add %1 = \"%2\" to config data").arg(mFFData.getTextLog(CFR::FiscalFields::aName)).arg(value)); }
 
-	if (!processCommand(CAtolOnlineFR::Commands::FS::GetFiscalizationResume, QByteArray(1, char(reregistrationNumber)), &data) || (data.size() <= 40))
-	{
-		return false;
-	}
-
-	if (!checkTaxSystems(data[39]) || !checkOperationModes(data[40]))
-	{
-		return false;
-	}
-
-	#define SET_LCONFIG_FISCAL_FIELD(aName) QString aName##Log = QString("fiscal tag %1 (%2)").arg(FiscalFields::aName).arg(CHardware::FiscalFields::aName); \
-		if (getTLV(FiscalFields::aName, data)) { setLConfigParameter(CHardware::FiscalFields::aName, data); \
-		     QString value = getConfigParameter(CHardware::FiscalFields::aName, data).toString(); \
-		     toLog(LogLevel::Normal, QString("%1: Add %2 = \"%3\" to config data").arg(mDeviceName).arg(aName##Log).arg(value)); }
-
-	#define SET_BCONFIG_FISCAL_FIELD(aName) QString aName##Log = QString("fiscal tag %1 (%2)").arg(FiscalFields::aName).arg(CHardware::FiscalFields::aName); \
-		if (getTLV(FiscalFields::aName, data)) { char value = data[0]; setConfigParameter(CHardware::FiscalFields::aName, value); \
-		     toLog(LogLevel::Normal, QString("%1: Add %2 = %3 to config data").arg(mDeviceName).arg(aName##Log).arg(int(value))); }
+	#define SET_BCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { char value = data[0]; mFFEngine.setConfigParameter(CFiscalSDK::aName, value); \
+		toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = %2 to config data").arg(mFFData.getTextLog(CFR::FiscalFields::aName)).arg(uchar(value))); }
 
 	SET_LCONFIG_FISCAL_FIELD(FTSURL);
-	SET_LCONFIG_FISCAL_FIELD(OFDURL);
 	SET_LCONFIG_FISCAL_FIELD(OFDName);
 	SET_LCONFIG_FISCAL_FIELD(LegalOwner);
 	SET_LCONFIG_FISCAL_FIELD(PayOffAddress);
@@ -94,8 +85,27 @@ bool AtolOnlineFRBase::updateParameters()
 	SET_BCONFIG_FISCAL_FIELD(LotteryMode);
 	SET_BCONFIG_FISCAL_FIELD(GamblingMode);
 	SET_BCONFIG_FISCAL_FIELD(ExcisableUnitMode);
+	SET_BCONFIG_FISCAL_FIELD(InAutomateMode);
 
-	return getTLV(FiscalFields::AgentFlagsRegistered, data) && !data.isEmpty() && checkAgentFlags(data[0]);
+	if (!isFiscal())
+	{
+		return true;
+	}
+
+	int reregistrationNumber = getDeviceParameter(CDeviceData::FR::ReregistrationNumber).toInt();
+
+	if (!processCommand(CAtolOnlineFR::Commands::FS::GetFiscalizationTotal, QByteArray(1, char(reregistrationNumber)), &data) || (data.size() <= 40))
+	{
+		toLog(LogLevel::Normal, mDeviceName + ": Failed to get fiscalization total");
+		return false;
+	}
+
+	if (!checkTaxSystems(data[39]) || !checkOperationModes(data[40]))
+	{
+		return false;
+	}
+
+	return getTLV(CFR::FiscalFields::AgentFlagsReg, data) && !data.isEmpty() && checkAgentFlags(data[0]);
 }
 
 //--------------------------------------------------------------------------------
@@ -140,7 +150,7 @@ void AtolOnlineFRBase::processDeviceData()
 		setDeviceParameter(CDeviceData::FS::Version, QString("%1, type %2").arg(clean(data.mid(2, 16)).data()).arg(data[18] ? "serial" : "debug"));
 	}
 
-	if (processCommand(CAtolOnlineFR::Commands::FS::GetFiscalizationResume, &data))
+	if (processCommand(CAtolOnlineFR::Commands::FS::GetFiscalizationTotal, &data))
 	{
 		mINN = CFR::INNToString(data.mid(7, 12));
 		mRNM = CFR::RNMToString(data.mid(19, 20));
@@ -231,6 +241,31 @@ bool AtolOnlineFRBase::setFRParameters()
 }
 
 //--------------------------------------------------------------------------------
+bool AtolOnlineFRBase::reboot()
+{
+	bool mode = mMode;
+
+	if (!enterInnerMode(CAtolFR::InnerModes::Cancel))
+	{
+		return false;
+	}
+
+	bool result = processCommand(CAtolOnlineFR::Commands::Reboot, QByteArray(1, ASCII::NUL));
+
+	if (!result)
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to reboot FR properly");
+	}
+
+	SleepHelper::msleep(CAtolOnlineFR::RebootPause);
+	result = waitReady(CAtolOnlineFR::RebootWaiting);
+
+	enterInnerMode(mode);
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------
 bool AtolOnlineFRBase::getStatus(TStatusCodes & aStatusCodes)
 {
 	QByteArray data;
@@ -255,25 +290,33 @@ bool AtolOnlineFRBase::performFiscal(const QStringList & aReceipt, const SPaymen
 
 	if (result)
 	{
+		auto getDataWaiting = [&] (const std::function<TResult()> & aCommand) -> TResult { TResult result; int i = 0; do { result = aCommand(); }
+			while ((result == CommandResult::Transport) && waitReady(CAtolOnlineFR::GetFiscalWaiting) && (++i < CAtolOnlineFR::MaxRepeatingFiscalData)); return result; };
+		#define GET_FS_DATA_WAITING(aCommand, ...) getDataWaiting([&] () -> TResult { return processCommand(CAtolOnlineFR::Commands::FS::aCommand, __VA_ARGS__); })
+
 		QByteArray data;
 
-		if (processCommand(CAtolOnlineFR::Commands::FS::GetStatus, &data) && (data.size() >= 32))
+		if (GET_FS_DATA_WAITING(GetStatus, &data) && (data.size() >= 32))
 		{
 			uint FDNumber = revert(data.mid(28, 4)).toHex().toUInt(0, 16);
-			aFPData.insert(FiscalFields::FDNumber, FDNumber);
+			mFFEngine.checkFPData(aFPData, CFR::FiscalFields::FDNumber, FDNumber);
 
-			if (processCommand(CAtolOnlineFR::Commands::FS::StartFiscalTLVData, getHexReverted(FDNumber, 4)))
+			if (GET_FS_DATA_WAITING(StartFiscalTLVData, getHexReverted(FDNumber, 4)))
 			{
 				CFR::STLV TLV;
 
-				while (processCommand(CAtolOnlineFR::Commands::FS::GetFiscalTLVData, &data))
+				while (GET_FS_DATA_WAITING(GetFiscalTLVData, &data))
 				{
-					if (parseTLV(data.mid(2), TLV))
+					if (mFFEngine.parseTLV(data.mid(2), TLV))
 					{
-						if (CFR::FiscalFields::FSRequired.contains(TLV.field))
+						if (mFFData.data().contains(TLV.field))
 						{
-							parseSTLVData(TLV, aPSData);
-							parseTLVData(TLV.field, TLV.data, aFPData);
+							mFFEngine.parseSTLVData(TLV, aPSData);
+							mFFEngine.parseTLVData (TLV, aFPData);
+						}
+						else
+						{
+							toLog(LogLevel::Warning, QString("%1: Failed to add fiscal field %2 due to it is unknown").arg(mDeviceName).arg(TLV.field));
 						}
 					}
 				}
@@ -285,7 +328,8 @@ bool AtolOnlineFRBase::performFiscal(const QStringList & aReceipt, const SPaymen
 
 	if (getRegister(CAtolOnlineFR::Registers::SessionData, data))
 	{
-		aFPData.insert(FiscalFields::DocumentNumber, data.left(3).toHex().toInt());
+		uint documentNumber = data.left(3).toHex().toUInt();
+		mFFEngine.checkFPData(aFPData, CFR::FiscalFields::DocumentNumber, documentNumber);
 	}
 
 	return result;
@@ -304,6 +348,14 @@ bool AtolOnlineFRBase::processAnswer(const QByteArray & aCommand, char aError)
 {
 	switch (aError)
 	{
+		case CAtolOnlineFR::Errors::FSOfflineEnd:
+		{
+			mProcessingErrors.push_back(mLastError);
+
+			mFSOfflineEnd = true;
+
+			break;
+		}
 		case CAtolOnlineFR::Errors::NeedExtendedErrorCode:
 		{
 			QByteArray data;
@@ -346,9 +398,9 @@ bool AtolOnlineFRBase::checkTaxes()
 {
 	if (mFRBuild >= mFRBuildUnifiedTaxes)
 	{
-		mTaxData.add(18, 1, "НДС 18%");
-		mTaxData.add(10, 2, "НДС 10%");
-		mTaxData.add( 0, 6, "БЕЗ НАЛОГА");
+		mTaxData.add(18, 1);
+		mTaxData.add(10, 2);
+		mTaxData.add( 0, 6);
 	}
 
 	return AtolFRBase::checkTaxes();
@@ -361,22 +413,22 @@ bool AtolOnlineFRBase::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 }
 
 //--------------------------------------------------------------------------------
-bool AtolOnlineFRBase::sale(const SAmountData & aAmountData)
+bool AtolOnlineFRBase::sale(const SUnitData & aUnitData)
 {
 	if (!processCommand(CAtolOnlineFR::Commands::StartSale, CAtolOnlineFR::StartSailingData))
 	{
 		return false;
 	}
 
-	if (!setOFDParametersOnSale(aAmountData))
+	if (!setOFDParametersOnSale(aUnitData))
 	{
 		return false;
 	}
 
-	int taxGroup = mTaxData[aAmountData.VAT].group;
-	QByteArray sum = getBCD(aAmountData.sum / 10.0, 7, 2, 3);
-	QByteArray name = mCodec->fromUnicode(aAmountData.name);
-	char section = (aAmountData.section == -1) ? ASCII::NUL : char(aAmountData.section);
+	int taxGroup = mTaxData[aUnitData.VAT].group;
+	QByteArray sum = getBCD(aUnitData.sum / 10.0, 7, 2, 3);
+	QByteArray name = mCodec->fromUnicode(aUnitData.name);
+	char section = (aUnitData.section == -1) ? ASCII::NUL : char(aUnitData.section);
 
 	QByteArray commandData;
 	commandData.append(CAtolOnlineFR::SaleFlags);     // флаги
@@ -399,14 +451,13 @@ bool AtolOnlineFRBase::setTLV(int aField, bool /*aForSale*/)
 {
 	bool result;
 
-	if (!checkFiscalField(aField, result))
+	if (!mFFEngine.checkFiscalField(aField, result))
 	{
 		return result;
 	}
 
 	QString fieldLog;
-	QVariant value = getConfigParameter(mFiscalFieldData[aField].description);
-	QByteArray commandData = getTLVData(aField, value, &fieldLog);
+	QByteArray commandData = mFFEngine.getTLVData(aField, &fieldLog);
 	commandData.prepend('\x00');    // номер блока
 	commandData.prepend('\x01');    // количество блоков
 	commandData.prepend(CAtolOnlineFR::PrintOFDParameter);    /// печатать ОФД-реквизит.
@@ -432,7 +483,7 @@ bool AtolOnlineFRBase::getTLV(int aField, QByteArray & aData, uchar aBlockNumber
 
 	QByteArray data;
 	CFR::STLV TLV;
-	QString errorLog = QString("%1: Failed to get fiscal tag %2 (%3)").arg(mDeviceName).arg(aField).arg(mFiscalFieldData[aField].description);
+	QString errorLog = mDeviceName + ": Failed to get " + mFFData.getTextLog(aField);
 
 	if (aBlockNumber)
 	{
@@ -470,7 +521,7 @@ bool AtolOnlineFRBase::getTLV(int aField, QByteArray & aData, uchar aBlockNumber
 		data += aData;
 	}
 
-	if (!parseTLV(data.mid(3), TLV))
+	if (!mFFEngine.parseTLV(data.mid(3), TLV))
 	{
 		toLog(LogLevel::Error, errorLog + " due to parse error");
 		return false;

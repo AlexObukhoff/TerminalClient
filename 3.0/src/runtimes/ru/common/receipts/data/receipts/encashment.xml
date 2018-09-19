@@ -33,6 +33,9 @@
 	<string>-----------------------------------</string>
 	<string>Кол-во купюр: %BILL_COUNT%</string>
 	<string> Сумма купюр: %BILL_SUM%</string>
+ 	<string if="%BANKCARD_SUM% &gt; 0">-----------------------------------</string>
+	<string if="%BANKCARD_SUM% &gt; 0">       Банковскими картами: %BANKCARD_COUNT%</string>
+	<string if="%BANKCARD_SUM% &gt; 0">Сумма по банковским картам: %BANKCARD_SUM%</string>
  	<string>-----------------------------------</string>
 	<string>Общая сумма:  %TOTAL_SUM%</string>
  	<string>-----------------------------------</string>

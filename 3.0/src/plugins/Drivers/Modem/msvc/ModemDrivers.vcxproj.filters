@@ -43,5 +43,8 @@
     <None Include="..\src\locale\modems_kk.ts">
       <Filter>Translation Files</Filter>
     </None>
+    <None Include="..\src\locale\modems_de.ts">
+      <Filter>Translation Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

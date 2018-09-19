@@ -24,17 +24,17 @@
         <translation>Language</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="164"/>
+        <location filename="../main_menu_scene.qml" line="166"/>
         <source>main_menu_scene#invalid_provider</source>
         <translation>Sorry, this provider is temporarily out of service. Try again later.</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="274"/>
+        <location filename="../main_menu_scene.qml" line="278"/>
         <source>main_menu_scene#rest_howto_title</source>
         <translation>Balance %REST% %CURRENCY%</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="275"/>
+        <location filename="../main_menu_scene.qml" line="279"/>
         <source>main_menu_scene#rest_howto_description</source>
         <translation type="unfinished">Click “Close” and choose any operator to make a payment.</translation>
     </message>

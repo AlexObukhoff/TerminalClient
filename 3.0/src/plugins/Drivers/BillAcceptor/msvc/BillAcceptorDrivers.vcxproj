@@ -70,7 +70,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CashAcceptors.lib;CCNetProtocol.lib;ID003Protocol.lib;EBDSProtocol.lib;V2eProtocol.lib;SSPProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Acceptors.lib;CashAcceptors.lib;CoinAcceptors.lib;CCTalkProtocol.lib;CCNetProtocol.lib;ID003Protocol.lib;EBDSProtocol.lib;V2eProtocol.lib;SSPProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -96,7 +96,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CashAcceptors.lib;CCNetProtocol.lib;ID003Protocol.lib;EBDSProtocol.lib;V2eProtocol.lib;SSPProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Acceptors.lib;CashAcceptors.lib;CoinAcceptors.lib;CCTalkProtocol.lib;CCNetProtocol.lib;ID003Protocol.lib;EBDSProtocol.lib;V2eProtocol.lib;SSPProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -121,7 +121,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmaind.lib;QtCored4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;CashAcceptorsd.lib;CCNetProtocold.lib;ID003Protocold.lib;EBDSProtocold.lib;V2eProtocold.lib;SSPProtocold.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmaind.lib;QtCored4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;Acceptorsd.lib;CashAcceptorsd.lib;CoinAcceptorsd.lib;CCTalkProtocold.lib;CCNetProtocold.lib;ID003Protocold.lib;EBDSProtocold.lib;V2eProtocold.lib;SSPProtocold.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -143,13 +143,14 @@
     <None Include="..\src\locale\bill_acceptors_en.ts" />
     <None Include="..\src\locale\bill_acceptors_ru.ts" />
     <None Include="..\src\locale\bill_acceptors_kk.ts" />
+    <None Include="..\src\locale\bill_acceptors_de.ts" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties lupdateOnBuild="1" MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties lupdateOnBuild="1" MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

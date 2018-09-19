@@ -1,6 +1,5 @@
 /* @file Принтеры семейства Star c эжектором. */
 
-// Project
 #include "EjectorStarPrinters.h"
 #include "StarPrinterData.h"
 #include "ModelData.h"

@@ -2,6 +2,9 @@
 
 #pragma once
 
+// std
+#include <memory>
+
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QString>
@@ -57,8 +60,14 @@ public:
 	/// Создаёт плагин.
 	virtual IPlugin * createPlugin(const QString & aInstancePath, const QString & aConfigPath) = 0;
 
+	/// Создаёт плагин.
+	virtual std::weak_ptr<IPlugin> createPluginPtr(const QString & aInstancePath, const QString & aConfigPath) = 0;
+
 	/// Удаляет плагин.
 	virtual bool destroyPlugin(IPlugin * aPlugin) = 0;
+
+	/// Удаляет плагин.
+	virtual bool destroyPlugin(const std::weak_ptr<IPlugin> & aPlugin) = 0;
 
 	/// Локализует названия и описания параметров.
 	virtual void translateParameters() = 0;

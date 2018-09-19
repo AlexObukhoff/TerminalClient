@@ -57,7 +57,7 @@ bool PrinterTest::isReady()
 	{
 		auto fr = dynamic_cast<SDK::Driver::IFiscalPrinter *>(mPrinter.data());
 
-		return fr ? fr->isFiscalReady(false, SDK::Driver::EFiscalPrinterCommand::Print) : mPrinter->isDeviceReady(true);
+		return fr ? fr->isFiscalReady(false, SDK::Driver::EFiscalPrinterCommand::Print) : mPrinter->isDeviceReady(false);
 	}
 
 	return false;

@@ -2,13 +2,7 @@
 
 #pragma once
 
-// Qt
-#include <Common/QtHeadersBegin.h>
-#include <QtCore/QTextCodec>
-#include <Common/QtHeadersEnd.h>
-
 // Modules
-#include "Hardware/Common/PollingExpector.h"
 #include "Hardware/Common/PortPollingDeviceBase.h"
 #include "Hardware/Common/SerialDeviceBase.h"
 #include "Hardware/Common/TCPDeviceBase.h"
@@ -57,9 +51,6 @@ public:
 	virtual bool printOut(const SPrintingOutData & aPrintingOutData);
 
 protected:
-	/// Установка локализованного параметра устройства.
-	void setLConfigParameter(const QString & aName, const QByteArray & aData);
-
 	/// Завершение инициализации.
 	virtual void finaliseInitialization();
 

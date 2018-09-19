@@ -38,6 +38,7 @@ class PrintCommand
 public:
 	PrintCommand(const QString & aReceiptType):
 		mReceiptType(aReceiptType) {}
+	virtual ~PrintCommand() {}
 
 	/// Проверка возможности печати.
 	virtual bool canPrint(SDK::Driver::IPrinter * aPrinter, bool aRealCheck)
@@ -91,6 +92,7 @@ class PrintPayment : public PrintFiscalCommand
 
 	SDK::Driver::TFiscalPaymentData mFiscalPaymentData;
 	SDK::Driver::TComplexFiscalPaymentData mPayOffSubjectData;
+	SDK::Driver::TFiscalFieldData mFiscalFieldData;
 
 public:
 	PrintPayment(const QString & aReceiptType, PrintingService * aService):
@@ -106,6 +108,9 @@ public:
 	const SDK::Driver::TFiscalPaymentData & getFiscalData() const;
 
 private:
+	/// Добавить данные платежа.
+	void addFiscalPaymentData(const SDK::Driver::TFiscalPaymentData & aFPData, QStringList & aData);
+
 	bool isFiscal(SDK::Driver::IPrinter * aPrinter);
 
 };

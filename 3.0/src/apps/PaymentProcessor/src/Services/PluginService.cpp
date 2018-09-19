@@ -64,8 +64,10 @@ bool PluginService::initialize()
 	mPluginLoader->addDirectory(mApplication->getPluginPath());
 	mPluginLoader->addDirectory(mApplication->getUserPluginPath());
 
+#ifndef _DEBUG
 	// Запустим фоновую проверку плагинов на наличие цифровой подписи
 	mPluginVerifierSynchronizer.addFuture(QtConcurrent::run(this, &PluginService::verifyPlugins));
+#endif
 
 	return true;
 }

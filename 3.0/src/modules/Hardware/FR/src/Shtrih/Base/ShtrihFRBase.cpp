@@ -53,9 +53,9 @@ bool ShtrihFRBase<T>::updateParameters()
 template<class T>
 bool ShtrihFRBase<T>::isConnected()
 {
-	SDK::Driver::EPortTypes::Enum portType = mIOPort->getType();
+	EPortTypes::Enum portType = mIOPort->getType();
 
-	if (portType == SDK::Driver::EPortTypes::COMEmulator)
+	if (portType == EPortTypes::COMEmulator)
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Port type is COM-emulator");
 		return false;
@@ -103,6 +103,7 @@ bool ShtrihFRBase<T>::isConnected()
 	mVerified = false;
 	mDeviceName = CShtrihFR::Models::Default;
 	mModelData = modeData[mModel];
+	mCanProcessZBuffer = mModelData.ZBufferSize;
 
 	if (mType == CShtrihFR::Types::KKM)
 	{
@@ -200,7 +201,7 @@ bool ShtrihFRBase<T>::printDeferredZReports()
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ShtrihFRBase<T>::execZReport(bool aAuto)
+bool ShtrihFRBase<T>::prepareZReport(bool aAuto, QVariantMap & aData)
 {
 	bool needCloseSession = mMode == CShtrihFR::InnerModes::NeedCloseSession;
 
@@ -208,35 +209,34 @@ bool ShtrihFRBase<T>::execZReport(bool aAuto)
 	{
 		if (mOperatorPresence)
 		{
-			toLog(LogLevel::Error, "ShtrihFR: Failed to process auto-Z-report due to presence of the operator.");
+			toLog(LogLevel::Error, mDeviceName + ": Failed to process auto-Z-report due to presence of the operator.");
 			mNeedCloseSession = mNeedCloseSession || needCloseSession;
 
 			return false;
 		}
 
-		if (!mIsOnline && !mModelData.ZReportQuantity)
+		if (!mIsOnline && !mCanProcessZBuffer)
 		{
-			toLog(LogLevel::Normal, "ShtrihFR: FR has no buffer, auto-Z-report is not available");
+			toLog(LogLevel::Normal, mDeviceName + ": FR has no buffer, auto-Z-report is not available");
 			mNeedCloseSession = mNeedCloseSession || needCloseSession;
 
 			return false;
 		}
 	}
 
-	toLog(LogLevel::Normal, QString("ShtrihFR: Begin processing %1Z-report").arg(aAuto ? "auto-" : ""));
+	return ProtoShtrihFR<T>::prepareZReport(aAuto, aData);
+}
 
-	// проверяем, нормальный ли режим, делаем запрос статуса
-	QByteArray answer;
+//--------------------------------------------------------------------------------
+template<class T>
+bool ShtrihFRBase<T>::execZReport(bool aAuto)
+{
+	QVariantMap outData;
 
-	if (!getLongStatus(answer))
+	if (!prepareZReport(aAuto, outData))
 	{
-		toLog(LogLevel::Error, QString("ShtrihFR: Failed to get status therefore failed to process %1Z-report.").arg(aAuto ? "auto-" : ""));
-		mNeedCloseSession = mNeedCloseSession || needCloseSession;
-
 		return false;
 	}
-
-	QVariantMap outData = getSessionOutData(answer);
 
 	char command = aAuto ? CShtrihFR::Commands::ZReportInBuffer : CShtrihFR::Commands::ZReport;
 	mNeedCloseSession = false;
@@ -298,7 +298,7 @@ bool ShtrihFRBase<T>::getZReportQuantity()
 	int count = ZReportQuantity.toInt();
 	toLog(LogLevel::Error, "ShtrihFR: Z-report count = " + QString::number(count));
 
-	mWhiteSpaceZBuffer = mModelData.ZReportQuantity - count;
+	mWhiteSpaceZBuffer = mModelData.ZBufferSize - count;
 
 	if (mWhiteSpaceZBuffer < 0)
 	{
@@ -333,8 +333,8 @@ bool ShtrihFRBase<T>::waitForChangeZReportMode()
 				return false;
 			}
 
-			if ((mSubmode == CShtrihFR::InnerSubmodes::ActivePaperOff) ||
-			    (mSubmode == CShtrihFR::InnerSubmodes::PassivePaperOff))
+			if ((mSubmode == CShtrihFR::InnerSubmodes::PaperEndPassive) ||
+			    (mSubmode == CShtrihFR::InnerSubmodes::PaperEndActive))
 			{
 				// 3.3. подрежим - закончилась бумага
 				return false;
@@ -389,7 +389,7 @@ bool ShtrihFRBase<T>::processAnswer(const QByteArray & aCommand)
 
 	if (mLastError == CShtrihFR::Errors::ChequeBufferOverflow)
 	{
-		mZBufferOverflow = bool(mModelData.ZReportQuantity);
+		mZBufferOverflow = mCanProcessZBuffer;
 	}
 
 	return false;

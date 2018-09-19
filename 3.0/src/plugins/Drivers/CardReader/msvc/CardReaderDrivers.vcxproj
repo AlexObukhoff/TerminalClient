@@ -162,6 +162,7 @@
     <CustomBuild Include="..\src\PCSCReader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\src\locale\card_readers_de.ts" />
     <None Include="..\src\locale\card_readers_en.ts" />
     <None Include="..\src\locale\card_readers_kk.ts" />
     <None Include="..\src\locale\card_readers_ru.ts" />
@@ -171,7 +172,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties lupdateOnBuild="1" MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties lupdateOnBuild="1" MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

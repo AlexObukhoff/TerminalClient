@@ -43,6 +43,7 @@ struct SStatusCodeSpecification
 
 typedef CSpecification<int, SStatusCodeSpecification> TStatusCodeSpecification;
 
+//--------------------------------------------------------------------------------
 namespace DeviceStatusCode
 {
 	class CSpecifications: public TStatusCodeSpecification

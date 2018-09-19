@@ -26,7 +26,7 @@ public:
 	virtual bool release();
 
 protected:
-	/// Получить статус
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Получить данные

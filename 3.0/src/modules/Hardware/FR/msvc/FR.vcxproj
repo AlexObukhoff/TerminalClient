@@ -118,13 +118,16 @@
     <ClCompile Include="..\src\Atol\Ejector\AtolVKP80BasedFR.cpp" />
     <ClCompile Include="..\src\Atol\Online\AtolOnlineFRBase.cpp" />
     <ClCompile Include="..\src\Atol\Online\Paymaster.cpp" />
+    <ClCompile Include="..\src\Base\FFEngine.cpp" />
     <ClCompile Include="..\src\Base\Port\PortFRBase.cpp" />
     <ClCompile Include="..\src\Kasbi\KasbiFRBase.cpp" />
     <ClCompile Include="..\src\Prim\Online\PrimOnlineFRBase.cpp" />
     <ClCompile Include="..\src\Shtrih\Base\ProtoShtrihFR.cpp" />
     <ClCompile Include="..\src\Shtrih\Base\ShtrihSerialFR.cpp" />
     <ClCompile Include="..\src\Shtrih\ModelData.cpp" />
-    <ClCompile Include="..\src\Shtrih\Online\PayOnlineFR.cpp" />
+    <ClCompile Include="..\src\Shtrih\Online\MStarTK2.cpp" />
+    <ClCompile Include="..\src\Shtrih\Online\Pay\PayFRBase.cpp" />
+    <ClCompile Include="..\src\Shtrih\Online\Pay\PayOnline.cpp" />
     <ClCompile Include="..\src\Shtrih\Online\ShtrihOnlineFRBase.cpp" />
     <ClCompile Include="..\src\Prim\Ejector\PrimEjectorFR.cpp" />
     <ClCompile Include="..\src\Prim\Presenter\PrimPresenterFR.cpp" />
@@ -139,10 +142,13 @@
     <ClCompile Include="..\src\Spark\SparkFR.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\AtolOnlinePrinters.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRBaseConstants.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\KasbiPrinters.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\OFDServerData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRErrorDescription.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\PayPrinters.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Protocols\FR\FiscalChequeStates.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRStatusCodes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRStatusesDescriptions.h" />
@@ -161,6 +167,7 @@
     <ClInclude Include="..\src\Atol\Online\AtolOnlineFRConstants.h" />
     <ClInclude Include="..\src\Atol\Online\AtolOnlineFRBase.h" />
     <ClInclude Include="..\src\Atol\Online\Paymaster.h" />
+    <ClInclude Include="..\src\Base\FFEngine.h" />
     <ClInclude Include="..\src\Base\Port\PortFRBase.h" />
     <ClInclude Include="..\src\Kasbi\KasbiFRBase.h" />
     <ClInclude Include="..\src\Kasbi\KasbiFRConstants.h" />
@@ -168,9 +175,10 @@
     <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFR.h" />
     <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFRConstants.h" />
     <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFRBase.h" />
-    <ClInclude Include="..\src\Prim\Ejector\PrimEjectorOnlineFR.h" />
+    <ClInclude Include="..\src\Prim\Online\PrimOnlineFR68.h" />
     <ClInclude Include="..\src\Prim\Online\PrimOnlineFRBase.h" />
     <ClInclude Include="..\src\Prim\Online\PrimOnlineFRConstants.h" />
+    <ClInclude Include="..\src\Prim\Online\PrimOnlineFRSpecial.h" />
     <ClInclude Include="..\src\Prim\Presenter\PrimPresenterFR.h" />
     <ClInclude Include="..\src\Prim\PrimFRBase.h" />
     <ClInclude Include="..\src\Prim\PrimFRConstants.h" />
@@ -183,7 +191,9 @@
     <ClInclude Include="..\src\Shtrih\Base\ShtrihSerialFRBase.h" />
     <ClInclude Include="..\src\Shtrih\Base\VirtualShtrihFR.h" />
     <ClInclude Include="..\src\Shtrih\Online\MStarTK2.h" />
-    <ClInclude Include="..\src\Shtrih\Online\PayOnlineFR.h" />
+    <ClInclude Include="..\src\Shtrih\Online\Pay\PayFRBase.h" />
+    <ClInclude Include="..\src\Shtrih\Online\Pay\PayOnline.h" />
+    <ClInclude Include="..\src\Shtrih\Online\Pay\PayVKP80FA.h" />
     <ClInclude Include="..\src\Shtrih\Online\ShtrihFROnlineConstants.h" />
     <ClInclude Include="..\src\Shtrih\Online\ShtrihOnlineFRBase.h" />
     <ClInclude Include="..\src\Shtrih\Base\Yarus01K.h" />
@@ -229,7 +239,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

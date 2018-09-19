@@ -101,7 +101,7 @@ bool CCNetCashAcceptorBase::waitNotBusyPowerUp()
 
 	auto poll = [&] () -> bool { return getStatus(std::ref(statusCodes)); };
 
-	if (!PollingExpector().wait<bool>(poll, std::bind(&CCNetCashAcceptorBase::isNotBusyPowerUp, this), CCCNet::PollingIntervals::Identification, CCCNet::Timeouts::PowerUp))
+	if (!PollingExpector().wait<bool>(poll, std::bind(&CCNetCashAcceptorBase::isNotBusyPowerUp, this), CCCNet::NotBusyPowerUpWaiting))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to wait not busy and power-up status from the cash acceptor after reset command");
 		return false;
@@ -179,31 +179,33 @@ TResult CCNetCashAcceptorBase::performCommand(const QByteArray & aCommand, const
 //--------------------------------------------------------------------------------
 bool CCNetCashAcceptorBase::checkConnection(QByteArray & aAnswer)
 {
-	PollingExpector expector;
-	TStatusCodes statusCodes;
-	bool result;
-	auto statusPoll = [&] () -> bool { result = getStatus(std::ref(statusCodes)); return result; };
-
-	if (!expector.wait(statusPoll, CCCNet::PollingIntervals::Identification, CCCNet::Timeouts::Available))
+	if (!waitReady(CCCNet::AvailableWaiting))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to wait any available status from the cash acceptor");
 		return false;
 	}
 
-	if (expector.wait<bool>(statusPoll, [&] () -> bool { return !result && !mLastAnswer.isEmpty(); }, CCCNet::PollingIntervals::Identification, CCCNet::Timeouts::FalseAutodetection))
+	PollingExpector expector;
+	TStatusCodes statusCodes;
+	bool result;
+	auto statusPoll = [&] () -> bool { statusCodes.clear(); result = getStatus(std::ref(statusCodes)); return result; };
+
+	if (expector.wait<bool>(statusPoll, [&] () -> bool { return !result && !mLastAnswer.isEmpty(); }, CCCNet::FalseAutoDetectionWaiting))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Unknown device trying to impersonate any CCNet device");
 		return false;
 	}
 
 	enableMoneyAcceptingMode(false);
+	auto isNotEnabled = [&] () -> bool { return !result || !statusCodes.contains(BillAcceptorStatusCode::Normal::Enabled); };
+	expector.wait<bool>(statusPoll, isNotEnabled, CCCNet::NotEnabled);
 
 	CCCNet::DeviceCodeSpecification * specification = mDeviceCodeSpecification.dynamicCast<CCCNet::DeviceCodeSpecification>().data();
 
 	auto isNotBusy = [&] () -> bool { return !mDeviceCodeBuffers.isEmpty() && std::find_if(mDeviceCodeBuffers.begin(), mDeviceCodeBuffers.end(),
 		[&] (const QByteArray & aBuffer) -> bool { return specification->isBusy(aBuffer); }) == mDeviceCodeBuffers.end(); };
 
-	if (!expector.wait<bool>(statusPoll, isNotBusy, CCCNet::PollingIntervals::Identification, CCCNet::Timeouts::Busy))
+	if (!expector.wait<bool>(statusPoll, isNotBusy, CCCNet::NotBusyWaiting))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to wait not busy status from the cash acceptor");
 		return false;
@@ -749,7 +751,22 @@ void CCNetCashAcceptorBase::cleanSpecificStatusCodes(TStatusCodes & aStatusCodes
 			<< DeviceStatusCode::OK::Initialization
 			<< BillAcceptorStatusCode::Busy::Returning;
 
-		cleanStatusCodes(aStatusCodes, baseHistoryList, replaceableHistory, BillAcceptorStatusCode::MechanicFailure::StickInExitChannel);
+		for (int i = 0; i < replaceableHistory.size(); ++i)
+		{
+			if (aStatusCodes.contains(replaceableHistory[i]))
+			{
+				foreach (const TStatusCodesHistory & history, baseHistoryList)
+				{
+					TStatusCodesHistory extraHistory = TStatusCodesHistory () << history << BillAcceptorStatusCode::MechanicFailure::StickInExitChannel;
+
+					if (isStatusCollectionConformed(history) || isStatusCollectionConformed(extraHistory))
+					{
+						aStatusCodes.remove(replaceableHistory[i]);
+						aStatusCodes.insert(BillAcceptorStatusCode::MechanicFailure::StickInExitChannel);
+					}
+				}
+			}
+		}
 	}
 }
 

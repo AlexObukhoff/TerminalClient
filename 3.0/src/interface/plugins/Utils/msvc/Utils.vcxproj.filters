@@ -43,12 +43,6 @@
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_UtilsPlugin.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Utils.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Utils.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Translator.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -56,9 +50,6 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Utils\ReleaseWithDebugInfo\moc_Translator.cpp">
-      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Utils\ReleaseWithDebugInfo\moc_Utils.cpp">
       <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Utils\ReleaseWithDebugInfo\moc_UtilsPlugin.cpp">
@@ -118,6 +109,24 @@
     <ClCompile Include="..\src\BarcodeProvider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_SkinProvider.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_SkinProvider.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_SkinProvider.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_Utils.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Utils.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Utils.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Log.h">
@@ -125,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="..\src\ProviderConstants.h">
       <Filter>Source Files\Models</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\SkinProvider.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\BarcodeProvider.h">
       <Filter>Source Files</Filter>
@@ -146,14 +152,17 @@
     <CustomBuild Include="..\src\Translator.h">
       <Filter>Source Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\src\Utils.h">
-      <Filter>Source Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\src\Skin.h">
       <Filter>Source Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\src\GroupModel.h">
       <Filter>Source Files\Models</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\SkinProvider.h">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\Utils.h">
+      <Filter>Source Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

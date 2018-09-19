@@ -7,8 +7,6 @@
 #include <Common/QtHeadersEnd.h>
 
 // Project
-#include "Hardware/Common/PollingExpector.h"
-
 #include "StarPrinters.h"
 #include "StarPrinterData.h"
 #include "ModelData.h"
@@ -286,8 +284,8 @@ bool StarPrinter::isConnected()
 	CSTAR::TMemorySwitches memorySwitches(mMemorySwitches);
 	mMemorySwitchUtils.setConfiguration(mMemorySwitches);
 
-	configuration.insert(CHardware::AutomaticStatus, CHardware::Values::Use);
-	configuration.insert(CHardware::Printer::VerticalMountMode, CHardware::Values::NotUse);
+	configuration.insert(CHardware::AutomaticStatus, CHardwareSDK::Values::Use);
+	configuration.insert(CHardware::Printer::VerticalMountMode, CHardwareSDK::Values::NotUse);
 
 	CSTAR::TMemorySwitchTypes memorySwitchTypes = CSTAR::TMemorySwitchTypes()
 		//<< ESTARMemorySwitchTypes::ASB
@@ -515,7 +513,7 @@ bool StarPrinter::updateParameters()
 	/*
 	// логика отключена, т.к. вместо ASB (единственный параметр) устанавливаем регистр
 	QVariantMap configuration;
-	configuration.insert(CHardware::AutomaticStatus, CHardware::Values::Use);
+	configuration.insert(CHardware::AutomaticStatus, CHardwareSDK::Values::Use);
 
 	CSTAR::TMemorySwitchTypes memorySwitchTypes;
 	memorySwitchTypes.append(ESTARMemorySwitchTypes::ASB);
@@ -796,7 +794,7 @@ bool StarPrinter::waitEjectorState(bool aBusy)
 	TStatusCodes statusCodes;
 	auto condition = [&] () -> bool { return !statusCodes.isEmpty() && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable) &&
 		(aBusy == statusCodes.contains(PrinterStatusCode::OK::PaperInPresenter)); };
-	bool result = PollingExpector().wait<void>(std::bind(&StarPrinter::doPoll, this, std::ref(statusCodes)), condition, CSTAR::Timeouts::Ejector, CSTAR::Timeouts::EjectorProcessing);
+	bool result = PollingExpector().wait<void>(std::bind(&StarPrinter::doPoll, this, std::ref(statusCodes)), condition, CSTAR::EjectorWaiting);
 
 	if (!aBusy && !result)
 	{

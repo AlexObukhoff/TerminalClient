@@ -14,7 +14,7 @@ class Skin : public QObject
 	Q_OBJECT
 
 public:
-	Skin(const QString & aInterfacePath, const QString & aUserPath);
+	Skin(const QObject * aApplication, const QString & aInterfacePath, const QString & aUserPath);
 
 public:
 	/// Получить имя скина
@@ -23,21 +23,30 @@ public:
 	/// Получить конфигурацию скина
 	QVariantMap getConfiguration() const;
 
+	void reload(const QVariantMap & aParams);
+
+	bool needReload(const QVariantMap & aParams) const;
+
 public slots:
 	QFont font(const QString & aFontName) const;
 	QString color(const QString & aColorName) const;
+	QString image(const QString & aImageId) const;
 
 private:
 	/// Возвращает 
 	QString skinConfigFileName(const QString & aName) const;
 
 	/// Загрузить конфигурацию скина
-	bool loadSkinConfig(bool aMerge = false);
+	bool loadSkinConfig();
 
 private:
 	QString mName;
+	QString mSystemName22;
+	QString mPrevName;
 	QVariantMap mConfig;
 	QString mInterfacePath;
+	QVariantMap mProviderSkinConfig;
+	QObject * mGuiService;
 };
 
 //------------------------------------------------------------------------------

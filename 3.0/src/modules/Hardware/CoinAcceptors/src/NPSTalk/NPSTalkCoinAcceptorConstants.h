@@ -16,9 +16,6 @@ namespace CNPSTalk
 
 		/// Период переинициализации.
 		const int ReInitialize = 5 * 1000;
-
-		/// Отсылка сигнала об отключении монетника
-		const int Disabling = 600;
 	}
 
 	/// Команды.

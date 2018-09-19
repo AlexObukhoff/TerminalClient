@@ -24,10 +24,6 @@ NPSTalkCoinAcceptor::NPSTalkCoinAcceptor()
 	// данные устройства
 	mDeviceName = "NPSTalk Comestero coin acceptor";
 	mMaxBadAnswers = 5;
-
-	//TODO: надо для всех монетников
-	setConfigParameter(CHardware::CashAcceptor::DisablingTimeout, CNPSTalk::Timeouts::Disabling);
-	setConfigParameter(CHardware::CashAcceptor::StackedFilter, true);
 }
 
 //--------------------------------------------------------------------------------
@@ -62,18 +58,6 @@ TResult NPSTalkCoinAcceptor::execCommand(const QByteArray & aCommand, const QByt
 QStringList NPSTalkCoinAcceptor::getModelList()
 {
 	return QStringList() << "Comestero Group RM5";
-}
-
-//---------------------------------------------------------------------------
-bool NPSTalkCoinAcceptor::stack()
-{
-	return true;
-}
-
-//---------------------------------------------------------------------------
-bool NPSTalkCoinAcceptor::reject()
-{
-	return true;
 }
 
 //---------------------------------------------------------------------------

@@ -53,6 +53,9 @@
     <ClInclude Include="..\src\Parameters\FRPluginParameterTranslations.h">
       <Filter>Parameters</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\locale\fr_ru.ts">
@@ -62,6 +65,9 @@
       <Filter>Translation Files</Filter>
     </None>
     <None Include="..\src\locale\fr_kk.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+    <None Include="..\src\locale\fr_de.ts">
       <Filter>Translation Files</Filter>
     </None>
   </ItemGroup>

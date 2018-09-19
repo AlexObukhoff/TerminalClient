@@ -124,19 +124,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Codec\CodecBase.cpp" />
+    <ClCompile Include="..\src\ConfigManager\DeviceConfigManager.cpp" />
     <ClCompile Include="..\src\Meta\MetaDevice.cpp" />
     <ClCompile Include="..\src\OPOS\OPOSPollingDeviceBase.cpp" />
     <ClCompile Include="..\src\Polling\PollingDeviceBase.cpp" />
     <ClCompile Include="..\src\MutexLocker.cpp" />
     <ClCompile Include="..\src\Polling\PollingExpector.cpp" />
     <ClCompile Include="..\src\Base\DeviceBase.cpp" />
-    <ClCompile Include="..\..\Protocols\Common\ProtocolUtils.cpp" />
     <ClCompile Include="..\src\PortPolling\PortPollingDeviceBase.cpp" />
     <ClCompile Include="..\src\Port\PortDeviceBase.cpp" />
     <ClCompile Include="..\src\Port\Serial\SerialDeviceBase.cpp" />
     <ClCompile Include="..\src\Port\TCP\TCPDeviceBase.cpp" />
     <ClCompile Include="..\src\Port\USB\USBDeviceBase.cpp" />
     <ClCompile Include="..\src\SafePerformer\SafePerformer.cpp" />
+    <ClCompile Include="..\src\Utils\DeviceUtils.cpp" />
+    <ClCompile Include="..\src\Utils\ProtocolUtils.cpp" />
     <ClCompile Include="..\src\Virtual\VirtualDeviceBase.cpp" />
     <ClCompile Include="..\src\WorkingThreadProxy.cpp" />
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PollingExpector.cpp">
@@ -290,11 +292,14 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\BaseStatusTypes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceCodeSpecification.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceDataConstants.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceLogicManager.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\FunctionTypes.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceLogManager.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ProtocolBase.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ProtoDevices.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\CommandResultData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\StatusCache.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\WaitingData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Plugins\CommonParameters.h" />
     <CustomBuild Include="..\src\WorkingThreadProxy.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -355,6 +360,7 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\USBDeviceModelData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Plugins\DevicePluginBase.h" />
     <ClInclude Include="..\src\Codec\CodecBase.h" />
+    <ClInclude Include="..\src\ConfigManager\DeviceConfigManager.h" />
     <ClInclude Include="..\src\OPOS\OPOSPollingDeviceBase.h" />
     <ClInclude Include="..\src\PortPolling\PortPollingDeviceBase.h" />
     <ClInclude Include="..\src\Port\PortDeviceBase.h" />
@@ -374,6 +380,8 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQCOMPORTWIN_LIB -DCYBERPLAT_DRIVER "-I$(TC_DIR)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\." "-I.\src" "-I$(QTDIR)\include"</Command>
     </CustomBuild>
+    <ClInclude Include="..\src\Utils\DeviceUtils.h" />
+    <ClInclude Include="..\src\Utils\ProtocolUtils.h" />
     <ClInclude Include="..\src\Virtual\VirtualDeviceBase.h" />
     <CustomBuild Include="..\..\..\..\includes\Hardware\CashAcceptors\ProtoCashAcceptor.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -498,7 +506,6 @@
     </CustomBuild>
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\HardwareConstants.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Protocols\Common\ProtocolNames.h" />
-    <ClInclude Include="..\..\Protocols\Common\ProtocolUtils.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\Specifications.h" />
   </ItemGroup>
   <ItemGroup>
@@ -511,7 +518,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

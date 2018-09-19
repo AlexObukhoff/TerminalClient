@@ -16,8 +16,8 @@ Widgets.SceneBase2 {
 	rightButton.visible: global.needPhone ? phoneEditor.acceptable : true
 	rightButtonText: Utils.locale.tr(QT_TR_NOOP("result_scene#forward"))
 	rightButtonIcon: 17
-	rightButtonBackground: rightButton.pressed ? ((global.needPhone || Core.graphics.ui["show_platru"] !== "true") ? "image://ui/button.primary.pressed" : "image://ui/button.paybook.pressed") :
-																							 ((global.needPhone || Core.graphics.ui["show_platru"] !== "true") ? "image://ui/button.primary.normal" : "image://ui/button.paybook.normal")
+	rightButtonBackground: rightButton.pressed ? ((global.needPhone || Core.graphics.ui["show_platru"] !== "true") ? Utils.ui.image("button.primary.pressed") : Utils.ui.image("button.paybook.pressed")) :
+																							 ((global.needPhone || Core.graphics.ui["show_platru"] !== "true") ? Utils.ui.image("button.primary.normal") : Utils.ui.image("button.paybook.normal"))
 
 	rightButtonTextColor: Utils.ui.color("color.button.primary")
 
@@ -64,12 +64,12 @@ Widgets.SceneBase2 {
 			BorderImage {
 				anchors { right: parent.right }
 				border { left: 104; top: 100; right: 18; bottom: 18 }
-				source: "image://ui/comment.left"
+				source: Utils.ui.image("comment.left")
 				width: 412
 
 				Image {
 					anchors.centerIn: parent
-					source: global.cyberChangeType ? "image://ui/cyberchange.logo" + global.cyberChangeType : ""
+					source: global.cyberChangeType ? Utils.ui.image("cyberchange.logo" + global.cyberChangeType) : ""
 				}
 			}
 		}
@@ -78,7 +78,10 @@ Widgets.SceneBase2 {
 			// Результат печати чека
 			ResultSceneItem {
 				icon: global.isReceiptPrinted ? 25 : 27
-				text: Utils.locale.tr(global.isReceiptPrinted ? QT_TR_NOOP("result_scene#receipt_printed") : QT_TR_NOOP("result_scene#failed_to_print_receipt"))
+				text: {
+					return Utils.locale.tr(global.isReceiptPrinted ? QT_TR_NOOP("result_scene#receipt_printed") : QT_TR_NOOP("result_scene#failed_to_print_receipt"))
+						+ (Core.printer.checkReceiptMail() ? ("<br/>" + Utils.locale.tr(QT_TR_NOOP("result_scene#send_email"))) : "")
+				}
 				width: 814
 			}
 
@@ -88,8 +91,8 @@ Widgets.SceneBase2 {
 				visible: Core.printer.checkReceiptMail()
 				width: 412
 				text: Utils.locale.tr(QT_TR_NOOP("result_scene#send_reseipt_via_email"))
-				texture: "image://ui/button.secondary.normal"
-				texturePressed: "image://ui/button.secondary.pressed"
+				texture: Utils.ui.image("button.secondary.normal")
+				texturePressed: Utils.ui.image("button.secondary.pressed")
 
 				onClicked: Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.SendEmail);
 			}
@@ -114,8 +117,8 @@ Widgets.SceneBase2 {
 
 				visible: (Core.graphics.ui["show_get_change"] === "true" || Core.graphics.ui["show_get_change"] === "1") && !dispenseButton.visible
 				width: parent.width
-				texture: "image://ui/button.secondary.normal"
-				texturePressed: "image://ui/button.secondary.pressed"
+				texture: Utils.ui.image("button.secondary.normal")
+				texturePressed: Utils.ui.image("button.secondary.pressed")
 
 				onClicked: resetChange()
 			}
@@ -124,8 +127,8 @@ Widgets.SceneBase2 {
 			Widgets.Button {
 				width: parent.width
 				text: Utils.locale.tr(QT_TR_NOOP("result_scene#pay_any_operator"))
-				texture: "image://ui/button.secondary.normal"
-				texturePressed: "image://ui/button.secondary.pressed"
+				texture: Utils.ui.image("button.secondary.normal")
+				texturePressed: Utils.ui.image("button.secondary.pressed")
 
 				onClicked: Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Forward);
 			}
@@ -135,8 +138,8 @@ Widgets.SceneBase2 {
 				visible: Core.graphics.ui["show_platru"] === "true" && Core.graphics.ui["use_platru_changeback"] === "true"
 				width: parent.width
 				text: Utils.locale.tr(QT_TR_NOOP("result_scene#topup_platru"))
-				texture: "image://ui/button.secondary.normal"
-				texturePressed: "image://ui/button.secondary.pressed"
+				texture: Utils.ui.image("button.secondary.normal")
+				texturePressed: Utils.ui.image("button.secondary.pressed")
 
 				onClicked: {
 					onClicked: Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.TopupPlatru);
@@ -151,9 +154,9 @@ Widgets.SceneBase2 {
 				width: parent.width
 				icon: 24
 				text: Utils.locale.tr(QT_TR_NOOP("result_scene#cash"))
-				texture: "image://ui/button.secondary.normal"
-				texturePressed: "image://ui/button.secondary.pressed"
-				textureHighLighted: "image://ui/button.secondary.highlighted"
+				texture: Utils.ui.image("button.secondary.normal")
+				texturePressed: Utils.ui.image("button.secondary.pressed")
+				textureHighLighted: Utils.ui.image("button.secondary.highlighted")
 
 				onClicked: dispense();
 			}
@@ -283,7 +286,7 @@ Widgets.SceneBase2 {
 
 	// Обработчики вызовов графического движка
 	function resetHandler(aParameters) {
-		global.provider = Core.payment.getProvider();
+		global.provider = Core.payment.getMNPProvider();
 		global.isReceiptPrinted = aParameters.hasOwnProperty("receipt_printed") && aParameters.receipt_printed;
 		global.change = Core.payment.getChangeAmount();
 		global.autoChangeback = aParameters.hasOwnProperty("auto_changeback") ? aParameters.auto_changeback : false
@@ -298,7 +301,7 @@ Widgets.SceneBase2 {
 		}
 
 		global.showChangebackInfo = (Core.payment.getParameter("PROVIDER") == Scenario.CyberService.ChangebackProvider) &&
-				(Core.graphics.ui["use_auto_changeback"] == "true")
+				GUI.toBool(GUI.ui("use_auto_changeback"))
 
 		resetPhoneEditor();
 

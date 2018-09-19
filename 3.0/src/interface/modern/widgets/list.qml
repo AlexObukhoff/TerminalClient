@@ -72,7 +72,7 @@ Item {
 				width: parent.width
 				height: rootItem.__doubleHeightMode ? sourceSize.width * 2 : sourceSize.width
 				border { left: 18; top: 100; right: 100; bottom: 18 }
-				source: model.checked ? "image://ui/enum.check" : "image://ui/enum.normal"
+				source: model.checked ? Utils.ui.image("enum.check") : Utils.ui.image("enum.normal")
 				opacity: rootItem.readonly && !model.checked  ? 0.5 : 1
 
 				Text {

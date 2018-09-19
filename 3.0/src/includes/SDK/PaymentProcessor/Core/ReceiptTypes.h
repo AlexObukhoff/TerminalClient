@@ -18,6 +18,7 @@ namespace CReceiptType
 	const char Test[] = "test";
 	const char DispenserEncashment[] = "dispense_encachment";
 	const char DispenserBalance[] = "dispense_balance";
+	const char Disabled[] = "disabled";
 }
 
 //---------------------------------------------------------------------------

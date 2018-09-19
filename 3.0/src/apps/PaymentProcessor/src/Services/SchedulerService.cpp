@@ -179,9 +179,13 @@ void SchedulerService::setupAutoUpdate()
 
 //------------------------------------------------------------------------------
 SchedulerService::Item::Item() :
-	mFailExecuteCounter(0),
+	mPeriod(0),
 	mTriggeredOnStart(false),
-	mOnlyOnce(false)
+	mTimeThreshold(0),
+	mRepeatCountIfFail(0),
+	mRetryTimeout(0),
+	mOnlyOnce(false),
+	mFailExecuteCounter(0)
 {
 }
 
@@ -223,7 +227,7 @@ SchedulerService::Item::Item(const QString & aName, const QSettings & aSettings,
 		}
 		else
 		{
-			mTime = mTime = QTime::currentTime().addSecs(60 * 60);
+			mTime = QTime::currentTime().addSecs(60 * 60);
 		}
 	}
 	else

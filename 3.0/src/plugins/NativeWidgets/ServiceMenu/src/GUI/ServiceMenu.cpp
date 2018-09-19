@@ -107,8 +107,6 @@ ServiceMenu::~ServiceMenu()
 	if (mMainWidget)
 	{
 		saveConfiguration();
-		mMainServiceWindow->shutdown();
-		mMainWidget->deleteLater();
 	}
 }
 

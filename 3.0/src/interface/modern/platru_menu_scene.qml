@@ -12,8 +12,8 @@ Widgets.SceneBase2 {
 	id: rootItem
 
 	sceneButtonIcon: 26
-	sceneButtonTexture: "image://ui/button.paybook.secondary.normal"
-	sceneButtonTexturePressed: "image://ui/button.paybook.secondary.pressed"
+	sceneButtonTexture: Utils.ui.image("button.paybook.secondary.normal")
+	sceneButtonTexturePressed: Utils.ui.image("button.paybook.secondary.pressed")
 
 	leftButtonIcon: 24
 	leftButtonText: Utils.locale.tr(QT_TR_NOOP("platru_menu_scene#pay"))
@@ -29,7 +29,7 @@ Widgets.SceneBase2 {
 		anchors { left: sceneButton.right; verticalCenter: sceneButton.verticalCenter; right: setupButton.left }
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
-		source: "image://ui/panel.operator"
+		source: Utils.ui.image("panel.operator")
 
 		Row {
 			anchors { left: parent.left; leftMargin: 10 }
@@ -40,7 +40,7 @@ Widgets.SceneBase2 {
 
 				anchors.verticalCenter: parent.verticalCenter
 				width: 100
-				source: "image://ui/paybook.logo"
+				source: Utils.ui.image("paybook.logo")
 			}
 
 			Item {
@@ -84,7 +84,7 @@ Widgets.SceneBase2 {
 		width: 407
 		icon: 9
 		text: Utils.locale.tr(QT_TR_NOOP("platru_menu_scene#setup"))
-		texture: global.editMode ? "image://ui/button.secondary.pressed" : "image://ui/button.secondary.normal"
+		texture: global.editMode ? Utils.ui.image("button.secondary.pressed") : Utils.ui.image("button.secondary.normal")
 		onClicked: global.editMode = !global.editMode
 	}
 
@@ -103,7 +103,7 @@ Widgets.SceneBase2 {
 		model: entryModel
 
 		delegate: Image {
-			source: !operatorId ? "image://ui/button.paybook.add" : "image://ui/button.paybook.bookmark"
+			source: !operatorId ? Utils.ui.image("button.paybook.add") : Utils.ui.image("button.paybook.bookmark")
 
 			Text {
 				anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 25 }
@@ -169,8 +169,8 @@ Widgets.SceneBase2 {
 					// Редактировать
 					Widgets.Button {
 						icon: 7
-						texture:  "image://ui/button.paybook.common"
-						texturePressed: "image://ui/button.paybook.common.pressed"
+						texture:  Utils.ui.image("button.paybook.common")
+						texturePressed: Utils.ui.image("button.paybook.common.pressed")
 
 						anchors.verticalCenter: parent.verticalCenter
 						width: 102
@@ -193,8 +193,8 @@ Widgets.SceneBase2 {
 					// Удалить
 					Widgets.Button {
 						icon: 23
-						texture: "image://ui/button.paybook.alert"
-						texturePressed: "image://ui/button.paybook.alert.pressed"
+						texture: Utils.ui.image("button.paybook.alert")
+						texturePressed: Utils.ui.image("button.paybook.alert.pressed")
 
 						anchors.verticalCenter: parent.verticalCenter
 						width: 102
@@ -269,7 +269,7 @@ Widgets.SceneBase2 {
 		anchors { right: view.left; rightMargin: 18; verticalCenter: view.verticalCenter }
 		visible: entryModel.count > 8 && !view.atXBeginning
 		background: Image {
-			source: back.pressed ? "image://ui/scroll.left.pressed" : "image://ui/scroll.left.normal"
+			source: back.pressed ? Utils.ui.image("scroll.left.pressed") : Utils.ui.image("scroll.left.normal")
 		}
 
 		onClicked: view.scrollBack()
@@ -282,7 +282,7 @@ Widgets.SceneBase2 {
 		anchors { left: view.right; leftMargin: 18; verticalCenter: view.verticalCenter }
 		visible: entryModel.count > 8 && !view.atXEnd
 		background: Image {
-			source: fwd.pressed ? "image://ui/scroll.right.pressed" : "image://ui/scroll.right.normal"
+			source: fwd.pressed ? Utils.ui.image("scroll.right.pressed") : Utils.ui.image("scroll.right.normal")
 		}
 		onClicked: view.scrollForward()
 	}

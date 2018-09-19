@@ -53,7 +53,16 @@ public:
 	virtual bool isReady() const = 0;
 
 protected:
-	virtual ~IPlugin() {}
+	friend class PluginDeleter;
+	virtual ~IPlugin() {}	
+};
+
+//---------------------------------------------------------------------------
+/// Удалятор для смарт-поинтера
+class PluginDeleter
+{
+public:
+	void operator()(IPlugin * aPlugin) { delete aPlugin; }
 };
 
 //------------------------------------------------------------------------------

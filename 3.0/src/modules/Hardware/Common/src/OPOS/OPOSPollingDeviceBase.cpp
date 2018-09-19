@@ -32,7 +32,8 @@ OPOSPollingDeviceBase<T, T2>::OPOSPollingDeviceBase():
 	mLastStatus(OPOS::OPOS_SUCCESS),
 	mClaimTimeout(1000),
 	mTriedToConnect(false),
-	mOpened(false)
+	mOpened(false),
+	mThreadProxy(&mThread)
 {
 	mThreadProxy.moveToThread(&mThread);
 
@@ -379,8 +380,11 @@ bool OPOSPollingDeviceBase<T, T2>::getStatus(TStatusCodes & aStatusCodes)
 		return true;
 	}
 
-	INT_CALL_OPOS(ReleaseDevice);
-	close();
+	if (mOpened)
+	{
+		INT_CALL_OPOS(ReleaseDevice);
+		close();
+	}
 
 	return false;
 }

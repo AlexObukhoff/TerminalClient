@@ -100,19 +100,21 @@ bool NativeBackend::isReady() const
 }
 
 //------------------------------------------------------------------------------
-SDK::GUI::IGraphicsItem * NativeBackend::getItem(const SDK::GUI::GraphicsItemInfo & aInfo)
+std::weak_ptr<SDK::GUI::IGraphicsItem> NativeBackend::getItem(const SDK::GUI::GraphicsItemInfo & aInfo)
 {
 	// TODO Context
 	TGraphicItemsCache::iterator it = mCachedItems.find(aInfo.name);
 
 	if (it == mCachedItems.end())
 	{
-		SDK::Plugin::IPlugin * plugin = mFactory->getPluginLoader()->createPlugin(aInfo.directory + aInfo.name);
+		auto plugin = mFactory->getPluginLoader()->createPluginPtr(aInfo.directory + aInfo.name);
 
-		if (plugin) 
+		if (!plugin.expired()) 
 		{
-			mLoadedPlugins.append(plugin);
-			it = mCachedItems.insert(aInfo.name, dynamic_cast<SDK::GUI::IGraphicsItem *>(plugin));
+			mLoadedPlugins.push_back(plugin);
+
+			auto item = std::dynamic_pointer_cast<SDK::GUI::IGraphicsItem, SDK::Plugin::IPlugin>(plugin.lock());
+			it = mCachedItems.insert(aInfo.name, item);
 		}
 		else
 		{
@@ -120,7 +122,21 @@ SDK::GUI::IGraphicsItem * NativeBackend::getItem(const SDK::GUI::GraphicsItemInf
 		}
 	}
 
-	return it == mCachedItems.end() ? 0 : it.value();
+	return it == mCachedItems.end() ? std::weak_ptr<SDK::GUI::IGraphicsItem>() : it.value();
+}
+
+//------------------------------------------------------------------------------
+bool NativeBackend::removeItem(const SDK::GUI::GraphicsItemInfo & aInfo)
+{
+	foreach(auto item, mCachedItems.values(aInfo.name))
+	{
+		if (item->getContext() == aInfo.context)
+		{
+			return mCachedItems.remove(aInfo.name, item) != 0;
+		}
+	}
+
+	return false;
 }
 
 //------------------------------------------------------------------------------
@@ -162,9 +178,15 @@ bool NativeBackend::initialize(SDK::GUI::IGraphicsEngine * aEngine)
 //------------------------------------------------------------------------------
 void NativeBackend::shutdown()
 {
-	foreach (SDK::Plugin::IPlugin * plugin, mLoadedPlugins)
+	mCachedItems.clear();
+
+	while (!mLoadedPlugins.empty())
 	{
-		mFactory->getPluginLoader()->destroyPlugin(plugin);
+		auto ptr = mLoadedPlugins.front();
+
+		mFactory->getPluginLoader()->destroyPluginPtr(ptr);
+
+		mLoadedPlugins.pop_front();
 	}
 }
 

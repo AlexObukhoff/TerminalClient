@@ -107,20 +107,36 @@ protected:
 	TResult processCommand(char aCommand, CPrimFR::TData * aAnswer = nullptr);
 	TResult processCommand(char aCommand, const CPrimFR::TData & aCommandData, CPrimFR::TData * aAnswer = nullptr);
 
+	template <class T>
+	TResult processCommand(char aCommand, int aIndex, const QString & aLog, T & aResult);
+	template <class T>
+	TResult processCommand(char aCommand, const CPrimFR::TData & aCommandData, int aIndex, const QString & aLog, T & aResult);
+
+	/// Распарсить данные ответа.
+	template <class T>
+	bool parseAnswerData(const CPrimFR::TData & aAnswer, int aIndex, const QString & aLog, T & aResult);
+
+	/// Загрузить данные устройства.
+	template <class T>
+	void loadDeviceData(const CPrimFR::TData & aAnswer, const QString & aName, const QString & aLog, int aIndex, const QString & aExtensibleName = "");
+
 	/// Проверить ответ.
 	TResult checkAnswer(TResult aResult, const QByteArray & aAnswer, CPrimFR::TData & aAnswerData);
 
 	/// Добавить обязательное G-поле ПФД в данные команды.
-	CPrimFR::TData addGFieldToBuffer(int aX, int aY);
+	CPrimFR::TData addGFieldToBuffer(int aX, int aY, int aFont = CPrimFR::FiscalFont::Default);
 
 	/// Сформировать необязательное G-поле ПФД
-	CPrimFR::TData addArbitraryFieldToBuffer(int aX, int aY, const QString & aData);
+	CPrimFR::TData addArbitraryFieldToBuffer(int aX, int aY, const QString & aData, int aFont = CPrimFR::FiscalFont::Default);
 
 	/// Обработка ответа предыдущей команды. Автоисправление некоторых ошибок.
 	virtual bool processAnswer(char aError);
 
 	/// Проверить параметры ФР.
 	bool checkParameters();
+
+	/// Получить параметр 3 ФР.
+	virtual ushort getParameter3();
 
 	/// Проверить настройки ФР.
 	bool checkControlSettings();

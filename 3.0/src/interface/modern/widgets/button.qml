@@ -110,7 +110,7 @@ BorderImage {
 		id: buttonImageDisabled
 
 		anchors.fill: parent
-		source: "image://ui/button.disabled"
+		source: Utils.ui.image("button.disabled")
 		border { left: 40; top: 40; right: 40; bottom: 40 }
 		horizontalTileMode: BorderImage.Repeat
 		verticalTileMode: BorderImage.Stretch

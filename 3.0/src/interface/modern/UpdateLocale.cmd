@@ -29,6 +29,7 @@ for %%F in (
 	user_assistant_scene.qml
 	provider_selector_popup.qml
 	topup_platru_scene.qml
+	edit_amount_scene.qml
 	"widgets\scene_base.qml"
 	"widgets\scene_base2.qml"
 	"widgets\status_bar.qml"

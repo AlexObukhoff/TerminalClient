@@ -23,6 +23,7 @@ ProtoShtrihFR<T>::ProtoShtrihFR()
 {
 	// кодек
 	mCodec = CodecByName[CHardware::Codepages::Win1251];
+	mFFEngine.setCodec(mCodec);
 
 	// параметры семейства ФР
 	mNextReceiptProcessing = false;
@@ -32,11 +33,12 @@ ProtoShtrihFR<T>::ProtoShtrihFR()
 	mModel = CShtrihFR::Models::ID::NoModel;
 	mNonNullableAmount = 0;
 	mFontNumber = CShtrihFR::Fonts::Default;
+	mTransportTimeout = CShtrihFR::Timeouts::Transport;
 
 	// налоги
-	mTaxData.add(18, 1, "НДС 18%");
-	mTaxData.add(10, 2, "НДС 10%");
-	mTaxData.add( 0, 0, "БЕЗ НАЛОГА");
+	mTaxData.add(18, 1);
+	mTaxData.add(10, 2);
+	mTaxData.add( 0, 0);
 
 	// данные команд
 	mCommandData.add(CShtrihFR::Commands::GetModelInfo, CShtrihFR::Timeouts::Default, false);
@@ -117,7 +119,7 @@ bool ProtoShtrihFR<T>::updateParameters()
 	setFRParameters();
 	getSectionNames();
 
-	return checkTaxes() && getPrintingSettings();
+	return (!isFiscal() || checkTaxes()) && getPrintingSettings();
 }
 
 //---------------------------------------------------------------------------
@@ -225,9 +227,9 @@ bool ProtoShtrihFR<T>::performFiscal(const QStringList & aReceipt, const SPaymen
 
 	bool result = true;
 
-	foreach (auto amountData, aPaymentData.amountDataList)
+	foreach (auto unitData, aPaymentData.unitDataList)
 	{
-		result = result && sale(amountData, aPaymentData.back);
+		result = result && sale(unitData, aPaymentData.back);
 	}
 
 	result = result && setOFDParameters() && closeDocument(getTotalAmount(aPaymentData), aPaymentData.payType);
@@ -310,6 +312,11 @@ void ProtoShtrihFR<T>::appendStatusCodes(ushort aFlags, TStatusCodes & aStatusCo
 	{
 		aStatusCodes.insert(DeviceStatusCode::Error::CoverIsOpened);
 	}
+
+	if ((mSubmode == CShtrihFR::InnerSubmodes::PaperEndPassive) || (mSubmode == CShtrihFR::InnerSubmodes::PaperEndActive))
+	{
+		aStatusCodes.insert(Error::PaperEnd);
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -328,7 +335,7 @@ bool ProtoShtrihFR<T>::isPaperWeightSensor() const
 	               (mModel == CShtrihFR::Models::ID::PayVKP80KFA))));
 
 	bool weightSensorsEnabled = !containsConfigParameter(CHardware::Printer::Settings::PaperWeightSensors) ||
-		(getConfigParameter(CHardware::Printer::Settings::PaperWeightSensors).toString() == CHardware::Values::Use);
+		(getConfigParameter(CHardware::Printer::Settings::PaperWeightSensors).toString() == CHardwareSDK::Values::Use);
 
 	return result && weightSensorsEnabled;
 }
@@ -387,6 +394,7 @@ TResult ProtoShtrihFR<T>::execCommand(const QByteArray & aCommand, const QByteAr
 {
 	mProtocol.setPort(mIOPort);
 	mProtocol.setLog(mLog);
+	mProtocol.setTransportTimeout(mTransportTimeout);
 
 	QByteArray commandData = aCommand;
 
@@ -620,25 +628,25 @@ void ProtoShtrihFR<T>::checkSalesName(QString & aName)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ProtoShtrihFR<T>::sale(const SAmountData & aAmountData, bool aBack)
+bool ProtoShtrihFR<T>::sale(const SUnitData & aUnitData, bool aBack)
 {
-	int taxIndex = mTaxData[aAmountData.VAT].group;
-	QString name = aAmountData.name;
-	char section = (aAmountData.section == -1) ? CShtrihFR::SectionNumber : char(aAmountData.section);
+	int taxIndex = mTaxData[aUnitData.VAT].group;
+	QString name = aUnitData.name;
+	char section = (aUnitData.section == -1) ? CShtrihFR::SectionNumber : char(aUnitData.section);
 	checkSalesName(name);
 
 	QByteArray commandData;
-	commandData.append(getHexReverted(1, 5, 3));                  // количество
-	commandData.append(getHexReverted(aAmountData.sum, 5, 2));    // сумма
-	commandData.append(section);                                  // отдел
-	commandData.append(getHexReverted(taxIndex, 4));              // налоги
-	commandData.append(mCodec->fromUnicode(name));                // текст продажи
+	commandData.append(getHexReverted(1, 5, 3));                // количество
+	commandData.append(getHexReverted(aUnitData.sum, 5, 2));    // сумма
+	commandData.append(section);                                // отдел
+	commandData.append(getHexReverted(taxIndex, 4));            // налоги
+	commandData.append(mCodec->fromUnicode(name));              // текст продажи
 
 	char command = aBack ? CShtrihFR::Commands::SaleBack : CShtrihFR::Commands::Sale;
 
 	if (!processCommand(command, commandData))
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to sale for %2 (%3, VAT = %4), feed, cut and exit").arg(mDeviceName).arg(aAmountData.sum, 0, 'f', 2).arg(name).arg(aAmountData.VAT));
+		toLog(LogLevel::Error, QString("%1: Failed to sale for %2 (%3, VAT = %4), feed, cut and exit").arg(mDeviceName).arg(aUnitData.sum, 0, 'f', 2).arg(name).arg(aUnitData.VAT));
 		return false;
 	}
 
@@ -665,9 +673,10 @@ void ProtoShtrihFR<T>::parseDeviceData(const QByteArray & aData)
 
 	mOldFirmware = (mModelData.build && (FRInfo.build != mModelData.build)) || ((mModelData.date < QDate::currentDate()) && (FRInfo.date < mModelData.date));
 
-	setDeviceParameter(CDeviceData::Version, FRInfo.version, CDeviceData::Firmware);
+	setDeviceParameter(CDeviceData::Version, FRInfo.version, CDeviceData::Firmware, true);
 	setDeviceParameter(CDeviceData::Build, FRInfo.build, CDeviceData::Firmware);
 	setDeviceParameter(CDeviceData::Date, FRInfo.date.toString(CFR::DateLogFormat), CDeviceData::Firmware);
+
 	setDeviceParameter(CDeviceData::FR::FreeReregistrations, uchar(aData[41]));
 }
 
@@ -709,8 +718,13 @@ void ProtoShtrihFR<T>::setFRParameters()
 		return;
 	}
 
-	//0. автообнуление денежной наличности при закрытии смены - нет
-	setFRParameter(mParameters.autoNulling, false);
+	QString nullingSumInCash = getConfigParameter(CHardwareSDK::FR::NullingSumInCash).toString();
+
+	if (nullingSumInCash != CHardwareSDK::Values::Auto)
+	{
+		//0. автообнуление денежной наличности при закрытии смены
+		setFRParameter(mParameters.autoNulling, nullingSumInCash == CHardwareSDK::Values::Use);
+	}
 
 	//1. Печать рекламного текста (шапка чека, клише) - да
 	//   на самом деле это доступность всей таблицы 4 - шапка чека + реклама в конце
@@ -753,7 +767,7 @@ void ProtoShtrihFR<T>::setFRParameters()
 	setFRParameter(mParameters.weightSensorEnable, isPaperWeightSensor());
 
 	//10. Длинный Z-отчет с гашением - да
-	setFRParameter(mParameters.ZReportType, true);
+	setFRParameter(mParameters.ZReportType, mOperatorPresence);
 
 	//11. Начисление налогов - на каждую операцию в чеке/налог вычисляется в ФР.
 	setFRParameter(mParameters.taxesCalculation, CShtrihFR::TaxForEachOperationInFR);
@@ -817,6 +831,19 @@ bool ProtoShtrihFR<T>::getFRParameter(const CShtrihFR::FRParameters::SData & aDa
 		return false;
 	}
 
+	if (!CShtrihFR::FRParameters::Fields.data().contains(mModel))
+	{
+		toLog(LogLevel::Normal, QString("ShtrihFR: Cannot get field for the device with model Id %1 as no data of system tables").arg(mModel));
+		return true;
+	}
+
+	if (aData.field == CShtrihFR::FRParameters::NA)
+	{
+		toLog(LogLevel::Normal, QString("ShtrihFR: The field %1 for table %2 for the device with model Id %3 is not available")
+			.arg(aData.description, mParameters.getMaxNADescriptionSize()).arg(aData.table).arg(mModel));
+		return true;
+	}
+
 	QByteArray commandData;
 	commandData.append(char(aData.table));
 	commandData.append(getHexReverted(aSeries, 2));
@@ -875,15 +902,14 @@ bool ProtoShtrihFR<T>::waitForChangeXReportMode()
 				return false;
 			}
 
-			if ((mSubmode == CShtrihFR::InnerSubmodes::ActivePaperOff) ||
-			    (mSubmode == CShtrihFR::InnerSubmodes::PassivePaperOff))
+			if ((mSubmode == CShtrihFR::InnerSubmodes::PaperEndPassive) ||
+			    (mSubmode == CShtrihFR::InnerSubmodes::PaperEndActive))
 			{
 				// 3.3. подрежим - закончилась бумага
 				return false;
 			}
 			//если режим или подрежим - печать или печать отчета или X-отчета, то
-			else if ((mMode == CShtrihFR::InnerModes::DataEjecting) ||
-			         (mMode == CShtrihFR::InnerModes::PrintFullZReport) ||
+			else if ((mMode == CShtrihFR::InnerModes::PrintFullZReport) ||
 			         (mMode == CShtrihFR::InnerModes::PrintEKLZReport) ||
 			         (mSubmode == CShtrihFR::InnerSubmodes::PrintingFullReports) ||
 			         (mSubmode == CShtrihFR::InnerSubmodes::Printing))
@@ -924,8 +950,10 @@ bool ProtoShtrihFR<T>::waitForChangeXReportMode()
 
 //--------------------------------------------------------------------------------
 template<class T>
-QVariantMap ProtoShtrihFR<T>::getSessionOutData(const QByteArray & aAnswer)
+QVariantMap ProtoShtrihFR<T>::getSessionOutData(const QByteArray & aLongStatusData)
 {
+	toLog(LogLevel::Normal, mDeviceName + ": Getting session out data");
+
 	QVariantMap result;
 	result.insert(CFiscalPrinter::Serial, mSerial);
 	result.insert(CFiscalPrinter::RNM, mRNM);
@@ -935,7 +963,7 @@ QVariantMap ProtoShtrihFR<T>::getSessionOutData(const QByteArray & aAnswer)
 	QDateTime systemDateTime = QDateTime::currentDateTime();
 	result.insert(CFiscalPrinter::SystemDateTime, systemDateTime.toString(CFR::DateTimeLogFormat));
 
-	ushort lastClosedSession = 1 + revert(aAnswer.mid(36, 2)).toHex().toUShort(0, 16);
+	ushort lastClosedSession = 1 + revert(aLongStatusData.mid(36, 2)).toHex().toUShort(0, 16);
 	result.insert(CFiscalPrinter::ZReportNumber, lastClosedSession);
 
 	double paymentAmount = 0;
@@ -964,24 +992,35 @@ QVariantMap ProtoShtrihFR<T>::getSessionOutData(const QByteArray & aAnswer)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ProtoShtrihFR<T>::execZReport(bool aAuto)
+bool ProtoShtrihFR<T>::prepareZReport(bool aAuto, QVariantMap & aOutData)
 {
-	toLog(LogLevel::Normal, QString("ShtrihFR: Begin processing %1Z-report").arg(aAuto ? "auto-" : ""));
+	QByteArray data;
 
-	bool needCloseSession = mMode == CShtrihFR::InnerModes::NeedCloseSession;
-
-	// проверяем, нормальный ли режим, делаем запрос статуса
-	QByteArray answer;
-
-	if (!getLongStatus(answer))
+	if (!getLongStatus(data))
 	{
-		toLog(LogLevel::Error, QString("ShtrihFR: Failed to get status therefore failed to process %1Z-report.").arg(aAuto ? "auto-" : ""));
-		mNeedCloseSession = mNeedCloseSession || needCloseSession;
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to get status therefore failed to process %1Z-report.").arg(aAuto ? "auto-" : ""));
+		mNeedCloseSession = mNeedCloseSession || (mMode == CShtrihFR::InnerModes::NeedCloseSession);
 
 		return false;
 	}
 
-	QVariantMap outData = getSessionOutData(answer);
+	aOutData = getSessionOutData(data);
+
+	toLog(LogLevel::Normal, mDeviceName + QString(": Begin processing %1Z-report").arg(aAuto ? "auto-" : ""));
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+bool ProtoShtrihFR<T>::execZReport(bool aAuto)
+{
+	QVariantMap outData;
+
+	if (!prepareZReport(aAuto, outData))
+	{
+		return false;
+	}
 
 	bool success = processCommand(CShtrihFR::Commands::ZReport);
 
@@ -1006,21 +1045,21 @@ bool ProtoShtrihFR<T>::execZReport(bool aAuto)
 template<class T>
 TResult ProtoShtrihFR<T>::getLongStatus()
 {
-	QByteArray answer;
+	QByteArray data;
 
-	return getLongStatus(answer);
+	return getLongStatus(data);
 }
 
 //--------------------------------------------------------------------------------
 template<class T>
-TResult ProtoShtrihFR<T>::getLongStatus(QByteArray & aAnswer)
+TResult ProtoShtrihFR<T>::getLongStatus(QByteArray & aData)
 {
-	TResult result = processCommand(CShtrihFR::Commands::GetLongStatus, &aAnswer);
+	TResult result = processCommand(CShtrihFR::Commands::GetLongStatus, &aData);
 
-	if (CORRECT(result) && result && (aAnswer.size() > 16))
+	if (CORRECT(result) && result && (aData.size() > 16))
 	{
-		mMode    = aAnswer[15] & CShtrihFR::InnerModes::Mask;
-		mSubmode = aAnswer[16];
+		mMode    = aData[15] & CShtrihFR::InnerModes::Mask;
+		mSubmode = aData[16];
 	}
 
 	return result;
@@ -1101,9 +1140,9 @@ bool ProtoShtrihFR<T>::processAnswer(const QByteArray & aCommand)
 					}
 					case CShtrihFR::InnerModes::SessionOpened :
 					{
-						bool rightCommand = (aCommand[0] == CShtrihFR::Commands::Encashment) || (aCommand[0] == CShtrihFR::Commands::SetFRParameter);
+						bool trueCommand = (aCommand[0] == CShtrihFR::Commands::Encashment) || (aCommand[0] == CShtrihFR::Commands::SetFRParameter);
 
-						return rightCommand && execZReport(true);
+						return trueCommand && execZReport(true);
 					}
 					case CShtrihFR::InnerModes::DocumentOpened :
 					{
@@ -1164,8 +1203,8 @@ bool ProtoShtrihFR<T>::waitForPrintingEnd(bool aCanBeOff)
 			}
 		}
 
-		if ((mSubmode == CShtrihFR::InnerSubmodes::ActivePaperOff) ||
-			(mSubmode == CShtrihFR::InnerSubmodes::PassivePaperOff))
+		if ((mSubmode == CShtrihFR::InnerSubmodes::PaperEndPassive) ||
+			(mSubmode == CShtrihFR::InnerSubmodes::PaperEndActive))
 		{
 			// закончилась бумага
 			return false;

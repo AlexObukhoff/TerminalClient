@@ -92,6 +92,9 @@ public:
 	/// Остановлен ли интерфейс?
 	virtual bool isDisabled() const;
 
+	/// Удалает все объекты GraphicsItem, очищает сцену
+	virtual void reset();
+
 	/// Ширина и высота экрана в пикселях.
 	virtual QRect getScreenSize(int aIndex) const;
 

@@ -3,11 +3,6 @@
 // STL
 #include <numeric>
 
-// Qt
-#include <Common/QtHeadersBegin.h>
-#include <QtCore/qmath.h>
-#include <Common/QtHeadersEnd.h>
-
 // OPOS
 #include <Common/QtHeadersBegin.h>
 #pragma warning(disable: 4100) // warning C4100: 'identifier' : unreferenced formal parameter
@@ -15,7 +10,9 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
+#include "PaymentProcessor/PrintConstants.h"
 #include "Hardware/Common/OPOSPollingDeviceBase.h"
+#include "Hardware/Common/WorkingThreadProxy.h"
 #include "Hardware/Printers/SerialPrinterBase.h"
 #include "Hardware/FR/ProtoFR.h"
 
@@ -34,7 +31,7 @@ template class FRBase<PortPrinterBase<PrinterBase<TCPDeviceBase<PortPollingDevic
 
 //--------------------------------------------------------------------------------
 template <class T>
-FRBase<T>::FRBase()
+FRBase<T>::FRBase(): mFFEngine(mLog)
 {
 	// описания для кодов статусов принтеров
 	mStatusCodesSpecification = DeviceStatusCode::PSpecifications(new FRStatusCode::CSpecifications());
@@ -59,13 +56,17 @@ FRBase<T>::FRBase()
 	mRegion = ERegion::RF;
 	mIsOnline = false;
 	mNextReceiptProcessing = true;
-	mWrongFiscalizationSettings = false;
+	mFFEngine.setCodec(mCodec);
+
+	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, false);
+	setConfigParameter(CHardwareSDK::FR::WithoutPrinting, CHardwareSDK::Values::Auto);
+	setConfigParameter(CHardware::CanSoftReboot, false);
 
 	mOFDFiscalParameters
-		<< FiscalFields::Cashier
-		<< FiscalFields::CashierINN
-		<< FiscalFields::UserContact
-		<< FiscalFields::TaxSystem;
+		<< CFR::FiscalFields::Cashier
+		<< CFR::FiscalFields::CashierINN
+		<< CFR::FiscalFields::UserContact
+		<< CFR::FiscalFields::TaxSystem;
 
 	mPayTypeData.add(EPayTypes::Cash,   1);
 	mPayTypeData.add(EPayTypes::EMoney, 2);
@@ -78,6 +79,7 @@ void FRBase<T>::setInitialData()
 	mEKLZError         = false;
 	mFMError           = false;
 	mFSError           = false;
+	mFSOfflineEnd      = false;
 	mZBufferFull       = false;
 	mZBufferOverflow   = false;
 	mPrinterCollapse   = false;
@@ -86,15 +88,18 @@ void FRBase<T>::setInitialData()
 	mFiscalCollapse    = false;
 	mOFDDataError      = false;
 	mNeedCloseSession  = false;
+	mNotPrintingError  = false;
 	mWrongFiscalizationSettings = false;
+	mCashierINNError   = false;
+	mTaxError          = false;
 
 	mEKLZ              = true;
 	mWhiteSpaceZBuffer = -1;
 	mLastOpenSession   = QDateTime::currentDateTime();
 	mOFDNotSentCount   = 0;
 	mOFDDTMark         = QDateTime::currentDateTime();
-	mFFDFR             = EFFD::F10Beta;
-	mFFDFS             = EFFD::F10Beta;
+	mFFDFR             = EFFD::Unknown;
+	mFFDFS             = EFFD::Unknown;
 	mCanProcessZBuffer = false;
 
 	mTaxSystems.clear();
@@ -110,6 +115,8 @@ void FRBase<T>::setInitialData()
 template <class T>
 void FRBase<T>::initialize()
 {
+	mFFEngine.setDeviceName(mDeviceName);
+
 	setInitialData();
 
 	T::initialize();
@@ -119,6 +126,16 @@ void FRBase<T>::initialize()
 template <class T>
 void FRBase<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
+	mFFEngine.setDeviceName(mDeviceName);
+
+	for (auto it = aConfiguration.begin(); it != aConfiguration.end(); ++it)
+	{
+		if (mFFData.getKey(it.key()))
+		{
+			mFFEngine.setConfigParameter(it.key(), it.value());
+		}
+	}
+
 	T::setDeviceConfiguration(aConfiguration);
 
 	if (aConfiguration.contains(CHardware::FR::FiscalMode))
@@ -127,122 +144,47 @@ void FRBase<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 		mStatusCodesSpecification.dynamicCast<FRStatusCode::CSpecifications>()->setFiscal(isFiscal);
 	}
 
-	checkDealerTaxSystems(true);
-	checkDealerAgentFlags(true);
+	if (aConfiguration.contains(CHardwareSDK::FR::WithoutPrinting))
+	{
+		QString withoutPrinting = aConfiguration.value(CHardwareSDK::FR::WithoutPrinting).toString();
+
+		if (withoutPrinting != CHardwareSDK::Values::Auto)
+		{
+			emit configurationChanged();
+
+			if (mConnected && (mInitialized == ERequestStatus::Success))
+			{
+				checkNotPrinting();
+			}
+		}
+	}
+
+	if (aConfiguration.contains(CFiscalSDK::CashierINN))
+	{
+		QString cashierINN = getConfigParameter(CFiscalSDK::CashierINN).toString().simplified();
+		setConfigParameter(CFiscalSDK::CashierINN, cashierINN);
+		mFFEngine.setConfigParameter(CFiscalSDK::CashierINN, cashierINN);
+
+		mCashierINNError = !mFFEngine.checkINN(cashierINN, CFR::INN::Person::Natural);
+	}
+
+	if (aConfiguration.contains(CHardwareSDK::FR::DealerTaxSystem)) mFFEngine.setConfigParameter(CHardwareSDK::FR::DealerTaxSystem, getConfigParameter(CHardwareSDK::FR::DealerTaxSystem));
+	if (aConfiguration.contains(CHardwareSDK::FR::DealerAgentFlag)) mFFEngine.setConfigParameter(CHardwareSDK::FR::DealerAgentFlag, getConfigParameter(CHardwareSDK::FR::DealerAgentFlag));
+	if (aConfiguration.contains(CHardwareSDK::OperatorPresence))    mFFEngine.setConfigParameter(CHardwareSDK::OperatorPresence, mOperatorPresence);
+
+	mFFEngine.checkDealerTaxSystem(mInitialized, !isAutoDetecting());
+	mFFEngine.checkDealerAgentFlag(mInitialized, !isAutoDetecting());
 }
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool FRBase<T>::checkDealerTaxSystems(bool aCanLog)
+bool FRBase<T>::isConnected()
 {
-	if (mOperatorPresence)
-	{
-		return true;
-	}
+	bool result = T::isConnected();
 
-	if (!containsConfigParameter(CHardwareSDK::FR::DealerTaxSystem))
-	{
-		if (aCanLog)
-		{
-			toLog(LogLevel::Normal, mDeviceName + ": No dealer taxation system");
-		}
+	mFFEngine.setDeviceName(mDeviceName);
 
-		return false;
-	}
-
-	QVariant taxSystemData = getConfigParameter(CHardwareSDK::FR::DealerTaxSystem);
-
-	if (taxSystemData.toString().isEmpty())
-	{
-		if (aCanLog)
-		{
-			toLog(LogLevel::Warning, mDeviceName + ": Dealer taxation system is empty");
-		}
-
-		return false;
-	}
-
-	char taxSystem = char(taxSystemData.toInt());
-
-	if (!CFR::TaxSystems.data().keys().contains(taxSystem))
-	{
-		if (aCanLog)
-		{
-			toLog(LogLevel::Warning, QString("%1: Wrong dealer taxation system = %2").arg(mDeviceName).arg(int(taxSystem)));
-		}
-
-		return false;
-	}
-
-	if ((mInitialized == ERequestStatus::Success) && !mTaxSystems.isEmpty() && !mTaxSystems.contains(taxSystem))
-	{
-		if (aCanLog)
-		{
-			toLog(LogLevel::Warning, QString("%1: The actual taxation system(s) %2 don`t contain dealer taxation system %3 (%4)")
-				.arg(mDeviceName).arg(toHexLog(CFR::joinData(mTaxSystems))).arg(toHexLog(taxSystem)).arg(CFR::TaxSystems[taxSystem]));
-		}
-
-		return false;
-	}
-
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-template <class T>
-bool FRBase<T>::checkDealerAgentFlags(bool aCanLog)
-{
-	if (mOperatorPresence)
-	{
-		return true;
-	}
-
-	if (!containsConfigParameter(CHardwareSDK::FR::DealerAgentFlag))
-	{
-		if (aCanLog)
-		{
-			toLog(LogLevel::Normal, mDeviceName + ": No dealer agent flag");
-		}
-
-		return false;
-	}
-
-	QVariant agentFlagData = getConfigParameter(CHardwareSDK::FR::DealerAgentFlag);
-
-	if (agentFlagData.toString().isEmpty())
-	{
-		if (aCanLog)
-		{
-			toLog(LogLevel::Warning, mDeviceName + ": Dealer agent flag is empty");
-		}
-
-		return false;
-	}
-
-	char agentFlag = char(agentFlagData.toInt());
-
-	if (!CFR::AgentFlags.data().keys().contains(agentFlag))
-	{
-		if (aCanLog)
-		{
-			toLog(LogLevel::Warning, QString("%1: Wrong dealer agent flag = %2").arg(mDeviceName).arg(int(agentFlag)));
-		}
-
-		return false;
-	}
-
-	if ((mInitialized == ERequestStatus::Success) && !mAgentFlags.isEmpty() && !mAgentFlags.contains(agentFlag))
-	{
-		if (aCanLog)
-		{
-			toLog(LogLevel::Warning, QString("%1: The actual agent flag(s) %2 don`t contain dealer agent flag %3 (%4)")
-				.arg(mDeviceName).arg(toHexLog(CFR::joinData(mAgentFlags))).arg(toHexLog(agentFlag)).arg(CFR::AgentFlags[agentFlag]));
-		}
-
-		return false;
-	}
-
-	return true;
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -253,6 +195,7 @@ void FRBase<T>::finaliseInitialization()
 
 	if (mConnected)
 	{
+		setConfigParameter(CHardwareSDK::SerialNumber, mSerial);
 		setDeviceParameter(CDeviceData::SerialNumber, mSerial);
 		setDeviceParameter(CDeviceData::FR::INN, mINN);
 		setDeviceParameter(CDeviceData::FR::RNM, mRNM);
@@ -266,42 +209,68 @@ void FRBase<T>::finaliseInitialization()
 				taxSystemData.insert(ETaxSystems::Enum(taxSystem), CFR::TaxSystems[taxSystem]);
 			}
 
-			TAgentFlagsData agentFlagsData;
-
-			foreach(char agentFlag, mAgentFlags)
+			if (!mAgentFlags.isEmpty())
 			{
-				agentFlagsData.insert(EAgentFlags::Enum(agentFlag), CFR::AgentFlags[agentFlag]);
+				TAgentFlagsData agentFlagsData;
+
+				foreach(char agentFlag, mAgentFlags)
+				{
+					agentFlagsData.insert(EAgentFlags::Enum(agentFlag), CFR::AgentFlags[agentFlag]);
+				}
+
+				setDeviceParameter( CDeviceData::FR::AgentFlags, QStringList(agentFlagsData.values()).join(", "));
+				setConfigParameter(CHardwareSDK::FR::AgentFlags, QVariant().fromValue(agentFlagsData));
 			}
 
 			TOperationModeData operationModeData;
 
 			foreach(char operationMode, mOperationModes)
 			{
-				operationModeData.insert(EOperationModes::Enum(operationMode), CFR::OperationModes::Data[operationMode].description);
+				int field = CFR::OperationModeData[operationMode];
+				operationModeData.insert(EOperationModes::Enum(operationMode), mFFData[field].translationPF);
 			}
 
 			QStringList operationModeDescriptions = operationModeData.values();
 
-			if (getConfigParameter(CHardware::FiscalFields::LotteryMode,       0).toInt()) operationModeDescriptions += CFR::LotteryMode;
-			if (getConfigParameter(CHardware::FiscalFields::GamblingMode,      0).toInt()) operationModeDescriptions += CFR::GamblingMode;
-			if (getConfigParameter(CHardware::FiscalFields::ExcisableUnitMode, 0).toInt()) operationModeDescriptions += CFR::ExcisableUnitMode;
+			if (mFFEngine.getConfigParameter(CFiscalSDK::LotteryMode,       0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::LotteryMode].translationPF;
+			if (mFFEngine.getConfigParameter(CFiscalSDK::GamblingMode,      0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::GamblingMode].translationPF;
+			if (mFFEngine.getConfigParameter(CFiscalSDK::ExcisableUnitMode, 0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::ExcisableUnitMode].translationPF;
+			if (mFFEngine.getConfigParameter(CFiscalSDK::InAutomateMode,    0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::InAutomateMode].translationPF;
 
 			setDeviceParameter(CDeviceData::FS::SerialNumber, mFSSerialNumber);
 			setDeviceParameter(CDeviceData::FR::TaxSystems, QStringList(taxSystemData.values()).join(", "));
-			setDeviceParameter(CDeviceData::FR::AgentFlags, QStringList(agentFlagsData.values()).join(", "));
 			setDeviceParameter(CDeviceData::FR::OperationModes, operationModeDescriptions.join(", "));
 			setDeviceParameter(CDeviceData::FR::FFDFR, CFR::FFD[mFFDFR].description);
 			setDeviceParameter(CDeviceData::FR::FFDFS, CFR::FFD[mFFDFS].description);
 
 			setConfigParameter(CHardwareSDK::FR::FSSerialNumber, mFSSerialNumber);
 			setConfigParameter(CHardwareSDK::FR::TaxSystems, QVariant().fromValue(taxSystemData));
-			setConfigParameter(CHardwareSDK::FR::AgentFlags, QVariant().fromValue(agentFlagsData));
-		}
 
-		setConfigParameter(CHardwareSDK::SerialNumber, mSerial);
+			if (!containsConfigParameter(CHardwareSDK::FR::FiscalFieldData))
+			{
+				QList<CFR::FiscalFields::SData> fiscalFieldValues = mFFData.data().values();
+				TFiscalFieldData fiscalFieldData;
+
+				for (int i = 0; i < fiscalFieldValues.size(); ++i)
+				{
+					CFR::FiscalFields::SData & data = fiscalFieldValues[i];
+					fiscalFieldData.insert(data.textKey, SFiscalFieldData(data.translationPF, data.isMoney));
+				}
+
+				setConfigParameter(CHardwareSDK::FR::FiscalFieldData, QVariant::fromValue(fiscalFieldData));
+
+				mFFEngine.setConfigParameter(CFiscalSDK::SerialFSNumber, getDeviceParameter(CDeviceData::FS::SerialNumber));
+				mFFEngine.setConfigParameter(CFiscalSDK::SerialFRNumber, getDeviceParameter(CDeviceData::SerialNumber));
+				mFFEngine.setConfigParameter(CFiscalSDK::INN,            getDeviceParameter(CDeviceData::FR::INN));
+				mFFEngine.setConfigParameter(CFiscalSDK::RNM,            getDeviceParameter(CDeviceData::FR::RNM));
+			}
+		}
 	}
 
 	T::finaliseInitialization();
+
+	QVariant configData = mFFEngine.getConfigParameter(CHardware::ConfigData);
+	setConfigParameter(CHardware::ConfigData, configData);
 
 	QString configOpeningTime = getConfigParameter(CHardware::FR::SessionOpeningTime).toString();
 	QTime OT = QTime::fromString(configOpeningTime, CFR::TimeLogFormat);
@@ -400,63 +369,14 @@ void FRBase<T>::checkZReportOnTimer()
 template <class T>
 bool FRBase<T>::checkTaxSystems(char aData)
 {
-	QStringList errorLog;
-
-	for (int i = 0; i < (sizeof(aData) * 8); ++i)
-	{
-		char taxSystem = 1 << i;
-
-		if (aData & taxSystem)
-		{
-			if (!CFR::TaxSystems.data().contains(taxSystem))
-			{
-				errorLog << toHexLog(taxSystem);
-			}
-
-			mTaxSystems << taxSystem;
-		}
-	}
-
-	if (!errorLog.isEmpty())
-	{
-		toLog(LogLevel::Error, mDeviceName + ": Unknown taxation system(s): " + errorLog.join(", "));
-		return false;
-	}
-
-	using namespace CFR::FiscalFields;
-
-	ERequired::Enum required = (mTaxSystems.size() > 1) ? ERequired::Yes : ERequired::No;
-	mFiscalFieldData.data()[FiscalFields::TaxSystem].required = required;
-
-	return true;
+	return mFFEngine.checkTaxSystems(aData, mTaxSystems);
 }
 
 //---------------------------------------------------------------------------
 template <class T>
 bool FRBase<T>::checkAgentFlags(char aData)
 {
-	QStringList errorLog;
-
-	for (int i = 0; i < (sizeof(aData) * 8); ++i)
-	{
-		char agentFlag = 1 << i;
-
-		if (aData & agentFlag)
-		{
-			if (!CFR::AgentFlags.data().contains(agentFlag))
-			{
-				errorLog << toHexLog(agentFlag);
-			}
-
-			mAgentFlags << agentFlag;
-		}
-	}
-
-	if (!errorLog.isEmpty())
-	{
-		toLog(LogLevel::Error, mDeviceName + ": Unknown agent flag(s): " + errorLog.join(", "));
-		return false;
-	}
+	bool result = mFFEngine.checkAgentFlags(aData, mAgentFlags);
 
 	if (mAgentFlags.contains(char(EAgentFlags::Agent)) && (mAgentFlags.size() > 1))
 	{
@@ -464,55 +384,29 @@ bool FRBase<T>::checkAgentFlags(char aData)
 		toLog(LogLevel::Error, mDeviceName + ": There are several agent flags and among them is the simple agent");
 	}
 
-	using namespace CFR::FiscalFields;
-
-	ERequired::Enum required = (mAgentFlags.size() > 1) ? ERequired::Yes : ERequired::No;
-	mFiscalFieldData.data()[FiscalFields::AgentFlagsRegistered].required = required;
-
 	if (mAgentFlags.size() >= 1)
 	{
-		mOFDFiscalParameters.insert(FiscalFields::AgentFlagsRegistered);
+		mOFDFiscalParameters.insert(CFR::FiscalFields::AgentFlagsReg);
 
 		//mOFDFiscalParametersOnSale.insert(FiscalFields::ProviderINN);
 		//mOFDFiscalParametersOnSale.insert(FiscalFields::AgentFlag);
 	}
 	else
 	{
-		mOFDFiscalParameters.remove(FiscalFields::AgentFlagsRegistered);
+		mOFDFiscalParameters.remove(CFR::FiscalFields::AgentFlagsReg);
 
-		mOFDFiscalParametersOnSale.remove(FiscalFields::ProviderINN);
-		mOFDFiscalParametersOnSale.remove(FiscalFields::AgentFlag);
+		mOFDFiscalParametersOnSale.remove(CFR::FiscalFields::ProviderINN);
+		mOFDFiscalParametersOnSale.remove(CFR::FiscalFields::AgentFlag);
 	}
 
-	return true;
+	return result;
 }
 
 //---------------------------------------------------------------------------
 template <class T>
 bool FRBase<T>::checkOperationModes(char aData)
 {
-	QStringList errorLog;
-
-	for (int i = 0; i < (sizeof(aData) * 8); ++i)
-	{
-		char operationMode = 1 << i;
-
-		if (aData & operationMode)
-		{
-			if (!CFR::OperationModes::Data.data().contains(operationMode))
-			{
-				errorLog << toHexLog(operationMode);
-			}
-
-			mOperationModes << operationMode;
-		}
-	}
-
-	if (!errorLog.isEmpty())
-	{
-		toLog(LogLevel::Error, mDeviceName + ": Unknown operation mode(s): " + errorLog.join(", "));
-		return false;
-	}
+	bool result = mFFEngine.checkOperationModes(aData, mOperationModes);
 
 	if (mOperationModes.contains(char(EOperationModes::Internet)) && !mOperatorPresence)
 	{
@@ -520,7 +414,7 @@ bool FRBase<T>::checkOperationModes(char aData)
 		toLog(LogLevel::Error, mDeviceName + ": There is \"FR for internet\" flag and no operator");
 	}
 
-	return true;
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -562,6 +456,39 @@ void FRBase<T>::checkDateTime()
 
 //---------------------------------------------------------------------------
 template <class T>
+bool FRBase<T>::setNotPrintDocument(bool /*aEnabled*/, bool /*aZReport*/)
+{
+	return !getConfigParameter(CHardwareSDK::FR::CanWithoutPrinting).toBool() ||
+	       (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardwareSDK::Values::Auto);
+}
+
+//---------------------------------------------------------------------------
+template <class T>
+bool FRBase<T>::checkNotPrinting(bool aEnabled, bool aZReport)
+{
+	mNotPrintingError = false;
+
+	if (!getConfigParameter(CHardwareSDK::FR::CanWithoutPrinting).toBool())
+	{
+		return true;
+	}
+
+	bool notPrintDocument = aEnabled || (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardwareSDK::Values::Use);
+
+	if (!WorkingThreadProxy(&mThread).invokeMethod<bool>(std::bind(&FRBase<T>::setNotPrintDocument, this, notPrintDocument, aZReport)))
+	{
+		mNotPrintingError = true;
+
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to check %1 %2 printing")
+			.arg(notPrintDocument ? "disabling" : "enabling").arg(aZReport ? "Z-report" : "fiscal document"));
+		return false;
+	}
+
+	return true;
+}
+
+//---------------------------------------------------------------------------
+template <class T>
 bool FRBase<T>::isFiscal() const
 {
 	return getConfigParameter(CHardware::FR::FiscalMode).toBool();
@@ -578,11 +505,20 @@ bool FRBase<T>::isOnline() const
 template <class T>
 bool FRBase<T>::checkTaxes()
 {
+	if (mRegion == ERegion::RF)
+	{
+		CFR::adjustRFVAT(mTaxData.data());
+	}
+
 	for (auto it = mTaxData.data().begin(); it != mTaxData.data().end(); ++it)
 	{
+		it->description = CFR::VATTr[it.key()];
+
 		if (!checkTax(it.key(), it.value()))
 		{
-			return false;
+			mTaxError = true;
+
+			return !isFiscal();
 		}
 	}
 
@@ -643,6 +579,8 @@ bool FRBase<T>::checkOFDData(const QByteArray & aAddressData, const QByteArray &
 	int portValue = aPortData.simplified().toHex().toUShort(0, 16);
 	CHardware::SPort port(QString::number(portValue));
 
+	removeDeviceParameter(CDeviceData::FR::OFDServer);
+
 	if ((!URL.valid && !IP.valid) || !port.valid)
 	{
 		setDeviceParameter(CDeviceData::Address, addressData, CDeviceData::FR::OFDServer);
@@ -662,8 +600,8 @@ bool FRBase<T>::checkOFDData(const QByteArray & aAddressData, const QByteArray &
 
 	auto it = std::find_if(OFDData.begin(), OFDData.end(), [&] (const CHardware::SOFDData & aOFDData) -> bool
 	{
-		bool testURL = URL.valid && (URL.value == aOFDData.testAddress.URL.value);
-		bool testIP  =  IP.valid && ( IP.value == aOFDData.testAddress.IP.value);
+		bool testURL = URL.valid && aOFDData.testAddress.URL.valid && (URL.value == aOFDData.testAddress.URL.value);
+		bool testIP  =  IP.valid && aOFDData.testAddress.IP.valid  && ( IP.value == aOFDData.testAddress.IP.value);
 
 		return (testURL && (aOFDData.address.URL.value != aOFDData.testAddress.URL.value)) ||
 		       (testIP  && (aOFDData.address.IP.value  != aOFDData.testAddress.IP.value))  ||
@@ -687,8 +625,8 @@ bool FRBase<T>::checkOFDData(const QByteArray & aAddressData, const QByteArray &
 
 	it = std::find_if(OFDData.begin(), OFDData.end(), [&] (const CHardware::SOFDData & aOFDData) -> bool
 	{
-		bool testURL = URL.valid && (URL.value == aOFDData.address.URL.value);
-		bool testIP  =  IP.valid && ( IP.value == aOFDData.address.IP.value);
+		bool testURL = URL.valid && aOFDData.address.URL.valid && (URL.value == aOFDData.address.URL.value);
+		bool testIP  =  IP.valid && aOFDData.address.IP.valid  && ( IP.value == aOFDData.address.IP.value);
 
 		return testURL || testIP;
 	});
@@ -714,72 +652,36 @@ bool FRBase<T>::checkOFDData(const QByteArray & aAddressData, const QByteArray &
 
 //---------------------------------------------------------------------------
 template <class T>
-bool FRBase<T>::checkFiscalField(int aField, bool & aResult)
-{
-	if (!mFiscalFieldData.data().contains(aField))
-	{
-		aResult = false;
-		toLog(LogLevel::Error, QString("%1: Failed to set %2 fiscal field due to it is unknown").arg(mDeviceName).arg(aField));
-
-		return false;
-	}
-
-	using namespace CFR::FiscalFields;
-
-	SData data = mFiscalFieldData[aField];
-
-	if (containsConfigParameter(data.description))
-	{
-		return true;
-	}
-
-	if (data.required == ERequired::No)
-	{
-		aResult = true;
-		toLog(LogLevel::Debug, QString("%1: don`t set field %2 (%3) due to the field is not required").arg(mDeviceName).arg(aField).arg(data.description));
-
-		return false;
-	}
-	else if ((data.required == ERequired::PM) && !mOperatorPresence)
-	{
-		aResult = true;
-		toLog(LogLevel::Debug, QString("%1: don`t set field %2 (%3) due to the operator is not present").arg(mDeviceName).arg(aField).arg(data.description));
-
-		return false;
-	}
-
-	aResult = false;
-	toLog(LogLevel::Error, QString("%1: Failed to set field %2 (%3) due due to it is absent").arg(mDeviceName).arg(aField).arg(data.description));
-
-	return false;
-}
-
-//---------------------------------------------------------------------------
-template <class T>
 void FRBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 {
 	T::cleanStatusCodes(aStatusCodes);
 
-	// фильтр ошибки ЭКЛЗ скоро кончится, если есть ошибка ЭКЛЗ
+	// фильтр ошибки ФН, если есть конкретная ошибка ФН или необходимо подключение к ОФД
+	if (aStatusCodes.contains(Error::FSEnd) || aStatusCodes.contains(Error::NeedOFDConnection))
+	{
+		aStatusCodes.remove(Error::FS);
+	}
+
+	// фильтр предупреждения ЭКЛЗ скоро кончится, если есть ошибка ЭКЛЗ
 	if (aStatusCodes.contains(Error::EKLZ))
 	{
 		aStatusCodes.remove(Warning::EKLZNearEnd);
 	}
 
-	// фильтр ошибки Фискальная память скоро кончится, если есть ошибка фискальной памяти
+	// фильтр предупреждения Фискальная память скоро кончится, если есть ошибка фискальной памяти
 	if (aStatusCodes.contains(Error::FiscalMemory))
 	{
 		aStatusCodes.remove(Warning::FiscalMemoryNearEnd);
 	}
 
-	// фильтр ошибок Буфер Z-отчетов заполнен и необходимости Z-отчета, если он уже переполнен
+	// фильтр предупреждения Буфер Z-отчетов заполнен и ошибки необходимости Z-отчета, если он уже переполнен
 	if (aStatusCodes.contains(Error::ZBufferOverflow))
 	{
 		aStatusCodes.remove(Warning::ZBufferFull);
 		aStatusCodes.remove(Error::NeedCloseSession);
 	}
 
-	// фильтр статусов буфера Z-отчетов, если есть сбой последнего
+	// фильтр предупреждения Буфер Z-отчетов заполнен и ошибки его переполнения, если есть сбой последнего
 	if (aStatusCodes.contains(Error::ZBuffer))
 	{
 		aStatusCodes.remove(Warning::ZBufferFull);
@@ -814,11 +716,16 @@ bool FRBase<T>::isFiscalReady(bool aOnline, EFiscalPrinterCommand::Enum aCommand
 
 //--------------------------------------------------------------------------------
 template <class T>
+bool FRBase<T>::canProcessZBuffer()
+{
+	return mConnected && (mInitialized != ERequestStatus::InProcess) && mCanProcessZBuffer;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
 bool FRBase<T>::printFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
 {
-	using namespace CFR::FiscalFields;
-
-	QScopedPointer<ConfigCleaner> configCleaner(new ConfigCleaner(&mConfiguration));
+	CFR::ConfigCleaner configCleaner(&mFFEngine);
 
 	if (!isFiscal())
 	{
@@ -826,209 +733,35 @@ bool FRBase<T>::printFiscal(const QStringList & aReceipt, const SPaymentData & a
 		return false;
 	}
 
-	if (aPaymentData.amountDataList.isEmpty())
-	{
-		toLog(LogLevel::Error, mDeviceName + ": Failed to process command due to no amount data");
-		return false;
-	}
-
-	foreach (const SAmountData & amountData, aPaymentData.amountDataList)
-	{
-		if (amountData.sum <= 0)
-		{
-			toLog(LogLevel::Error, QString("%1: Failed to sale%2 for sum = %3").arg(mDeviceName).arg(aPaymentData.back ? " back" : "").arg(amountData.sum, 0, 'f', 2));
-			return false;
-		}
-	}
-
-	if (aPaymentData.back)
-	{
-		double amountInCash = WorkingThreadProxy().invokeMethod<double>(std::bind(&FRBase<T>::getAmountInCash, this));
-		TSum totalAmount = getTotalAmount(aPaymentData);
-
-		if (amountInCash < 0)
-		{
-			toLog(LogLevel::Error, mDeviceName + ": Failed to get valid amount in cash for selling back");
-		}
-		else if (totalAmount > amountInCash)
-		{
-			toLog(LogLevel::Error, QString("%1: Failed to sale back for %2 > %3 in cash").arg(mDeviceName).arg(totalAmount, 0, 'f', 2).arg(amountInCash, 0, 'f', 2));
-
-			emitStatusCode(FRStatusCode::Error::NoMoney, EFRStatus::NoMoneyForSellingBack);
-
-			return false;
-		}
-	}
-
-	TVATs errorVATs = getVATs(aPaymentData) - getActualVATs();
-
-	if (!errorVATs.isEmpty())
-	{
-		toLog(LogLevel::Error, mDeviceName + ": The actual taxes does not contain VAT(s): " + getVATLog(errorVATs));
-		return false;
-	}
-
-	foreach (auto amountData, aPaymentData.amountDataList)
-	{
-		if (!mTaxData.data().contains(amountData.VAT))
-		{
-			toLog(LogLevel::Error, mDeviceName + QString(": The taxes specification does not contain VAT = %1").arg(amountData.VAT));
-			return false;
-		}
-	}
-
 	SPaymentData paymentData(aPaymentData);
 
-	if (paymentData.payType == EPayTypes::None)
+	for (int i = 0; i < paymentData.unitDataList.size(); ++i)
 	{
-		toLog(LogLevel::Error, mDeviceName + ": pay type is not defined");
+		for (auto it = CPrinters::AutoCorrection.data().begin(); it != CPrinters::AutoCorrection.data().end(); ++it)
+		{
+			paymentData.unitDataList[i].name = paymentData.unitDataList[i].name.replace(it.key(), it.value());
+		}
+	}
+
+	if (!checkAmountsOnPayment(paymentData) ||
+	    !checkSumInCash(paymentData)        ||
+	    !checkVATsOnPayment(paymentData)    ||
+	    !checkPayTypeOnPayment(paymentData) ||
+		!checkNotPrinting()                 ||
+	    !mFFEngine.checkTaxSystemOnPayment(paymentData) ||
+	    !mFFEngine.checkAgentFlagOnPayment(paymentData))
+	{
 		return false;
 	}
-	else if (!mPayTypeData.data().contains(paymentData.payType))
-	{
-		toLog(LogLevel::Error, mDeviceName + QString(": The pay types specification does not contain type = %1 (%2)").arg(paymentData.payType).arg(CFR::PayTypeDescription[paymentData.payType]));
-		return false;
-	}
 
-	char taxSystem = char(paymentData.taxSystem);
-	char taxSystemData = char(getConfigParameter(CHardwareSDK::FR::DealerTaxSystem).toInt());
-	ETaxSystems::Enum dealerTaxSystem = ETaxSystems::Enum(taxSystemData);
-
-	if (dealerTaxSystem != ETaxSystems::None)
-	{
-		if (mTaxSystems.contains(taxSystemData))
-		{
-			paymentData.taxSystem = dealerTaxSystem;
-		}
-		else if (mTaxSystems.size() == 1)
-		{
-			paymentData.taxSystem = ETaxSystems::Enum(mTaxSystems[0]);
-		}
-	}
-	else if (!mTaxSystems.isEmpty())
-	{
-		char joinedTaxSystems = CFR::joinData(mTaxSystems);
-
-		if (paymentData.taxSystem == ETaxSystems::None)
-		{
-			if (mTaxSystems.size() == 1)
-			{
-				paymentData.taxSystem = ETaxSystems::Enum(mTaxSystems[0]);
-			}
-			else
-			{
-				toLog(LogLevel::Error, QString("%1: Failed to determine the required taxation system from the several ones (%2)")
-					.arg(mDeviceName).arg(toHexLog(joinedTaxSystems)));
-				return false;
-			}
-		}
-		else if (!mTaxSystems.contains(taxSystem))
-		{
-			toLog(LogLevel::Error, QString("%1: The actual taxation system(s) %2 don`t contain system %3 (%4)")
-				.arg(mDeviceName).arg(toHexLog(joinedTaxSystems)).arg(toHexLog(taxSystem)).arg(CFR::TaxSystems[taxSystem]));
-			return false;
-		}
-	}
-
-	removeConfigParameter(CHardware::FiscalFields::TaxSystem);
-
-	if (paymentData.taxSystem != ETaxSystems::None)
-	{
-		setConfigParameter(CHardware::FiscalFields::TaxSystem, char(paymentData.taxSystem));
-	}
-	/*
-	if (mAgentFlags.size() > 1)
-	{
-		foreach (const SAmountData & amountData, aPaymentData.amountDataList)
-		{
-			QString providerINN = amountData.providerINN;
-			QString log = QString("%1: Failed to sale%2 for %3 (sum = %4) due to ").arg(mDeviceName).arg(aPaymentData.back ? " back" : "").arg(amountData.name).arg(amountData.sum, 0, 'f', 2);
-			int size = providerINN.size();
-
-			if (!size)
-			{
-				toLog(LogLevel::Error, log + "provider INN is empty");
-				return false;
-			}
-			else if (((size != CFR::INNSize::LegalPerson) && (size != CFR::INNSize::NaturalPerson)) || (QRegExp("[0-9]+").indexIn(providerINN) == -1))
-			{
-				toLog(LogLevel::Error, log + "wrong provider INN = " + providerINN);
-				return false;
-			}
-		}
-	}
-	*/
-	char agentFlag = char(paymentData.agentFlag);
-	char agentFlagData = char(getConfigParameter(CHardwareSDK::FR::DealerAgentFlag).toInt());
-	EAgentFlags::Enum dealerAgentFlag = EAgentFlags::Enum(agentFlagData);
-
-	if (dealerAgentFlag != EAgentFlags::None)
-	{
-		if (mAgentFlags.contains(agentFlagData))
-		{
-			paymentData.agentFlag = dealerAgentFlag;
-		}
-		else if (mAgentFlags.size() == 1)
-		{
-			paymentData.agentFlag = EAgentFlags::Enum(mAgentFlags[0]);
-		}
-	}
-	else if (!mAgentFlags.isEmpty())
-	{
-		char joinedAgentFlags = CFR::joinData(mAgentFlags);
-
-		if (paymentData.agentFlag == EAgentFlags::None)
-		{
-			if (mAgentFlags.size() == 1)
-			{
-				paymentData.agentFlag = EAgentFlags::Enum(mAgentFlags[0]);
-			}
-			else
-			{
-				toLog(LogLevel::Error, QString("%1: Failed to determine the required agent flag from the several ones (%2)")
-					.arg(mDeviceName).arg(toHexLog(joinedAgentFlags)));
-				return false;
-			}
-		}
-		else if (!mAgentFlags.contains(agentFlag))
-		{
-			toLog(LogLevel::Error, QString("%1: The actual agent flag(s) %2 don`t contain flag %3 (%4)")
-				.arg(mDeviceName).arg(toHexLog(joinedAgentFlags)).arg(toHexLog(agentFlag)).arg(CFR::AgentFlags[agentFlag]));
-			return false;
-		}
-	}
-
-	removeConfigParameter(CHardware::FiscalFields::AgentFlag);
-	removeConfigParameter(CHardware::FiscalFields::AgentFlagsRegistered);
-
-	if (paymentData.agentFlag != EAgentFlags::None)
-	{
-		agentFlag = char(paymentData.agentFlag);
-		setConfigParameter(CHardware::FiscalFields::AgentFlag,            agentFlag);
-		setConfigParameter(CHardware::FiscalFields::AgentFlagsRegistered, agentFlag);
-	}
-
-	QString userPhone = aPaymentData.fiscalParameters.value(CHardwareSDK::FR::UserPhone).toString().remove(QRegExp("[^0-9]+"));
-	QString userMail  = aPaymentData.fiscalParameters.value(CHardwareSDK::FR::UserMail).toString();
-
-	if (!userPhone.isEmpty())
-	{
-		setConfigParameter(CHardware::FiscalFields::UserContact, "+" + userPhone);
-	}
-
-	if (userMail.contains(QRegExp("^[^@]+@[^@]+$")))
-	{
-		setConfigParameter(CHardware::FiscalFields::UserContact, userMail);
-	}
-
-	setConfigParameter(CHardware::FiscalFields::PayOffSubjectMethodType, EPayOffSubjectMethodTypes::Full);
+	addFiscalFieldsOnPayment(paymentData);
 
 	QStringList receipt(aReceipt);
 	cleanReceipt(receipt);
 
-	for (int i = 0; i < paymentData.amountDataList.size(); ++i)
+	for (int i = 0; i < paymentData.unitDataList.size(); ++i)
 	{
-		QString & name = paymentData.amountDataList[i].name;
+		QString & name = paymentData.unitDataList[i].name;
 		name = name.simplified();
 
 		if (mIsOnline)
@@ -1046,85 +779,21 @@ bool FRBase<T>::printFiscal(const QStringList & aReceipt, const SPaymentData & a
 		return false;
 	}
 
-	foreach (int field, FiscalTotals)
-	{
-		if (!aFPData.value(field).toInt())
-		{
-			aFPData.remove(field);
-		}
-	}
-
-	EPayOffTypes::Enum payOffType = aPaymentData.back ? EPayOffTypes::DebitBack : EPayOffTypes::Debit;
-
-	aFPData.insert(FiscalFields::FDName, CFR::FDName);
-	aFPData.insert(FiscalFields::PayOffType, CFR::PayOffTypes[payOffType]);
-	aFPData.insert(FiscalFields::SerialFSNumber, mFSSerialNumber);
-	aFPData.insert(FiscalFields::INN, mINN);
-	aFPData.insert(FiscalFields::RNM, mRNM);
-	aFPData.insert(FiscalFields::SerialFRNumber, mSerial);
-	aFPData.insert(FiscalFields::FTSURL, getConfigParameter(CHardware::FiscalFields::FTSURL));
-	aFPData.insert(FiscalFields::OFDURL, getConfigParameter(CHardware::FiscalFields::OFDURL));
-	aFPData.insert(FiscalFields::OFDName, getConfigParameter(CHardware::FiscalFields::OFDName));
-	aFPData.insert(FiscalFields::LegalOwner, getConfigParameter(CHardware::FiscalFields::LegalOwner));
-	aFPData.insert(FiscalFields::PayOffAddress, getConfigParameter(CHardware::FiscalFields::PayOffAddress));
-	aFPData.insert(FiscalFields::PayOffPlace, getConfigParameter(CHardware::FiscalFields::PayOffPlace));
+	mFFEngine.filterAfterPayment(aFPData, aPSData);
 
 	int sessionNumber = getSessionNumber();
 
 	if (sessionNumber)
 	{
-		aFPData.insert(FiscalFields::SessionNumber, sessionNumber);
+		mFFEngine.checkFPData(aFPData, CFR::FiscalFields::SessionNumber, sessionNumber);
 	}
 
-	QByteArray FDSignData = aFPData.value(FiscalFields::FDSign).toByteArray();
-	qulonglong FDSign = FDSignData.right(4).toHex().toULongLong(0, 16);
-	QString FDSignTextData = QString("%1").arg(FDSign, CFR::FDSignSize, 10, QChar(ASCII::Zero));
-	aFPData.insert(FiscalFields::FDSign, FDSignTextData);
-
-	QDateTime dateTime = aFPData.value(FiscalFields::FDDateTime).toDateTime();
-
-	if (!dateTime.isValid())
-	{
-		dateTime = getDateTime();
-	}
-
-	aFPData.insert(FiscalFields::FDDateTime, dateTime.toString(CFR::DateTimeShortLogFormat));
-
-	for (int i = 0; i < mOperationModes.size(); ++i)
-	{
-		CFR::OperationModes::SData modeData = CFR::OperationModes::Data[mOperationModes[i]];
-
-		if (modeData.field)
-		{
-			aFPData.insert(modeData.field, modeData.description);
-		}
-	}
-
-	if (getConfigParameter(CHardware::FiscalFields::LotteryMode,       0).toInt()) aFPData.insert(FiscalFields::LotteryMode,       CFR::LotteryMode);
-	if (getConfigParameter(CHardware::FiscalFields::GamblingMode,      0).toInt()) aFPData.insert(FiscalFields::GamblingMode,      CFR::GamblingMode);
-	if (getConfigParameter(CHardware::FiscalFields::ExcisableUnitMode, 0).toInt()) aFPData.insert(FiscalFields::ExcisableUnitMode, CFR::ExcisableUnitMode);
-
-	#define ADD_SPEC_DFIELD(aData, aName, aSpecification) if (aData.contains(FiscalFields::aName)) { int value = aData[FiscalFields::aName].toInt(); \
-		QString result = CFR::aSpecification[char(value)]; aData.insert(FiscalFields::aName, result); }
-	#define ADD_SPEC_DFIELD_SAME(aData, aName) ADD_SPEC_DFIELD(aData, aName, aName##s)
-
-	ADD_SPEC_DFIELD(aFPData, AgentFlagsRegistered, AgentFlags);
-	ADD_SPEC_DFIELD_SAME(aFPData, TaxSystem);
-
-	for (int i = 0; i < aPSData.size(); ++i)
-	{
-		ADD_SPEC_DFIELD_SAME(aPSData[i], PayOffSubjectType);
-		ADD_SPEC_DFIELD_SAME(aPSData[i], PayOffSubjectMethodType);
-		ADD_SPEC_DFIELD_SAME(aPSData[i], VATRate);
-		ADD_SPEC_DFIELD_SAME(aPSData[i], AgentFlag);
-	}
-
-	toLog(LogLevel::Normal, mDeviceName + ": Fiscal payment data:\n" + getFPDataLog(aFPData));
+	toLog(LogLevel::Normal, mDeviceName + ": Fiscal payment data:\n" + mFFEngine.getFPDataLog(aFPData));
 	QString log;
 
 	foreach(const TFiscalPaymentData FPData, aPSData)
 	{
-		log += getFPDataLog(FPData);
+		log += mFFEngine.getFPDataLog(FPData);
 	}
 
 	toLog(LogLevel::Normal, mDeviceName + ": Payoff subject data:\n" + log);
@@ -1140,7 +809,7 @@ bool FRBase<T>::setOFDParameters()
 
 	foreach (auto parameter, mOFDFiscalParameters)
 	{
-		ERequired::Enum required = mFiscalFieldData[parameter].required;
+		ERequired::Enum required = mFFData[parameter].required;
 		bool critical = (required == ERequired::Yes) || (mOperatorPresence && (ERequired::PM));
 
 		if (!setTLV(parameter) && critical)
@@ -1154,12 +823,12 @@ bool FRBase<T>::setOFDParameters()
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool FRBase<T>::setOFDParametersOnSale(const SAmountData & aAmountData)
+bool FRBase<T>::setOFDParametersOnSale(const SUnitData & aUnitData)
 {
-	if (mOFDFiscalParametersOnSale.contains(FiscalFields::ProviderINN))
+	if (mOFDFiscalParametersOnSale.contains(CFR::FiscalFields::ProviderINN))
 	{
-		QString providerINN = aAmountData.providerINN.simplified().leftJustified(CFR::INNSize::NaturalPerson);
-		setConfigParameter(CHardware::FiscalFields::ProviderINN, providerINN);
+		QString providerINN = aUnitData.providerINN.simplified().leftJustified(CFR::INN::Person::Natural);
+		mFFEngine.setConfigParameter(CFiscalSDK::ProviderINN, providerINN);
 	}
 
 	foreach (auto parameter, mOFDFiscalParametersOnSale)
@@ -1213,7 +882,7 @@ bool FRBase<T>::printXReport(const QStringList & aReceipt)
 template <class T>
 bool FRBase<T>::processEncashment(const QStringList & aReceipt, double aAmount)
 {
-	double amountInCash = WorkingThreadProxy().invokeMethod<double>(std::bind(&FRBase<T>::getAmountInCash, this));
+	double amountInCash = WorkingThreadProxy(&mThread).invokeMethod<double>(std::bind(&FRBase<T>::getAmountInCash, this));
 
 	if (amountInCash < 0)
 	{
@@ -1311,7 +980,7 @@ bool FRBase<T>::performXReport(const QStringList & aReceipt)
 {
 	bool result = processReceipt(aReceipt, mNextReceiptProcessing);
 
-	if (result)
+	if (result && checkNotPrinting())
 	{
 		complexFiscalDocument(std::bind(&FRBase::processXReport, this), "X-report");
 	}
@@ -1325,7 +994,7 @@ bool FRBase<T>::performEncashment(const QStringList & aReceipt, double aAmount)
 {
 	bool result = processReceipt(aReceipt, mNextReceiptProcessing);
 
-	if (result)
+	if (result && checkNotPrinting())
 	{
 		complexFiscalDocument(std::bind(&FRBase::processPayout, this, aAmount), "payout");
 	}
@@ -1378,6 +1047,10 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 	if (mZBufferError)     aStatusCodes.insert(FRStatusCode::Error::ZBuffer);
 	if (mFiscalCollapse)   aStatusCodes.insert(FRStatusCode::Error::FiscalCollapse);
 	if (mNeedCloseSession) aStatusCodes.insert(FRStatusCode::Error::NeedCloseSession);
+	if (mNotPrintingError) aStatusCodes.insert(DeviceStatusCode::Error::Initialization);
+	if (mCashierINNError)  aStatusCodes.insert(FRStatusCode::Error::CashierINN);
+	if (mFSOfflineEnd)     aStatusCodes.insert(FRStatusCode::Error::NeedOFDConnection);
+	if (mTaxError)         aStatusCodes.insert(FRStatusCode::Error::Taxes);
 
 	if (mIsOnline)
 	{
@@ -1408,7 +1081,7 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 			aStatusCodes.insert(FRStatusCode::Warning::OFDData);
 		}
 
-		if (!mTaxSystems.isEmpty() && !checkDealerTaxSystems())
+		if (!mTaxSystems.isEmpty() && !mFFEngine.checkDealerTaxSystem(mInitialized, false))
 		{
 			if (mTaxSystems.size() > 1)
 			{
@@ -1420,7 +1093,7 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 			}
 		}
 
-		if (!mAgentFlags.isEmpty() && !checkDealerAgentFlags())
+		if (!mAgentFlags.isEmpty() && !mFFEngine.checkDealerAgentFlag(mInitialized, false))
 		{
 			if (mAgentFlags.size() > 1)
 			{
@@ -1453,7 +1126,7 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 template <class T>
 TSum FRBase<T>::getTotalAmount(const SPaymentData & aPaymentData) const
 {
-	return std::accumulate(aPaymentData.amountDataList.begin(), aPaymentData.amountDataList.end(), TSum(0), [] (TSum aSum, const SAmountData & aData) -> TSum { return aSum + aData.sum; });
+	return std::accumulate(aPaymentData.unitDataList.begin(), aPaymentData.unitDataList.end(), TSum(0), [] (TSum aSum, const SUnitData & aData) -> TSum { return aSum + aData.sum; });
 }
 
 //--------------------------------------------------------------------------------
@@ -1462,9 +1135,9 @@ TVATs FRBase<T>::getVATs(const SPaymentData & aPaymentData) const
 {
 	TVATs result;
 
-	foreach(auto amountData, aPaymentData.amountDataList)
+	foreach(auto unitData, aPaymentData.unitDataList)
 	{
-		result << amountData.VAT;
+		result << unitData.VAT;
 	}
 
 	return result;
@@ -1476,7 +1149,7 @@ TVATs FRBase<T>::getActualVATs() const
 {
 	if (mRegion == ERegion::RF)
 	{
-		return CFR::RFActualVATs;
+		return CFR::isRFVAT20() ? CFR::RFActualVATs20 : CFR::RFActualVATs;
 	}
 
 	return CFR::KZActualVATs;
@@ -1484,314 +1157,143 @@ TVATs FRBase<T>::getActualVATs() const
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool FRBase<T>::parseTLV(const QByteArray & aData, CFR::STLV & aTLV)
+bool FRBase<T>::checkAmountsOnPayment(const SPaymentData & aPaymentData)
 {
-	auto getInt = [&aData] (int aIndex, int aShift) -> int { int result = uchar(aData[aIndex]); return result << (8 * aShift); };
-	int fullDataSize = aData.size();
-
-	if (fullDataSize < CFR::MinTLVSize)
+	if (aPaymentData.unitDataList.isEmpty())
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to parse TLV data due to data size = %2, need %3 min").arg(mDeviceName).arg(fullDataSize).arg(CFR::MinTLVSize));
+		toLog(LogLevel::Error, mDeviceName + ": Failed to process command due to no amount data");
 		return false;
 	}
 
-	int size = getInt(2, 0) | getInt(3, 1);
-	int dataSize = fullDataSize - 4;
-
-	if (dataSize < size)
+	foreach(const SUnitData & unitData, aPaymentData.unitDataList)
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to parse TLV data due to data size = %2, need %3 min").arg(mDeviceName).arg(dataSize).arg(size));
-		return false;
+		if (unitData.sum <= 0)
+		{
+			toLog(LogLevel::Error, QString("%1: Failed to sale%2 for sum = %3").arg(mDeviceName).arg(aPaymentData.back ? " back" : "").arg(unitData.sum, 0, 'f', 2));
+			return false;
+		}
 	}
-
-	int field = getInt(0, 0) | getInt(1, 1);
-	QByteArray data  = aData.mid(4, size);
-
-	using namespace CFR::FiscalFields;
-
-	SData FFData = mFiscalFieldData[field];
-	Types::SData typeData = Types::Data[FFData.type];
-
-	int FFMinSize = typeData.minSize;
-	int FFDataSize = data.size();
-
-	if (FFDataSize < FFMinSize)
-	{
-		toLog(LogLevel::Error, QString("%1: Failed to parse %2 field %3 (%4) due to size = %5, need %6 min")
-			.arg(mDeviceName).arg(typeData.description).arg(field).arg(FFData.description).arg(FFDataSize).arg(FFMinSize));
-		return false;
-	}
-
-	if (typeData.fixSize)
-	{
-		data = data.left(FFMinSize);
-	}
-
-	aTLV.field = field;
-	aTLV.data  = data;
 
 	return true;
 }
 
 //--------------------------------------------------------------------------------
 template <class T>
-CFR::TTLVList FRBase<T>::parseSTLV(const QByteArray & aData)
+bool FRBase<T>::checkSumInCash(const SPaymentData & aPaymentData)
 {
-	CFR::TTLVList result;
-	CFR::STLV TLV;
-	int index = 0;
-
-	while ((index < aData.size()) && parseTLV(aData.mid(index), TLV))
+	if (!aPaymentData.back)
 	{
-		result.insert(TLV.field, TLV.data);
-		index += TLV.data.size() + 4;
+		return true;
 	}
 
-	return result;
+	double amountInCash = WorkingThreadProxy(&mThread).invokeMethod<double>(std::bind(&FRBase<T>::getAmountInCash, this));
+	TSum totalAmount = getTotalAmount(aPaymentData);
+
+	if (amountInCash < 0)
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to get valid amount in cash for selling back");
+	}
+	else if (totalAmount > amountInCash)
+	{
+		toLog(LogLevel::Error, QString("%1: Failed to sale back for %2 > %3 in cash").arg(mDeviceName).arg(totalAmount, 0, 'f', 2).arg(amountInCash, 0, 'f', 2));
+
+		emitStatusCode(FRStatusCode::Error::NoMoney, EFRStatus::NoMoneyForSellingBack);
+
+		return false;
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
 template <class T>
-QByteArray FRBase<T>::getTLVData(int aField, const QVariant & aValue, QString * aLog = nullptr)
+bool FRBase<T>::checkVATsOnPayment(const SPaymentData & aPaymentData)
 {
-	if (!mFiscalFieldData.data().contains(aField))
+	TVATs errorVATs = getVATs(aPaymentData) - getActualVATs();
+
+	if (!errorVATs.isEmpty())
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to get TLV-data for field %2 due to no data in specification").arg(mDeviceName).arg(aField));
-		return "";
+		toLog(LogLevel::Error, mDeviceName + ": The actual taxes does not contain VAT(s): " + getVATLog(errorVATs));
+		return false;
 	}
 
-	using namespace CFR::FiscalFields;
-
-	SData FFData = mFiscalFieldData[aField];
-	QString log = QString("field %1 (%2) = ").arg(aField).arg(FFData.description);
-
-	QByteArray result = getHexReverted(aField, 2);
-
-	switch (FFData.type)
+	foreach(auto unitData, aPaymentData.unitDataList)
 	{
-		case ETypes::VLN:
+		if (!mTaxData.data().contains(unitData.VAT))
 		{
-			qulonglong data = aValue.toULongLong();
-			result += getDigitTLVData(data);
-			log += QString::number(data);
-
-			break;
-		}
-		case ETypes::FVLN:
-		{
-			double data = aValue.toDouble();
-			int dotNumber = QString::number(data).indexOf(ASCII::Dot) + 1;
-			result.append(uchar(dotNumber));
-
-			//TODO: проверить на Касби - qPow(data, data)
-
-			result.append(data ? getDigitTLVData(qulonglong(qPow(data, data))) : ASCII::NUL);
-			log += QString::number(data, 'f', 2);
-
-			break;
-		}
-		case ETypes::String:
-		{
-			QString data = aValue.toString();
-			result += mCodec->fromUnicode(data);
-			log += data;
-
-			break;
-		}
-		case ETypes::Byte:
-		{
-			char data = char(aValue.toUInt());
-			result += data;
-			log += toHexLog(data);
-
-			break;
-		}
-		//TODO: доделать лог для STLV - для Касби
-		case ETypes::STLV:
-		case ETypes::ByteArray:
-		{
-			QByteArray data = aValue.toByteArray();
-			result += data;
-			log += "0x" + data.toHex().toUpper();
-
-			break;
-		}
-		default:
-		{
-			result.clear();    // чтобы не прошел запрос установки TLV-параметра из-за неверных данных, с которыми неясно что делать
-			log += "0x" + aValue.toByteArray();
-			toLog(LogLevel::Error, QString("%1: Failed to get TLV-data for field %2 due to data type to set = %3 is unknown").arg(mDeviceName).arg(aField).arg(int(FFData.type)));
-
-			break;
+			toLog(LogLevel::Error, mDeviceName + QString(": The taxes specification does not contain VAT = %1").arg(unitData.VAT));
+			return false;
 		}
 	}
 
-	result.insert(2, getHexReverted(result.size() - 2, 2));
-
-	if (aLog)
-	{
-		*aLog = log;
-	}
-
-	return result;
+	return true;
 }
 
 //--------------------------------------------------------------------------------
 template <class T>
-QByteArray FRBase<T>::getDigitTLVData(qulonglong aValue)
+void FRBase<T>::addFiscalFieldsOnPayment(const SPaymentData & aPaymentData)
 {
-	int size = sizeof(aValue);
-	QByteArray result;
+	auto addPhone = [&] (const QString & aField, const QVariant & aData) { QString phone = mFFEngine.filterPhone(aData.toString());
+		if (!phone.isEmpty()) mFFEngine.setConfigParameter(aField, phone); };
 
-	for (int i = 0; i < size; ++i)
+	auto addMail = [&] (const QString & aField, const QVariant & aData) { QString mail = aData.toString();
+		if (mail.contains(QRegExp("^[^@]+@[^@]+$"))) mFFEngine.setConfigParameter(aField, mail); };
+
+	EPayOffTypes::Enum payOffType = aPaymentData.back ? EPayOffTypes::DebitBack : EPayOffTypes::Debit;
+	mFFEngine.setConfigParameter(CFiscalSDK::PayOffType, payOffType);
+
+	QVariantMap receiptParameters = getConfigParameter(CHardwareSDK::Printer::ReceiptParameters).toMap();
+
+	addPhone(CFiscalSDK::ProviderPhone, getConfigParameter(CHardwareSDK::Printer::TemplateParameters).toMap()[CPrintConstants::OpPhone]);
+	addPhone(CFiscalSDK::AgentPhone,            receiptParameters[CPrintConstants::DealerPhone]);
+	addPhone(CFiscalSDK::TransferOperatorPhone, receiptParameters[CPrintConstants::BankPhone]);
+
+	mFFEngine.setConfigParameter(CFiscalSDK::TransferOperatorAddress, receiptParameters[CPrintConstants::BankAddress].toString().simplified());
+	mFFEngine.setConfigParameter(CFiscalSDK::TransferOperatorINN,     receiptParameters[CPrintConstants::BankInn].toString().simplified());
+	mFFEngine.setConfigParameter(CFiscalSDK::TransferOperatorName,    receiptParameters[CPrintConstants::BankName].toString().simplified());
+
+	addPhone(CFiscalSDK::UserContact, aPaymentData.fiscalParameters.value(CHardwareSDK::FR::UserPhone));
+	 addMail(CFiscalSDK::UserContact, aPaymentData.fiscalParameters.value(CHardwareSDK::FR::UserMail));
+
+	mFFEngine.setConfigParameter(CFiscalSDK::PayOffSubjectMethodType, CFR::PayOffSubjectMethodType);
+
+	QList<int> fiscalFields = mFFData.data().keys();
+	QVariantMap FFConfig;
+
+	for (auto it = mFFData.data().begin(); it != mFFData.data().end(); ++it)
 	{
-		char data = char(aValue >> (8 * (size - i - 1)));
-
-		if (!result.isEmpty() || data)
-		{
-			result.append(data);
-		}
+		if (containsDeviceParameter(it->textKey)) FFConfig.insert(it->textKey, getDeviceParameter(it->textKey));
+		if (containsConfigParameter(it->textKey)) FFConfig.insert(it->textKey, getConfigParameter(it->textKey));
 	}
 
-	if (result.isEmpty())
-	{
-		result.append(ASCII::NUL);
-	}
-
-	return revert(result);
+	mFFEngine.setConfiguration(FFConfig);
 }
 
 //--------------------------------------------------------------------------------
 template <class T>
-void FRBase<T>::parseTLVData(int aField, const QByteArray & aData, TFiscalPaymentData & aFPData)
+bool FRBase<T>::checkPayTypeOnPayment(const SPaymentData & aPaymentData)
 {
-	if (!mFiscalFieldData.data().contains(aField))
+	if (aPaymentData.payType == EPayTypes::None)
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to parse TLV-data for field %2 due to no data in specification").arg(mDeviceName).arg(aField));
-		return;
+		toLog(LogLevel::Error, mDeviceName + ": pay type is not defined");
+		return false;
+	}
+	else if (!mPayTypeData.data().contains(aPaymentData.payType))
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": The pay types specification does not contain type = %1 (%2)").arg(aPaymentData.payType).arg(CFR::PayTypeDescription[aPaymentData.payType]));
+		return false;
 	}
 
-	using namespace CFR::FiscalFields;
-
-	SData FFData = mFiscalFieldData[aField];
-	QVariant result;
-
-	if (FFData.type == ETypes::STLV)
-	{
-		return;
-	}
-
-	switch (FFData.type)
-	{
-		case ETypes::String:
-		{
-			if (mCodec)
-			{
-				QTextCodec * codec = CodecByName[CHardware::Codepages::CP866];
-				result = codec->toUnicode(aData);
-			}
-
-			break;
-		}
-		case ETypes::FVLN:
-		{
-			qulonglong digitData = revert(aData.mid(1)).toHex().toULongLong(0, 16);
-			QString textData = QString::number(digitData);
-			textData = textData.insert(textData.size() - int(uchar(aData[0])), QChar(ASCII::Dot));
-			result = textData.toDouble();
-
-			break;
-		}
-		case ETypes::VLN:
-		case ETypes::Byte:
-		{
-			result = revert(aData).toHex().toUInt(0, 16);
-
-			break;
-		}
-		case ETypes::UnixTime:
-		{
-			QDateTime dateTime;
-			dateTime.setTimeSpec(Qt::UTC);
-			uint seconds = ProtocolUtils::revert(aData).toHex().toUInt(0, 16);
-			dateTime.setTime_t(seconds);
-
-			result = dateTime;
-
-			break;
-		}
-		case ETypes::ByteArray:
-		{
-			result = aData;    // формат априори неизвестен
-
-			break;
-		}
-		default:
-		{
-			toLog(LogLevel::Error, QString("%1: Failed to parse TLV-data for field %2 due to data type to set = %3 is unknown").arg(mDeviceName).arg(aField).arg(int(FFData.type)));
-
-			break;
-		}
-	}
-
-	if (result.isValid())
-	{
-		aFPData.insert(aField, result);
-	}
+	return true;
 }
 
 //--------------------------------------------------------------------------------
 template <class T>
-void FRBase<T>::parseSTLVData(const CFR::STLV & aTLV, TComplexFiscalPaymentData & aPSData)
+void FRBase<T>::setLog(ILog * aLog)
 {
-	if (mFiscalFieldData[aTLV.field].type == CFR::FiscalFields::ETypes::STLV)
-	{
-		CFR::TTLVList complexFPData = parseSTLV(aTLV.data);
-		TFiscalPaymentData FPData;
+	T::setLog(aLog);
 
-		for (auto it = complexFPData.begin(); it != complexFPData.end(); ++it)
-		{
-			parseTLVData(it.key(), it.value(), FPData);
-		}
-
-		if (!FPData.isEmpty())
-		{
-			aPSData << FPData;
-		}
-	}
-}
-
-//--------------------------------------------------------------------------------
-template <class T>
-QString FRBase<T>::getFPDataLog(const TFiscalPaymentData & aFPData) const
-{
-	if (aFPData.isEmpty())
-	{
-		return "";
-	}
-
-	QList<int> fields = aFPData.keys();
-	qSort(fields);
-
-	QList<int> descriptionSizes;
-
-	foreach(int field, fields)
-	{
-		descriptionSizes << mFiscalFieldData[field].description.size();
-	}
-
-	qSort(descriptionSizes);
-	int maxDescriptionSize = descriptionSizes.last();
-	QStringList log;
-
-	foreach(int field, fields)
-	{
-		QString description = mFiscalFieldData[field].description;
-		QString descriptionLog = QString("(%1)%2").arg(description).arg("", maxDescriptionSize - description.size());
-		log << QString("%1 %2 = %3").arg(field).arg(descriptionLog).arg(aFPData[field].toString());
-	}
-
-	return "\n" + log.join("\n") + "\n";
+	mFFEngine.setLog(aLog);
 }
 
 //--------------------------------------------------------------------------------

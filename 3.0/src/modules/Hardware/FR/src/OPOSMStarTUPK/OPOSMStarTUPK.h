@@ -47,7 +47,7 @@ protected:
 	/// Проверка возможности выполнения функционала, предполагающего связь с устройством.
 	virtual bool checkConnectionAbility();
 
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Фоновая логика при появлении определенных состояний устройства.

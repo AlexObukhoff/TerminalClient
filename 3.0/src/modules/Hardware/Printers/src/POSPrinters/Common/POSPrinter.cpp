@@ -92,10 +92,7 @@ bool POSPrinter::isConnected()
 		return false;
 	}
 
-	PollingExpector expector;
-	TStatusCodes statusCodes;
-
-	if (!expector.wait(std::bind(&POSPrinter::getStatus, this, std::ref(statusCodes)), CPOSPrinter::Interval, CPOSPrinter::Timeouts::Statuses))
+	if (!waitReady(CPOSPrinter::AvailableWaiting))
 	{
 		return false;
 	}

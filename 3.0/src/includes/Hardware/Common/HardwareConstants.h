@@ -17,7 +17,8 @@ namespace CHardware
 	const char PluginParameterNames[] = "plugin_parameter_names";
 	const char RequiredResourceNames[] = "required_resource_names";
 	const char PluginPath[] = "plugin_path";
-
+	const char ConfigData[] = "config_data";
+	const char CanSoftReboot[] = "can_soft_reboot";	const char ProtocolType[] = "protocol_type";
 	/// Типы вызова функционала драйвера.
 	namespace CallingTypes
 	{
@@ -26,7 +27,7 @@ namespace CHardware
 	}
 
 	/// Типы устройств.
-	namespace Type
+	namespace Types
 	{
 		const char CashAcceptor[] = "CashAcceptor";
 		const char BillAcceptor[] = "BillAcceptor";
@@ -47,17 +48,6 @@ namespace CHardware
 		const char SPARK[] = "SPARK";
 		const char ATOL[] = "ATOL";
 		const char CustomKZT[] = "CP866 (Kazakhstan)";
-	}
-
-	/// Варинатны использования настроек.
-	namespace Values
-	{
-		const char Use[] = "use";
-		const char NotUse[] = "not use";
-		const char NoChange[] = "no change";
-		const char Auto[] = "auto";
-		const char More[] = "more";
-		const char Less[] = "less";
 	}
 
 	/// Константы порта.
@@ -104,6 +94,14 @@ namespace CHardware
 		const char ProcessEnabling[] = "process_enabling";
 		const char ProcessDisabling[] = "process_disabling";
 		const char StackedFilter[] = "stacked_filter";
+
+		/// Типы протокола CCTalk.
+		namespace CCTalkTypes
+		{
+			const char CRC8[] = "CRC8";
+			const char CRC16[] = "CRC16";
+			const char CRC16Encrypted[] = "CRC16 Encrypted";
+		}
 	}
 
 	/// Константы виртуального устройства приема денег.
@@ -238,6 +236,7 @@ namespace CHardware
 		const char EKLZStatus[] = "EKLZ_status";
 		const char CVCNumber[] = "cvc_number";
 		const char ForcePerformZReport[] = "force_perform_z_report";
+		const char PrinterModel[] = "printer_model";
 
 		/// Команды.
 		namespace Commands

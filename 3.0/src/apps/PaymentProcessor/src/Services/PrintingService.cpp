@@ -9,9 +9,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QDate>
 #include <QtCore/QBuffer>
-#include <QtCore/QTextStream>
 #include <QtScript/QScriptEngine>
-#include <QtCore/QTextCodec>
 #include <QtXML/QDomDocument>
 #include <QtXML/QXmlStreamWriter>
 #include <Common/QtHeadersEnd.h>
@@ -67,12 +65,15 @@ namespace CPrintingService
 //---------------------------------------------------------------------------
 PrintingService::PrintingService(IApplication * aApplication) :
 	mApplication(aApplication),
+	mDatabaseUtils(nullptr),
+	mDeviceService(nullptr),
 	mContinuousMode(false),
 	mServiceOperation(false),
 	mRandomReceiptsID(false),
 	mNextReceiptIndex(1),
-	mFiscalRegister(nullptr),
-	mRandomGenerator(static_cast<unsigned>(QDateTime::currentDateTime().currentMSecsSinceEpoch()))
+	mRandomGenerator(static_cast<unsigned>(QDateTime::currentDateTime().currentMSecsSinceEpoch())),
+	mEnableBlankFiscalData(false),
+	mFiscalRegister(nullptr)
 {
 	setLog(mApplication->getLog());
 }
@@ -221,27 +222,36 @@ int PrintingService::printReceipt(const QString & aReceiptType, const QVariantMa
 	mContinuousMode = aContinuousMode;
 	mServiceOperation = aServiceOperation;
 
-	QString receiptTemplate = (QString("%1_%2").arg(aParameters[PPSDK::CPayment::Parameters::Type].toString()).arg(aReceiptTemplate)).toLower();
-
-	// Извлекаем шаблон 'PROCESSING_TYPE'_aReceiptTemplate
-	if (!mCachedReceipts.contains(receiptTemplate))
-	{
-		receiptTemplate = aReceiptTemplate.toLower();
-
+	QStringList receiptTemplates;
+	receiptTemplates
+		// Извлекаем шаблон 'PROCESSING_TYPE'_aReceiptTemplate
+		<< (QString("%1_%2").arg(aParameters[PPSDK::CPayment::Parameters::Type].toString()).arg(aReceiptTemplate)).toLower()
 		// Извлекаем обычный шаблон для чека нужного типа.
-		if (!mCachedReceipts.contains(receiptTemplate))
-		{
-			toLog(LogLevel::Error, QString("Failed to print receipt. Missing receipt template : %1.").arg(receiptTemplate));
+		<< aReceiptTemplate.toLower()
+		// Резервный шаблон
+		<< SDK::PaymentProcessor::CReceiptType::Payment;
 
-			QMetaObject::invokeMethod(this, "printEmptyReceipt", Qt::QueuedConnection, Q_ARG(int, 0), Q_ARG(bool, true));
-			return 0;
+	foreach (auto templateName, receiptTemplates)
+	{
+		if (templateName == SDK::PaymentProcessor::CReceiptType::Disabled)
+		{
+			break;
+		}
+
+		if (mCachedReceipts.contains(templateName))
+		{
+			auto printCommand = getPrintCommand(aReceiptType);
+			printCommand->setReceiptTemplate(templateName);
+
+			return performPrint(printCommand, aParameters, mCachedReceipts[templateName]);
 		}
 	}
 
-	auto printCommand = getPrintCommand(aReceiptType);
-	printCommand->setReceiptTemplate(aReceiptTemplate);
+	toLog(LogLevel::Error, QString("Failed to print receipt. Missing receipt template : %1.").arg(aReceiptTemplate));
 
-	return performPrint(printCommand, aParameters, mCachedReceipts[receiptTemplate]);
+	QMetaObject::invokeMethod(this, "printEmptyReceipt", Qt::QueuedConnection, Q_ARG(int, 0), Q_ARG(bool, true));
+
+	return 0;
 }
 
 //---------------------------------------------------------------------------
@@ -1276,11 +1286,8 @@ void PrintingService::saveReceiptContent(const QString & aReceiptName, const QSt
 	// Сохраняем чек.
 	if (file.open(QIODevice::WriteOnly))
 	{
-		QTextStream ostream(&file);
-
-		ostream << aContents.join("\r\n");
-		
-		ostream.flush();
+		file.write(aContents.join("\r\n").toUtf8());
+		file.close();
 	}
 	else
 	{
@@ -1306,6 +1313,18 @@ void PrintingService::saveReceipt(const QVariantMap & aParameters, const QString
 }
 
 //---------------------------------------------------------------------------
+QString & replaceTags(QString & aMessage)
+{
+	aMessage.replace("[br]", "\n", Qt::CaseInsensitive);
+	aMessage.remove(QRegExp("\\[(b|dw|dh)\\]", Qt::CaseInsensitive));
+	aMessage.remove(QRegExp("\\[/(b|dw|dh)\\]", Qt::CaseInsensitive));
+
+	aMessage.remove(QRegExp("\\[img.?\\].*\\[/img\\]"));
+
+	return aMessage;
+}
+
+//---------------------------------------------------------------------------
 QString PrintingService::loadReceipt(qint64 aPaymentId)
 {
 	// Получаем имя папки с чеками.
@@ -1320,18 +1339,24 @@ QString PrintingService::loadReceipt(qint64 aPaymentId)
 	}
 
 	QDir dir(path.path() + QDir::separator());
-	QStringList receipts = dir.entryList(QStringList() << QString("*%1.txt").arg(aPaymentId) << QString("*%1_not_printed.txt").arg(aPaymentId));
+	QStringList receiptFiles;
+	receiptFiles
+		<< QString("*_%1.txt").arg(aPaymentId)
+		<< QString("*_%1_*.txt").arg(aPaymentId);
 
-	if (!receipts.isEmpty())
+	QStringList receiptsBody;
+
+	QStringList receipts = dir.entryList(receiptFiles);
+	while (!receipts.isEmpty())
 	{
 		QFile f(dir.absolutePath() + QDir::separator() + receipts.takeFirst());
 		if (f.open(QIODevice::ReadOnly))
 		{
-			return QTextCodec::codecForName("Windows-1251")->toUnicode(f.readAll());
-		}		
+			receiptsBody << replaceTags(QString::fromUtf8(f.readAll()));
+		}
 	}
 
-	return QString();
+	return receiptsBody.join("\n------------------------------\n");
 }
 
 //---------------------------------------------------------------------------
@@ -1401,8 +1426,11 @@ void PrintingService::updateHardwareConfiguration()
 		.arg(DSDK::CComponents::Printer).arg(DSDK::CComponents::DocumentPrinter).arg(DSDK::CComponents::FiscalRegistrator);
 	QStringList printerNames = settings->getDeviceList().filter(QRegExp(regExpData));
 
-	mRandomReceiptsID = settings->getCommonSettings().randomReceiptsID;
-	QTime autoZReportTime = settings->getCommonSettings().autoZReportTime;
+	auto commonSettings = settings->getCommonSettings();
+
+	mRandomReceiptsID = commonSettings.randomReceiptsID;
+	QTime autoZReportTime = commonSettings.autoZReportTime;
+	mEnableBlankFiscalData = commonSettings.enableBlankFiscalData;
 
 	mPrinterDevices.clear();
 	mAvailablePrinters.clear();

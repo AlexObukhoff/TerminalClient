@@ -48,7 +48,9 @@ void UtilsPlugin::initializeEngine(QDeclarativeEngine * aEngine, const char * /*
 
 	aEngine->rootContext()->setContextProperty("Utils", utils);
 
-	aEngine->addImageProvider("ui", new SkinProvider(interfacePath, logoPath, userLogoPath, dynamic_cast<Skin *>(utils->getSkin())));
+	SkinProvider * sp = new SkinProvider(interfacePath, logoPath, userLogoPath, dynamic_cast<Skin *>(utils->getSkin()));
+	
+	aEngine->addImageProvider("ui", sp);
 	
 	aEngine->addImageProvider("barcode", new BarcodeProvider());
 }

@@ -9,7 +9,7 @@
 
 // Project
 #include "Hardware/FR/FRBaseConstants.h"
-#include "Hardware/FR/FiscalFieldDescriptions.h"
+#include "FFEngine.h"
 
 //--------------------------------------------------------------------------------
 template <class T>
@@ -49,18 +49,21 @@ public:
 	/// Является ли онлайновым.
 	virtual bool isOnline() const;
 
+	/// Установить лог.
+	virtual void setLog(ILog * aLog);
+
 protected:
+	/// Попытка самоидентификации.
+	virtual bool isConnected();
+
 	/// Завершение инициализации.
 	virtual void finaliseInitialization();
 
-	/// Запрос статуса.
+	/// Получить и обработать статус.
 	virtual bool processStatus(TStatusCodes & aStatusCodes);
 
 	/// Проверить установки сервера ОФД.
 	bool checkOFDData(const QByteArray & aAddressData, const QByteArray & aPortData);
-
-	/// Проверить возможность использования фискального реквизита.
-	bool checkFiscalField(int aField, bool & aResult);
 
 	/// Открыта ли сессия.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
@@ -86,17 +89,26 @@ protected:
 	/// Загрузить СНО.
 	bool checkTaxSystems(char aData);
 
-	/// Проверить корректность СНО дилера.
-	bool checkDealerTaxSystems(bool aCanLog = false);
-
 	/// Загрузить признаки агента.
 	bool checkAgentFlags(char aData);
 
-	/// Проверить корректность признаков агента дилера.
-	bool checkDealerAgentFlags(bool aCanLog = false);
-
 	/// Загрузить режимы работы.
 	bool checkOperationModes(char aData);
+
+	/// Проверить суммы на платеже.
+	bool checkAmountsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
+
+	/// Проверить сумму в кассе на платеже.
+	bool checkSumInCash(const SDK::Driver::SPaymentData & aPaymentData);
+
+	/// Проверить налоги на платеже.
+	bool checkVATsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
+
+	/// Добавить фискальные теги в платеж.
+	void addFiscalFieldsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
+
+	/// Проверить тип оплаты на платеже.
+	bool checkPayTypeOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
 	/// Проверить параметры налогов.
 	virtual bool checkTaxes();
@@ -114,28 +126,10 @@ protected:
 	bool setOFDParameters();
 
 	/// Установить реквизиты ОФД на продаже.
-	bool setOFDParametersOnSale(const SDK::Driver::SAmountData & aAmountData);
+	bool setOFDParametersOnSale(const SDK::Driver::SUnitData & aUnitData);
 
 	/// Установить TLV-параметр.
 	virtual bool setTLV(int /*aField*/, bool /*aForSale*/ = false) { return true; }
-
-	/// Распарсить TLV-параметр.
-	bool parseTLV(const QByteArray & aData, CFR::STLV & aTLV);
-
-	/// Распарсить массив байтов STLV-структуры.
-	CFR::TTLVList parseSTLV(const QByteArray & aData);
-
-	/// Распарсить значение TLV-структуры.
-	void parseTLVData(int aField, const QByteArray & aData, SDK::Driver::TFiscalPaymentData & aFPData);
-
-	/// Распарсить значение STLV-структуры.
-	void parseSTLVData(const CFR::STLV & aTLV, SDK::Driver::TComplexFiscalPaymentData & aPSData);
-
-	/// Получить массив байтов TLV-структуры для установки тега.
-	QByteArray getTLVData(int aField, const QVariant & aValue, QString * aLog = nullptr);
-
-	/// Получить массив байтов TLV-структуры для установки тега VLN-типа.
-	QByteArray getDigitTLVData(qulonglong aValue);
 
 	/// Проверить Z-отчет по таймеру.
 	void checkZReportOnTimer();
@@ -188,8 +182,14 @@ protected:
 	/// Логгировать данные налогов.
 	QString getVATLog(const SDK::Driver::TVATs & aVATs) const;
 
-	/// Получить лог фискальных данных платежа.
-	QString getFPDataLog(const SDK::Driver::TFiscalPaymentData & aFPData) const;
+	/// Включить/выключить режим непечати документов.
+	virtual bool setNotPrintDocument(bool aEnabled, bool aZReport = false);
+
+	/// Проверить непечать документа.
+	bool checkNotPrinting(bool aEnabled = false, bool aZReport = false);
+
+	/// Может работать с буфером Z-отчетов?
+	virtual bool canProcessZBuffer();
 
 	/// Наличие ЭКЛЗ.
 	bool mEKLZ;
@@ -202,6 +202,9 @@ protected:
 
 	/// Постоянная ошибка ФН.
 	bool mFSError;
+
+	/// Исчерпан ресурс хранения отчетов в ФН.
+	bool mFSOfflineEnd;
 
 	/// Буфер Z-отчетов заполнен.
 	bool mZBufferFull;
@@ -261,15 +264,12 @@ protected:
 	CFR::PayTypeData mPayTypeData;
 
 	/// Системы налогообложения (СНО).
-	typedef QList<char> TTaxSystems;
 	TTaxSystems mTaxSystems;
 
 	/// Признаки агента.
-	typedef QList<char> TAgentFlags;
 	TAgentFlags mAgentFlags;
 
 	/// Режимы работы.
-	typedef QList<char> TOperationModes;
 	TOperationModes mOperationModes;
 
 	/// Серийный номер ФР.
@@ -291,13 +291,25 @@ protected:
 	EFFD::Enum mFFDFS;
 
 	/// Данные фискальных реквизитов.
-	CFR::FiscalFields::CData mFiscalFieldData;
+	CFR::FiscalFields::Data mFFData;
 
 	/// Может работать с буфером Z-отчетов.
 	bool mCanProcessZBuffer;
 
 	/// Параметры фискализации некорректны?
 	bool mWrongFiscalizationSettings;
+
+	/// Экземляр движка фискальных тегов.
+	FFEngine mFFEngine;
+
+	/// Ошибка установки непечати.
+	bool mNotPrintingError;
+
+	/// Ошибка ИНН кассира.
+	bool mCashierINNError;
+
+	/// Ошибка налоговых ставок.
+	bool mTaxError;
 };
 
 //--------------------------------------------------------------------------------

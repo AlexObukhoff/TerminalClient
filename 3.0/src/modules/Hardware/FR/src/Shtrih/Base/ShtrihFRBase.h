@@ -15,7 +15,7 @@ protected:
 	/// Попытка самоидентификации.
 	virtual bool isConnected();
 
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Инициализация устройства.
@@ -29,6 +29,9 @@ protected:
 
 	/// Снять Z-отчет.
 	virtual bool execZReport(bool aAuto);
+
+	/// Проверка готовности фискальника к Z-отчету.
+	virtual bool prepareZReport(bool aAuto, QVariantMap & aData);
 
 	/// Распечатать отложенные Z-отчеты.
 	bool printDeferredZReports();

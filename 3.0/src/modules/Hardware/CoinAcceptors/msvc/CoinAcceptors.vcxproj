@@ -18,6 +18,7 @@
     <ProjectGuid>{F791E94D-60D3-4C49-9FAF-1A260D796C3A}</ProjectGuid>
     <RootNamespace>ComPortWin</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
+    <ProjectName>CoinAcceptors</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -115,8 +116,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\CCTalk\CCTalkCoinAcceptorBase.cpp" />
-    <ClCompile Include="..\src\CCTalk\CCTalkModelData.cpp" />
-    <ClCompile Include="..\src\CCTalk\ComplexEnable.cpp" />
     <ClCompile Include="..\src\NPSTalk\NPSTalkCoinAcceptor.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -127,35 +126,13 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusCodes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusesDescriptions.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CurrencyDescriptions.h" />
-    <ClInclude Include="..\src\CCTalk\CCTalkCurrencyData.h" />
-    <ClInclude Include="..\src\CCTalk\CCTalkModelData.h" />
+    <ClInclude Include="..\src\CCTalk\CCTalkCoinAcceptorBase.h" />
     <ClInclude Include="..\src\CCTalk\CCTalkCoinAcceptorConstants.h" />
+    <ClInclude Include="..\src\CCTalk\CCTalkCoinAcceptorModelData.h" />
+    <ClInclude Include="..\src\CCTalk\CCTalkComplexEnableCoinAcceptor.h" />
+    <ClInclude Include="..\src\CoinAcceptorBase.h" />
     <ClInclude Include="..\src\NPSTalk\NPSTalkCoinAcceptor.h" />
-    <ClInclude Include="..\src\CCTalk\ComplexEnable.h" />
     <ClInclude Include="..\src\NPSTalk\NPSTalkCoinAcceptorConstants.h" />
-    <CustomBuild Include="..\src\CCTalk\CCTalkCoinAcceptorBase.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
-      </Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
-      </Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
-      </Command>
-    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\msvc\Common.vcxproj">
@@ -176,7 +153,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" Qt5Version_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" QtVersion_x0020_Win32="$(DefaultQtVersion)" RccDir=".\GeneratedFiles\$(ProjectName)" UicDir=".\GeneratedFiles\$(ProjectName)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

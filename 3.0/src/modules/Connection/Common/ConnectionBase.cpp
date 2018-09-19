@@ -266,7 +266,8 @@ bool ConnectionBase::httpCheckMethod(const IConnection::CheckUrl & aHost)
 
 	if (!aHost.second.isEmpty() && !answer.contains(aHost.second.toLatin1()))
 	{
-		toLog(LogLevel::Error, QString("Connection check failed. Server answer verify failed '%1'.").arg(aHost.second));
+		toLog(LogLevel::Error, QString("Server answer verify failed '%1'.\nServer response: '%2'.")
+			.arg(aHost.second).arg(QString::fromUtf8(answer).left(1024)));
 
 		traceLog();
 

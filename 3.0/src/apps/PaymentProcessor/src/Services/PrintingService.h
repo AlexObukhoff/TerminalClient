@@ -75,7 +75,7 @@ public:
 	/// Завершение работы, освобождение ресурсов.
 	virtual bool shutdown();
 
-	/// Поулчение списка зависимостей.
+	/// Получение списка зависимостей.
 	virtual const QSet<QString> & getRequiredServices() const;
 
 	/// Получить параметры сервиса.
@@ -108,6 +108,8 @@ public:
 	virtual int printReport(const QString & aReceiptType, const QVariantMap & aParameters);
 
 	#pragma endregion
+
+	bool enableBlankFiscalData() const { return mEnableBlankFiscalData; }
 
 public:
 	/// Получить объект фискального регистратора
@@ -229,6 +231,7 @@ private:
 	bool mServiceOperation;
 	bool mRandomReceiptsID;
 	mutable std::mt19937 mRandomGenerator;
+	bool mEnableBlankFiscalData;
 
 	/// Индекс следующего задания на печать
 	QAtomicInt mNextReceiptIndex;

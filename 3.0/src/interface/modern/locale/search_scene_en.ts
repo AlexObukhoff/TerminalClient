@@ -14,12 +14,12 @@
         <translation>Sorry, this provider is temporarily out of service. Try again later.</translation>
     </message>
     <message>
-        <location filename="../search_scene.qml" line="148"/>
+        <location filename="../search_scene.qml" line="149"/>
         <source>search_scene#hint</source>
         <translation>Start typing a keyword</translation>
     </message>
     <message>
-        <location filename="../search_scene.qml" line="161"/>
+        <location filename="../search_scene.qml" line="162"/>
         <source>search_scene#not_found</source>
         <translation>Nothing was found.</translation>
     </message>

@@ -34,7 +34,7 @@ namespace CSTAR { namespace MemorySwitches
 
 			using namespace CHardware::Printer::Settings;
 			using namespace CHardware::Printer::Values;
-			using namespace CHardware::Values;
+			using namespace CHardwareSDK::Values;
 			using namespace CSTAR::Models;
 
 			// LoopHoldEjector (LPE) - для принтеров с эжектором

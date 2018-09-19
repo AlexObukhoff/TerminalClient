@@ -94,7 +94,13 @@ namespace CPrimFR
 	const ushort Parameter1Mask = 0xFF00;
 
 	/// Параметр 2 настройки ФР.
-	const ushort Parameter2 = 0x14A5;
+	const ushort Parameter2 = 0x14A0;
+
+	/// Маска для длинных отчетов.
+	const ushort LongReportMask2 = 0x0005;
+
+	/// Маска для обнуления суммы в кассе при закрытии смены (параметр 2).
+	const ushort NullingSumInCashMask = 0x0100;
 
 	/// Версия ПО ФР, где присутствуют презентер и ретрактор.
 	const char SoftVersionPresenter[] = "LPC22";
@@ -110,6 +116,14 @@ namespace CPrimFR
 
 	/// Текст на чеке перед выходом из незапланированного режима принтера
 	const char EndPrinterModeText[] = "           PRINTER MODE";
+
+	//----------------------------------------------------------------------------
+	/// Шрифт для фискальных документов.
+	namespace FiscalFont
+	{
+		const int Default = 1;
+		const int Narrow  = 0;
+	}
 
 	//----------------------------------------------------------------------------
 	/// Паузы, [мс].

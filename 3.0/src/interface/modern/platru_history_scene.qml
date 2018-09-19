@@ -20,7 +20,7 @@ Widgets.SceneBase2 {
 		anchors { left: sceneButton.right; right: parent.right; rightMargin: 30; verticalCenter: sceneButton.verticalCenter }
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
-		source: "image://ui/panel.operator"
+		source: Utils.ui.image("panel.operator")
 
 		Row {
 			anchors { left: parent.left; leftMargin: 10 }
@@ -31,7 +31,7 @@ Widgets.SceneBase2 {
 
 				anchors.verticalCenter: parent.verticalCenter
 				width: 100
-				source: "image://ui/paybook.logo"
+				source: Utils.ui.image("paybook.logo")
 			}
 
 			Item {

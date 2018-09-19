@@ -5,6 +5,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTextCodec>
+#include <QtCore/QReadWriteLock>
 #include <Common/QtHeadersEnd.h>
 
 // Project
@@ -89,6 +90,9 @@ protected:
 
 	/// Массив данных для перекодировки.
 	CharacterData mData;
+
+	/// Сторож данных.
+	mutable QReadWriteLock mDataGuard;
 
 	/// Минимальное значение unicode-символа для использования кодека для перекодировки.
 	ushort mMinValueActive;

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <memory>
+
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QObject>
@@ -126,6 +128,7 @@ public:
 	GraphicsEngine();
 	~GraphicsEngine();
 
+public:
 	/// Инициализация. Вызывается после addContentDirectory() и addEngine(), 
 	/// инициализирует экран.
 	bool initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aShowDebugInfo = false);
@@ -141,6 +144,19 @@ public:
 
 	/// Закрывает все графические элементы, прячет экран.
 	void stop();
+
+	enum EWidgetType
+	{
+		All,
+		Qml,
+		Native,
+		Web
+	};
+
+	Q_ENUMS(EWidgetType)
+
+	/// Очистить сцену от виджетов.
+	void reset(EWidgetType aType = GraphicsEngine::Qml);
 
 	/// Добавляет каталог с графическими элементами (сразу производится поиск всех описателей и их парсинг).
 	void addContentDirectory(const QString & aDirectory);
@@ -223,9 +239,7 @@ private: // Типы
 	struct SWidget
 	{
 		SDK::GUI::GraphicsItemInfo info;
-		SDK::GUI::IGraphicsItem  * graphics;
-
-		SWidget() : graphics(0) {}
+		std::weak_ptr<SDK::GUI::IGraphicsItem> graphics;
 	};
 
 	typedef QMap<QString, SWidget> TWidgetList;

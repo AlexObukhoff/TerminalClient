@@ -7,6 +7,7 @@
 #include "Hardware/Printers/PortPrinterBase.h"
 
 // Project
+#include "Hardware/FR/AtolOnlinePrinters.h"
 #include "../Base/AtolFRBase.h"
 #include "AtolOnlineFRConstants.h"
 
@@ -25,7 +26,7 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Получить ключ модели для идентификации.
@@ -59,7 +60,7 @@ protected:
 	virtual bool checkTax(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData);
 
 	/// Продажа.
-	virtual bool sale(const SDK::Driver::SAmountData & aAmountData);
+	virtual bool sale(const SDK::Driver::SUnitData & aUnitData);
 
 	/// Установить TLV-параметр.
 	virtual bool setTLV(int aField, bool aForSale = false);
@@ -69,6 +70,12 @@ protected:
 
 	/// Установить флаги по ошибке в ответе.
 	virtual void setErrorFlags(char aError, const QByteArray & aCommand);
+
+	/// Получить Id принтера.
+	virtual char getPrinterId();
+
+	/// Софтварная перезагрузка.
+	bool reboot();
 
 	/// Версия ПО ФР, начиная с которой унифицирован порядок налоговых ставок.
 	int mFRBuildUnifiedTaxes;

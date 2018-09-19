@@ -4,7 +4,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtDeclarative/QDeclarativeExtensionPlugin>
 #include <QtDeclarative/QDeclarativeImageProvider>
 #include <Common/QtHeadersEnd.h>
@@ -12,8 +12,10 @@
 class Skin;
 
 //------------------------------------------------------------------------------
-class SkinProvider : public QDeclarativeImageProvider
+class SkinProvider : public QObject, public QDeclarativeImageProvider
 {
+	Q_OBJECT
+
 public:
 	SkinProvider(const QString & aInterfacePath, const QString & aLogoPath, const QString & aUserLogoPath, const Skin * aSkin);
 	~SkinProvider() {};
@@ -26,8 +28,7 @@ private:
 private:
 	QString mLogoPath;
 	QString mUserLogoPath;
-	QString mSkinName;
-	QVariantMap mSkinConfig;
+	const Skin * mSkin;	
 	QString mInterfacePath;
 
 	QHash<QString, QImage> mBackgrounds;

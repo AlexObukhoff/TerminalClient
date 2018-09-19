@@ -38,7 +38,7 @@ protected:
 	/// Завершение инициализации.
 	virtual void finaliseInitialization();
 
-	/// Запрос статуса.
+	/// Получить и обработать статус.
 	virtual bool processStatus(TStatusCodes & aStatusCodes);
 
 	/// Проверить порт.
@@ -63,7 +63,7 @@ protected:
 	virtual QString getTrOfNewProcessed(const TStatusCollection & aStatusCollection, SDK::Driver::EWarningLevel::Enum aWarningLevel);
 
 	/// Получить спецификацию статуса.
-	virtual SStatusCodeSpecification getStatusCodeSpecification(int aStatusCode);
+	virtual SStatusCodeSpecification getStatusCodeSpecification(int aStatusCode) const;
 
 	/// Проверка возможности применения буфера статусов.
 	virtual bool canApplyStatusBuffer();

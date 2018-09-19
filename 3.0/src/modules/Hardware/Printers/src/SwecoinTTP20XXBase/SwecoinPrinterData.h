@@ -16,8 +16,8 @@
 namespace CSwecoinPrinter
 {
 	const int Pause = 500;  /// Таймаут порта после инициализации.
-	const int MaxReadIdTimeout = 10 * 1000;  /// Максимальный таймаут для чтения ответа на команду поулчения Id.
-	const int MinReadIdTimeout = 2 * 1000;   /// Минимальный таймаут для чтения данных на команду поулчения Id.
+	const int MaxReadIdTimeout = 10 * 1000;  /// Максимальный таймаут для чтения ответа на команду получения Id.
+	const int MinReadIdTimeout = 2 * 1000;   /// Минимальный таймаут для чтения данных на команду получения Id.
 
 	const char UnknownModelName[] = "Unknown Swecoin Printer";  /// Имя принтера по умолчанию.
 	

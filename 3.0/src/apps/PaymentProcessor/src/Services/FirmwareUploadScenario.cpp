@@ -42,7 +42,8 @@ FirmwareUploadScenario::FirmwareUploadScenario(IApplication * aApplication) :
 	Scenario(CFirmwareUploadScenario::Name, ILog::getInstance(CFirmwareUploadScenario::Name)),
 	mApplication(aApplication),
 	mRetryCount(2),
-	mDevice(nullptr)
+	mDevice(nullptr),
+	mDeviceInitializedTimer(0)
 {
 	mReportBuilder = new ReportBuilder(mApplication->getWorkingDirectory());
 }

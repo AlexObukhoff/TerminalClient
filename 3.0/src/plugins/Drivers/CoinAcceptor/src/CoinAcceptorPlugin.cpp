@@ -28,9 +28,19 @@ TParameterList EnumParameters()
 }
 
 //------------------------------------------------------------------------------
+template <class T>
+TParameterList CCTalkParameters()
+{
+	using namespace CHardware::CashAcceptor;
+
+	return EnumParameters<T>()
+		<< setProtocolType(CCTalkTypes::CRC8, QStringList() << CCTalkTypes::CRC8);
+}
+
+//------------------------------------------------------------------------------
 BEGIN_REGISTER_PLUGIN
-	SIMPLE_COMMON_DRIVER(CCTalkCoinAcceptorBase, EnumParameters)
-	SIMPLE_COMMON_DRIVER(ComplexEnableCCTalkCoinAcceptor, EnumParameters)
+	SIMPLE_COMMON_DRIVER(CCTalkCoinAcceptorBase, CCTalkParameters)
+	SIMPLE_COMMON_DRIVER(CCTalkComplexEnableCoinAcceptor, CCTalkParameters)
 	//COMMON_COIN_ACCEPTOR_PLUGIN(NPSTalkCoinAcceptor)   // отключено из-за отсутствия возможности отключения отдельных номиналов и других критичных проблем
 END_REGISTER_PLUGIN
 

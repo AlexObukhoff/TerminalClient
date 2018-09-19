@@ -8,3 +8,4 @@
 #include "../../../../modules/Hardware/CashAcceptors/src/ID003/ID003CashAcceptor.h"
 #include "../../../../modules/Hardware/CashAcceptors/src/V2e/V2eCashAcceptor.h"
 #include "../../../../modules/Hardware/CashAcceptors/src/SSP/SSPCashAcceptor.h"
+#include "../../../../modules/Hardware/CashAcceptors/src/CCTalk/CCTalkCashAcceptor.h"

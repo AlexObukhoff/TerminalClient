@@ -60,7 +60,7 @@ public:
 #pragma endregion
 
 protected:
-	/// Получение статуса
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Получить состояние регистрации в сети

@@ -371,6 +371,10 @@ void NetworkService::updateModemParameters()
 				toLog(LogLevel::Error, QString("Failed to send USSD: '%1'.").arg(connectionTemplate.balanceNumber));
 			}
 		}
+		else
+		{
+			toLog(LogLevel::Error, QString("Connection template '%1' not found. USSD request for balance undefined.").arg(getConnection().name));
+		}
 
 		QString operatorName;
 

@@ -1,0 +1,23 @@
+{
+	"name": "main_menu_scene",
+	spacing: 0,
+	"items": [
+	{
+		name: "Ad",
+		path: "ad.qml",
+		standalone: true,
+		parameters: { source: "banner_fullscreen.swf", width: 1280, height: 200, sourceWidth: 1280, sourceHeight: 1024, y: 41 }
+	},
+	{  path: "spacer.qml", parameters: { height: 250 } },
+	{
+		name: "TopOperators",
+		path: "operator_menu.qml",
+		parameters: { itemsOnPage: 10, model: MenuWalker.model }
+	},
+	{  path: "spacer.qml", parameters: { height: 40 } },
+	{
+		name: "RootGroups",
+		path: "root_groups.qml",
+		parameters: { font: "font.root.group.20", columns: 4, rows: 1, scrollable: true, cellWidth: 244, cellHeight: 200 }
+	}]
+}

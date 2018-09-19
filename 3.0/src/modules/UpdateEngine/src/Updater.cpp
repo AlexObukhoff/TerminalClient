@@ -1113,7 +1113,7 @@ CUpdaterErrors::Enum Updater::loadComponents(const QByteArray & aContent, Update
 				if (record.tagName() == "post-action")
 				{
 					auto name = record.attribute("path").remove(leadingSlash);
-					auto url = record.attribute("url");
+					// auto url = record.attribute("url");
 
 					actions.append(name);
 					continue;

@@ -8,6 +8,7 @@
 #include <Common/QtHeadersEnd.h>
 
 // Project
+#include "Hardware/Common/PollingExpector.h"
 #include "Hardware/Common/BaseStatusDescriptions.h"
 #include "Hardware/Common/BaseStatusTypes.h"
 #include "Hardware/Common/HystoryList.h"
@@ -25,6 +26,9 @@ namespace CDevice
 
 	/// Имя устройства по умолчанию.
 	const char DefaultName[] = "Unknown device";
+
+	/// Разделитель статусов.
+	const char StatusSeparator[] = "; ";
 }
 
 //--------------------------------------------------------------------------------
@@ -73,10 +77,10 @@ protected:
 	/// Полл.
 	virtual void doPoll(TStatusCodes & aStatusCodes);
 
-	/// Запрос статуса.
+	/// Получить и обработать статус.
 	virtual bool processStatus(TStatusCodes & aStatusCodes);
 
-	/// Запрос статуса.
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Применение буфера статусов для блокирования "мигающих" ошибок.
@@ -128,10 +132,10 @@ protected:
 	bool isPluginMismatch();
 
 	/// Получить переводы статусов.
-	QString getStatusTranslations(const TStatusCodes & aStatusCodes, bool aLocale);
+	QString getStatusTranslations(const TStatusCodes & aStatusCodes, bool aLocale) const;
 
 	/// Получить спецификацию статуса.
-	virtual SStatusCodeSpecification getStatusCodeSpecification(int aStatusCode);
+	virtual SStatusCodeSpecification getStatusCodeSpecification(int aStatusCode) const;
 
 	/// Получить статус-коды.
 	TStatusCodes getStatusCodes(const TStatusCollection & aStatusCollection);
@@ -151,6 +155,9 @@ protected:
 
 	/// Состояние окружения устройства изменилось.
 	virtual bool environmentChanged();
+
+	/// Подождать готовность.
+	bool waitReady(const SWaitingData & aWaitingData);
 
 	/// Получить уровень тревожности по буферу статус-кодов.
 	virtual SDK::Driver::EWarningLevel::Enum getWarningLevel(const TStatusCollection & aStatusCollection);
@@ -179,7 +186,7 @@ protected:
 	/// Устройство протестировано на совместимость.
 	bool mVerified;
 
-	/// Mодель соответствует другому плагину.
+	/// Mодель соответствует своему плагину.
 	bool mModelCompatibility;
 
 	/// Мьютекс для блокировки поллинга при выполнении внешних операций.

@@ -141,7 +141,7 @@ namespace CSTAR
 			
 			if (value.type() == QVariant::Bool)
 			{
-				value = value.toBool() ? CHardware::Values::Use : CHardware::Values::NotUse;
+				value = value.toBool() ? CHardwareSDK::Values::Use : CHardwareSDK::Values::NotUse;
 			}
 
 			QVariantMap configuration;

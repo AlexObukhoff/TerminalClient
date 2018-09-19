@@ -63,7 +63,10 @@ Utils::Utils(QDeclarativeEngine * aEngine, const QString & aInterfacePath, const
 	mProviderListFilter->setSourceModel(mProviderListModel.data());
 	mProviderListFilter->setDynamicSortFilter(true);
 
-	mSkin = QSharedPointer<Skin>(new Skin(mInterfacePath, mUserPath));
+	mSkin = QSharedPointer<Skin>(new Skin(application, mInterfacePath, mUserPath));
+	
+	mGuiService = application->property("graphics").value<QObject *>();
+	connect(mGuiService, SIGNAL(skinReload(const QVariantMap &)), this, SLOT(onReloadSkin(const QVariantMap &)));
 }
 
 //------------------------------------------------------------------------------
@@ -403,6 +406,16 @@ QVariantMap Utils::str2json(const QString & aString) const
 	Log(Log::Error) << QString("Utils: failed to parsed JSON string %1").arg(aString);
 	
 	return QVariantMap();
+}
+
+//------------------------------------------------------------------------------
+void Utils::onReloadSkin(const QVariantMap & aParams)
+{
+	if (mSkin->needReload(aParams))
+	{
+		QMetaObject::invokeMethod(mGuiService, "reset", Qt::DirectConnection);
+		mSkin->reload(aParams);
+	}
 }
 
 //------------------------------------------------------------------------------

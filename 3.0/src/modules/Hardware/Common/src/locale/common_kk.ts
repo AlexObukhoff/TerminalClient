@@ -28,167 +28,172 @@
         <source>CommonParameters#protocol_name</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../../../../../includes/Hardware/Plugins/CommonParameters.h" line="27"/>
+        <source>CommonParameters#protocol_type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GeneralStatuses</name>
     <message>
         <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="34"/>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="56"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="57"/>
         <source>#unknown_state</source>
         <translation type="unfinished">Белгісіз күй</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="53"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="54"/>
         <source>#ok</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="64"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="65"/>
         <source>#operation_error</source>
         <translation type="unfinished">Пәрменді орындауда қате шықты </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="58"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="59"/>
         <source>#need_firmware_update</source>
         <translation type="unfinished">операциялық жүйені жаңарту қажет </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="67"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="68"/>
         <source>#model_not_compatible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="78"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="79"/>
         <source>#maintenance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="79"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="80"/>
         <source>#thirdparty_driver_error</source>
         <translation type="unfinished">Тысқары драйвер қатесі </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="61"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="62"/>
         <source>#wrong_switches_configuration</source>
         <translation type="unfinished">Басқарушы ауыстырып қосқыштар бұрыс бапталған </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="54"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="55"/>
         <source>#busy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="59"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="60"/>
         <source>#need_reboot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="60"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="61"/>
         <source>#thirdparty_driver_warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="62"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="63"/>
         <source>#developing</source>
         <translation type="unfinished">операциялық жүйе қатесі </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="63"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="64"/>
         <source>#compatibility</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="65"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="66"/>
         <source>#unknown_data_exchange_error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="66"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="67"/>
         <source>#model_not_verified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="68"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="69"/>
         <source>#unknown_warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="71"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="72"/>
         <source>#mechanisms_positioning_error</source>
         <translation type="unfinished">ішкі механизм жұмыс тәртібіне келтірілмеген </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="72"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="73"/>
         <source>#power_supply_error</source>
         <translation type="unfinished">қуат көзінен қате шықты </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="73"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="74"/>
         <source>#memory_storage_error</source>
         <translation type="unfinished">жадыдан қате шықты </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="75"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="76"/>
         <source>#temperature_error</source>
         <translation>тумпературалық қате</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="76"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="77"/>
         <source>#initialization_error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="77"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="78"/>
         <source>#incorrect_firmware</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="80"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="81"/>
         <source>#thirdparty_driver_error_fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="81"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="82"/>
         <source>#driver_error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="82"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="83"/>
         <source>#boot_error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="83"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="84"/>
         <source>#recovery_mode_error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="85"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="86"/>
         <source>#cover_is_opened_error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="86"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="87"/>
         <source>#mechanic_failure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="84"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="85"/>
         <source>#electronic_error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="55"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="56"/>
         <source>#initialization</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="74"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="75"/>
         <source>#not_available</source>
         <translation type="unfinished">қолжетімсіз</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="70"/>
+        <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="71"/>
         <source>#unknown_error</source>
         <translation type="unfinished">белгісіз ақаулық</translation>
     </message>

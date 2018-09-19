@@ -62,5 +62,11 @@
     <None Include="..\src\locale\virtual_devices_ru.ts">
       <Filter>Translation Files</Filter>
     </None>
+    <None Include="..\src\locale\virtual_devices_en.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+    <None Include="..\src\locale\virtual_devices_de.ts">
+      <Filter>Translation Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

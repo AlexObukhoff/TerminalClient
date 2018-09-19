@@ -2,11 +2,6 @@
 
 #pragma once
 
-// Qt
-#include <Common/QtHeadersBegin.h>
-#include <QtCore/QTextCodec>
-#include <Common/QtHeadersEnd.h>
-
 // Modules
 #include "Hardware/Printers/SerialPrinterBase.h"
 #include "Hardware/FR/ProtoFR.h"

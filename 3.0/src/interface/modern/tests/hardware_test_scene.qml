@@ -19,7 +19,7 @@ Rectangle {
 
 		anchors { horizontalCenter: parent.horizontalCenter; top: parent.top; topMargin: 100 }
 		height: frameSize
-		source: "image://ui/waiting"
+		source: Utils.ui.image("waiting")
 	}
 
 	Text {

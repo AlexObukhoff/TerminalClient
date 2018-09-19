@@ -40,7 +40,7 @@ FocusScope {
 				description.text: Utils.locale.tr(QT_TR_NOOP("pay_scene#required_amount"))
 
 				anchors { left: parent.left; right: parent.right }
-				source: "image://ui/panel.entry"
+				source: Utils.ui.image("panel.entry")
 			}
 
 			// Текущаяя комиссия
@@ -52,7 +52,7 @@ FocusScope {
 				description.color: Utils.ui.color("color.panel.tertiary")
 
 				anchors { left: parent.left; right: parent.right }
-				source: "image://ui/panel.commission"
+				source: Utils.ui.image("panel.commission")
 			}
 		}
 	}

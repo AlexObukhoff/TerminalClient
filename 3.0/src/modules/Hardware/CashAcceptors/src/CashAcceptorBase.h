@@ -81,8 +81,11 @@ protected:
 	/// Анализирует коды статусов кастомных устройств и фильтрует несуществующие статусы для нижней логики.
 	virtual void cleanSpecificStatusCodes(TStatusCodes & /*aStatusCodes*/) {}
 
-	/// Анализирует коды статусов устройства и фильтрует несуществующие статусы для нижней логики на основе истории статусов.
-	void cleanStatusCodes(TStatusCodes & aStatusCodes, const TStatusCodesHistoryList & aBaseHistoryList, TStatusCodesHistory aReplaceableHistory, int aReplacingStatusCode);
+	/// Ищет с конца совпадение истории статусов с куском истории статусов.
+	bool isStatusCollectionConformed(const TStatusCodesHistory & aHistory);
+
+	/// Заменяет совпадающие с куском истории статусов статус-коды.
+	void replaceConformedStatusCodes(TStatusCodes & aStatusCodes, int aStatusCodeFrom, int aStatusCodeTo);
 
 	/// Отправка статусов.
 	virtual void sendStatuses(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection);
@@ -103,7 +106,7 @@ protected:
 	bool isNotEnabled() const;
 
 	/// Отключен на прием купюр?
-	bool isDisabled() const;
+	bool isDisabled(const CCashAcceptor::TStatuses & aStatuses = CCashAcceptor::TStatuses()) const;
 
 	/// Не отключен на прием купюр?
 	bool isNotDisabled() const;
@@ -116,6 +119,9 @@ protected:
 
 	/// Получение признака возможности возврата купюры.
 	bool canReturning(bool aOnline);
+
+	/// Получить долгоиграющие статус-коды.
+	TStatusCodes getLongStatusCodes() const;
 
 	/// Вывод в лог таблицы номиналов.
 	virtual void logEnabledPars();

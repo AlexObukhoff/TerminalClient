@@ -24,13 +24,13 @@ namespace CCCNet
 		{
 			data()[Models::CashcodeGX ][Currency::RUB][true]  = TFimwareVersionSet() << 1205;
 
-			data()[Models::CashcodeSM ][Currency::RUB][true]  = TFimwareVersionSet() << 1353;
+			data()[Models::CashcodeSM ][Currency::RUB][true]  = TFimwareVersionSet() << 1357;
 
-			data()[Models::CashcodeSM ][Currency::RUB][false] = TFimwareVersionSet() << 1382 << 1434;
+			data()[Models::CashcodeSM ][Currency::RUB][false] = TFimwareVersionSet() << 1386 << 1434;
 			data()[Models::CashcodeMSM][Currency::RUB][false] = TFimwareVersionSet() << 1115;
 			data()[Models::CashcodeMSM][Currency::EUR][false] = TFimwareVersionSet() << 1130 << 1228 << 1329 << 1411 << 1527;
 			data()[Models::CashcodeMVU][Currency::RUB][false] = TFimwareVersionSet() << 1330;
-			data()[Models::CashcodeMFL][Currency::RUB][false] = TFimwareVersionSet() << 1140;
+			data()[Models::CashcodeMFL][Currency::RUB][false] = TFimwareVersionSet() << 1143;
 			data()[Models::CashcodeSL ][Currency::RUB][false] = TFimwareVersionSet() << 1013 << 2004 << 3003 << 0005;
 
 			data()[Models::CashcodeMVU][Currency::KZT][false] = TFimwareVersionSet() << 1314;

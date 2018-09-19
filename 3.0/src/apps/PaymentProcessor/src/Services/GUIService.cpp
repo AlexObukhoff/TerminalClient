@@ -523,6 +523,12 @@ bool GUIService::isDisabled() const
 }
 
 //---------------------------------------------------------------------------
+void GUIService::reset()
+{
+	mGraphicsEngine.reset();
+}
+
+//---------------------------------------------------------------------------
 QRect GUIService::getScreenSize(int aIndex) const
 {
 	return aIndex ? mGraphicsEngine.getDisplayRectangle(aIndex) : QRect(0, 0, mWidth, mHeight);

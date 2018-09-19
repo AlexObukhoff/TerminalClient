@@ -29,7 +29,7 @@ bool CustomVKP80III::getModelId(QByteArray & aAnswer) const
 //--------------------------------------------------------------------------------
 bool CustomVKP80III::updateParameters()
 {
-	setConfigParameter(CHardware::Printer::Settings::Loop, CHardware::Values::Use);
+	setConfigParameter(CHardware::Printer::Settings::Loop, CHardwareSDK::Values::Use);
 
 	return POSPrinter::updateParameters();
 }
@@ -54,7 +54,7 @@ bool CustomVKP80III::receiptProcessing()
 	char ejectorAction = (ejectorActionParameter == CHardware::Printer::Values::Retract) ? CCustomVKP80III::Retraction : CCustomVKP80III::Pushing;
 	int leftReceiptTimeout =  0;
 
-	if (ejectorActionParameter != CHardware::Values::NoChange)
+	if (ejectorActionParameter != CHardwareSDK::Values::Auto)
 	{
 		leftReceiptTimeout = getConfigParameter(CHardware::Printer::Settings::LeftReceiptTimeout).toInt();
 	}

@@ -17,7 +17,7 @@ Item {
 		id: buttonImageOn
 
 		width: 120
-		source: "image://ui/checkbox.on"
+		source: Utils.ui.image("checkbox.on")
 		border { left: 21; top: 84; right: 84; bottom: 21 }
 		horizontalTileMode: BorderImage.Stretch
 		verticalTileMode: BorderImage.Stretch
@@ -29,7 +29,7 @@ Item {
 		id: buttonImagePressed
 
 		width: 120
-		source: "image://ui/checkbox.pressed"
+		source: Utils.ui.image("checkbox.pressed")
 		border { left: 21; top: 84; right: 84; bottom: 21 }
 		horizontalTileMode: BorderImage.Stretch
 		verticalTileMode: BorderImage.Stretch
@@ -41,7 +41,7 @@ Item {
 		id: buttonImageOff
 
 		width: 120
-		source: "image://ui/checkbox.off"
+		source: Utils.ui.image("checkbox.off")
 		border { left: 21; top: 84; right: 84; bottom: 21 }
 		horizontalTileMode: BorderImage.Repeat
 		verticalTileMode: BorderImage.Stretch

@@ -16,7 +16,7 @@
         <translation>Во время проверки произошла ошибка.</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="256"/>
+        <location filename="../scenario/payment_scenario.js" line="258"/>
         <source>payment_scenario#cannot_use_provider_without_printer</source>
         <translation>Извините, этот платёж не может быть принят из-за неработающего принтера. Попробуйте позже.</translation>
     </message>

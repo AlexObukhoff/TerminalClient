@@ -1,14 +1,7 @@
 import qbs 1.0
 
-Product {
-	type: "staticlibrary"
+import "../../../../qbs/libTemplate.qbs" as TCLib
+
+TCLib {
 	name: "Log"
-
-	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core"] }
-
-	Depends { name: "Core" }
-
-	files: [ "src/*.cpp", "src/*.h" ]
 }
-

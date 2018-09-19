@@ -73,6 +73,8 @@ function onResume()
 
 	enableSignals();
 
+	Core.graphics.reload({});
+
 	//Обновим состояние контейнера операторов
 	if (ScenarioEngine.getState() === "menu") {
 		GUI.show("MainMenuScene", {reset: ScenarioEngine.context.result === Scenario.Result.Abort, build_name: Core.graphics.ui["build_name"]});
@@ -83,6 +85,8 @@ function onResume()
 function onPause()
 {
 	disableSignals();
+
+	Core.graphics.reload({provider_id: Core.userProperties.get("operator_id")});
 }
 
 //------------------------------------------------------------------------------
@@ -97,6 +101,7 @@ function canStop()
 function onTimeout(aState)
 {
 	if (aState === "menu") {
+		GUI.hide()
 		GUI.notify(Scenario.Idle.Event.Timeout, {});
 	} else {
 		Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Back);
@@ -193,8 +198,8 @@ function searchEnterHandler(aParameters)
 		return;
 	}
 
-	GUI.show("SearchScene",
-					 {reset: !(aParameters.signal === Scenario.Event.Resume && ScenarioEngine.context.result === Scenario.Result.Back)});
+	//TODO Сломали сохранение результатов поиска
+	GUI.show("SearchScene", {reset: true});
 }
 
 //------------------------------------------------------------------------------

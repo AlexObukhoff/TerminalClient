@@ -282,7 +282,7 @@ void V2eCashAcceptor::cleanSpecificStatusCodes(TStatusCodes & aStatusCodes)
 	{
 		// при рефакторинге сделать как восстановимую ошибку для Авроры - неизвестную ошибку
 		TStatusCodes beforeLastErrors = getStatusCodes(mStatusCollection);
-		bool       lastStatusCodesOK = aStatusCodes.contains(DeviceStatusCode::Error::Unknown) && !aStatusCodes.contains(BillAcceptorStatusCode::MechanicFailure::StackerOpen);
+		bool       lastStatusCodesOK =      aStatusCodes.contains(DeviceStatusCode::Error::Unknown) &&    !aStatusCodes.contains(BillAcceptorStatusCode::MechanicFailure::StackerOpen);
 		bool beforeLastStatusCodesOK = !beforeLastErrors.contains(DeviceStatusCode::Error::Unknown) && beforeLastErrors.contains(BillAcceptorStatusCode::MechanicFailure::StackerOpen);
 
 		if (mDeviceName.contains(CV2e::Models::Aurora) && lastStatusCodesOK && beforeLastStatusCodesOK)

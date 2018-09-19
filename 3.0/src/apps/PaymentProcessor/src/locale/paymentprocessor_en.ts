@@ -20,87 +20,57 @@
 <context>
     <name>PrintFiscalCommand</name>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="100"/>
+        <location filename="../Services/PrintingCommands.cpp" line="102"/>
         <source>#bank_fee</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="101"/>
+        <location filename="../Services/PrintingCommands.cpp" line="103"/>
         <source>#dealer_fee</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="107"/>
+        <location filename="../Services/PrintingCommands.cpp" line="109"/>
         <source>#processing_fee</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>PrintPayment</name>
+    <name>TerminalStatuses</name>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="245"/>
-        <source>#tax_system</source>
-        <translation type="unfinished"></translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="19"/>
+        <source>#ok</source>
+        <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="246"/>
-        <source>#kkt_timestamp</source>
-        <translation type="unfinished"></translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="21"/>
+        <source>#key_error</source>
+        <translation>Keys corrupted</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="247"/>
-        <source>#kkt_znm</source>
-        <translation type="unfinished"></translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="22"/>
+        <source>#config_error</source>
+        <translation>Config files corrupted</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="248"/>
-        <source>#kkt_rnm</source>
-        <translation type="unfinished"></translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="23"/>
+        <source>#database_error</source>
+        <translation>Database error</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="249"/>
-        <source>#kkt_session</source>
-        <translation type="unfinished"></translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="24"/>
+        <source>#network_error</source>
+        <translation>Network error</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="250"/>
-        <source>#kkt_fd_serial</source>
-        <translation type="unfinished"></translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="25"/>
+        <source>#account_balance_error</source>
+        <translation>Account balance error</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="251"/>
-        <source>#kkt_fn</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="252"/>
-        <source>#kkt_fd</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="253"/>
-        <source>#kkt_fp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="255"/>
-        <source>#tax_amount_02</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="256"/>
-        <source>#tax_amount_03</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="257"/>
-        <source>#tax_amount_04</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Services/PrintingCommands.cpp" line="258"/>
-        <source>#tax_amount_05</source>
-        <translation type="unfinished"></translation>
+        <location filename="../Services/TerminalStatusDescriptions.h" line="26"/>
+        <source>#interface_locked</source>
+        <translation>User interface locked</translation>
     </message>
 </context>
 <context>
@@ -108,22 +78,22 @@
     <message>
         <location filename="../SplashScreen/splash_screen_scene.qml" line="48"/>
         <source>#terminal_not_available</source>
-        <translation>The terminal is temporarily out of service.</translation>
+        <translation type="unfinished">The terminal is temporarily out of service.</translation>
     </message>
     <message>
         <location filename="../SplashScreen/splash_screen_scene.qml" line="55"/>
         <source>#dont_power_off_terminal</source>
-        <translation>The software is being updated. Do not power off the terminal!</translation>
+        <translation type="unfinished">The software is being updated. Do not power off the terminal!</translation>
     </message>
     <message>
         <location filename="../SplashScreen/splash_screen_scene.qml" line="65"/>
         <source>#terminal</source>
-        <translation>Terminal: %1</translation>
+        <translation type="unfinished">Terminal: %1</translation>
     </message>
     <message>
         <location filename="../SplashScreen/splash_screen_scene.qml" line="74"/>
         <source>#support</source>
-        <translation>Support: %1</translation>
+        <translation type="unfinished">Support: %1</translation>
     </message>
 </context>
 </TS>

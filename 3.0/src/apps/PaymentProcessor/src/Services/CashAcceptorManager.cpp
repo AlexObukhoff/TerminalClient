@@ -146,21 +146,42 @@ bool CashAcceptorManager::shutdown()
 //---------------------------------------------------------------------------
 QStringList CashAcceptorManager::getPaymentMethods()
 {
+	PPSDK::IPaymentService * ps = mApplication->getCore()->getPaymentService();
+	qint64 id = ps->getActivePayment();
+	QString procType = ps->getPaymentField(id, PPSDK::CPayment::Parameters::Type).value.toString();
+
+	PPSDK::TerminalSettings * settings = SettingsService::instance(mApplication)->getAdapter<PPSDK::TerminalSettings>();
+	QVariantMap chargeAccess = settings->getChargeProviderAccess();
+	
 	QSet<QString> result;
 
-	if (!mDeviceList.isEmpty())
+	auto checkMethod = [&chargeAccess, &procType](const QString & aName) -> bool
 	{
-		result.insert(CCashAcceptor::CashPaymentMethod);
-	}
+		if ((!chargeAccess.isEmpty() && chargeAccess.value(procType).toStringList().contains(aName)) ||
+			(chargeAccess.isEmpty() && !aName.isEmpty()))
+		{
+			return true;
+		}
+
+		return false;
+	};
 
 	foreach (SDK::PaymentProcessor::IChargeProvider * provider, mChargeProviders)
 	{
 		QString method = provider->getMethod();
 
-		if (!method.isEmpty())
+		if (checkMethod(method))
 		{
-			result.insert(method);
+			result.insert(provider->getMethod());
 		}
+	}
+	
+	// Устройство добавляем в случае, если настройки оплаты для типов процессинга не заданы
+	// Или должно быть соответствуюшее разрешение
+	if (!mDeviceList.isEmpty() && (chargeAccess.isEmpty() ||
+		checkMethod(CCashAcceptor::CashPaymentMethod)))
+	{
+		result.insert(CCashAcceptor::CashPaymentMethod);
 	}
 
 	return result.toList();
@@ -185,18 +206,8 @@ void CashAcceptorManager::updateHardwareConfiguration()
 		{
 			mDeviceList.append(device);
 
-			// Подписываемся на сигналы.
-			if (mDisableAmountOverflow)
-			{
-				device->subscribe(SDK::Driver::ICashAcceptor::EscrowSignal, this, SLOT(onEscrowChangeControl(SDK::Driver::SPar)));
-			}
-			else 
-			{
-				device->subscribe(SDK::Driver::ICashAcceptor::EscrowSignal, this, SLOT(onEscrow(SDK::Driver::SPar)));
-			}
-
+			// Подписываемся на статус.
 			device->subscribe(SDK::Driver::IDevice::StatusSignal, this, SLOT(onStatusChanged(SDK::Driver::EWarningLevel::Enum, const QString &, int)));
-			device->subscribe(SDK::Driver::ICashAcceptor::StackedSignal, this, SLOT(onStacked(SDK::Driver::TParList)));
 
 			device->setParList(mWorkingParList);
 		}
@@ -251,9 +262,21 @@ bool CashAcceptorManager::enable(qint64 aPayment, const QString & aPaymentMethod
 
 			if (acceptor->setEnable(true))
 			{
-				toLog(LogLevel::Debug, QString("Payment %2. %1 was added.").arg(acceptor->getName()).arg(mPaymentData->paymentId));
+				// Подписываемся на эскроу и стекед.
+				if (mDisableAmountOverflow)
+				{
+					acceptor->subscribe(SDK::Driver::ICashAcceptor::EscrowSignal, this, SLOT(onEscrowChangeControl(SDK::Driver::SPar)));
+				}
+				else 
+				{
+					acceptor->subscribe(SDK::Driver::ICashAcceptor::EscrowSignal, this, SLOT(onEscrow(SDK::Driver::SPar)));
+				}
+
+				acceptor->subscribe(SDK::Driver::ICashAcceptor::StackedSignal, this, SLOT(onStacked(SDK::Driver::TParList)));
 
 				mPaymentData->validators.insert(acceptor);
+
+				toLog(LogLevel::Debug, QString("Payment %2. %1 was added.").arg(acceptor->getName()).arg(mPaymentData->paymentId));
 			}
 		}
 	}
@@ -303,7 +326,7 @@ bool CashAcceptorManager::disable(qint64 aPayment)
 	// Даем команду на отключение устройств.
 	foreach (DSDK::ICashAcceptor * acceptor, mDeviceList)
 	{
-		if (!acceptor->setEnable(false))
+		if (mPaymentData->validators.contains(acceptor) && !acceptor->setEnable(false))
 		{
 			toLog(LogLevel::Error, QString("Failed to disable cash acceptor %1.").arg(mDeviceService->getDeviceConfigName(acceptor)));
 		}
@@ -475,8 +498,12 @@ void CashAcceptorManager::onStatusChanged(DSDK::EWarningLevel::Enum aLevel, cons
 		}
 		else if (acceptor && aStatus == DSDK::ECashAcceptorStatus::Disabled)
 		{
-			// Отправляем сигнал об отключении купюроприемника.
+			// Принят сигнал об отключении купюроприемника.
 			toLog(LogLevel::Debug, acceptor->getName() + " is disabled.");
+
+			// Отписываемся от эскроу и стекеда.
+			acceptor->unsubscribe(SDK::Driver::ICashAcceptor::EscrowSignal,  this);
+			acceptor->unsubscribe(SDK::Driver::ICashAcceptor::StackedSignal, this);
 
 			// Удаляем купюроприемник из списка включенных.
 			if (mPaymentData)

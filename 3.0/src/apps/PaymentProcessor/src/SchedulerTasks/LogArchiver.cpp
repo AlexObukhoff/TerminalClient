@@ -42,16 +42,20 @@ LogArchiver::LogArchiver(const QString & aName, const QString & aLogName, const 
 {
 	IApplication * app = dynamic_cast<IApplication *>(BasicApplication::getInstance());
 
-	PPSDK::ICore * core = app->getCore();
-	PPSDK::TerminalSettings * terminalSettings = static_cast<PPSDK::TerminalSettings *>(core->getSettingsService()->
-		getAdapter(PPSDK::CAdapterNames::TerminalAdapter));
+	if (app)
+	{
+		PPSDK::ICore * core = app->getCore();
+		PPSDK::TerminalSettings * terminalSettings = static_cast<PPSDK::TerminalSettings *>(core->getSettingsService()->
+			getAdapter(PPSDK::CAdapterNames::TerminalAdapter));
 
-	mMaxSize = terminalSettings->getLogsMaxSize();
-	mLogDir = QDir(app->getWorkingDirectory() + "/logs");
-	mKernelPath = app->getWorkingDirectory();
+		mMaxSize = terminalSettings->getLogsMaxSize();
+		mLogDir = QDir(app->getWorkingDirectory() + "/logs");
+		mKernelPath = app->getWorkingDirectory();
+
+		mPacker.setToolPath(mKernelPath);
+	}
 
 	mPacker.setLog(getLog());
-	mPacker.setToolPath(mKernelPath);
 }
 
 //---------------------------------------------------------------------------

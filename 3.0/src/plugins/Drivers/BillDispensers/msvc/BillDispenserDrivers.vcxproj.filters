@@ -32,6 +32,9 @@
     <None Include="..\src\locale\bill_dispensers_kk.ts">
       <Filter>Translation Files</Filter>
     </None>
+    <None Include="..\src\locale\bill_dispensers_de.ts">
+      <Filter>Translation Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\Dispensers\DispenserStatusesDescriptions.h">
