@@ -29,6 +29,7 @@ namespace CPrintConstants
 	const char * const OpBrand               = "OPERATOR_BRAND";
 	const char * const OpName                = "OPERATOR_NAME";
 	const char * const OpINN                 = "OPERATOR_INN";
+	const char * const OpPhone               = "OPERATOR_PHONE";
 	const char * const RecipientInn          = "RECIPIENT_INN";
 	const char * const RecipientName         = "RECIPIENT_NAME";
 	const char * const ServiceType           = "SERVICE_TYPE";
@@ -51,7 +52,7 @@ namespace CPrintConstants
 		const char * const FDNumber       = "KKM_FD_NUMBER";           // номер фискального чека
 		const char * const FDSign         = "KKM_FD_SIGN";             // фискальный признак данных
 
-		const char * const TaxAmount02 = "TAX_AMOUNT_02";    // сумма НДС чека по ставке 18% (1102)
+		const char * const TaxAmount02 = "TAX_AMOUNT_02";    // сумма НДС чека по ставке 18(20)% (1102)
 		const char * const TaxAmount03 = "TAX_AMOUNT_03";    // сумма НДС чека по ставке 10% (1103)
 		const char * const TaxAmount04 = "TAX_AMOUNT_04";    // сумма расчета по чеку с НДС по ставке 0% (1104)
 		const char * const TaxAmount05 = "TAX_AMOUNT_05";    // сумма расчета по чеку без НДС (1105)

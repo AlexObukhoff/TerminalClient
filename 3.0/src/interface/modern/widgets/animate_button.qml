@@ -1,6 +1,6 @@
 /* @file Анимированная кнопка с текстом и иконкой */
 
-import QtQuick 1.1
+import QtQuick 2.6
 
 Button {
 	// Путь к анимированной текстуре кнопки
@@ -8,7 +8,7 @@ Button {
 
 	property int __duration: 150
 
-	BorderImage2 {
+	BorderImage {
 		id: buttonImageHighLight
 
 		anchors.fill: parent

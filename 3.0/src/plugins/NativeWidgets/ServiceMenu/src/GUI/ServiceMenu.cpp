@@ -1,4 +1,4 @@
-﻿/* @file Виджет сервисного меню */
+/* @file Виджет сервисного меню */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -66,10 +66,9 @@ REGISTER_PLUGIN_WITH_PARAMETERS(SDK::Plugin::makePath(SDK::PaymentProcessor::App
 
 //--------------------------------------------------------------------------
 ServiceMenu::ServiceMenu(SDK::Plugin::IEnvironment * aFactory, const QString & aInstancePath)
-	: mMainWidget(0),
-	  mEnvironment(aFactory),
+	: mEnvironment(aFactory),
 	  mInstancePath(aInstancePath),
-	  mMainServiceWindow(0),
+	  mMainServiceWindow(nullptr),
 	  mIsReady(true)
 {
 	SDK::PaymentProcessor::ICore * core =
@@ -84,31 +83,19 @@ ServiceMenu::ServiceMenu(SDK::Plugin::IEnvironment * aFactory, const QString & a
 		mEnvironment->getLog(CServiceMenuBackend::LogName)->write(LogLevel::Error, "Failed to get ICore");
 	}
 
-	mMainWidget = new QGraphicsProxyWidget;
 
 	mMainServiceWindow = new MainServiceWindow(mBackend.data());
 	mMainServiceWindow->initialize();
-	mMainWidget->setWidget(mMainServiceWindow);
-	mMainWidget->setScale(qMin(core->getGUIService()->getScreenSize(0).width() / qreal(mMainServiceWindow->width()),
-		core->getGUIService()->getScreenSize(0).height() / qreal(mMainServiceWindow->height())));
-
-	qreal newWidgetWidth = core->getGUIService()->getScreenSize(0).width() / mMainWidget->scale();
-	mMainWidget->setMinimumWidth(newWidgetWidth);
-	mMainWidget->setMaximumWidth(newWidgetWidth);
-
-	qreal newWidgetHeight = core->getGUIService()->getScreenSize(0).height() / mMainWidget->scale();
-	mMainWidget->setMinimumHeight(newWidgetHeight);
-	mMainWidget->setMaximumHeight(newWidgetHeight);
 }
 
 //--------------------------------------------------------------------------
 ServiceMenu::~ServiceMenu()
 {
-	if (mMainWidget)
+	if (mMainServiceWindow)
 	{
 		saveConfiguration();
 		mMainServiceWindow->shutdown();
-		mMainWidget->deleteLater();
+		mMainServiceWindow->deleteLater();
 	}
 }
 
@@ -192,6 +179,12 @@ QQuickItem * ServiceMenu::getWidget() const
 }
 
 //---------------------------------------------------------------------------
+QWidget * ServiceMenu::getNativeWidget() const
+{
+	return mMainServiceWindow;
+}
+
+//---------------------------------------------------------------------------
 QVariantMap ServiceMenu::getContext() const
 {
 	// TODO
@@ -201,7 +194,7 @@ QVariantMap ServiceMenu::getContext() const
 //---------------------------------------------------------------------------
 bool ServiceMenu::isValid() const
 {
-	return mMainWidget != 0;
+	return true;
 }
 
 //---------------------------------------------------------------------------

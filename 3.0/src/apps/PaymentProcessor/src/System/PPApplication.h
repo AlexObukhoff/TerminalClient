@@ -1,4 +1,4 @@
-﻿/* @file Класс приложения для PaymentProcessor. */
+/* @file Класс приложения для PaymentProcessor. */
 
 #pragma once
 
@@ -30,7 +30,7 @@ class PPApplication : public QObject,  public QAbstractNativeEventFilter, public
 	Q_OBJECT
 
 public:
-	PPApplication(const QString & aName, const QString & aVersion, int aArgumentCount, char ** aArguments);
+	PPApplication(const QString & aName, const QString & aVersion, int & aArgumentCount, char ** aArguments);
 	virtual ~PPApplication();
 
 	int exec();

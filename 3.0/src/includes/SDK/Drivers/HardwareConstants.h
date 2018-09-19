@@ -70,6 +70,7 @@ namespace CAllHardware
 		const char FiscalFieldData[] = "fiscal_field_data";
 		const char WithoutPrinting[] = "without_printing";
 		const char CanWithoutPrinting[] = "can_without_printing";
+		const char NullingSumInCash[] = "nulling_sum_in_cash";
 	}
 
 	/// Константы принтера.

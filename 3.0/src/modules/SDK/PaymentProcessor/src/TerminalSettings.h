@@ -117,6 +117,7 @@ struct SCommonSettings
 	bool printFailedReceipts;  /// Распечатывать не напечатанные фискальные чеки при инкассации
 	bool randomReceiptsID;     /// Номера чеков в рандомном порядке
 	QTime autoZReportTime;     /// Автоматичекое закрытие смены ККТ в определенное время
+	bool enableBlankFiscalData;/// Разрешать печатать фискальные чеки без фискальных данных
 
 	SCommonSettings() : 
 		blockCheatedPayment(false),
@@ -127,7 +128,8 @@ struct SCommonSettings
 		disableAmountOverflow(false),
 		penetrationEventLevel(EEventType::OK),
 		printFailedReceipts(true),
-		randomReceiptsID(false)
+		randomReceiptsID(false),
+		enableBlankFiscalData(false)
 	{
 		_blockOn
 			<< ValidatorError
@@ -253,6 +255,9 @@ public:
 
 	/// URL для отправки фидбека в Киберплат
 	QString getFeedbackURL() const;
+
+	/// Возвращает мапу из типов процессинга и разрешенных ChargeProvider для каждого соотвтественно.
+	QVariantMap getChargeProviderAccess() const;
 
 	/// Общие настройки.
 	virtual SCommonSettings getCommonSettings() const;

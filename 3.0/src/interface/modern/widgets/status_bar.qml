@@ -1,6 +1,6 @@
-﻿﻿/* @file Информационная строка. */
+/* @file Информационная строка. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 
 
 Item {
@@ -10,14 +10,14 @@ Item {
 	property string changeTime
 
 	// Сдача
-	BorderImage2 {
+	BorderImage {
 		id: changePanel
 
 		anchors { left: caption.right }
 		width: childrenRect.width + 20
 		height: parent.height
 		visible: rootItem.changeValue > 0.0
-		source: visible ? (time.__blink ? "image://ui/panel.change" : "image://ui/panel.change.empty") : ""
+		source: visible ? (time.__blink ? Utils.ui.image("panel.change") : Utils.ui.image("panel.change.empty")) : ""
 		border { left: 10; top: 10; right: 10; bottom: 10 }
 
 		Row {
@@ -25,15 +25,15 @@ Item {
 			spacing: 5
 			height: parent.height
 
-			Image2 {
-				source: "image://ui/icons.rest"
+			Image {
+				source: Utils.ui.image("icons.rest")
 			}
 
 			Text {
 				height: parent.height
 				verticalAlignment: Text.AlignVCenter
-				font: Skin.ui.font("font.status.primary")
-				color: Skin.ui.color("color.main.primary")
+				font: Utils.ui.font("font.status.primary")
+				color: Utils.ui.color("color.main.primary")
 				text: Utils.locale.tr(QT_TR_NOOP("status_bar#change"))
 			}
 
@@ -43,21 +43,21 @@ Item {
 				height: parent.height
 				horizontalAlignment: Text.AlignRight
 				verticalAlignment: Text.AlignVCenter
-				font: Skin.ui.font("font.status.secondary")
-				color: Skin.ui.color("color.main.primary")
+				font: Utils.ui.font("font.status.secondary")
+				color: Utils.ui.color("color.main.primary")
 				text: rootItem.changeValue + " " + Core.environment.terminal.currencyName
 			}
 
-			Image2 {
+			Image {
 				anchors.verticalCenter: parent.verticalCenter
-				source: "image://ui/top.spacer"
+				source: Utils.ui.image("top.spacer")
 			}
 
 			Text {
 				height: parent.height
 				verticalAlignment: Text.AlignVCenter
-				font: Skin.ui.font("font.status.primary")
-				color: Skin.ui.color("color.main.primary")
+				font: Utils.ui.font("font.status.primary")
+				color: Utils.ui.color("color.main.primary")
 				text: rootItem.changeTime
 			}
 		}
@@ -76,16 +76,16 @@ Item {
 		Text {
 			height: parent.height
 			verticalAlignment: Text.AlignVCenter
-			font: Skin.ui.font("font.status.primary")
-			color: Skin.ui.color("color.main.secondary")
+			font: Utils.ui.font("font.status.primary")
+			color: Utils.ui.color("color.main.secondary")
 			text: Utils.locale.tr(QT_TR_NOOP("status_bar#caption_llc"))
 		}
 
 		Text {
 			height: parent.height
 			verticalAlignment: Text.AlignVCenter
-			font: Skin.ui.font("font.status.primary")
-			color: Skin.ui.color("color.main.primary")
+			font: Utils.ui.font("font.status.primary")
+			color: Utils.ui.color("color.main.primary")
 			text: Utils.locale.tr(QT_TR_NOOP("status_bar#caption_cyberplat"))
 		}
 	}
@@ -100,16 +100,16 @@ Item {
 		visible: !changePanel.visible
 		height: parent.height
 
-		Image2 {
-			source: "image://ui/icons.support"
+		Image {
+			source: Utils.ui.image("icons.support")
 		}
 
 		Text {
 			id: phone
 
 			anchors.verticalCenter: parent.verticalCenter
-			font: Skin.ui.font("font.status.primary")
-			color: Skin.ui.color("color.main.secondary")
+			font: Utils.ui.font("font.status.primary")
+			color: Utils.ui.color("color.main.secondary")
 
 			onTextChanged: opacity = 0;
 
@@ -150,8 +150,8 @@ Item {
 		anchors { right: ap.left; rightMargin: 10 }
 		height: parent.height
 
-		Image2 {
-			source: "image://ui/icons.time"
+		Image {
+			source: Utils.ui.image("icons.time")
 		}
 
 		Spacer { width: 10 }
@@ -190,24 +190,24 @@ Item {
 			Text {
 				height: parent.height
 				verticalAlignment: Text.AlignVCenter
-				font: Skin.ui.font("font.status.primary")
-				color: Skin.ui.color("color.main.primary")
+				font: Utils.ui.font("font.status.primary")
+				color: Utils.ui.color("color.main.primary")
 				text: time.__hours
 			}
 
 			Text {
 				height: parent.height
 				verticalAlignment: Text.AlignVCenter
-				font: Skin.ui.font("font.status.primary")
-				color: time.__blink ? (Core.network.connected ? Skin.ui.color("color.main.primary") : Skin.ui.color("color.contrast") ) : "transparent"
+				font: Utils.ui.font("font.status.primary")
+				color: time.__blink ? (Core.network.connected ? Utils.ui.color("color.main.primary") : Utils.ui.color("color.contrast") ) : "transparent"
 				text: ":"
 			}
 
 			Text {
 				height: parent.height
 				verticalAlignment: Text.AlignVCenter
-				font: Skin.ui.font("font.status.primary")
-				color: Skin.ui.color("color.main.primary")
+				font: Utils.ui.font("font.status.primary")
+				color: Utils.ui.color("color.main.primary")
 				text: time.__minutes
 			}
 		}
@@ -219,8 +219,8 @@ Item {
 
 			height: parent.height
 			verticalAlignment: Text.AlignVCenter
-			font: Skin.ui.font("font.status.primary")
-			color: Skin.ui.color("color.main.secondary")
+			font: Utils.ui.font("font.status.primary")
+			color: Utils.ui.color("color.main.secondary")
 			text: time.__date
 		}
 	}
@@ -234,15 +234,15 @@ Item {
 		height: parent.height
 		spacing: 10
 
-		Image2 {
-			source: "image://ui/icons.terminal"
+		Image {
+			source: Utils.ui.image("icons.terminal")
 		}
 
 		Text {
 			height: parent.height
 			verticalAlignment: Text.AlignVCenter
-			font: Skin.ui.font("font.status.primary")
-			color: Skin.ui.color("color.main.secondary")
+			font: Utils.ui.font("font.status.primary")
+			color: Utils.ui.color("color.main.secondary")
 			text: Core.environment.terminal.AP
 		}
 	}

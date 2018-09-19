@@ -1,6 +1,6 @@
-﻿/* @file Экран истории платежей. */
+/* @file Экран истории платежей. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "controls" 1.0 as Controls
 import "widgets" 1.0 as Widgets
@@ -16,22 +16,22 @@ Widgets.SceneBase2 {
 	rightButtonEnabled: false
 	topPanelEnabled: false
 
-	Widgets.BorderImage2 {
+	BorderImage {
 		anchors { left: sceneButton.right; right: parent.right; rightMargin: 30; verticalCenter: sceneButton.verticalCenter }
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
-		source: "image://ui/panel.operator"
+		source: Utils.ui.image("panel.operator")
 
 		Row {
 			anchors { left: parent.left; leftMargin: 10 }
 			height: parent.height
 
-			Widgets.Image2 {
+			Image {
 				id: logo
 
 				anchors.verticalCenter: parent.verticalCenter
 				width: 100
-				source: "image://ui/paybook.logo"
+				source: Utils.ui.image("paybook.logo")
 			}
 
 			Item {
@@ -45,7 +45,7 @@ Widgets.SceneBase2 {
 
 				Text {
 					text: formatter.displayText
-					font: Skin.ui.font("font.panel.secondary")
+					font: Utils.ui.font("font.panel.secondary")
 
 					TextInput {
 						id: formatter
@@ -58,7 +58,7 @@ Widgets.SceneBase2 {
 
 				Text {
 					text: Number(global.balance).toFixed(2) + " " + Core.environment.terminal.currencyName
-					font: Skin.ui.font("font.balance")
+					font: Utils.ui.font("font.balance")
 				}
 			}
 		}

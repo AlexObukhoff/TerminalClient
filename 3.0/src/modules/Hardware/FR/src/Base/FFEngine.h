@@ -30,14 +30,17 @@ public:
 	/// Установка параметра.
 	virtual void setConfigParameter(const QString & aName, const QVariant & aValue);
 
-	/// Распарсить TLV-параметр.
+	/// Распарсить TLV-структуру.
 	bool parseTLV(const QByteArray & aData, CFR::STLV & aTLV);
+
+	/// Проверить данные TLV-структуры.
+	bool checkTLVData(CFR::STLV & aTLV);
 
 	/// Распарсить массив байтов STLV-структуры.
 	CFR::TTLVList parseSTLV(const QByteArray & aData);
 
 	/// Распарсить значение TLV-структуры.
-	void parseTLVData(int aField, const QByteArray & aData, SDK::Driver::TFiscalPaymentData & aFPData);
+	void parseTLVData(const CFR::STLV & aTLV, SDK::Driver::TFiscalPaymentData & aFPData);
 
 	/// Распарсить значение STLV-структуры.
 	void parseSTLVData(const CFR::STLV & aTLV, SDK::Driver::TComplexFiscalPaymentData & aPSData);
@@ -87,10 +90,16 @@ public:
 	bool checkAgentFlagOnPayment(SDK::Driver::SPaymentData & aPaymentData);
 
 	/// Добавить/удалить/скорректировать фискальные теги, полученные после платежа.
-	void filterAfterPayment(const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	void filterAfterPayment(SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
 
 	/// Проверить ИНН.
 	bool checkINN(const QString & aINN, int aType = CFR::INN::Person::Unknown);
+
+	/// Привести строку с данными телефона к виду +{Ц}.
+	QString filterPhone(const QString & aData);
+
+	/// Добавить данные.
+	void addData(const CFR::FiscalFields::TData & aData);
 
 	/// Установить имя устройства.
 	void setDeviceName(const QString & aDeviceName);
@@ -100,7 +109,7 @@ public:
 
 protected:
 	/// Данные фискальных реквизитов.
-	CFR::FiscalFields::CData mFiscalFieldData;
+	CFR::FiscalFields::Data mFFData;
 
 	/// Название устройства.
 	QString mDeviceName;

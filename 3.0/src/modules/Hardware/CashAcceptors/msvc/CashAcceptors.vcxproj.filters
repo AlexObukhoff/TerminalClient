@@ -67,6 +67,9 @@
     <Filter Include="SSP">
       <UniqueIdentifier>{2adb5832-e301-4235-becd-56451765e9ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ccTalk">
+      <UniqueIdentifier>{f2145f68-0bc1-4881-8856-aa1923f4ecf7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\CashAcceptorBase.cpp">
@@ -111,6 +114,9 @@
     <ClCompile Include="..\src\SSP\SSPCashAcceptor.cpp">
       <Filter>SSP</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\CCTalk\CCTalkCashAcceptor.cpp">
+      <Filter>ccTalk</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorBaseConstants.h">
@@ -128,7 +134,7 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CurrencyDescriptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CashAcceptorData.h">
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\CashAcceptorStatusData.h">
@@ -223,6 +229,15 @@
     </ClInclude>
     <ClInclude Include="..\src\SSP\SSPModelData.h">
       <Filter>SSP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkCashAcceptor.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkCashAcceptorConstants.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkCashAcceptorModelData.h">
+      <Filter>ccTalk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

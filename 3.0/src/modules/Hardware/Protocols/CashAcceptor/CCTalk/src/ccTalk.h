@@ -2,23 +2,17 @@
 
 #pragma once
 
+// Modules
 #include "Hardware/Common/ProtocolBase.h"
+
+// Project
+#include "Hardware/Acceptors/CCTalkData.h"
 
 //--------------------------------------------------------------------------------
 namespace CCCTalk
 {
-	/// Дефолтный таймаут для ожидания ответа, [мс].
-	const int ReadingTimeout = 500;
-
-	namespace ECRCType
-	{
-		enum Enum
-		{
-			Simple,
-			CRC8,
-			CRC16
-		};
-	}
+	/// Неизвестный тип протокола.
+	const char UnknownType[] = "unknown";
 }
 
 //--------------------------------------------------------------------------------
@@ -28,7 +22,7 @@ public:
 	CCTalkCAProtocol();
 
 	/// Установить тип CRC.
-	void setCRCType(CCCTalk::ECRCType::Enum aType);
+	void setType(const QString & aType);
 
 	/// Установить адрес slave-устройства.
 	void setAddress(uchar aAddress);
@@ -43,11 +37,15 @@ protected:
 	/// Получить пакет данных из порта.
 	bool getAnswer(QByteArray & aAnswer, const QByteArray & aCommandData);
 
+	/// Вычислить контрольную сумму пакета данных.
+	uchar calcCRC8(const QByteArray & aData);
+	ushort calcCRC16(const QByteArray & aData);
+
 	/// Адрес устройства.
-	uchar mAddress;
+	char mAddress;
 
 	/// тип CRC.
-	CCCTalk::ECRCType::Enum mCRCType;
+	QString mType;
 };
 
 //--------------------------------------------------------------------------------

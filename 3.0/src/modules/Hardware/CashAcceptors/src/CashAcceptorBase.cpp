@@ -30,7 +30,7 @@ CashAcceptorBase<T>::CashAcceptorBase()
 
 	// описания для кодов статусов
 	mStatusCodesSpecification = DeviceStatusCode::PSpecifications(new BillAcceptorStatusCode::CSpecifications());
-	mDeviceType = CHardware::Type::CashAcceptor;
+	mDeviceType = CHardware::Types::CashAcceptor;
 
 	// параметры истории статусов
 	mStatusHistory.setSize(5);
@@ -106,6 +106,31 @@ CCashAcceptor::TStatuses CashAcceptorBase<T>::getLastStatuses(int aLevel) const
 
 //---------------------------------------------------------------------------
 template <class T>
+TStatusCodes CashAcceptorBase<T>::getLongStatusCodes() const
+{
+	TStatusCodes result;
+
+	for (auto it = mStatusCodesSpecification->data().begin(); it != mStatusCodesSpecification->data().end(); ++it)
+	{
+		ECashAcceptorStatus::Enum status = ECashAcceptorStatus::Enum(it->status);
+
+		if (CCashAcceptor::Set::LongStatuses.contains(status))
+		{
+			result << it.key();
+		}
+	}
+
+	result -= TStatusCodes()
+		<< BillAcceptorStatusCode::BillOperation::Unloaded
+		<< BillAcceptorStatusCode::BillOperation::Dispensed
+		<< BillAcceptorStatusCode::Busy::SetStackerType
+		<< BillAcceptorStatusCode::Busy::Returned;
+
+	return result;
+}
+
+//---------------------------------------------------------------------------
+template <class T>
 bool CashAcceptorBase<T>::canDisable() const
 {
 	CCashAcceptor::TStatuses lastStatuses = getLastStatuses();
@@ -162,9 +187,9 @@ bool CashAcceptorBase<T>::isNotDisabled() const
 
 //---------------------------------------------------------------------------
 template <class T>
-bool CashAcceptorBase<T>::isDisabled() const
+bool CashAcceptorBase<T>::isDisabled(const CCashAcceptor::TStatuses & aStatuses) const
 {
-	CCashAcceptor::TStatuses lastStatuses = getLastStatuses();
+	CCashAcceptor::TStatuses lastStatuses = !aStatuses.isEmpty() ? aStatuses : getLastStatuses();
 
 	if (!std::accumulate(lastStatuses.begin(), lastStatuses.end(), 0, [] (int aStatusAmount, const TStatusCodes & aStatusCodes) -> int
 		{ return aStatusAmount + aStatusCodes.size(); }))
@@ -210,7 +235,7 @@ bool CashAcceptorBase<T>::isAvailable()
 template <class T>
 bool CashAcceptorBase<T>::canReturning(bool aOnline)
 {
-	if (mDeviceType != CHardware::Type::BillAcceptor)
+	if (mDeviceType != CHardware::Types::BillAcceptor)
 	{
 		return false;
 	}
@@ -405,14 +430,14 @@ ECurrencyError::Enum CashAcceptorBase<T>::processParTable()
 	{
 		ECashReceiver::Enum cashReceiver = it.value().cashReceiver;
 
-		if (mDeviceType == CHardware::Type::CashAcceptor)
+		if (mDeviceType == CHardware::Types::CashAcceptor)
 		{
-			mDeviceType = (cashReceiver == ECashReceiver::BillAcceptor) ? CHardware::Type::BillAcceptor : CHardware::Type::CoinAcceptor;
+			mDeviceType = (cashReceiver == ECashReceiver::BillAcceptor) ? CHardware::Types::BillAcceptor : CHardware::Types::CoinAcceptor;
 		}
-		else if (((mDeviceType == CHardware::Type::BillAcceptor) && (cashReceiver == ECashReceiver::CoinAcceptor)) ||
-			((mDeviceType == CHardware::Type::CoinAcceptor) && (cashReceiver == ECashReceiver::BillAcceptor)))
+		else if (((mDeviceType == CHardware::Types::BillAcceptor) && (cashReceiver == ECashReceiver::CoinAcceptor)) ||
+			((mDeviceType == CHardware::Types::CoinAcceptor) && (cashReceiver == ECashReceiver::BillAcceptor)))
 		{
-			mDeviceType = CHardware::Type::DualCashAcceptor;
+			mDeviceType = CHardware::Types::DualCashAcceptor;
 		}
 
 		it.value().inhibit = true;
@@ -475,7 +500,7 @@ ECurrencyError::Enum CashAcceptorBase<T>::processParTable()
 				.arg(it->nominal, 5)
 				.arg(it->currencyId)
 				.arg(it->currency)
-				.arg((mDeviceType != CHardware::Type::DualCashAcceptor) ? "" : ((it->cashReceiver == ECashReceiver::BillAcceptor) ? " in bill acceptor" : " in coin acceptor"))
+				.arg((mDeviceType != CHardware::Types::DualCashAcceptor) ? "" : ((it->cashReceiver == ECashReceiver::BillAcceptor) ? " in bill acceptor" : " in coin acceptor"))
 				.arg(it->inhibit ? ", inhibited" : "");
 		}
 	}
@@ -494,45 +519,37 @@ ECurrencyError::Enum CashAcceptorBase<T>::processParTable()
 
 //--------------------------------------------------------------------------------
 template <class T>
-void CashAcceptorBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes, const TStatusCodesHistoryList & aBaseHistoryList, TStatusCodesHistory aReplaceableHistory, int aReplacingStatusCode)
+bool CashAcceptorBase<T>::isStatusCollectionConformed(const TStatusCodesHistory & aHistory)
 {
-	auto conformStatusCollection = [&] (const TStatusCodesHistory & aHistory) -> bool
+	if (mStatusCollectionHistory.size() < aHistory.size())
 	{
-		if (mStatusCollectionHistory.size() < aHistory.size())
+		return false;
+	}
+
+	for (int i = 0; i < aHistory.size(); ++i)
+	{
+		TStatusCodes historyStatusCodes = getStatusCodes(mStatusCollectionHistory.lastValue(aHistory.size() - i));
+		TStatusCodes testStatusCodes = TStatusCodes() << aHistory[i];
+
+		if (!historyStatusCodes.contains(testStatusCodes))
 		{
 			return false;
 		}
+	}
 
-		for (int i = 0; i < aHistory.size(); ++i)
-		{
-			TStatusCodes historyStatusCodes = getStatusCodes(mStatusCollectionHistory.lastValue(aHistory.size() - i));
-			TStatusCodes testStatusCodes = TStatusCodes() << aHistory[i];
+	return true;
+}
 
-			if (!historyStatusCodes.contains(testStatusCodes))
-			{
-				return false;
-			}
-		}
+//--------------------------------------------------------------------------------
+template <class T>
+void CashAcceptorBase<T>::replaceConformedStatusCodes(TStatusCodes & aStatusCodes, int aStatusCodeFrom, int aStatusCodeTo)
+{
+	TStatusCodesHistory history = TStatusCodesHistory() << aStatusCodeFrom;
 
-		return true;
-	};
-
-	for (int i = 0; i < aReplaceableHistory.size(); ++i)
+	if (aStatusCodes.contains(aStatusCodeFrom) && (isStatusCollectionConformed(history) || isStatusCollectionConformed(history << aStatusCodeTo)))
 	{
-		if (aStatusCodes.contains(aReplaceableHistory[i]))
-		{
-			foreach (const TStatusCodesHistory & aHistory, aBaseHistoryList)
-			{
-				TStatusCodesHistory historyExtra(aHistory);
-				historyExtra += aReplacingStatusCode;
-
-				if (conformStatusCollection(aHistory) || conformStatusCollection(historyExtra))
-				{
-					aStatusCodes.remove(aReplaceableHistory[i]);
-					aStatusCodes.insert(aReplacingStatusCode);
-				}
-			}
-		}
+		aStatusCodes.remove(aStatusCodeFrom);
+		aStatusCodes.insert(aStatusCodeTo);
 	}
 }
 
@@ -655,6 +672,11 @@ void CashAcceptorBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 				aStatusCodes.remove(statusCode);
 			}
 		}
+	}
+
+	if (aStatusCodes.size() > 1)
+	{
+		aStatusCodes.remove(DeviceStatusCode::OK::OK);
 	}
 }
 

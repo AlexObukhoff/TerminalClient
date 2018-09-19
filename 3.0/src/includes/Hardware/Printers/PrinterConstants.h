@@ -2,6 +2,12 @@
 
 #pragma once
 
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtGui/QColor>
+#include <Common/QtHeadersEnd.h>
+
+// Modules
 #include "Hardware/Common/Specifications.h"
 
 //--------------------------------------------------------------------------------
@@ -21,6 +27,9 @@ namespace CPrinters
 
 	/// Количество символов в строке-разделителе по умолчанию.
 	const int DefaultHRSize = 35;
+
+	/// Белый цвет.
+	const QRgb White = QColor(Qt::white).rgb();
 
 	/// Действие с незабранным чеком.
 	namespace ELeftReceiptAction

@@ -103,7 +103,6 @@ bool AtolSerialFR::getShortStatus(TStatusCodes & aStatusCodes)
 void AtolSerialFR::processDeviceData()
 {
 	AtolFRBase::processDeviceData();
-	mCanProcessZBuffer = mModelData.ZBufferSize;
 
 	CAtolFR::SSoftInfo softInfo;
 	removeDeviceParameter(CDeviceData::FM::Firmware);
@@ -176,7 +175,7 @@ void AtolSerialFR::processDeviceData()
 //--------------------------------------------------------------------------------
 bool AtolSerialFR::enterExtendedMode()
 {
-	if (!mModelData.ZBufferSize)
+	if (!mCanProcessZBuffer)
 	{
 		return true;
 	}

@@ -117,6 +117,9 @@
     <ClInclude Include="..\src\Services\IntegratedDrivers.h">
       <Filter>Services\Hardware</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Services\TerminalStatusDescriptions.h">
+      <Filter>Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Services\CryptService.cpp">
@@ -602,12 +605,6 @@
       <Filter>Translation Files</Filter>
     </None>
     <None Include="..\src\locale\paymentprocessor_de.ts">
-      <Filter>Translation Files</Filter>
-    </None>
-    <None Include="..\src\locale\paymentprocessor_en_bankomat.ts">
-      <Filter>Translation Files</Filter>
-    </None>
-    <None Include="..\src\locale\paymentprocessor_ru_bankomat.ts">
       <Filter>Translation Files</Filter>
     </None>
   </ItemGroup>

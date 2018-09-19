@@ -15,13 +15,19 @@ namespace CPrimOnlineFR
 	const char ZReportInBuffer[] = "01";
 
 	/// Формат представления даты и времени в ответе на запрос статуса ФН-а.
-	const char DateTimeFormat[] = "ddMMyyyyhhmm";
+	const char FSDateTimeFormat[] = "ddMMyyyyhhmm";
 
 	/// По умолчанию использовать последнюю регистрацию.
 	const char LastRegistration[] = "00";
 
 	/// Количество типов оплаты.
 	const int PayTypeAmount = '\x0F';
+
+	/// Данные для парсинга TLV-структур фискального чека.
+	const char RegExpTLVData[] = "<([0-9]+)>(.*)";
+
+	/// Формат представления даты-времени в теге 1012 при получении данных о тегах фисклаьного документа.
+	const char FFDateTimeFormat[] = "dd.MM.yyyy hh:mm";
 
 	//----------------------------------------------------------------------------
 	/// Настройки для ПФД.
@@ -36,7 +42,7 @@ namespace CPrimOnlineFR
 	}
 
 	/// Получить версию ФФД по номеру билда прошивки.
-	inline EFFD::Enum getFFD(int aBuild)
+	inline EFFD::Enum getFFD(double aBuild)
 	{
 		if (aBuild <  60) return EFFD::F10Beta;
 		if (aBuild < 100) return EFFD::F10;
@@ -47,10 +53,10 @@ namespace CPrimOnlineFR
 	}
 
 	/// Получить актуальные версии прошивок для разных версий ФФД.
-	inline int getActualFirmware(EFFD::Enum aFFD)
+	inline double getActualFirmware(EFFD::Enum aFFD)
 	{
-		if (aFFD == EFFD::F10)  return  64;
-		if (aFFD == EFFD::F105) return 104;
+		if (aFFD == EFFD::F10)  return  64.0;
+		if (aFFD == EFFD::F105) return 104.5;
 
 		return 0;
 	}
@@ -89,19 +95,31 @@ namespace CPrimOnlineFR
 	namespace Commands
 	{
 		const char GetFSStatus          = '\x29';    /// Получить статус ФН.
+		const char GetOFDNotSentCount   = '\x39';    /// Получить количество неотправленных документов в ОФД.
 		const char GetPayTypeData       = '\x4B';    /// Получить данные о виде платежа.
 		const char GetOFDData           = '\x67';    /// Получить параметры обмена с ОФД.
 		const char GetRegTLVData        = '\x88';    /// Получить TLV-параметр регистрации.
+		const char GetFiscalTLVData     = '\x8B';    /// Получить TLV-параметры ФД.
 		const char GetRegistrationTotal = '\x8F';    /// Получить итоги регистрации.
 	}
 
+	//----------------------------------------------------------------------------
+	/// Флаги команды получения фискальных тегов.
+	namespace FiscalTLVDataFlags
+	{
+		const int Start = 3;
+		const int Get   = 4;
+	}
+
 	//----------------------------------------------------------------------------	
-	/// Ошибки выполнения команд.
+	/// Ошибки.
 	namespace Errors
 	{
 		/// Коды ошибок.
 		const char MoneyCounterOverflow = '\x10';    /// Переполнение денежного счетчика.
 		const char Code2DErrors         = '\x60';    /// Ошибка 2D-кода.
+		const char NoRequiedData        = '\x78';    /// Нет запрошенных данных.
+		const char FSOfflineEnd         = '\x84';    /// Исчерпан ресурс хранения документов для ОФД.
 
 		class Specification : public CPrimFR::Errors::SpecificationBase
 		{

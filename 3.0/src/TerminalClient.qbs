@@ -1,6 +1,7 @@
 ﻿import qbs
 import qbs.TextFile
 import qbs.Environment
+import qbs.FileInfo
 
 Project {
 	qbsSearchPaths: "../scripts/build/qbs"
@@ -14,15 +15,16 @@ Project {
 		"../tests/tests.qbs"
 	]
 
-	Product {
+	CppApplication {
 		name: "Core"
-		
+
 		qbsSearchPaths: "../scripts/build/qbs"
 
 		type: [ "VersionUpdaterType" ]
 		Depends { name: "cpp" }
 		Depends { name: "VersionUpdater" }
-		
+
+//		cpp.useCxxPrecompiledHeader: true
 		cpp.includePaths: [ "includes" ]
 		
 		files: [
@@ -45,6 +47,7 @@ Project {
 //			cpp.warningLevel: "all"
 			cpp.cLanguageVersion: "c11"
 			cpp.cxxLanguageVersion: "c++14"
+//			cpp.useCxxPrecompiledHeader: true
 			cpp.includePaths: [
 				product.buildDirectory + "/includes",
 				product.sourceDirectory + "/includes"
@@ -59,6 +62,12 @@ Project {
 				return defList;
 			}
 
+/*			Group {
+				name: "precompiled headers"
+				files: { return [ path + "/includes/Common/precompiled_headers.h" ]; }
+				fileTags: ["cpp_pch_src"]
+			} */
+			
 			Properties {
 				condition: qbs.toolchain.contains('msvc')
 				
@@ -74,11 +83,11 @@ Project {
 			}
 
 			Properties {
-				condition: product.TC_DEBUG_BUILD || (product.TC_BRANCH == "release")
-				cpp.debugInformation: true
+				condition: product.TC_DEBUG_BUILD == "0" && qbs.buildVariant == "release"
+				cpp.debugInformation: false
 				cpp.separateDebugInformation: true
-		   }			
+			}
 		}
-	}	
+	}
 }
 

@@ -19,7 +19,7 @@ ShtrihSerialFR::ShtrihSerialFR()
 	mErrorData = PErrorData(new CShtrihFRBase::Errors::CData);
 
 	// данные налогов
-	mTaxData.add(0, 3, "БЕЗ НАЛОГА");
+	mTaxData.add(0, 3);
 }
 
 //--------------------------------------------------------------------------------
@@ -31,8 +31,6 @@ QStringList ShtrihSerialFR::getModelList()
 //--------------------------------------------------------------------------------
 bool ShtrihSerialFR::updateParameters()
 {
-	mCanProcessZBuffer = mModelData.ZReportQuantity;
-
 	if (!TShtrihSerialFRBase::updateParameters())
 	{
 		return false;

@@ -108,7 +108,8 @@
     </ClCompile>
     <Lib>
       <OutputFile>$(TargetPath)</OutputFile>
-      <AdditionalDependencies></AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(THIRDPARTY_BIN_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -130,6 +131,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DKEYSUTILS_LIB "-I.\GeneratedFiles\$(ProjectName)\." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\libipriv" "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\Qt5port" "-I$(THIRDPARTY_DIR)\."</Command>
     </CustomBuild>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IGUIService.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IServiceState.h" />
     <ClInclude Include="..\src\Security\SecurityFilter.h" />
     <ClInclude Include="..\src\UserSettings.h" />
@@ -285,26 +287,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IEventService.h" />
-    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IGUIService.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
-      </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">%(Outputs)</Outputs>
-    </CustomBuild>
     <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IHIDService.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DKEYSUTILS_LIB  "-I.\GeneratedFiles\$(ProjectName)\." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\libipriv" "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\Qt5port" "-I$(THIRDPARTY_DIR)\."</Command>

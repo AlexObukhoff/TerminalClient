@@ -1,4 +1,4 @@
-﻿/* @file Плагин для отрисовки изображений интерфейса пользователя */
+/* @file Плагин для отрисовки изображений интерфейса пользователя */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -15,88 +15,44 @@
 #include "SkinProvider.h"
 
 //------------------------------------------------------------------------------
-SkinProvider::SkinProvider(
-	const QObject * aApplication, 
-	const QString & aInterfacePath, 
-	const QString & aContentPath, 
-	const QString & aUserPath, 
-	const Utils::TSkinConfig & aSkinConfig
-) :
+SkinProvider::SkinProvider(const QString & aInterfacePath, const QString & aContentPath, const QString & aUserPath, const Skin * aSkin) :
 	QQuickImageProvider(QQmlImageProviderBase::Image),
-	mApplication(aApplication),
 	mLogoPath(aContentPath + "/logo"),
 	mUserLogoPath(aUserPath + "/logo"),
 	mInterfacePath(aInterfacePath),
-	mSkinConfig2(aSkinConfig),
-	mCurrentSkin(nullptr)
+	mSkin(aSkin)
 {
-	mPaymentService = mApplication->property("payment").value<QObject *>();
-	mGuiService = mApplication->property("graphics").value<QObject *>();
-
-	// Зарегистрируем шрифты всех скинов
-	QDirIterator dirEntry(QString("%1/skins").arg(mInterfacePath), QString("*.ttf*;*.otf").split(";"), QDir::Files, QDirIterator::Subdirectories);
-	while (dirEntry.hasNext())
-	{
-		dirEntry.next();
-
-		if (QFontDatabase::addApplicationFont(dirEntry.filePath()) == -1)
-		{
-			Log(Log::Debug) << QString("Failed to add font '%1'.").arg(dirEntry.fileName());
-		}
-	}
-
-	foreach (qint64 o, mSkinConfig2.keys())
-	{
-		QString name = mSkinConfig2.value(o);
-		mSkins.insert(name, QSharedPointer<Skin>(new Skin(aInterfacePath, name)));
-	}
 }
 
 //------------------------------------------------------------------------------
 QImage SkinProvider::requestImage(const QString & aId, QSize * aSize, const QSize & aRequestedSize)
 {
+	QString skinName = mSkin->getName();
+
 	if (!aId.contains("logoprovider"))
-	{
+	{		
 		QString path = getImagePath(aId);
 
-		if (path.isEmpty())
+		Log(Log::Debug) << QString("SkinProvider: LOAD texture %1 from '%2'.").arg(aId).arg(path);
+
+		QImage image;
+
+		if (image.load(path))
 		{
-			return QImage();
-		}
+			if (aRequestedSize.isValid())
+			{
+				//TODO
+				image = image.scaled(aRequestedSize);
+			}
 
-		QImage i;
-		i.load(path);
-		*aSize = i.size();
-
-		return aRequestedSize.isValid() ? i.scaled(aRequestedSize) : i;
-
-		/*Log(Log::Debug) << QString("requestImage [%1] %2").arg(aId).arg(path);
-
-		QImage image = mImageCache.value(path);
-		
-		if (image.isNull())
-		{
+			*aSize = image.size();
 			
-
-			QImage i;
-
-			if (i.load(path))
-			{
-				image = aRequestedSize.isValid() ? i.scaled(aRequestedSize) : i;
-
-				Log(Log::Debug) << QString("IMAGE insert in cache [%1] %2").arg(aId).arg(path);
-
-				mImageCache.insert(path, image);
-
-				return image;
-			}
-			else
-			{
-				Log(Log::Debug) << QString("SkinProvider: failed to load texture %1 from '%2'.").arg(aId).arg(path);
-			}
+			return image;
 		}
-
-		return image;*/
+		else
+		{
+			Log(Log::Error) << QString("SkinProvider: failed to load texture %1 from '%2'.").arg(aId).arg(path);
+		}
 	}
 	// Логотипы предварительно обработаем перед выдачей
 	else
@@ -125,7 +81,7 @@ QImage SkinProvider::requestImage(const QString & aId, QSize * aSize, const QSiz
 			}
 			else
 			{
-				Log(Log::Debug) << QString("SkinProvider: failed to load logo background '%1' from '%2'.").arg(background).arg(path);
+				Log(Log::Error) << QString("SkinProvider: failed to load logo background '%1' from '%2'.").arg(background).arg(path);
 			}
 		}
 
@@ -206,61 +162,12 @@ QImage SkinProvider::requestImage(const QString & aId, QSize * aSize, const QSiz
 }
 
 //------------------------------------------------------------------------------
-QString SkinProvider::getImagePath(const QString & aImageId)
+QString SkinProvider::getImagePath(const QString & aImageId) const
 {
-	QPointer<QObject> userProps(mApplication->property("userProperties").value<QObject*>());	
-	QVariantMap all = userProps->property("clone").value<QVariantMap>();
-	qint64 providerId = all.value("operator_id").toString().toInt();
-	if (!mSkinConfig2.keys().contains(providerId))
-	{
-		providerId = -1;
-	}
-
-	QString newImageId = aImageId.split("$").first();
-
-	QString scene = mGuiService->property("topScene").value<QString>();
-	QString pathWithScene = QString("%1/%2").arg(scene).arg(newImageId);
-	QString skinName = mSkinConfig2.value(providerId);
-
-	QVariantMap skinConfig = mSkins.value(skinName)->getConfiguration();
-	QVariantMap::const_iterator it = skinConfig.find(pathWithScene);
-	mCurrentSkin = mSkins.value(skinName).data();
-		
-	QString result;
-
-	if (it != skinConfig.end())
-	{
-		result = mInterfacePath + QDir::separator() + "skins" + QDir::separator() + skinName + QDir::separator() + it->toString();
-	}
-	else
-	{
-		it = skinConfig.find(pathWithScene.split("/").last());
-
-		if (it != skinConfig.end())
-		{
-			result = mInterfacePath + QDir::separator() + "skins" + QDir::separator() + skinName + QDir::separator() + it->toString();
-		}
-	}
-
-	if (!QFile::exists(result))
-	{
-		Log(Log::Debug) << QString("SkinProvider: failed to load texture '%1' from '%2'. Try loading from 'default'.").arg(it->toString()).arg(result);
-		result = mInterfacePath + QDir::separator() + "skins" + QDir::separator() + "default" + QDir::separator() + it->toString();
-
-		if (!QFile::exists(result))
-		{
-			Log(Log::Debug) << QString("SkinProvider: failed to load texture '%1' from 'default'").arg(it->toString());
-			return QString();
-		}
-	}
+	QVariantMap skinConfig = mSkin->getConfiguration();
+	QVariantMap::const_iterator it = skinConfig.find(aImageId);	
 	
-	return  result;
-}
-
-//------------------------------------------------------------------------------
-QObject * SkinProvider::getSkin() const
-{
-	return mCurrentSkin ? mCurrentSkin : mSkins.value(mSkinConfig2.value(-1)).data();
+	return it != skinConfig.end() ? it->toString() : "";
 }
 
 //------------------------------------------------------------------------------

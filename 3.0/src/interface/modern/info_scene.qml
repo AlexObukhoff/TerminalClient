@@ -1,14 +1,15 @@
-﻿/* @file Экран информации о терминале. */
+/* @file Экран информации о терминале. */
 
-import QtQuick 2.2
-import QtWebKit 1.1
+import QtQuick 2.6
+import QtWebEngine 1.2
+import QtQml.Models 2.3
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
 import "info_content/info_model.js" 1.0 as InfoModel
 import "scripts/gui.js" 1.0 as GUI
 import "scenario/constants.js" 1.0 as Scenario
-import "plugins" 1.0
+//import "plugins" 1.0
 
 Widgets.SceneBase2 {
 	id: rootItem
@@ -30,13 +31,13 @@ Widgets.SceneBase2 {
 		anchors { fill: parent; leftMargin: 30; rightMargin: 30; topMargin: 190 }
 		interactive: false
 
-		delegate: Widgets.BorderImage2 {
+		delegate: BorderImage {
 			width: parent.width
 			height: 120
 
 			border { left: 18; top: 100; right: 100; bottom: 18 }
 			// Для ПмщнкАбнт немножко закостылим
-			source: modelData.source === "UserAssistantScene" ? "image://ui/enum.online" : "image://ui/enum.normal"
+			source: modelData.source === "UserAssistantScene" ? Utils.ui.image("enum.online") : Utils.ui.image("enum.normal")
 
 			Text {
 				id: itemText
@@ -46,8 +47,8 @@ Widgets.SceneBase2 {
 				clip: true
 				verticalAlignment: Text.AlignVCenter
 				wrapMode: Text.WordWrap
-				color: Skin.ui.color("color.main.primary")
-				font: Skin.ui.font("font.panel.title")
+				color: Utils.ui.color("color.main.primary")
+				font: Utils.ui.font("font.panel.title")
 				elide: Text.ElideRight
 				maximumLineCount: 1
 				text: Utils.locale.tr(modelData.name)
@@ -68,8 +69,7 @@ Widgets.SceneBase2 {
 
 					InfoModel.push(treeView.model);
 					treeView.model = modelData.items;
-
-					treeView.currentItemText = Utils.locale.tr(modelData.name);
+					treeView.currentItemText = modelData.name;
 				}
 
 				onPressed: Utils.playSound(Scenario.Sound.Click2)
@@ -91,22 +91,30 @@ Widgets.SceneBase2 {
 
 		Item {
 			property alias url: webView.url
-			property alias html: webView.html
+
+			function loadHtml(aHtml) {
+				//GUI.log(aHtml)
+				webView.loadHtml(aHtml)
+			}
 
 			anchors.fill: pageView
 
-			WebView {
+			WebEngineView {
 				id: webView
 
-				preferredWidth: parent.width
-				preferredHeight: 657
+				width: parent.width
+				height: 657
+				//url: "file:///z:/interface/ru.howto.html"
+
+				settings.localContentCanAccessFileUrls: true
+				settings.localContentCanAccessRemoteUrls: true
 			}
 
-			Widgets.BorderImage2 {
+			BorderImage {
 				width: parent.width
 				height: parent.height
 				border { left: 40; top: 40; right: 40; bottom: 40 }
-				source: "image://ui/webview.angles"
+				source: Utils.ui.image("webview.angles")
 				z: 1
 			}
 		}
@@ -134,7 +142,7 @@ Widgets.SceneBase2 {
 				var html = Utils.readFile(Core.environment.terminal.contentPath + "/" + (aItem.hasOwnProperty("localize") &&
 																																								 aItem.localize ? Utils.locale.getLanguage() + "." : "") + aItem.source);
 
-				pageView.item.html = html.replace("%SKIN_DIR%", Core.environment.terminal.skinPath);
+				pageView.item.loadHtml(html.replace("%SKIN_DIR%", Core.environment.terminal.skinPath));
 			}
 			else if (aItem.type === "component") {
 				pageView.source = "info_content/" + aItem.source;

@@ -1,6 +1,6 @@
 /* Компонент для выбора оператора с постраничной листалкой */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../scenario/constants.js" as Scenario
 
 Item {
@@ -64,11 +64,11 @@ Item {
 			height: 1
 		}
 
-		BorderImage2 {
+		BorderImage {
 			width: 1097
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
-			source: "image://ui/panel.operator"
+			source: Utils.ui.image("panel.operator")
 
 			Row {
 				anchors { left: parent.left; right: parent.right }
@@ -84,14 +84,14 @@ Item {
 					width: logoGroup.width
 
 					// Подложка для иконки корневой группы
-					Image2 {
+					Image {
 						visible: logoGroup.sourceSize.width
 						anchors.left: parent.left
 						anchors.verticalCenter: parent.verticalCenter
-						source: "image://ui/panel.iconsback." + Core.graphics.ui["icon_set"]
+						source: Utils.ui.image("panel.iconsback." + Core.graphics.ui["icon_set"])
 					}
 					// Иконка корневой группы
-					Image2 {
+					Image {
 						id: logoGroup
 
 						anchors.left: parent.left
@@ -111,8 +111,8 @@ Item {
 					width: logoGroup.status == Image.Error ? parent.width : 800
 					anchors.verticalCenter: parent.verticalCenter
 					horizontalAlignment: logoGroup.status == Image.Error ? Text.AlignHCenter : Text.AlignLeft
-					font: Skin.ui.font("font.panel.title")
-					color: Skin.ui.color("color.title")
+					font: Utils.ui.font("font.panel.title")
+					color: Utils.ui.color("color.title")
 					wrapMode: Text.WordWrap
 				}
 			}
@@ -166,8 +166,8 @@ Item {
 			Text {
 				anchors { verticalCenter: separator.verticalCenter; right: separator.left; rightMargin: 40 }
 				text: Utils.locale.tr(QT_TR_NOOP("operator_selector#page"))
-				font: Skin.ui.font("font.main.accent")
-				color: Skin.ui.color("color.main.secondary")
+				font: Utils.ui.font("font.main.accent")
+				color: Utils.ui.color("color.main.secondary")
 			}
 
 			// текущая
@@ -175,17 +175,17 @@ Item {
 				anchors { verticalCenter: separator.verticalCenter; right: separator.left }
 				visible: pageModel.count > 1
 				text: rootItem.__currentPage + 1
-				font: Skin.ui.font("font.main.accent")
-				color: Skin.ui.color("color.main.primary")
+				font: Utils.ui.font("font.main.accent")
+				color: Utils.ui.color("color.main.primary")
 			}
 
 			// разделитель
-			Image2 {
+			Image {
 				id: separator
 
 				anchors.verticalCenter: parent.verticalCenter
 				x: 1050
-				source: "image://ui/top.spacer"
+				source: Utils.ui.image("top.spacer")
 			}
 
 			// всего
@@ -193,8 +193,8 @@ Item {
 				anchors { verticalCenter: separator.verticalCenter; left: separator.right }
 				visible: pageModel.count > 1
 				text: pageModel.count
-				font: Skin.ui.font("font.main.accent")
-				color: Skin.ui.color("color.main.primary")
+				font: Utils.ui.font("font.main.accent")
+				color: Utils.ui.color("color.main.primary")
 			}
 		}
 	}
@@ -206,9 +206,9 @@ Item {
 		width: 407
 		icon: 6
 		text: Utils.locale.tr(QT_TR_NOOP("operator_selector#search"))
-		color: Skin.ui.color("color.button.primary")
-		texture: "image://ui/button.primary.normal"
-		texturePressed: "image://ui/button.primary.pressed"
+		color: Utils.ui.color("color.button.primary")
+		texture: Utils.ui.image("button.primary.normal")
+		texturePressed: Utils.ui.image("button.primary.pressed")
 		onClicked: rootItem.search()
 	}
 
@@ -217,9 +217,9 @@ Item {
 
 		icon: 16
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#back"))
-		color: Skin.ui.color("color.button.secondary")
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		color: Utils.ui.color("color.button.secondary")
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 
 		anchors { left: parent.left; bottom: parent.bottom; bottomMargin: 30 }
 		width: 407
@@ -232,9 +232,9 @@ Item {
 		icon: 17
 		enabled: !rootItem.atYEnd
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#forward"))
-		color: Skin.ui.color("color.button")
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		color: Utils.ui.color("color.button")
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 
 		width: 407
 		anchors { left: searchButton.right; bottom: parent.bottom; bottomMargin: 30 }

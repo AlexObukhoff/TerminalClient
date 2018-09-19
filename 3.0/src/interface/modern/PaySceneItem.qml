@@ -1,7 +1,7 @@
-﻿﻿import QtQuick 2.2
+import QtQuick 2.6
 import "widgets" 1.0 as Widgets
 
-Widgets.BorderImage2 {
+BorderImage {
 	id: rootItem
 
 	property variant amount
@@ -10,7 +10,7 @@ Widgets.BorderImage2 {
 
 	border { left: 30; top: 30; right: 30; bottom: 30 }
 	horizontalTileMode: BorderImage.Stretch
-	source: "image://ui/panel.operator"
+	source: Utils.ui.image("panel.operator")
 	height: 120
 
 	onAmountChanged: {
@@ -35,7 +35,7 @@ Widgets.BorderImage2 {
 			height: parent.height
 			verticalAlignment: Text.AlignVCenter
 			wrapMode: Text.WordWrap
-			font: Skin.ui.font("font.panel.title")
+			font: Utils.ui.font("font.panel.title")
 
 			Rectangle {
 				width: parent.width
@@ -52,7 +52,7 @@ Widgets.BorderImage2 {
 			height: parent.height
 			verticalAlignment: Text.AlignVCenter
 			horizontalAlignment: Text.AlignRight
-			font: Skin.ui.font("font.money")
+			font: Utils.ui.font("font.money")
 
 			Rectangle {
 				width: parent.width
@@ -72,7 +72,7 @@ Widgets.BorderImage2 {
 			width: 84
 			height: parent.height
 			verticalAlignment: Text.AlignVCenter
-			font: Skin.ui.font("font.panel.title")
+			font: Utils.ui.font("font.panel.title")
 		}
 	}
 }

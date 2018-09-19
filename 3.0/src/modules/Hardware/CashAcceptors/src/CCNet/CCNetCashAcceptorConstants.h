@@ -234,6 +234,11 @@ namespace CCCNet
 
 			/// Неисправности.
 			setExtraCodeDefault('\x47', DeviceStatusCode::Error::Unknown);
+			addStatus('\x10', DeviceStatusCode::Warning::Developing, "Unable to create object");
+			addStatus('\x11', DeviceStatusCode::Warning::Developing, "Object timeout");
+			addStatus('\x12', DeviceStatusCode::Warning::Developing, "Object access error");
+			addStatus('\x13', DeviceStatusCode::Warning::Developing, "Timer access error");
+			addStatus('\x14', DeviceStatusCode::Warning::Developing, "Task access error");
 			addStatus('\x15', DeviceStatusCode::Error::MemoryStorage);
 			addStatus('\x22', DeviceStatusCode::Error::RecoveryMode);
 			addStatus('\x23', BillAcceptorStatusCode::Error::Calibration);

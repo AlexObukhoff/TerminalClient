@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.6
 import "." 1.0 as Widgets
 
 Item {
@@ -19,12 +19,12 @@ Item {
 		width: parent.width
 		spacing: 16
 
-		BorderImage2 {
+		BorderImage {
 			id: background
 
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
-			source: "image://ui/panel.warning"
+			source: Utils.ui.image("panel.warning")
 			width: 120
 
 			Icon {
@@ -33,13 +33,15 @@ Item {
 			}
 		}
 
+		AnimatedImage{}
+
 		Text {
 			id: message
 
 			anchors.verticalCenter: parent.verticalCenter
 			width: text ? (rootItem.width - background.width) : 0
-			font: Skin.ui.font("font.secondary")
-			color: Skin.ui.color("color.main.primary")
+			font: Utils.ui.font("font.secondary")
+			color: Utils.ui.color("color.main.primary")
 			wrapMode: Text.WordWrap
 		}
 	}

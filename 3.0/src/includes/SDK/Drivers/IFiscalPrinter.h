@@ -15,16 +15,18 @@
 namespace SDK {
 namespace Driver {
 
+/// Состояние сессии.
 namespace ESessionState
 {
 	enum Enum
 	{
-		Error,     /// Ошибка определения
-		Opened,    /// Открыта
-		Closed     /// Закрыта
+		Error,     /// Ошибка определения.
+		Opened,    /// Открыта.
+		Closed     /// Закрыта.
 	};
 }
 
+//--------------------------------------------------------------------------------
 class IFiscalPrinter: public IPrinter
 {
 public:
@@ -57,6 +59,9 @@ public:
 	/// Является ли онлайновым.
 	virtual bool isOnline() const = 0;
 
+	/// Может работать с буфером Z-отчетов?
+	virtual bool canProcessZBuffer() = 0;
+
 protected:
 	virtual ~IFiscalPrinter() {}
 };
@@ -64,4 +69,3 @@ protected:
 }} // namespace SDK::Driver
 
 //--------------------------------------------------------------------------------
-

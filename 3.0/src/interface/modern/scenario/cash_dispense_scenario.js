@@ -1,4 +1,4 @@
-﻿/* @file Cценарий выдачи наличных. */
+/* @file Cценарий выдачи наличных. */
 
 include("constants.js", "Scenario");
 include("../scripts/gui.js", "GUI");

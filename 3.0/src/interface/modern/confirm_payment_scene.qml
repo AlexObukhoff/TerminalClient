@@ -1,6 +1,6 @@
-﻿/* @file Экран . */
+/* @file Экран . */
 
-import QtQuick 1.1
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" as Widgets
 import "controls" as Controls

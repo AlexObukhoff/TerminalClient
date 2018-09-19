@@ -1,4 +1,6 @@
-﻿/* @file Модуль навигации по дереву (groups.xml). */
+/* @file Модуль навигации по дереву (groups.xml). */
+
+Qt.include("gui.js")
 
 // Модель с узлами текущего уровня.
 var model = null;
@@ -16,6 +18,10 @@ function reset(aModel, aFile, aRoot)
 	_root = aRoot;
 	model.source = aFile;
 	_history.length = 0;
+
+	GUI.log("MenuWalker@reset", aModel, aFile, aRoot)
+	for (var i=0; i < aModel.count; i++)
+		GUI.log("#", i, aModel[i])
 }
 
 // Спускается на уровень ниже, перезагружая модель.

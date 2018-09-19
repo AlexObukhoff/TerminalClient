@@ -337,6 +337,39 @@ bool PluginFactory::destroyPlugin(IPlugin * aPlugin)
 }
 
 //------------------------------------------------------------------------------
+std::weak_ptr<IPlugin> PluginFactory::createPluginPtr(const QString & aInstancePath, const QString & aConfigPath)
+{
+	IPlugin * plugin = createPlugin(aInstancePath, aConfigPath);
+
+	if (!plugin)
+	{
+		return std::weak_ptr<IPlugin>();
+	}
+
+	auto pluginPtr = std::shared_ptr<IPlugin>(plugin, SDK::Plugin::PluginDeleter());
+	
+	// createPlugin помещает указатель на плагин в отдельную мапу. Поместим плагин в отдельный контейнер.
+	mCreatedPluginsPtr.insert(pluginPtr, mCreatedPlugins[plugin]);	
+	mCreatedPlugins.remove(plugin);
+		
+	return pluginPtr;
+}
+
+//------------------------------------------------------------------------------
+bool PluginFactory::destroyPlugin(const std::weak_ptr<IPlugin> & aPlugin)
+{
+	mKernel->getLog()->write(LogLevel::Normal, QString("Destroying plugin \"%1\".").arg(aPlugin.lock()->getPluginName()));
+
+	if (mCreatedPluginsPtr.contains(aPlugin.lock()))
+	{
+		mCreatedPluginsPtr.remove(aPlugin.lock());
+		return true;
+	}	
+
+	return false;
+}
+
+//------------------------------------------------------------------------------
 void PluginFactory::translateParameters()
 {
 	auto pluginList = PluginInitializer::getPluginList();

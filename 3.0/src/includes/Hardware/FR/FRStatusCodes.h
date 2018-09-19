@@ -37,12 +37,13 @@ namespace FRStatusCode
 		const int ZBufferOverflow      = 275;    /// Переполнен буфер z-отчётов.
 		const int NeedCloseSession     = 276;    /// Необходимо выполнить Z-отчет.
 		const int FSEnd                = 277;    /// Срок действия ФН кончился.
-		const int FSMemoryEnd          = 278;    /// Необходимо подключение к серверу ОФД.
+		const int NeedOFDConnection    = 278;    /// Необходимо подключение к серверу ОФД.
 		const int FS                   = 279;    /// Ошибка ФН.
 		const int NoMoney              = 280;    /// Не хватает денег для какой-либо операции.
 		const int WrongDealerTaxSystem = 281;    /// Неверно настроена СНО.
 		const int WrongDealerAgentFlag = 282;    /// Неверно настроен признак агента.
 		const int CashierINN           = 283;    /// Неправильный ИНН кассира.
+		const int Taxes                = 284;    /// Налоговые ставки неверны.
 	}
 }
 

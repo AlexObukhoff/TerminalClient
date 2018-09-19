@@ -1,6 +1,6 @@
-﻿/* @file Экран ввода реквизитов платежа. */
+/* @file Экран ввода реквизитов платежа. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
@@ -124,19 +124,8 @@ Widgets.SceneBase2 {
 
 			var parameters = {};
 
-			var findFieldType = function(aProvider, aId) {
-				var result = {};
-				try {
-					aProvider.fields.forEach(function (aField) {
-						if (aField.id == aId) { result = aField; throw BreakException; }
-					});
-				} catch (e) {}
-
-				return result.type;
-			}
-
 			for (var id in Editor.values) {
-				parameters[id] =  findFieldType(global.provider.id, id) == "enum" ? Editor.values[id].rawValue : Editor.values[id].value;
+				parameters[id] =  Editor.getField(id).type == "enum" ? Editor.values[id].rawValue : Editor.values[id].value;
 				parameters[id + "_DISPLAY"] = Editor.values[id].value;
 
 				if (Editor.values[id].rawValue !== Editor.values[id].value) {

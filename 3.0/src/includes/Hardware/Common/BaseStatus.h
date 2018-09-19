@@ -21,7 +21,7 @@ namespace DeviceStatusCode
 		const int NeedReboot             = 31;    /// Необходимо перезагрузить устройство по питанию.
 		const int ThirdPartyDriver       = 32;    /// Ошибка драйвера стороннего ПО и/или прошивки устройства при выполнении операции.
 		const int WrongSwitchesConfig    = 33;    /// Устройство неверно сконфигурировано.
-		const int Developing             = 34;    /// Ошибка проектирования.
+		const int Developing             = 34;    /// Ошибка проектирования (прошивки).
 		const int Compatibility          = 35;    /// Версия плагина не соответствует версии PP.
 		const int OperationError         = 36;    /// Ошибка выполнения команды.
 		const int UnknownDataExchange    = 37;    /// Ошибка при получении данных от устройства.

@@ -2,7 +2,6 @@
 
 // Modules
 #include "Hardware/Common/HardwareConstants.h"
-#include "Hardware/FR/AtolOnlinePrinters.h"
 
 // Project
 #include "FRPluginParameters.h"
@@ -55,9 +54,24 @@ SPluginParameter setNotPrinting()
 }
 
 //------------------------------------------------------------------------------
-SPluginParameter setPaymasterPrinterModel()
+SPluginParameter setPrinterModel(const QStringList & aModels, const QString & aDefault)
 {
-	return SPluginParameter(CHardware::FR::PrinterModel, false, PPT::PrinterModel, QString(), CAtolOnlinePrinters::Default, CAtolOnlinePrinters::CModels().getNames());
+	return SPluginParameter(CHardware::FR::PrinterModel, false, PPT::PrinterModel, QString(), aDefault, aModels);
+}
+
+//------------------------------------------------------------------------------
+SPluginParameter setPrinterModel(const QString & aModel)
+{
+	return setPrinterModel(QStringList() << aModel, aModel);
+}
+
+//------------------------------------------------------------------------------
+SPluginParameter setNullingSumInCash()
+{
+	return SPluginParameter(CHardwareSDK::FR::NullingSumInCash, false, PPT::NullingSumInCash, QString(), CHardwareSDK::Values::NotUse, QStringList()
+		<< CHardwareSDK::Values::Use
+		<< CHardwareSDK::Values::NotUse
+		<< CHardwareSDK::Values::Auto);
 }
 
 //------------------------------------------------------------------------------

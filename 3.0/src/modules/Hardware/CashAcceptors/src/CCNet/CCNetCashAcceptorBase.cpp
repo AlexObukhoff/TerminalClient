@@ -751,7 +751,22 @@ void CCNetCashAcceptorBase::cleanSpecificStatusCodes(TStatusCodes & aStatusCodes
 			<< DeviceStatusCode::OK::Initialization
 			<< BillAcceptorStatusCode::Busy::Returning;
 
-		cleanStatusCodes(aStatusCodes, baseHistoryList, replaceableHistory, BillAcceptorStatusCode::MechanicFailure::StickInExitChannel);
+		for (int i = 0; i < replaceableHistory.size(); ++i)
+		{
+			if (aStatusCodes.contains(replaceableHistory[i]))
+			{
+				foreach (const TStatusCodesHistory & history, baseHistoryList)
+				{
+					TStatusCodesHistory extraHistory = TStatusCodesHistory () << history << BillAcceptorStatusCode::MechanicFailure::StickInExitChannel;
+
+					if (isStatusCollectionConformed(history) || isStatusCollectionConformed(extraHistory))
+					{
+						aStatusCodes.remove(replaceableHistory[i]);
+						aStatusCodes.insert(BillAcceptorStatusCode::MechanicFailure::StickInExitChannel);
+					}
+				}
+			}
+		}
 	}
 }
 

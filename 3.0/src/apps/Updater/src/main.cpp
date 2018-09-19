@@ -1,4 +1,4 @@
-﻿/* @file Mainline. */
+/* @file Mainline. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>

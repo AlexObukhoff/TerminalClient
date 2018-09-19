@@ -14,6 +14,7 @@ using namespace SDK::Driver::IOPort::COM;
 //--------------------------------------------------------------------------------
 template TResult PrimFRBase::processCommand<uchar> (char, int, const QString &, uchar  &);
 template TResult PrimFRBase::processCommand<ushort>(char, int, const QString &, ushort &);
+template TResult PrimFRBase::processCommand<uint>  (char, int, const QString &, uint   &);
 template TResult PrimFRBase::processCommand<int>   (char, int, const QString &, int    &);
 
 template void PrimFRBase::loadDeviceData<uchar> (const CPrimFR::TData &, const QString &, const QString &, int, const QString &);
@@ -31,7 +32,6 @@ PrimFRBase::PrimFRBase() : mMode(EFRMode::Fiscal)
 	mModels = CPrimFR::CommonModels();
 	mModel = CPrimFR::Models::Unknown;
 	mOffline = true;
-	mAFDFont = CPrimFR::AFD::Font::Default;
 
 	setConfigParameter(CHardware::Printer::Commands::Cutting, CPOSPrinter::Command::Cut);
 	mErrorData = PErrorData(new CPrimFR::Errors::Specification);
@@ -44,13 +44,13 @@ PrimFRBase::PrimFRBase() : mMode(EFRMode::Fiscal)
 	// данные команд
 	mCommandTimouts.append(CPrimFR::Commands::SetFRParameters,  3 * 1000);
 	mCommandTimouts.append(CPrimFR::Commands::SetEjectorAction, 3 * 1000);
-	mCommandTimouts.append(CPrimFR::Commands::ZReport,          3 * 1000);
+	mCommandTimouts.append(CPrimFR::Commands::ZReport,         10 * 1000);
 	mCommandTimouts.append(CPrimFR::Commands::AFD,             10 * 1000);
 
 	// налоги
-	mTaxData.add( 0, 0, "БЕЗ НДС");
-	mTaxData.add(10, 4, "НДС 10%");
-	mTaxData.add(18, 5, "НДС 18%");
+	mTaxData.add( 0, 0);
+	mTaxData.add(10, 4);
+	mTaxData.add(18, 5);
 
 	// данные порта
 	mPortParameters[EParameters::BaudRate].append(EBaudRate::BR115200);   // preferable for work
@@ -72,14 +72,17 @@ PrimFRBase::PrimFRBase() : mMode(EFRMode::Fiscal)
 //--------------------------------------------------------------------------------
 bool PrimFRBase::updateParameters()
 {
-	mAFDFont = CPrimFR::AFD::Font::Default;
-
-	if (!mOperatorPresence && isFiscal() && !checkParameters())
+	if ((!mOperatorPresence && !checkParameters()) || !checkControlSettings())
 	{
 		return false;
 	}
 
-	if (!checkControlSettings() || !checkTaxes())
+	if (!isFiscal())
+	{
+		return true;
+	}
+
+	if (!checkTaxes())
 	{
 		return false;
 	}
@@ -89,7 +92,7 @@ bool PrimFRBase::updateParameters()
 	commandData << mCodec->fromUnicode(payment) << " " << " ";
 
 	// устанавливаем названия строк фискального чека
-	if (!mOperatorPresence && isFiscal() && !commandData.isEmpty() && !processCommand(CPrimFR::Commands::SetFDTypeNames, commandData))
+	if (!processCommand(CPrimFR::Commands::SetFDTypeNames, commandData))
 	{
 		toLog(LogLevel::Error, "PrimPrinters: Failed to set fiscal receipt type name");
 		return false;
@@ -117,7 +120,7 @@ bool PrimFRBase::checkParameters()
 
 	ushort parameter1 = CPrimFR::Parameter1;
 	ushort parameter2 = CPrimFR::Parameter2;
-	ushort parameter3 = 0;
+	ushort parameter3 = qToBigEndian(getParameter3());
 
 	using namespace CHardware::Printer;
 
@@ -125,6 +128,27 @@ bool PrimFRBase::checkParameters()
 	{
 		parameter1 &=  CPrimFR::Parameter1Mask;
 		parameter1 |= ~CPrimFR::Parameter1Mask & FRParameter1;
+	}
+
+	QString nullingSumInCash = getConfigParameter(CHardwareSDK::FR::NullingSumInCash).toString();
+
+	if (nullingSumInCash == CHardwareSDK::Values::Auto)
+	{
+		parameter2 &= ~CPrimFR::NullingSumInCashMask;
+		parameter2 |= FRParameter2 & CPrimFR::NullingSumInCashMask;
+	}
+	else if (nullingSumInCash == CHardwareSDK::Values::Use)
+	{
+		parameter2 |= CPrimFR::NullingSumInCashMask;
+	}
+	else if (nullingSumInCash == CHardwareSDK::Values::NotUse)
+	{
+		parameter2 &= ~CPrimFR::NullingSumInCashMask;
+	}
+
+	if (mOperatorPresence)
+	{
+		parameter2 |= CPrimFR::LongReportMask2;
 	}
 
 	QString printDocumentCap = getConfigParameter(Settings::DocumentCap).toString();
@@ -135,17 +159,6 @@ bool PrimFRBase::checkParameters()
 	{
 		parameter2 |= CPrimFR::NeedPrintFiscalCapMask;
 	}
-
-	if (!getConfigParameter(RetractorEnable).toBool())
-	{
-		parameter3 = ushort(getConfigParameter(Settings::LineSpacing).toInt());
-	}
-	else if (getConfigParameter(Settings::NotTakenReceipt).toString() == Values::Retract)
-	{
-		parameter3 = ushort(getConfigParameter(Settings::LeftReceiptTimeout).toInt());
-	}
-
-	parameter3 = qToBigEndian(parameter3);
 
 	if ((FRParameter1 == parameter1) &&
 		(FRParameter2 == parameter2) &&
@@ -167,6 +180,12 @@ bool PrimFRBase::checkParameters()
 	}
 
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+ushort PrimFRBase::getParameter3()
+{
+	return ushort(getConfigParameter(CHardware::Printer::Settings::LineSpacing).toInt());
 }
 
 //--------------------------------------------------------------------------------
@@ -265,10 +284,12 @@ bool PrimFRBase::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 	}
 
 	QStringList log;
+	LogLevel::Enum logLevel = LogLevel::Warning;
 
 	if (taxData.value != aVAT)
 	{
-		log << QString("tax value = %1%, need %2%").arg(taxData.value/100.0, 5, 'f', 2, ASCII::Zero).arg(aVAT, 5, 'f', 2, ASCII::Zero);
+		log << QString("tax value = %1%, need %2%").arg(taxData.value, 5, 'f', 2, ASCII::Zero).arg(aVAT, 5, 'f', 2, ASCII::Zero);
+		logLevel = LogLevel::Error;
 	}
 
 	if (taxData.description != aData.description)
@@ -281,7 +302,7 @@ bool PrimFRBase::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 		return true;
 	}
 
-	toLog(LogLevel::Error, mDeviceName + QString(": Wrong %1 for %2 tax group").arg(log.join("; ")).arg(aData.group));
+	toLog(logLevel, mDeviceName + QString(": Wrong %1 for %2 tax group").arg(log.join("; ")).arg(aData.group));
 
 	if (mIsOnline && (taxData.value != aVAT))
 	{
@@ -293,7 +314,7 @@ bool PrimFRBase::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 
 	bool result = setTaxData(aData.group, taxData);
 
-	return result || (taxData.value == aVAT);
+	return result || (logLevel == LogLevel::Warning);
 }
 
 //--------------------------------------------------------------------------------
@@ -378,6 +399,7 @@ TResult PrimFRBase::processCommand(char aCommand, const CPrimFR::TData & aComman
 		commandData += CPrimFR::Separator + dataItem;
 	}
 
+	mLastError = 0;
 	QByteArray answer;
 	TResult result = mProtocol.processCommand(commandData, answer, mCommandTimouts[aCommand]);
 
@@ -412,6 +434,7 @@ TResult PrimFRBase::processCommand(char aCommand, const CPrimFR::TData & aComman
 	}
 
 	char error = char(qToBigEndian(QString(answerData[3]).toUShort(0, 16)));
+	mLastError = error;
 
 	if (!error)
 	{
@@ -807,7 +830,7 @@ void PrimFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDataList
 }
 
 //--------------------------------------------------------------------------------
-bool PrimFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+bool PrimFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & /*aFPData*/, TComplexFiscalPaymentData & /*aPSData*/)
 {
 	QStringList receipt(aReceipt);
 	makeAFDReceipt(receipt);
@@ -839,7 +862,8 @@ bool PrimFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 	// терминальный чек
 	for (int i = 0; i < receiptSize; ++i)
 	{
-		commandData << addArbitraryFieldToBuffer(i + 1, 1, receipt[i]);
+		char font = mIsOnline ? CPrimFR::FiscalFont::Narrow : CPrimFR::FiscalFont::Default;
+		commandData << addArbitraryFieldToBuffer(i + 1, 1, receipt[i], font);
 	}
 
 	// количество полей
@@ -869,15 +893,17 @@ bool PrimFRBase::processXReport()
 double PrimFRBase::getAmountInCash()
 {
 	CPrimFR::TData answer;
+	// индексы для парсинга, меняться не будут. Зависят от мажорной версии прошивки, которая привязана к версии ФФД
+	int index = (mFFDFR < EFFD::F105) ? 23 : 31;
 
-	if (!processCommand(CPrimFR::Commands::EReport, &answer) || (answer.size() < 24))
+	if (!processCommand(CPrimFR::Commands::EReport, &answer) || (answer.size() <= index))
 	{
 		toLog(LogLevel::Error, "PrimPrinters: Failed to process E-Report");
 		return -1;
 	}
 
 	bool OK;
-	double result = answer[23].toDouble(&OK);
+	double result = answer[index].toDouble(&OK);
 
 	return OK ? result : -1;
 }
@@ -984,9 +1010,9 @@ TResult PrimFRBase::doZReport(bool aAuto)
 //--------------------------------------------------------------------------------
 bool PrimFRBase::execZReport(bool aAuto)
 {
-	bool cannotAutoZReport = !CPrimFR::ModelData[mModel].hasBuffer || (mOperatorPresence && !getConfigParameter(CHardware::FR::ForcePerformZReport).toBool());
+	bool cannotAutoZReport = !mCanProcessZBuffer || (mOperatorPresence && !getConfigParameter(CHardware::FR::ForcePerformZReport).toBool());
 
-	if (aAuto && cannotAutoZReport)
+	if (aAuto && cannotAutoZReport && !mIsOnline)
 	{
 		toLog(LogLevel::Error, mDeviceName + (mOperatorPresence ?
 			": Failed to process auto-Z-report due to presence of the operator." :
@@ -1013,7 +1039,7 @@ bool PrimFRBase::performZReport(bool aPrintDeferredReports)
 {
 	bool ZReportOK = execZReport(false);
 
-	int needPrintDeferred = aPrintDeferredReports && CPrimFR::ModelData[mModel].hasBuffer;
+	int needPrintDeferred = aPrintDeferredReports && mCanProcessZBuffer;
 	int endZReport = needPrintDeferred ? getEndZReportNumber() : 0;
 
 	if (!needPrintDeferred || (endZReport <= 0))
@@ -1092,24 +1118,24 @@ bool PrimFRBase::setMode(EFRMode::Enum aMode)
 }
 
 //--------------------------------------------------------------------------------
-CPrimFR::TData PrimFRBase::addGFieldToBuffer(int aX, int aY)
+CPrimFR::TData PrimFRBase::addGFieldToBuffer(int aX, int aY, int aFont)
 {
 	return CPrimFR::TData()
 		<< QString("%1").arg(qToBigEndian(unsigned short(aX)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по X
 		<< QString("%1").arg(qToBigEndian(unsigned short(aY)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по Y
-		<< int2String(mAFDFont).toLatin1();   // шрифт, см. ESC !
+		<< int2String(aFont).toLatin1();   // шрифт, см. ESC !
 }
 
 //--------------------------------------------------------------------------------
-CPrimFR::TData PrimFRBase::addArbitraryFieldToBuffer(int aX, int aY, const QString & aData)
+CPrimFR::TData PrimFRBase::addArbitraryFieldToBuffer(int aX, int aY, const QString & aData, int aFont)
 {
 	return CPrimFR::TData()
 		<< QString("%1").arg(qToBigEndian(unsigned short(aX)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по X
 		<< QString("%1").arg(qToBigEndian(unsigned short(aY)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по Y
-		<< int2String(mAFDFont).toLatin1()    // шрифт, см. ESC !
-		<< "01"                               // Печать произвольного реквизита
-		<< "00"                               // N вывода на контрольную ленту
-		<< mCodec->fromUnicode(aData);        // данные
+		<< int2String(aFont).toLatin1()    // шрифт, см. ESC !
+		<< "01"                            // Печать произвольного реквизита
+		<< "00"                            // N вывода на контрольную ленту
+		<< mCodec->fromUnicode(aData);     // данные
 }
 
 //--------------------------------------------------------------------------------

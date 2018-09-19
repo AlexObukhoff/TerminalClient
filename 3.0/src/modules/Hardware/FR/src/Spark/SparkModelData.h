@@ -76,12 +76,12 @@ namespace CSparkFR
 
 				flags110.add( 3, "xxxxxx0x", "сashbox and EKLZ extra options in Z-report");    /// Денежный ящик и доп. инфо ЭКЛЗ на Z-отчете
 				flags110.add( 4, "xx000000", "format of fiscal document");                     /// Формат полей фискального чека
-				flags110.add( 7, "10x11100", "format of fiscal document and Z-report");        /// Формат полей фискального чека и Z-отчета
+				flags110.add( 7, "10xxxxxx", "format of fiscal document and Z-report");        /// Формат полей фискального чека и Z-отчета
 				flags110.add( 9, "1xxxxxxx", "inhibition of payment instrument");              /// Запреты средств платежей
-				flags110.add(10, "ххxxx0xx", "KKM working features");                          /// Особенности работы ККМ
+				flags110.add(10, "xxxxx0xx", "KKM working features");                          /// Особенности работы ККМ
 				flags110.add(14, "00xxxxxx", "paper heating and extra options");               /// Прогрев бумаги м другие настройки
 				flags110.add(18, "11xxxxxx", "barcode options");                               /// Настройки печати штрих-кодов
-				flags110.add(19, "xx01xxxx", "taxes and other options");                       /// Настройки печати штрих-кодов
+				flags110.add(19, "xx01xxxx", "taxes and other options");                       /// Дополнительные возможности по использованию нулевой ставки налогов
 				flags110.add(21, "1x1xxxxx", "system options");                                /// Системные настройки
 				flags110.add(22, "xxx00000", "separating line");                               /// Линия разделения заголовка чека
 				flags110.add(24, "01000x11", "system options 2");                              /// Системные настройки 2 (только 110)

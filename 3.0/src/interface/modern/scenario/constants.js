@@ -1,4 +1,4 @@
-﻿//.pragma library
+//.pragma library
 
 var Idle = {
 	Name: "idle",

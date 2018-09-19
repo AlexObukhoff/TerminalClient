@@ -66,4 +66,31 @@ protected:
 
 #define APPEND(Key) append(Key, #Key)
 
+// базовый класс для хранения данных в виде пар ключ-значение со статическим заполнением данных
+template <class T1, class T2>
+class CSSpecification: public CSpecification<T1, T2>
+{
+public:
+	CSSpecification()
+	{
+		mBuffer = addData(T1(), T2(), true);
+	}
+
+	static QMap<T1, T2> addData(const T1 & aKey, const T2 & aValue, bool aMode = false)
+	{
+		static QMap<T1, T2> data;
+
+		if (aMode)
+		{
+			return data;
+		}
+
+		data.insert(aKey, aValue);
+
+		return QMap<T1, T2>();
+	}
+};
+
+#define ADD_STATIC_DATA(aClass, T1, aName, aKey, aValue) const T1 aName = [] () -> T1 { aClass::addData(aKey, aValue); return aKey; } ();
+
 //---------------------------------------------------------------------------

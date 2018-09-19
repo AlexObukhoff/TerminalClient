@@ -27,7 +27,7 @@ public:
 	}
 
 protected:
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes)
 	{
 		if (!CustomPrinter::getStatus(aStatusCodes))

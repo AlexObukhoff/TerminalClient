@@ -37,6 +37,9 @@ Project {
 		files: [
 			"CashAcceptors/src/*.*",
 			"CashAcceptors/src/*/*.*",
+			"CoinAcceptors/src/CCTalk/*.*",
+			"Acceptors/src/*.*",
+			"Acceptors/src/*/*.*",
 			"../../includes/Hardware/CashAcceptors/BillTable.h",
 			"../../includes/Hardware/CashAcceptors/CashAcceptorBaseConstants.h",
 			"../../includes/Hardware/CashAcceptors/CashAcceptorStatusCodes.h",
@@ -69,7 +72,16 @@ Project {
 		Depends { name: "Core" }
 
 		files: [
-			"CoinAcceptors/src/CCTalk/*.*"
+			"CashAcceptors/src/*.*",
+			"CashAcceptors/src/*/*.*",
+			"CoinAcceptors/src/CCTalk/*.*",
+			"Acceptors/src/*.*",
+			"Acceptors/src/*/*.*",
+			"../../includes/Hardware/CashAcceptors/BillTable.h",
+			"../../includes/Hardware/CashAcceptors/CashAcceptorBaseConstants.h",
+			"../../includes/Hardware/CashAcceptors/CashAcceptorStatusCodes.h",
+			"../../includes/Hardware/CashAcceptors/CurrencyDescriptions.h",
+			"../../includes/Hardware/CashAcceptors/ModelData.h"
 		]
 	}
 
@@ -92,6 +104,7 @@ Project {
 			"FR/src/Prim/*/*.*",
 			"FR/src/Shtrih/*.*",
 			"FR/src/Shtrih/*/*.*",
+			"FR/src/Shtrih/*/*/*.*",
 			"FR/src/Spark/*.*",
 			"FR/src/Kasbi/*.*",
 

@@ -37,7 +37,7 @@ public:
 		{
 			switch (mLevel)
 			{
-				case Debug:
+				case Debug: qDebug() << mMessage; break;
 				case Normal: qDebug() << mMessage; break;
 				case Warning:
 				case Error: qWarning() << mMessage; break;

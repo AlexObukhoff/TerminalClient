@@ -109,16 +109,16 @@
   <ItemGroup>
     <ClCompile Include="..\src\GraphicsEngine.cpp" />
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_GraphicsEngine.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_GraphicsEngine.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_GraphicsEngine.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\GraphicsEngine\ReleaseWithDebugInfo\moc_GraphicsEngine.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,7 +142,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" UicDir=".\GeneratedFiles\$(ProjectName)" RccDir=".\GeneratedFiles\$(ProjectName)" lupdateOnBuild="0" Qt5Version_x0020_Win32="5.6.0" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)" UicDir=".\GeneratedFiles\$(ProjectName)" RccDir=".\GeneratedFiles\$(ProjectName)" lupdateOnBuild="0" Qt5Version_x0020_Win32="$(DefaultQtVersion)" MocOptions="" QtVersion_x0020_Win32="$(DefaultQtVersion)" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -1,4 +1,4 @@
-﻿/* @file Сканер Honeywell Metrologic на OPOS-драйвере. */
+/* @file Сканер Honeywell Metrologic на OPOS-драйвере. */
 
 #import "OPOSScanner.tlb"
 

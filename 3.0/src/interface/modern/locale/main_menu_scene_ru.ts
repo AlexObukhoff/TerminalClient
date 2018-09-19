@@ -29,12 +29,12 @@
         <translation>Извините, оплата в пользу данного оператора временно невозможна. Попробуйте позже.</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="276"/>
+        <location filename="../main_menu_scene.qml" line="278"/>
         <source>main_menu_scene#rest_howto_title</source>
         <translation>Остаток средств %REST% %CURRENCY%</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="277"/>
+        <location filename="../main_menu_scene.qml" line="279"/>
         <source>main_menu_scene#rest_howto_description</source>
         <translation>Нажмите «Закрыть» и выберите любого оператора для оплаты.</translation>
     </message>

@@ -1,6 +1,6 @@
 /* @file Контейнер для покадрового отображения последовательности спрайтов */
 
-import QtQuick 2.2
+import QtQuick 2.6
 
 Item {
 	id: rootItem
@@ -15,7 +15,7 @@ Item {
 
 	clip: true
 
-	Image2 {
+	Image {
 		id: image
 
 		y: -rootItem.height * rootItem._currentFrame

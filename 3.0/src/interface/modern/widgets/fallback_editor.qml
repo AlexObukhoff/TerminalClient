@@ -1,6 +1,6 @@
-﻿/* @file Fallback редактор. */
+/* @file Fallback редактор. */
 
-import QtQuick 1.1
+import QtQuick 2.6
 import "../controls" as Controls
 
 Item {
@@ -20,8 +20,8 @@ Item {
 		verticalAlignment: Text.AlignVCenter
 		wrapMode: Text.WordWrap
 		text: Utils.locale.tr(QT_TRANSLATE_NOOP("editor", "editor#invalid_provider"))
-		font: Skin.ui.font("font.message")
-		color: Skin.ui.color("color.main.primary")
+		font: Utils.ui.font("font.message")
+		color: Utils.ui.color("color.main.primary")
 	}
 
 	// Сохраняет значение

@@ -1,6 +1,6 @@
-﻿/* @file Чекбокс */
+/* @file Чекбокс */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../scenario/constants.js" 1.0 as Scenario
 
 Item {
@@ -13,11 +13,11 @@ Item {
 
 	height: 120
 
-	BorderImage2 {
+	BorderImage {
 		id: buttonImageOn
 
 		width: 120
-		source: "image://ui/checkbox.on"
+		source: Utils.ui.image("checkbox.on")
 		border { left: 21; top: 84; right: 84; bottom: 21 }
 		horizontalTileMode: BorderImage.Stretch
 		verticalTileMode: BorderImage.Stretch
@@ -25,11 +25,11 @@ Item {
 		visible: rootItem.checked
 	}
 
-	BorderImage2 {
+	BorderImage {
 		id: buttonImagePressed
 
 		width: 120
-		source: "image://ui/checkbox.pressed"
+		source: Utils.ui.image("checkbox.pressed")
 		border { left: 21; top: 84; right: 84; bottom: 21 }
 		horizontalTileMode: BorderImage.Stretch
 		verticalTileMode: BorderImage.Stretch
@@ -37,11 +37,11 @@ Item {
 		visible: false
 	}
 
-	BorderImage2 {
+	BorderImage {
 		id: buttonImageOff
 
 		width: 120
-		source: "image://ui/checkbox.off"
+		source: Utils.ui.image("checkbox.off")
 		border { left: 21; top: 84; right: 84; bottom: 21 }
 		horizontalTileMode: BorderImage.Repeat
 		verticalTileMode: BorderImage.Stretch
@@ -54,8 +54,8 @@ Item {
 		height: rootItem.height
 		width: rootItem.width - 120
 		verticalAlignment: Text.AlignVCenter
-		color: Skin.ui.color("color.main.primary")
-		font: Skin.ui.font("font.checkbox")
+		color: Utils.ui.color("color.main.primary")
+		font: Utils.ui.font("font.checkbox")
 		wrapMode: Text.WordWrap
 		text: rootItem.text
 	}

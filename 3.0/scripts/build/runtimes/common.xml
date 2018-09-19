@@ -21,9 +21,6 @@
 	<file source="{QBS_RESULT_PATH}/plugins/user_assistant.dll" target="plugins/plugins/user_assistant.dll"/>
 	
 	<!-- Графические движки, компонент plugins -->
-	<!--
-		<file source="{QBS_RESULT_PATH}/plugins/webkit_backend.dll" target="plugins/plugins/backends/webkit_backend.dll"/>
-	-->
 	<file source="{QBS_RESULT_PATH}/plugins/qml_backend.dll" target="plugins/plugins/backends/qml_backend.dll"/>
 	<file source="{QBS_RESULT_PATH}/plugins/native_backend.dll" target="plugins/plugins/backends/native_backend.dll"/>
 
@@ -31,47 +28,69 @@
 	<directory source="src/runtimes/common" target="" recursive="true"/>
 	
 	<!-- Qt, компонент qt -->
-<!--	<file source="{QTDIR}/bin/Qt5Core.dll" target="qt/Qt5Core.dll"/>
+	<file source="{QTDIR}/bin/icudt57.dll" target="qt/icudt57.dll"/>
+	<file source="{QTDIR}/bin/icuin57.dll" target="qt/icuin57.dll"/>
+	<file source="{QTDIR}/bin/icuuc57.dll" target="qt/icuuc57.dll"/>
+	<file source="{QTDIR}/bin/Qt5Core.dll" target="qt/Qt5Core.dll"/>
 	<file source="{QTDIR}/bin/Qt5Gui.dll" target="qt/Qt5Gui.dll"/>
+	<file source="{QTDIR}/bin/Qt5Multimedia.dll" target="qt/Qt5Multimedia.dll"/>
 	<file source="{QTDIR}/bin/Qt5Network.dll" target="qt/Qt5Network.dll"/>
-	<file source="{QTDIR}/bin/Qt5OpenGL.dll" target="qt/Qt5OpenGL.dll"/>
+	<file source="{QTDIR}/bin/Qt5Positioning.dll" target="qt/Qt5Positioning.dll"/>
+	<file source="{QTDIR}/bin/Qt5Qml.dll" target="qt/Qt5Qml.dll"/>
+	<file source="{QTDIR}/bin/Qt5Quick.dll" target="qt/Qt5Quick.dll"/>
 	<file source="{QTDIR}/bin/Qt5Script.dll" target="qt/Qt5Script.dll"/>
 	<file source="{QTDIR}/bin/Qt5Sql.dll" target="qt/Qt5Sql.dll"/>
-	<file source="{QTDIR}/bin/Qt5Widgets.dll" target="qt/Qt5Widgets.dll"/>
-	<file source="{QTDIR}/bin/Qt5WebKit.dll" target="qt/Qt5WebKit.dll"/>
-	<file source="{QTDIR}/bin/Qt5WebKitWidgets.dll" target="qt/Qt5WebKitWidgets.dll"/>
-	<file source="{QTDIR}/bin/Qt5Multimedia.dll" target="qt/Qt5Multimedia.dll"/>
-	<file source="{QTDIR}/bin/Qt5Xml.dll" target="qt/Qt5Xml.dll"/>
-	<file source="{QTDIR}/bin/Qt5XmlPatterns.dll" target="qt/Qt5XmlPatterns.dll"/>
 	<file source="{QTDIR}/bin/Qt5Svg.dll" target="qt/Qt5Svg.dll"/>
-	<file source="{QTDIR}/bin/Qt5PrintSupport.dll" target="qt/Qt5PrintSupport.dll"/>
-	<file source="{QTDIR}/bin/icudt51.dll" target="qt/icudt51.dll"/>
-	<file source="{QTDIR}/bin/icuin51.dll" target="qt/icuin51.dll"/>
-	<file source="{QTDIR}/bin/icuuc51.dll" target="qt/icuuc51.dll"/>
-	<file source="{QTDIR}/bin/libEGL.dll" target="qt/libEGL.dll"/>
-	<file source="{QTDIR}/bin/libGLESv2.dll" target="qt/libGLESv2.dll"/>
+	<file source="{QTDIR}/bin/Qt5WebChannel.dll" target="qt/Qt5WebChannel.dll"/>
+	<file source="{QTDIR}/bin/Qt5WebEngine.dll" target="qt/Qt5WebEngine.dll"/>
+	<file source="{QTDIR}/bin/Qt5WebEngineCore.dll" target="qt/Qt5WebEngineCore.dll"/>
+	<file source="{QTDIR}/bin/Qt5Widgets.dll" target="qt/Qt5Widgets.dll"/>
+	<file source="{QTDIR}/bin/Qt5Xml.dll" target="qt/Qt5Xml.dll"/>
+	
+	<file source="{QTDIR}/bin/QtWebEngineProcess.exe" target="qt/QtWebEngineProcess.exe"/>
+
+	<!-- Plugins, компонент qt -->
 	<file source="{QTDIR}/plugins/imageformats/qgif.dll" target="qt/imageformats/qgif.dll"/>
 	<file source="{QTDIR}/plugins/imageformats/qico.dll" target="qt/imageformats/qico.dll"/>
 	<file source="{QTDIR}/plugins/imageformats/qjpeg.dll" target="qt/imageformats/qjpeg.dll"/>
-	<file source="{QTDIR}/plugins/imageformats/qmng.dll" target="qt/imageformats/qmng.dll"/>
 	<file source="{QTDIR}/plugins/imageformats/qsvg.dll" target="qt/imageformats/qsvg.dll"/>
-	<file source="{QTDIR}/plugins/imageformats/qwbmp.dll" target="qt/imageformats/qwbmp.dll"/>
-	<file source="{QTDIR}/plugins/platforms/qwindows.dll" target="qt/platforms/qwindows.dll"/>  
-
-	
+	<file source="{QTDIR}/plugins/platforms/qwindows.dll" target="qt/platforms/qwindows.dll"/>
+	<file source="{QTDIR}/plugins/bearer/qgenericbearer.dll" target="qt/bearer/qgenericbearer.dll"/>
+	<file source="{QTDIR}/plugins/bearer/qnativewifibearer.dll" target="qt/bearer/qnativewifibearer.dll"/>
+	<file source="{QTDIR}/plugins/scenegraph/softwarecontext.dll" target="qt/scenegraph/softwarecontext.dll"/>
 	<file source="{QTDIR}/plugins/sqldrivers/qsqlite.dll" target="qt/sqldrivers/qsqlite.dll"/>
-	<file source="{QTDIR}/qml/QtWebKit/qmldir" target="qt/QtWebKit/qmldir"/>
-	<file source="{QTDIR}/qml/QtWebKit/qmlwebkitplugin.dll" target="qt/QtWebKit/qmlwebkitplugin.dll"/>-->
+	<file source="{QTDIR}/plugins/audio/qtaudio_windows.dll" target="qt/audio/qtaudio_windows.dll"/>
+
+	<!-- QtQml, компонент qt -->
+	<file source="{QTDIR}/qml/QtQml/Models.2/plugins.qmltypes" target="qt/QtQml/Models.2/plugins.qmltypes"/>
+	<file source="{QTDIR}/qml/QtQml/Models.2/qmldir" target="qt/QtQml/Models.2/qmldir"/>
+	<file source="{QTDIR}/qml/QtQml/Models.2/modelsplugin.dll" target="qt/QtQml/Models.2/modelsplugin.dll"/>
+
+	<!-- QtQuick2, компонент qt -->
+	<file source="{QTDIR}/qml/QtQuick.2/plugins.qmltypes" target="qt/QtQuick.2/plugins.qmltypes"/>
+	<file source="{QTDIR}/qml/QtQuick.2/qmldir" target="qt/QtQuick.2/qmldir"/>
+	<file source="{QTDIR}/qml/QtQuick.2/qtquick2plugin.dll" target="qt/QtQuick.2/qtquick2plugin.dll"/>
+	
+	<!-- QtWebChannel, компонент qt -->
+	<file source="{QTDIR}/qml/QtWebChannel/plugins.qmltypes" target="qt/QtWebChannel/plugins.qmltypes"/>
+	<file source="{QTDIR}/qml/QtWebChannel/qmldir" target="qt/QtWebChannel/qmldir"/>
+	<file source="{QTDIR}/qml/QtWebChannel/declarative_webchannel.dll" target="qt/QtWebChannel/declarative_webchannel.dll"/>
+	
+	<!-- QtWebEngine, компонент qt -->
+	<file source="{QTDIR}/qml/QtWebEngine/plugins.qmltypes" target="qt/QtWebEngine/plugins.qmltypes"/>
+	<file source="{QTDIR}/qml/QtWebEngine/qmldir" target="qt/QtWebEngine/qmldir"/>
+	<file source="{QTDIR}/qml/QtWebEngine/qtwebengineplugin.dll" target="qt/QtWebEngine/qtwebengineplugin.dll"/>
+
+	<!-- QtWebEngine experimental, компонент qt -->
+	<!-- <file source="{QTDIR}/QtWebEngine/experimental/qtwebengineexperimentalplugin.dll" target="qt/QtWebEngine/experimental/qtwebengineexperimentalplugin.dll"/> -->
+
+	<!-- resources, translations: qtdeploy их тащит, но надо проверить, нужны ли они на самом деле -->
 
 	<!-- Обновление конфигурации ТК -->
-	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/FlashSecurityUpdate.cmd" target="update_settings/post-action-FlashSecurityUpdate.cmd"/>
+	<!--<file if="{CYBERPLAT_BUILD}" source="scripts/updates/FlashSecurityUpdate.cmd" target="update_settings/post-action-FlashSecurityUpdate.cmd"/>-->
 	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/AutoEndTasksSetup.cmd" target="update_settings/post-action-AutoEndTasksSetup.cmd"/>
 
-	<!-- Обновление корневых сертификатов Windows -->
-	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/rootsupd.exe" target="update_root_cert/rootsupd.exe"/>
-	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/rootsupd.cmd" target="update_root_cert/post-action-rootsupd.cmd"/>
-	
-	<!-- Обновление VS 2013 Runtime -->
+	<!-- Обновление VS 2015 Runtime -->
 	<file if="{CYBERPLAT_BUILD}" source="scripts/updates/vs_runtime_update.cmd" target="update_vs_runtime/post-action-runtime-update.cmd"/>
 	<file if="{CYBERPLAT_BUILD}" source="scripts/install/thirdparty/vcredist_x86_2015.exe" target="update_vs_runtime/vcredist_x86_2015.exe"/>
 	<file if="{CYBERPLAT_BUILD}" source="scripts/install/thirdparty/vc2015test.exe" target="update_vs_runtime/vc2015test.exe"/>

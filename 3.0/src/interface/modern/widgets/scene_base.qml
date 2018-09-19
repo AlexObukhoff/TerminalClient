@@ -1,9 +1,9 @@
-﻿/* @file Базовый экран. */
+/* @file Базовый экран. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../controls" as Controls
 
-FocusScope {
+Item {
 	id: rootItem
 
 	// Фон экрана.
@@ -48,11 +48,11 @@ FocusScope {
 	height: 1024
 
 	// Фон.
-	Image2 {
+	Image {
 		id: backgroundImage
 
 		anchors.fill: parent
-		source: "image://ui/background"
+		source: Utils.ui.image("background")
 		z: -1
 	}
 
@@ -70,18 +70,18 @@ FocusScope {
 		x: 30
 		y: 57
 		icon: 0
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 		onClicked: rootItem.back()
 	}
 
-	BorderImage2 {
+	BorderImage {
 		id: topPanel
 
 		anchors { left: sceneButton.right; right: info.visible ? info.left : parent.right; rightMargin: info.visible ? 0 : 30; verticalCenter: sceneButton.verticalCenter }
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
-		source: "image://ui/panel.operator"
+		source: Utils.ui.image("panel.operator")
 
 		Row {
 			anchors { left: parent.left; leftMargin: topPanelIcon.visible ? 13 : 0 }
@@ -96,7 +96,7 @@ FocusScope {
 			Icon {
 				id: topPanelIcon
 
-				icons: "image://ui/icons.secondary"
+				icons: Utils.ui.image("icons.secondary")
 				visible: !topPanelImage.width
 			}
 
@@ -106,8 +106,8 @@ FocusScope {
 				width: info.visible ? 730 : 850
 				height: parent.height
 				clip: true
-				font: Skin.ui.font("font.title")
-				color: Skin.ui.color("color.title")
+				font: Utils.ui.font("font.title")
+				color: Utils.ui.color("color.title")
 				wrapMode: Text.WordWrap
 				verticalAlignment: Text.AlignVCenter
 				elide: Text.ElideRight
@@ -125,8 +125,8 @@ FocusScope {
 
 		anchors { right: rootItem.right; rightMargin: 29; verticalCenter: sceneButton.verticalCenter }
 		visible: topPanel.visible
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 		onClicked: rootItem.information()
 	}
 

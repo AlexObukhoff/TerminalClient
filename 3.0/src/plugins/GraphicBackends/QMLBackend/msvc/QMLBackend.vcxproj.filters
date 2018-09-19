@@ -71,6 +71,9 @@
     <ClInclude Include="..\src\QMLGraphicsItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\GUI\IGraphicsItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\src\QMLBackend.h">

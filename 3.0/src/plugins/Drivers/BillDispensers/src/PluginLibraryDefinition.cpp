@@ -1,4 +1,4 @@
-﻿/* @file Конфигурация фабрики плагинов. */
+/* @file Конфигурация фабрики плагинов. */
 
 // Plugin SDK
 #include <SDK/Plugins/PluginFactory.h>

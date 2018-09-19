@@ -69,7 +69,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CashAcceptors.lib;CCNetProtocol.lib;ID003Protocol.lib;EBDSProtocol.lib;V2eProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Acceptors.lib;CashAcceptors.lib;CoinAcceptors.lib;CCTalkProtocol.lib;CCNetProtocol.lib;ID003Protocol.lib;EBDSProtocol.lib;V2eProtocol.lib;SSPProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -94,7 +94,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CashAcceptors.lib;CCNetProtocol.lib;ID003Protocol.lib;EBDSProtocol.lib;V2eProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Acceptors.lib;CashAcceptors.lib;CoinAcceptors.lib;CCTalkProtocol.lib;CCNetProtocol.lib;ID003Protocol.lib;EBDSProtocol.lib;V2eProtocol.lib;SSPProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -118,7 +118,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;CashAcceptorsd.lib;CCNetProtocold.lib;ID003Protocold.lib;EBDSProtocold.lib;V2eProtocold.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;Acceptorsd.lib;CashAcceptorsd.lib;CoinAcceptorsd.lib;CCTalkProtocold.lib;CCNetProtocold.lib;ID003Protocold.lib;EBDSProtocold.lib;V2eProtocold.lib;SSPProtocold.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

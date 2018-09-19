@@ -1,4 +1,4 @@
-﻿/* @file Всплывающее окно */
+/* @file Всплывающее окно */
 
 import QtQuick 1.0
 import Application.Types 1.0

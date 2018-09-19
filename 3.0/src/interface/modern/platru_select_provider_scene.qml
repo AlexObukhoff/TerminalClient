@@ -1,6 +1,6 @@
-﻿/* @file Экран меню выбора оператора в ПК. */
+/* @file Экран меню выбора оператора в ПК. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "controls" 1.0 as Controls
 import "widgets" 1.0 as Widgets

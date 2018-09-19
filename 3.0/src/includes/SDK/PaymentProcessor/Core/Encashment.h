@@ -45,6 +45,18 @@ struct SBalance
 		EAmountType::Enum type; /// Тип сумм (купюры, монеты, оплата по карте и т.п.).
 		int currency;           /// Валюта, пока не используется.
 		QList<SAmount> amounts; /// Список сумма:количество.
+
+		Currency::Nominal getSum() const
+		{
+			Currency::Nominal::RawType result = 0;
+
+			foreach (auto & amount, amounts)
+			{
+				result += amount.value.rawValue() * amount.count;
+			}
+
+			return Currency::Nominal::fromRawValue(result);
+		}
 	};
 
 	SBalance()
@@ -76,10 +88,35 @@ struct SBalance
 
 	QString dispensedNotes;       /// Список выданных купюр в виде отчета
 
+	QString getAmountSum(const EAmountType::Enum aType, const QList<SAmounts> & aSumsList) const
+	{
+		Currency::Nominal::RawType result = 0;
+
+		foreach (auto & bal, aSumsList)
+		{
+			if (bal.type == aType)
+			{
+				result += bal.getSum().rawValue();
+			}
+		}
+
+		return Currency::Nominal::fromRawValue(result).toString(false);
+	}
+
 	/// Получить список полей для чека баланса.
 	QVariantMap getFields() const
 	{
 		QVariantMap fields;
+
+		auto typeToString = [](EAmountType::Enum aType) -> QString {
+			switch (aType)
+			{
+			case EAmountType::Coin:     return "COIN";
+			case EAmountType::EMoney:   return "EMONEY";
+			case EAmountType::BankCard: return "BANKCARD";
+			default: return "BILL";
+			}
+		};
 
 		auto fillFields = [&](const QString & aPrefix, const QList<SAmounts> & aSums)
 		{
@@ -89,26 +126,16 @@ struct SBalance
 			fields[aPrefix + "COIN_SUM"] = 0;
 
 			fields[aPrefix + "EMONEY_SUM"] = 0;
-
-			QMap<EAmountType::Enum, double> sumByType;
+			fields[aPrefix + "BANKCARD_SUM"] = 0;
 
 			if (isValid)
 			{
 				fields["ENCASHMENT_START_DATE"] = lastEncashmentDate.toLocalTime().toString("dd.MM.yyyy hh:mm:ss");
 				fields[aPrefix + "TOTAL_SUM"] = amount;
 
-
 				foreach (const SAmounts & sum, aSums)
 				{
-					QString type;
-
-					switch (sum.type)
-					{
-						case EAmountType::Bill: type = "BILL"; break;
-						case EAmountType::Coin: type = "COIN"; break;
-						case EAmountType::EMoney: type = "EMONEY"; break;
-						default: type = "BILL";
-					}
+					QString type = typeToString(sum.type);
 
 					foreach (auto a, sum.amounts)
 					{
@@ -120,21 +147,13 @@ struct SBalance
 
 						// Добавляем детализацию по купюрам (номера купюр каждого номинала).
 						fields[aPrefix + a.value.toString() + "_" + type + "_DETAILS"] = a.serials;
-
-						if (sumByType.contains(sum.type))
-						{
-							sumByType[sum.type] += a.value.toDouble() * a.count;
-						}
-						else
-						{
-							sumByType[sum.type] = a.value.toDouble() * a.count;
-						}
 					}
 				}
 
-				fields[aPrefix + "BILL_SUM"] = QString::number(sumByType[EAmountType::Bill], 'f', 2);
-				fields[aPrefix + "COIN_SUM"] = QString::number(sumByType[EAmountType::Coin], 'f', 2);
-				fields[aPrefix + "EMONEY_SUM"] = QString::number(sumByType[EAmountType::EMoney], 'f', 2);
+				fields[aPrefix + "BILL_SUM"] = getAmountSum(EAmountType::Bill, aSums);
+				fields[aPrefix + "COIN_SUM"] = getAmountSum(EAmountType::Coin, aSums);
+				fields[aPrefix + "EMONEY_SUM"] = getAmountSum(EAmountType::EMoney, aSums);
+				fields[aPrefix + "BANKCARD_SUM"] = getAmountSum(EAmountType::BankCard, aSums);
 			}
 		};
 

@@ -43,12 +43,6 @@
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_UtilsPlugin.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Utils.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Utils.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Translator.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -56,9 +50,6 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Utils\ReleaseWithDebugInfo\moc_Translator.cpp">
-      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Utils\ReleaseWithDebugInfo\moc_Utils.cpp">
       <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Utils\ReleaseWithDebugInfo\moc_UtilsPlugin.cpp">
@@ -94,6 +85,15 @@
     <ClCompile Include="..\src\Skin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Skin.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_Skin.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Skin.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\SkinProvider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -118,13 +118,13 @@
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_SkinProvider.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_Skin.cpp">
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_Utils.cpp">
       <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Skin.cpp">
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Utils.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Skin.cpp">
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Utils.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
@@ -152,7 +152,7 @@
     <CustomBuild Include="..\src\Translator.h">
       <Filter>Source Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\src\Utils.h">
+    <CustomBuild Include="..\src\Skin.h">
       <Filter>Source Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\src\GroupModel.h">
@@ -161,7 +161,7 @@
     <CustomBuild Include="..\src\SkinProvider.h">
       <Filter>Source Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\src\Skin.h">
+    <CustomBuild Include="..\src\Utils.h">
       <Filter>Source Files</Filter>
     </CustomBuild>
   </ItemGroup>

@@ -40,6 +40,3 @@ MultiEditorWrapper 1.0 multieditor_wrapper.qml
 PayConfirmEditor 1.0 pay_confirm_editor.qml
 
 EditorDescription 1.0 editor_description.qml
-
-Image2 1.0 image2.qml
-BorderImage2 1.0 border_image2.qml

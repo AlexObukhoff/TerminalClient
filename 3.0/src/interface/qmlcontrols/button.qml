@@ -1,4 +1,4 @@
-﻿/* @file Кнопка. */
+/* @file Кнопка. */
 
 import QtQuick 1.1
 

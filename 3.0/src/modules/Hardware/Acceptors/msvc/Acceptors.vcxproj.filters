@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="ccTalk">
+      <UniqueIdentifier>{0ebe228f-c1ad-4895-9fec-e50ff87f8e3f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\CCTalk\CCTalkAcceptorBase.cpp">
+      <Filter>ccTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CCTalk\CCTalkModelData.cpp">
+      <Filter>ccTalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CCTalk\CCTalkComplexEnableAcceptor.cpp">
+      <Filter>ccTalk</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\BillTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorBaseConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusCodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusesDescriptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CurrencyDescriptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CashAcceptor\CashAcceptorStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkAcceptorBase.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkAcceptorConstants.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkCurrencyData.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkModelData.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkComplexEnableAcceptor.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Acceptors\CCTalkAddresses.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

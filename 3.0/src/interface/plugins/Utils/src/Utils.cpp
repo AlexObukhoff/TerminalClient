@@ -1,4 +1,4 @@
-﻿/* @file Набор вспомогательных функций для qml. */
+/* @file Набор вспомогательных функций для qml. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -15,6 +15,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
 #include <QtGui/QKeyEvent>
+#include <QtGui/QWindow>
 #include <QtQml/QQmlEngine>
 #include <QtQml/QQmlContext>
 #include <QtMultimedia/QSound>
@@ -71,12 +72,21 @@ Utils::Utils(QQmlEngine * aEngine, const QString & aInterfacePath, const QString
 	mProviderListFilter = QSharedPointer<ProviderListFilter>(new ProviderListFilter(this));
 	mProviderListFilter->setSourceModel(mProviderListModel.data());
 	mProviderListFilter->setDynamicSortFilter(true);
+
+	mSkin = QSharedPointer<Skin>(new Skin(application, mInterfacePath, mUserPath));
+	
+	mGuiService = application->property("graphics").value<QObject *>();
+	connect(mGuiService, SIGNAL(skinReload(const QVariantMap &)), this, SLOT(onReloadSkin(const QVariantMap &)));
 }
 
 //------------------------------------------------------------------------------
 void Utils::generateKeyEvent(int aKey, int aModifiers, const QString & aText) const
 {
-	QApplication::postEvent(QApplication::focusWidget(), new QKeyEvent(QEvent::KeyPress, aKey, Qt::KeyboardModifiers(aModifiers), aText));
+	const QGuiApplication *app = qApp;
+	QWindow *focusWindow = app ? app->focusWindow() : 0;
+	if (focusWindow) {
+		QGuiApplication::sendEvent(focusWindow, new QKeyEvent(QEvent::KeyPress, aKey, Qt::KeyboardModifiers(aModifiers), aText));
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -327,9 +337,9 @@ QObject * Utils::getProviderList()
 }
 
 //------------------------------------------------------------------------------
-Utils::TSkinConfig Utils::getSkinConfig() const
+QObject * Utils::getSkin()
 {
-	return mSkinConfig;
+	return mSkin.data();
 }
 
 // Файлы для воспроизведения должны лежать в соответствующих папках: common, narrator, etc
@@ -413,6 +423,16 @@ QVariantMap Utils::str2json(const QString & aString) const
 }
 
 //------------------------------------------------------------------------------
+void Utils::onReloadSkin(const QVariantMap & aParams)
+{
+	if (mSkin->needReload(aParams))
+	{
+		QMetaObject::invokeMethod(mGuiService, "reset", Qt::DirectConnection);
+		mSkin->reload(aParams);
+	}
+}
+
+//------------------------------------------------------------------------------
 QMap<qint64, quint32> Utils::getStatistic()
 {
 	QMap<qint64, quint32> result;
@@ -465,32 +485,6 @@ void Utils::loadConfiguration()
 		foreach(QString key, userSettings.allKeys())
 		{
 			configuration.insert(key, userSettings.value(key));
-		}
-	}
-
-	// Сохраним отдельно настройки скинов
-	
-	// Основной скин
-	mSkinConfig.insert(-1, configuration.value("ui/skin").toString());
-	
-	// Скины для операторов хранятся в секции [skin]
-	// имя_скина=оператор1б оператор2...
-	foreach (QString key, configuration.keys())
-	{
-		if (key == "ui/skin")
-		{
-			continue;
-		}
-		
-		if (key.contains("skin"))
-		{
-			QString skin = key.split("/").last();
-			QStringList pp = configuration.value(key).toStringList();
-
-			foreach (QString p, pp)
-			{
-				mSkinConfig.insert(p.toInt(), skin);
-			}
 		}
 	}
 

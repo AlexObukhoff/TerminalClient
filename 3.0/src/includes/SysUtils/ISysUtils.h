@@ -1,4 +1,4 @@
-﻿/* @file Интерфейс к SysUtils. Нужно для функций, специфичных для конкретной ОС. */
+/* @file Интерфейс к SysUtils. Нужно для функций, специфичных для конкретной ОС. */
 
 #pragma once
 
@@ -90,6 +90,25 @@ public:
 	/// Переместить окно поверх всех окон
 	static bool bringWindowToFront(WId aWindow);
 	static bool bringWindowToFront(const QString & aWindowTitle);
+
+	/// Информация о процессе
+	struct SProcessInfo
+	{
+		qint64 id;
+		QString path;
+		qint64 memoryUsage;
+		qint64 handlers;
+
+		SProcessInfo() : id(0), memoryUsage(0), handlers(0) {}
+
+		QString toString() const
+		{
+			return QString("%1 %2 Memory: %3, handlers: %4.").arg(id).arg(path).arg(memoryUsage).arg(handlers);
+		}
+	};
+
+	/// Получить список работающих процессов
+	static QList<SProcessInfo> getAllProcessInfo();
 
 };
 

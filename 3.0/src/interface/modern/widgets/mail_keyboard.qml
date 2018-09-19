@@ -1,6 +1,6 @@
-﻿/* @file Английская раскладка клавиатуры. */
+/* @file Английская раскладка клавиатуры. */
 
-import QtQuick 1.1
+import QtQuick 2.6
 import "../controls" 1.0 as Controls
 
 Controls.KeyboardBase {

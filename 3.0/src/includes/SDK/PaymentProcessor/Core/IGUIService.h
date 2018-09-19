@@ -38,6 +38,9 @@ public:
 	/// Проверка состояния интерфейса.
 	virtual bool isDisabled() const = 0;
 
+	/// Удалает все объекты GraphicsItem, очищает сцену
+	virtual void reset() = 0;
+
 	/// Возвращает текущий размер экрана в пикселях.
 	virtual QRect getScreenSize(int aIndex) const = 0;
 

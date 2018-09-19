@@ -25,6 +25,7 @@
 #include "Hardware/Common/FunctionTypes.h"
 #include "Hardware/Common/ASCII.h"
 #include "Hardware/Protocols/Common/ProtocolUtils.h"
+#include "Hardware/Common/DeviceUtils.h"
 
 #pragma warning(disable : 4250) // warning 4250: 'class1' : inherits 'class2::member' via dominance
 // Есть ветки наследования, интерфейсная и базовой реализации. Последняя содержит вызываемый функционал и

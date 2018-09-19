@@ -1,4 +1,4 @@
-﻿/* @file Модуль управления сторожевым сервисом через сокет. */
+/* @file Модуль управления сторожевым сервисом через сокет. */
 
 #pragma once
 
@@ -49,7 +49,7 @@ private slots:
 
 	void onTrayIconActivated(QSystemTrayIcon::ActivationReason aReason);
 
-	void onStartServiceClicked(QString aName);
+	void onStartServiceClicked(const QString & aArguments);
 	void onStopServiceClicked();
 	void onCloseIconClicked();
 

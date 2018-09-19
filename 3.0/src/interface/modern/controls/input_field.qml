@@ -1,8 +1,8 @@
-﻿/* @file Поле ввода. */
+/* @file Поле ввода. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 
-FocusScope {
+Item {
 	id: rootItem
 
 	// Cодержит ли поле допустимое значение
@@ -72,9 +72,8 @@ FocusScope {
 		id: input
 
 		z: 1
-		anchors { left: parent.left; leftMargin: rootItem.textMargin; right: parent.right; verticalCenter: parent.verticalCenter; rightMargin: backspace.width + rootItem.textMargin }
 		focus: true
-
+		anchors { left: parent.left; leftMargin: rootItem.textMargin; right: parent.right; verticalCenter: parent.verticalCenter; rightMargin: backspace.width + rootItem.textMargin }
 		horizontalAlignment: TextInput.AlignLeft
 		validator: RegExpValidator { id: inputValidator }
 

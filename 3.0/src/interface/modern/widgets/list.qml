@@ -1,6 +1,6 @@
-﻿/* @file Список с прокруткой. */
+/* @file Список с прокруткой. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../scripts/gui.js" 1.0 as GUI
 import "../scenario/constants.js" 1.0 as Scenario
 
@@ -68,11 +68,11 @@ Item {
 			width: scrollBar.visible ? 1131 : 1222
 			model: em
 
-			delegate: BorderImage2 {
+			delegate: BorderImage {
 				width: parent.width
 				height: rootItem.__doubleHeightMode ? sourceSize.width * 2 : sourceSize.width
 				border { left: 18; top: 100; right: 100; bottom: 18 }
-				source: model.checked ? "image://ui/enum.check" : "image://ui/enum.normal"
+				source: model.checked ? Utils.ui.image("enum.check") : Utils.ui.image("enum.normal")
 				opacity: rootItem.readonly && !model.checked  ? 0.5 : 1
 
 				Text {
@@ -83,8 +83,8 @@ Item {
 					text: model.name
 					verticalAlignment: Text.AlignVCenter
 					wrapMode: Text.Wrap
-					color: model.checked ? Skin.ui.color("color.list.check") : Skin.ui.color("color.list.normal")
-					font: rootItem.__halfFontHeightMode ? Skin.ui.font("font.enum") : Skin.ui.font("font.panel.title")
+					color: model.checked ? Utils.ui.color("color.list.check") : Utils.ui.color("color.list.normal")
+					font: rootItem.__halfFontHeightMode ? Utils.ui.font("font.enum") : Utils.ui.font("font.panel.title")
 					elide: Text.ElideRight
 					maximumLineCount: 3
 				}

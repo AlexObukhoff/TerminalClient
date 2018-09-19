@@ -19,6 +19,7 @@ public:
 		mDeviceName = "NeoService";
 		mRegion = ERegion::KZ;
 		mLineFeed = false;
+		mTransportTimeout = 1000;
 
 		// данные порта
 		mPortParameters[EParameters::BaudRate].clear();
@@ -29,8 +30,8 @@ public:
 
 		// данные налогов
 		mTaxData.data().clear();
-		mTaxData.add(12, 1, "НДС 12%");
-		mTaxData.add( 0, 2, "БЕЗ НАЛОГА");
+		mTaxData.add(12, 1);
+		mTaxData.add( 0, 2);
 	}
 
 protected:

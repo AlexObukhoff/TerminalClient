@@ -229,13 +229,13 @@ QString Provider::xmlFields2Json(const QString & aXmlFields)
 }
 
 //------------------------------------------------------------------------------
-QObjectList Provider::getFields()
+QVariant Provider::getFields()
 {
 	PaymentService * paymentService = qobject_cast<PaymentService *>(parent());
 
 	if (!paymentService)
 	{
-		return mFields["0"]; 
+		return QVariant::fromValue(mFields["0"]);
 	}
 
 	QString currentStep = paymentService->currentStep();
@@ -256,7 +256,7 @@ QObjectList Provider::getFields()
 		}
 	}
 
-	return mFields[currentStep];
+	return QVariant::fromValue(mFields[currentStep]);
 }
 
 //------------------------------------------------------------------------------
@@ -344,7 +344,7 @@ QVariantMap PaymentService::calculateCommission(const QVariantMap & aParameters)
 }
 
 //------------------------------------------------------------------------------
-QVariantMap PaymentService::calculateLimits(const QString & aAmount)
+QVariantMap PaymentService::calculateLimits(const QString & aAmount, bool aFixedAmount)
 {
 	//TODO Код из paymentbase::calculateLimits
 
@@ -355,9 +355,24 @@ QVariantMap PaymentService::calculateLimits(const QString & aAmount)
 	double maxAmount = aAmount.toDouble();
 
 	const qint64 providerID = getParameter(PPSDK::CPayment::Parameters::Provider).toLongLong();
-	const bool isFixedAmount = qFuzzyCompare(minAmount, maxAmount);
 	const auto provider = mPaymentService->getProvider(providerID);
-	double systemMax = qMin(provider.limits.system.toDouble(), maxAmount);
+	double systemMax = provider.limits.system.toDouble();
+	systemMax = maxAmount > systemMax ? systemMax : maxAmount;
+
+	if (!aFixedAmount)
+	{
+		// Корректируем максимальный платеж в зависимости от системного лимита
+		if (qFuzzyIsNull(maxAmount) || qFuzzyIsNull(systemMax))
+		{
+			// Если какой-либо из лимитов не задан, то берем тот, который задан.
+			maxAmount = qMax(systemMax, maxAmount);
+		}
+		else
+		{
+			// Иначе берем нижнюю границу.
+			maxAmount = qMin(systemMax, maxAmount);
+		}
+	}
 
 	// Проверяем значение системного лимита
 	if (qFuzzyIsNull(systemMax))
@@ -369,7 +384,7 @@ QVariantMap PaymentService::calculateLimits(const QString & aAmount)
 	if (provider.processor.rounding)
 	{
 		maxAmount = qCeil(maxAmount);
-		minAmount = isFixedAmount ? maxAmount : qCeil(minAmount);
+		minAmount = aFixedAmount ? maxAmount : qCeil(minAmount);
 	}
 
 	// Формируем массив заполненных полей для подсчёта комиссий.
@@ -424,7 +439,7 @@ QVariantMap PaymentService::calculateLimits(const QString & aAmount)
 	auto calcAmountAllByAmountAll = [&com, &provider](double & aAmount) -> double {
 		double amountAll = 0.0;
 
-		if (com.getType() == PPSDK::Commission::Percent)
+		if (com.getType() == PPSDK::Commission::Percent && com.getValue())
 		{
 			double amountAllLimit1 = 0.0;
 
@@ -453,10 +468,14 @@ QVariantMap PaymentService::calculateLimits(const QString & aAmount)
 				amountAll = qMax(amountAllLimit3, amountAll);
 			}
 		}
-		else
+		else if (com.getType() == PPSDK::Commission::Absolute && !qFuzzyIsNull(com.getValue()))
 		{
 			aAmount -= com.getValue();
 			amountAll = aAmount;
+		}
+		else if (!qFuzzyIsNull(com.getMinCharge()))
+		{
+			amountAll = aAmount - com.getMinCharge();
 		}
 
 		return amountAll;
@@ -465,7 +484,12 @@ QVariantMap PaymentService::calculateLimits(const QString & aAmount)
 	double localAmountAllLimit = calcAmountAll(maxAmount);
 	double maxAmountAll = 0.0;
 
-	if (localAmountAllLimit > systemMax)
+	if (aFixedAmount)
+	{
+		// если лимиты равны и комиссия больше системного лимита, то пропускаем эти лимиты дальше.
+		maxAmountAll = localAmountAllLimit;
+	}
+	else if (localAmountAllLimit > systemMax)
 	{
 		maxAmountAll = systemMax;
 		maxAmount = calcAmountAllByAmountAll(maxAmount);

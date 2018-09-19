@@ -161,8 +161,12 @@ Commission Commission::fromSettings(const TPtree & aSettings)
 
 	commission.mType = (aSettings.get<QString>("<xmlattr>.type").toLower() == "absolute") ?  Absolute : Percent;
 	commission.mValue = aSettings.get<double>("<xmlattr>.amount");
-	commission.mMinCharge = aSettings.get<double>("<xmlattr>.min_charge", CCommissions::MinChargeValue);
-	commission.mMaxCharge = aSettings.get<double>("<xmlattr>.max_charge", CCommissions::MaxChargeValue);
+
+	QString minChargeValue = aSettings.get<QString>("<xmlattr>.min_charge", QString::number(CCommissions::MinChargeValue)).trimmed();
+	commission.mMinCharge = minChargeValue.isEmpty() ? CCommissions::MinChargeValue : minChargeValue.toDouble();
+
+	QString maxChargeValue = aSettings.get<QString>("<xmlattr>.max_charge", QString::number(CCommissions::MaxChargeValue)).trimmed();
+	commission.mMaxCharge = maxChargeValue.isEmpty() ? CCommissions::MaxChargeValue : maxChargeValue.toDouble();
 
 	QString round = aSettings.get<QString>("<xmlattr>.round", "bank").toLower();
 	if (round == "high")

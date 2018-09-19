@@ -79,8 +79,15 @@ namespace CSparkFR
 	/// Z-отчёт выталкивается вперёд перед печатью следующего.
 	const char PushZReport[] = "2";
 
-	/// Системный флаг системных настроек-2.
-	const int SystemOptions2 = 24;
+	/// Системные флаги.
+	namespace SystemFlags
+	{
+		const int ZReportsAndFiscal =  7;    /// Настройки Z-отчёта и чека.
+		const int SystemOptions2    = 24;    /// Системные настройки-2.
+	}
+
+	/// Маска для длинных отчетов.
+	const char LongReportMask = '\x1F';
 
 	/// Номер кассира.
 	const int CashierNumber = 1;

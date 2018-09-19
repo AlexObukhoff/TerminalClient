@@ -20,16 +20,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\CCTalk\CCTalkCoinAcceptorBase.cpp">
-      <Filter>ccTalk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\CCTalk\ComplexEnable.cpp">
-      <Filter>ccTalk</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\NPSTalk\NPSTalkCoinAcceptor.cpp">
       <Filter>NPSTalk</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CCTalk\CCTalkModelData.cpp">
+    <ClCompile Include="..\src\CCTalk\CCTalkCoinAcceptorBase.cpp">
       <Filter>ccTalk</Filter>
     </ClCompile>
   </ItemGroup>
@@ -58,28 +52,23 @@
     <ClInclude Include="..\src\NPSTalk\NPSTalkCoinAcceptor.h">
       <Filter>NPSTalk</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CCTalk\ComplexEnable.h">
-      <Filter>ccTalk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CCTalk\CCTalkCurrencyData.h">
-      <Filter>ccTalk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CCTalk\CCTalkModelData.h">
-      <Filter>ccTalk</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\NPSTalk\NPSTalkCoinAcceptorConstants.h">
       <Filter>NPSTalk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CCTalk\CCTalkCoinAcceptorConstants.h">
-      <Filter>ccTalk</Filter>
     </ClInclude>
     <ClInclude Include="..\src\CoinAcceptorBase.h">
       <Filter>Base</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\src\CCTalk\CCTalkCoinAcceptorBase.h">
+    <ClInclude Include="..\src\CCTalk\CCTalkCoinAcceptorConstants.h">
       <Filter>ccTalk</Filter>
-    </CustomBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkCoinAcceptorModelData.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkComplexEnableCoinAcceptor.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCTalk\CCTalkCoinAcceptorBase.h">
+      <Filter>ccTalk</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

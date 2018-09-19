@@ -19,7 +19,7 @@ class CoinAcceptorBase : public TSerialCashAcceptor
 public:
 	CoinAcceptorBase()
 	{
-		//TODO: надо для всех монетников
+		mDeviceType = CHardware::Types::CoinAcceptor;
 		setConfigParameter(CHardware::CashAcceptor::DisablingTimeout, CCoinAcceptor::DisablingTimeout);
 		setConfigParameter(CHardware::CashAcceptor::StackedFilter, true);
 	}

@@ -477,6 +477,17 @@ bool PrinterBase<T>::execSpecialTag(const Tags::SLexeme & aTagLexeme)
 
 		if (image.loadFromData(QByteArray::fromBase64(aTagLexeme.data.toLatin1())) && !image.isNull())
 		{
+			for (int i = 0; i < image.width(); ++i)
+			{
+				for (int j = 0; j < image.height(); ++j)
+				{
+					if (!qAlpha(image.pixel(i, j)))
+					{
+						image.setPixel(i, j, CPrinters::White);
+					}
+				}
+			}
+
 			image = image.convertToFormat(QImage::Format_Mono);
 			printImage(image, aTagLexeme.tags);
 		}
@@ -529,10 +540,9 @@ void PrinterBase<T>::separate(QStringList & aReceipt) const
 template <class T>
 bool PrinterBase<T>::canCheckReady(bool aOnline)
 {
-	bool initFailed = mConnected && (mInitialized == ERequestStatus::Fail);
 	bool notConnected = !mConnected && (!mOperatorPresence || !aOnline);
 
-	return (mInitialized != ERequestStatus::InProcess) && !initFailed && !notConnected;
+	return (mInitialized != ERequestStatus::InProcess) && !notConnected;
 }
 
 //---------------------------------------------------------------------------
@@ -546,6 +556,16 @@ bool PrinterBase<T>::isDeviceReady(bool aOnline)
 template <class T>
 bool PrinterBase<T>::isPossible(bool aOnline, QVariant aCommand)
 {
+	if (mConnected && (mInitialized == ERequestStatus::Fail))
+	{
+		MutexLocker locker(&mResourceMutex);
+
+		if (mUnnecessaryErrors[aCommand.toInt()].isEmpty())
+		{
+			return false;
+		}
+	}
+
 	if (aOnline)
 	{
 		if (!checkConnectionAbility())

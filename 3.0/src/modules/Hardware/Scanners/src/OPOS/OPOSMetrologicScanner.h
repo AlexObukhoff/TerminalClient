@@ -63,7 +63,7 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
-	/// Запрос статуса.
+	/// Получить и обработать статус.
 	virtual bool processStatus(TStatusCodes & aStatusCodes);
 
 	/// Включает/выключает устройство.

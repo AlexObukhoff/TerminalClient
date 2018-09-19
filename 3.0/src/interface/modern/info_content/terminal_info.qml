@@ -1,6 +1,6 @@
-﻿/* @file Страница информации о дилере. */
+/* @file Страница информации о дилере. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../controls" 1.0 as Controls
 import "../widgets" 1.0 as Widgets
 import "../scripts/gui.js" 1.0 as GUI
@@ -36,8 +36,8 @@ Item {
 				delegate: Text {
 					width: view.flickArea.width
 					wrapMode: Text.WordWrap
-					font: Skin.ui.font("font.secondary")
-					color: Skin.ui.color("color.main.primary")
+					font: Utils.ui.font("font.secondary")
+					color: Utils.ui.color("color.main.primary")
 					text: modelData
 
 					MouseArea {

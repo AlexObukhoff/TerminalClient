@@ -1,7 +1,8 @@
-﻿﻿/* @file Контейнер для swf. */
+/* @file Контейнер для swf. */
 
-import QtQuick 2.2
-import QtWebKit 3.0
+import QtQuick 2.6
+import QtWebEngine 1.2
+import QtWebChannel 1.0
 
 Item {
 	id: rootItem
@@ -21,7 +22,7 @@ Item {
 	signal popuped(variant aParameters)
 
 	// Фон
-	Image2 {
+	Image {
 		id: background
 	}
 
@@ -31,15 +32,19 @@ Item {
 		height: rootItem.height
 		color: "transparent"
 
-		WebView {
+		WebEngineView {
 			id: webView
 
-			anchors { left: parent.left; right: parent.right }
+			anchors.fill: parent
+			//anchors { left: parent.left; right: parent.right }
 			//backgroundColor: "transparent"
 
 			property string flash
 			property int flashWidth
 			property int flashHeight
+
+			settings.javascriptEnabled: true
+			settings.pluginsEnabled: true
 
 			/*html: "<html><head><body marginwidth='0' marginheight='0'>" +
 						"<embed width='" + flashWidth + "'height='" + flashHeight + "' name='plugin' src='" + flash +

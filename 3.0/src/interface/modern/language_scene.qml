@@ -1,6 +1,6 @@
-﻿/* @file Экран выбора языка. */
+/* @file Экран выбора языка. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" as Widgets
 import "controls" as Controls

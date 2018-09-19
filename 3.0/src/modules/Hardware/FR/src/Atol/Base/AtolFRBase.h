@@ -32,7 +32,7 @@ protected:
 	/// Получить ключ модели для идентификации.
 	virtual CAtolFR::TModelKey getModelKey(const QByteArray & /*aAnswer*/) { return CAtolFR::TModelKey(); }
 
-	/// Получить статусы.
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Инициализация устройства.
@@ -132,7 +132,7 @@ protected:
 	bool enterInnerMode(char aInnerMode);
 
 	/// Выйти из режима.
-	bool exitInnerMode();
+	bool exitInnerMode(bool aForce = false);
 
 	/// Выполнить Z-отчет.
 	virtual bool execZReport(bool aAuto);
@@ -166,6 +166,9 @@ protected:
 
 	/// Получить короткий статус.
 	virtual bool getShortStatus(TStatusCodes & aStatusCodes);
+
+	/// Распарсить флаги короткого статуса.
+	virtual void parseShortStatusFlags(char aFlags, TStatusCodes & aStatusCodes);
 
 	/// Получить длинный статус.
 	bool getLongStatus(QByteArray & aData);

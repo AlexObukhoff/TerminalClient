@@ -38,6 +38,9 @@ protected:
 	/// Попытка самоидентификации.
 	virtual bool isConnected();
 
+	/// Запросить и сохранить параметры устройства.
+	virtual void processDeviceData();
+
 	/// Анализирует коды статусов кастомных устройств и фильтрует несуществующие статусы для нижней логики.
 	virtual void cleanSpecificStatusCodes(TStatusCodes & aStatusCodes);
 
@@ -62,7 +65,7 @@ protected:
 	/// Выполнить команду.
 	virtual TResult execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
 
-	/// Получить статус;
+	/// Получить статус.
 	TResult poll(char aAction, QByteArray * aAnswer = nullptr);
 
 	/// Получить информацию о номинале из буфера.

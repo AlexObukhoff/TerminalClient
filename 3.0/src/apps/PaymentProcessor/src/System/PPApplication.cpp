@@ -1,4 +1,4 @@
-﻿/* @file Класс приложения для PaymentProcessor. */
+/* @file Класс приложения для PaymentProcessor. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -9,6 +9,7 @@
 #include <QtCore/QThreadPool>
 #include <QtWidgets/QDesktopWidget>
 #include <QtGui/QPixmap>
+#include <QtGui/QScreen>
 #include <QtGui/QImage>
 #include <QtGui/QSessionManager>
 #include <Common/QtHeadersEnd.h>
@@ -46,7 +47,7 @@ QString IApplication::getWorkingDirectory()
 
 //------------------------------------------------------------------------
 PPApplication::PPApplication(
-	const QString & aName, const QString & aVersion, int aArgumentCount, char ** aArguments)
+	const QString & aName, const QString & aVersion, int & aArgumentCount, char ** aArguments)
 	: BasicQtApplication<SafeQApplication>(aName, aVersion, aArgumentCount, aArguments),
 	mProtection("PaymentProcessorProtection")
 {
@@ -172,7 +173,7 @@ void PPApplication::onScreenshot()
 	{
 		auto geometry = desktop->screenGeometry(i);
 
-		mScreenshots << QPixmap::grabWindow(desktop->winId(), geometry.left(), geometry.top(), geometry.width(), geometry.height()).toImage();
+		QGuiApplication::primaryScreen()->grabWindow(desktop->winId(), geometry.left(), geometry.top(), geometry.width(), geometry.height()).toImage();
 	}
 #else
 	#error Screenshot command is not implemented on this platform.

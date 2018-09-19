@@ -1,6 +1,6 @@
-﻿/* @file Кнопка. */
+/* @file Кнопка. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../scenario/constants.js" 1.0 as Scenario
 
 Item {

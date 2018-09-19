@@ -1,6 +1,6 @@
-﻿/* @file Экран меню выбора оператора. */
+/* @file Экран меню выбора оператора. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "controls" 1.0 as Controls
 import "widgets" 1.0 as Widgets
@@ -12,6 +12,8 @@ import "plugins" 1.0
 
 Widgets.SceneBase {
 	id: rootItem
+
+	property QtObject adBanner
 
 	sceneButton.visible: global.menuLevel > 0
 	topPanelEnabled: false
@@ -57,7 +59,11 @@ Widgets.SceneBase {
 		anchors { fill: parent; leftMargin: 30; rightMargin: 30; topMargin: 34; bottomMargin: 150 }
 		visible: global.menuLevel == 0
 
-		onHeightChanged: GUI.log(MenuWalker.model)
+		Rectangle {
+			height: parent.height
+			width: parent,width
+			color: "red"
+		}
 	}
 
 	// Выбор группы/оператора
@@ -96,8 +102,8 @@ Widgets.SceneBase {
 			width: 407
 			icon: 6
 			text: Utils.locale.tr(QT_TR_NOOP("main_menu_scene#search"))
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 			visible: Core.graphics.ui["show_search"] === "true"
 
 			onClicked: Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Search)
@@ -108,8 +114,8 @@ Widgets.SceneBase {
 			width: 407
 			icon: 15
 			text: Utils.locale.tr(QT_TR_NOOP("main_menu_scene#info"))
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 			visible: Core.graphics.ui["show_info"] === "true"
 
 			onClicked: Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Info)
@@ -120,8 +126,8 @@ Widgets.SceneBase {
 			width: 407
 			icon: 12
 			text: Utils.locale.tr(QT_TR_NOOP("main_menu_scene#language"))
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 			visible: Core.graphics.ui["show_language"] === "true"
 
 			onClicked: Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Language)
@@ -131,9 +137,9 @@ Widgets.SceneBase {
 		Widgets.Button {
 			width: 407
 			text: Utils.locale.tr(QT_TR_NOOP("main_menu_scene#platru"))
-			color: Skin.ui.color("color.button.primary")
-			texture: "image://ui/button.paybook.normal"
-			texturePressed: "image://ui/button.paybook.pressed"
+			color: Utils.ui.color("color.button.primary")
+			texture: Utils.ui.image("button.paybook.normal")
+			texturePressed: Utils.ui.image("button.paybook.pressed")
 			visible: Core.graphics.ui["show_platru"] === "true"
 
 			onClicked: Core.postEvent(EventType.StartScenario, { name: Scenario.Platru.Name });
@@ -159,9 +165,24 @@ Widgets.SceneBase {
 	function goToCategory(aId, aIsGroup, aSelectedIndex) {
 		GUI.log("GO TO CATEGORY: ", aId, aIsGroup, aSelectedIndex)
 
+		if (!rootItem.adBanner) {
+			for(var i = 0; i < rootItem.children.length; ++i)
+			{
+				if (rootItem.children[i].objectName == "Ad") {
+					rootItem.adBanner = rootItem.children[i]
+				}
+			}
+		}
+
+		Core.userProperties.set("operator_id", aId);
+
 		if (aIsGroup) {
 			global.menuLevel = MenuWalker.go(aId, operatorSelector.getCurrentPosition());
 			Utils.playSound(Scenario.Sound.ChooseOperator);
+
+			if (rootItem.adBanner) {
+				rootItem.adBanner.visible = false
+			}
 		} else {
 			var provider = Core.payment.getProvider(aId);
 			if (provider.isNull()) {
@@ -208,7 +229,7 @@ Widgets.SceneBase {
 							fields[json.fields[i].id] = {
 								"rawValue": json.fields[i].value,
 								"value": findFieldType(provider, json.fields[i].id) == "enum" ? enumName(provider, json.fields[i].value) : json.fields[i].value,
-								"visible": json.fields[i].hasOwnProperty("visible") ? !(json.fields[i].visible == "false") : true
+																																								"visible": json.fields[i].hasOwnProperty("visible") ? !(json.fields[i].visible == "false") : true
 							};
 
 							hideFieldCount += json.fields[i].visible == "false";
@@ -220,9 +241,10 @@ Widgets.SceneBase {
 					}
 				}
 
+				GUI.log("@", hideFieldCount)
 				Core.postEvent(EventType.StartScenario, {
 												 name: Scenario.Payment.Name, id: aId, fields: fields,
-												 skip_fill_fields: Object.keys(Core.payment.getProvider(aId).fields).length === hideFieldCount
+												 skip_fill_fields: hideFieldCount && (Object.keys(Core.payment.getProvider(aId).fields).length === hideFieldCount)
 											 });
 			}
 		}
@@ -236,6 +258,12 @@ Widgets.SceneBase {
 		// Сбросим состояние дочерних элементов
 		for(var i in rootColumn.items) {
 			rootColumn.items[i].reset();
+		}
+
+		Core.graphics.reload({});
+
+		if (rootItem.adBanner) {
+			rootItem.adBanner.visible = true
 		}
 	}
 
@@ -287,18 +315,26 @@ Widgets.SceneBase {
 	}
 
 	Component.onCompleted: {
+		//Сохраним цвет фона всплывающего окна в глобальном пространстве
+		Core.userProperties.set("color.popup.overlay", Utils.ui.color("color.popup.overlay"));
+
 		// Инициализация MenuWalker
 		MenuWalker.reset(Utils.GroupModel, Core.environment.terminal.dataPath + "/groups.xml", null);
 
 		// Загрузка и инициализация комонентов главного экрана.
 		// Если название профиля в config.xml отсутствует, то загружаем дефолтный
-		var profiles = ["top5_noad", "top5", "top10", "top10_noad", "top20_noad"];
+		var profiles = ["top5_noad", "top5", "top5_full", "top10_noad", "top10", "top10_full", "top20_noad"];
 		var current = Core.environment.terminal.adProfile;
 
 		var json = JSON.parse(Utils.readFile(Core.environment.terminal.interfacePath + "/scripts/" + (profiles.indexOf(current) != -1 ? current : "top5_noad") + ".json"));
 		SceneFactory.createMainScene(json, rootColumn);
 
-		//Сохраним цвет фона всплывающего окна в глобальном пространстве
-		Core.userProperties.set("color.popup.overlay", Skin.ui.color("color.popup.overlay"));
+		for (var i = 0; rootColumn.children.length; i++) {
+			{
+				if (rootColumn.children[i].hasOwnProperty("model") && rootColumn.children[i].model == "MenuWalker.model") {
+					rootColumn.children[i].model = MenuWalker.model
+				}
+			}
+		}
 	}
 }

@@ -9,8 +9,13 @@
 class ShtrihFRProtocol: public ProtocolBase
 {
 public:
+	ShtrihFRProtocol();
+
 	/// Выполнить команду.
 	TResult processCommand(const QByteArray & aCommandData, QByteArray & aUnpackedAnswer, int aTimeout);
+
+	/// Установить таймаут технологических посылок.
+	void setTransportTimeout(int aTimeout);
 
 private:
 	/// Подсчет CRC.
@@ -42,6 +47,9 @@ private:
 
 	/// Отправить ENQ.
 	bool sendENQ();
+
+	/// Таймаут технологических посылок.
+	int mTransportTimeout;
 };
 
 //--------------------------------------------------------------------------------

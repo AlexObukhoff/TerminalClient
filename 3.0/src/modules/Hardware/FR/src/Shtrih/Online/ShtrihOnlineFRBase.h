@@ -23,7 +23,7 @@ public:
 	static QStringList getModelList();
 
 protected:
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Инициализация устройства.
@@ -84,7 +84,13 @@ protected:
 	bool checkFirmwareUpdatingData(const CShtrihFR::FRParameters::SData & aData, int aValue, const QString & aLogData, bool & aNeedReboot);
 
 	/// Включить/выключить режим непечати документов.
-	virtual bool setNotPrintDocument(bool aEnabled);
+	virtual bool setNotPrintDocument(bool aEnabled, bool aZReport = false);
+
+	/// Софтварная перезагрузка.
+	bool reboot();
+
+	/// Установка кассира.
+	bool setCashier();
 
 	/// Поддерживается команда запроса статуса принтера.
 	bool mPrinterStatusEnabled;

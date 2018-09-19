@@ -29,10 +29,10 @@ bool GUIService::show(const QString & aWidget, const QVariantMap & aParameters)
 {
 	if (mTopWidgetName != aWidget)
 	{
-		emit topSceneChanged();
-	}
+		mTopWidgetName = aWidget;
 
-	mTopWidgetName = aWidget;
+		emit topSceneChange();
+	}
 
 	return mGUIService->show(aWidget, aParameters);
 }
@@ -56,7 +56,19 @@ void GUIService::notify(const QString & aEvent, const QVariantMap & aParameters)
 }
 
 //------------------------------------------------------------------------------
-QString GUIService::getTopWidget() const
+void GUIService::reset()
+{
+	mGUIService->reset();
+}
+
+//------------------------------------------------------------------------------
+void GUIService::reload(const QVariantMap & aParams)
+{
+	emit skinReload(aParams);
+}
+
+//------------------------------------------------------------------------------
+QString GUIService::getTopScene() const
 {
 	return mTopWidgetName;
 }

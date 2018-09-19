@@ -48,11 +48,9 @@ void UtilsPlugin::initializeEngine(QQmlEngine * aEngine, const char * /*aUri*/)
 
 	aEngine->rootContext()->setContextProperty("Utils", utils);
 
-	SkinProvider * sp = new SkinProvider(application, interfacePath, logoPath, userLogoPath, utils->getSkinConfig());
+	SkinProvider * sp = new SkinProvider(interfacePath, logoPath, userLogoPath, dynamic_cast<Skin *>(utils->getSkin()));
 	
 	aEngine->addImageProvider("ui", sp);
-
-	aEngine->rootContext()->setContextProperty("Skin", sp);
 	
 	aEngine->addImageProvider("barcode", new BarcodeProvider());
 }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -120,6 +120,7 @@
     <ClCompile Include="..\src\CCNet\CCNetCreator.cpp" />
     <ClCompile Include="..\src\CCNet\CCNetRecycler.cpp" />
     <ClCompile Include="..\src\CCNet\IntelHex.cpp" />
+    <ClCompile Include="..\src\CCTalk\CCTalkCashAcceptor.cpp" />
     <ClCompile Include="..\src\EBDS\EBDSCashAcceptor.cpp" />
     <ClCompile Include="..\src\ICT\ICTCashAcceptor.cpp" />
     <ClCompile Include="..\src\ID003\ID003CashAcceptor.cpp" />
@@ -137,7 +138,7 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\BillTable.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CurrencyDescriptions.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\ModelData.h" />
-    <ClInclude Include="..\src\CashAcceptorData.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorData.h" />
     <ClInclude Include="..\src\CashAcceptorStatusData.h" />
     <ClInclude Include="..\src\CCNet\CCNetCashAcceptorBase.h" />
     <ClInclude Include="..\src\CCNet\CCNetCashAcceptorDataTypes.h" />
@@ -150,6 +151,9 @@
     <ClInclude Include="..\src\CCNet\IntelHex.h" />
     <ClInclude Include="..\src\CCNet\CCNetModelData.h" />
     <ClInclude Include="..\src\CCNet\Models.h" />
+    <ClInclude Include="..\src\CCTalk\CCTalkCashAcceptor.h" />
+    <ClInclude Include="..\src\CCTalk\CCTalkCashAcceptorConstants.h" />
+    <ClInclude Include="..\src\CCTalk\CCTalkCashAcceptorModelData.h" />
     <ClInclude Include="..\src\CurrencyErrors.h" />
     <ClInclude Include="..\src\CashAcceptorBase.h" />
     <ClInclude Include="..\src\EBDS\EBDSCashAcceptor.h" />

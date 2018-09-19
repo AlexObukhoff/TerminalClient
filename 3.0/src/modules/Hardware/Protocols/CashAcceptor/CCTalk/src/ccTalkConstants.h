@@ -7,27 +7,33 @@
 #include <QtCore/QtGlobal>
 #include <Common/QtHeadersEnd.h>
 
+//--------------------------------------------------------------------------------
 namespace CCCTalk
 {
-	/// Адреса устройств по умолчанию.
-	namespace Address
-	{
-		const uchar Common  = 0;    /// Широкополосная команда.
-		const uchar Host    = 1;    /// Хост.
-		const uchar Default = 2;    /// Устройство по умолчанию.
-	}
+	const char NAK  = '\x05';
+	const char BUSY = '\x06';
 
-	const int MinAnswerSize     = 5;    /// Минимальный размер ответного пакета.
-	const int MaxBusyNAKRepeats = 3;    /// Максимальное количество повторов из-за BUSY устройства.
+	/// Константа для вычисления контрольной суммы.
+	const ushort Polynominal = 0x1021;
+
+	/// Последний бит для вычисления CRC.
+	const ushort LastBit = 0x8000;
+
+	/// Минимальный размер ответного пакета.
+	const int MinAnswerSize = 5;
+
+	/// Максимальное количество повторов из-за BUSY устройства.
+	const int MaxBusyNAKRepeats = 3;
 
 	/// Таймауты, [мс].
 	namespace Timeouts
 	{
-		const int NAKBusy = 1000;    /// Повтор после BUSY или NAK-а.
-	}
+		/// Повтор после BUSY или NAK-а.
+		const int NAKBusy = 1000;
 
-	const char NAK  = '\x05';
-	const char BUSY = '\x06';
+		/// Дефолтный для ожидания ответа.
+		const int Reading = 500;
+	}
 }
 
 //--------------------------------------------------------------------------------

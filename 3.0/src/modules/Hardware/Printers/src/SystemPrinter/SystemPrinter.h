@@ -1,4 +1,4 @@
-﻿/* @file Системный принтер. */
+/* @file Системный принтер. */
 
 #pragma once
 
@@ -55,7 +55,7 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Напечатать чек.

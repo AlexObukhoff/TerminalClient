@@ -365,12 +365,15 @@ void NetworkTaskManager::onTaskSslErrors(const QList<QSslError> & aErrors)
 		{
 			QString hostName = mHostNameCashe.value(ip, "");
 
-			QRegExp exp(error.certificate().subjectInfo(QSslCertificate::CommonName), Qt::CaseInsensitive, QRegExp::Wildcard);
-
-			if (exp.exactMatch(hostName))
+			foreach (QString subject, error.certificate().subjectInfo(QSslCertificate::CommonName))
 			{
-				errorsIgnored << error;
-				continue;
+				QRegExp exp(subject, Qt::CaseInsensitive, QRegExp::Wildcard);
+
+				if (exp.exactMatch(hostName))
+				{
+					errorsIgnored << error;
+					continue;
+				}
 			}
 		}
 

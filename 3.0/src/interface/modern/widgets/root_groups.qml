@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.6
 import "../controls" 1.0 as Controls
 import "../scenario/constants.js" as Scenario
 
@@ -27,18 +27,18 @@ Item {
 			width: rootItem.cellWidth
 			height: rootItem.cellHeight
 
-			BorderImage2 {
+			BorderImage {
 				id: image
 
 				anchors.fill: parent
 				border { left: 20; top: 25; right: 20; bottom: 25 }
-				source: handler.pressed ? "image://ui/button.group.pressed" : "image://ui/button.group.normal"
+				source: handler.pressed ? Utils.ui.image("button.group.pressed") : Utils.ui.image("button.group.normal")
 
 				Column {
 					anchors { horizontalCenter: parent.horizontalCenter; top: parent.top; topMargin: 9 }
 
 					// Лого группы
-					Image2 {
+					Image {
 						id: logo
 
 						anchors.horizontalCenter: parent.horizontalCenter
@@ -56,8 +56,8 @@ Item {
 						wrapMode: Text.WordWrap
 						horizontalAlignment: Text.AlignHCenter
 						verticalAlignment: Text.AlignVCenter
-						font: Skin.ui.font(rootItem.font)
-						color: Skin.ui.color("color.group")
+						font: Utils.ui.font(rootItem.font)
+						color: Utils.ui.color("color.group")
 
 						text: Utils.locale.tr("root_groups#" + id) === ("root_groups#" + id) ? name : Utils.locale.tr("root_groups#" + id);
 					}
@@ -89,8 +89,8 @@ Item {
 
 			anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 8 }
 			visible: !categoryView.atXBeginning
-			background: Image2 {
-				source: back.pressed ? "image://ui/scroll.left.pressed" : "image://ui/scroll.left.normal"
+			background: Image {
+				source: back.pressed ? Utils.ui.image("scroll.left.pressed") : Utils.ui.image("scroll.left.normal")
 			}
 			onClicked: categoryView.decrementCurrentIndex()
 		}
@@ -127,8 +127,8 @@ Item {
 
 			anchors { verticalCenter: parent.verticalCenter; right: parent.right; rightMargin: 8 }
 			visible: !categoryView.atXEnd
-			background: Image2 {
-				source: fwd.pressed ? "image://ui/scroll.right.pressed" : "image://ui/scroll.right.normal"
+			background: Image {
+				source: fwd.pressed ? Utils.ui.image("scroll.right.pressed") : Utils.ui.image("scroll.right.normal")
 			}
 			onClicked: categoryView.incrementCurrentIndex()
 		}

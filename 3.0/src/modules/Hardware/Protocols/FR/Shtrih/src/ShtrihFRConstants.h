@@ -32,8 +32,8 @@ namespace CShtrihFR
 		/// Дефолтный чтения ответа.
 		const int DefaultAnswer = 3150;
 
-		/// Для ответа на ENQ.
-		const int ENQAnswer = 100;
+		/// Ожидания ответа на ENQ (на открытие сессии) и ACK/NAK (на отправленную команду).
+		const int Transport = 100;
 	}
 }
 

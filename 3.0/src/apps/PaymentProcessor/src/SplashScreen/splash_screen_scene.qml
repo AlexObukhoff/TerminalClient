@@ -1,6 +1,6 @@
 /* @file Экран блокировки терминала. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 
 Image {

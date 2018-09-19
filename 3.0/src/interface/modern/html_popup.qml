@@ -1,11 +1,11 @@
-﻿/* @file Всплывающее окно ожидания завершения или уведомления у результате какой-либо операции. */
+/* @file Всплывающее окно ожидания завершения или уведомления у результате какой-либо операции. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
 import "scripts/gui.js" 1.0 as GUI
-import "plugins" 1.0
+//import "plugins" 1.0
 
 Item {
 	id: rootItem
@@ -23,9 +23,9 @@ Item {
 	Widgets.Button {
 		icon: 18
 		text: Utils.locale.tr(QT_TR_NOOP("info_popup#close"))
-		color: Skin.ui.color("color.button.secondary")
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		color: Utils.ui.color("color.button.secondary")
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 
 		anchors { horizontalCenter: parent.horizontalCenter; top: html.bottom; topMargin: 21 }
 		width: 406

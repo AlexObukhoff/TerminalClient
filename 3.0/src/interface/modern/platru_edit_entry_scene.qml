@@ -1,6 +1,6 @@
-﻿/* @file Экран редактирования записи платежной книжки. */
+/* @file Экран редактирования записи платежной книжки. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls

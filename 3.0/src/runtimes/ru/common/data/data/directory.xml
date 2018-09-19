@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <directory>
   <connections>
     <connection name="MTS GPRS" init_string='AT+CGDCONT=1,"IP","internet.mts.ru"' phone="*99***1#" login="mts" password="mts">

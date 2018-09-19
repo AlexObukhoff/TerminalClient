@@ -1,4 +1,4 @@
-﻿/* @file Сценарий основного меню терминала. */
+/* @file Сценарий основного меню терминала. */
 
 include("../scenario/constants.js", "Scenario");
 include("../scripts/gui.js", "GUI");

@@ -1,11 +1,11 @@
-﻿/* @file Всплывающее окно ожидания завершения или уведомления у результате какой-либо операции. */
+/* @file Всплывающее окно ожидания завершения или уведомления у результате какой-либо операции. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
 import "scripts/gui.js" 1.0 as GUI
-import "plugins" 1.0
+//import "plugins" 1.0
 
 Item {
 	id: rootItem
@@ -32,12 +32,12 @@ Item {
 		height: global.waiting ? 564 : 657
 		y: global.waiting ? 289 : 197
 
-		Widgets.BorderImage2 {
+		BorderImage {
 			anchors.fill: parent
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
 			verticalTileMode: BorderImage.Stretch
-			source: "image://ui/webview.angles.overlay"
+			source: Utils.ui.image("webview.angles.overlay")
 			z: 2
 		}
 
@@ -69,7 +69,7 @@ Item {
 					anchors { horizontalCenter: parent.horizontalCenter }
 					visible: global.waiting && !global.countdown
 					height: frameSize
-					source: "image://ui/waiting"
+					source: Utils.ui.image("waiting")
 				}
 
 				Text {
@@ -78,8 +78,8 @@ Item {
 					property int elapsed
 
 					anchors { horizontalCenter: parent.horizontalCenter }
-					font: Skin.ui.font("font.key.number")
-					color: Skin.ui.color("color.main.secondary")
+					font: Utils.ui.font("font.key.number")
+					color: Utils.ui.color("color.main.secondary")
 					text: "00:%1".arg(elapsed < 10 ? "0%1".arg(elapsed) : elapsed)
 					visible: global.countdown
 					height: 50
@@ -111,8 +111,8 @@ Item {
 					width: view.flickArea.width - scroller.width
 					wrapMode: Text.WordWrap
 					horizontalAlignment: Text.AlignHCenter
-					font: Skin.ui.font("font.message")
-					color: Skin.ui.color("color.message")
+					font: Utils.ui.font("font.message")
+					color: Utils.ui.color("color.message")
 					lineHeight: 1.2
 				}
 			}
@@ -160,9 +160,9 @@ Item {
 			icon: 18
 			text: ((typeof global.button1) != "undefined" && global.button1.text) ? (typeof global.button1.text === "object" ?
 																																								 Utils.locale.tr(global.button1.text.tr) : global.button1.text) : Utils.locale.tr(QT_TR_NOOP("info_popup#close"))
-			color: Skin.ui.color("color.button.secondary")
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			color: Utils.ui.color("color.button.secondary")
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 
 			width: 407
 			visible: global.cancelable
@@ -185,9 +185,9 @@ Item {
 				icon: 18
 				text: ((typeof global.button2) != "undefined" && global.button2.text) ? (typeof global.button2.text === "object" ?
 																																									 Utils.locale.tr(global.button2.text.tr) : global.button2.text) : Utils.locale.tr(QT_TR_NOOP("info_popup#retry"))
-				color: Skin.ui.color("color.button.primary")
-				texture: "image://ui/button.primary.normal"
-				texturePressed: "image://ui/button.primary.pressed"
+				color: Utils.ui.color("color.button.primary")
+				texture: Utils.ui.image("button.primary.normal")
+				texturePressed: Utils.ui.image("button.primary.pressed")
 
 				width: 407
 				onClicked: { global.result = applyButton(global.button2); hideAnimation.start(); }

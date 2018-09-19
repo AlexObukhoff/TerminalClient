@@ -1,6 +1,6 @@
-﻿/* @file Кнопка цифровой клавиатуры. */
+/* @file Кнопка цифровой клавиатуры. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../controls" 1.0 as Controls
 
 Controls.Button {
@@ -22,14 +22,14 @@ Controls.Button {
 	label: Text {
 		id: text
 
-		color: rootItem.pressed ? Skin.ui.color("color.key.normal") : Skin.ui.color("color.key.pressed")
-		font: Skin.ui.font("font.key.number")
+		color: rootItem.pressed ? Utils.ui.color("color.key.normal") : Utils.ui.color("color.key.pressed")
+		font: Utils.ui.font("font.key.number")
 		text: !rootItem.standalone && rootItem.parent.handler.altMode ? rootItem.altText : rootItem.text
 	}
 
-	background: Image2 {
-		source: backgroundSource == "" ? (rootItem.pressed ? "image://ui/button.number.pressed" : "image://ui/button.number.normal") :
-																		 ("image://ui/" + backgroundSource + (rootItem.pressed ? "pressed" : "normal"))
+	background: Image {
+		source: backgroundSource == "" ? (rootItem.pressed ? Utils.ui.image("button.number.pressed") : Utils.ui.image("button.number.normal")) :
+																		 (Utils.ui.image("" + backgroundSource + (rootItem.pressed ? ")pressed" : "normal"))
 	}
 
 	// Обработка клика

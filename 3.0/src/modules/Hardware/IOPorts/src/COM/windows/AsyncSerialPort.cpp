@@ -1,4 +1,4 @@
-﻿/* @file Асинхронная Windows-реализация COM-порта. */
+/* @file Асинхронная Windows-реализация COM-порта. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -515,7 +515,7 @@ bool AsyncSerialPort::read(QByteArray & aData, int aTimeout)
 	{
 		toLog(LogLevel::Normal, QString("%1: << {%2}").arg(mConnectedDeviceName).arg(aData.toHex().constData()));
 	}
-	else if (!aData.isEmpty() && !mMaxReadingSize && !aData.isEmpty())
+	else if (!aData.isEmpty() && !mMaxReadingSize)
 	{
 		toLog(LogLevel::Debug, QString("%1 << %2").arg(mSystemName).arg(aData.toHex().data()));
 	}
@@ -540,6 +540,8 @@ bool AsyncSerialPort::processReading(QByteArray & aData, int aTimeout)
 		mReadBytes = 0;
 		BOOL wait = ((result == WAIT_OBJECT_0) || mWaitResult) ? TRUE : FALSE;
 		::GetOverlappedResult(mPortHandle, &mReadOverlapped, &mReadBytes, wait);
+
+		SleepHelper::msleep(CAsyncSerialPort::VCOMReadingPause);
 	}
 
 	DWORD errors = 0;

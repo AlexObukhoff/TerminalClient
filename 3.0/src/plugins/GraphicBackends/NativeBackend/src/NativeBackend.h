@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include <list>
+#include <memory>
+
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QObject>
@@ -54,7 +57,10 @@ public:
 	virtual void shutdown();
 
 	/// Создаёт (или возвращает из кэша) графический элемент по описанию.
-	virtual SDK::GUI::IGraphicsItem * getItem(const SDK::GUI::GraphicsItemInfo & aInfo);
+	virtual std::weak_ptr<SDK::GUI::IGraphicsItem> getItem(const SDK::GUI::GraphicsItemInfo & aInfo);
+
+	/// Удаляет графический элемент по описанию
+	virtual bool removeItem(const SDK::GUI::GraphicsItemInfo & aInfo);
 
 	/// Возвращает тип движка.
 	virtual QString getType() const;
@@ -68,7 +74,7 @@ private:
 	QString mInstancePath;
 
 	typedef QMap<QString, SDK::GUI::GraphicsItemInfo> TGraphicsItemsInfo;
-	typedef QMap<QString, SDK::GUI::IGraphicsItem *> TGraphicItemsCache;
+	typedef QMultiMap<QString, std::shared_ptr<SDK::GUI::IGraphicsItem>> TGraphicItemsCache;
 	
 	QVariantMap mParameters;
 	SDK::Plugin::IEnvironment * mFactory;
@@ -79,7 +85,7 @@ private:
 	TGraphicsItemsInfo mItemList;
 	TGraphicItemsCache mCachedItems;
 
-	QList<SDK::Plugin::IPlugin *> mLoadedPlugins;
+	std::list<std::weak_ptr<SDK::Plugin::IPlugin>> mLoadedPlugins;
 };
 
 //------------------------------------------------------------------------------

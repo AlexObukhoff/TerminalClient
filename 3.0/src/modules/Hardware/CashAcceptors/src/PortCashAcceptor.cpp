@@ -343,7 +343,8 @@ bool PortCashAcceptor<T>::setEnable(bool aEnabled)
 
 	if (mInitialized != ERequestStatus::Success)
 	{
-		toLog(aEnabled ? LogLevel::Error : LogLevel::Normal, QString("%1: not initialized, return %2").arg(mDeviceName).arg(aEnabled ? "false" : "true"));
+		if (aEnabled) toLog(LogLevel::Error,  mDeviceName + ": on set enable(true) not initialized, return false");
+		         else toLog(LogLevel::Normal, mDeviceName + ": on set enable(false) not initialized, return true");
 
 		if (!aEnabled)
 		{
@@ -699,6 +700,7 @@ bool PortCashAcceptor<T>::updateParameters()
 {
 	//TODO: при расширении функционала делать это в базовом классе
 	setInitialData();
+	processDeviceData();
 
 	if (!reset(false) || !setDefaultParameters())
 	{
@@ -816,7 +818,7 @@ void PortCashAcceptor<T>::postPollingAction(const TStatusCollection & aNewStatus
 
 	bool needSetEnable = term1 || term2 || term3;
 
-	toLog(LogLevel::Debug, QString("enabled = %1, enable correction is %2needed,\
+	toLog(LogLevel::Debug, mDeviceName + QString(": enabled = %1, enable correction is %2needed,\
 		\n(1) = %3, isEnabled = %4, enabling = %5, isDisabled = %6, disabling = %7,\
 		\n(2) = %8, exit from error = %9,\
 		\n(3) = %10, beforeRejected = %11, disabled statuses is %12empty")

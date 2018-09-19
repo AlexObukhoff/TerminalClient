@@ -424,6 +424,20 @@ QString TerminalSettings::getFeedbackURL() const
 }
 
 //---------------------------------------------------------------------------
+QVariantMap TerminalSettings::getChargeProviderAccess() const
+{
+	QVariantMap result;
+
+	TPtree empty;
+	BOOST_FOREACH(const TPtree::value_type & value, mProperties.get_child("system.charge_access", empty))
+	{
+		result.insert(QString::fromStdString(value.first), value.second.get_value<QString>().split(","));
+	}
+
+	return result;
+}
+
+//---------------------------------------------------------------------------
 SAppEnvironment TerminalSettings::getAppEnvironment() const
 {
 	SAppEnvironment environment;
@@ -463,6 +477,7 @@ SCommonSettings TerminalSettings::getCommonSettings() const
 	settings.autoEncachement = mProperties.get("config.hardware.validator_settings.auto_encashment", settings.autoEncachement);
 	settings.printFailedReceipts = mProperties.get("config.hardware.printer_settings.print_failed_receipts", settings.printFailedReceipts);
 	settings.randomReceiptsID = mProperties.get("config.hardware.printer_settings.random_receipts_id", settings.randomReceiptsID);
+	settings.enableBlankFiscalData = mProperties.get("config.hardware.printer_settings.enable_blank_fiscal_data", settings.enableBlankFiscalData);
 
 	QString defaultZReportTime = (!settings.autoZReportTime.isNull() && settings.autoZReportTime.isValid()) ?
 		settings.autoZReportTime.toString("hh:mm") : "";

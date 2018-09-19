@@ -11,6 +11,7 @@ namespace CAtolOnlinePrinters
 	const char Memory = '\x07';    /// Печать в никуда.
 
 	const char Default[] = "Default";    /// По умолчанию.
+	const char CitizenPPU700[] = "Citizen PPU-700";    /// Citizen PPU-700.
 
 	class CModels: public CDescription<char>
 	{

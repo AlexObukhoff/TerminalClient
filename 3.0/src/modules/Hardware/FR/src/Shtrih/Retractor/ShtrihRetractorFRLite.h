@@ -21,6 +21,12 @@ protected:
 
 	/// Добавить общие статусы.
 	virtual void appendStatusCodes(ushort aFlags, TStatusCodes & aStatusCodes);
+
+	/// Получить таймаут незабранного чека.
+	virtual uchar getLeftReceiptTimeout();
+
+	/// Выполнить действия после установки параметров системной таблицы.
+	void postSettingAction();
 };
 
 //--------------------------------------------------------------------------------

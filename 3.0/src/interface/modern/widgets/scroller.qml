@@ -1,6 +1,6 @@
-﻿/* @file Кнопки прокрутки. */
+/* @file Кнопки прокрутки. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../controls" 1.0 as Controls
 
 Item {
@@ -23,8 +23,8 @@ Item {
 		id: upButton
 
 		anchors { left: parent.left; top:  parent.top }
-		icon: Image2 {
-			source: upButton.pressed ? "image://ui/scroll.up.pressed" : "image://ui/scroll.up.normal"
+		icon: Image {
+			source: upButton.pressed ? Utils.ui.image("scroll.up.pressed") : Utils.ui.image("scroll.up.normal")
 		}
 		onClicked: rootItem.up()
 	}
@@ -34,8 +34,8 @@ Item {
 		id: downButton
 
 		anchors { right: parent.right; bottom: parent.bottom }
-		icon: Image2 {
-			source: downButton.pressed ? "image://ui/scroll.down.pressed" : "image://ui/scroll.down.normal"
+		icon: Image {
+			source: downButton.pressed ? Utils.ui.image("scroll.down.pressed") : Utils.ui.image("scroll.down.normal")
 		}
 		onClicked: rootItem.down()
 	}

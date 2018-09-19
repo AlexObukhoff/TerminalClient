@@ -1,4 +1,4 @@
-﻿/* @file Виджет виртуальной клавиатуры */
+/* @file Виджет виртуальной клавиатуры */
 
 // Qt
 #include <Common/QtHeadersBegin.h>

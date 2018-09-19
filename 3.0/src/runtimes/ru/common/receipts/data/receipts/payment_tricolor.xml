@@ -14,7 +14,7 @@
 	<string>Терминал [b]%TERMINAL_NUMBER%[/b]</string>
 	<string>Адрес терминала: [b]%POINT_ADDRESS%[/b]</string>
 	<string>-----------------------------------</string>
-	<string if="%DEALER_IS_BANK% == 0">Оплата:[b] %SERVICE_TYPE% ("Триколор ТВ" - "Основной Пакет")[/b]</string>
+	<string if="%DEALER_IS_BANK% == 0">Оплата:[b] %SERVICE_TYPE% ("Триколор ТВ" - "Единый/Единый UHD/Экстра/Триколор Онлайн")[/b]</string>
 	<string if="%DEALER_IS_BANK% == 0">Поставщик: [b]%OPERATOR_NAME%[/b]</string>
 	<string if="%DEALER_IS_BANK% == 0">Тел. поставщика: [b]%OPERATOR_PHONE%[/b]</string>
 	<string if="%DEALER_IS_BANK% == 0">Общая сумма принятых денежных средств:</string>
@@ -29,7 +29,7 @@
 	<else if="%DEALER_IS_BANK% != 0">прием от физического лица наличных</else>
 	<else if="%DEALER_IS_BANK% != 0">денежных средств.</else>
 	<else if="%DEALER_IS_BANK% != 0">Назначение перевода:</else>
-	<else if="%DEALER_IS_BANK% != 0">[b]%SERVICE_TYPE% ("Триколор ТВ" - "Основной Пакет")[/b]</else>
+	<else if="%DEALER_IS_BANK% != 0">[b]%SERVICE_TYPE% ("Триколор ТВ" - "Единый/Единый UHD/Экстра/Триколор Онлайн")[/b]</else>
 	<else if="%DEALER_IS_BANK% != 0">Принято: [b]%AMOUNT_ALL% %CURRENCY%[/b]</else>
 	<else if="%DEALER_IS_BANK% != 0">Комиссия: [b]%FEE% %CURRENCY%[/b]</else>
 	<else if="%DEALER_IS_BANK% != 0">Зачислено: [b]%AMOUNT% %CURRENCY%[/b]</else>
@@ -61,7 +61,7 @@
 	<string if="%DEALER_IS_BANK% == 0">ООО "КИБЕРПЛАТ"</string>
 	<string if="%DEALER_IS_BANK% == 0">Место нахождения: 121108, г.Москва,</string>
 	<string if="%DEALER_IS_BANK% == 0">ул.Герасима Курина, д.4, корп. 3, пом. I</string>
-	<string if="%DEALER_IS_BANK% == 0">ИНН 7710377540 , тел. +7 (495) 788-56-96</string>
+	<string if="%DEALER_IS_BANK% == 0">ИНН 7731220815 , тел. +7 (495) 788-56-96</string>
 	<else if="%DEALER_IS_BANK% != 0">Оператор по переводу денежных средств:</else>
 	<else if="%DEALER_IS_BANK% != 0">ООО КБ "ПЛАТИНА"</else>
 	<else if="%DEALER_IS_BANK% != 0">Ген. лицензия ЦБ РФ N2347 от 20.05.1993</else>

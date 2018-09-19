@@ -153,6 +153,8 @@ bool GUIService::initialize()
 	mWidth = mConfig.value("interface/width", CGUIService::DefaultScreenWidth).toInt();
 	mHeight = mConfig.value("interface/height", CGUIService::DefaultScreenHeight).toInt();
 
+	toLog(LogLevel::Debug, QString("%1, %2, %3").arg(display).arg(mWidth).arg(mHeight));
+
 	// Установка чувствительности для события mouse drag
 	qApp->setStartDragDistance(mConfig.value("interface/sensivity", CGUIService::StartDragDistance).toInt());
 
@@ -520,6 +522,12 @@ void GUIService::onIntruderActivity()
 bool GUIService::isDisabled() const
 {
 	return mDisabled;
+}
+
+//---------------------------------------------------------------------------
+void GUIService::reset()
+{
+	mGraphicsEngine.reset();
 }
 
 //---------------------------------------------------------------------------

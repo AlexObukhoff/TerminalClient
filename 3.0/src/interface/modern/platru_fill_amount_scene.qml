@@ -1,6 +1,6 @@
-﻿/* @file Экран ввода суммы к оплате в ПК. */
+/* @file Экран ввода суммы к оплате в ПК. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
@@ -72,14 +72,14 @@ Widgets.SceneBase2 {
 
 		// Min
 		Text {
-			font: Skin.ui.font("font.tariff")
-			color: Skin.ui.color("color.tariff.min")
+			font: Utils.ui.font("font.tariff")
+			color: Utils.ui.color("color.tariff.min")
 			text: Utils.locale.tr(QT_TR_NOOP("platru_fill_amount_scene#min_amount")).arg(global.minAmount).arg(Core.environment.terminal.currencyName)
 		}
 
 		Text {
-			font: Skin.ui.font("font.tariff")
-			color: Skin.ui.color("color.tariff.max")
+			font: Utils.ui.font("font.tariff")
+			color: Utils.ui.color("color.tariff.max")
 			text: Utils.locale.tr(QT_TR_NOOP("platru_fill_amount_scene#max_amount")).arg(global.maxAmount).arg(Core.environment.terminal.currencyName)
 		}
 	}

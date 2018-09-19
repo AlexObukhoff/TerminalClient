@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.6
 import Core.Types 1.0
 import "../widgets" as Widgets
 import "../plugins" 1.0
@@ -19,7 +19,7 @@ Rectangle {
 
 		anchors { horizontalCenter: parent.horizontalCenter; top: parent.top; topMargin: 100 }
 		height: frameSize
-		source: "image://ui/waiting"
+		source: Utils.ui.image("waiting")
 	}
 
 	Text {

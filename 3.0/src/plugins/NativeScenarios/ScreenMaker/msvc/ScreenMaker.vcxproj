@@ -16,7 +16,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>screen_maker_scenario</ProjectName>
-    <ProjectGuid>{FD6A54F7-0822-4C8A-BDB2-2DECD3E110E4}</ProjectGuid>
+    <ProjectGuid>{98FDC5A6-BFEA-4FBE-9CE3-BB6A4D087246}</ProjectGuid>
     <RootNamespace>UADispenser</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
   </PropertyGroup>

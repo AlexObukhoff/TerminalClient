@@ -1,6 +1,6 @@
-﻿/* @file Поле ввода touch17. */
+/* @file Поле ввода touch17. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../controls" 1.0 as Controls
 
 Controls.InputField {
@@ -12,11 +12,10 @@ Controls.InputField {
 	property alias capitalization: rootItem.capitalization
 
 	height: 120
-	focus: true
-	font: Skin.ui.font("font.textfield")
+	font: Utils.ui.font("font.textfield")
 
-	background: BorderImage2 {
-		source: "image://ui/textfield"
+	background: BorderImage {
+		source: Utils.ui.image("textfield")
 		anchors.fill: parent
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
@@ -24,7 +23,7 @@ Controls.InputField {
 	}
 
 	backspace: Controls.SlidingButton {
-		background: Image2 {source: pressed ? "image://ui/button.backspace.pressed" : "image://ui/button.backspace.normal"}
+		background: Image {source: pressed ? Utils.ui.image("button.backspace.pressed") : Utils.ui.image("button.backspace.normal")}
 
 		onClicked: Utils.generateKeyEvent(Qt.Key_Backspace, Qt.NoModifier)
 	}

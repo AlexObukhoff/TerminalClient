@@ -1,13 +1,13 @@
-﻿/* @file Экран ввода реквизитов платежа. */
+/* @file Экран ввода реквизитов платежа. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
 import "scripts/editor_factory.js" 1.0 as Editor
 import "scripts/gui.js" 1.0 as GUI
 import "scenario/constants.js" as Scenario
-import "plugins" 1.0
+//import "plugins" 1.0
 
 Widgets.SceneBase2 {
 	id: rootItem
@@ -158,9 +158,7 @@ Widgets.SceneBase2 {
 		//TODO: Cyberpay
 		//Editor.setup(editArea, aParameters.hasOwnProperty("cyberpay") ? Core.payment.getProvider(aParameters.templateId).fields : global.provider.fields, aParameters.fields);
 
-		GUI.log(editArea, global.provider.fields, aParameters.fields);
-
-		Editor.setup(global.provider.fields, aParameters.fields);
+		Editor.setup(rootItem, global.provider.fields, aParameters.fields);
 		changeEditorAnimation.leftToRight = true;
 		changeEditorAnimation.showing = true;
 		changeEditorAnimation.nextIndex = Editor.getNextField(true);

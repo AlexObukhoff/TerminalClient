@@ -26,7 +26,7 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Получить ключ модели для идентификации.
@@ -70,9 +70,6 @@ protected:
 
 	/// Установить флаги по ошибке в ответе.
 	virtual void setErrorFlags(char aError, const QByteArray & aCommand);
-
-	/// Включить/выключить режим непечати документов.
-	virtual bool setNotPrintDocument(bool aEnabled);
 
 	/// Получить Id принтера.
 	virtual char getPrinterId();

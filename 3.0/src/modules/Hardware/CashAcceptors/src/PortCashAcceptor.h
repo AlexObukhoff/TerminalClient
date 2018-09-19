@@ -45,7 +45,10 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
-	/// Запрос статуса.
+	/// Запросить и сохранить параметры устройства.
+	virtual void processDeviceData() {}
+
+	/// Получить и обработать статус.
 	virtual bool processStatus(TStatusCodes & aStatusCodes);
 
 	/// Получить статус.

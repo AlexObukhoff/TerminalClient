@@ -103,7 +103,7 @@ char SparkFR::fromBCD(char aData)
 }
 
 //--------------------------------------------------------------------------------
-bool SparkFR::checkFlag(const QByteArray aFlagBuffer, int aNumber)
+bool SparkFR::checkSystemFlag(const QByteArray & aFlagBuffer, int aNumber)
 {
 	auto dataIt = std::find_if(mSystemFlags.begin(), mSystemFlags.end(), [&](const CSparkFR::SystemFlags::SData & aData) -> bool { return aData.number == aNumber; });
 
@@ -187,47 +187,16 @@ bool SparkFR::updateParameters()
 	QByteArray flagData;
 	TTaxData taxData;
 
-	if (!getSystemFlags(flagData, &taxData))
+	if (!getSystemFlags(flagData, &taxData) || checkSystemFlags(flagData))
 	{
 		return false;
 	}
 
-	TTaxes taxes;
+	processDeviceData();
 
-	for (int i = 0; i < CSparkFR::TaxRateCount; ++i)
+	if (!isFiscal())
 	{
-		bool OK;
-		TVAT VAT = TVAT(taxData[i].toInt(&OK));
-		taxes.append(OK ? VAT : -1);
-	}
-
-	mTaxes = getActualVATs().toList();
-	qSort(mTaxes);
-
-	TVATs absentVATs = getActualVATs() - taxes.toSet();
-
-	if (!absentVATs.isEmpty())
-	{
-		QByteArray commandData;
-
-		for (int i = 0; i < CSparkFR::TaxRateCount; ++i)
-		{
-			commandData += (i < mTaxes.size()) ? QString("%1").arg(mTaxes[i], 2, 10, QChar(ASCII::Zero)).toLatin1() : CSparkFR::NoTaxes;
-		}
-
-		if (!processCommand(CSparkFR::Commands::SetTaxes, commandData) || !processCommand(CSparkFR::Commands::AcceptTaxes))
-		{
-			toLog(LogLevel::Error, mDeviceName + ": Failed to set taxes");
-			return false;
-		}
-	}
-
-	foreach(auto data, mSystemFlags)
-	{
-		if (!checkFlag(flagData, data.number))
-		{
-			return false;
-		}
+		return true;
 	}
 
 	if (isAdaptiveFCCreation())
@@ -252,7 +221,71 @@ bool SparkFR::updateParameters()
 		}
 	}
 
-	processDeviceData();
+	return checkTaxFlags(taxData);
+}
+
+//--------------------------------------------------------------------------------
+bool SparkFR::checkSystemFlags(QByteArray & aFlagData)
+{
+	auto dataIt = std::find_if(mSystemFlags.begin(), mSystemFlags.end(), [&] (const CSparkFR::SystemFlags::SData & aData) -> bool { return aData.number == CSparkFR::SystemFlags::ZReportsAndFiscal; });
+
+	if (dataIt == mSystemFlags.end())
+	{
+		toLog(LogLevel::Error, QString("%1: Failed to find system flag %2 in device one").arg(mDeviceName).arg(CSparkFR::SystemFlags::ZReportsAndFiscal));
+		return false;
+	}
+
+	for (int i = 0; i < 8; ++i)
+	{
+		if (CSparkFR::LongReportMask & (1 << i))
+		{
+			dataIt->mask[7 - i] = mOperatorPresence ? '1' : '0';
+		}
+	}
+
+	foreach(auto data, mSystemFlags)
+	{
+		if (!checkSystemFlag(aFlagData, data.number))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+bool SparkFR::checkTaxFlags(const TTaxData & aTaxData)
+{
+	TTaxes taxes;
+
+	for (int i = 0; i < CSparkFR::TaxRateCount; ++i)
+	{
+		bool OK;
+		TVAT VAT = TVAT(aTaxData[i].toInt(&OK));
+		taxes.append(OK ? VAT : -1);
+	}
+
+	mTaxes = getActualVATs().toList();
+	qSort(mTaxes);
+
+	TVATs absentVATs = getActualVATs() - taxes.toSet();
+
+	if (!absentVATs.isEmpty())
+	{
+		QByteArray commandData;
+
+		for (int i = 0; i < CSparkFR::TaxRateCount; ++i)
+		{
+			commandData += (i < mTaxes.size()) ? QString("%1").arg(mTaxes[i], 2, 10, QChar(ASCII::Zero)).toLatin1() : CSparkFR::NoTaxes;
+		}
+
+		if (!processCommand(CSparkFR::Commands::SetTaxes, commandData) || !processCommand(CSparkFR::Commands::AcceptTaxes))
+		{
+			toLog(LogLevel::Error, mDeviceName + ": Failed to set taxes");
+			return false;
+		}
+	}
 
 	return true;
 }
@@ -637,14 +670,6 @@ bool SparkFR::setFiscalParameters(const QStringList & aReceipt)
 //--------------------------------------------------------------------------------
 bool SparkFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
 {
-	TVATs absentVATs = getVATs(aPaymentData) - mTaxes.toSet();
-
-	if (!absentVATs.isEmpty())
-	{
-		toLog(LogLevel::Error, QString("%1: Failed to process fiscal document due to there are some unaccounted taxe(s): %2").arg(mDeviceName).arg(getVATLog(absentVATs)));
-		return false;
-	}
-
 	TSum totalAmount = getTotalAmount(aPaymentData);
 
 	if (!payIO(totalAmount, true))
@@ -767,11 +792,11 @@ bool SparkFR::cut()
 //--------------------------------------------------------------------------------
 bool SparkFR::retract()
 {
-	auto dataIt = std::find_if(mSystemFlags.begin(), mSystemFlags.end(), [&](const CSparkFR::SystemFlags::SData & aData) -> bool { return aData.number == CSparkFR::SystemOptions2; });
+	auto dataIt = std::find_if(mSystemFlags.begin(), mSystemFlags.end(), [&](const CSparkFR::SystemFlags::SData & aData) -> bool { return aData.number == CSparkFR::SystemFlags::SystemOptions2; });
 
 	if (dataIt == mSystemFlags.end())
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to find system flag %2 in device one").arg(mDeviceName).arg(CSparkFR::SystemOptions2));
+		toLog(LogLevel::Error, QString("%1: Failed to find system flag %2 in device one").arg(mDeviceName).arg(CSparkFR::SystemFlags::SystemOptions2));
 		return false;
 	}
 
@@ -785,7 +810,7 @@ bool SparkFR::retract()
 	// отключаем альтернативный способ опроса датчиков презентера
 	dataIt->mask[6] = '0';
 
-	if (!checkFlag(flagData, CSparkFR::SystemOptions2))
+	if (!checkSystemFlag(flagData, CSparkFR::SystemFlags::SystemOptions2))
 	{
 		return false;
 	}
@@ -797,7 +822,7 @@ bool SparkFR::retract()
 
 	// отключаем альтернативный способ опроса датчиков презентера
 	dataIt->mask[6] = '1';
-	checkFlag(flagData, CSparkFR::SystemOptions2);
+	checkSystemFlag(flagData, CSparkFR::SystemFlags::SystemOptions2);
 
 	return true;
 }

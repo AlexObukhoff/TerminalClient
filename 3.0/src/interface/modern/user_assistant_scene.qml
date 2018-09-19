@@ -1,6 +1,6 @@
 /* @file Страница помощника абонента */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "scripts/gui.js" 1.0 as GUI

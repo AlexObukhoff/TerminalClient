@@ -9,6 +9,7 @@ namespace SDK { namespace Driver { namespace CAllHardware { namespace FiscalFiel
 	const char PayOffAddress[]   = "payoff_address";      // 1009 (Адрес расчетов).
 	const char FDDateTime[]      = "fd_date_time";        // 1012 (Дата и время ФД).
 	const char SerialFRNumber[]  = "serial_fr_number";    // 1013 (Заводской номер ФР).
+	const char OFDINN[]          = "ofd_inn";             // 1017 (ИНН ОФД).
 	const char INN[]             = "inn";                 // 1018 (ИНН пользователя).
 	const char PayOffAmount[]    = "payoff_amount";       // 1020 (Сумма расчета в чеке).
 	const char Cashier[]         = "cashier";             // 1021 (Кассир).
@@ -23,16 +24,35 @@ namespace SDK { namespace Driver { namespace CAllHardware { namespace FiscalFiel
 	const char LegalOwner[]      = "legal_owner";         // 1048 (Наименование юр. лица владельца).
 	const char PayOffType[]      = "payoff_type";         // 1054 (Признак расчета).
 	const char TaxSystem[]       = "tax_system";          // 1055 (СНО на платеже).
-	const char AgentFlagsReg[]   = "agent_flags_reg";     // 1057 (Признак(и) платежного агента из итогов регистрации и на платеже).
 	const char FTSURL[]          = "fts_url";             // 1060 (Адрес сайта ФНС).
 	const char TaxSystemsReg[]   = "tax_systems_reg";     // 1062 (СНО из итогов регистрации).
+	const char ProcessingPhone[] = "processing_phone";    // 1074 (Телефон оператора по приему платежей).
 	const char FDSign[]          = "fd_sign";             // 1077 (Фискальный признак документа).
+	const char SenderMail[]      = "sender_mail";         // 1117 (Электронная почта отправителя чека).
 	const char PayOffPlace[]     = "payoff_place";        // 1187 (Место расчетов).
+	const char ModelVersion[]    = "model_version";       // 1188 (Версия модели ККТ).
+	const char FFDFR[]           = "ffd_fr";              // 1189 (Версия ФФД ФР).
+	const char FFDFS[]           = "ffd_fs";              // 1190 (Версия ФФД ФН).
 	const char VATRate[]         = "vat_rate";            // 1199 (Ставка НДС).
 	const char CashierINN[]      = "cashier_inn";         // 1203 (ИНН кассира).
 	const char OFDURL[]          = "ofd_url";             // 1208 (Адрес сайта для получения чека).
-	const char AgentFlag[]       = "agent_flag";          // 1222 (Признак платежного агента на платеже).
-	const char ProviderINN[]     = "provider_inn";        // 1226 (ИНН поставщика).
+	const char FFD[]             = "ffd";                 // 1209 (Версия ФФД).
+
+	// Данные оператора перевода
+	const char TransferOperatorAddress[] = "transfer_operator_address";    // 1005 (Адрес оператора перевода).
+	const char TransferOperatorINN[]     = "transfer_operator_inn";        // 1016 (ИНН оператора перевода).
+	const char TransferOperatorName[]    = "transfer_operator_name";       // 1026 (Наименование оператора перевода).
+	const char TransferOperatorPhone[]   = "transfer_operator_phone";      // 1075 (Телефон оператора перевода).
+
+	// Данные поставщика
+	const char ProviderPhone[]   = "provider_phone";     // 1171 (Телефон поставщика).
+	const char ProviderINN[]     = "provider_inn";       // 1226 (ИНН поставщика).
+
+	// Данные платежного агента
+	const char AgentOperation[]  = "agent_operation";    // 1044 (Операция платежного агента).
+	const char AgentFlagsReg[]   = "agent_flags_reg";    // 1057 (Признак(и) платежного агента из итогов регистрации и на платеже).
+	const char AgentPhone[]      = "agent_phone";        // 1073 (Телефон платежного агента).
+	const char AgentFlag[]       = "agent_flag";         // 1222 (Признак платежного агента на платеже).
 
 	// Режимы работы
 	const char AutomaticMode[]      = "automatic_mode";          // 1001 (Признак автоматического режима).
@@ -44,6 +64,7 @@ namespace SDK { namespace Driver { namespace CAllHardware { namespace FiscalFiel
 	const char LotteryMode[]        = "lottery_mode";            // 1126 (Признак проведения лотереи).
 	const char GamblingMode[]       = "gambling_mode";           // 1193 (Признак проведения азартных игр).
 	const char ExcisableUnitMode[]  = "excisable_unit_mode";     // 1207 (Признак торговли подакцизными товарами).
+	const char InAutomateMode[]     = "in_automate_mode";        // 1221 (Признак установки в автомате).
 
 	// Предмет расчета (на конкретную продажу)
 	const char PayOffSubjectQuantity[]   = "payoff_subject_quantity";       // 1023 (Количество предмета расчета).
@@ -62,11 +83,11 @@ namespace SDK { namespace Driver { namespace CAllHardware { namespace FiscalFiel
 	const char CounterOfferFiscalTotal[] = "counter_offer_fiscal_total";    // 1217 (Сумма по чеку (БСО) встречным предоставлением).
 
 	// Налоги (на весь чек)
-	const char TaxAmount02[] = "tax_amount_02";    // 1102 (Сумма НДС чека по ставке 18%).
+	const char TaxAmount02[] = "tax_amount_02";    // 1102 (Сумма НДС чека по ставке 18(20)%).
 	const char TaxAmount03[] = "tax_amount_03";    // 1103 (Сумма НДС чека по ставке 10%).
 	const char TaxAmount04[] = "tax_amount_04";    // 1104 (Сумма расчета по чеку с НДС по ставке 0%).
 	const char TaxAmount05[] = "tax_amount_05";    // 1105 (Сумма расчета по чеку без НДС).
-	const char TaxAmount06[] = "tax_amount_06";    // 1106 (Сумма НДС чека по расчетной ставке 18/118).
+	const char TaxAmount06[] = "tax_amount_06";    // 1106 (Сумма НДС чека по расчетной ставке 18/118 (20/120)).
 	const char TaxAmount07[] = "tax_amount_07";    // 1107 (Сумма НДС чека по расчетной ставке 10/110).
 
 }}}}

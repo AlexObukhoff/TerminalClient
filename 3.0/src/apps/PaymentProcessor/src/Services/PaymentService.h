@@ -197,7 +197,7 @@ public:
 
 protected:
 	/// Формирование подписи платежа.
-	QString createSignature(PPSDK::IPayment * aPayment);
+	QString createSignature(PPSDK::IPayment * aPayment, bool aWithCRC = true);
 
 	/// Проверка подписи для платежа.
 	bool verifySignature(PPSDK::IPayment * aPayment);

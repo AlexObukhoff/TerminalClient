@@ -1,6 +1,6 @@
-﻿/* @file Виджет для отображения табличных данных. */
+/* @file Виджет для отображения табличных данных. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 
 FocusScope {
 	id: rootItem
@@ -25,11 +25,11 @@ FocusScope {
 			width: parent.width - (scroller.visible ? 100 : 0)
 
 			// Шапка таблицы
-			BorderImage2 {
+			BorderImage {
 				width: parent.width
 				height: 120
 				border { left: 100; top: 18; right: 18; bottom: 100 }
-				source: "image://ui/comment.bottom.simple"
+				source: Utils.ui.image("comment.bottom.simple")
 
 				Row {
 					anchors { fill: parent; leftMargin: 40 }
@@ -38,8 +38,8 @@ FocusScope {
 					Text {
 						width: 172
 						height: parent.height
-						font: Skin.ui.font("font.main")
-						color: Skin.ui.color("color.table.primary")
+						font: Utils.ui.font("font.main")
+						color: Utils.ui.color("color.table.primary")
 						wrapMode: Text.WordWrap
 						verticalAlignment: Text.AlignVCenter
 						elide: Text.ElideRight
@@ -52,8 +52,8 @@ FocusScope {
 					Text {
 						width: scroller.visible ? 500 : 590
 						height: parent.height
-						font: Skin.ui.font("font.main")
-						color: Skin.ui.color("color.table.primary")
+						font: Utils.ui.font("font.main")
+						color: Utils.ui.color("color.table.primary")
 						wrapMode: Text.WordWrap
 						verticalAlignment: Text.AlignVCenter
 						elide: Text.ElideRight
@@ -66,8 +66,8 @@ FocusScope {
 					Text {
 						width: 134
 						height: parent.height
-						font: Skin.ui.font("font.main")
-						color: Skin.ui.color("color.table.primary")
+						font: Utils.ui.font("font.main")
+						color: Utils.ui.color("color.table.primary")
 						wrapMode: Text.WordWrap
 						horizontalAlignment: Text.AlignRight
 						verticalAlignment: Text.AlignVCenter
@@ -83,8 +83,8 @@ FocusScope {
 					Text {
 						width: 200
 						height: parent.height
-						font: Skin.ui.font("font.main")
-						color: Skin.ui.color("color.table.primary")
+						font: Utils.ui.font("font.main")
+						color: Utils.ui.color("color.table.primary")
 						wrapMode: Text.WordWrap
 						verticalAlignment: Text.AlignVCenter
 						elide: Text.ElideRight
@@ -103,13 +103,13 @@ FocusScope {
 				clip: true
 
 				model: tableModel
-				delegate: BorderImage2 {
+				delegate: BorderImage {
 					width: parent.width
 					height: 120
 					border { left: 18; top: 100; right: 100; bottom: 18 }
-					source: ListView.isCurrentItem ? "image://ui/enum.pressed" : "image://ui/enum.normal"
+					source: ListView.isCurrentItem ? Utils.ui.image("enum.pressed") : Utils.ui.image("enum.normal")
 
-					property string textColor: ListView.isCurrentItem ? Skin.ui.color("color.entry.secondary") : Skin.ui.color("color.main.primary")
+					property string textColor: ListView.isCurrentItem ? Utils.ui.color("color.entry.secondary") : Utils.ui.color("color.main.primary")
 
 					Row {
 						anchors { fill: parent; leftMargin: 40 }
@@ -118,7 +118,7 @@ FocusScope {
 						Text {
 							width: 172
 							height: parent.height
-							font: Skin.ui.font("font.main")
+							font: Utils.ui.font("font.main")
 							color: textColor
 							wrapMode: Text.WordWrap
 							verticalAlignment: Text.AlignVCenter
@@ -132,7 +132,7 @@ FocusScope {
 						Text {
 							width: scroller.visible ? 500 : 590
 							height: parent.height
-							font: Skin.ui.font("font.main")
+							font: Utils.ui.font("font.main")
 							color: textColor
 							wrapMode: Text.WordWrap
 							verticalAlignment: Text.AlignVCenter
@@ -146,7 +146,7 @@ FocusScope {
 						Text {
 							width: 134
 							height: parent.height
-							font: Skin.ui.font("font.main")
+							font: Utils.ui.font("font.main")
 							color: textColor
 							wrapMode: Text.WordWrap
 							horizontalAlignment: Text.AlignRight
@@ -163,7 +163,7 @@ FocusScope {
 						Text {
 							width: 200
 							height: parent.height
-							font: Skin.ui.font("font.main")
+							font: Utils.ui.font("font.main")
 							color: textColor
 							wrapMode: Text.WordWrap
 							verticalAlignment: Text.AlignVCenter

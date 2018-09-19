@@ -49,6 +49,9 @@ public:
 	/// Является ли онлайновым.
 	virtual bool isOnline() const;
 
+	/// Установить лог.
+	virtual void setLog(ILog * aLog);
+
 protected:
 	/// Попытка самоидентификации.
 	virtual bool isConnected();
@@ -56,7 +59,7 @@ protected:
 	/// Завершение инициализации.
 	virtual void finaliseInitialization();
 
-	/// Запрос статуса.
+	/// Получить и обработать статус.
 	virtual bool processStatus(TStatusCodes & aStatusCodes);
 
 	/// Проверить установки сервера ОФД.
@@ -105,7 +108,7 @@ protected:
 	void addFiscalFieldsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
 	/// Проверить тип оплаты на платеже.
-	bool checkPayType(const SDK::Driver::SPaymentData & aPaymentData);
+	bool checkPayTypeOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
 	/// Проверить параметры налогов.
 	virtual bool checkTaxes();
@@ -180,10 +183,13 @@ protected:
 	QString getVATLog(const SDK::Driver::TVATs & aVATs) const;
 
 	/// Включить/выключить режим непечати документов.
-	virtual bool setNotPrintDocument(bool aEnabled);
+	virtual bool setNotPrintDocument(bool aEnabled, bool aZReport = false);
 
 	/// Проверить непечать документа.
-	bool checkNotPrinting(bool aEnabled = false);
+	bool checkNotPrinting(bool aEnabled = false, bool aZReport = false);
+
+	/// Может работать с буфером Z-отчетов?
+	virtual bool canProcessZBuffer();
 
 	/// Наличие ЭКЛЗ.
 	bool mEKLZ;
@@ -196,6 +202,9 @@ protected:
 
 	/// Постоянная ошибка ФН.
 	bool mFSError;
+
+	/// Исчерпан ресурс хранения отчетов в ФН.
+	bool mFSOfflineEnd;
 
 	/// Буфер Z-отчетов заполнен.
 	bool mZBufferFull;
@@ -282,7 +291,7 @@ protected:
 	EFFD::Enum mFFDFS;
 
 	/// Данные фискальных реквизитов.
-	CFR::FiscalFields::CData mFiscalFieldData;
+	CFR::FiscalFields::Data mFFData;
 
 	/// Может работать с буфером Z-отчетов.
 	bool mCanProcessZBuffer;
@@ -298,6 +307,9 @@ protected:
 
 	/// Ошибка ИНН кассира.
 	bool mCashierINNError;
+
+	/// Ошибка налоговых ставок.
+	bool mTaxError;
 };
 
 //--------------------------------------------------------------------------------

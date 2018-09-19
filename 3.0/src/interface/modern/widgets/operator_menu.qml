@@ -1,7 +1,9 @@
-﻿/* @file Сетка для отображения кнопок операторов с обработкой кликов и прокрутки. */
+/* @file Сетка для отображения кнопок операторов с обработкой кликов и прокрутки. */
 
-import QtQuick 2.2
+import QtQuick 2.6
+import QtQml.Models 2.3
 import "../scenario/constants.js" as Scenario
+import "../scripts/gui.js" as GUI
 
 GridView {
 	id: rootItem
@@ -30,7 +32,7 @@ GridView {
 	flickDeceleration: 2000
 	boundsBehavior: Flickable.DragOverBounds
 	interactive: false
-	clip: true
+	//clip: true
 
 	onItemsOnPageChanged: {
 		if (!__onItemsCountChanged) {
@@ -44,11 +46,11 @@ GridView {
 		height: cellHeight
 
 		// Логотип/название
-		BorderImage2 {
+		BorderImage {
 			anchors.fill: parent
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			source: cellWidth == __minCellWidth ? getLogo(model, handler.pressed && (handler.id === model.id && handler.name === model.name)) :
-																						(handler.pressed && (handler.id === model.id) ? "image://ui/button.operator.pressed" : "image://ui/button.operator.normal")
+																						(handler.pressed && (handler.id === model.id) ? Utils.ui.image("button.operator.pressed") : Utils.ui.image("button.operator.normal"))
 		}
 
 		Item {
@@ -57,7 +59,7 @@ GridView {
 			anchors.verticalCenter: parent.verticalCenter
 
 			// Логотип
-			Image2 {
+			Image {
 				id: logotype
 
 				anchors.verticalCenter: parent.verticalCenter
@@ -78,8 +80,8 @@ GridView {
 					Text {
 						width: parent.width
 						wrapMode: Text.Wrap
-						color: Skin.ui.color("color.operator")
-						font: Skin.ui.font("font.wide.group.title")
+						color: Utils.ui.color("color.operator")
+						font: Utils.ui.font("font.wide.group.title")
 						text: title
 						maximumLineCount: 1
 					}
@@ -87,8 +89,8 @@ GridView {
 					Text {
 						width: parent.width
 						wrapMode: Text.Wrap
-						color: Skin.ui.color("color.bookmark.secondary")
-						font: Skin.ui.font("font.wide.group.description")
+						color: Utils.ui.color("color.bookmark.secondary")
+						font: Utils.ui.font("font.wide.group.description")
 						text: descr
 						lineHeight: 0.8
 						maximumLineCount: 2
@@ -108,13 +110,14 @@ GridView {
 					elide: Text.ElideRight
 					wrapMode: Text.Wrap
 					verticalAlignment: Text.AlignVCenter
-					color: Skin.ui.color("color.operator")
-					font: isGroup ? Skin.ui.font("font.wide.group.title") : Skin.ui.font("font.wide.group.name")
+					color: Utils.ui.color("color.operator")
+					font: isGroup ? Utils.ui.font("font.wide.group.title") : Utils.ui.font("font.wide.group.name")
 					text: "<p style='line-height:80%'>%1</p>".arg(name.replace(new RegExp("\\[\\[([^>]*)\\]\\]", "g"), "<font color='%1'>$1</font>".arg("#F15A24")))
 
 					Component.onCompleted: {
 						if (operatorName.paintedHeight > 120) {
 							operatorName.text = name
+							GUI.log(name)
 						}
 					}
 				}
@@ -166,7 +169,8 @@ GridView {
 	}
 
 	onCountChanged: {
-		if (model.category === 0) __rootCategory = model.rootElement;
+		GUI.log("onCountChanged", model, count)
+		if (model.category == 0) __rootCategory = model.rootElement;
 
 		var gridValue = Core.graphics.ui["use_smart_grid"];
 		if (gridValue) {
@@ -220,7 +224,7 @@ GridView {
 	}
 
 	function getColor(aProvider, aPressed) {
-		return Skin.ui.color("color.operator.normal");
+		return Utils.ui.color("color.operator.normal");
 	}
 
 	function gotoPage(aPage) {
@@ -245,6 +249,6 @@ GridView {
 		calcLayout(true);
 	}
 
-	Component.onCompleted: reset()
+	Component.onCompleted: { reset(); 						GUI.log("#operator_menu completed") }
 }
 

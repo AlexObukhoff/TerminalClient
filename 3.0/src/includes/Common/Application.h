@@ -70,7 +70,7 @@ public:
 	/// Тип Qt приложения. Может быть QCoreApplication/QApplication/QSingleApplication.
 	typedef T TApplication;
 
-	BasicQtApplication(const QString & aName, const QString & aVersion, int aArgumentCount, char ** aArguments);
+	BasicQtApplication(const QString & aName, const QString & aVersion, int & aArgumentCount, char ** aArguments);
 	virtual ~BasicQtApplication() {}
 
 	/// Запускает цикл обработки событий.
@@ -91,7 +91,7 @@ private:
 // Реализация BasicQtApplication
 
 template<typename T>
-BasicQtApplication<T>::BasicQtApplication(const QString & aName, const QString & aVersion, int aArgumentCount, char ** aArguments)
+BasicQtApplication<T>::BasicQtApplication(const QString & aName, const QString & aVersion, int & aArgumentCount, char ** aArguments)
 	: BasicApplication(aName, aVersion, aArgumentCount, aArguments), mQtApplication(aArgumentCount, aArguments)
 {
 	mQtApplication.setApplicationName(aName);

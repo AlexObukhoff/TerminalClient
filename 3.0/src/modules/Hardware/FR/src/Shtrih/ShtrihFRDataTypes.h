@@ -77,7 +77,7 @@ namespace CShtrihFR
 		QString name;
 		bool verified;
 		bool ejector;
-		int ZReportQuantity;
+		int ZBufferSize;
 		int feed;
 		QDate date;
 		int build;
@@ -88,7 +88,7 @@ namespace CShtrihFR
 			const QString & aName,
 			bool aVerified,
 			bool aEjector,
-			int aZReportQuantity,
+			int aZBufferSize,
 			int aFeed,
 			const QDate & aDate,
 			int aBuild,
@@ -96,7 +96,7 @@ namespace CShtrihFR
 				id(aId),
 				name(aName),
 				ejector(aEjector),
-				ZReportQuantity(aZReportQuantity),
+				ZBufferSize(aZBufferSize),
 				verified(aVerified),
 				feed(aFeed),
 				date(aDate),
@@ -104,7 +104,7 @@ namespace CShtrihFR
 				linePrintingTimeout(aLinePrintingTimeout)
 		{}
 
-		SModelData(): verified(false), ejector(false), ZReportQuantity(0), feed(0), date(QDate::currentDate()), build(0), linePrintingTimeout(0) {}
+		SModelData(): verified(false), ejector(false), ZBufferSize(0), feed(0), date(QDate::currentDate()), build(0), linePrintingTimeout(0) {}
 	};
 
 	typedef QPair<uchar, ERegisterType::Enum> TRegisterId;
@@ -219,8 +219,8 @@ namespace CShtrihFR
 				ADD_SHTRIH_FIELD(13, documentCapAmount);            // Количество строк рекламного текста
 				ADD_SHTRIH_FIELD(14, printDocumentCap);             // Печать клише
 				ADD_SHTRIH_FIELD(15, cuttingWithOpenedDocument);    // Отрезка при открытом чеке
-				ADD_SHTRIH_FIELD(16, autoRetractingCheques);        // Выброс чеков
-				ADD_SHTRIH_FIELD(17, autoRetractingReports);        // Выброс отчетов
+				ADD_SHTRIH_FIELD(16, autoRetractingCheques);        // Выброс/авторетракция чеков
+				ADD_SHTRIH_FIELD(17, autoRetractingReports);        // Выброс/авторетракция отчетов
 				ADD_SHTRIH_FIELD(18, presentationLength);           // Длина презентации чеков
 				ADD_SHTRIH_FIELD(19, leftReceiptTimeout);           // Таймаут ретракции
 				ADD_SHTRIH_FIELD(20, loop);                         // Делать петлю при печати

@@ -1,4 +1,4 @@
-﻿/* @file Реализация интерфейса работы с PC/SC API. */
+/* @file Реализация интерфейса работы с PC/SC API. */
 
 // Modules
 #include "Hardware/Protocols/Common/ProtocolUtils.h"

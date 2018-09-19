@@ -107,8 +107,5 @@
     <None Include="..\src\locale\updater_kk.ts">
       <Filter>Translation Files</Filter>
     </None>
-    <None Include="..\src\locale\updater_ru_bankomat.ts">
-      <Filter>Translation Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

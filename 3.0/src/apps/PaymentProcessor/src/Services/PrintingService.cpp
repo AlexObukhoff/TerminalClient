@@ -9,7 +9,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QDate>
 #include <QtCore/QBuffer>
-#include <QtCore/QTextStream>
 #include <QtQml/QJSEngine>
 #include <QtQml/QJSValue>
 #include <QtCore/QTextCodec>
@@ -74,8 +73,9 @@ PrintingService::PrintingService(IApplication * aApplication) :
 	mServiceOperation(false),
 	mRandomReceiptsID(false),
 	mNextReceiptIndex(1),
-	mFiscalRegister(nullptr),
-	mRandomGenerator(static_cast<unsigned>(QDateTime::currentDateTime().currentMSecsSinceEpoch()))
+	mRandomGenerator(static_cast<unsigned>(QDateTime::currentDateTime().currentMSecsSinceEpoch())),
+	mEnableBlankFiscalData(false),
+	mFiscalRegister(nullptr)
 {
 	setLog(mApplication->getLog());
 }
@@ -235,6 +235,11 @@ int PrintingService::printReceipt(const QString & aReceiptType, const QVariantMa
 
 	foreach (auto templateName, receiptTemplates)
 	{
+		if (templateName == SDK::PaymentProcessor::CReceiptType::Disabled)
+		{
+			break;
+		}
+
 		if (mCachedReceipts.contains(templateName))
 		{
 			auto printCommand = getPrintCommand(aReceiptType);
@@ -1283,11 +1288,8 @@ void PrintingService::saveReceiptContent(const QString & aReceiptName, const QSt
 	// Сохраняем чек.
 	if (file.open(QIODevice::WriteOnly))
 	{
-		QTextStream ostream(&file);
-
-		ostream << aContents.join("\r\n");
-		
-		ostream.flush();
+		file.write(aContents.join("\r\n").toUtf8());
+		file.close();
 	}
 	else
 	{
@@ -1313,6 +1315,18 @@ void PrintingService::saveReceipt(const QVariantMap & aParameters, const QString
 }
 
 //---------------------------------------------------------------------------
+QString & replaceTags(QString & aMessage)
+{
+	aMessage.replace("[br]", "\n", Qt::CaseInsensitive);
+	aMessage.remove(QRegExp("\\[(b|dw|dh)\\]", Qt::CaseInsensitive));
+	aMessage.remove(QRegExp("\\[/(b|dw|dh)\\]", Qt::CaseInsensitive));
+
+	aMessage.remove(QRegExp("\\[img.?\\].*\\[/img\\]"));
+
+	return aMessage;
+}
+
+//---------------------------------------------------------------------------
 QString PrintingService::loadReceipt(qint64 aPaymentId)
 {
 	// Получаем имя папки с чеками.
@@ -1327,18 +1341,24 @@ QString PrintingService::loadReceipt(qint64 aPaymentId)
 	}
 
 	QDir dir(path.path() + QDir::separator());
-	QStringList receipts = dir.entryList(QStringList() << QString("*%1.txt").arg(aPaymentId) << QString("*%1_not_printed.txt").arg(aPaymentId));
+	QStringList receiptFiles;
+	receiptFiles
+		<< QString("*_%1.txt").arg(aPaymentId)
+		<< QString("*_%1_*.txt").arg(aPaymentId);
 
-	if (!receipts.isEmpty())
+	QStringList receiptsBody;
+
+	QStringList receipts = dir.entryList(receiptFiles);
+	while (!receipts.isEmpty())
 	{
 		QFile f(dir.absolutePath() + QDir::separator() + receipts.takeFirst());
 		if (f.open(QIODevice::ReadOnly))
 		{
-			return QTextCodec::codecForName("Windows-1251")->toUnicode(f.readAll());
-		}		
+			receiptsBody << replaceTags(QString::fromUtf8(f.readAll()));
+		}
 	}
 
-	return QString();
+	return receiptsBody.join("\n------------------------------\n");
 }
 
 //---------------------------------------------------------------------------
@@ -1408,8 +1428,11 @@ void PrintingService::updateHardwareConfiguration()
 		.arg(DSDK::CComponents::Printer).arg(DSDK::CComponents::DocumentPrinter).arg(DSDK::CComponents::FiscalRegistrator);
 	QStringList printerNames = settings->getDeviceList().filter(QRegExp(regExpData));
 
-	mRandomReceiptsID = settings->getCommonSettings().randomReceiptsID;
-	QTime autoZReportTime = settings->getCommonSettings().autoZReportTime;
+	auto commonSettings = settings->getCommonSettings();
+
+	mRandomReceiptsID = commonSettings.randomReceiptsID;
+	QTime autoZReportTime = commonSettings.autoZReportTime;
+	mEnableBlankFiscalData = commonSettings.enableBlankFiscalData;
 
 	mPrinterDevices.clear();
 	mAvailablePrinters.clear();

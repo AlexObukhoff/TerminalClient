@@ -114,27 +114,41 @@ bool WebKitBackend::isReady() const
 }
 
 //------------------------------------------------------------------------------
-SDK::GUI::IGraphicsItem * WebKitBackend::getItem(const SDK::GUI::GraphicsItemInfo & aInfo)
+std::weak_ptr<SDK::GUI::IGraphicsItem> WebKitBackend::getItem(const SDK::GUI::GraphicsItemInfo & aInfo)
 {
-	QMap<QString, QSharedPointer<WebGraphicsItem> >::iterator it = mItems.find(aInfo.name);
+	QMap<QString, std::shared_ptr<WebGraphicsItem>>::iterator it = mItems.find(aInfo.name);
 
-	if (it != mItems.end() && it.value().data()->getContext() == aInfo.context)
+	if (it != mItems.end() && it.value()->getContext() == aInfo.context)
 	{
-		return it.value().data();
+		return it.value();
 	}
 
-	QSharedPointer<WebGraphicsItem> item(new WebGraphicsItem(aInfo, mCoreProxy, mEngine->getLog()));
+	std::shared_ptr<WebGraphicsItem> item(new WebGraphicsItem(aInfo, mCoreProxy, mEngine->getLog()), SDK::GUI::GraphicsItemDeleter());
 
 	if (item->isValid())
 	{
-		mItems.insertMulti(aInfo.name, item);
+		mItems.insert(aInfo.name, item);
 	}
 	else
 	{
 		mEngine->getLog()->write(LogLevel::Error, item->getError());
 	}
 
-	return item.data();
+	return item;
+}
+
+//------------------------------------------------------------------------------
+bool WebKitBackend::removeItem(const SDK::GUI::GraphicsItemInfo & aInfo)
+{
+	foreach (auto item, mItems.values(aInfo.name))
+	{
+		if (item->getContext() == aInfo.context)
+		{
+			return mItems.remove(aInfo.name, item) != 0;
+		}
+	}
+
+	return false;
 }
 
 //------------------------------------------------------------------------------

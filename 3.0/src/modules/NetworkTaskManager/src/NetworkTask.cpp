@@ -1,4 +1,4 @@
-﻿/* @file Реализация базового класса для сетевого запроса. */
+/* @file Реализация базового класса для сетевого запроса. */
 
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QMutexLocker>

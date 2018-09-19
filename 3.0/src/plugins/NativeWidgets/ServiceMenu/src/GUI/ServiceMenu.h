@@ -1,4 +1,4 @@
-﻿/* @file Виджет сервисного меню */
+/* @file Виджет сервисного меню */
 
 #pragma once
 
@@ -68,7 +68,7 @@ public:
 	// Возвращает виджет.
 	virtual QQuickItem * getWidget() const;
 
-	virtual QWidget * getNativeWidget() const { return mMainServiceWindow; }
+	virtual QWidget * getNativeWidget() const;
 
 	/// Возвращает контекст виджета.
 	virtual QVariantMap getContext() const;
@@ -82,7 +82,6 @@ private:
 	SDK::Plugin::IEnvironment * mEnvironment;
 	QVariantMap mParameters;
 
-	QGraphicsProxyWidget * mMainWidget;
 	MainServiceWindow * mMainServiceWindow;
 	QSharedPointer<ServiceMenuBackend> mBackend;
 };

@@ -1,6 +1,6 @@
-﻿/* @file Всплывающее окно с рекламным содержимым. */
+/* @file Всплывающее окно с рекламным содержимым. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
@@ -55,9 +55,9 @@ Item {
 
 			icon: 18
 			text: Utils.locale.tr(QT_TR_NOOP("info_popup#close"))
-			color: Skin.ui.color("color.button.secondary")
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			color: Utils.ui.color("color.button.secondary")
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 
 			width: 407
 			onClicked: hideAnimation.start();

@@ -731,19 +731,31 @@ void DeviceManager::checkITInstancePath(QString & aInstancePath)
 	paths.insert("Common.Driver.Printer.COM.POS.Custom", TNewPaths()
 	          << "Common.Driver.Printer.COM.POS.Custom"
 	          << "Common.Driver.Printer.COM.POS.CustomTG2480H");
+
 	paths.insert("Common.Driver.BillAcceptor.COM", TNewPaths()
-		<< "Common.Driver.BillAcceptor.COM.CCNet"
-		<< "Common.Driver.BillAcceptor.COM.CCNet.CashcodeGX"
-		<< "Common.Driver.BillAcceptor.COM.CCNet.Creator"
-		<< "Common.Driver.BillAcceptor.COM.CCNet.Recycler"
-		<< "Common.Driver.BillAcceptor.COM.EBDS"
-		<< "Common.Driver.BillAcceptor.COM.ICT"
-		<< "Common.Driver.BillAcceptor.COM.ID003"
-		<< "Common.Driver.BillAcceptor.COM.V2e");
+	          << "Common.Driver.BillAcceptor.COM.CCNet"
+	          << "Common.Driver.BillAcceptor.COM.CCNet.CashcodeGX"
+	          << "Common.Driver.BillAcceptor.COM.CCNet.Creator"
+	          << "Common.Driver.BillAcceptor.COM.CCNet.Recycler"
+	          << "Common.Driver.BillAcceptor.COM.EBDS"
+	          << "Common.Driver.BillAcceptor.COM.ICT"
+	          << "Common.Driver.BillAcceptor.COM.ID003"
+	          << "Common.Driver.BillAcceptor.COM.V2e");
+
 	paths.insert("Common.Driver.FiscalRegistrator.TCP.ShtrihOnline.Pay", TNewPaths()
-		<< "Common.Driver.FiscalRegistrator.TCP.ShtrihOnline.Ejector");
+	          << "Common.Driver.FiscalRegistrator.TCP.ShtrihOnline.Ejector");
 	paths.insert("Common.Driver.FiscalRegistrator.COM.ShtrihOnline.Pay", TNewPaths()
-		<< "Common.Driver.FiscalRegistrator.COM.ShtrihOnline.Ejector");
+	          << "Common.Driver.FiscalRegistrator.COM.ShtrihOnline.Ejector");
+
+	changeInstancePath(aInstancePath, configPath, paths);
+
+	paths.clear();
+	paths.insert("Common.Driver.FiscalRegistrator.TCP.ShtrihOnline.Ejector", TNewPaths()
+	          << "Common.Driver.FiscalRegistrator.TCP.ShtrihOnline.PayOnline"
+	          << "Common.Driver.FiscalRegistrator.TCP.ShtrihOnline.PayVKP80FA");
+	paths.insert("Common.Driver.FiscalRegistrator.COM.ShtrihOnline.Ejector", TNewPaths()
+	          << "Common.Driver.FiscalRegistrator.COM.ShtrihOnline.PayOnline"
+	          << "Common.Driver.FiscalRegistrator.COM.ShtrihOnline.PayVKP80FA");
 
 	changeInstancePath(aInstancePath, configPath, paths);
 }

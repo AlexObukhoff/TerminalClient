@@ -1,4 +1,4 @@
-﻿/* @file Реализация интерфейса SysUtils. */
+/* @file Реализация интерфейса SysUtils. */
 
 // windows
 #include <windows.h>

@@ -5,6 +5,7 @@ Project {
 
 	AppTemplate {
 		name: "client"
+		consoleApplication: false
 
 		Depends {
 			name: "Qt";

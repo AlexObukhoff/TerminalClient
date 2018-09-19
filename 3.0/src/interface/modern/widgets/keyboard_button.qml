@@ -1,6 +1,7 @@
-﻿/* @file Кнопка клавиатуры. */
+/* @file Кнопка клавиатуры. */
 
-import QtQuick 2.2
+import QtQuick 2.6
+import "../scripts/gui.js" as GUI
 import "../controls" 1.0 as Controls
 
 Controls.Button {
@@ -13,7 +14,7 @@ Controls.Button {
 	property string text
 
 	// Цвет текста кнопки
-	property string color: rootItem.disabled ? "transparent" : (rootItem.pressed ? Skin.ui.color("color.key.pressed") : Skin.ui.color("color.key.normal"))
+	property string color: rootItem.disabled ? "transparent" : (rootItem.pressed ? Utils.ui.color("color.key.pressed") : Utils.ui.color("color.key.normal"))
 
 	// Подложка кнопки без расширения
 	property string backgroundSource: ""
@@ -46,15 +47,15 @@ Controls.Button {
 		id: text
 
 		color: rootItem.color
-		font: Skin.ui.font("font.key")
+		font: Utils.ui.font("font.key")
 		text: !rootItem.standalone && rootItem.parent.handler.altMode ? rootItem.altText : rootItem.text
 	}
 
-	background: BorderImage2 {
+	background: BorderImage {
 		border { left: 10; top: 10; right: 10; bottom: 10 }
-		source: backgroundSource == "" ? (rootItem.disabled ? "image://ui/button.disabled" :
-																													(rootItem.pressed ? "image://ui/button.key.pressed" : "image://ui/button.key.normal")) :
-																		 ("image://ui/" + backgroundSource + "." + (rootItem.disabled ? "disabled" : (rootItem.pressed ? "pressed" : "normal")))
+		source: backgroundSource == "" ? (rootItem.disabled ? Utils.ui.image("button.disabled") :
+																													(rootItem.pressed ? Utils.ui.image("button.key.pressed") : Utils.ui.image("button.key.normal"))) :
+																		 Utils.ui.image(backgroundSource + "." + (rootItem.disabled ? "disabled" : (rootItem.pressed ? "pressed" : "normal")))
 	}
 
 	icon: Icon { icon: iconId }

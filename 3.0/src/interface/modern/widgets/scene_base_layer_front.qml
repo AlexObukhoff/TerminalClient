@@ -1,60 +1,64 @@
-import QtQuick 1.1
-import Qt.labs.particles 1.0
+import QtQuick 2.6
 
-Rectangle {
-		width: 1280
-		height: 1024
-		color: "transparent"
+Row {
+	z: 10
 
-		Particles {
-				y: 0
-				width: parent.width
-				height: parent.height
-				source: "../skins/default/images/bonus/snow.png"
-				lifeSpan: 3000
-				count: 100
-				angle: 120
-				angleDeviation: 36
-				velocity: 30
-				velocityDeviation: 10
-				ParticleMotionWander {
-						xvariance: 30
-						pace: 100
-				}
+	anchors { horizontalCenter: parent.horizontalCenter; top: parent.top; topMargin: 17 }
+
+	spacing: 10
+
+	Rectangle {
+		width: 20
+		height: 20
+		rotation: 200
+
+		color: "white"
+
+		border.width : 2
+		border.color : "white"
+
+
+		RotationAnimation on rotation {
+			loops: Animation.Infinite
+			from: 0
+			to: 360
+			duration: 300
 		}
+	}
 
-		Particles {
-				y: 0
-				width: parent.width
-				height: parent.height
-				source: "../skins/default/images/bonus/snow2.png"
-				lifeSpan: 5000
-				count: 50
-				angle: 70
-				angleDeviation: 36
-				velocity: 40
-				velocityDeviation: 10
-				ParticleMotionWander {
-						xvariance: 30
-						pace: 100
-				}
-		}
+	Rectangle {
+		width: 20
+		height: 20
+		rotation: 200
 
-		Particles {
-				y: 0
-				width: parent.width
-				height: parent.height
-				source: "../skins/default/images/bonus/snow3.png"
-				lifeSpan: 8000
-				count: 30
-				angle: 70
-				angleDeviation: 36
-				velocity: 50
-				velocityDeviation: 10
-				ParticleMotionWander {
-						xvariance: 30
-						pace: 100
-				}
+		color: "blue"
+		border.width : 2
+		border.color : "white"
+
+		RotationAnimation on rotation {
+			loops: Animation.Infinite
+			from: 0
+			to: 360
+			duration: 500
 		}
+	}
+
+	Rectangle {
+		width: 20
+		height: 20
+		rotation: 200
+
+		color: "red"
+
+		border.width : 2
+		border.color : "white"
+
+		RotationAnimation on rotation {
+			loops: Animation.Infinite
+			from: 0
+			to: 360
+			duration: 1000
+		}
+	}
 }
 

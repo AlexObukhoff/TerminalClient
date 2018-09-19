@@ -227,7 +227,7 @@ bool PortDeviceBase<T>::processStatus(TStatusCodes & aStatusCodes)
 
 //--------------------------------------------------------------------------------
 template <class T>
-SStatusCodeSpecification PortDeviceBase<T>::getStatusCodeSpecification(int aStatusCode)
+SStatusCodeSpecification PortDeviceBase<T>::getStatusCodeSpecification(int aStatusCode) const
 {
 	return mIOPortStatusCodes.contains(aStatusCode) ? mIOPortStatusCodesSpecification[aStatusCode] : T::getStatusCodeSpecification(aStatusCode);
 }

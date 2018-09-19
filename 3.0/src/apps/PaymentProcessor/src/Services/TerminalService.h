@@ -26,6 +26,10 @@
 
 #include <WatchServiceClient/IWatchServiceClient.h>
 
+// Project
+#include "TerminalStatusDescriptions.h"
+
+
 class IHardwareDatabaseUtils;
 class IApplication;
 class GUIService;
@@ -116,6 +120,10 @@ private:
 
 	/// Отключаем/включаем графический интерфейс.
 	void updateGUI();
+
+	/// Обновить статус терминала
+	void updateTerminalStatus();
+
 
 private slots:
 	void onEvent(const SDK::PaymentProcessor::Event & aEvent);

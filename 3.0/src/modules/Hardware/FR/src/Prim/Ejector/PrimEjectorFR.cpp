@@ -35,6 +35,20 @@ bool PrimEjectorFR<T>::updateParameters()
 
 //--------------------------------------------------------------------------------
 template <class T>
+ushort PrimEjectorFR<T>::getParameter3()
+{
+	using namespace CHardware::Printer;
+
+	if (getConfigParameter(Settings::NotTakenReceipt).toString() != Values::Retract)
+	{
+		return 0;
+	}
+
+	return ushort(getConfigParameter(Settings::LeftReceiptTimeout).toInt());
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
 bool PrimEjectorFR<T>::checkPresentationLength()
 {
 	if (!PrimFRBase::checkParameters())

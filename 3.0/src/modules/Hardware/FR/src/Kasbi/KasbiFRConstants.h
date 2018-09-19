@@ -18,9 +18,6 @@ namespace CKasbiFR
 	/// Минимальный размер распакованных данных.
 	const int MinUnpackedErrorSize = 2;
 
-	/// Признак способа расчета - полная предварительная оплата.
-	const char FullPrepaymentSettlement = '\x01';
-
 	/// Формат представления даты для вывода в лог.
 	const char TimeLogFormat[] = "hh:mm";
 
@@ -28,7 +25,16 @@ namespace CKasbiFR
 	const char FontSize = 1;
 
 	/// Ретракцию для отчетов открытия/закрытия смены не выполнять.
-	const char NoSessionReportRetraction = '\x00';
+	const char SessionReportNoRetraction = '\x00';
+
+	/// Id для определения версии ФН 1.0.
+	const char FS10Id[] = "v_1_0";
+
+	/// Id для определения версии ФН 1.1.
+	const char FS11Id[] = "v_1_1";
+
+	/// Последняя актуальная прошивка.
+	const char LastFirmware[] = "1.0.21";
 
 	/// Признак вывода на печать.
 	namespace Print
@@ -44,13 +50,6 @@ namespace CKasbiFR
 		const int Default = 500;
 	}
 
-	/// Признаки способа расчета.
-	namespace SettlementTypes
-	{
-		const char Income          = 1;    /// Приход
-		const char IncomeReturning = 2;    /// Возврат прихода
-	}
-
 	/// Данные ФН.
 	struct SFSData
 	{
@@ -63,34 +62,6 @@ namespace CKasbiFR
 		SFSData() : documentOpened(false), sessionOpened(false), flags(ASCII::NUL), number(0), lastFDNumber(0) {}
 		SFSData(bool aDocumentOpened, bool aSessionOpened, char aFlags, qulonglong aNumber, uint aLastFDNumber) :
 			documentOpened(aDocumentOpened), sessionOpened(aSessionOpened), flags(aFlags), number(aNumber), lastFDNumber(aLastFDNumber) {}
-	};
-
-	//------------------------------------------------------------------------------------------------
-	/// Режимы работы ФР.
-	class Modes : public CBitmapDescription<char>
-	{
-	public:
-		Modes()
-		{
-			addBit(0, "encryption");
-			addBit(1, "offline");
-			addBit(2, "automatic");
-			addBit(3, "service sector");
-			addBit(4, "strict accountancy documents (SAD)");
-			addBit(5, "internet");
-		}
-
-		virtual QString getValues(char aValue)
-		{
-			QString result = CBitmapDescription<char>::getValues(aValue);
-
-			if (~aValue & (1 << 4))
-			{
-				result += QString(result.isEmpty() ? "" : ", ") + "cash register receipt";
-			}
-
-			return result;
-		}
 	};
 
 	//------------------------------------------------------------------------------------------------
@@ -121,6 +92,7 @@ namespace CKasbiFR
 		// Фискальные операции
 		const char OpenDocument          = '\x23';    /// Открыть фискальный чек.
 		const char Sale                  = '\x2B';    /// Продажа.
+		const char SendAgentData         = '\x2C';    /// Передать данные платежного агента.
 		const char Total                 = '\x2D';    /// Итог.
 		const char CloseDocument         = '\x24';    /// Закрыть фискальный чек.
 		const char CancelDocument        = '\x10';    /// Аннулировать чек.
@@ -130,6 +102,8 @@ namespace CKasbiFR
 		const char EndZReport            = '\x2A';    /// Закончить формирование Z-отчета.
 		const char StartOpeningSession   = '\x21';    /// Начать открытие смены.
 		const char OpenSession           = '\x22';    /// Открыть смену.
+		const char StartFiscalTLVData    = '\x35';    /// Начать получение данных фискального документа в TLV-формате.
+		const char GetFiscalTLVData      = '\x36';    /// Получить данные фискального документа в TLV-формате.
 
 		class CData : public CSpecification<char, int>
 		{
@@ -140,6 +114,7 @@ namespace CKasbiFR
 				append(EndXReport,    2 * 1000);
 				append(EndZReport,   60 * 1000);
 				append(OpenSession,   2 * 1000);
+				append(GetStatus,     2 * 1000);
 
 				setDefault(Timeouts::Default);
 			}
@@ -153,10 +128,10 @@ namespace CKasbiFR
 	public:
 		CStatuses()
 		{
-			append(1, PrinterStatusCode::Error::PrinterFR);
+			append(1, PrinterStatusCode::Error::PrinterFRNotAvailable);
 			append(2, PrinterStatusCode::Error::PaperEnd);
 			append(3, PrinterStatusCode::Error::PaperJam);
-			append(5, DeviceStatusCode::Error::CoverIsOpened);
+			append(5,  DeviceStatusCode::Error::CoverIsOpened);
 			append(6, PrinterStatusCode::Error::Cutter);
 			append(7, PrinterStatusCode::Error::PrinterFR);
 		}
@@ -168,13 +143,27 @@ namespace CKasbiFR
 	/// Фискальные реквизиты.
 	namespace FiscalFields
 	{
-		const int FRDateTime              = 30000;    // Дата/время ККТ
-		const int OFDAddress              = 30005;    // Адрес ОФД
-		const int OFDPort                 = 30006;    // Порт ОФД
-		const int FontSize                = 30015;    // Размер шрифта
-		const int OptionalFiscalParameter = 30017;    // Дополнительный параметр на фискальном чеке
-		const int SessionReportRetraction = 30018;    // Ретракция отчетов открытия/закрытия смены
-		const int PrinterModel            = 30019;    // Модель принтера
+		class Data: public CSSpecification<int, CFR::FiscalFields::SData>
+		{
+		public:
+			QString getTextLog(int aField) const { return QString("fiscal field %1 (%2)").arg(aField).arg(value(aField).textKey.replace("_", " ")); }
+		};
+
+		#define ADD_KASBI_FF(aField, aName, aType) ADD_STATIC_DATA(CKasbiFR::FiscalFields::Data, int, aName, aField, \
+			CFR::FiscalFields::SData(CFR::FiscalFields::ETypes::aType, #aName, #aName));
+
+		ADD_KASBI_FF(30000, FRDateTime,              ByteArray);    /// Дата/время ККТ
+		ADD_KASBI_FF(30005, OFDAddress,              ByteArray);    /// Адрес ОФД
+		ADD_KASBI_FF(30006, OFDPort,                 ByteArray);    /// Порт ОФД
+		ADD_KASBI_FF(30009, OFDInterval,             UINT16);       /// Интервал таймера ОФД
+		ADD_KASBI_FF(30015, FontSize,                Byte);         /// Размер шрифта
+		ADD_KASBI_FF(30017, OptionalFiscalParameter, String);       /// Дополнительный параметр на фискальном чеке
+		ADD_KASBI_FF(30018, SessionReportRetraction, Byte);         /// Ретракция отчетов открытия/закрытия смены
+		ADD_KASBI_FF(30019, PrinterModel,            Byte);         /// Модель принтера
+		ADD_KASBI_FF(30020, FullReportType,          Byte);         /// Печатать денежные счетчики перед закрытием смены
+		ADD_KASBI_FF(30021, PrinterBaudRate,         UINT32);       /// Скорость подключаемого ПУ
+		ADD_KASBI_FF(30034, Reserved,                String);       /// Зарезервирован
+		ADD_KASBI_FF(30040, OFDName,                 String);       /// Наименование ОФД
 	}
 
 	//------------------------------------------------------------------------------------------------
@@ -218,50 +207,53 @@ namespace CKasbiFR
 				add('\x31', "Неверные дата/время в ККТ");
 				add('\x32', "Переданы не все необходимые данные");
 				add('\x33', "РНМ сформирован неверно, проверка на данной ККТ не прошла");
-				add('\x34', "Данные уже были переданы ранее");
+				add('\x34', "Данные команды уже были переданы ранее");
 				add('\x35', "Аппаратный сбой ККТ");
 				add('\x36', "Неверно указан признак расчета, возможные значения: приход, расход, возврат прихода, возврат расхода");
 				add('\x37', "Указанный налог не может быть применен");
-				add('\x38', "Данные необходимы только для платежного агента (указано при регистрации)");
-				add('\x39', "Итоговая сумма оплаты не равна стоимости предметов расчета");
+				add('\x38', "Команда необходима только для платежного агента (указано при регистрации)");
+				add('\x39', "Сумма расчета чека не равна сумме следующих значений по чеку: сумма наличными, сумма электронными, сумма предоплатой, сумма постоплатой, сумма встречным предоставлением");
+				add('\x3A', "Сумма оплаты соответствующими типами (за исключением наличных) превышает итог чека");
+				add('\x3B', "Некорректная разрядность итога чека");
+				add('\x3C', "Некорректная разрядность денежных величин");
+				add('\x3D', "Превышено максимально допустимое количество предметов расчета в чеке");
+				add('\x3E', "Превышено максимально допустимое количество предметов расчета c данными агента в чеке");
+				add('\x3F', "Невозможно передать данные агента, допустимы данные агента либо для всего чека, либо данные агента по предметам расчета");
 				add('\x40', "Некорректный статус печатающего устройства");
+				add('\x42', "Сумма изъятия больше доступной суммы наличных в ККТ");
+				add('\x43', "Операция внесения-изъятия денег в ККТ возможна только при открытой смене");
+				add('\x44', "Счетчики денег не инициализированы");
+				add('\x45', "Сумма по чеку коррекции всеми типами оплаты не равна полной сумме для расчетов по ставкам НДС");
+				add('\x46', "Сумма по чеку коррекции всеми типами оплаты не равна итоговой сумме чека коррекции");
+				add('\x47', "В чеке коррекции не указано ни одной суммы для расчетов по ставкам НДС");
 				add('\x50', "Ошибка сохранения настроек");
 				add('\x51', "Передано некорректное значение времени");
-				add('\x52', "В чеке не должны присутствовать иные предметы расчета помимо предмета расчета с признаком способа расчета \"Оплата кредита\"");
+				add('\x52', "В чеке не должны присутствовать иные предметы расчета помимо предмета расчета с признаком способа расчета «Оплата кредита»");
 				add('\x53', "Переданы не все необходимые данные для агента");
-				add('\x54', "Итоговая сумма чека не равна сумме оплаты всеми видами");
+				add('\x54', "Итоговая сумма расчета(в рублях без учета копеек) не равна сумме стоимости всех предметов расчета(в рублях без учета копеек)");
 				add('\x55', "Неверно указан признак расчета для чека коррекции, возможные значения: приход, расход");
 				add('\x56', "Неверная структура переданных данных для агента");
 				add('\x57', "Не указан режим налогообложения");
 				add('\x58', "Данная ставка НДС недопустима для агента. Агент не является плательщиком НДС");
-				add('\x59', "Некорректно указано значение тэга \"Признак платежного агента\"");
+				add('\x59', "Не указано или неверно указано значение тэга \"Признак платежного агента\"");
+				add('\x5A', "Невозможно внести товарную позицию уже после внесения данных об оплате");
+				add('\x5B', "Команда может быть выполнена только при открытом чеке");
+				add('\x5C', "Некорректный формат или длина в массиве переданных строк нефискальной информации");
+				add('\x5D', "Достигнуто максимальное количество строк нефискальной информации");
+				add('\x5E', "Не переданы данные кассира");
 				add('\x60', "Номер блока прошивки указан некорректно");
+				add('\x70', "Значение не зашито в ККТ");
+				add('\x71', "Некорректное значение серийного номера");
+				add('\x7F', "Команда не выполнена");
 				add('\xE0', "Присутствуют неотправленные в ОФД документы");
+				add('\xF3', "Подключенный ФН не соответствует данным регистрации ККТ");
+				add('\xF4', "ФН еще не был активирован");
+				add('\xF5', "ФН был закрыт");
 			}
 		};
 
 		static CData Data;
 	}
-
-	//--------------------------------------------------------------------------------
-	/// Модели принтеров.
-	class CPrinterModels : public CDescription<char>
-	{
-	public:
-		CPrinterModels()
-		{
-			append(0, "Auto");
-			append(1, "Custom VKP-80");
-			append(2, "Custom TG-2480");
-			append(3, "Citizen CT-S2000");
-			append(4, "Citizen PPU-700");
-			append(5, "Star TSP");
-			append(6, "Star TUP");
-			append(7, "Epson EU-422");
-		}
-	};
-
-	static CPrinterModels PrinterModels;
 
 	//--------------------------------------------------------------------------------
 	/// Теги.

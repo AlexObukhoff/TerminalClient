@@ -1,6 +1,6 @@
-﻿/* @file Экран информации о терминале. */
+/* @file Экран информации о терминале. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
@@ -33,14 +33,14 @@ Widgets.SceneBase {
 		model: Utils.ProviderList
 
 		delegate: Column {
-			Widgets.Image2 {
+			Image {
 				id: logo
 				source: "image://ui/logoprovider/" + id + "/button.operator.normal/" + name;
 			}
 
 			Row {
-				Widgets.Image2 {
-					source: "image://ui/search.spacer"
+				Image {
+					source: Utils.ui.image("search.spacer")
 				}
 
 				Item {
@@ -55,8 +55,8 @@ Widgets.SceneBase {
 					elide: Text.ElideRight
 					maximumLineCount: 3
 					text: model.name
-					font: Skin.ui.font("font.search.label")
-					color: Skin.ui.color("color.main.primary")
+					font: Utils.ui.font("font.search.label")
+					color: Utils.ui.color("color.main.primary")
 					clip: true
 				}
 			}
@@ -82,6 +82,7 @@ Widgets.SceneBase {
 					if (Core.payment.getProvider(id).isNull()) {
 						GUI.notification(Utils.locale.tr(QT_TR_NOOP("search_scene#invalid_provider")));
 					} else {
+						Core.userProperties.set("operator_id", id);
 						Core.postEvent(EventType.StartScenario, {name: Scenario.Payment.Name, id: id});
 					}
 				}
@@ -119,8 +120,8 @@ Widgets.SceneBase {
 
 		anchors { left: parent.left; leftMargin: 42; top: view.top; topMargin: 20 }
 		visible: view.count > 4 && !view.atXBeginning && !global.addButtonClicked
-		background: Widgets.Image2 {
-			source: back.pressed ? "image://ui/scroll.left.pressed" : "image://ui/scroll.left.normal"
+		background: Image {
+			source: back.pressed ? Utils.ui.image("scroll.left.pressed") : Utils.ui.image("scroll.left.normal")
 		}
 		onClicked: view.scrollBack()
 	}
@@ -131,8 +132,8 @@ Widgets.SceneBase {
 
 		anchors { right: parent.right; rightMargin: 42; top: view.top; topMargin: 20 }
 		visible: view.count > 4 && !view.atXEnd && !global.addButtonClicked
-		background: Widgets.Image2 {
-			source: fwd.pressed ? "image://ui/scroll.right.pressed" : "image://ui/scroll.right.normal"
+		background: Image {
+			source: fwd.pressed ? Utils.ui.image("scroll.right.pressed") : Utils.ui.image("scroll.right.normal")
 		}
 		onClicked: view.scrollForward()
 	}
@@ -142,8 +143,8 @@ Widgets.SceneBase {
 		anchors { horizontalCenter: parent.horizontalCenter }
 		y: 294
 
-		font: Skin.ui.font("font.title")
-		color: Skin.ui.color("color.main.primary")
+		font: Utils.ui.font("font.title")
+		color: Utils.ui.color("color.main.primary")
 		visible: inputField.empty && !global.addButtonClicked
 		text: Utils.locale.tr(QT_TR_NOOP("search_scene#hint"))
 	}
@@ -156,8 +157,8 @@ Widgets.SceneBase {
 		visible: global.showSendRequest
 
 		Text {
-			font: Skin.ui.font("font.title")
-			color: Skin.ui.color("color.main.primary")
+			font: Utils.ui.font("font.title")
+			color: Utils.ui.color("color.main.primary")
 			text: Utils.locale.tr(QT_TR_NOOP("search_scene#not_found"))
 		}
 	}
@@ -175,7 +176,6 @@ Widgets.SceneBase {
 			maxLength: 30
 
 			anchors { left: parent.left; right: parent.right }
-			focus: true
 
 			onValueChanged: {
 				view.positionViewAtIndex(0, GridView.Beginning);
@@ -207,5 +207,12 @@ Widgets.SceneBase {
 
 		keyboard.reset();
 		keyboard.altMode = false;
+
+		Utils.ProviderList.filter = ""
+	}
+
+	function showHandler() {
+		GUI.log("#show")
+		GUI.log(inputField.empty,  global.addButtonClicked)
 	}
 }

@@ -1,4 +1,4 @@
-﻿/* @file Модуль загрузки и управления редакторами. */
+/* @file Модуль загрузки и управления редакторами. */
 
 Qt.include("gui.js")
 
@@ -100,6 +100,21 @@ function updateFields(aFields, aReset)
 	_fields = $
 }
 
+//------------------------------------------------------------------------------
+function getField(aId)
+{
+	var result = {};
+	try {
+		_fields.forEach(function (aField) {
+			if (aField.id = aId) {
+				result = aField;
+				throw BreakException;
+			}
+		});
+	} catch (e) {}
+
+	return result
+}
 
 //------------------------------------------------------------------------------
 // Возвращает редактор для поля и индексом aIndex
@@ -191,6 +206,8 @@ function getNextField(aForward)
 // Находит редактор для данного типа
 function _createEditor(aType)
 {
+	GUI.log("CREATE", aType, "EDITOR")
+
 	var editor;
 
 	var component = {status: Component.Error};
@@ -199,7 +216,7 @@ function _createEditor(aType)
 	if (Core.userProperties.get("operator_id")) {
 		component = _createComponent("file:///%1/scene_with_context/operators/%2/widgets/%3_editor.qml"
 																 .arg(Core.environment.terminal.interfacePath)
-																 .arg(Core.userProperties.get("operator_id"))
+																 .arg(String(Core.userProperties.get("operator_id")))
 																 .arg(aType));
 	}
 
@@ -262,7 +279,7 @@ function _createComponent(aPath) {
 	var component = {status: Component.Error};
 
 	try {
-		component = Qt.createComponent(aPath);
+		component = Qt.createComponent(aPath, Component.PreferSynchronous, _parent);
 		_lastGoogPath = aPath;
 		Core.log.debug("Status: %1, Path: %2, Error: %3".arg(component.status).arg(aPath).arg(component.errorString() ? component.errorString() : "OK"));
 	}

@@ -1,4 +1,4 @@
-﻿/* @file Реализация платёжного запроса к серверу. */
+/* @file Реализация платёжного запроса к серверу. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -7,22 +7,22 @@
 #include <Common/QtHeadersEnd.h>
 
 // SDK
+#include <SDK/PaymentProcessor/Core/IServiceState.h>
 #include <SDK/PaymentProcessor/Payment/Security.h>
+#include <SDK/PaymentProcessor/Payment/Parameters.h>
+
+// Modules
+#include <Crypt/ICryptEngine.h>
 
 // Thirdparty
 #if QT_VERSION < 0x050000
 #include <Qt5Port/qt5port.h>
 #endif
 
-#include <SDK/PaymentProcessor/Core/IService.h>
-#include <SDK/PaymentProcessor/Core/IServiceState.h>
-
-// Modules
-#include <Crypt/ICryptEngine.h>
-
 // Project
 #include "Payment.h"
 #include "PaymentRequest.h"
+
 
 using SDK::PaymentProcessor::SProvider;
 namespace PPSDK = SDK::PaymentProcessor;
@@ -45,20 +45,7 @@ PaymentRequest::PaymentRequest(Payment * aPayment, const QString & aName) :
 	addParameter("NUMBER", QString());
 	addParameter("ACCOUNT", QString());
 
-	QStringList states;
-
-	foreach(PPSDK::IService * service, aPayment->getPaymentFactory()->getCore()->getServices())
-	{
-		if (PPSDK::IServiceState * ss = dynamic_cast<PPSDK::IServiceState *>(service))
-		{
-			states << ss->getState();
-		}
-	}
-
-	if (!states.isEmpty())
-	{
-		addParameter("CRC", QString::fromLatin1(QCryptographicHash::hash(states.join(";").toLatin1(), QCryptographicHash::Sha256).toHex()));
-	}
+	addParameter("CRC", aPayment->getParameter(PPSDK::CPayment::Parameters::CRC).value);
 }
 
 //---------------------------------------------------------------------------

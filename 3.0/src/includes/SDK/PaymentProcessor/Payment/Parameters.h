@@ -22,6 +22,7 @@ namespace CPayment
 		const char InitialSession[] = "INITIAL_SESSION";
 		const char Amount[] = "AMOUNT";
 		const char AmountAll[] = "AMOUNT_ALL";
+		const char CRC[] = "CRC";
 		const char Cheated[] = "CHEATED";
 
 		/// Опциональные параметры.

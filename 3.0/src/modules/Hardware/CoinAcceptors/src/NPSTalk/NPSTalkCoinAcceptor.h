@@ -21,7 +21,7 @@ public:
 	/// Возвращает список поддерживаемых устройств.
 	static QStringList getModelList();
 
-	/// Получение статуса.
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 protected:

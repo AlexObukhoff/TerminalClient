@@ -1,6 +1,6 @@
-﻿/* @file Английская раскладка клавиатуры. */
+/* @file Английская раскладка клавиатуры. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../controls" 1.0 as Controls
 
 Controls.KeyboardBase {
@@ -95,7 +95,7 @@ Controls.KeyboardBase {
 
 			KeyboardButton { width: 258; iconId: 12; backgroundSource: "button.function"; disabled: false; onClicked: { altMode = false; rootItem.rightAltClicked() } }
 			KeyboardButton { width: 344; text: _(" "); iconId: 34; key: Qt.Key_Space }
-			KeyboardButton { width: 258; iconId: 33; disabled: false; onClicked: altMode = !altMode;  background: BorderImage2 { border { left: 40; top: 40; right: 40; bottom: 40 } source: altMode ? "image://ui/button.function.pressed" : "image://ui/button.function.normal" } }
+			KeyboardButton { width: 258; iconId: 33; disabled: false; onClicked: altMode = !altMode;  background: BorderImage { border { left: 40; top: 40; right: 40; bottom: 40 } source: altMode ? Utils.ui.image("button.function.pressed") : Utils.ui.image("button.function.normal") } }
 			KeyboardButton { text: _("-"); altText: _("("); backgroundSource: "button.function" }
 			KeyboardButton { text: _("0"); altText: _(")"); backgroundSource: "button.function" }
 			KeyboardButton { width: 170; key: Qt.Key_Backspace; iconId: 36; backgroundSource: "button.function"; disabled: false }

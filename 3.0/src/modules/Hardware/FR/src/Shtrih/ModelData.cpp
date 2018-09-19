@@ -38,9 +38,9 @@ CData::CData()
 	mDefaultFWDate = QDate(2017, 12, 29);
 
 	/// Сторонние разработки.
-	addNew( -1, "PAYONLINE",      "PayOnline-01-FA",     true, true,  0, 0);
-	addNew( -2, "PAY VKP-80K-ФА", "PayVKP-80K-FA",       true, true,  0, 0);
-	addNew(-30, "MSTAR-TK.2",     "Multisoft MStar-TK2", true, false, 0, 3, QDate(2017, 12, 14));
+	addNew( -1, "PAYONLINE",      "PayOnline-01-FA",     true, true,  1000, 0);    // определяется размером SD-карты, если она есть
+	addNew( -2, "PAY VKP-80K-ФА", "PayVKP-80K-FA",       true, true,  1000, 0);    // определяется размером SD-карты, если она есть
+	addNew(-30, "MSTAR-TK",       "Multisoft MStar-TK2", true, false, 0, 3, QDate(2017, 12, 14));
 
 	/// Online.
 	addNew(-31, "ШТРИХ-ON-LINE",  "Shtrih-M Shtrih-Online", true, false, 0, 3);

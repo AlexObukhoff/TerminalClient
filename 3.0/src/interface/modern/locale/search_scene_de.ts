@@ -14,12 +14,12 @@
         <translation>Zahlung zugunsten dieses Betreibers ist leider momentan nicht möglich. Versuchen Sie es bitte später.</translation>
     </message>
     <message>
-        <location filename="../search_scene.qml" line="148"/>
+        <location filename="../search_scene.qml" line="149"/>
         <source>search_scene#hint</source>
         <translation>Zur Suche beginnen Sie, das Schlüsselwort einzugeben</translation>
     </message>
     <message>
-        <location filename="../search_scene.qml" line="161"/>
+        <location filename="../search_scene.qml" line="162"/>
         <source>search_scene#not_found</source>
         <translation>Nichts gefunden.</translation>
     </message>

@@ -17,36 +17,6 @@ namespace PaymentProcessor {
 namespace Scripting {
 
 //------------------------------------------------------------------------------
-QVariant Properties::get(const QString & aName)
-{
-	if (has(aName))
-	{
-		return mProperties[aName];
-	}
-
-	return QVariant();
-}
-
-//------------------------------------------------------------------------------
-void Properties::set(const QString & aName, const QVariant & aValue)
-{
-	mProperties[aName] = aValue;
-	emit updated();
-}
-
-//------------------------------------------------------------------------------
-bool Properties::has(const QString & aName)
-{
-	return mProperties.contains(aName);
-}
-
-//------------------------------------------------------------------------------
-QVariantMap Properties::getAll() const
-{
-	return mProperties;
-}
-
-//------------------------------------------------------------------------------
 Core::Core(ICore * aCore)
 	: mCore(aCore),
 	  mUserProperties(aCore->getUserProperties()),
@@ -190,4 +160,5 @@ QString Core::getMD5Hash(const QString & aSource)
 	return QCryptographicHash::hash(aSource.toLatin1(), QCryptographicHash::Md5).toHex();
 }
 
+//------------------------------------------------------------------------------
 }}} // Scripting::PaymentProcessor::SDK

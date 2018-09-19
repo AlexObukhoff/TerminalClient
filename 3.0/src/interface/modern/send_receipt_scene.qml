@@ -1,6 +1,6 @@
 /* @file Экран отправки чека на электронную почту */
 
-import QtQuick 1.1
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
@@ -24,8 +24,8 @@ Widgets.SceneBase2 {
 		Widgets.Button {
 			width: 244
 			text: "@yandex.ru"
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 
 			onClicked: mails.updateEditor(text)
 		}
@@ -33,8 +33,8 @@ Widgets.SceneBase2 {
 		Widgets.Button {
 			width: 244
 			text: "@mail.ru"
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 
 			onClicked: mails.updateEditor(text)
 		}
@@ -42,8 +42,8 @@ Widgets.SceneBase2 {
 		Widgets.Button {
 			width: 244
 			text: "@gmail.com"
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 
 			onClicked: mails.updateEditor(text)
 		}
@@ -51,8 +51,8 @@ Widgets.SceneBase2 {
 		Widgets.Button {
 			width: 244
 			text: "@rambler.ru"
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 
 			onClicked: mails.updateEditor(text)
 		}
@@ -60,8 +60,8 @@ Widgets.SceneBase2 {
 		Widgets.Button {
 			width: 244
 			text: "@bk.ru"
-			texture: "image://ui/button.secondary.normal"
-			texturePressed: "image://ui/button.secondary.pressed"
+			texture: Utils.ui.image("button.secondary.normal")
+			texturePressed: Utils.ui.image("button.secondary.pressed")
 
 			onClicked: mails.updateEditor(text)
 		}

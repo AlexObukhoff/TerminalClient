@@ -232,6 +232,7 @@ function denominfoEnterHandler(aParameters) {
 //------------------------------------------------------------------------------
 function fillEnterHandler(aParameters) {
 	if (Core.payment.currentStep() !== "0") {
+		GUI.log("#0")
 		// Флаг направления движения для редактора полей
 		var forward = true;
 
@@ -252,18 +253,21 @@ function fillEnterHandler(aParameters) {
 		GUI.notify("append_fields", {forward: forward});
 	}
 	else {
+		GUI.log("#1")
 		printerIsReady = Core.printer.checkPrinter(false);
 
 		if (!printerIsReady && Core.payment.getProvider(ScenarioEngine.context.id).requirePrinter) {
 			GUI.notification({tr: QT_TR_NOOP("payment_scenario#cannot_use_provider_without_printer")}, 5000, Scenario.Payment.Event.Abort);
 		}
 		else {
+			GUI.log("#2")
 			var parameters = {
 				fields: (ScenarioEngine.context.hasOwnProperty("fields") && Object.keys(ScenarioEngine.context.fields).length) ?
 									ScenarioEngine.context.fields : ((aParameters.hasOwnProperty("fields") && Object.keys(aParameters.fields).length) ? aParameters.fields : {})
 			};
 
 			if (ScenarioEngine.context.hasOwnProperty("skip_fill_fields") && ScenarioEngine.context.skip_fill_fields) {
+				GUI.log("#2.1")
 				// Если нажали кнопку назад, то останавливаем сценарий
 				if (aParameters && aParameters.signal == Scenario.Payment.Event.Back) {
 					Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Abort);
@@ -273,6 +277,7 @@ function fillEnterHandler(aParameters) {
 				parameters.signal = Scenario.Payment.Event.Forward;
 				Core.postEvent(EventType.UpdateScenario, parameters);
 			} else {
+				GUI.log("#2.2")
 				parameters.reset = aParameters && aParameters.signal != Scenario.Payment.Event.Back;
 				parameters.printerIsReady = printerIsReady;
 				parameters.id = ScenarioEngine.context.id;
@@ -454,7 +459,7 @@ function addinfoEnterHandler(aParameters) {
 		GUI.show("AddInfoScene",
 						 {
 							 reset: true, id: p.id, addInfo: info, addFields: fields.length ? fields : "", needChooseService: needChooseService,
-							 canPayProcess: aParameters.hasOwnProperty("canPayProcess") ? aParameters.canPayProcess : true
+																																								canPayProcess: aParameters.hasOwnProperty("canPayProcess") ? aParameters.canPayProcess : true
 						 });
 
 		return;
@@ -626,10 +631,18 @@ function onPaymentStepCompleted(aPayment, aStep, aError) {
 
 //------------------------------------------------------------------------------
 function finishEnterHandler(aParameters) {
+	function changeback_ok() {
+		return GUI.toBool(GUI.ui("use_auto_changeback")) || GUI.toInt(GUI.ui("use_auto_changeback"))
+	}
+
+	function disable_show_change() {
+		return (!GUI.ui("show_get_change") || GUI.toInt(GUI.ui("show_get_change")) === 0 || GUI.toBool(GUI.ui("show_get_change")) === false)
+	}
+
 	useAutoChangeback =
 			Core.payment.getParameter("CONTACT")
-			&& Core.graphics.ui["use_auto_changeback"] === "true"
-			&& (!Core.graphics.ui["show_get_change"] || Core.graphics.ui["show_get_change"] === "0" || Core.graphics.ui["show_get_change"] === "false")
+			&& changeback_ok()
+			&& disable_show_change()
 			&& Core.payment.getChangeAmount() > 0;
 
 	// Скорректируем время ожидания для сцены("пропустим")
@@ -679,7 +692,8 @@ function finishExitHandler(aParameters) {
 
 	if (useAutoChangeback) {
 		var phone = Core.payment.getParameter("CONTACT");
-		var operatorMnp = Scenario.CyberService.ChangebackProvider;
+		var operatorMnp = GUI.toInt(GUI.ui("use_auto_changeback")) ?
+					GUI.toInt(GUI.ui("use_auto_changeback")) : Scenario.CyberService.ChangebackProvider;
 
 		Core.userProperties.set("operator.fields", {100: {value: phone, rawValue: phone}});
 		Core.userProperties.set("run.topup.payment", operatorMnp);

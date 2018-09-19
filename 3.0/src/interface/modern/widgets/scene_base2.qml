@@ -1,6 +1,6 @@
-﻿/* @file Базовый экран с кнопкой возврата, названием и нижней панелью управления. */
+/* @file Базовый экран с кнопкой возврата, названием и нижней панелью управления. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../controls" as Controls
 
 SceneBase {
@@ -48,6 +48,8 @@ SceneBase {
 	// Клик по левой кнопке
 	signal leftClick
 
+	background: Utils.ui.image("background")
+
 	// Кнопка назад
 	Button {
 		id: buttonBack
@@ -56,9 +58,9 @@ SceneBase {
 		width: 407
 		icon: 16
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#back"))
-		color: Skin.ui.color("color.button.secondary")
-		texture: "image://ui/button.secondary.normal"
-		texturePressed: "image://ui/button.secondary.pressed"
+		color: Utils.ui.color("color.button.secondary")
+		texture: Utils.ui.image("button.secondary.normal")
+		texturePressed: Utils.ui.image("button.secondary.pressed")
 		onClicked: rootItem.leftClick()
 	}
 
@@ -70,9 +72,9 @@ SceneBase {
 		width: 408
 		icon: 17
 		text: Utils.locale.tr(QT_TR_NOOP("scene_base2#forward"))
-		color: Skin.ui.color("color.button.primary")
-		texture: "image://ui/button.primary.normal"
-		texturePressed: "image://ui/button.primary.pressed"
+		color: Utils.ui.color("color.button.primary")
+		texture: Utils.ui.image("button.primary.normal")
+		texturePressed: Utils.ui.image("button.primary.pressed")
 		onClicked: rootItem.rightClick()
 	}
 }

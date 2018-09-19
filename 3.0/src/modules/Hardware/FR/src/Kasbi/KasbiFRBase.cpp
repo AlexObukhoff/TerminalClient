@@ -25,16 +25,33 @@ KasbiFRBase::KasbiFRBase()
 	mDeviceName = CKasbiFR::Models::Default;
 	mLineFeed = false;
 	mIsOnline = true;
+	mFFDFR = EFFD::F105;
 	mNextReceiptProcessing = false;
 	setConfigParameter(CHardwareSDK::CanOnline, true);
 
+	mFFEngine.addData(CKasbiFR::FiscalFields::Data().data());
+
 	// налоги
-	mTaxData.add(18, 1, "НДС 10%");
-	mTaxData.add(10, 2, "НДС 18%");
-	mTaxData.add( 0, 6, "БЕЗ НАЛОГА");
+	mTaxData.add(18, 1);
+	mTaxData.add(10, 2);
+	mTaxData.add( 0, 6);
 
 	// теги
 	mTagEngine = Tags::PEngine(new CKasbiFR::TagEngine());
+}
+
+//--------------------------------------------------------------------------------
+void KasbiFRBase::setDeviceConfiguration(const QVariantMap & aConfiguration)
+{
+	TSerialFRBase::setDeviceConfiguration(aConfiguration);
+
+	bool notPrinting = getConfigParameter(CHardwareSDK::FR::WithoutPrinting) == CHardwareSDK::Values::Use;
+	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel, CKasbiPrinters::Default).toString();
+
+	if (aConfiguration.contains(CHardware::FR::PrinterModel) && (printerModel != CKasbiPrinters::Default) && !notPrinting)
+	{
+		mPPTaskList.append([&] () { mNotPrintingError = !setNotPrintDocument(false); });
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -95,6 +112,22 @@ bool KasbiFRBase::updateParameters()
 		processCommand(CKasbiFR::Commands::CancelDocument);
 	}
 
+	processDeviceData();
+
+	CFR::TTLVList requiredPrintingData;
+	requiredPrintingData.insert(CKasbiFR::FiscalFields::FontSize, QByteArray(1, CKasbiFR::FontSize));
+	requiredPrintingData.insert(CKasbiFR::FiscalFields::SessionReportRetraction, QByteArray(1, CKasbiFR::SessionReportNoRetraction));
+
+	if (!checkPrintingParameters(requiredPrintingData))
+	{
+		return false;
+	}
+
+	if (!isFiscal())
+	{
+		return true;
+	}
+
 	QByteArray data;
 
 	if (!processCommand(CKasbiFR::Commands::GetRegistrationData, &data) || (data.size() <= 34))
@@ -108,30 +141,14 @@ bool KasbiFRBase::updateParameters()
 		return false;
 	}
 
-	processDeviceData(data);
-
-	if (!checkPrintingParameters())
-	{
-		return false;
-	}
-
-	mOFDDataError = true;
-
-	if (processCommand(CKasbiFR::Commands::GetOFDData, &data))
-	{
-		CFR::TTLVList TLVs = mFFEngine.parseSTLV(data);
-
-		if (TLVs.contains(CKasbiFR::FiscalFields::OFDAddress) && TLVs.contains(CKasbiFR::FiscalFields::OFDPort))
-		{
-			mOFDDataError = !checkOFDData(TLVs[CKasbiFR::FiscalFields::OFDAddress], revert(TLVs[CKasbiFR::FiscalFields::OFDPort]));
-		}
-	}
+	mRNM = CFR::RNMToString(data.left(20));
+	mINN = CFR::INNToString(data.mid(20, 12));
 
 	return true;
 }
 
 //--------------------------------------------------------------------------------
-bool KasbiFRBase::checkPrintingParameters()
+bool KasbiFRBase::checkPrintingParameters(const CFR::TTLVList & aRequiredTLVs)
 {
 	QByteArray data;
 
@@ -143,41 +160,72 @@ bool KasbiFRBase::checkPrintingParameters()
 
 	CFR::TTLVList TLVs = mFFEngine.parseSTLV(data);
 
-	QByteArray fontSizeData     = TLVs.value(CKasbiFR::FiscalFields::FontSize);
-	QByteArray optionalFPData   = TLVs.value(CKasbiFR::FiscalFields::OptionalFiscalParameter);
-	QByteArray sessionRRData    = TLVs.value(CKasbiFR::FiscalFields::SessionReportRetraction);
-	QByteArray printerModelData = TLVs.value(CKasbiFR::FiscalFields::PrinterModel);
-
-	if (sessionRRData.isEmpty())
+	for (auto it = TLVs.begin(); it != TLVs.end(); ++it)
 	{
-		toLog(LogLevel::Error, mDeviceName + ": Failed to check retraction of session reports due to no valid data");
+		CFR::STLV TLV(it.key(), it.value());
+
+		if (!mFFEngine.checkTLVData(TLV))
+		{
+			return false;
+		}
+
+		it.value() = TLV.data;
+	}
+
+	QSet<int> noFields = aRequiredTLVs.keys().toSet() - TLVs.keys().toSet();
+	QString errorLog = mFFData.getLogFromList(noFields.toList());
+
+	if (!errorLog.isEmpty())
+	{
+		toLog(LogLevel::Error, mDeviceName + ": No requied field(s): " + errorLog);
 		return false;
 	}
 
-	if (!printerModelData.isEmpty() && CKasbiFR::PrinterModels.data().contains(printerModelData[0]))
+	if (TLVs.contains(CKasbiFR::FiscalFields::PrinterModel))
 	{
-		setDeviceParameter(CDeviceData::FR::Printer, CKasbiFR::PrinterModels[printerModelData[0]]);
+		char printerModelKey = TLVs[CKasbiFR::FiscalFields::PrinterModel][0];
+		QString printerModel = CKasbiPrinters::Models[printerModelKey];
+		QString configModel = getConfigParameter(CHardware::FR::PrinterModel).toString();
+
+		if ((configModel.isEmpty() || (configModel == CKasbiPrinters::Default)) && (printerModel != configModel))
+		{
+			setConfigParameter(CHardware::FR::PrinterModel, printerModel);
+
+			emit configurationChanged();
+		}
+
+		if (!printerModel.isEmpty())
+		{
+			setDeviceParameter(CHardware::FR::PrinterModel, printerModel);
+		}
 	}
 
-	char fontSize = fontSizeData.isEmpty() ? CKasbiFR::FontSize : fontSizeData[0];
-	bool wrongRetraction = sessionRRData[0] != CKasbiFR::NoSessionReportRetraction;
-
-	if ((fontSize != CKasbiFR::FontSize) || wrongRetraction)
+	if (TLVs.contains(CKasbiFR::FiscalFields::PrinterBaudRate))
 	{
-		QByteArray commandData = QByteArray() +
-			mFFEngine.getTLVData(CKasbiFR::FiscalFields::PrinterModel, printerModelData) +
-			mFFEngine.getTLVData(CKasbiFR::FiscalFields::FontSize, CKasbiFR::FontSize) +
-			mFFEngine.getTLVData(CKasbiFR::FiscalFields::SessionReportRetraction, CKasbiFR::NoSessionReportRetraction) +
-			mFFEngine.getTLVData(CKasbiFR::FiscalFields::OptionalFiscalParameter, optionalFPData);
+		uint baudrate = qToBigEndian(TLVs[CKasbiFR::FiscalFields::PrinterBaudRate].toHex().toUInt(0, 16));
+		setDeviceParameter(CHardware::Port::COM::BaudRate, baudrate, CHardware::FR::PrinterModel);
+	}
+
+	CFR::TTLVList oldTLVs(TLVs);
+
+	for (auto it = aRequiredTLVs.begin(); it != aRequiredTLVs.end(); ++it)
+	{
+		TLVs.insert(it.key(), it.value());
+	}
+
+	if (oldTLVs != TLVs)
+	{
+		QByteArray commandData;
+
+		foreach (int field, TLVs.keys())
+		{
+			commandData += mFFEngine.getTLVData(field, TLVs[field]);
+		}
 
 		if (!processCommand(CKasbiFR::Commands::SetPrintingParameters, commandData))
 		{
 			toLog(LogLevel::Error, mDeviceName + ": Failed to set FR printing parameters");
-
-			if (wrongRetraction)
-			{
-				return false;
-			}
+			return false;
 		}
 	}
 
@@ -185,12 +233,8 @@ bool KasbiFRBase::checkPrintingParameters()
 }
 
 //--------------------------------------------------------------------------------
-void KasbiFRBase::processDeviceData(const QByteArray & aRegistrationData)
+void KasbiFRBase::processDeviceData()
 {
-	mRNM = CFR::RNMToString(aRegistrationData.left(20));
-	mINN = CFR::INNToString(aRegistrationData.mid(20, 12));
-
-	setDeviceParameter(CDeviceData::FR::ModeFlags, CKasbiFR::Modes().getValues(aRegistrationData[32]));
 	QByteArray data;
 
 	if (processCommand(CKasbiFR::Commands::GetSerial, &data) && (data.size() >= 12))
@@ -201,6 +245,8 @@ void KasbiFRBase::processDeviceData(const QByteArray & aRegistrationData)
 	if (processCommand(CKasbiFR::Commands::GetVersion, &data))
 	{
 		setDeviceParameter(CDeviceData::Firmware, data);
+
+		mOldFirmware = DeviceUtils::isComplexFirmwareOld(data, CKasbiFR::LastFirmware);
 	}
 
 	if (processCommand(CKasbiFR::Commands::GetFSSerial, &data))
@@ -210,7 +256,16 @@ void KasbiFRBase::processDeviceData(const QByteArray & aRegistrationData)
 
 	if (processCommand(CKasbiFR::Commands::GetFSVersion, &data))
 	{
-		setDeviceParameter(CDeviceData::FS::Version, clean(data));
+		QByteArray FSVersion = clean(data);
+		setDeviceParameter(CDeviceData::FS::Version, FSVersion);
+
+		if (FSVersion.contains(CKasbiFR::FS10Id)) mFFDFS = EFFD::F10;
+		if (FSVersion.contains(CKasbiFR::FS11Id)) mFFDFS = EFFD::F11;
+	}
+
+	if (mFFDFS == EFFD::Unknown)
+	{
+		mFFDFS = EFFD::F10;
 	}
 
 	if (processCommand(CKasbiFR::Commands::GetFSData, &data) && (data.size() >= 5))
@@ -226,6 +281,16 @@ void KasbiFRBase::processDeviceData(const QByteArray & aRegistrationData)
 	if (getFSData(FSData))
 	{
 		setDeviceParameter(CDeviceData::FR::FiscalDocuments, FSData.lastFDNumber);
+	}
+
+	if (processCommand(CKasbiFR::Commands::GetOFDData, &data))
+	{
+		CFR::TTLVList TLVs = mFFEngine.parseSTLV(data);
+
+		if (TLVs.contains(CKasbiFR::FiscalFields::OFDAddress) && TLVs.contains(CKasbiFR::FiscalFields::OFDPort))
+		{
+			mOFDDataError = !checkOFDData(TLVs[CKasbiFR::FiscalFields::OFDAddress], revert(TLVs[CKasbiFR::FiscalFields::OFDPort]));
+		}
 	}
 
 	checkDateTime();
@@ -506,7 +571,7 @@ bool KasbiFRBase::sale(const SUnitData & aUnitData)
 		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectUnitPrice, qRound64(aUnitData.sum * 100.0)) +
 		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectQuantity, 1.0) +
 		mFFEngine.getTLVData(CFR::FiscalFields::VATRate, char(section)) +
-		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectMethodType, CKasbiFR::FullPrepaymentSettlement);
+		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectMethodType, CFR::PayOffSubjectMethodType);
 
 	return processCommand(CKasbiFR::Commands::Sale, mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubject, commandData));
 }
@@ -538,40 +603,123 @@ bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData
 		result = result && sale(unitData);
 	}
 
-	QString userContact = mFFEngine.getConfigParameter(CFiscalSDK::UserContact).toString();
 	uint totalSum = uint(getTotalAmount(aPaymentData) * 100);
-
-	QByteArray commandData = QByteArray() +
+	auto totalPayTypeSum = [&] (EPayTypes::Enum aPayType) -> uint { return totalSum * int(aPaymentData.payType == aPayType); };
+	QByteArray commandData =
 		mFFEngine.getTLVData(CFR::FiscalFields::TaxSystem, char(aPaymentData.taxSystem)) +
-		mFFEngine.getTLVData(CFR::FiscalFields::CashFiscalTotal, totalSum) +
-		mFFEngine.getTLVData(CFR::FiscalFields::CardFiscalTotal, 0) +
-		mFFEngine.getTLVData(CFR::FiscalFields::PrePaymentFiscalTotal, 0) +
-		mFFEngine.getTLVData(CFR::FiscalFields::PostPaymentFiscalTotal, 0) +
-		mFFEngine.getTLVData(CFR::FiscalFields::CounterOfferFiscalTotal, 0) +
-		mFFEngine.getTLVData(CFR::FiscalFields::UserContact, userContact);
+		mFFEngine.getTLVData(CFR::FiscalFields::CashFiscalTotal,         totalPayTypeSum(EPayTypes::Cash)) +
+		mFFEngine.getTLVData(CFR::FiscalFields::CardFiscalTotal,         totalPayTypeSum(EPayTypes::EMoney)) +
+		mFFEngine.getTLVData(CFR::FiscalFields::PrePaymentFiscalTotal,   totalPayTypeSum(EPayTypes::PrePayment)) +
+		mFFEngine.getTLVData(CFR::FiscalFields::PostPaymentFiscalTotal,  totalPayTypeSum(EPayTypes::PostPayment)) +
+		mFFEngine.getTLVData(CFR::FiscalFields::CounterOfferFiscalTotal, totalPayTypeSum(EPayTypes::CounterOffer));
+
+	QString cashier     = mFFEngine.getConfigParameter(CFiscalSDK::Cashier).toString();
+	QString cashierINN  = mFFEngine.getConfigParameter(CFiscalSDK::CashierINN).toString();
+	QString userContact = mFFEngine.getConfigParameter(CFiscalSDK::UserContact).toString();
+
+	if (!cashier.isEmpty())     commandData += mFFEngine.getTLVData(CFR::FiscalFields::Cashier, cashier);
+	if (!cashierINN.isEmpty())  commandData += mFFEngine.getTLVData(CFR::FiscalFields::CashierINN, cashier);
+	if (!userContact.isEmpty()) commandData += mFFEngine.getTLVData(CFR::FiscalFields::UserContact, userContact);
 
 	result = result && processCommand(CKasbiFR::Commands::Total, commandData);
 
-	char command = aPaymentData.back ? CKasbiFR::SettlementTypes::IncomeReturning : CKasbiFR::SettlementTypes::Income;
-	commandData = mFFEngine.getDigitTLVData(totalSum).left(5);
-	commandData = QByteArray(1, command) + commandData + QByteArray(5 - commandData.size(), ASCII::NUL);
-	bool closingResult = processCommand(CKasbiFR::Commands::CloseDocument, commandData);
-
-	if (result && (closingResult || !isDocumentOpened()))
+	if (aPaymentData.agentFlag != EAgentFlags::None)
 	{
-		return true;
+		commandData =
+			mFFEngine.getTLVData(CFR::FiscalFields::AgentFlagsReg, char(aPaymentData.agentFlag)) +
+			mFFEngine.getTLVData(CFR::FiscalFields::AgentPhone) +
+			mFFEngine.getTLVData(CFR::FiscalFields::AgentOperation,  " ") +
+			mFFEngine.getTLVData(CFR::FiscalFields::ProcessingPhone, " ") +
+			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorName) +
+			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorINN) +
+			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorAddress) +
+			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorPhone) +
+			mFFEngine.getTLVData(CFR::FiscalFields::ProviderPhone);
+
+		result = result && processCommand(CKasbiFR::Commands::SendAgentData, commandData);
 	}
 
-	processCommand(CKasbiFR::Commands::CancelDocument);
-	receiptProcessing();
+	char payOffType = char(mFFEngine.getConfigParameter(CFiscalSDK::PayOffType).toInt());
+	commandData = mFFEngine.getDigitTLVData(totalSum).left(5);
+	commandData = QByteArray(1, payOffType) + commandData + QByteArray(5 - commandData.size(), ASCII::NUL);
+	bool closingResult = processCommand(CKasbiFR::Commands::CloseDocument, commandData);
 
-	return false;
+	if (!result || (!closingResult && isDocumentOpened()))
+	{
+		processCommand(CKasbiFR::Commands::CancelDocument);
+		receiptProcessing();
+
+		return false;
+	}
+
+	CKasbiFR::SFSData FSData;
+
+	if (getFSData(FSData))
+	{
+		mFFEngine.checkFPData(aFPData, CFR::FiscalFields::FDNumber, FSData.lastFDNumber);
+
+		if (processCommand(CKasbiFR::Commands::StartFiscalTLVData, getHexReverted(FSData.lastFDNumber, 4)))
+		{
+			CFR::STLV TLV;
+			QByteArray data;
+
+			while (processCommand(CKasbiFR::Commands::GetFiscalTLVData, &data))
+			{
+				if (mFFEngine.parseTLV(data, TLV))
+				{
+					if (mFFData.data().contains(TLV.field))
+					{
+						mFFEngine.parseSTLVData(TLV, aPSData);
+						mFFEngine.parseTLVData (TLV, aFPData);
+					}
+					else
+					{
+						toLog(LogLevel::Warning, QString("%1: Failed to add fiscal field %2 due to it is unknown").arg(mDeviceName).arg(TLV.field));
+					}
+				}
+			}
+		}
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
 bool KasbiFRBase::processXReport()
 {
 	return processCommand(CKasbiFR::Commands::StartXReport) && processCommand(CKasbiFR::Commands::EndXReport);
+}
+
+//--------------------------------------------------------------------------------
+bool KasbiFRBase::setNotPrintDocument(bool aEnabled, bool /*aZReport*/)
+{
+	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel).toString();
+	char printerModelKey = CKasbiPrinters::Virtual;
+
+	if (!aEnabled)
+	{
+		if (!CKasbiPrinters::Models.data().values().contains(printerModel))
+		{
+			toLog(LogLevel::Error, mDeviceName + ": Unknown printer model " + printerModel);
+			return false;
+		}
+
+		printerModelKey = CKasbiPrinters::Models.data().key(printerModel);
+
+		// TODO: ждем функционала по запросу реальной актуальной модели принтера в ПО ФР
+		/*
+		if (!printerModelKey)
+		{
+			toLog(LogLevel::Error, mDeviceName + ": Cannot set auto printer model due to it is not allowed");
+			return false;
+		}
+		*/
+	}
+
+	CFR::TTLVList requiredPrinterModelData;
+	requiredPrinterModelData.insert(CKasbiFR::FiscalFields::PrinterModel, QByteArray(1, printerModelKey));
+
+	return checkPrintingParameters(requiredPrinterModelData);
 }
 
 //--------------------------------------------------------------------------------

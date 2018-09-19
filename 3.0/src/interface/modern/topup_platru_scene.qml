@@ -1,6 +1,6 @@
 /* @file Экран выбора телефона для перевода сдачи на ПК */
 
-import QtQuick 1.1
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls

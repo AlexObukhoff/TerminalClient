@@ -1,4 +1,4 @@
-﻿/* @file Вспомогательные методы для работы с графическим движком. */
+/* @file Вспомогательные методы для работы с графическим движком. */
 
 var Reason = {
 	PopupClosed: "popup_closed"
@@ -95,3 +95,17 @@ function filter(aProvider, aField) {
 	return aProvider.applySecurityFilter(aField.id, raw ? raw : Core.payment.getParameter(aField.id), Core.payment.getParameter(aField.id + "_DISPLAY"));
 }
 
+//------------------------------------------------------------------------------
+function toInt(aParam) {
+	return parseInt(aParam) || 0
+}
+
+//------------------------------------------------------------------------------
+function toBool(aParam) {
+	return aParam  === "true"
+}
+
+//------------------------------------------------------------------------------
+function ui(aParam) {
+	return Core.graphics.ui[aParam]
+}

@@ -14,12 +14,12 @@
         <translation>Кешіріңіз, бұл оператор пайдасына төлем жасау уақытша мүмкін емес. Кейінірек байқап көріңіз.</translation>
     </message>
     <message>
-        <location filename="../search_scene.qml" line="148"/>
+        <location filename="../search_scene.qml" line="149"/>
         <source>search_scene#hint</source>
         <translation>Іздеу үшін негізгі сөзді тере бастаңыз</translation>
     </message>
     <message>
-        <location filename="../search_scene.qml" line="161"/>
+        <location filename="../search_scene.qml" line="162"/>
         <source>search_scene#not_found</source>
         <translation>Ештеңе табылған жоқ</translation>
     </message>

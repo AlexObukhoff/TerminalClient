@@ -53,9 +53,9 @@ OPOSMStarTUPK::OPOSMStarTUPK() : mNativeDriver(nullptr)
 	mUnnecessaryErrors.insert(EFiscalPrinterCommand::XReport,    TStatusCodes() << DeviceStatusCode::Error::MemoryStorage);
 
 	// налоги
-	mTaxData.add( 0, 0, "БЕЗ НАЛОГА");
-	mTaxData.add(18, 1, "НДС 18%");
-	mTaxData.add(10, 2, "НДС 10%");
+	mTaxData.add( 0, 0);
+	mTaxData.add(18, 1);
+	mTaxData.add(10, 2);
 
 	// теги
 	mTagEngine = Tags::PEngine(new COPOSMStarTUPK::TagEngine());
@@ -241,12 +241,7 @@ bool OPOSMStarTUPK::updateParameters()
 		mFWVersion = firmware[0].remove(".").toInt();
 	}
 
-	if (!checkTaxes())
-	{
-		return false;
-	}
-
-	return true;
+	return !isFiscal() || checkTaxes();
 }
 
 //--------------------------------------------------------------------------------

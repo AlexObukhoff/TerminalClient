@@ -16,8 +16,7 @@ using namespace ProtocolUtils;
 // Получить модели данной реализации.
 namespace CPrimFR { inline TModels OnlineModels()
 {
-	return TModels()
-		<< CPrimFR::Models::PRIM_06F;
+	return TModels();
 }}
 
 //--------------------------------------------------------------------------------
@@ -26,6 +25,7 @@ PrimOnlineFRBase::PrimOnlineFRBase()
 	// данные устройства
 	mErrorData = PErrorData(new CPrimOnlineFR::Errors::Specification);
 	mIsOnline = true;
+	mAFDFont = CPrimFR::FiscalFont::Default;
 
 	// данные моделей
 	mDeviceName = CPrimFR::DefaultOnlineModelName;
@@ -37,8 +37,15 @@ PrimOnlineFRBase::PrimOnlineFRBase()
 
 	// данные команд
 	mCommandTimouts.append(CPrimOnlineFR::Commands::GetFSStatus, 2 * 1000);
+	mCommandTimouts.append(CPrimOnlineFR::Commands::GetFiscalTLVData, 5 * 1000);
 
 	setConfigParameter(CHardwareSDK::CanOnline, true);
+}
+
+//--------------------------------------------------------------------------------
+QStringList PrimOnlineFRBase::getModelList()
+{
+	return CPrimFR::getModelList(CPrimFR::OnlineModels());
 }
 
 //--------------------------------------------------------------------------------
@@ -57,25 +64,26 @@ bool PrimOnlineFRBase::updateParameters()
 	mINN = CFR::INNToString(data[9]);
 
 	mFSSerialNumber = CFR::FSSerialToString(data[11]);
-	mAFDFont = CPrimFR::AFD::Font::Default;
 
 	QString firmware = data[10].simplified();
 	setDeviceParameter(CDeviceData::Firmware, firmware);
-	int build = firmware.right(3).toInt();
-
-	if (build)
-	{
-		mFFDFR = CPrimOnlineFR::getFFD(build);
-		int actualFirmware = CPrimOnlineFR::getActualFirmware(mFFDFR);
-		mOldFirmware = actualFirmware && (actualFirmware > build);
-
-		//TODO: TLV-запрос для получения версии ФФД ФН -> mFFDFS (тег 1190), будет после 1.05
-		mFFDFS = EFFD::F10;
-	}
 
 	if (firmware.size() == 7)
 	{
-		setDeviceParameter(CDeviceData::ControllerBuild, QString("%1.%2").arg(firmware.right(3)).arg(firmware[2]), CDeviceData::Firmware);
+		QString textBuild = QString("%1.%2").arg(firmware.right(3)).arg(firmware[2]);
+		double build = textBuild.toDouble();
+
+		if (build)
+		{
+			mFFDFR = CPrimOnlineFR::getFFD(build);
+			double actualFirmware = CPrimOnlineFR::getActualFirmware(mFFDFR);
+			mOldFirmware = actualFirmware && (actualFirmware > build);
+
+			//TODO: TLV-запрос для получения версии ФФД ФН -> mFFDFS (тег 1190), будет после 1.05
+			mFFDFS = EFFD::F10;
+		}
+
+		setDeviceParameter(CDeviceData::ControllerBuild, textBuild, CDeviceData::Firmware);
 		int DTDBuild = firmware.mid(1, 1).toInt(0, 16);
 
 		if (DTDBuild)
@@ -95,6 +103,24 @@ bool PrimOnlineFRBase::updateParameters()
 
 	processDeviceData();
 
+	if (mFFDFR > EFFD::F10)
+	{
+		getRegTLVData(CFR::FiscalFields::LotteryMode);
+		getRegTLVData(CFR::FiscalFields::GamblingMode);
+		getRegTLVData(CFR::FiscalFields::ExcisableUnitMode);
+		getRegTLVData(CFR::FiscalFields::InAutomateMode);
+	}
+
+	if ((!mOperatorPresence && !checkParameters()) || !checkControlSettings())
+	{
+		return false;
+	}
+
+	if (!isFiscal())
+	{
+		return true;
+	}
+
 	CPrimFR::TData commandData = CPrimFR::TData() << CPrimFR::DontPrintFD << CPrimOnlineFR::LastRegistration;
 
 	if (!processCommand(CPrimOnlineFR::Commands::GetRegistrationTotal, commandData, &data))
@@ -113,31 +139,27 @@ bool PrimOnlineFRBase::updateParameters()
 
 	if (mFFDFR > EFFD::F10)
 	{
-		mAFDFont = CPrimFR::AFD::Font::Narrow;
+		uchar FFData;
+		bool noRequiedData = mLastError == CPrimOnlineFR::Errors::NoRequiedData;
 
-		commandData = CPrimFR::TData() << QByteArray::number(qToBigEndian(ushort(CFR::FiscalFields::AgentFlagsReg)), 16);
-		uchar agentFlagsData;
-
-		if (!processCommand(CPrimOnlineFR::Commands::GetRegTLVData, commandData, 5, "agent flags", agentFlagsData) || !checkAgentFlags(char(agentFlagsData)))
+		if ((!getRegTLVData(CFR::FiscalFields::AgentFlagsReg, FFData) && !noRequiedData) || (!noRequiedData && !checkAgentFlags(char(FFData))))
 		{
 			return false;
 		}
 	}
 
-	if (!mOperatorPresence && isFiscal() && !checkParameters())
-	{
-		return false;
-	}
+	return checkTaxes() && checkPayTypes();
+}
 
-	if (!checkControlSettings() || !checkTaxes())
-	{
-		return false;
-	}
-
+//--------------------------------------------------------------------------------
+bool PrimOnlineFRBase::checkPayTypes()
+{
 	mPayTypeData.data().clear();
 
 	for (int i = 0; i < CPrimOnlineFR::PayTypeAmount; ++i)
 	{
+		CPrimFR::TData data;
+
 		if (!processCommand(CPrimOnlineFR::Commands::GetPayTypeData, CPrimFR::TData() << int2String(i).toLatin1(), &data))
 		{
 			return false;
@@ -147,7 +169,7 @@ bool PrimOnlineFRBase::updateParameters()
 
 		if (parseAnswerData(data, 12, "pay type", field))
 		{
-			if (!mFiscalFieldData.data().contains(field))
+			if (!mFFData.data().contains(field))
 			{
 				toLog(LogLevel::Warning, mDeviceName + ": Unknown fiscal field of pay type " + QString::number(field));
 			}
@@ -172,13 +194,66 @@ bool PrimOnlineFRBase::updateParameters()
 }
 
 //--------------------------------------------------------------------------------
+bool PrimOnlineFRBase::getRegTLVData(int aField, uchar & aData)
+{
+	CPrimFR::TData commandData = CPrimFR::TData() << QByteArray::number(qToBigEndian(ushort(aField)), 16);
+
+	return processCommand(CPrimOnlineFR::Commands::GetRegTLVData, commandData, 5, mFFData.getTextLog(aField), aData);
+}
+
+//--------------------------------------------------------------------------------
+bool PrimOnlineFRBase::getRegTLVData(int aField)
+{
+	uchar FFData;
+
+	if (!getRegTLVData(aField, FFData))
+	{
+		return false;
+	}
+
+	mFFEngine.setConfigParameter(mFFData[aField].textKey, FFData);
+	toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = %2 to config data").arg(mFFData.getTextLog(aField)).arg(FFData));
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+bool PrimOnlineFRBase::getStatus(TStatusCodes & aStatusCodes)
+{
+	CPrimFR::TData data;
+
+	if (!PrimFRBase::getStatus(aStatusCodes))
+	{
+		return false;
+	}
+
+	ushort OFDNotSentCount;
+	TResult result = processCommand(CPrimOnlineFR::Commands::GetOFDNotSentCount, 5, "OFD not sent fiscal documents count", OFDNotSentCount);
+
+	if (result)
+	{
+		checkOFDNotSentCount(OFDNotSentCount, aStatusCodes);
+	}
+	else if (result == CommandResult::Device)
+	{
+		aStatusCodes.insert(DeviceStatusCode::Warning::Unknown);
+	}
+	else
+	{
+		return result;
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
 QDateTime PrimOnlineFRBase::getDateTime()
 {
 	CPrimFR::TData data;
 
 	if (processCommand(CPrimOnlineFR::Commands::GetFSStatus, &data) && (data.size() > 16))
 	{
-		return QDateTime::fromString(data[10].insert(4, "20"), CPrimOnlineFR::DateTimeFormat);
+		return QDateTime::fromString(data[10].insert(4, "20"), CPrimOnlineFR::FSDateTimeFormat);
 	}
 
 	return QDateTime();
@@ -233,7 +308,7 @@ void PrimOnlineFRBase::processDeviceData()
 		if (data.size() > 8)
 		{
 			QString dateTimedata = data[8] + data[7];
-			QDateTime dateTime = QDateTime::fromString(dateTimedata.insert(4, "20"), CPrimOnlineFR::DateTimeFormat);
+			QDateTime dateTime = QDateTime::fromString(dateTimedata.insert(4, "20"), CPrimOnlineFR::FSDateTimeFormat);
 
 			if (dateTime.isValid())
 			{
@@ -246,6 +321,116 @@ void PrimOnlineFRBase::processDeviceData()
 
 	mOFDDataError = !processCommand(CPrimOnlineFR::Commands::GetOFDData, &data) || (data.size() <= 9) ||
 		!checkOFDData(data[9], getBufferFromString(data[5].right(2) + data[5].left(2)));
+}
+
+//--------------------------------------------------------------------------------
+bool PrimOnlineFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+{
+	if (!PrimFRBase::performFiscal(aReceipt, aPaymentData, aFPData, aPSData))
+	{
+		return false;
+	}
+
+	uint FDNumber;
+
+	if (processCommand(CPrimOnlineFR::Commands::GetFSStatus, 12, "last document number in FS", FDNumber))
+	{
+		mFFEngine.checkFPData(aFPData, CFR::FiscalFields::FDNumber, FDNumber);
+		CPrimFR::TData commandData = CPrimFR::TData()
+			<< QString("%1").arg(qToBigEndian(FDNumber), 8, 16, QLatin1Char(ASCII::Zero)).toLatin1()
+			<< int2ByteArray(CPrimOnlineFR::FiscalTLVDataFlags::Start);
+
+		if (processCommand(CPrimOnlineFR::Commands::GetFiscalTLVData, commandData))
+		{
+			commandData[1] = int2ByteArray(CPrimOnlineFR::FiscalTLVDataFlags::Get);
+			CPrimFR::TData answer;
+
+			if (processCommand(CPrimOnlineFR::Commands::GetFiscalTLVData, commandData, &answer))
+			{
+				QRegExp regExp(CPrimOnlineFR::RegExpTLVData);
+
+				for (int i = 5; i < answer.size(); ++i)
+				{
+					QString TLVData = mCodec->toUnicode(answer[i]);
+
+					if (regExp.indexIn(TLVData) != -1)
+					{
+						QStringList capturedData = regExp.capturedTexts();
+						CFR::STLV TLV;
+
+						bool OK;
+						TLV.field = capturedData[1].toInt(&OK);
+
+						if (OK)
+						{
+							TLV.data = mCodec->fromUnicode(capturedData[2]);
+
+							if (TLV.field == CFR::FiscalFields::PayOffSubject)
+							{
+								aPSData << TFiscalPaymentData();
+							}
+							else if (mFFData.data().contains(TLV.field))
+							{
+								if (!CFR::FiscalFields::PayOffSubjectFields.contains(TLV.field))
+								{
+									setFPData(aFPData, TLV);
+								}
+								else if (!aPSData.isEmpty())
+								{
+									setFPData(aPSData.last(), TLV);
+								}
+							}
+							else
+							{
+								toLog(LogLevel::Warning, QString("%1: Failed to add fiscal field %2 due to it is unknown").arg(mDeviceName).arg(TLV.field));
+							}
+						}
+						else
+						{
+							toLog(LogLevel::Error, mDeviceName + ": Failed to parse TLV field number " + capturedData[1]);
+						}
+					}
+					else
+					{
+						toLog(LogLevel::Error, mDeviceName + QString(": Failed to parse TLV data %1 (%2)").arg(TLVData).arg(answer[i].toHex().data()));
+					}
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+void PrimOnlineFRBase::setFPData(TFiscalPaymentData & aFPData, const CFR::STLV & aTLV)
+{
+	QString data = mCodec->toUnicode(aTLV.data);
+	CFR::FiscalFields::SData FFData = mFFData[aTLV.field];
+
+	if (FFData.type == CFR::FiscalFields::ETypes::UnixTime)
+	{
+		QDateTime dateTime = QDateTime::fromString(data.insert(6, "20"), CPrimOnlineFR::FFDateTimeFormat);
+		mFFEngine.setFPData(aFPData, aTLV.field, dateTime);
+	}
+	else if (!FFData.isMoney)
+	{
+		mFFEngine.setFPData(aFPData, aTLV.field, data);
+	}
+	else
+	{
+		bool OK;
+		double value = data.toDouble(&OK);
+
+		if (OK)
+		{
+			mFFEngine.setFPData(aFPData, aTLV.field, qulonglong(100 * value));
+		}
+		else
+		{
+			toLog(LogLevel::Warning, mDeviceName + QString(": Failed to parse money data %1 for field %2").arg(data).arg(aTLV.field));
+		}
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -295,31 +480,31 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 	int receiptNumberY = getDataY(5);
 
 	aCommandData
-		<< addGFieldToBuffer(startX + 1, serialNumberY)      // серийный номер
-		<< addGFieldToBuffer(startX + 1, documentNumberY)    // номер документа
-		<< addGFieldToBuffer(startX + 2, 1)                  // дата
-		<< addGFieldToBuffer(startX + 2, timeY)              // время
-		<< addGFieldToBuffer(lastX  + 2, INNY)               // ИНН
-		<< addGFieldToBuffer(lastX  + 0, cashierY) << mCodec->fromUnicode(operatorId)    // ID оператора
-		<< addGFieldToBuffer(lastX  + 2, totalY)   << sumData;    // сумма
+		<< addGFieldToBuffer(startX + 1, serialNumberY, mAFDFont)      // серийный номер
+		<< addGFieldToBuffer(startX + 1, documentNumberY, mAFDFont)    // номер документа
+		<< addGFieldToBuffer(startX + 2, 1, mAFDFont)                  // дата
+		<< addGFieldToBuffer(startX + 2, timeY, mAFDFont)              // время
+		<< addGFieldToBuffer(lastX  + 2, INNY, mAFDFont)               // ИНН
+		<< addGFieldToBuffer(lastX  + 0, cashierY, mAFDFont) << mCodec->fromUnicode(operatorId)    // ID оператора
+		<< addGFieldToBuffer(lastX  + 2, totalY, mAFDFont)   << sumData;    // сумма
 
 	aAdditionalAFDData
-		<< addArbitraryFieldToBuffer(startX + 1, 1, serialNumber)
-		<< addArbitraryFieldToBuffer(startX + 1, documentNumberY - (documentNumber.size() + 1), documentNumber)
-		<< addArbitraryFieldToBuffer(lastX  + 2, 1, INN)
-		<< addArbitraryFieldToBuffer(lastX  + 2, totalY - total.size() - 1, total)
+		<< addArbitraryFieldToBuffer(startX + 1, 1, serialNumber, mAFDFont)
+		<< addArbitraryFieldToBuffer(startX + 1, documentNumberY - (documentNumber.size() + 1), documentNumber, mAFDFont)
+		<< addArbitraryFieldToBuffer(lastX  + 2, 1, INN, mAFDFont)
+		<< addArbitraryFieldToBuffer(lastX  + 2, totalY - total.size() - 1, total, mAFDFont)
 
 		// 1038 (номер смены)
-		<< addArbitraryFieldToBuffer(lastX + 1, 1, session)
-		<<            addFiscalField(lastX + 1, 2 + session.size(), CFR::FiscalFields::SessionNumber)
+		<< addArbitraryFieldToBuffer(lastX + 1, 1, session, mAFDFont)
+		<<            addFiscalField(lastX + 1, 2 + session.size(), mAFDFont, CFR::FiscalFields::SessionNumber)
 
 		// 1042 (номер чека)
-		<< addArbitraryFieldToBuffer(lastX + 1, receiptNumberY - receiptNumber.size() - 1, receiptNumber)
-		<<            addFiscalField(lastX + 1, receiptNumberY, CFR::FiscalFields::DocumentNumber);
+		<< addArbitraryFieldToBuffer(lastX + 1, receiptNumberY - receiptNumber.size() - 1, receiptNumber, mAFDFont)
+		<<            addFiscalField(lastX + 1, receiptNumberY, mAFDFont, CFR::FiscalFields::DocumentNumber);
 
 	if (cashierExist)
 	{
-		aAdditionalAFDData << addArbitraryFieldToBuffer(aReceiptSize + cashierX, 1, cashier);
+		aAdditionalAFDData << addArbitraryFieldToBuffer(aReceiptSize + cashierX, 1, cashier, mAFDFont);
 	}
 
 	// продажи
@@ -327,7 +512,7 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 
 	for (int i = 0; i < aPaymentData.unitDataList.size(); ++i)
 	{
-		SUnitData & unitData = aPaymentData.unitDataList.value(i);
+		SUnitData unitData = aPaymentData.unitDataList.value(i);
 		int section = (unitData.section != -1) ? unitData.section : 1;
 		QStringList data = QStringList()
 			<< unitData.name
@@ -340,10 +525,9 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 			<< "";
 
 		int addAFDDataIndex = aAdditionalAFDData.size();
-		int addX = 0;
 
-		#define ADD_AFD_TAG(aX, aY, aField, ...) aAdditionalAFDData << addFiscalField(lastX + aX,  aY, CFR::FiscalFields::aField * 100 + i + 1, __VA_ARGS__);
-		#define ADD_AFD_TAG_MULTI(aX, aY, aField, aData) ADD_AFD_TAG(aX, aY, aField, aData); lastX += addX;
+		#define ADD_AFD_TAG(aX, aY, aField, ...) aAdditionalAFDData << addFiscalField(lastX + aX, aY, mAFDFont, CFR::FiscalFields::aField * 100 + i + 1, __VA_ARGS__);
+		#define ADD_AFD_TAG_MULTI(aX, aY, aField, aData) ADD_AFD_TAG(aX, aY, aField, aData); lastX += int(newLine);
 
 		if (mFFDFR > EFFD::F10)
 		{
@@ -352,8 +536,8 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 			int VATY = getAmountY(sum * unitData.VAT / 100.0);
 
 			int unitNameSize = unitData.name.size();
-			addX = 0;//unitNameSize / CPrimOnlineFR::UnitLineSize;
-			addX += int((amountY - (unitNameSize - addX * CPrimOnlineFR::AFD::LineSize::Unit)) < 4);
+			int unitRest = (unitNameSize % CPrimOnlineFR::AFD::LineSize::GField) + int(unitNameSize > CPrimOnlineFR::AFD::LineSize::Unit);
+			bool newLine = (amountY - unitRest) < 4;
 
 			ADD_AFD_TAG_MULTI(1, 1, PayOffSubject, data.join("|"));    // 1059 (товар)
 			ADD_AFD_TAG(1, amountY, PayOffSubjectUnitPrice);           // 1079 (цена)
@@ -364,12 +548,12 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 		}
 		else
 		{
-			aAdditionalAFDData << addFiscalField(lastX + 1, 1, CFR::FiscalFields::UnitName, data.join("|"));    // 1030 (наименование товара)
+			aAdditionalAFDData << addFiscalField(lastX + 1, 1, mAFDFont, CFR::FiscalFields::UnitName, data.join("|"));    // 1030 (наименование товара)
 		}
 
-		foreach (auto data, aAdditionalAFDData.mid(addAFDDataIndex))
+		foreach (auto AFDData, aAdditionalAFDData.mid(addAFDDataIndex))
 		{
-			int newLastX = qToBigEndian(data[0].toUShort(0, 16));
+			int newLastX = qToBigEndian(AFDData[0].toUShort(0, 16));
 			lastX = qMax(lastX, newLastX);
 		}
 	}
@@ -377,11 +561,7 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 	// 1057 (флаг агента)
 	if ((mFFDFR > EFFD::F10) && (aPaymentData.agentFlag != EAgentFlags::None))
 	{
-		int index = 0;
-
-		while (~aPaymentData.agentFlag & (1 << index++)) {}
-
-		aAdditionalAFDData << addFiscalField(lastX + 1, 1, CFR::FiscalFields::AgentFlagsReg, int2String(index));
+		aAdditionalAFDData << addFiscalField(lastX + 1, 1, mAFDFont, CFR::FiscalFields::AgentFlagsReg, int2String(uchar(aPaymentData.agentFlag)));
 	}
 
 	// 1055 (СНО)
@@ -391,14 +571,22 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 
 		while (~aPaymentData.taxSystem & (1 << index++)) {}
 
-		aAdditionalAFDData << addFiscalField(lastX + 1, 25, CFR::FiscalFields::TaxSystem, int2String(index));
+		aAdditionalAFDData << addFiscalField(lastX + 1, 25, mAFDFont, CFR::FiscalFields::TaxSystem, int2String(index));
 	}
 
-	QString userContact = getConfigParameter(CFiscalSDK::UserContact).toString();
+	QString userContact = mFFEngine.getConfigParameter(CFiscalSDK::UserContact).toString();
 
-	if ((mFFDFR > EFFD::F10) && !userContact.isEmpty())
+	if (!userContact.isEmpty())
 	{
-		aAdditionalAFDData << addFiscalField(lastX + 2, 1, CFR::FiscalFields::UserContact, userContact);
+		if (mFFDFR >= EFFD::F105)
+		{
+			aAdditionalAFDData << addFiscalField(lastX + 2, 1, mAFDFont, CFR::FiscalFields::UserContact, userContact);
+		}
+		else
+		{
+			toLog(LogLevel::Warning, mDeviceName + QString(": Failed to transmit %1 due to FFD version = %2, need %3 min")
+				.arg(mFFData.getTextLog(CFR::FiscalFields::UserContact)).arg(CFR::FFD[mFFDFR].description).arg(CFR::FFD[EFFD::F105].description));
+		}
 	}
 }
 
@@ -426,6 +614,20 @@ bool PrimOnlineFRBase::openSession()
 }
 
 //--------------------------------------------------------------------------------
+bool PrimOnlineFRBase::processAnswer(char aError)
+{
+	if (aError == CPrimOnlineFR::Errors::FSOfflineEnd)
+	{
+		mProcessingErrors.push_back(mLastError);
+
+		mFSOfflineEnd = true;
+	}
+
+	return PrimFRBase::processAnswer(aError);
+}
+
+
+//--------------------------------------------------------------------------------
 int PrimOnlineFRBase::getVerificationCode()
 {
 	int result;
@@ -439,9 +641,9 @@ int PrimOnlineFRBase::getVerificationCode()
 }
 
 //--------------------------------------------------------------------------------
-CPrimFR::TData PrimOnlineFRBase::addFiscalField(int aX, int aY, int aFiscalField, const QString & aData)
+CPrimFR::TData PrimOnlineFRBase::addFiscalField(int aX, int aY, int aFont, int aFiscalField, const QString & aData)
 {
-	return addArbitraryFieldToBuffer(aX, aY, QString("<%1>").arg(aFiscalField) + aData);
+	return addArbitraryFieldToBuffer(aX, aY, QString("<%1>").arg(aFiscalField) + aData, aFont);
 }
 
 //--------------------------------------------------------------------------------

@@ -124,7 +124,6 @@
     <None Include="..\src\locale\updater_en.ts" />
     <None Include="..\src\locale\updater_ru.ts" />
     <None Include="..\src\locale\updater_kk.ts" />
-    <None Include="..\src\locale\updater_ru_bankomat.ts" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9D1146B4-1756-4D36-BB53-B91108597544}</ProjectGuid>

@@ -1,6 +1,6 @@
-﻿/* @file Всплывающее окно выбора провайдера */
+/* @file Всплывающее окно выбора провайдера */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "plugins" 1.0
 import "widgets" 1.0 as Widgets
 import "controls" 1.0 as Controls
@@ -19,12 +19,12 @@ Item {
 		height: 657
 		clip: true
 
-		Widgets.BorderImage2 {
+		BorderImage {
 			anchors.fill: parent
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
 			verticalTileMode: BorderImage.Stretch
-			source: "image://ui/webview.angles.overlay"
+			source: Utils.ui.image("webview.angles.overlay")
 			z: 2
 		}
 
@@ -37,8 +37,8 @@ Item {
 				id: message
 
 				anchors { horizontalCenter: parent.horizontalCenter }
-				font: Skin.ui.font("font.title")
-				color: Skin.ui.color("color.title")
+				font: Utils.ui.font("font.title")
+				color: Utils.ui.color("color.title")
 			}
 
 			Grid {
@@ -50,7 +50,7 @@ Item {
 					id: providerRepeater
 
 					// Логотип/название
-					delegate: Widgets.Image2 {
+					delegate: Image {
 						source: "image://ui/logoprovider/" + modelData.id + "/button.operator.normal/" + modelData.name
 
 						MouseArea {
@@ -87,9 +87,9 @@ Item {
 	Widgets.Button {
 		icon: 13
 		text: Utils.locale.tr(QT_TR_NOOP("provider_selector_popup#close"))
-		color: Skin.ui.color("color.button.primary")
-		texture: "image://ui/button.notice.normal"
-		texturePressed: "image://ui/button.notice.pressed"
+		color: Utils.ui.color("color.button.primary")
+		texture: Utils.ui.image("button.notice.normal")
+		texturePressed: Utils.ui.image("button.notice.pressed")
 
 		width: 407
 		anchors { horizontalCenter: parent.horizontalCenter; top: messagePanel.bottom; topMargin: 21 }

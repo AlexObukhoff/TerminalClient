@@ -24,7 +24,7 @@ public:
 	static QStringList getModelList();
 
 protected:
-	/// Получение статуса.
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Попытка самоидентификации.

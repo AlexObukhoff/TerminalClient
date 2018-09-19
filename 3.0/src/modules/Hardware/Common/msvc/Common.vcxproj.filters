@@ -80,6 +80,9 @@
     <Filter Include="ConfigManager">
       <UniqueIdentifier>{949a5d73-ebbe-4fe3-9da0-8aebc2fbac42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{787b3b22-f593-4381-bd16-9d26d1a8676d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PollingExpector.cpp">
@@ -226,11 +229,14 @@
     <ClCompile Include="..\src\Port\TCP\TCPDeviceBase.cpp">
       <Filter>Port\TCP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Protocols\Common\ProtocolUtils.cpp">
-      <Filter>Protocols</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\ConfigManager\DeviceConfigManager.cpp">
       <Filter>ConfigManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utils\DeviceUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utils\ProtocolUtils.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -321,9 +327,6 @@
     <ClInclude Include="..\src\Port\TCP\TCPDeviceBase.h">
       <Filter>Port\TCP</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Protocols\Common\ProtocolUtils.h">
-      <Filter>Protocols</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\CodecDescriptions.h">
       <Filter>Codec</Filter>
     </ClInclude>
@@ -345,6 +348,12 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\WaitingData.h">
       <Filter>Polling</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Utils\DeviceUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utils\ProtocolUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\locale\common_ru.ts">
@@ -354,6 +363,9 @@
       <Filter>Translation Files</Filter>
     </None>
     <None Include="..\src\locale\common_kk.ts">
+      <Filter>Translation Files</Filter>
+    </None>
+    <None Include="common_de.ts">
       <Filter>Translation Files</Filter>
     </None>
   </ItemGroup>

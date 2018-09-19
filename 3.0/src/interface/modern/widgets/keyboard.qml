@@ -1,6 +1,6 @@
-﻿/* @file Контейнер с двумя изменяемыми и одной статичной раскладкой. */
+/* @file Контейнер с двумя изменяемыми и одной статичной раскладкой. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../scripts/gui.js" as GUI
 
 // Клавиатура
@@ -18,10 +18,10 @@ Item {
 	height: 428
 	clip: true
 
-	BorderImage2 {
+	BorderImage {
 		anchors.fill: parent
 		border { left: 55; top: 100; right: 55; bottom: 18 }
-		source: "image://ui/panel.keyboard"
+		source: Utils.ui.image("panel.keyboard")
 	}
 
 	SequentialAnimation {

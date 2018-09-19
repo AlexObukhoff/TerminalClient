@@ -109,6 +109,8 @@ public:
 
 	#pragma endregion
 
+	bool enableBlankFiscalData() const { return mEnableBlankFiscalData; }
+
 public:
 	/// Получить объект фискального регистратора
 	SDK::PaymentProcessor::IFiscalRegister * getFiscalRegister() const;
@@ -229,6 +231,7 @@ private:
 	bool mServiceOperation;
 	bool mRandomReceiptsID;
 	mutable std::mt19937 mRandomGenerator;
+	bool mEnableBlankFiscalData;
 
 	/// Индекс следующего задания на печать
 	QAtomicInt mNextReceiptIndex;

@@ -40,12 +40,12 @@ WatchServiceController::WatchServiceController()
 	{
 		auto action = mMenu.addAction(QIcon(":/icons/play.ico"), tr("#start_service_menu"));
 		connect(action, SIGNAL(triggered(bool)), mSignalMapper, SLOT(map()));
-		mSignalMapper->setMapping(action, QString("service_menu"));
+		mSignalMapper->setMapping(action, QString("-start_scenario=service_menu"));
 		mStartServiceActions << action;
 
 		action = mMenu.addAction(QIcon(":/icons/play.ico"), tr("#start_first_setup"));
 		connect(action, SIGNAL(triggered(bool)), mSignalMapper, SLOT(map()));
-		mSignalMapper->setMapping(action, QString("first_setup"));
+		mSignalMapper->setMapping(action, QString("-start_scenario=first_setup"));
 		mStartServiceActions << action;
 
 		mMenu.addSeparator();
@@ -53,12 +53,14 @@ WatchServiceController::WatchServiceController()
 
 	auto action = mMenu.addAction(QIcon(":/icons/play.ico"), tr("#start_service"));
 	connect(action, SIGNAL(triggered(bool)), mSignalMapper, SLOT(map()));
-	mSignalMapper->setMapping(action, QString());
+
+	mSignalMapper->setMapping(action, QString("--disable-web-security"));	
 	mStartServiceActions << action;
 
 	mStopServiceAction = mMenu.addAction(QIcon(":/icons/stop.ico"), tr("#stop_service"));
 	mMenu.addSeparator();
 	mCloseTrayIconAction = mMenu.addAction(tr("#close"));
+
 
 	connect(mSignalMapper, SIGNAL(mapped(QString)), SLOT(onStartServiceClicked(QString)));
 	connect(mStopServiceAction, SIGNAL(triggered(bool)), SLOT(onStopServiceClicked()));
@@ -144,9 +146,9 @@ void WatchServiceController::onCloseCommandReceived()
 }
 
 //----------------------------------------------------------------------------
-void WatchServiceController::onStartServiceClicked(QString aName)
+void WatchServiceController::onStartServiceClicked(const QString & aArguments)
 {
-	LOG(getLog(), LogLevel::Normal, QString("User say: start service. %1").arg(aName));
+	LOG(getLog(), LogLevel::Normal, QString("User say: start service. %1").arg(aArguments));
 
 	mLastCommand = Start;
 
@@ -157,9 +159,9 @@ void WatchServiceController::onStartServiceClicked(QString aName)
 
 		QStringList parameters;
 
-		if (!aName.isEmpty())
+		if (!aArguments.isEmpty())
 		{
-			parameters << QString("-client_options=-start_scenario=%1").arg(aName);
+			parameters << QString("-client_options=%1").arg(aArguments);
 		}
 
 		QProcess::startDetached(path, parameters, BasicApplication::getInstance()->getWorkingDirectory());

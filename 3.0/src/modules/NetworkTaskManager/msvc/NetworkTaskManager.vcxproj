@@ -60,7 +60,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;CRYPT_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
@@ -73,11 +73,14 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <Link>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;DEBUG_INFO;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;CRYPT_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
@@ -88,12 +91,15 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <Link>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalOptions>/DMEMLEAKS_SUPPORT %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(Configuration);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR)\boost;$(THIRDPARTY_DIR);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_CORE_LIB;CRYPT_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
@@ -105,6 +111,9 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <Link>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5Networkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\FileDownloadTask.cpp" />
@@ -154,13 +163,13 @@
   <ItemGroup>
     <CustomBuild Include="..\src\FileDownloadTask.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\."</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB -D_USING_V110_SDK71_  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtNetwork" "-IC:\Program Files (x86)\Visual Leak Detector\include"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing %(Identity)...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing %(Identity)...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\."</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DDEBUG_INFO -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\."</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB -D_USING_V110_SDK71_  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtNetwork" "-IC:\Program Files (x86)\Visual Leak Detector\include"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DDEBUG_INFO -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB -D_USING_V110_SDK71_  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtNetwork" "-IC:\Program Files (x86)\Visual Leak Detector\include"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
@@ -168,13 +177,13 @@
     </CustomBuild>
     <CustomBuild Include="..\src\NetworkTask.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\."</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB -D_USING_V110_SDK71_  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtNetwork" "-IC:\Program Files (x86)\Visual Leak Detector\include"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing %(Identity)...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing %(Identity)...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\."</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DDEBUG_INFO -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\."</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB -D_USING_V110_SDK71_  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtNetwork" "-IC:\Program Files (x86)\Visual Leak Detector\include"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DDEBUG_INFO -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB -D_USING_V110_SDK71_  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtNetwork" "-IC:\Program Files (x86)\Visual Leak Detector\include"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
@@ -182,13 +191,13 @@
     </CustomBuild>
     <CustomBuild Include="..\src\NetworkTaskManager.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\."</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB -D_USING_V110_SDK71_  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtNetwork" "-IC:\Program Files (x86)\Visual Leak Detector\include"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing %(Identity)...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing %(Identity)...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\."</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DDEBUG_INFO -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\."</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB -D_USING_V110_SDK71_  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtNetwork" "-IC:\Program Files (x86)\Visual Leak Detector\include"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DDEBUG_INFO -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DCRYPT_LIB -DQT_NETWORK_LIB -D_USING_V110_SDK71_  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(Configuration)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\boost" "-I$(THIRDPARTY_DIR)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtNetwork" "-IC:\Program Files (x86)\Visual Leak Detector\include"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>

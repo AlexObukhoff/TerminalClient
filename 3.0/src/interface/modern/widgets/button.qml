@@ -1,10 +1,10 @@
-﻿/* @file Кнопка с текстом и иконкой */
+/* @file Кнопка с текстом и иконкой */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../scenario/constants.js" 1.0 as Scenario
-import "../plugins"
+//import "../plugins"
 
-BorderImage2 {
+BorderImage {
 	id: rootItem
 
 	// Путь к фону кнопки
@@ -44,7 +44,7 @@ BorderImage2 {
 		onClicked: { connections.target = null; rootItem.clicked() }
 	}
 
-	BorderImage2 {
+	BorderImage {
 		id: buttonImageNormal
 
 		anchors.fill: parent
@@ -56,7 +56,7 @@ BorderImage2 {
 		visible: rootItem.enabled
 	}
 
-	BorderImage2 {
+	BorderImage {
 		id: buttonImagePressed
 
 		anchors.fill: parent
@@ -80,8 +80,8 @@ BorderImage2 {
 
 			height: rootItem.height
 			verticalAlignment: Text.AlignVCenter
-			color: Skin.ui.color("color.button")
-			font: Skin.ui.font("font.button")
+			color: Utils.ui.color("color.button")
+			font: Utils.ui.font("font.button")
 			wrapMode: Text.WordWrap
 			text: rootItem.text
 			lineHeightMode: Text.FixedHeight
@@ -106,11 +106,11 @@ BorderImage2 {
 		}
 	}
 
-	BorderImage2 {
+	BorderImage {
 		id: buttonImageDisabled
 
 		anchors.fill: parent
-		source: "image://ui/button.disabled"
+		source: Utils.ui.image("button.disabled")
 		border { left: 40; top: 40; right: 40; bottom: 40 }
 		horizontalTileMode: BorderImage.Repeat
 		verticalTileMode: BorderImage.Stretch

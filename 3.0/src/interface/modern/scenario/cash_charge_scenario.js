@@ -1,4 +1,4 @@
-﻿/* @file Платёжный сценарий. */
+/* @file Платёжный сценарий. */
 
 include("constants.js", "Scenario");
 include("../scripts/gui.js", "GUI");

@@ -1,6 +1,6 @@
-﻿/* @file Главный экран платёжной книжки. */
+/* @file Главный экран платёжной книжки. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Core.Types 1.0
 import "controls" 1.0 as Controls
 import "widgets" 1.0 as Widgets
@@ -12,8 +12,8 @@ Widgets.SceneBase2 {
 	id: rootItem
 
 	sceneButtonIcon: 26
-	sceneButtonTexture: "image://ui/button.paybook.secondary.normal"
-	sceneButtonTexturePressed: "image://ui/button.paybook.secondary.pressed"
+	sceneButtonTexture: Utils.ui.image("button.paybook.secondary.normal")
+	sceneButtonTexturePressed: Utils.ui.image("button.paybook.secondary.pressed")
 
 	leftButtonIcon: 24
 	leftButtonText: Utils.locale.tr(QT_TR_NOOP("platru_menu_scene#pay"))
@@ -25,22 +25,22 @@ Widgets.SceneBase2 {
 
 	property int itemsOnPage: 8
 
-	Widgets.BorderImage2 {
+	BorderImage {
 		anchors { left: sceneButton.right; verticalCenter: sceneButton.verticalCenter; right: setupButton.left }
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
-		source: "image://ui/panel.operator"
+		source: Utils.ui.image("panel.operator")
 
 		Row {
 			anchors { left: parent.left; leftMargin: 10 }
 			height: parent.height
 
-			Widgets.Image2 {
+			Image {
 				id: logo
 
 				anchors.verticalCenter: parent.verticalCenter
 				width: 100
-				source: "image://ui/paybook.logo"
+				source: Utils.ui.image("paybook.logo")
 			}
 
 			Item {
@@ -53,9 +53,9 @@ Widgets.SceneBase2 {
 				anchors { verticalCenter: parent.verticalCenter }
 
 				Text {
-					color: Skin.ui.color("color.subtitle")
+					color: Utils.ui.color("color.subtitle")
 					text: formatter.displayText
-					font: Skin.ui.font("font.secondary")
+					font: Utils.ui.font("font.secondary")
 
 					TextInput {
 						id: formatter
@@ -67,9 +67,9 @@ Widgets.SceneBase2 {
 				}
 
 				Text {
-					color: Skin.ui.color("color.title")
+					color: Utils.ui.color("color.title")
 					text: Number(global.balance).toFixed(2) + " " + Core.environment.terminal.currencyName
-					font: Skin.ui.font("font.title")
+					font: Utils.ui.font("font.title")
 				}
 			}
 		}
@@ -84,7 +84,7 @@ Widgets.SceneBase2 {
 		width: 407
 		icon: 9
 		text: Utils.locale.tr(QT_TR_NOOP("platru_menu_scene#setup"))
-		texture: global.editMode ? "image://ui/button.secondary.pressed" : "image://ui/button.secondary.normal"
+		texture: global.editMode ? Utils.ui.image("button.secondary.pressed") : Utils.ui.image("button.secondary.normal")
 		onClicked: global.editMode = !global.editMode
 	}
 
@@ -102,15 +102,15 @@ Widgets.SceneBase2 {
 		flow: GridView.TopToBottom
 		model: entryModel
 
-		delegate: Widgets.Image2 {
-			source: !operatorId ? "image://ui/button.paybook.add" : "image://ui/button.paybook.bookmark"
+		delegate: Image {
+			source: !operatorId ? Utils.ui.image("button.paybook.add") : Utils.ui.image("button.paybook.bookmark")
 
 			Text {
 				anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 25 }
 				visible: !operatorId
 				verticalAlignment: Text.AlignVCenter
-				font: Skin.ui.font("font.main.accent")
-				color: Skin.ui.color("color.main.primary")
+				font: Utils.ui.font("font.main.accent")
+				color: Utils.ui.color("color.main.primary")
 
 				text: Utils.locale.tr(QT_TR_NOOP("platru_menu_scene#add_entry"))
 			}
@@ -119,7 +119,7 @@ Widgets.SceneBase2 {
 				visible: operatorId
 				anchors.fill: parent
 
-				Widgets.Image2 {
+				Image {
 					visible: !global.editMode
 					source: "image://ui/logoprovider/" + operatorId + "/button.operator.blank/" + name
 					anchors { left: parent.left; leftMargin: 33; verticalCenter: parent.verticalCenter }
@@ -133,12 +133,12 @@ Widgets.SceneBase2 {
 					// Комментарий
 					Text {
 						width: parent.width
-						font: Skin.ui.font("font.bookmark.primary")
+						font: Utils.ui.font("font.bookmark.primary")
 						wrapMode: Text.WordWrap
 						lineHeight: 0.8
 						elide: Text.ElideRight
 						maximumLineCount: 2
-						color: Skin.ui.color("color.bookmark.primary")
+						color: Utils.ui.color("color.bookmark.primary")
 						text: comment ? comment : ""
 					}
 
@@ -147,12 +147,12 @@ Widgets.SceneBase2 {
 					// Номер
 					Text {
 						width: parent.width
-						font: Skin.ui.font("font.bookmark.secondary")
+						font: Utils.ui.font("font.bookmark.secondary")
 						wrapMode: Text.WordWrap
 						lineHeight: 0.8
 						elide: Text.ElideRight
 						maximumLineCount: 2
-						color: Skin.ui.color("color.bookmark.secondary")
+						color: Utils.ui.color("color.bookmark.secondary")
 						text: parameters ? (parameters.hasOwnProperty("100") ? parameters["100"] : "") : ""
 					}
 				}
@@ -169,8 +169,8 @@ Widgets.SceneBase2 {
 					// Редактировать
 					Widgets.Button {
 						icon: 7
-						texture:  "image://ui/button.paybook.common"
-						texturePressed: "image://ui/button.paybook.common.pressed"
+						texture:  Utils.ui.image("button.paybook.common")
+						texturePressed: Utils.ui.image("button.paybook.common.pressed")
 
 						anchors.verticalCenter: parent.verticalCenter
 						width: 102
@@ -193,8 +193,8 @@ Widgets.SceneBase2 {
 					// Удалить
 					Widgets.Button {
 						icon: 23
-						texture: "image://ui/button.paybook.alert"
-						texturePressed: "image://ui/button.paybook.alert.pressed"
+						texture: Utils.ui.image("button.paybook.alert")
+						texturePressed: Utils.ui.image("button.paybook.alert.pressed")
 
 						anchors.verticalCenter: parent.verticalCenter
 						width: 102
@@ -268,8 +268,8 @@ Widgets.SceneBase2 {
 
 		anchors { right: view.left; rightMargin: 18; verticalCenter: view.verticalCenter }
 		visible: entryModel.count > 8 && !view.atXBeginning
-		background: Widgets.Image2 {
-			source: back.pressed ? "image://ui/scroll.left.pressed" : "image://ui/scroll.left.normal"
+		background: Image {
+			source: back.pressed ? Utils.ui.image("scroll.left.pressed") : Utils.ui.image("scroll.left.normal")
 		}
 
 		onClicked: view.scrollBack()
@@ -281,8 +281,8 @@ Widgets.SceneBase2 {
 
 		anchors { left: view.right; leftMargin: 18; verticalCenter: view.verticalCenter }
 		visible: entryModel.count > 8 && !view.atXEnd
-		background: Widgets.Image2 {
-			source: fwd.pressed ? "image://ui/scroll.right.pressed" : "image://ui/scroll.right.normal"
+		background: Image {
+			source: fwd.pressed ? Utils.ui.image("scroll.right.pressed") : Utils.ui.image("scroll.right.normal")
 		}
 		onClicked: view.scrollForward()
 	}

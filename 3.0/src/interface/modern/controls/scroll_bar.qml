@@ -1,6 +1,6 @@
-﻿/* @file Полоса прокрутки. */
+/* @file Полоса прокрутки. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 
 Item {
 	id: rootItem

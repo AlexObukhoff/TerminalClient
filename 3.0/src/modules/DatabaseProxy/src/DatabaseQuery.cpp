@@ -43,6 +43,12 @@ bool DatabaseQuery::isValid()
 }
 
 //---------------------------------------------------------------------------
+int DatabaseQuery::numRowsAffected() const
+{
+	return QSqlQuery::numRowsAffected();
+}
+
+//---------------------------------------------------------------------------
 QVariant DatabaseQuery::value(int i) const
 {
 	return QSqlQuery::value(i);

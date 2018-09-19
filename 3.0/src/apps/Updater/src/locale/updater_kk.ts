@@ -17,58 +17,58 @@
 <context>
     <name>UpdaterApp</name>
     <message>
-        <location filename="../UpdaterApp.cpp" line="91"/>
+        <location filename="../UpdaterApp.cpp" line="92"/>
         <source>#error_run_from_temp_dir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../UpdaterApp.cpp" line="92"/>
+        <location filename="../UpdaterApp.cpp" line="93"/>
         <source>#error_connection_to_guard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../UpdaterApp.cpp" line="93"/>
+        <location filename="../UpdaterApp.cpp" line="94"/>
         <source>#error_unknown_command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../UpdaterApp.cpp" line="94"/>
+        <location filename="../UpdaterApp.cpp" line="95"/>
         <source>#error_second_instance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../UpdaterApp.cpp" line="95"/>
+        <location filename="../UpdaterApp.cpp" line="96"/>
         <source>#error_unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../UpdaterApp.cpp" line="96"/>
+        <location filename="../UpdaterApp.cpp" line="97"/>
         <source>#error_network</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../UpdaterApp.cpp" line="97"/>
+        <location filename="../UpdaterApp.cpp" line="98"/>
         <source>#error_parse_response</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../UpdaterApp.cpp" line="98"/>
+        <location filename="../UpdaterApp.cpp" line="99"/>
         <source>#error_deploy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../UpdaterApp.cpp" line="99"/>
+        <location filename="../UpdaterApp.cpp" line="100"/>
         <source>#error_aborted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../UpdaterApp.cpp" line="100"/>
+        <location filename="../UpdaterApp.cpp" line="101"/>
         <source>#error_update_blocked</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../UpdaterApp.cpp" line="101"/>
-        <location filename="../UpdaterApp.cpp" line="338"/>
+        <location filename="../UpdaterApp.cpp" line="102"/>
+        <location filename="../UpdaterApp.cpp" line="339"/>
         <source>#error_check_integrity</source>
         <translation type="unfinished"></translation>
     </message>

@@ -119,7 +119,7 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
-	/// Получить статус;
+	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
 	/// Вызывает int-метод в рабочем потоке, возвращает и обработывает результат.

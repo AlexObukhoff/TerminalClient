@@ -34,7 +34,9 @@ namespace CPrimFR
 
 			OnlineUnknown = 100,
 			PRIM_06F,
-			PRIM_21FA
+			PRIM_08F,
+			PRIM_21FA_Custom,
+			PRIM_21FA_Epson
 		};
 	}
 
@@ -65,7 +67,8 @@ namespace CPrimFR
 
 			// Online
 			append("\x8F\x90\x88\x8C\x20\x30\x36\x2D\x94",     Models::PRIM_06F);
-			append("\x8F\x90\x88\x8C\x20\x32\x31\x2D\x94\x80", Models::PRIM_21FA);
+			append("\x8F\x90\x88\x8C\x20\x30\x38\x2D\x94",     Models::PRIM_08F);
+			append("\x8F\x90\x88\x8C\x20\x32\x31\x2D\x94\x80", Models::PRIM_21FA_Epson);
 		}
 	};
 
@@ -147,8 +150,10 @@ namespace CPrimFR
 			data().insert(Models::AZIMUT_TMU950PK,  SModelParameters("Iskra AZIMUT TM-U950PK", false, false, 4, statusDataControlPaper));
 
 			// Онлайн
-			data().insert(Models::PRIM_06F,  SModelParameters("Iskra PRIM 06-F",  true, true,  4, statusData));
-			data().insert(Models::PRIM_21FA, SModelParameters("Iskra PRIM 21-FA", true, true,  0, statusData21V03));
+			data().insert(Models::PRIM_06F, SModelParameters("Iskra PRIM 06-F",  true, true,  4, statusData));
+			data().insert(Models::PRIM_08F, SModelParameters("Iskra PRIM 08-F",  true, true,  4, statusData));
+			data().insert(Models::PRIM_21FA_Epson,  SModelParameters("Iskra PRIM 21-FA", true, true, 5, statusData21V0102));
+			data().insert(Models::PRIM_21FA_Custom, SModelParameters("Iskra PRIM 21-FA", true, true, 0, statusData21V03));
 
 			// default
 			data().insert(Models::Unknown, SModelParameters(DefaultModelName, false, false, 8, statusData));

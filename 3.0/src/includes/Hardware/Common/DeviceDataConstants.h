@@ -133,7 +133,6 @@ namespace CDeviceData
 		const char FiscalDocuments[] = "fiscal_documents";
 		const char NonFiscalDocuments[] = "non_fiscal_document";
 		const char Printer[] = "printer";
-		const char ModeFlags[] = "mode_flags";
 		const char EKLZ[] = "eklz";
 		const char OperationModes[] = "operation_modes";
 		const char AutomaticNumber[] = "automatic_number";

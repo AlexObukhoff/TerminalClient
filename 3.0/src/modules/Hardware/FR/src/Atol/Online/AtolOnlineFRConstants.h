@@ -29,7 +29,7 @@ namespace CAtolOnlineFR
 	/// Печатать ОФД-реквизит.
 	const char PrintOFDParameter = '\x01';
 
-	/// Налоги: округление налогов - на весь чек, контроль суммы налогов 10 и 18 %.
+	/// Налоги: округление налогов - на весь чек, контроль суммы налогов 10 и 18(20) %.
 	const char TaxParameters = '\x02';
 
 	/// Печать параметров Z-отчета: печатать все счетчики и данные о приходах и расходах.
@@ -108,14 +108,14 @@ namespace CAtolOnlineFR
 		/// Коды команд ФН-а.
 		namespace FS
 		{
-			const char GetStatus[]              = "\xA4\x30";    /// Получить статус ФН.
-			const char GetNumber[]              = "\xA4\x31";    /// Получить номер ФН.
-			const char GetValidity[]            = "\xA4\x32";    /// Получить срок действия ФН.
-			const char GetVersion[]             = "\xA4\x33";    /// Получить версию ФН.
-			const char GetFiscalizationResume[] = "\xA4\x43";    /// Получить итог фискализации.
-			const char GetFDbyNumber[]          = "\xA4\x40";    /// Получить фискальный документ по его номеру.
-			const char StartFiscalTLVData[]     = "\xA4\x45";    /// Начать получение данных фискального документа в TLV-формате.
-			const char GetFiscalTLVData[]       = "\xA4\x46";    /// Получить данные фискального документа в TLV-формате.
+			const char GetStatus[]             = "\xA4\x30";    /// Получить статус ФН.
+			const char GetNumber[]             = "\xA4\x31";    /// Получить номер ФН.
+			const char GetValidity[]           = "\xA4\x32";    /// Получить срок действия ФН.
+			const char GetVersion[]            = "\xA4\x33";    /// Получить версию ФН.
+			const char GetFiscalizationTotal[] = "\xA4\x43";    /// Получить итог фискализации.
+			const char GetFDbyNumber[]         = "\xA4\x40";    /// Получить фискальный документ по его номеру.
+			const char StartFiscalTLVData[]    = "\xA4\x45";    /// Начать получение данных фискального документа в TLV-формате.
+			const char GetFiscalTLVData[]      = "\xA4\x46";    /// Получить данные фискального документа в TLV-формате.
 		}
 	}
 
@@ -123,8 +123,9 @@ namespace CAtolOnlineFR
 	/// Ошибки.
 	namespace Errors
 	{
-		const char NeedExtendedErrorCode = '\xEE';    /// Запросить расширенный код ошибки в регистре 55
-		const char NoRequiedDataInFS = '\xDA';    /// В ФН нет запрошенных данных
+		const char NoRequiedDataInFS     = '\xDA';    /// В ФН нет запрошенных данных.
+		const char FSOfflineEnd          = '\xEB';    /// Исчерпан ресурс хранения ФН.
+		const char NeedExtendedErrorCode = '\xEE';    /// Запросить расширенный код ошибки в регистре 55.
 
 		class CData : public FRError::CData
 		{

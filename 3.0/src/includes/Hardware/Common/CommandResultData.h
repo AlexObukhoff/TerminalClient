@@ -12,9 +12,21 @@ public:
 		*this = aResult;
 	}
 
+	TResult (bool aResult)
+	{
+		*this = aResult;
+	}
+
 	TResult & operator = (const int & aResult)
 	{
 		mData = aResult;
+
+		return *this;
+	}
+
+	TResult & operator = (bool aResult)
+	{
+		mData = aResult ? 0 : -1;
 
 		return *this;
 	}

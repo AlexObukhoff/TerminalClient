@@ -5,6 +5,8 @@
 #include <windows.h>
 #endif
 
+#include <string.h>
+
 // stl
 #include <iostream>
 
@@ -12,6 +14,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QtGlobal>
 #include <QtCore/QDateTime>
+#include <QtCore/QLoggingCategory>
 #include <QBreakpadHandler.h>
 #include <Common/QtHeadersEnd.h>
 
@@ -21,6 +24,7 @@
 
 // Проект
 #include "System/PPApplication.h"
+#include "System/UnhandledException.h"
 
 //---------------------------------------------------------------------------
 int main(int argc, char ** argv)
@@ -35,9 +39,13 @@ int main(int argc, char ** argv)
 		// TODO PORT_QT5
 		//QApplication::setGraphicsSystem("raster");
 		
+		qputenv("QMLSCENE_DEVICE", "softwarecontext");
+
 		PPApplication application(Cyberplat::Application, Cyberplat::getVersion(), argc, argv);
 
 		QBreakpadInstance.setDumpPath(PPApplication::getInstance()->getWorkingDirectory() + "/logs/");
+
+		//CatchUnhandledExceptions();
 
 		if (!application.getQtApplication().isRunning())
 		{

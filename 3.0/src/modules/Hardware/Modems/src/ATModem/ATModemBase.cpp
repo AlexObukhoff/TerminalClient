@@ -1,4 +1,4 @@
-﻿/* @file Базовый класс AT-совместимого модема. */
+/* @file Базовый класс AT-совместимого модема. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>

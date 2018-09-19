@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <memory>
+
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QString>
@@ -27,7 +29,10 @@ public:
 	virtual void shutdown() = 0;
 
 	/// Создаёт (или возвращает из кэша) графический элемент по описанию.
-	virtual IGraphicsItem * getItem(const GraphicsItemInfo & aInfo) = 0;
+	virtual std::weak_ptr<SDK::GUI::IGraphicsItem> getItem(const GraphicsItemInfo & aInfo) = 0;
+
+	/// Удаляет графический элемент по описанию
+	virtual bool removeItem(const GraphicsItemInfo & aInfo) = 0;
 
 	/// Возвращает тип движка.
 	virtual QString getType() const = 0;

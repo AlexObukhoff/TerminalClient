@@ -1,6 +1,6 @@
-﻿/* @file Сцена оплаты в режиме чтения. */
+/* @file Сцена оплаты в режиме чтения. */
 
-import QtQuick 1.1
+import QtQuick 2.6
 import "../" as Widgets
 import "../scenario/constants.js" as Scenario
 import "../scripts/gui.js" as GUI
@@ -33,26 +33,26 @@ FocusScope {
 
 			// К оплате
 			Widgets.PaySceneItem {
-				amount: {"color": Skin.ui.color("color.entry.primary"), "text": Number(global.requiredAmount).toFixed(2)}
-				currency.color: Skin.ui.color("color.entry.secondary")
+				amount: {"color": Utils.ui.color("color.entry.primary"), "text": Number(global.requiredAmount).toFixed(2)}
+				currency.color: Utils.ui.color("color.entry.secondary")
 				currency.text: Core.environment.terminal.currencyName
-				description.color: Skin.ui.color("color.entry.secondary")
+				description.color: Utils.ui.color("color.entry.secondary")
 				description.text: Utils.locale.tr(QT_TR_NOOP("pay_scene#required_amount"))
 
 				anchors { left: parent.left; right: parent.right }
-				source: "image://ui/panel.entry"
+				source: Utils.ui.image("panel.entry")
 			}
 
 			// Текущаяя комиссия
 			Widgets.PaySceneItem {
-				amount: {"color": Skin.ui.color("color.panel.primary"), "text": Number(global.requiredAmount - global.maxAmount).toFixed(2)}
+				amount: {"color": Utils.ui.color("color.panel.primary"), "text": Number(global.requiredAmount - global.maxAmount).toFixed(2)}
 				currency.text: Core.environment.terminal.currencyName
-				currency.color: Skin.ui.color("color.panel.secondary")
+				currency.color: Utils.ui.color("color.panel.secondary")
 				description.text: Utils.locale.tr(QT_TR_NOOP("pay_scene#fee_amount_all"))
-				description.color: Skin.ui.color("color.panel.tertiary")
+				description.color: Utils.ui.color("color.panel.tertiary")
 
 				anchors { left: parent.left; right: parent.right }
-				source: "image://ui/panel.commission"
+				source: Utils.ui.image("panel.commission")
 			}
 		}
 	}

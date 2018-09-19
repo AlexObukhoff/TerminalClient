@@ -5,9 +5,9 @@
 #include "Hardware/Printers/PrinterPluginParameters.h"
 
 // Project
-#include "FRPlugin.h"
 #include "Parameters/FRPluginParameters.h"
 #include "Parameters/FRPluginParameterTranslations.h"
+#include "FRPlugin.h"
 
 using namespace SDK::Plugin;
 using namespace SDK::Driver;
@@ -41,7 +41,8 @@ TParameterList PrimParametersBase(const QStringList & aModels)
 	return defaultParameters<T>(aModels, CComponents::FiscalRegistrator)
 		<< setProtocol(ProtocolNames::FR::PRIM)
 		<< setAutoCloseSessionAbility()
-		<< setDocumentCap();
+		<< setDocumentCap()
+		<< setNullingSumInCash();
 }
 
 //------------------------------------------------------------------------------
@@ -59,7 +60,8 @@ TParameterList PresenterPrimParameters(const QStringList & aModels)
 {
 	return PrimParameters<T>(aModels)
 		<< setLoopEnabled()
-		<< setBackFeed(PPT::ForNonFiscalDocuments);
+		<< setBackFeed(PPT::ForNonFiscalDocuments)
+		<< setPrinterModel("Epson EU-422");
 }
 
 //------------------------------------------------------------------------------
@@ -73,7 +75,8 @@ TParameterList EjectorPrimParameters(const QStringList & aModels)
 		<< setPresentationLength()
 		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, true, PrinterValues::Retract, false)
 		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, true, PrinterValues::Retract, false)
-		<< setLeftReceiptTimeout();
+		<< setLeftReceiptTimeout()
+		<< setPrinterModel("Custom VKP-80");
 }
 
 //------------------------------------------------------------------------------
@@ -93,7 +96,8 @@ TParameterList ShtrihParameters(const QStringList & aModels)
 	return defaultParameters<T>(aModels, CComponents::FiscalRegistrator)
 		<< setProtocol(ProtocolNames::FR::Shtrih)
 		<< setModifiedValues(CHardwareSDK::ModelName, modelNames)
-		<< setWeightSensorsEnabled();
+		<< setWeightSensorsEnabled()
+		<< setNullingSumInCash();
 }
 
 //------------------------------------------------------------------------------
@@ -141,13 +145,31 @@ TParameterList ShtrihOnlineSerialFRParameters(const QStringList & aModels)
 
 //------------------------------------------------------------------------------
 template <class T>
-TParameterList PayOnlineParameters(const QStringList & aModels)
+TParameterList PayFAParameters(const QStringList & aModels)
 {
 	return modifyPriority(ShtrihOnlineParameters<T>(aModels), EDetectingPriority::High)
 		<< setLoopEnabled("", false)
 		<< setPresentationLength()
-		<< setLeftReceiptTimeout(true)
 		<< setRemoteSensor(true);
+}
+
+//------------------------------------------------------------------------------
+template <class T>
+TParameterList PayVKP80FAParameters(const QStringList & aModels)
+{
+	return PayFAParameters<T>(aModels)
+		<< setLeftReceiptTimeout(true);
+}
+
+//------------------------------------------------------------------------------
+template <class T>
+TParameterList PayOnlineParameters(const QStringList & aModels)
+{
+	return PayFAParameters<T>(aModels)
+		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, true, Values::Auto)
+		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, true, Values::Auto)
+		<< setLeftReceiptTimeout(false)
+		<< setPrinterModel(CPayPrinters::CModels().getNames(), CPayPrinters::Default);
 }
 
 //------------------------------------------------------------------------------
@@ -166,7 +188,8 @@ template <class T>
 TParameterList AtolParameters(const QStringList & aModels, const QString & aDeviceType)
 {
 	return defaultParameters<T>(aModels, aDeviceType)
-		<< setProtocol(ProtocolNames::FR::ATOL);
+		<< setProtocol(ProtocolNames::FR::ATOL)
+		<< setNullingSumInCash();
 }
 
 //------------------------------------------------------------------------------
@@ -208,14 +231,6 @@ TParameterList PayPPU700Parameters(const QStringList & aModels)
 
 //------------------------------------------------------------------------------
 template <class T>
-TParameterList AtolOnlineParameters(const QStringList & aModels, const QString & aDeviceType)
-{
-	return AtolLSParameters<T>(aModels, aDeviceType)
-		<< setNotPrinting();
-}
-
-//------------------------------------------------------------------------------
-template <class T>
 TParameterList PaymasterParameters(const QStringList & aModels)
 {
 	QVariantMap modelNames;
@@ -223,9 +238,10 @@ TParameterList PaymasterParameters(const QStringList & aModels)
 
 	return PayVKP80Parameters<T>(aModels)
 		<< setNotPrinting()
-		<< setPaymasterPrinterModel()
+		<< setPrinterModel(CAtolOnlinePrinters::CModels().getNames(), CAtolOnlinePrinters::Default)
 		<< setRemoteSensor(true)
-		<< setModifiedValues(CHardwareSDK::ModelName, modelNames);
+		<< setModifiedValues(CHardwareSDK::ModelName, modelNames)
+		<< setJamSensorEnabled();
 }
 
 //------------------------------------------------------------------------------
@@ -261,7 +277,8 @@ template <class T>
 TParameterList KasbiParameters(const QStringList & aModels)
 {
 	return defaultParameters<T>(aModels, CComponents::FiscalRegistrator)
-		<< setProtocol(ProtocolNames::FR::Kasbi);
+		<< setProtocol(ProtocolNames::FR::Kasbi)
+		<< setPrinterModel(CKasbiPrinters::CModels().getNames(), CKasbiPrinters::Default);
 }
 
 //------------------------------------------------------------------------------
@@ -272,11 +289,13 @@ TParameterList KasbiParameters(const QStringList & aModels)
 
 //------------------------------------------------------------------------------
 BEGIN_REGISTER_PLUGIN
-	COMMON_FR_PLUGIN(PrimFRBase, PrimParameters)
-	COMMON_FR_PLUGIN(PrimPresenterFRBase, PresenterPrimParameters)
-	COMMON_FR_PLUGIN(PrimEjectorFRBase,   EjectorPrimParameters)
-	COMMON_FR_PLUGIN(PrimOnlineFRBase,    PrimParameters)
-	COMMON_FR_PLUGIN(PrimEjectorOnlineFR, EjectorPrimParameters)
+	COMMON_FR_PLUGIN(PrimFRBase,            PrimParameters)
+	COMMON_FR_PLUGIN(PrimPresenterFRBase,   PresenterPrimParameters)
+	COMMON_FR_PLUGIN(PrimEjectorFRBase,     EjectorPrimParameters)
+	COMMON_FR_PLUGIN(PrimOnlineFRBase,      PrimParameters)
+	COMMON_FR_PLUGIN(PrimOnlineFR68,        PrimParametersBase)
+	SINGLE_FR_PLUGIN(PrimPresenterOnlineFR, PresenterPrimParameters, Iskra PRIM 21-FA)
+	SINGLE_FR_PLUGIN(PrimEjectorOnlineFR,   EjectorPrimParameters,   Iskra PRIM 21-FA)
 
 	ATOL_FR_PLUGIN(AtolFR,       FiscalRegistrator, AtolLSParameters)
 	ATOL_FR_PLUGIN(AtolFRSingle, FiscalRegistrator, AtolParameters)
@@ -287,7 +306,7 @@ BEGIN_REGISTER_PLUGIN
 	SINGLE_FR_PLUGIN(PayPPU700,  PayPPU700Parameters, PayPPU-700K)
 	SINGLE_FR_PLUGIN(PayCTS2000, PayParameters,       PayCTS-2000K)
 
-	ATOL_FR_PLUGIN(AtolOnlineFRBase, FiscalRegistrator, AtolOnlineParameters)
+	ATOL_FR_PLUGIN(AtolOnlineFRBase, FiscalRegistrator, AtolLSParameters)
 	SINGLE_FR_PLUGIN(Paymaster,  PaymasterParameters, Sensis Kaznachej)
 
 	COMMON_FR_PLUGIN(ShtrihSerialFR, ShtrihParameters)
@@ -296,8 +315,10 @@ BEGIN_REGISTER_PLUGIN
 	SINGLE_FR_PLUGIN(ShtrihKioskFRK, ShtrihKioskFRKParameters, Shtrih-M Kiosk-FR-K)
 	SINGLE_FR_PLUGIN(VirtualShtrihFR, ShtrihParameters, NeoService)
 
-	COMMON_FR_PLUGIN(PayOnlineTCPFR, PayOnlineParameters)
-	COMMON_FR_PLUGIN(PayOnlineSerialFR, PayOnlineParameters)
+	SINGLE_FR_PLUGIN(PayOnlineTCP,     PayOnlineParameters,  PayOnline-01-FA)
+	SINGLE_FR_PLUGIN(PayOnlineSerial,  PayOnlineParameters,  PayOnline-01-FA)
+	SINGLE_FR_PLUGIN(PayVKP80FATCP,    PayVKP80FAParameters, PayVKP-80K-FA)
+	SINGLE_FR_PLUGIN(PayVKP80FASerial, PayVKP80FAParameters, PayVKP-80K-FA)
 	COMMON_FR_PLUGIN(ShtrihOnlineTCPFR, ShtrihOnlineParameters)
 	COMMON_FR_PLUGIN(ShtrihOnlineSerialFR, ShtrihOnlineSerialFRParameters)
 	SINGLE_FR_PLUGIN(MStarTK2FR, MStarTK2Parameters,  Multisoft MStar-TK2)

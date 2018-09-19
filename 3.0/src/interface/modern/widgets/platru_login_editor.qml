@@ -1,6 +1,6 @@
-﻿/* @file Редактор с цифровой клавиатурой. */
+/* @file Редактор с цифровой клавиатурой. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../controls" 1.0 as Controls
 
 FocusScope {
@@ -26,8 +26,8 @@ FocusScope {
 
 				anchors { left: parent.left; leftMargin: 35 }
 				width: inputField.width
-				font: Skin.ui.font("font.title")
-				color: Skin.ui.color("color.main.primary")
+				font: Utils.ui.font("font.title")
+				color: Utils.ui.color("color.main.primary")
 			}
 
 			Item {
@@ -55,8 +55,8 @@ FocusScope {
 
 				anchors { left: parent.left; leftMargin: 35 }
 				width: inputField.width - 50
-				font: Skin.ui.font("font.tooltip.secondary")
-				color: Skin.ui.color("color.main.primary")
+				font: Utils.ui.font("font.tooltip.secondary")
+				color: Utils.ui.color("color.main.primary")
 				wrapMode: Text.WordWrap
 			}
 		}

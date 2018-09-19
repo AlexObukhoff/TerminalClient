@@ -1,7 +1,7 @@
-﻿/* @file Редактор с цифровой клавиатурой. */
+/* @file Редактор с цифровой клавиатурой. */
 
-import QtQuick 2.2
-import "../plugins" 1.0
+import QtQuick 2.6
+import "../scripts/gui.js" as GUI
 
 FocusScope {
 	id: rootItem
@@ -14,6 +14,8 @@ FocusScope {
 
 	width: 1211
 	height: 630
+
+	anchors.centerIn: parent
 
 	Column {
 		anchors { left: parent.left; right: parent.right; top: parent.top }
@@ -33,6 +35,7 @@ FocusScope {
 
 			anchors { left: parent.left; leftMargin: -5; right: parent.right; rightMargin: -5 }
 			backspace: Item {}
+
 		}
 
 		// Клавиатура
@@ -40,7 +43,10 @@ FocusScope {
 			id: numpad
 
 			anchors.horizontalCenter: parent.horizontalCenter
-			onClicked: aKey == Qt.Key_Clear ? inputField.reset() : Utils.generateKeyEvent(aKey, aModifiers, aText)
+			onClicked: {
+
+				aKey == Qt.Key_Clear ? inputField.reset() : Utils.generateKeyEvent(aKey, aModifiers, aText)
+			}
 		}
 	}
 
@@ -92,7 +98,7 @@ FocusScope {
 			if (numpad.floatNumber) {
 				//Свойство acceptable = true, если введенное число попадает в заданный диапазон [0.01|minAmount; +Inf|maxAmount]
 
-				var component = Qt.createQmlObject("import QtQuick 1.1; DoubleValidator {decimals: 2; notation: DoubleValidator.StandardNotation}", rootItem);
+				var component = Qt.createQmlObject("import QtQuick 2.6; DoubleValidator {decimals: 2; notation: DoubleValidator.StandardNotation}", rootItem);
 				component.bottom = aField.minAmount ? aField.minAmount : 0.01;
 
 				if (aField.maxAmount) {

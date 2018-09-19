@@ -141,6 +141,9 @@
     <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IServiceState.h">
       <Filter>Core\Services</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IGUIService.h">
+      <Filter>Core\Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Commissions.cpp">
@@ -455,9 +458,6 @@
       <Filter>Core</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IDeviceService.h">
-      <Filter>Core\Services</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IGUIService.h">
       <Filter>Core\Services</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\..\..\includes\SDK\PaymentProcessor\Core\IHIDService.h">

@@ -1,4 +1,4 @@
-﻿/* @file Асинхронная Windows-реализация COM-порта. */
+/* @file Асинхронная Windows-реализация COM-порта. */
 
 #pragma once
 
@@ -106,6 +106,9 @@ namespace CAsyncSerialPort
 
 	/// Таймаут открытия порта в процессе подключения, [мс].
 	const int OnlineOpeningTimeout = 5 * 1000;
+
+	/// Пауза для VCOM-портов между ожиданием и чтением данных, [мс].
+	const int VCOMReadingPause = 3;
 }
 
 #define BOOL_CALL(aFunctionName, ...) [&] () -> bool { if (!checkReady()) return false; \

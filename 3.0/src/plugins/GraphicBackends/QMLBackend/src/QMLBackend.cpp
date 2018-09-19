@@ -1,10 +1,11 @@
-﻿/* @file Реализация плагина. */
+/* @file Реализация плагина. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlComponent>
 #include <QtQuick/QQuickItem>
+#include <QtWebEngine/QtWebEngine>
 #include <Common/QtHeadersEnd.h>
 
 // GUI SDK
@@ -62,6 +63,8 @@ QMLBackend::QMLBackend(SDK::Plugin::IEnvironment * aFactory, const QString & aIn
 	mInstancePath = aInstancePath;
 	mEngine = 0;
 
+	QtWebEngine::initialize();
+
 	// Регистрируем типы событий.
 	qmlRegisterUncreatableType<SDK::PaymentProcessor::EEventType>(
 		QString("%1.%2").arg(SDK::PaymentProcessor::Scripting::CProxyNames::Core).arg(CQMLBackend::TypesExportNamespace).toLatin1(), 1, 0, "EventType", "EventType enum is readonly.");
@@ -109,28 +112,41 @@ bool QMLBackend::isReady() const
 }
 
 //------------------------------------------------------------------------------
-SDK::GUI::IGraphicsItem * QMLBackend::getItem(const SDK::GUI::GraphicsItemInfo & aInfo)
+std::weak_ptr<SDK::GUI::IGraphicsItem> QMLBackend::getItem(const SDK::GUI::GraphicsItemInfo & aInfo)
 {
 	TGraphicItemsCache::iterator it = mCachedItems.find(aInfo.name);
 
-	if (it != mCachedItems.end() && it.value().data()->getContext() == aInfo.context)
+	if (it != mCachedItems.end() && it.value()->getContext() == aInfo.context)
 	{
-		return it.value().data();
+		return it.value();
 	}
 
-	QSharedPointer<QMLGraphicsItem> item(new QMLGraphicsItem(aInfo, &mQMLEngine, mEngine->getLog()));
+	std::shared_ptr<QMLGraphicsItem> item(new QMLGraphicsItem(aInfo, &mQMLEngine, mEngine->getLog()), SDK::GUI::GraphicsItemDeleter());
 
 	if (item->isValid())
 	{
-		mCachedItems.insertMulti(aInfo.name, item);
+		mCachedItems.insert(aInfo.name, item);
 	}
 	else
 	{
 		mEngine->getLog()->write(LogLevel::Error, item->getError());
-		return 0;
 	}
 
-	return item.data();
+	return item;
+}
+
+//------------------------------------------------------------------------------
+bool QMLBackend::removeItem(const SDK::GUI::GraphicsItemInfo & aInfo)
+{
+	foreach (auto item, mCachedItems.values(aInfo.name))
+	{
+		if (item->getContext() == aInfo.context)
+		{
+			return mCachedItems.remove(aInfo.name, item) != 0;
+		}
+	}
+
+	return false;
 }
 
 //------------------------------------------------------------------------------

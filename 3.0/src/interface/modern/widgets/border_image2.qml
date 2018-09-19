@@ -1,5 +1,5 @@
 // Обертка для стандартного компонента, с отключенным кэшированием
-import QtQuick 1.1
+import QtQuick 2.6
 
 BorderImage {
 	id: rootItem

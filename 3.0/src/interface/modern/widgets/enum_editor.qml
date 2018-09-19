@@ -1,6 +1,6 @@
-﻿/* @file Редактор списка значенией. */
+/* @file Редактор списка значенией. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../scripts/gui.js" as GUI
 
 Item {
@@ -30,11 +30,11 @@ Item {
 			onClicked: rootItem.showComment()
 		}
 
-		Image2 {
+		Image {
 			anchors { top: parent.top; topMargin: 112 }
 			width: 1220
 			height: 498
-			source: "image://ui/panel.enum"
+			source: Utils.ui.image("panel.enum")
 
 			List {
 				id: list

@@ -5,6 +5,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QDateTime>
+#include <QtCore/QRegExp>
 #include <Common/QtHeadersEnd.h>
 
 // STL
@@ -165,8 +166,14 @@ namespace CFR
 		<< FRStatusCode::Error::EKLZ
 		<< FRStatusCode::Error::FiscalMemory;
 
+	/// Сменилась ли ставка НДС с 18% на 20% в РФ.
+	inline bool isRFVAT20() { return QDate::currentDate() >= QDate(2019, 1, 1); }
+
 	/// Актуальные ставки НДС в России.
 	const SDK::Driver::TVATs RFActualVATs = SDK::Driver::TVATs() << 18 << 10 << 0;
+
+	/// Актуальные ставки НДС в России начиная с 2019 года.
+	const SDK::Driver::TVATs RFActualVATs20 = SDK::Driver::TVATs() << 20 << 10 << 0;
 
 	/// Актуальные ставки НДС в Казахстане.
 	const SDK::Driver::TVATs KZActualVATs = SDK::Driver::TVATs() << 12 << 0;
@@ -232,6 +239,7 @@ namespace CFR
 		QByteArray data;
 
 		STLV(): field(0) {}
+		STLV(int aField, const QByteArray & aData): field(aField), data(aData) {}
 	};
 
 	/// TLV-пакет
@@ -247,18 +255,23 @@ namespace CFR
 			QString description;
 
 			SData() : group(0) {}
-			SData(int aGroup, const QString & aDescription) : group(aGroup), description(aDescription) {}
+			SData(int aGroup, const QString & aDescription = "") : group(aGroup), description(aDescription) {}
 		};
 
 		class Data : public CSpecification<SDK::Driver::TVAT, SData>
 		{
 		public:
-			void add(SDK::Driver::TVAT aVAT, int aGroup, const char * aDescription)
+			void add(SDK::Driver::TVAT aVAT, int aGroup)
 			{
-				append(aVAT, SData(aGroup, QString::fromUtf8(aDescription)));
+				append(aVAT, SData(aGroup));
 			}
 		};
+
+		typedef QMap<SDK::Driver::TVAT, SData> TData;
 	}
+
+	/// Скорректировать ставку НДС с 18% на 20% в РФ.
+	inline void adjustRFVAT(Taxes::TData & aData) { if (aData.contains(18) && isRFVAT20()) { aData.insert(20, aData[18]); aData.remove(18); }}
 
 	//--------------------------------------------------------------------------------
 	/// Типы оплаты
@@ -385,7 +398,7 @@ namespace CFR
 		{
 			append('\x01', FRStatusCode::Error::FSEnd);
 			append('\x02', FRStatusCode::Warning::FSNearEnd);
-			append('\x04', FRStatusCode::Error::FSMemoryEnd);
+			append('\x04', FRStatusCode::Error::NeedOFDConnection);    // память ФН переполнена (это не таймаут 30 суток)
 		//	append('\x08', FRStatusCode::Warning::OFDNoConnection);    // не работает либо имеет другое значение
 			append('\x80', FRStatusCode::Error::FS);
 		}
@@ -418,16 +431,42 @@ namespace CFR
 	public:
 		CVATRates::CVATRates()
 		{
-			append(1, "НДС 18%");
+			if (isRFVAT20())
+			{
+				append(1, "НДС 20%");
+				append(3, "НДС 20/120");
+			}
+			else
+			{
+				append(1, "НДС 18%");
+				append(3, "НДС 18/118");
+			}
+
 			append(2, "НДС 10%");
-			append(3, "НДС 18/118");
 			append(4, "НДС 10/110");
 			append(5, "НДС 0%");
-			append(6, "");
+			append(6, "БЕЗ НАЛОГА");
 		}
 	};
 
 	static CVATRates VATRates;
+
+	//--------------------------------------------------------------------------------
+	/// ПФ ставок НДС.
+	class CVATTr: public CDescription<SDK::Driver::TVAT>
+	{
+	public:
+		CVATTr::CVATTr()
+		{
+			append(20, "НДС 20%");
+			append(18, "НДС 18%");
+			append(12, "НДС 12%");
+			append(10, "НДС 10%");
+			append( 0, "БЕЗ НАЛОГА");
+		}
+	};
+
+	static CVATTr VATTr;
 
 	//--------------------------------------------------------------------------------
 	/// Режимы работы.
@@ -486,40 +525,36 @@ namespace CFR
 	public:
 		DealerDataManager(DeviceConfigManager * aConfigManager, const QString & aKey) : mPerformer(aConfigManager), mKey(aKey)
 		{
-			QString value;
-
 			if (mPerformer)
 			{
-				mConfigData = mPerformer->getConfigParameter(CHardware::ConfigData).toMap();
-				value = mPerformer->getConfigParameter(mKey).toString().simplified();
-			}
+				QVariantMap configData = mPerformer->getConfigParameter(CHardware::ConfigData).toMap();
+				QString value = mPerformer->getConfigParameter(mKey).toString().simplified();
 
-			if (value.isEmpty())
-			{
-				mConfigData.remove(mKey);
-			}
-			else
-			{
-				mConfigData.insert(mKey, value);
+				if (value.isEmpty())
+				{
+					mData = value;
+				}
 			}
 		}
 
 		~DealerDataManager()
 		{
-			if (mPerformer)
+			if (mPerformer && mData.isValid())
 			{
-				mPerformer->setConfigParameter(CHardware::ConfigData, mConfigData);
+				QVariantMap configData = mPerformer->getConfigParameter(CHardware::ConfigData).toMap();
+				configData.insert(mKey, mData);
+				mPerformer->setConfigParameter(CHardware::ConfigData, configData);
 			}
 		}
 
 		void setValue(const QString & aValue)
 		{
-			mConfigData.insert(mKey, aValue);
+			mData = aValue;
 		}
 
 	private:
 		DeviceConfigManager * mPerformer;
-		QVariantMap mConfigData;
+		QVariant mData;
 		QString mKey;
 	};
 }

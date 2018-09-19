@@ -1,6 +1,6 @@
-﻿/* @file Редактор с цифровой клавиатурой. */
+/* @file Редактор с цифровой клавиатурой. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import QtWebKit 1.1
 import Core.Types 1.0
 import "." 1.0 as Widgets
@@ -22,12 +22,12 @@ FocusScope {
 	Item {
 		anchors.fill: parent
 
-		BorderImage2 {
+		BorderImage {
 			anchors.fill: parent
 			border { left: 30; top: 30; right: 30; bottom: 30 }
 			horizontalTileMode: BorderImage.Stretch
 			verticalTileMode: BorderImage.Stretch
-			source: "image://ui/webview.angles.overlay"
+			source: Utils.ui.image("webview.angles.overlay")
 			z: 2
 		}
 
@@ -52,7 +52,7 @@ FocusScope {
 				preferredWidth: view.flickArea.width
 				preferredHeight: view.flickArea.height
 				transformOrigin: Item.TopLeft
-				backgroundColor:  Skin.ui.color("color.message.background")
+				backgroundColor:  Utils.ui.color("color.message.background")
 
 				onLoadFinished: if (html.indexOf("%SKIN_DIR%") !== -1) { html = html.replace("%SKIN_DIR%", Core.environment.terminal.skinPath) }
 			}

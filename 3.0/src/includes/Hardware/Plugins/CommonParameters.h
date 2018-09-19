@@ -24,6 +24,7 @@ namespace CommonPluginParameterTranslations
 	static const char * RequiredResource = QT_TRANSLATE_NOOP("CommonParameters", "CommonParameters#required_resource");
 	static const char * InteractionType  = QT_TRANSLATE_NOOP("CommonParameters", "CommonParameters#interaction_type");
 	static const char * ProtocolName     = QT_TRANSLATE_NOOP("CommonParameters", "CommonParameters#protocol_name");
+	static const char * ProtocolType     = QT_TRANSLATE_NOOP("CommonParameters", "CommonParameters#protocol_type");
 };
 
 namespace CPPT = CommonPluginParameterTranslations;
@@ -230,6 +231,13 @@ inline SPluginParameter setModifiedKeys(const QString & aOldParameterName, const
 	modifiedKeys.insert(aOldParameterName, aNewParameterName);
 
 	return SPluginParameter(CPlugin::ModifiedKeys, SPluginParameter::Set, false, QString(), QString(), QString(), modifiedKeys, true);
+}
+
+//------------------------------------------------------------------------------
+// Тип протокола.
+inline SPluginParameter setProtocolType(const QString & aDefaultType, const QStringList & aPossibleTypes)
+{
+	return SPluginParameter(CHardware::ProtocolType, false, CPPT::ProtocolType, QString(), aDefaultType, aPossibleTypes);
 }
 
 //------------------------------------------------------------------------------

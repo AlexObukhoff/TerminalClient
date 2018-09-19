@@ -1,6 +1,6 @@
-﻿/* @file Раскладка клавиатуры с цифрами и дополнительными символами. */
+/* @file Раскладка клавиатуры с цифрами и дополнительными символами. */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import "../controls" 1.0 as Controls
 
 Controls.KeyboardBase {

@@ -17,6 +17,9 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
+	/// Получить параметр 3 ФР.
+	virtual ushort getParameter3();
+
 	/// Анализирует коды статусов устройства и фильтрует лишние.
 	virtual void cleanStatusCodes(TStatusCodes & aStatusCodes);
 

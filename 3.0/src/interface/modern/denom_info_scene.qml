@@ -1,6 +1,6 @@
-﻿/* @file Экран . */
+/* @file Экран . */
 
-import QtQuick 1.1
+import QtQuick 2.6
 import Core.Types 1.0
 import "widgets" as Widgets
 import "scripts/gui.js" 1.0 as GUI
@@ -13,7 +13,7 @@ Widgets.SceneBase2 {
 	leftButtonEnabled: true
 	rightButtonEnabled: !global.rightButtonDisabled
 
-	Widgets.BorderImage2 {
+	BorderImage {
 		anchors { horizontalCenter: parent.horizontalCenter }
 		width: 1218
 		height: 657
@@ -22,7 +22,7 @@ Widgets.SceneBase2 {
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch
 		verticalTileMode: BorderImage.Stretch
-		source: "image://ui/panel.operator"
+		source: Utils.ui.image("panel.operator")
 	}
 
 	Column {
@@ -32,8 +32,8 @@ Widgets.SceneBase2 {
 		Text {
 			horizontalAlignment: Text.AlignHCenter
 			width: parent.width
-			font: Skin.ui.font("font.message")
-			color: Skin.ui.color("color.message")
+			font: Utils.ui.font("font.message")
+			color: Utils.ui.color("color.message")
 			wrapMode: Text.WordWrap
 			text: {
 				if (flowNotes.hasChildren && flowCoins.hasChildren) {

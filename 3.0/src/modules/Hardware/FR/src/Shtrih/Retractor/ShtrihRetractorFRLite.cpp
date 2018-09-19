@@ -25,16 +25,17 @@ bool ShtrihRetractorFRLite<T>::updateParameters()
 	using namespace CHardware::Printer;
 
 	//17. Авторетракция чеков - нет
+	bool out = mModel == CShtrihFR::Models::ID::MStarTK2;
 	QByteArray data;
 
-	if ((!getFRParameter(mParameters.autoRetractingCheques, data) || data.isEmpty() || bool(data[0])) &&
-	      setFRParameter(mParameters.autoRetractingCheques, false))
+	if ((!getFRParameter(mParameters.autoRetractingCheques, data) || data.isEmpty() || (bool(data[0]) != out)) &&
+	      setFRParameter(mParameters.autoRetractingCheques, out))
 	{
 		mNeedReboot = true;
 	}
 
 	//18. Авторетракция отчетов - нет
-	setFRParameter(mParameters.autoRetractingReports, false);
+	setFRParameter(mParameters.autoRetractingReports, out);
 
 	//19. Длина презентации
 	if (containsConfigParameter(Settings::PresentationLength))
@@ -46,8 +47,13 @@ bool ShtrihRetractorFRLite<T>::updateParameters()
 	//20. Таймаут забытого чека
 	if (containsConfigParameter(Settings::LeftReceiptTimeout))
 	{
-		int timeout = getConfigParameter(Settings::LeftReceiptTimeout).toInt();
-		setFRParameter(mParameters.leftReceiptTimeout, uchar(timeout));
+		uchar timeout = getLeftReceiptTimeout();
+
+		if (!getFRParameter(mParameters.leftReceiptTimeout, data) || data.isEmpty() || (uchar(data[0]) != timeout))
+		{
+			setFRParameter(mParameters.leftReceiptTimeout, timeout);
+			postSettingAction();
+		}
 	}
 
 	//21. Петля
@@ -63,6 +69,34 @@ bool ShtrihRetractorFRLite<T>::updateParameters()
 	}
 
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+uchar ShtrihRetractorFRLite<T>::getLeftReceiptTimeout()
+{
+	return uchar(getConfigParameter(CHardware::Printer::Settings::LeftReceiptTimeout).toInt());
+}
+
+//--------------------------------------------------------------------------------
+template <>
+void ShtrihRetractorFRLite<ShtrihSerialFR>::postSettingAction()
+{
+	// чтобы не собирался код из других классов
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+void ShtrihRetractorFRLite<T>::postSettingAction()
+{
+	if (getConfigParameter(CHardware::CanSoftReboot).toBool())
+	{
+		reboot();
+	}
+	else
+	{
+		mNeedReboot = true;
+	}
 }
 
 //--------------------------------------------------------------------------------

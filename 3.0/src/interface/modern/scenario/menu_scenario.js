@@ -1,4 +1,4 @@
-﻿/* @file Сценарий основного меню терминала. */
+/* @file Сценарий основного меню терминала. */
 
 include("constants.js", "Scenario");
 include("../scripts/gui.js", "GUI");
@@ -73,6 +73,8 @@ function onResume()
 
 	enableSignals();
 
+	Core.graphics.reload({});
+
 	//Обновим состояние контейнера операторов
 	if (ScenarioEngine.getState() === "menu") {
 		GUI.show("MainMenuScene", {reset: ScenarioEngine.context.result === Scenario.Result.Abort, build_name: Core.graphics.ui["build_name"]});
@@ -83,6 +85,8 @@ function onResume()
 function onPause()
 {
 	disableSignals();
+
+	Core.graphics.reload({provider_id: Core.userProperties.get("operator_id")});
 }
 
 //------------------------------------------------------------------------------
@@ -97,6 +101,7 @@ function canStop()
 function onTimeout(aState)
 {
 	if (aState === "menu") {
+		GUI.hide()
 		GUI.notify(Scenario.Idle.Event.Timeout, {});
 	} else {
 		Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Back);
@@ -162,13 +167,14 @@ function menuEnterHandler(aParameters)
 		Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Stop);
 	}
 	else {
-		GUI.show("MainMenuScene", {
+		/**/GUI.show("MainMenuScene", {
 							 reset:(aParameters.signal === Scenario.Event.Resume &&
 											((ScenarioEngine.context.result === Scenario.Result.Abort) || (ScenarioEngine.context.result === Scenario.Result.OK))),
 							 build_name: Core.graphics.ui["build_name"]
 						 });
 
-		GUI.notify(aParameters.signal, aParameters);
+		GUI.notify(aParameters.signal, aParameters);/** /
+		GUI.show("TestScene", { reset: true })/**/
 	}
 }
 
@@ -193,8 +199,8 @@ function searchEnterHandler(aParameters)
 		return;
 	}
 
-	GUI.show("SearchScene",
-					 {reset: !(aParameters.signal === Scenario.Event.Resume && ScenarioEngine.context.result === Scenario.Result.Back)});
+	//TODO Сломали сохранение результатов поиска
+	GUI.show("SearchScene", {reset: true});
 }
 
 //------------------------------------------------------------------------------

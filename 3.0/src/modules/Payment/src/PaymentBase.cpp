@@ -1,4 +1,4 @@
-﻿/* @file Базовый класс для класса реализующего платёж. */
+/* @file Базовый класс для класса реализующего платёж. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -6,10 +6,13 @@
 #include <QtCore/QReadLocker>
 #include <QtCore/QWriteLocker>
 #include <QtQml/QJSEngine>
+#include <QtCore/QCryptographicHash>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
 #include <SDK/PaymentProcessor/Core/ICore.h>
+#include <SDK/PaymentProcessor/Core/IService.h>
+#include <SDK/PaymentProcessor/Core/IServiceState.h>
 #include <SDK/PaymentProcessor/Core/ISettingsService.h>
 #include <SDK/PaymentProcessor/Core/ICryptService.h>
 #include <SDK/PaymentProcessor/Settings/ISettingsAdapter.h>
@@ -24,6 +27,11 @@
 
 // Project
 #include "PaymentBase.h"
+
+// Thirdparty
+#if QT_VERSION < 0x050000
+#include <Qt5Port/qt5port.h>
+#endif
 
 namespace PPSDK = SDK::PaymentProcessor;
 
@@ -40,6 +48,26 @@ PaymentBase::PaymentBase(SDK::PaymentProcessor::IPaymentFactory * aFactory, SDK:
 	mParameters.insert(SParameter(PPSDK::CPayment::Parameters::Step, CPayment::Steps::Init, true));
 	mParameters.insert(SParameter(PPSDK::CPayment::Parameters::InitialSession, createPaymentSession(), true));
 	mParameters.insert(SParameter(PPSDK::CPayment::Parameters::AmountAll, 0, true));
+
+	QStringList states;
+
+	foreach(PPSDK::IService * service, aCore->getServices())
+	{
+		if (PPSDK::IServiceState * ss = dynamic_cast<PPSDK::IServiceState *>(service))
+		{
+			states << ss->getState();
+		}
+	}
+
+	if (!states.isEmpty())
+	{
+#if QT_VERSION < 0x050000
+		QString crc = QString::fromLatin1(CCryptographicHash::hash(states.join(";").toLatin1(), CCryptographicHash::Sha256).toHex());
+#else
+		QString crc = QString::fromLatin1(QCryptographicHash::hash(states.join(";").toLatin1(), QCryptographicHash::Sha256).toHex());
+#endif
+		mParameters.insert(SParameter(PPSDK::CPayment::Parameters::CRC, crc, true, true, true));
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -210,6 +238,8 @@ qint64 PaymentBase::getProvider(bool aMNP) const
 	PPSDK::DealerSettings * dealerSettings =
 		dynamic_cast<PPSDK::DealerSettings *>(mCore->getSettingsService()->getAdapter(PPSDK::CAdapterNames::DealerAdapter));
 
+	Q_ASSERT(dealerSettings);
+
 	PPSDK::SProvider provider = dealerSettings->getMNPProvider(myProvider, getewayIn, getewayOut);
 
 	return provider.isNull() ? myProvider : provider.id;
@@ -303,8 +333,10 @@ bool PaymentBase::getLimits(double & aMinAmount, double & aMaxAmount)
 		return false;
 	}
 
-	QString minLimit = getMNPProviderSettings().limits.min;
-	QString maxLimit = getMNPProviderSettings().limits.max;
+	auto limits = getMNPProviderSettings().limits;
+
+	QString minLimit = limits.min;
+	QString maxLimit = limits.max;
 
 	QRegExp macroPattern("\\{(.+)\\}");
 	macroPattern.setMinimal(true);
@@ -323,7 +355,7 @@ bool PaymentBase::getLimits(double & aMinAmount, double & aMaxAmount)
 	aMinAmount = myEngine.evaluate(minLimit).toString().toDouble();
 
 	// Если не получилось вычислить максимальный лимит, то берем системный
-	aMaxAmount = myEngine.evaluate(maxLimit.isEmpty() ? getMNPProviderSettings().limits.system : maxLimit).toString().toDouble();
+	aMaxAmount = myEngine.evaluate(maxLimit.isEmpty() ? limits.system : maxLimit).toString().toDouble();
 
 	return true;
 }
@@ -345,6 +377,8 @@ bool PaymentBase::calculateLimits()
 {
 	PPSDK::DealerSettings * dealerSettings =
 		dynamic_cast<PPSDK::DealerSettings *>(mCore->getSettingsService()->getAdapter(PPSDK::CAdapterNames::DealerAdapter));
+
+	Q_ASSERT(dealerSettings);
 
 	double minAmount = 0.0;
 	double maxAmount = 0.0;
@@ -421,13 +455,13 @@ bool PaymentBase::calculateLimits()
 
 			amountAll = amountAllLimit1;
 
-			if (com.getMinCharge())
+			if (!qFuzzyIsNull(com.getMinCharge()))
 			{
 				double amountAllLimit2 = aAmount + com.getMinCharge();
 				amountAll = amountAllLimit1 > amountAllLimit2 ? amountAllLimit1 : amountAllLimit2;
 			}
 
-			if (com.getMaxCharge())
+			if (!qFuzzyIsNull(com.getMaxCharge()))
 			{
 				double amountAllLimit3 = aAmount + com.getMaxCharge();
 				amountAll = amountAll > amountAllLimit3 ? amountAllLimit3 : amountAll;
@@ -473,12 +507,12 @@ bool PaymentBase::calculateLimits()
 				amountAll = qMax(amountAllLimit3, amountAll);
 			}
 		}
-		else if (com.getType() == PPSDK::Commission::Absolute && com.getValue())
+		else if (com.getType() == PPSDK::Commission::Absolute && !qFuzzyIsNull(com.getValue()))
 		{
 			aAmount -= com.getValue();
 			amountAll = aAmount;
 		}
-		else if (com.getMinCharge() || com.getMinCharge())
+		else if (!qFuzzyIsNull(com.getMinCharge()))
 		{
 			amountAll = aAmount - com.getMinCharge();
 		}
@@ -550,6 +584,8 @@ QList<PPSDK::IPayment::SParameter> PaymentBase::calculateCommission(const QList<
 	const auto limits = getMNPProviderSettings().limits;
 	PPSDK::DealerSettings * dealerSettings =
 		dynamic_cast<PPSDK::DealerSettings *>(mCore->getSettingsService()->getAdapter(PPSDK::CAdapterNames::DealerAdapter));
+
+	Q_ASSERT(dealerSettings);
 
 	if (!qFuzzyIsNull(amountAll))
 	{
@@ -710,6 +746,8 @@ bool PaymentBase::isCriticalError(int aError) const
 {
 	PPSDK::TerminalSettings * terminalSettings =
 		dynamic_cast<PPSDK::TerminalSettings *>(mCore->getSettingsService()->getAdapter(PPSDK::CAdapterNames::TerminalAdapter));
+
+	Q_ASSERT(terminalSettings);
 
 	return terminalSettings->getCriticalErrors().contains(aError);
 }

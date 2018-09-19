@@ -134,6 +134,13 @@ bool EBDSCashAcceptor::isConnected()
 	setDeviceParameter(CDeviceData::ModelKey, ProtocolUtils::toHexLog(modelKey));
 	setDeviceParameter(CDeviceData::Revision, revision);
 
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+void EBDSCashAcceptor::processDeviceData()
+{
+	QByteArray answer;
 	auto getData = [&] (const QByteArray & aCommand) -> bool { bool result = processCommand(aCommand, &answer); answer.replace(ASCII::NUL, "").replace(ASCII::DEL, ""); return result; };
 
 	if (getData(CEBDS::Commands::GetType))
@@ -158,8 +165,6 @@ bool EBDSCashAcceptor::isConnected()
 	{
 		setDeviceParameter(CDeviceData::Type, answer, CDeviceData::CashAcceptors::BillSet);
 	}
-
-	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -291,7 +296,7 @@ void EBDSCashAcceptor::cleanSpecificStatusCodes(TStatusCodes & aStatusCodes)
 {
 	mStackerNearFull = mStackerNearFull ||
 		(aStatusCodes.contains(BillAcceptorStatusCode::BillOperation::Stacked) &&
-		aStatusCodes.contains(BillAcceptorStatusCode::Warning::Cheated));
+		 aStatusCodes.contains(BillAcceptorStatusCode::Warning::Cheated));
 
 	if (mStackerNearFull)
 	{

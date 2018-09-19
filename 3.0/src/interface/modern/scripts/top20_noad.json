@@ -1,10 +1,9 @@
-﻿{
+{
 	"profile": "top20_noad",
 	"name": "main_menu_scene",
 	"spacing": "10",
 	"items": [
 	{  "path": "spacer.qml", "parameters": { "height": "11" } },
-	{ "path": "number_editor.qml", "parameters": {} },
 	{
 		"name": "TopOperators",
 		"path": "operator_menu.qml",

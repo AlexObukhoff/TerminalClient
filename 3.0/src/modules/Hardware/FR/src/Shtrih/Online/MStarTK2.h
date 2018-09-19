@@ -5,40 +5,36 @@
 #include "../Retractor/ShtrihRetractorFRLite.h"
 
 //--------------------------------------------------------------------------------
-typedef ShtrihRetractorFRLite<ShtrihOnlineFRBase<ShtrihSerialFRBase>> TStarTK2FR;
+namespace CMStarTK2FR
+{
+	/// Настройки печати.
+	namespace Printing
+	{
+		const char All       = '\x00';    /// Печатать всё.
+		const char NoFiscal  = '\x00';    /// Не печатать фисклаьный чек.
+		const char NoZReport = '\x03';    /// Не печатать Z-отчёт.
+	}
+}
 
-class MStarTK2FR : public TStarTK2FR
+//--------------------------------------------------------------------------------
+typedef ShtrihRetractorFRLite<ShtrihOnlineFRBase<ShtrihSerialFRBase>> TMStarTK2FR;
+
+class MStarTK2FR : public TMStarTK2FR
 {
 	SET_SUBSERIES("MStarTK2")
 
 public:
-	MStarTK2FR()
-	{
-		mDeviceName = CShtrihFR::Models::CData()[CShtrihFR::Models::ID::MStarTK2].name;
-		mOFDFiscalParameters << CFR::FiscalFields::Cashier;
-		mPrinterStatusEnabled = false;
-
-		mSupportedModels = getModelList();
-	}
+	MStarTK2FR();
 
 	/// Возвращает список поддерживаемых устройств.
-	static QStringList getModelList()
-	{
-		using namespace CShtrihFR::Models;
-
-		return CData().getModelList(ID::MStarTK2);
-	}
+	static QStringList getModelList();
 
 protected:
 	/// Выполнить команду.
-	virtual TResult processCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr)
-	{
-		QVariantMap configuration;
-		configuration.insert(CHardware::Port::COM::WaitResult, true);
-		mIOPort->setDeviceConfiguration(configuration);
+	virtual TResult processCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
 
-		return TStarTK2FR::processCommand(aCommand, aCommandData, aAnswer);
-	}
+	/// Включить/выключить режим непечати документов.
+	virtual bool setNotPrintDocument(bool aEnabled, bool aZReport = false);
 };
 
 //--------------------------------------------------------------------------------

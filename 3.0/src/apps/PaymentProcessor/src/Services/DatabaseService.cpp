@@ -120,7 +120,7 @@ bool DatabaseService::initialize()
 			{
 				// Отмечаем статус устройста, что БД была восстановлена
 				EventService::instance(mApplication)->sendEvent(
-					SDK::PaymentProcessor::Event(SDK::PaymentProcessor::EEventType::Warning, getName(), "Database integrity check failed. New database will be created."));
+					SDK::PaymentProcessor::Event(SDK::PaymentProcessor::EEventType::OK, getName(), "New database was created."));
 			}
 
 			//TODO - Запускаем процедуру восстановления базы

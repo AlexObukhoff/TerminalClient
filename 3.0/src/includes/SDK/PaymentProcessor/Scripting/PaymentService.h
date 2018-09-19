@@ -139,7 +139,7 @@ class Provider : public QObject
 	Q_PROPERTY(QString minLimit READ getMinLimit CONSTANT)
 	Q_PROPERTY(QString maxLimit READ getMaxLimit CONSTANT)
 	Q_PROPERTY(QString systemLimit READ getSystemLimit CONSTANT)
-	Q_PROPERTY(QObjectList fields READ getFields CONSTANT)
+	Q_PROPERTY(QVariant fields READ getFields CONSTANT)
 	Q_PROPERTY(bool skipCheck READ getSkipCheck CONSTANT)
 	Q_PROPERTY(bool payOnline READ getPayOnline CONSTANT)
 	Q_PROPERTY(bool askForRetry READ getAskForRetry CONSTANT)
@@ -173,7 +173,7 @@ private:
 	QString getMinLimit() const { return mProvider.limits.min; }
 	QString getMaxLimit() const { return mProvider.limits.max; }
 	QString getSystemLimit() const { return mProvider.limits.system; }
-	QObjectList getFields();
+	QVariant getFields();
 	bool getSkipCheck() const { return mProvider.processor.skipCheck; }
 	bool getPayOnline() const { return mProvider.processor.payOnline; }
 	bool getAskForRetry() const { return mProvider.processor.askForRetry; }
@@ -268,7 +268,7 @@ public slots:
 	QVariantMap calculateCommission(const QVariantMap & aParameters);
 
 	/// Вычислить для активного платежа, без записи результата в параметры платежа, лимиты комиссию для произвольной суммы 
-	QVariantMap calculateLimits(const QString & aAmount);
+	QVariantMap calculateLimits(const QString & aAmount, bool aFixedAmount = false);
 
 	/// Возвращает список купюр текущего платежа.
 	QObject * getPaymentNotes();

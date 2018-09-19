@@ -30,6 +30,7 @@ public:
 	virtual bool last() = 0;
 
 	virtual bool isValid() = 0;
+	virtual int  numRowsAffected() const = 0;
 
 	virtual QVariant value(int i) const = 0;
 };

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <memory>
+
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QObject>
@@ -10,10 +12,13 @@
 #include <QtCore/QStack>
 #include <QtCore/QSharedPointer>
 #include <QtGui/QInputEvent>
+#include <QtGui/QColor>
 #include <QtQuick/QQuickView>
 #include <QtQuickWidgets/QQuickWidget>
 #include <QtQuick/QQuickItem>
-//#include <QtGui/QInputContext>
+#include <QtQml/QQmlEngine>
+#include <QtQuick/QQuickWindow>
+#include <QtQuick/QQuickPaintedItem>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -33,37 +38,33 @@ namespace
 	const QString DefaultBackgroundColor = "#003e75";
 	const int DefaultAlpha = 0xd8;
 
-	class ModalBackgroundWidget : public QQuickItem
+	class ModalBackgroundWidget : public QQuickPaintedItem
 	{
 	public:
 		ModalBackgroundWidget()
 		{
-			if (window())
-			{
-				window()->setColor(ModalBackgroundWidget::getColor(DefaultBackgroundColor));
-			}
+			setFlag(QQuickItem::ItemHasContents);			
+			setFillColor(ModalBackgroundWidget::getColor(DefaultBackgroundColor));
+
+			// Необходимо для обработки мыши
+			setAcceptedMouseButtons(Qt::AllButtons);
 		}
 
 	public:
 		void setColor(const QString & aColor, int aAlpha = DefaultAlpha)
 		{
-			if (window())
-			{
-				window()->setColor(ModalBackgroundWidget::getColor(aColor.isEmpty() ? DefaultBackgroundColor : aColor, aAlpha));
-			}
+			setFillColor(ModalBackgroundWidget::getColor(aColor.isEmpty() ? DefaultBackgroundColor : aColor, aAlpha));
 		}
+
+	protected:
+		void paint(QPainter * aPainter) override { Q_UNUSED(aPainter) }
+		void mousePressEvent(QMouseEvent * aEvent) override { Q_UNUSED(aEvent) }
 
 	private:
-		virtual bool sceneEvent(QEvent * aEvent)
-		{
-			return dynamic_cast<QInputEvent *>(aEvent) == 0;
-		}
-
-		static QColor getColor(const QString & aColor, int aAlpha = DefaultAlpha)
+		QColor getColor(const QString & aColor, int aAlpha = DefaultAlpha)
 		{
 			QColor color(aColor);
 			color.setAlpha(aAlpha);
-
 			return color;
 		}
 	};
@@ -133,6 +134,7 @@ public:
 	GraphicsEngine();
 	~GraphicsEngine();
 
+public:
 	/// Инициализация. Вызывается после addContentDirectory() и addEngine(), 
 	/// инициализирует экран.
 	bool initialize(int aDisplay, int aWidth, int aHeight, bool aShowCursor, bool aShowDebugInfo = false);
@@ -148,6 +150,19 @@ public:
 
 	/// Закрывает все графические элементы, прячет экран.
 	void stop();
+
+	enum EWidgetType
+	{
+		All,
+		Qml,
+		Native,
+		Web
+	};
+
+	Q_ENUMS(EWidgetType)
+
+	/// Очистить сцену от виджетов.
+	void reset(EWidgetType aType = GraphicsEngine::Qml);
 
 	/// Добавляет каталог с графическими элементами (сразу производится поиск всех описателей и их парсинг).
 	void addContentDirectory(const QString & aDirectory);
@@ -230,9 +245,7 @@ private: // Типы
 	struct SWidget
 	{
 		SDK::GUI::GraphicsItemInfo info;
-		SDK::GUI::IGraphicsItem  * graphics;
-
-		SWidget() : graphics(0) {}
+		std::weak_ptr<SDK::GUI::IGraphicsItem> graphics;
 	};
 
 	typedef QMap<QString, SWidget> TWidgetList;
@@ -244,8 +257,12 @@ private: // Данные
 	/// Список доступных экранов.
 	QMap<int, SScreen> mScreens;
 
-	// Холст.
-	QQuickWidget mView;
+	// Родительское окно приложения
+	QWidget * mRootView;
+
+	// Контейнер для отображения QtQuick сцен
+	QQuickWindow * mQuickView;
+	
 
 	// Список каталогов с контентом.
 	QStringList mContentDirectories;
@@ -257,6 +274,8 @@ private: // Данные
 
 	// Список доступных виджетов.
 	TWidgetList mWidgets;
+
+	QQmlEngine mEngine;
 
 	// Текущий виджет.
 	TWidgetList::Iterator mTopWidget;
