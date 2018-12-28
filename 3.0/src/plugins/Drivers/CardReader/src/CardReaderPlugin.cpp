@@ -2,7 +2,8 @@
 
 // Modules
 #include "Hardware/Plugins/CommonParameters.h"
-#include "../../../../modules/Hardware/Cardreaders/src/CreatorReader.h"
+#include "../../../../modules/Hardware/Cardreaders/src/Creator/CreatorReader.h"
+#include "../../../../modules/Hardware/Cardreaders/src/IDTech/IDTechReader.h"
 
 // Project
 #include "MifareReader.h"
@@ -28,6 +29,7 @@ TParameterList EnumParameters()
 BEGIN_REGISTER_PLUGIN
 	SIMPLE_COMMON_DRIVER(MifareReader, EnumParameters)
 	SIMPLE_COMMON_DRIVER(CreatorReader, EnumParameters)
+	//SIMPLE_COMMON_DRIVER(IDTechReader, EnumParameters)
 END_REGISTER_PLUGIN
 
 //------------------------------------------------------------------------------

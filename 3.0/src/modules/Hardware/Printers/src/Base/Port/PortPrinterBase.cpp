@@ -100,7 +100,7 @@ void PortPrinterBase<T>::execTags(Tags::SLexeme & aTagLexeme, QVariant & aLine)
 
 	foreach(const Tags::TTypes types, mTagEngine->groupsTypesByPrefix(aTagLexeme.tags))
 	{
-		QByteArray openTag = mTagEngine->getTag(types, Tags::Direction::Open);
+		QByteArray openTag  = mTagEngine->getTag(types, Tags::Direction::Open);
 		QByteArray closeTag = mTagEngine->getTag(types, Tags::Direction::Close);
 		data = openTag + data + closeTag;
 	}

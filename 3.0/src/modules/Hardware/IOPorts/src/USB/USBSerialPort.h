@@ -2,10 +2,6 @@
 
 #pragma once
 
-// Windows
-#include <windows.h>
-
-// Project
 #include "Hardware/IOPorts/AsyncSerialPort.h"
 
 //--------------------------------------------------------------------------------

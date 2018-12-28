@@ -15,7 +15,7 @@
 #include <SDK/PaymentProcessor/Settings/TerminalSettings.h>
 
 // Project
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "Backend/HardwareManager.h"
 #include "ServiceTags.h"
@@ -45,7 +45,7 @@ bool DispenserServiceWindow::activate()
 	{
 		QVariantMap config = mBackend->getHardwareManager()->getDeviceConfiguration(device);
 		
-		foreach(PPSDK::SCashUnit cashUnit, cashUnitState.value(device))
+		for (const PPSDK::SCashUnit & cashUnit : cashUnitState.value(device))
 		{
 				QListWidgetItem * item = new QListWidgetItem(QString("%1:%2 -> %3 x %4 %5 = %6%7")
 					.arg(config.value("system_name").toString())

@@ -257,10 +257,10 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 	else if (canFiscalPrint(aPrinter, false))
 	{
 		DSDK::SPaymentData paymentData = getPaymentData(actualParameters);
+		DSDK::IFiscalPrinter * fiscalPrinter = static_cast<DSDK::IFiscalPrinter *>(aPrinter);
 
-		mFiscalPaymentData.clear();
-		mPayOffSubjectData.clear();
-		result = static_cast<DSDK::IFiscalPrinter *>(aPrinter)->printFiscal(receipt, paymentData, mFiscalPaymentData, mPayOffSubjectData);
+		quint32 FDNumber = 0;
+		result = fiscalPrinter->printFiscal(receipt, paymentData, &FDNumber);
 
 		if (result)
 		{
@@ -269,11 +269,15 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 				mFiscalFieldData = aPrinter->getDeviceConfiguration().value(CHardwareSDK::FR::FiscalFieldData).value<DSDK::TFiscalFieldData>();
 			}
 
-			addFiscalPaymentData(mFiscalPaymentData, receipt);
+			SDK::Driver::TFiscalPaymentData fiscalPaymentData;
+			SDK::Driver::TComplexFiscalPaymentData payOffSubjectData;
+			fiscalPrinter->checkFiscalFields(FDNumber, fiscalPaymentData, payOffSubjectData);
 
-			for (int i = 0; i < mPayOffSubjectData.size(); ++i)
+			addFiscalPaymentData(fiscalPaymentData, receipt);
+
+			for (int i = 0; i < payOffSubjectData.size(); ++i)
 			{
-				addFiscalPaymentData(mPayOffSubjectData[i], receipt);
+				addFiscalPaymentData(payOffSubjectData[i], receipt);
 			}
 		}
 	}
@@ -306,12 +310,6 @@ void PrintPayment::addFiscalPaymentData(const DSDK::TFiscalPaymentData & aFPData
 			aData << text.simplified();
 		}
 	}
-}
-
-//---------------------------------------------------------------------------
-const DSDK::TFiscalPaymentData & PrintPayment::getFiscalData() const
-{
-	return mFiscalPaymentData;
 }
 
 //---------------------------------------------------------------------------

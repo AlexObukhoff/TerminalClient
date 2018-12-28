@@ -105,6 +105,9 @@
     <Filter Include="Shtrih\Online\MStar">
       <UniqueIdentifier>{2086b9ba-7384-40c8-81e8-9bf07f730afe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AFP">
+      <UniqueIdentifier>{164a8542-6bd2-4e7c-944a-96122f7ac099}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Base\FRBase.cpp">
@@ -193,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="..\src\Shtrih\Online\MStarTK2.cpp">
       <Filter>Shtrih\Online\MStar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MStar\Online\AFPFR.cpp">
+      <Filter>AFP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -411,6 +417,18 @@
     </ClInclude>
     <ClInclude Include="..\src\Shtrih\Online\MStarTK2.h">
       <Filter>Shtrih\Online\MStar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MStar\Online\AFPFR.h">
+      <Filter>AFP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MStar\Online\AFPFRConstants.h">
+      <Filter>AFP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MStar\Online\ModelData.h">
+      <Filter>AFP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MStar\Online\AFPFRDataTypes.h">
+      <Filter>AFP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -61,7 +61,7 @@ void CitizenPPU700::processDeviceData()
 	EjectorPOS::processDeviceData();
 	QByteArray answer;
 
-	if (mIOPort->write(CCitizenPPU700::Command::GetFirmwareVersion) && getAnswer(answer, CPOSPrinter::Timeouts::Info))
+	if (mIOPort->write(CCitizenPPU700::Command::GetFirmware) && getAnswer(answer, CPOSPrinter::Timeouts::Info))
 	{
 		setDeviceParameter(CDeviceData::Firmware, answer);
 	}

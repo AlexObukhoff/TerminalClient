@@ -25,7 +25,7 @@
 
 // Проект
 #include "ServiceTags.h"
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/PaymentManager.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "PaymentServiceWindow.h"
@@ -225,8 +225,8 @@ void PaymentServiceWindow::onUpdatePayments(const QString & aMessage)
 	}
 
 	aMessage.isEmpty() 
-		? MessageBox::wait(tr("#updating_payment_data")) 
-		: MessageBox::wait(aMessage);
+		? GUI::MessageBox::wait(tr("#updating_payment_data")) 
+		: GUI::MessageBox::wait(aMessage);
 
 	mPaymentTaskWatcher.setFuture(QtConcurrent::run(this, &PaymentServiceWindow::loadPayments));
 }
@@ -236,11 +236,11 @@ void PaymentServiceWindow::onShowProcessWindow(bool aShow, const QString & aMess
 {
 	if (aShow)
 	{
-		MessageBox::wait(aMessage);
+		GUI::MessageBox::wait(aMessage);
 	}
 	else
 	{
-		MessageBox::hide();
+		GUI::MessageBox::hide();
 	}
 }
 
@@ -258,7 +258,7 @@ void PaymentServiceWindow::onPaymentsUpdated()
 	rbLastEncashment->setChecked(true);
 	rbAllPayments->setChecked(true);
 
-	MessageBox::hide(true);
+	GUI::MessageBox::hide(true);
 }
 
 //----------------------------------------------------------------------------
@@ -553,12 +553,12 @@ void PaymentTableModel::printReceipt(const QModelIndex & index)
 		}
 		else
 		{
-			MessageBox::info(tr("#printed_before"));
+			GUI::MessageBox::info(tr("#printed_before"));
 		}
 	}
 	else
 	{
-		MessageBox::info(tr("#select_payment_to_print"));
+		GUI::MessageBox::info(tr("#select_payment_to_print"));
 	}
 }
 
@@ -582,7 +582,7 @@ void PaymentTableModel::printAllReceipts()
 	}
 	else
 	{
-		MessageBox::info(tr("#nothing_to_print"));
+		GUI::MessageBox::info(tr("#nothing_to_print"));
 	}
 }
 
@@ -619,7 +619,7 @@ void PaymentTableModel::printFilteredReceipts(const QSet<qint64> & aPaymentsID)
 	}
 	else
 	{
-		MessageBox::info(tr("#nothing_to_print"));
+		GUI::MessageBox::info(tr("#nothing_to_print"));
 	}
 }
 
@@ -628,7 +628,7 @@ void PaymentTableModel::onReceiptPrinted(qint64 aPaymentId, bool aErrorHappened)
 {
 	if (aErrorHappened)
 	{
-		MessageBox::critical(tr("#error_occurred_printing"));
+		GUI::MessageBox::critical(tr("#error_occurred_printing"));
 		mPrintingQueue.clear();
 		return;
 	}
@@ -690,16 +690,16 @@ void PaymentTableModel::proccessPayment(const QModelIndex & index)
 			mPaymentManager->processPayment(payment.getId());
 			onUpdatePayment(payment.getId());
 
-			MessageBox::info(tr("#process"));
+			GUI::MessageBox::info(tr("#process"));
 		}
 		else
 		{
-			MessageBox::info(tr("#bad_status"));
+			GUI::MessageBox::info(tr("#bad_status"));
 		}
 	}
 	else
 	{
-		MessageBox::info(tr("#select_payment_to_process"));
+		GUI::MessageBox::info(tr("#select_payment_to_process"));
 	}
 }
 
@@ -722,11 +722,11 @@ void PaymentTableModel::proccessNextPayment()
 	{
 		if (mProcessPayments.processed)
 		{
-			MessageBox::info(tr("#process %1 payments").arg(mProcessPayments.processed));
+			GUI::MessageBox::info(tr("#process %1 payments").arg(mProcessPayments.processed));
 		}
 		else
 		{
-			MessageBox::info(tr("#nothing_to_process"));
+			GUI::MessageBox::info(tr("#nothing_to_process"));
 		}
 
 		mProcessPayments.clear();
@@ -743,8 +743,8 @@ void PaymentTableModel::processAllPayments()
 	mProcessPayments.payments = mPaymentInfoList;
 	mProcessPayments.processed = 0;
 
-	MessageBox::wait(tr("#updating_payment_data"), true);
-	MessageBox::subscribe(this);
+	GUI::MessageBox::wait(tr("#updating_payment_data"), true);
+	GUI::MessageBox::subscribe(this);
 
 	// Вызываем обработку следующего платежа
 	QMetaObject::invokeMethod(this, "proccessNextPayment", Qt::QueuedConnection);

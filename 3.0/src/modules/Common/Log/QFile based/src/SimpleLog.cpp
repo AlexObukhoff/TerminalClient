@@ -16,6 +16,7 @@
 #endif
 
 #include <Common/Version.h>
+#include <SysUtils/ISysUtils.h>
 
 // Проект
 #include "SimpleLog.h"
@@ -179,9 +180,8 @@ bool SimpleLog::init()
 			{
 				QFileInfo info(QDir::toNativeSeparators(QString::fromWCharArray(szPath)));
 				QString settingsFilePath = QDir::toNativeSeparators(info.absolutePath() + "/" + info.completeBaseName() + ".ini");
-				QSettings mSettings(settingsFilePath, QSettings::IniFormat);
-				mSettings.setIniCodec("UTF-8");
-				
+				QSettings mSettings(ISysUtils::rmBOM(settingsFilePath), QSettings::IniFormat);
+				mSettings.setIniCodec("UTF-8");				
 
 				if (mSettings.contains("common/working_directory"))
 				{

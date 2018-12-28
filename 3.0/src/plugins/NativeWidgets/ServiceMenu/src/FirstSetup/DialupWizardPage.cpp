@@ -14,7 +14,7 @@
 #include <SDK/PaymentProcessor/Connection/ConnectionTypes.h>
 
 // Проект
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/NetworkManager.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "GUI/ServiceTags.h"
@@ -106,7 +106,7 @@ void DialupWizardPage::onCreateConnection(const QString & aConnection, const QSt
 	}
 	else
 	{
-		MessageBox::warning(tr("#failed_create_connection"));
+		GUI::MessageBox::warning(tr("#failed_create_connection"));
 	}
 }
 
@@ -119,7 +119,7 @@ void DialupWizardPage::onTestConnection(const QString & aConnection)
 	connection.name = aConnection;
 	mBackend->getNetworkManager()->setConnection(connection);
 
-	MessageBox::wait(tr("#testing_connection"));
+	GUI::MessageBox::wait(tr("#testing_connection"));
 
 	mTaskWatcher.setFuture(QtConcurrent::run(boost::bind(&NetworkManager::testConnection, mBackend->getNetworkManager(), boost::ref(mConnectionError))));
 }
@@ -139,15 +139,15 @@ void DialupWizardPage::onRemoveConnection(const QString & aConnection)
 	}
 	else
 	{
-		MessageBox::warning(tr("#failed_remove_connection"));
+		GUI::MessageBox::warning(tr("#failed_remove_connection"));
 	}
 }
 
 //---------------------------------------------------------------------------
 void DialupWizardPage::onTestFinished()
 {
-	MessageBox::hide();
-	MessageBox::info(mTaskWatcher.result() ? tr("#connection_test_ok") : tr("#connection_test_failed") + "\n" + mConnectionError);
+	GUI::MessageBox::hide();
+	GUI::MessageBox::info(mTaskWatcher.result() ? tr("#connection_test_ok") : tr("#connection_test_failed") + "\n" + mConnectionError);
 
 	emit pageEvent("#can_proceed", mTaskWatcher.result());
 }

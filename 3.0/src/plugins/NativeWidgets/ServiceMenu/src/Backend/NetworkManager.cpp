@@ -16,7 +16,7 @@
 // Project
 #include "GUI/ServiceTags.h"
 
-#include "MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "NetworkManager.h"
 
 namespace PPSDK = SDK::PaymentProcessor;
@@ -104,7 +104,7 @@ QList<QPair<QString, QString> > NetworkManager::getModems() const
 	}
 	catch (const NetworkError &)
 	{
-		MessageBox::critical(tr("#get_modems_error"));
+		GUI::MessageBox::critical(tr("#get_modems_error"));
 	}
 
 	return result;
@@ -119,7 +119,7 @@ QStringList NetworkManager::getInterfaces() const
 	}
 	catch (const NetworkError &)
 	{
-		MessageBox::critical(tr("#get_interface_error"));
+		GUI::MessageBox::critical(tr("#get_interface_error"));
 	}
 
 	return QStringList();
@@ -134,7 +134,7 @@ QStringList NetworkManager::getRemoteConnections() const
 	}
 	catch (const NetworkError &)
 	{
-		MessageBox::critical(tr("#get_remote_connections_error"));
+		GUI::MessageBox::critical(tr("#get_remote_connections_error"));
 	}
 
 	return QStringList();
@@ -149,7 +149,7 @@ QStringList NetworkManager::getLocalConnections() const
 	}
 	catch (const NetworkError &)
 	{
-		MessageBox::critical(tr("#get_local_connections_error"));
+		GUI::MessageBox::critical(tr("#get_local_connections_error"));
 	}
 
 	return QStringList();
@@ -182,7 +182,7 @@ bool NetworkManager::createDialupConnection(const SDK::PaymentProcessor::SConnec
 			}
 			catch (const NetworkError & e)
 			{
-				MessageBox::critical(e.getSeverity() == ESeverity::Critical ? tr("#phone_entry_call_failed") :  tr("#phone_entry_already_exist\n"));
+				GUI::MessageBox::critical(e.getSeverity() == ESeverity::Critical ? tr("#phone_entry_call_failed") :  tr("#phone_entry_already_exist\n"));
 			}
 		}
 	}
@@ -206,7 +206,7 @@ bool NetworkManager::removeDialupConnection(const SDK::PaymentProcessor::SConnec
 			}
 			catch (const NetworkError & e)
 			{
-				MessageBox::critical(e.getSeverity() == ESeverity::Critical ? tr("#phone_entry_call_failed") :  tr("#phone_entry_not_exist\n"));
+				GUI::MessageBox::critical(e.getSeverity() == ESeverity::Critical ? tr("#phone_entry_call_failed") :  tr("#phone_entry_not_exist\n"));
 			}
 		}
 	}

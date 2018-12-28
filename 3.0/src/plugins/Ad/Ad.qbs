@@ -6,6 +6,7 @@ PluginTemplate {
 
 	Depends { name: "Qt"; submodules: ["sql", "network", "qml"] }
 
+	Depends { name: "SysUtils" }
 	Depends { name: "PaymentBase" }
 	Depends { name: "NetworkTaskManager" }
 	

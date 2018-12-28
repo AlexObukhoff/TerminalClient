@@ -10,12 +10,13 @@ Controls.InputField {
 	property alias backspace: rootItem.backspace
 	property alias maxLength: rootItem.maxLength
 	property alias capitalization: rootItem.capitalization
+	property alias readonly: rootItem.readonly
 
 	height: 120
 	font: Utils.ui.font("font.textfield")
 
 	background: BorderImage {
-		source: Utils.ui.image("textfield")
+		source: rootItem.readonly ? Utils.ui.image("panel.operator") : Utils.ui.image("textfield")
 		anchors.fill: parent
 		border { left: 30; top: 30; right: 30; bottom: 30 }
 		horizontalTileMode: BorderImage.Stretch

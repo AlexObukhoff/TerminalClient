@@ -94,7 +94,7 @@ namespace CPrimexNP2511
 		{
 			append(ASCII::STX, SDeviceParameters(7, CDeviceData::ModelName));
 			append(ASCII::ETX, SDeviceParameters(8, CDeviceData::Firmware));
-			append(ASCII::EOT, SDeviceParameters(8, CDeviceData::BootVersion));
+			append(ASCII::EOT, SDeviceParameters(8, CDeviceData::BootFirmware));
 			append(ASCII::ENQ, SDeviceParameters(4, CDeviceData::Switches));
 		}
 	};

@@ -136,7 +136,6 @@ void HIDService::onData(const QVariantMap & aDataMap)
 
 		if (faceDetected)
 		{
-			QBuffer buffer;
 			buffer.open(QIODevice::WriteOnly);
 			aDataMap.value(CHardwareSDK::HID::ImageWithFaceArea).value<QImage>().convertToFormat(QImage::Format_RGB16).save(&buffer, "jpg");
 			parameters.insert(HID::CAMERA_FACE_DETECTED_IMAGE, QString(buffer.data().toBase64()));

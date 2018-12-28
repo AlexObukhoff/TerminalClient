@@ -74,6 +74,9 @@ public:
 	/// Возвращает сетевой интерфейс.
 	NetworkTaskManager * getNetworkTaskManager() const;
 
+	/// Получить окружение
+	SDK::Plugin::IEnvironment * getEnviroment() const { return mFactory; }
+
 private:
 	bool mInitialized;
 	SDK::Plugin::IEnvironment * mFactory;

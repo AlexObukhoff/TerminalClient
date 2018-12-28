@@ -3,7 +3,7 @@
 // Stl
 #include <math.h>
 
-// SDK
+// Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QStringList>
 #include <QtCore/QRegExp>

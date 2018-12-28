@@ -18,7 +18,8 @@ namespace FRError
 			Printer,        /// Принтер.
 			FM,             /// Фискальная память.
 			EKLZ,           /// ЭКЛЗ.
-			FS              /// ФН.
+			FS,             /// ФН.
+			SD              /// Ошибка карты памяти.
 		};
 	}
 
@@ -26,15 +27,16 @@ namespace FRError
 	{
 		QString description;
 		EType::Enum type;
+		bool extraData;
 
-		SData() : type(EType::FR) {}
-		SData(const QString & aDescription, EType::Enum aType = EType::FR) : description(aDescription), type(aType) {}
+		SData() : type(EType::FR), extraData(false) {}
+		SData(const QString & aDescription, EType::Enum aType = EType::FR, bool aExtraData = false) : description(aDescription), type(aType), extraData(aExtraData) {}
 	};
 
-	class CData : public CSpecification<char, SData>
+	class Data : public CSpecification<char, SData>
 	{
 	public:
-		CData()
+		Data()
 		{
 			setDefault(SData(QString::fromUtf8("Неизвестная"), EType::Unknown));
 		}
@@ -42,6 +44,11 @@ namespace FRError
 		void add(char aKey, const char * aDescription, EType::Enum aType = EType::Unknown)
 		{
 			mBuffer.insert(aKey, SData(QString::fromUtf8(aDescription), aType));
+		}
+
+		void add(char aKey, const char * aDescription, bool aExtraData)
+		{
+			mBuffer.insert(aKey, SData(QString::fromUtf8(aDescription), EType::FR, aExtraData));
 		}
 	};
 }

@@ -61,7 +61,7 @@ protected:
 	/// Напечатать чек.
 	virtual bool printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt);
 
-	/// Кутэшный принтер.
+	/// Qt-принтер.
 	QPrinter mPrinter;
 
 	/// Битмап c картинкой.

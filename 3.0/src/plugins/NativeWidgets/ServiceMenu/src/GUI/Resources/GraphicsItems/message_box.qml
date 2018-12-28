@@ -24,13 +24,19 @@ Rectangle {
 		source: ""
 	}
 
-	AnimatedImage {
+	Item {
 		id: imageWait
 
 		x: 44
 		y: 50
-		source: "qrc:/Images/MessageBox/wait.gif"
-		visible: false
+
+		height: 188
+		width: 188
+
+		AnimatedImage {
+			anchors.centerIn: parent
+			source: "qrc:/Images/MessageBox/wait.gif"
+		}
 	}
 
 	Text {
@@ -241,6 +247,7 @@ Rectangle {
 			if (aParameters["icon"] == MessageBox.Wait)
 			{
 				imageWait.visible = true;
+				imageMain.visible = false;
 
 				if (aParameters["button"] == MessageBox.Cancel)
 				{

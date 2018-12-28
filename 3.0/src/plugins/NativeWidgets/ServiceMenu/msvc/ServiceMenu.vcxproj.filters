@@ -62,15 +62,15 @@
     <Filter Include="Backend\Form files">
       <UniqueIdentifier>{f4dff56f-eacb-4844-acd8-a9079715284e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MessageBox">
+      <UniqueIdentifier>{14cfba82-86e0-48b6-8490-47353ead8206}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Backend\HardwareManager.cpp">
       <Filter>Backend</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Backend\KeysManager.cpp">
-      <Filter>Backend</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Backend\MessageBox.cpp">
       <Filter>Backend</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Backend\NetworkManager.cpp">
@@ -355,12 +355,6 @@
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_NetworkManager.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_MessageBox.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_MessageBox.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_KeysManager.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -440,9 +434,6 @@
       <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_KeysWizardPage.cpp">
-      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_MessageBox.cpp">
       <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\service_menu\ReleaseWithDebugInfo\moc_NetworkManager.cpp">
@@ -655,6 +646,30 @@
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_PluginLibraryDefinition.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\GUI\MessageBox\MessageBox.cpp">
+      <Filter>MessageBox</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_MessageBox.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_MessageBox.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_MessageBox.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\MessageBox\MessageWindow.cpp">
+      <Filter>MessageBox</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_MessageWindow.cpp">
+      <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_MessageWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_MessageWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Backend\IConfigManager.h">
@@ -773,6 +788,9 @@
     </ClInclude>
     <ClInclude Include="..\src\GUI\ServiceMenu.h">
       <Filter>Plugins\ServiceMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(ProjectName)\ui_MessageWindow.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -991,9 +1009,6 @@
     <CustomBuild Include="..\src\Backend\NetworkManager.h">
       <Filter>Backend</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\src\Backend\MessageBox.h">
-      <Filter>Backend</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\src\Backend\KeysManager.h">
       <Filter>Backend</Filter>
     </CustomBuild>
@@ -1129,8 +1144,15 @@
     <CustomBuild Include="..\src\Backend\ServiceMenuBackend.h">
       <Filter>Backend</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\src\GUI\PluginLibraryDefinition.h">
-      <Filter>Generated Files</Filter>
+    <CustomBuild Include="..\src\GUI\PluginLibraryDefinition.h" />
+    <CustomBuild Include="..\src\GUI\MessageBox\MessageBox.h">
+      <Filter>MessageBox</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\MessageBox\MessageWindow.h">
+      <Filter>MessageBox</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\MessageBox\MessageWindow.ui">
+      <Filter>MessageBox</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

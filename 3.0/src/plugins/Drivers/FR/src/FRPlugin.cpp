@@ -179,8 +179,7 @@ TParameterList MStarTK2Parameters(const QStringList & aModels)
 	return modifyPriority(ShtrihOnlineParameters<T>(aModels), EDetectingPriority::High)
 		//<< setRemoteSensor(true)
 		<< setLoopEnabled("", false)
-		<< setPresentationLength()
-		<< setLeftReceiptTimeout(true);
+		<< setPresentationLength();
 }
 
 //------------------------------------------------------------------------------
@@ -282,6 +281,15 @@ TParameterList KasbiParameters(const QStringList & aModels)
 }
 
 //------------------------------------------------------------------------------
+template <class T>
+TParameterList AFPParameters(const QStringList & aModels)
+{
+	return modifyPriority(defaultParameters<T>(aModels, CComponents::FiscalRegistrator), EDetectingPriority::High)
+		<< setNullingSumInCash()
+		<< setProtocol(ProtocolNames::FR::AFP);
+}
+
+//------------------------------------------------------------------------------
 #define SINGLE_FR_PLUGIN(aClassName, aParameters, aName) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName>, QStringList() << #aName))
 #define COMMON_FR_PLUGIN(aClassName, aParameters)        COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName>, aClassName::getModelList()))
 
@@ -327,6 +335,7 @@ BEGIN_REGISTER_PLUGIN
 	COMMON_FR_PLUGIN(SparkFR, SparkParameters)
 	SINGLE_FR_PLUGIN(OPOSMStarTUPK, OPOSFRParameters, Multisoft MStar-TUP-K)
 	SINGLE_FR_PLUGIN(KasbiFRBase, KasbiParameters, Kasbi Terminal-FA)
+	COMMON_FR_PLUGIN(AFPFR, AFPParameters)
 END_REGISTER_PLUGIN
 
 //------------------------------------------------------------------------------

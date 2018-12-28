@@ -9,7 +9,7 @@
 #include <SDK/Drivers/Components.h>
 
 // Проект
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/NetworkManager.h"
 #include "Backend/HardwareManager.h"
 #include "Backend/ServiceMenuBackend.h"
@@ -84,14 +84,14 @@ bool HardwareServiceWindow::shutdown()
 //------------------------------------------------------------------------
 void HardwareServiceWindow::onDetectionStarted()
 {
-	MessageBox::wait(tr("#detecting_devices"), true);
-	MessageBox::subscribe(this);
+	GUI::MessageBox::wait(tr("#detecting_devices"), true);
+	GUI::MessageBox::subscribe(this);
 
 	QVariantMap params;
 	params[SDK::GUI::CMessageBox::ButtonType] = SDK::GUI::MessageBoxParams::Text;
 	params[SDK::GUI::CMessageBox::ButtonText] = tr("#stop_search");
 
-	MessageBox::update(params);
+	GUI::MessageBox::update(params);
 }
 
 //------------------------------------------------------------------------
@@ -102,7 +102,7 @@ void HardwareServiceWindow::onDetectionFinished()
 	// Обновляем статусы найденных железок
 	mBackend->getHardwareManager()->updateStatuses();
 
-	MessageBox::hide();
+	GUI::MessageBox::hide();
 }
 
 //------------------------------------------------------------------------
@@ -116,9 +116,9 @@ void HardwareServiceWindow::onEditSlot(DeviceSlot * aSlot, EditorPane * aPane)
 
 	if (aSlot->getType() == SDK::Driver::CComponents::Modem)
 	{
-		MessageBox::wait(tr("#closing_connection"));
+		GUI::MessageBox::wait(tr("#closing_connection"));
 		mBackend->getNetworkManager()->closeConnection();
-		MessageBox::hide();
+		GUI::MessageBox::hide();
 	}
 }
 
@@ -163,13 +163,13 @@ void HardwareServiceWindow::onEditFinished()
 //------------------------------------------------------------------------
 void HardwareServiceWindow::onApplyingStarted()
 {
-	MessageBox::wait(tr("#applying_configuration"));
+	GUI::MessageBox::wait(tr("#applying_configuration"));
 }
 
 //------------------------------------------------------------------------
 void HardwareServiceWindow::onApplyingFinished()
 {
-	MessageBox::hide(true);
+	GUI::MessageBox::hide(true);
 
 	// Для переинициализации свежедобавленного устройства. В противном случае не работает тест купюроприемника.
 	mWindow->setConfiguration(mBackend->getHardwareManager()->getConfiguration());
@@ -178,8 +178,8 @@ void HardwareServiceWindow::onApplyingFinished()
 //------------------------------------------------------------------------
 void HardwareServiceWindow::onClicked(const QVariantMap & /*aParameters*/)
 {
-	MessageBox::hide();
-	MessageBox::wait(tr("#waiting_stop_search"));
+	GUI::MessageBox::hide();
+	GUI::MessageBox::wait(tr("#waiting_stop_search"));
 	
 	mWindow->abortDetection();
 

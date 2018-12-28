@@ -11,6 +11,8 @@
 #include "PrimFRConstants.h"
 #include "PrimFR.h"
 
+using namespace ProtocolUtils;
+
 //--------------------------------------------------------------------------------
 PrimFRProtocol::PrimFRProtocol() : mDifferential(ASCII::Space), mLastCommandResult(0)
 {
@@ -23,28 +25,38 @@ ushort PrimFRProtocol::calcCRC(const QByteArray & aData)
 }
 
 //--------------------------------------------------------------------------------
-bool PrimFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnswer, bool aPrinterMode)
+TResult PrimFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnswer, bool aPrinterMode)
 {
 	if (aAnswer.size() < CPrimFR::MinAnswerSize)
 	{
 		toLog(LogLevel::Error, QString("PRIM: The length of the packet is less than %1 byte").arg(CPrimFR::MinAnswerSize));
-		return false;
+		return CommandResult::Protocol;
 	}
 
 	if (aAnswer[0] != CPrimFR::Prefix)
 	{
 		toLog(LogLevel::Error, QString("PRIM: Invalid prefix = %1, need = %2")
-			.arg(ProtocolUtils::toHexLog(aAnswer[0]))
-			.arg(ProtocolUtils::toHexLog(CPrimFR::Prefix)));
-		return false;
+			.arg(toHexLog(aAnswer[0]))
+			.arg(toHexLog(CPrimFR::Prefix)));
+		return CommandResult::Protocol;
+	}
+
+	char postfix = aAnswer.right(5)[0];
+
+	if (postfix != CPrimFR::Postfix)
+	{
+		toLog(LogLevel::Error, QString("PRIM: Invalid postfix = %1, need = %2")
+			.arg(toHexLog(postfix))
+			.arg(toHexLog(CPrimFR::Postfix)));
+		return CommandResult::Protocol;
 	}
 
 	if ((aAnswer[1] != char(mDifferential)) && !aPrinterMode)
 	{
 		toLog(LogLevel::Error, QString("PRIM: Invalid differential = %1, need = %2")
-			.arg(ProtocolUtils::toHexLog(aAnswer[1]))
-			.arg(ProtocolUtils::toHexLog(mDifferential)));
-		return false;
+			.arg(toHexLog(aAnswer[1]))
+			.arg(toHexLog(mDifferential)));
+		return CommandResult::Id;
 	}
 
 	QString requestCommand = aRequest.mid(6, 2);
@@ -55,21 +67,10 @@ bool PrimFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnsw
 		toLog(LogLevel::Error, QString("PRIM: Invalid command in answer = \"%1\", need = \"%2\"")
 			.arg(answerCommand)
 			.arg(requestCommand));
-		return false;
-	}
-
-	char postfix = aAnswer.right(5)[0];
-
-	if (postfix != CPrimFR::Postfix)
-	{
-		toLog(LogLevel::Error, QString("PRIM: Invalid postfix = %1, need = %2")
-			.arg(ProtocolUtils::toHexLog(postfix))
-			.arg(ProtocolUtils::toHexLog(CPrimFR::Postfix)));
-		return false;
+		return CommandResult::Id;
 	}
 
 	QByteArray unpackedData = aAnswer.left(aAnswer.size() - 4);
-
 	ushort localCRC = calcCRC(unpackedData);
 	bool isOK;
 	ushort CRC = qToBigEndian(aAnswer.right(4).toUShort(&isOK, 16));
@@ -77,15 +78,15 @@ bool PrimFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnsw
 	if (!isOK)
 	{
 		toLog(LogLevel::Error, QString("PRIM: Filed to convert CRC = %1 from hex to digit").arg(aAnswer.right(4).data()));
-		return false;
+		return CommandResult::CRC;
 	}
 	else if (localCRC != CRC)
 	{
-		toLog(LogLevel::Error, QString("PRIM: Invalid CRC = %1 (%2), need %3").arg(CRC).arg(CRC, 4, 16, QChar('0')).arg(localCRC));
-		return false;
+		toLog(LogLevel::Error, QString("PRIM: Invalid CRC = %1 (%2), need %3 (%4)").arg(CRC).arg(toHexLog(CRC)).arg(localCRC).arg(toHexLog(localCRC)));
+		return CommandResult::CRC;
 	}
 
-	return true;
+	return CommandResult::OK;
 }
 
 //--------------------------------------------------------------------------------
@@ -191,6 +192,7 @@ TResult PrimFRProtocol::execCommand(const QByteArray & aRequest, QByteArray & aA
 {
 	int index = 0;
 	QByteArray request(aRequest);
+	TResult result = CommandResult::OK;
 
 	do
 	{
@@ -212,7 +214,9 @@ TResult PrimFRProtocol::execCommand(const QByteArray & aRequest, QByteArray & aA
 			return CommandResult::NoAnswer;
 		}
 
-		if (check(aRequest, aAnswer, aConditions == EPrimFRCommandConditions::PrinterMode))
+		result = check(aRequest, aAnswer, aConditions == EPrimFRCommandConditions::PrinterMode);
+
+		if (result)
 		{
 			aAnswer = aAnswer.mid(2, aAnswer.size() - 8);
 
@@ -221,7 +225,7 @@ TResult PrimFRProtocol::execCommand(const QByteArray & aRequest, QByteArray & aA
 	}
 	while(++index < CPrimFR::RepeatingCount::Protocol);
 
-	return CommandResult::Protocol;
+	return result;
 }
 
 //--------------------------------------------------------------------------------

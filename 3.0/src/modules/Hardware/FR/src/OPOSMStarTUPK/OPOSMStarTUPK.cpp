@@ -175,7 +175,7 @@ SOPOSResult OPOSMStarTUPK::processIntMethod(TIntMethod aMethod, const QString & 
 
 							toOPOS_LOG(LogLevel::Normal, "Going to reset printer.");
 
-							if (OPOS_SUCCESS(INT_CALL_OPOS(ResetPrinter)) && !isDocumentOpened())
+							if (OPOS_SUCCESS(INT_CALL_OPOS(ResetPrinter)) && (getDocumentState() == EDocumentState::Closed))
 							{
 								result = OPOS::OPOS_SUCCESS;
 							}
@@ -187,7 +187,7 @@ SOPOSResult OPOSMStarTUPK::processIntMethod(TIntMethod aMethod, const QString & 
 						{
 							toOPOS_LOG(LogLevel::Normal, "Going to checking document state and aborting the document, if it is need.");
 
-							if (isDocumentOpened() && abortDocument())
+							if ((getDocumentState() == EDocumentState::Opened) && abortDocument())
 							{
 								result = repeatMethod();
 							}
@@ -309,10 +309,7 @@ bool OPOSMStarTUPK::receiptProcessing()
 //--------------------------------------------------------------------------------
 bool OPOSMStarTUPK::processReceipt(const QStringList & aReceipt, bool aProcessing)
 {
-	QStringList receipt(aReceipt);
-	cleanReceipt(receipt);
-
-	if (receipt.isEmpty())
+	if (!isPrintingNeed(aReceipt))
 	{
 		return true;
 	}
@@ -326,7 +323,9 @@ bool OPOSMStarTUPK::processReceipt(const QStringList & aReceipt, bool aProcessin
 		return false;
 	}
 
-	if (!TOPOSFR::processReceipt(aReceipt, false) || !OPOS_SUCCESS(INT_CALL_OPOS(EndNonFiscal)))
+	QStringList receipt = simplifyReceipt(aReceipt);
+
+	if (!TOPOSFR::processReceipt(receipt, false) || !OPOS_SUCCESS(INT_CALL_OPOS(EndNonFiscal)))
 	{
 		fixError(EFiscalPrinterCommand::Print, std::bind(&OPOSMStarTUPK::abortDocument, this));
 
@@ -433,7 +432,7 @@ bool OPOSMStarTUPK::getStatus(TStatusCodes & aStatusCodes)
 }
 
 //--------------------------------------------------------------------------------
-bool OPOSMStarTUPK::isDocumentOpened()
+EDocumentState::Enum OPOSMStarTUPK::getDocumentState()
 {
 	int state = INT_CALL_OPOS(PrinterState).error;
 
@@ -443,12 +442,7 @@ bool OPOSMStarTUPK::isDocumentOpened()
 	              (state == OPOS::FPTR_PS_FISCAL_RECEIPT_ENDING) ||
 	              (state == OPOS::FPTR_PS_FISCAL_RECEIPT_TOTAL);
 
-	if (!result)
-	{
-		toOPOS_LOG(LogLevel::Normal, QString("PrinterState returns state %1, so document was not opened.").arg(state));
-	}
-
-	return result;
+	return result ? EDocumentState::Opened : EDocumentState::Closed;
 }
 
 //--------------------------------------------------------------------------------
@@ -533,7 +527,7 @@ bool OPOSMStarTUPK::makeFiscal(const SPaymentData & aPaymentData)
 }
 
 //--------------------------------------------------------------------------------
-bool OPOSMStarTUPK::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & /*aFPData*/, TComplexFiscalPaymentData & /*aPSData*/)
+bool OPOSMStarTUPK::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * /*aFDNumber*/)
 {
 	if (!processReceipt(aReceipt, false))
 	{
@@ -549,6 +543,12 @@ bool OPOSMStarTUPK::performFiscal(const QStringList & aReceipt, const SPaymentDa
 	}
 
 	return result;
+}
+
+//--------------------------------------------------------------------------------
+ESessionState::Enum OPOSMStarTUPK::getSessionState()
+{
+	return BOOL_CALL_OPOS(DayOpened) ? ESessionState::Opened : ESessionState::Closed;
 }
 
 //--------------------------------------------------------------------------------
@@ -754,9 +754,15 @@ double OPOSMStarTUPK::getAmountInCash()
 	using namespace COPOSMStarTUPK::DirectIO;
 
 	QString data;
-	bool result = OPOS_SUCCESS(INT_CALL_OPOS(DirectIO, GetData::Command, GetData::TotalEncash, std::ref(data)));
+	if (!OPOS_SUCCESS(INT_CALL_OPOS(DirectIO, GetData::Command, GetData::TotalEncash, std::ref(data))))
+	{
+		return -1;
+	}
 
-	return result ? data.toDouble() : -1;
+	bool OK;
+	double result = data.toDouble(&OK);
+
+	return OK ? result : -1;
 }
 
 //--------------------------------------------------------------------------------

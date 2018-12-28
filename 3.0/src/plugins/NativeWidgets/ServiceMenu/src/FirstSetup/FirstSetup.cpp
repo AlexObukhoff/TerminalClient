@@ -14,7 +14,7 @@
 #include <SDK/PaymentProcessor/Core/IGUIService.h>
 
 // Проект
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "FirstSetup.h"
 
@@ -140,7 +140,7 @@ void FirstSetup::hide()
 //---------------------------------------------------------------------------
 void FirstSetup::notify(const QString & /*aReason*/, const QVariantMap & aParameters)
 {
-	MessageBox::emitSignal(aParameters);
+	GUI::MessageBox::emitSignal(aParameters);
 }
 
 //---------------------------------------------------------------------------

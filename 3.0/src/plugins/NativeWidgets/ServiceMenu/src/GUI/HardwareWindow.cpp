@@ -13,7 +13,7 @@
 #include <SDK/PaymentProcessor/Core/ICore.h>
 
 // Проект
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/HardwareManager.h"
 #include "Backend/NetworkManager.h"
 #include "Backend/ServiceMenuBackend.h"
@@ -85,7 +85,7 @@ HardwareWindow::HardwareWindow(ServiceMenuBackend * aBackend, QWidget * aParent)
 
 		lastType = type;
 		
-		foreach (QString model, modelList)
+		for (QString & model : modelList)
 		{
 			SDeviceItem item;
 			item.model = model;
@@ -273,7 +273,7 @@ void HardwareWindow::onDeviceFound(const QString & aConfigName)
 	QVariantMap popupParams;
 	popupParams[SDK::GUI::CMessageBox::TextAppendMode] = true;
 	popupParams[SDK::GUI::CMessageBox::TextMessageExt] = slot->getModel();
-	MessageBox::update(popupParams);
+	GUI::MessageBox::update(popupParams);
 }
 
 //------------------------------------------------------------------------

@@ -21,7 +21,7 @@ char SparkFRProtocol::calcCRC(const QByteArray & aData)
 }
 
 //--------------------------------------------------------------------------------
-bool SparkFRProtocol::unpack(QByteArray & aAnswerData)
+bool SparkFRProtocol::check(const QByteArray & aAnswerData)
 {
 	// размер
 	if (aAnswerData.size() < CSparkFR::MinPacketAnswerSize)
@@ -65,8 +65,6 @@ bool SparkFRProtocol::unpack(QByteArray & aAnswerData)
 		return false;
 	}
 
-	aAnswerData = aAnswerData.mid(1, size - 3);
-
 	return true;
 }
 
@@ -106,7 +104,14 @@ TResult SparkFRProtocol::performCommand(const QByteArray & aCommandData, QByteAr
 		}
 		else if (!aAnswerData.startsWith(ASCII::NAK))
 		{
-			return unpack(aAnswerData) ? CommandResult::OK : CommandResult::Protocol;
+			if (!check(aAnswerData))
+			{
+				return CommandResult::Protocol;
+			}
+
+			aAnswerData = aAnswerData.mid(1, aAnswerData.size() - 3);
+
+			return CommandResult::OK;
 		}
 
 		toLog(LogLevel::Warning, "SPARK: Answer contains NAK");

@@ -12,7 +12,7 @@
 #include <SDK/PaymentProcessor/Connection/ConnectionTypes.h>
 
 // Проект
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/NetworkManager.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "GUI/ServiceTags.h"
@@ -137,7 +137,7 @@ void UnmanagedWizardPage::onTestConnection(QNetworkProxy aProxy)
 
 	mBackend->getNetworkManager()->setConnection(connection);
 
-	MessageBox::wait(tr("#testing_connection"));
+	GUI::MessageBox::wait(tr("#testing_connection"));
 
 	mTaskWatcher.setFuture(QtConcurrent::run(mBackend->getNetworkManager(), &NetworkManager::testConnection, QString()));
 }
@@ -145,8 +145,8 @@ void UnmanagedWizardPage::onTestConnection(QNetworkProxy aProxy)
 //---------------------------------------------------------------------------
 void UnmanagedWizardPage::onTestFinished()
 {
-	MessageBox::hide();
-	MessageBox::info(mTaskWatcher.result() ? tr("#connection_test_ok") : tr("#connection_test_failed"));
+	GUI::MessageBox::hide();
+	GUI::MessageBox::info(mTaskWatcher.result() ? tr("#connection_test_ok") : tr("#connection_test_failed"));
 
 	// сохраняем в mConnectionSettings хорошие настройки прокси
 	if (mTaskWatcher.result())

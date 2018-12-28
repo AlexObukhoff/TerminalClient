@@ -13,6 +13,7 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
+#include "SysUtils/ISysUtils.h"
 #include "Hardware/FR/ProtoFR.h"
 #include "Hardware/HID/ProtoOPOSScanner.h"
 
@@ -70,11 +71,7 @@ void OPOSPollingDeviceBase<T, T2>::initializeResources()
 {
 	if (!mCOMInitialized && FAILED(CoInitializeEx(0, COINIT_APARTMENTTHREADED)))
 	{
-		DWORD error = GetLastError();
-		LPWSTR buf = 0;
-		FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, 0, 0);
-		toOPOS_LOG(LogLevel::Error, QString("Failed to init COM, error: %1. Description: %2.").arg(error).arg(QString::fromWCharArray(buf)));
-		LocalFree(buf);
+		toOPOS_LOG(LogLevel::Error, "Failed to init COM, " + ISysUtils::getLastErrorMessage());
 
 		mDriver.clear();
 	}

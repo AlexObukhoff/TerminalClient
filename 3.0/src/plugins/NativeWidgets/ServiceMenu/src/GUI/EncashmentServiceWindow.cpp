@@ -1,6 +1,9 @@
 /* @file Окно инкассации. */
 
+// Qt
+#include <Common/QtHeadersBegin.h>
 #include <QtCore/QSettings>
+#include <Common/QtHeadersEnd.h>
 
 // SDK
 #include <SDK/PaymentProcessor/Core/ReceiptTypes.h>
@@ -13,8 +16,11 @@
 #include <SDK/PaymentProcessor/Settings/TerminalSettings.h>
 #include <SDK/PaymentProcessor/Core/IFundsService.h>
 
+//
+#include <SysUtils/ISysUtils.h>
+
 // Проект
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/PaymentManager.h"
 #include "Backend/HardwareManager.h"
 #include "Backend/ServiceMenuBackend.h"
@@ -50,7 +56,7 @@ EncashmentServiceWindow::EncashmentServiceWindow(ServiceMenuBackend * aBackend, 
 	
 	if (QFile::exists(mPayloadSettingsPath))
 	{
-		QSettings settings(mPayloadSettingsPath, QSettings::IniFormat);
+		QSettings settings(ISysUtils::rmBOM(mPayloadSettingsPath), QSettings::IniFormat);
 
 		foreach(QString deviceGuid, settings.childGroups())
 		{
@@ -102,7 +108,6 @@ void EncashmentServiceWindow::updateUI()
 //------------------------------------------------------------------------
 bool EncashmentServiceWindow::activate()
 {
-	connect(mBackend->getPaymentManager(), SIGNAL(receiptPrinted(qint64, bool)), this, SLOT(onPeceiptPrinted(qint64, bool)));
 	connect(mBackend->getHardwareManager(), SIGNAL(deviceStatusChanged(const QString &, const QString &, const QString &, SDK::Driver::EWarningLevel::Enum)), 
 		this, SLOT(onDeviceStatusChanged(const QString &, const QString &, const QString &, SDK::Driver::EWarningLevel::Enum)));
 
@@ -116,7 +121,6 @@ bool EncashmentServiceWindow::activate()
 //------------------------------------------------------------------------
 bool EncashmentServiceWindow::deactivate()
 {
-	disconnect(mBackend->getPaymentManager(), SIGNAL(receiptPrinted(qint64, bool)), this, SLOT(onPeceiptPrinted(qint64, bool)));
 	disconnect(mBackend->getHardwareManager(), SIGNAL(deviceStatusChanged(const QString &, const QString &, const QString &, SDK::Driver::EWarningLevel::Enum)), 
 		this, SLOT(onDeviceStatusChanged(const QString &, const QString &, const QString &, SDK::Driver::EWarningLevel::Enum)));
 
@@ -165,7 +169,7 @@ void EncashmentServiceWindow::onPrintBalance()
 	else
 	{
 		// TODO Дополнять статусом принтера
-		MessageBox::critical(mMessageError);
+		GUI::MessageBox::critical(mMessageError);
 	}
 }
 
@@ -189,7 +193,7 @@ void EncashmentServiceWindow::doPayload()
 		// номер кассеты:номинал:количество|номер кассеты:номинал:количество
 		// обнулить все кассеты payload=0
 		// обнулить первую кассету payload=1:0
-		foreach(QString unitPayload, mPayloadSettings.value(device.split("_").last()).toString().split("|"))
+		for(QString & unitPayload : mPayloadSettings.value(device.split("_").last()).toString().split("|"))
 		{
 			if (unitPayload.isEmpty())
 			{
@@ -214,7 +218,7 @@ void EncashmentServiceWindow::doPayload()
 			}
 			else
 			{
-				MessageBox::critical(tr("#check_update_payload_settings"));
+				GUI::MessageBox::critical(tr("#check_update_payload_settings"));
 			}
 		}
 

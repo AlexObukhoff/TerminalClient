@@ -11,6 +11,7 @@ Project {
 		Depends { name: "HardwarePrinters" }
 		Depends { name: "HardwareFR" }
 		Depends { name: "OPOSSDK" }
+		Depends { name: "SysUtils" }
 
 		files: [
 			"../../../includes/Common/CoreVersion.rc",

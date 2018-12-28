@@ -20,6 +20,7 @@ namespace PluginParameterTranslations
 	static const char * Loop               = QT_TRANSLATE_NOOP("PrinterParameters", "PrinterParameters#loop");
 	static const char * PresentLength      = QT_TRANSLATE_NOOP("PrinterParameters", "PrinterParameters#present_length");
 	static const char * BackFeed           = QT_TRANSLATE_NOOP("PrinterParameters", "PrinterParameters#back_feed");
+	static const char * LeftMargin         = QT_TRANSLATE_NOOP("PrinterParameters", "PrinterParameters#left_margin");
 };
 
 //------------------------------------------------------------------------

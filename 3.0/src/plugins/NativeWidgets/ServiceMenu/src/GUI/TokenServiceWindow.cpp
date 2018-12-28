@@ -12,7 +12,7 @@
 #include <SDK/PaymentProcessor/Core/ICore.h>
 
 // Проект
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/KeysManager.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "TokenServiceWindow.h"
@@ -73,10 +73,10 @@ bool TokenServiceWindow::shutdown()
 //------------------------------------------------------------------------
 void TokenServiceWindow::onBeginFormat()
 {
-	if (MessageBox::question(tr("#question_format_token_warning")))
+	if (GUI::MessageBox::question(tr("#question_format_token_warning")))
 	{
-		MessageBox::hide();
-		MessageBox::wait(tr("#format_token"));
+		GUI::MessageBox::hide();
+		GUI::MessageBox::wait(tr("#format_token"));
 		
 		killTimer(mUIUpdateTimer);
 
@@ -87,7 +87,7 @@ void TokenServiceWindow::onBeginFormat()
 //------------------------------------------------------------------------
 void TokenServiceWindow::onEndFormat()
 {
-	MessageBox::hide();
+	GUI::MessageBox::hide();
 
 	mUIUpdateTimer = startTimer(1000);
 }
@@ -95,8 +95,8 @@ void TokenServiceWindow::onEndFormat()
 //------------------------------------------------------------------------
 void TokenServiceWindow::onError(QString aError)
 {
-	MessageBox::hide();
-	MessageBox::critical(aError);
+	GUI::MessageBox::hide();
+	GUI::MessageBox::critical(aError);
 
 	mUIUpdateTimer = startTimer(1000);
 }

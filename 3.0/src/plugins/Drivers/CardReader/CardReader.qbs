@@ -12,6 +12,10 @@ Project {
 		Depends { name: "HardwareCommon" }
 		Depends { name: "Cardreaders" }
 		Depends { name: "HardwareIOPorts" }
+		Depends { name: "SysUtils" }
+		
+		Depends { name: "IDTech_SDK" }
+		Depends { name: "libusb" }
 
 		files: [
 			"../../../includes/Common/CoreVersion.rc",

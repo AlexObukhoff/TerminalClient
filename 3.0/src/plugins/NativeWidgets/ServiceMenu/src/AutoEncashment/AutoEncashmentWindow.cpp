@@ -16,7 +16,7 @@
 #include "GUI/ServiceTags.h"
 #include "GUI/InputBox.h"
 #include "GUI/EncashmentWindow.h"
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/PaymentManager.h"
 #include "Backend/HardwareManager.h"
 #include "Backend/ServiceMenuBackend.h"
@@ -152,7 +152,7 @@ void AutoEncashmentWindow::onTestPrinter()
 
 	if (!isPrinterOK)
 	{
-		MessageBox::warning(tr("#printer_failed"));
+		GUI::MessageBox::warning(tr("#printer_failed"));
 
 		return;
 	}
@@ -219,7 +219,7 @@ void AutoEncashmentWindow::onIdleTimeout()
 		mInputBox = nullptr;
 	}
 
-	MessageBox::hide();
+	GUI::MessageBox::hide();
 
 	mBackend->toLog("Timeout AutoEncashment in service_menu scenario.");
 

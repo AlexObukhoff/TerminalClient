@@ -14,10 +14,9 @@ namespace CDeviceData
 	const char ModelNumber[] = "model_number";
 	const char Revision[] = "revision";
 	const char Firmware[] = "firmware";
+	const char BootFirmware[] = "boot_firmware";
 	const char CheckSum[] = "check_sum";
 	const char SerialNumber[] = "serial_number";
-	const char BootVersion[] = "boot_version";
-	const char BootFirmware[] = "boot_firmware";
 	const char BoardVersion[] = "board_version";
 	const char Build[] = "build";
 	const char Switches[] = "switches";
@@ -32,6 +31,7 @@ namespace CDeviceData
 	const char ProtocolVersion[] = "protocol_version";
 	const char SDCard[] = "sd_card";
 	const char Error[] = "error";
+	const char NotConnected[] = "not_connected";
 	const char Identity[] = "identity";
 	const char Token[] = "token_data";
 	const char InternalFirmware[] = "device_id_key";
@@ -124,6 +124,7 @@ namespace CDeviceData
 		const char OwnerId[] = "owner_id";
 		const char ReregistrationNumber[] = "reregistration_number";
 		const char FreeReregistrations[] = "free_reregistrations";
+		const char LastRegistrationDate[] = "last_registration_date";
 		const char Activated[] = "activated";
 		const char Language[] = "language";
 		const char CurrentDate[] = "fr_current_date";
@@ -137,6 +138,7 @@ namespace CDeviceData
 		const char OperationModes[] = "operation_modes";
 		const char AutomaticNumber[] = "automatic_number";
 		const char DTDBuild[] = "dtd_build";    // data transfer device
+		const char CanProcessZBuffer[] = "can_process_z_buffer";
 	}
 
 	/// ЭКЛЗ.

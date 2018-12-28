@@ -1,6 +1,7 @@
 /* @file Реализация интерфейса работы с PC/SC API. */
 
 // Modules
+#include "SysUtils/ISysUtils.h"
 #include "Hardware/Protocols/Common/ProtocolUtils.h"
 
 // Project
@@ -81,24 +82,14 @@ bool PCSCReader::handleResult(const QString & aFunctionName, HRESULT aResultCode
 	SDeviceCodeSpecification specification = CPCSCReader::DeviceCodeSpecification[aResultCode];
 	mStatusCodes.insert(specification.statusCode);
 
-	HLOCAL hlocal = NULL;
-	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, aResultCode,
-		MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), (LPTSTR) &hlocal, 0, NULL);
-
-	QString log;
-
-	if (hlocal != NULL)
-	{
-		log = QString::fromWCharArray((const wchar_t *)LocalLock(hlocal));
-		LocalFree(hlocal);
-	}
+	QString log = ISysUtils::getErrorMessage(aResultCode, false);
 
 	if (log.isEmpty())
 	{
 		log = specification.description;
 	}
 
-	toLog(LogLevel::Normal, QString("%1 returns %2 (%3)").arg(aFunctionName).arg(ProtocolUtils::toHexLog(quint32(aResultCode))).arg(log));
+	toLog(LogLevel::Normal, aFunctionName + " returns " + log);
 
 	return false;
 }

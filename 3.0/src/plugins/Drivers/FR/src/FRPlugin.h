@@ -35,6 +35,7 @@
 #include "../../../../modules/Hardware/FR/src/OPOSMStarTUPK/OPOSMStarTUPK.h"
 #include "../../../../modules/Hardware/FR/src/Spark/SparkFR.h"
 #include "../../../../modules/Hardware/FR/src/Kasbi/KasbiFRBase.h"
+#include "../../../../modules/Hardware/FR/src/MStar/Online/AFPFR.cpp"
 
 //------------------------------------------------------------------------------
 template <class T>

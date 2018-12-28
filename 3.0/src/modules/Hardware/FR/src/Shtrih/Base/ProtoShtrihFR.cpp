@@ -34,6 +34,7 @@ ProtoShtrihFR<T>::ProtoShtrihFR()
 	mNonNullableAmount = 0;
 	mFontNumber = CShtrihFR::Fonts::Default;
 	mTransportTimeout = CShtrihFR::Timeouts::Transport;
+	mNeedReceiptProcessingOnCancel = false;
 
 	// налоги
 	mTaxData.add(18, 1);
@@ -43,8 +44,8 @@ ProtoShtrihFR<T>::ProtoShtrihFR()
 	// данные команд
 	mCommandData.add(CShtrihFR::Commands::GetModelInfo, CShtrihFR::Timeouts::Default, false);
 
-	// ошибки
-	mErrorData = PErrorData(new FRError::CData);
+	// данные ошибок
+	mUnprocessedErrorData.add(CShtrihFR::Commands::GetFRParameter, CShtrihFR::Errors::WrongParametersInCommand);
 }
 
 //--------------------------------------------------------------------------------
@@ -69,57 +70,29 @@ bool ProtoShtrihFR<T>::getPrintingSettings()
 
 //--------------------------------------------------------------------------------
 template<class T>
-void ProtoShtrihFR<T>::getSectionNames()
-{
-	TSectionNames sectionNames;
-	int group = 1;
-	char lastError = 0;
-	TResult lastCommandResult = CommandResult::OK;
-
-	do
-	{
-		QByteArray data;
-
-		if (!getFRParameter(CShtrihFR::FRParameters::SectionName, data, char(group++)))
-		{
-			toLog(LogLevel::Error, mDeviceName + QString(": Failed to get name for %1 section").arg(group - 1));
-		}
-		else
-		{
-			sectionNames.insert(group - 1, mCodec->toUnicode(data.replace(ASCII::NUL, "").simplified()));
-		}
-
-		if (!mLastCommandResult && (mLastCommandResult == lastCommandResult) && CommandResult::ProtocolErrors.contains(mLastCommandResult))
-		{
-			break;
-		}
-
-		lastCommandResult = mLastCommandResult;
-
-		if (mLastError && (lastError == mLastError))
-		{
-			break;
-		}
-
-		lastError = mLastError;
-	}
-	while (mLastError != CShtrihFR::Errors::WrongParametersInCommand);
-
-	if (!sectionNames.isEmpty())
-	{
-		setConfigParameter(CHardwareSDK::FR::SectionNames, QVariant::fromValue<TSectionNames>(sectionNames));
-	}
-}
-
-//--------------------------------------------------------------------------------
-template<class T>
 bool ProtoShtrihFR<T>::updateParameters()
 {
 	processDeviceData();
 	setFRParameters();
-	getSectionNames();
 
-	return (!isFiscal() || checkTaxes()) && getPrintingSettings();
+	if (!getPrintingSettings())
+	{
+		return false;
+	}
+
+	if (!isFiscal())
+	{
+		return true;
+	}
+
+	TLoadSectionName loadSectionName = [&] (int aIndex, QByteArray & aData) -> bool { return getFRParameter(CShtrihFR::FRParameters::SectionName, aData, char(++aIndex)); };
+
+	if (mOperatorPresence && !loadSectionNames(loadSectionName))
+	{
+		return false;
+	}
+
+	return checkTaxes();
 }
 
 //---------------------------------------------------------------------------
@@ -196,31 +169,17 @@ bool ProtoShtrihFR<T>::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ProtoShtrihFR<T>::prepareFiscal()
+bool ProtoShtrihFR<T>::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * /*aFDNumber*/)
 {
-	//TODO: поддержать базовый функционал работы с незабранным чеком
-	if (!getLongStatus())
+	EDocumentState::Enum documentState = getDocumentState();
+
+	if ((documentState == EDocumentState::Error) ||
+	   ((documentState == EDocumentState::Opened) && !processCommand(CShtrihFR::Commands::CancelDocument)))
 	{
 		return false;
 	}
 
-	if (mMode == CShtrihFR::InnerModes::NeedCloseSession)
-	{
-		return execZReport(true);
-	}
-	else if (mMode == CShtrihFR::InnerModes::DocumentOpened)
-	{
-		return processCommand(CShtrihFR::Commands::CancelDocument);
-	}
-
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-template<class T>
-bool ProtoShtrihFR<T>::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & /*aFPData*/, TComplexFiscalPaymentData & /*aPSData*/)
-{
-	if (!prepareFiscal() || !processReceipt(aReceipt, false) || !openDocument(aPaymentData.back))
+	if (!processReceipt(aReceipt, false) || !openDocument(aPaymentData.back))
 	{
 		return false;
 	}
@@ -235,7 +194,7 @@ bool ProtoShtrihFR<T>::performFiscal(const QStringList & aReceipt, const SPaymen
 	result = result && setOFDParameters() && closeDocument(getTotalAmount(aPaymentData), aPaymentData.payType);
 
 	waitForPrintingEnd(true);
-	//isFiscalDocumentOpened();
+	//getDocumentState() == EDocumentState::Opened;
 
 	if (!result && aPaymentData.back && (mLastError == CShtrihFR::Errors::NotEnoughMoney))
 	{
@@ -254,29 +213,30 @@ bool ProtoShtrihFR<T>::performFiscal(const QStringList & aReceipt, const SPaymen
 template<class T>
 bool ProtoShtrihFR<T>::cancelFiscal()
 {
-	return processCommand(CShtrihFR::Commands::CancelDocument);
+	return processCommand(CShtrihFR::Commands::CancelDocument) && (!mNeedReceiptProcessingOnCancel || receiptProcessing());
 }
 
 //--------------------------------------------------------------------------------
 template<class T>
 bool ProtoShtrihFR<T>::getStatus(TStatusCodes & aStatusCodes)
 {
-	QByteArray data;
-	TResult result = getLongStatus(data);
+	QByteArray data = performStatus(aStatusCodes, CShtrihFR::Commands::GetLongStatus, 16);
 
-	if (!CORRECT(result))
+	if (data == CFR::Result::Fail)
 	{
 		return false;
 	}
-	else if (result)
+	else if (data != CFR::Result::Error)
 	{
+		mMode    = data[15] & CShtrihFR::InnerModes::Mask;
+		mSubmode = data[16];
+
 		ushort flags = revert(data.mid(13, 2)).toHex().toUShort(0, 16);
 		appendStatusCodes(flags, aStatusCodes);
 	}
-	else if (mLastError)
+	else if (mLastError == CShtrihFR::Errors::Cutter)
 	{
-		int statusCode = CShtrihFR::Errors::Cutter ? PrinterStatusCode::Error::Cutter : DeviceStatusCode::Error::Unknown;
-		aStatusCodes.insert(statusCode);
+		aStatusCodes.insert(PrinterStatusCode::Error::Cutter);
 	}
 
 	return true;
@@ -455,14 +415,19 @@ TResult ProtoShtrihFR<T>::execCommand(const QByteArray & aCommand, const QByteAr
 
 	int errorPosition = aCommand.size();
 	mLastError = answer[errorPosition];
+	mLastCommand = aCommand;
 
 	if (!mLastError)
 	{
 		return CommandResult::OK;
 	}
 
-	toLog(LogLevel::Error, "ShtrihFR: Error: " + mErrorData->value(mLastError).description);
-	setErrorFlags(aCommand);
+	toLog(LogLevel::Error, mDeviceName + ": Error: " + mErrorData->value(mLastError).description);
+
+	if (!isErrorUnprocessed(aCommand, mLastError))
+	{
+		setErrorFlags();
+	}
 
 	if (isNotError(aCommand[0]))
 	{
@@ -476,8 +441,13 @@ TResult ProtoShtrihFR<T>::execCommand(const QByteArray & aCommand, const QByteAr
 		return CommandResult::Device;
 	}
 
-	if (!processAnswer(aCommand))
+	char error = mLastError;
+
+	if (isErrorUnprocessed(aCommand, error) || !processAnswer(aCommand, error))
 	{
+		mLastError = error;
+		mLastCommand = aCommand;
+
 		return CommandResult::Device;
 	}
 
@@ -492,7 +462,7 @@ bool ProtoShtrihFR<T>::isNotError(char aCommand)
 {
 	if ((mLastError == CShtrihFR::Errors::BadModeForCommand) &&
 	    (aCommand == CShtrihFR::Commands::CancelDocument) &&
-	    getLongStatus() && (mMode != CShtrihFR::InnerModes::DocumentOpened))
+		(getDocumentState() == EDocumentState::Closed))
 	{
 		toLog(LogLevel::Normal, "ShtrihFR: Fiscal document already closed");
 		return true;
@@ -568,10 +538,15 @@ bool ProtoShtrihFR<T>::cut()
 }
 
 //--------------------------------------------------------------------------------
-template<class T>
-bool ProtoShtrihFR<T>::isFiscalDocumentOpened()
+template <class T>
+EDocumentState::Enum ProtoShtrihFR<T>::getDocumentState()
 {
-	return getLongStatus() && (mMode == CShtrihFR::InnerModes::DocumentOpened);
+	if (!getLongStatus())
+	{
+		return EDocumentState::Error;
+	}
+
+	return (mMode == CShtrihFR::InnerModes::DocumentOpened) ? EDocumentState::Opened : EDocumentState::Closed;
 }
 
 //--------------------------------------------------------------------------------
@@ -586,7 +561,7 @@ bool ProtoShtrihFR<T>::openDocument(bool aBack)
 		return false;
 	}
 
-	return isFiscalDocumentOpened();
+	return getDocumentState() == EDocumentState::Opened;
 }
 
 //--------------------------------------------------------------------------------
@@ -799,14 +774,14 @@ bool ProtoShtrihFR<T>::setFRParameter(const CShtrihFR::FRParameters::SData & aDa
 
 	if (!CShtrihFR::FRParameters::Fields.data().contains(mModel))
 	{
-		toLog(LogLevel::Normal, QString("ShtrihFR: Cannot set field for the device with model Id %1 as no data of system tables").arg(mModel));
+		toLog(LogLevel::Normal, mDeviceName + ": Failed to set fields due to no data in field specification for model Id = " + QString::number(mModel));
 		return true;
 	}
 
 	if (aData.field == CShtrihFR::FRParameters::NA)
 	{
-		toLog(LogLevel::Normal, QString("ShtrihFR: The field %1 for table %2 for the device with model Id %3 is not available")
-			.arg(aData.description, mParameters.getMaxNADescriptionSize()).arg(aData.table).arg(mModel));
+		toLog(LogLevel::Normal, mDeviceName + QString(": Failed to set field %1 for table %2 due to it is not available")
+			.arg(aData.description, mParameters.getMaxNADescriptionSize()).arg(aData.table));
 		return true;
 	}
 
@@ -819,7 +794,13 @@ bool ProtoShtrihFR<T>::setFRParameter(const CShtrihFR::FRParameters::SData & aDa
 	else if (aValue.type() == QVariant::String) commandData.append(mCodec->fromUnicode(aValue.toString()));
 	else commandData.append(char(aValue.toInt()));
 
-	return processCommand(CShtrihFR::Commands::SetFRParameter, commandData);
+	if (!processCommand(CShtrihFR::Commands::SetFRParameter, commandData))
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to set %1 = %2").arg(aData.log(aSeries)).arg(aValue.toString()));
+		return false;
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -833,14 +814,14 @@ bool ProtoShtrihFR<T>::getFRParameter(const CShtrihFR::FRParameters::SData & aDa
 
 	if (!CShtrihFR::FRParameters::Fields.data().contains(mModel))
 	{
-		toLog(LogLevel::Normal, QString("ShtrihFR: Cannot get field for the device with model Id %1 as no data of system tables").arg(mModel));
+		toLog(LogLevel::Normal, mDeviceName + ": Failed to get fields due to no data in field specification for model Id = " + QString::number(mModel));
 		return true;
 	}
 
 	if (aData.field == CShtrihFR::FRParameters::NA)
 	{
-		toLog(LogLevel::Normal, QString("ShtrihFR: The field %1 for table %2 for the device with model Id %3 is not available")
-			.arg(aData.description, mParameters.getMaxNADescriptionSize()).arg(aData.table).arg(mModel));
+		toLog(LogLevel::Normal, mDeviceName + QString(": Failed to get field %1 for table %2 due to it is not available")
+			.arg(aData.description, mParameters.getMaxNADescriptionSize()).arg(aData.table));
 		return true;
 	}
 
@@ -852,7 +833,7 @@ bool ProtoShtrihFR<T>::getFRParameter(const CShtrihFR::FRParameters::SData & aDa
 
 	if (!processCommand(CShtrihFR::Commands::GetFRParameter, commandData, &data))
 	{
-		toLog(LogLevel::Error, QString("ShtrihFR: Failed to get field %1 (series %2) of system table %3").arg(aData.field).arg(uint(aSeries)).arg(aData.table));
+		toLog(LogLevel::Error, mDeviceName + ": Failed to get " + aData.log(aSeries));
 		return false;
 	}
 
@@ -865,18 +846,17 @@ bool ProtoShtrihFR<T>::getFRParameter(const CShtrihFR::FRParameters::SData & aDa
 template<class T>
 bool ProtoShtrihFR<T>::processXReport()
 {
-	if ((mModel == CShtrihFR::Models::ID::NeoService) && getLongStatus() && (mMode == CShtrihFR::InnerModes::SessionClosed))
+	if ((mModel == CShtrihFR::Models::ID::NeoService) && (getSessionState() == ESessionState::Closed))
 	{
-		toLog(LogLevel::Error, "ShtrihFR: Session is closed, exit!");
-		return true;
+		return false;
 	}
 
-	if (processCommand(CShtrihFR::Commands::XReport))
+	if (!processCommand(CShtrihFR::Commands::XReport))
 	{
-		return waitForChangeXReportMode();
+		return false;
 	}
 
-	return false;
+	return waitForChangeXReportMode();
 }
 
 //--------------------------------------------------------------------------------
@@ -918,7 +898,7 @@ bool ProtoShtrihFR<T>::waitForChangeXReportMode()
 			}
 			else if ((mMode == CShtrihFR::InnerModes::SessionOpened)    ||
 			         (mMode == CShtrihFR::InnerModes::SessionClosed)    ||
-			         (mMode == CShtrihFR::InnerModes::NeedCloseSession) ||
+			         (mMode == CShtrihFR::InnerModes::SessionExpired) ||
 			         (mSubmode == CShtrihFR::InnerSubmodes::PaperOn))
 			{
 				// 3.3. режим - тот, который ожидаем, если X-отчет допечатался, все хорошо
@@ -999,7 +979,7 @@ bool ProtoShtrihFR<T>::prepareZReport(bool aAuto, QVariantMap & aOutData)
 	if (!getLongStatus(data))
 	{
 		toLog(LogLevel::Error, mDeviceName + QString(": Failed to get status therefore failed to process %1Z-report.").arg(aAuto ? "auto-" : ""));
-		mNeedCloseSession = mNeedCloseSession || (mMode == CShtrihFR::InnerModes::NeedCloseSession);
+		mNeedCloseSession = mNeedCloseSession || (mMode == CShtrihFR::InnerModes::SessionExpired);
 
 		return false;
 	}
@@ -1026,7 +1006,7 @@ bool ProtoShtrihFR<T>::execZReport(bool aAuto)
 
 	if (getLongStatus())
 	{
-		mNeedCloseSession = mMode == CShtrihFR::InnerModes::NeedCloseSession;
+		mNeedCloseSession = mMode == CShtrihFR::InnerModes::SessionExpired;
 	}
 
 	if (success)
@@ -1076,9 +1056,10 @@ ESessionState::Enum ProtoShtrihFR<T>::getSessionState()
 		return ESessionState::Error;
 	}
 
-	bool result = (mMode == CShtrihFR::InnerModes::SessionOpened) || (mMode == CShtrihFR::InnerModes::NeedCloseSession);
+	if (mMode == CShtrihFR::InnerModes::SessionClosed)  return ESessionState::Closed;
+	if (mMode == CShtrihFR::InnerModes::SessionExpired) return ESessionState::Expired;
 
-	return result ? ESessionState::Opened : ESessionState::Closed;
+	return ESessionState::Opened;
 }
 
 //--------------------------------------------------------------------------------
@@ -1115,26 +1096,26 @@ bool ProtoShtrihFR<T>::getRegister(const CShtrihFR::TRegisterId & aRegister, QBy
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ProtoShtrihFR<T>::processAnswer(const QByteArray & aCommand)
+bool ProtoShtrihFR<T>::processAnswer(const QByteArray & aCommand, char aError)
 {
-	switch (mLastError)
+	switch (aError)
 	{
 		case CShtrihFR::Errors::DocumentIsOpened :
 		{
-			mProcessingErrors.push_back(mLastError);
+			mProcessingErrors.push_back(aError);
 
 			return processCommand(CShtrihFR::Commands::CancelDocument);
 		}
 		//--------------------------------------------------------------------------------
 		case CShtrihFR::Errors::BadModeForCommand :
 		{
-			mProcessingErrors.push_back(mLastError);
+			mProcessingErrors.push_back(aError);
 
 			if (getLongStatus())
 			{
 				switch (mMode)
 				{
-					case CShtrihFR::InnerModes::NeedCloseSession :
+					case CShtrihFR::InnerModes::SessionExpired :
 					{
 						return execZReport(true);
 					}
@@ -1156,21 +1137,21 @@ bool ProtoShtrihFR<T>::processAnswer(const QByteArray & aCommand)
 		//--------------------------------------------------------------------------------
 		case CShtrihFR::Errors::NeedZReport :
 		{
-			mProcessingErrors.push_back(mLastError);
+			mProcessingErrors.push_back(aError);
 
 			return execZReport(true);
 		}
 		//--------------------------------------------------------------------------------
 		case CShtrihFR::Errors::NeedExtentionPrinting :
 		{
-			mProcessingErrors.push_back(mLastError);
+			mProcessingErrors.push_back(aError);
 
 			return processCommand(CShtrihFR::Commands::ExtentionPrinting);
 		}
 		//--------------------------------------------------------------------------------
 		case CShtrihFR::Errors::NeedWaitForPrinting :
 		{
-			mProcessingErrors.push_back(mLastError);
+			mProcessingErrors.push_back(aError);
 
 			return waitForPrintingEnd();
 		}
@@ -1181,7 +1162,7 @@ bool ProtoShtrihFR<T>::processAnswer(const QByteArray & aCommand)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ProtoShtrihFR<T>::waitForPrintingEnd(bool aCanBeOff)
+bool ProtoShtrihFR<T>::waitForPrintingEnd(bool aCanBeOff, int aTimeout)
 {
 	QTime clockTimer;
 	clockTimer.start();
@@ -1231,7 +1212,7 @@ bool ProtoShtrihFR<T>::waitForPrintingEnd(bool aCanBeOff)
 			SleepHelper::msleep(sleepTime);
 		}
 	}
-	while(clockTimer.elapsed() < CShtrihFR::Timeouts::MaxWaitForPrintingEnd);
+	while(clockTimer.elapsed() < aTimeout);
 
 	// 6. вышли по таймауту, значит, не смогли дождаться нужного режима/подрежима
 	return false;

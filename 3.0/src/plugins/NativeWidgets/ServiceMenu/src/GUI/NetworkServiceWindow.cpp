@@ -16,7 +16,7 @@
 #include <SDK/PaymentProcessor/Connection/ConnectionTypes.h>
 
 // Проект
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/NetworkManager.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "ServiceTags.h"
@@ -172,7 +172,7 @@ void NetworkServiceWindow::onTestDialupConnection(const QString & aConnection)
 	connection.type = EConnectionTypes::Dialup;
 	connection.name = aConnection;
 
-	MessageBox::wait(tr("#testing_connection"));
+	GUI::MessageBox::wait(tr("#testing_connection"));
 
 	mBackend->getNetworkManager()->setConnection(connection);
 	mTaskWatcher.setFuture(QtConcurrent::run(boost::bind(&NetworkManager::testConnection, mBackend->getNetworkManager(), boost::ref(mConnectionError))));
@@ -216,7 +216,7 @@ void NetworkServiceWindow::onTestUnmanagedConnection(QNetworkProxy aProxy)
 
 	connection.proxy = proxy;
 
-	MessageBox::wait(tr("#testing_connection"));
+	GUI::MessageBox::wait(tr("#testing_connection"));
 
 	mBackend->getNetworkManager()->setConnection(connection);
 	mTaskWatcher.setFuture(QtConcurrent::run(boost::bind(&NetworkManager::testConnection, mBackend->getNetworkManager(), boost::ref(mConnectionError))));
@@ -225,8 +225,8 @@ void NetworkServiceWindow::onTestUnmanagedConnection(QNetworkProxy aProxy)
 //---------------------------------------------------------------------------
 void NetworkServiceWindow::onTestFinished()
 {
-	MessageBox::hide();
-	MessageBox::info(mTaskWatcher.result() ? tr("#connection_test_ok") : tr("#connection_test_failed") + "\n" + mConnectionError);
+	GUI::MessageBox::hide();
+	GUI::MessageBox::info(mTaskWatcher.result() ? tr("#connection_test_ok") : tr("#connection_test_failed") + "\n" + mConnectionError);
 }
 
 //------------------------------------------------------------------------

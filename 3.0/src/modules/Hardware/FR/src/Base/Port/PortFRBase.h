@@ -17,7 +17,7 @@ public:
 	PortFRBase();
 
 	/// Печать фискального чека.
-	virtual bool printFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool printFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
 
 	/// Выполнить Z-отчет [и распечатать отложенные Z-отчеты].
 	virtual bool printZReport(bool aPrintDeferredReports);
@@ -26,16 +26,33 @@ public:
 	virtual bool printXReport(const QStringList & aReceipt);
 
 protected:
+	/// Установить начальные параметры.
+	virtual void setInitialData();
+
 	/// Идентификация.	
 	virtual bool checkExistence();
 
-	/// Установить начальные параметры.
-	virtual void setInitialData();
+	/// Получить статус. Возвращает Fail, Error (константы) или правильный ответ.
+	template <class T2>
+	QByteArray performStatus(TStatusCodes & aStatusCodes, T2 aCommand, int aIndex = -1);
 
 	/// Сформировать массив байтов для печаит из массива строк.
 	typedef QList<QByteArray> TReceiptBuffer;
 	void makeReceipt(const QStringList & aReceipt, QStringList & aBuffer);
 	void makeReceipt(const QStringList & aReceipt, TReceiptBuffer & aBuffer);
+
+	typedef std::function<TResult(QByteArray & aData)> TGetFiscalTLVData;
+	typedef std::function<bool(const CFR::STLV & aTLV)> TProcessTLVAction;
+	bool processFiscalTLVData(const TGetFiscalTLVData & aGetFiscalTLVData, SDK::Driver::TFiscalPaymentData * aFPData, SDK::Driver::TComplexFiscalPaymentData * aPSData);
+	bool processTLVData(const TGetFiscalTLVData & aGetFiscalTLVData, TProcessTLVAction aAction = TProcessTLVAction());
+
+	/// Загрузить названия отделов.
+	typedef std::function<bool(int aIndex, QByteArray & aValue)> TLoadSectionName;
+	bool loadSectionNames(const TLoadSectionName & aLoadSectionName);
+
+	/// Является ли ошибка необрабатываемой?
+	bool isErrorUnprocessed(char aCommand, char aError);
+	bool isErrorUnprocessed(const QByteArray & aCommand, char aError);
 
 	/// Буфер обрабатываемых ошибок.
 	class ErrorBuffer : public QList<char>
@@ -47,11 +64,28 @@ protected:
 
 	ErrorBuffer mProcessingErrors;
 
+	/// Команда последнего запроса.
+	QByteArray mLastCommand;
+
 	/// Ошибка на последний запрос.
 	char mLastError;
 
 	/// Результат последней выполненной протокольной команды.
 	TResult mLastCommandResult;
+
+	/// Данные ошибок.
+	typedef QSharedPointer<FRError::Data> PErrorData;
+	PErrorData mErrorData;
+
+	/// Данные необрабатываемых ошибок.
+	class UnprocessedErrorData : public CSpecification<QByteArray, char>
+	{
+	public:
+		void add(char aCommand, char aError) { append(QByteArray(1, aCommand), aError); }
+		void add(const QByteArray & aCommand, char aError) { append(aCommand, aError); }
+	};
+
+	UnprocessedErrorData mUnprocessedErrorData;
 };
 
 typedef PortFRBase<SerialPrinterBase<PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoFR>>>>> TSerialFRBase;

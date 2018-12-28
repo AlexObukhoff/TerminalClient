@@ -260,6 +260,8 @@ private: // Данные
 	// Родительское окно приложения
 	QWidget * mRootView;
 
+	QWidget * mQuickContainer;
+
 	// Контейнер для отображения QtQuick сцен
 	QQuickWindow * mQuickView;
 	

@@ -58,6 +58,8 @@ bool Paymaster::updateParameters()
 		return false;
 	}
 
+	mOldFirmware = mOldFirmware || (mFRBuild && (mFRBuild < CPaymaster::MinFRBuild));
+
 	QByteArray data;
 
 	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { mFFEngine.setLConfigParameter(CFiscalSDK::aName, data); \
@@ -121,7 +123,7 @@ void Paymaster::processDeviceData()
 //--------------------------------------------------------------------------------
 bool Paymaster::enterExtendedMode()
 {
-	bool mode = mMode;
+	char mode = mMode;
 
 	if (!enterInnerMode(CAtolFR::InnerModes::Programming))
 	{

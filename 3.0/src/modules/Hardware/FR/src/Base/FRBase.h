@@ -9,6 +9,7 @@
 
 // Project
 #include "Hardware/FR/FRBaseConstants.h"
+#include "Hardware/FR/FRErrorDescription.h"
 #include "FFEngine.h"
 
 //--------------------------------------------------------------------------------
@@ -17,9 +18,6 @@ class FRBase : public T
 {
 public:
 	FRBase();
-
-	/// Подключает и инициализует устройство. Обертка для вызова функционала в рабочем потоке.
-	virtual void initialize();
 
 	/// Устанавливает конфигурацию устройству.
 	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
@@ -31,7 +29,13 @@ public:
 	virtual bool isFiscalReady(bool aOnline, SDK::Driver::EFiscalPrinterCommand::Enum aCommand = SDK::Driver::EFiscalPrinterCommand::Sale);
 
 	/// Печать фискального чека.
-	virtual bool printFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool printFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
+
+	/// Получить фискальные теги по номеру документа.
+	virtual bool checkFiscalFields(quint32 aFDNumber, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+
+	/// Получить фискальные теги по номеру документа.
+	bool processFiscalFields(quint32 aFDNumber, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
 
 	/// Выполнить Z-отчет [и распечатать отложенные Z-отчеты].
 	virtual bool printZReport(bool aPrintDeferredReports);
@@ -42,6 +46,12 @@ public:
 	/// Выполнить выплату [и распечатать нефискальный чек - инкассацию].
 	virtual bool printEncashment(const QStringList & aReceipt);
 	virtual bool printEncashment(const QStringList & aReceipt, double aAmount);
+
+	/// Получить состояние смены.
+	virtual SDK::Driver::ESessionState::Enum checkSessionState();
+
+	/// Получить состояние документа.
+	virtual SDK::Driver::EDocumentState::Enum checkDocumentState();
 
 	/// Находится ли в фискальном режиме.
 	virtual bool isFiscal() const;
@@ -59,14 +69,23 @@ protected:
 	/// Завершение инициализации.
 	virtual void finaliseInitialization();
 
+	/// Завершение инициализации для онлайновых ФР.
+	void finaliseOnlineInitialization();
+
+	/// Инициализировать логику снятия Z-отчетов по таймеру.
+	void initializeZReportByTimer();
+
 	/// Получить и обработать статус.
 	virtual bool processStatus(TStatusCodes & aStatusCodes);
 
 	/// Проверить установки сервера ОФД.
 	bool checkOFDData(const QByteArray & aAddressData, const QByteArray & aPortData);
 
-	/// Открыта ли сессия.
+	/// Получить состояние смены.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
+
+	/// Получить состояние документа.
+	virtual SDK::Driver::EDocumentState::Enum getDocumentState();
 
 	/// Открыть смену.
 	virtual bool openSession() { return false; }
@@ -95,6 +114,9 @@ protected:
 	/// Загрузить режимы работы.
 	bool checkOperationModes(char aData);
 
+	/// Проверить имена товаров на платеже.
+	void checkUnitNames(SDK::Driver::SPaymentData & aPaymentData);
+
 	/// Проверить суммы на платеже.
 	bool checkAmountsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
@@ -120,7 +142,13 @@ protected:
 	virtual bool processXReport() = 0;
 
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & /*aReceipt*/, const SDK::Driver::SPaymentData & /*aPaymentData*/, SDK::Driver::TFiscalPaymentData & /*aFPData*/, SDK::Driver::TComplexFiscalPaymentData & /*aPSData*/) { return false; }
+	virtual bool performFiscal(const QStringList & /*aReceipt*/, const SDK::Driver::SPaymentData & /*aPaymentData*/, uint * /*aFDNumber = nullptr*/) { return false; }
+
+	/// Печать фискального чека.
+	bool processFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, uint * aFDNumber);
+
+	/// Получить фискальные теги по номеру документа.
+	virtual bool getFiscalFields(quint32 /*aFDNumber*/, SDK::Driver::TFiscalPaymentData & /*aFPData*/, SDK::Driver::TComplexFiscalPaymentData & /*aPSData*/) { return false; }
 
 	/// Установить реквизиты ОФД.
 	bool setOFDParameters();
@@ -132,7 +160,7 @@ protected:
 	virtual bool setTLV(int /*aField*/, bool /*aForSale*/ = false) { return true; }
 
 	/// Проверить Z-отчет по таймеру.
-	void checkZReportOnTimer();
+	void checkZReportByTimer();
 
 	/// Выполнить Z-отчет.
 	virtual void onExecZReport();
@@ -190,6 +218,9 @@ protected:
 
 	/// Может работать с буфером Z-отчетов?
 	virtual bool canProcessZBuffer();
+
+	/// Получить статус по типу ошибки устройства.
+	static int getErrorStatusCode(FRError::EType::Enum aErrorType);
 
 	/// Наличие ЭКЛЗ.
 	bool mEKLZ;

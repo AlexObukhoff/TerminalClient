@@ -158,7 +158,7 @@ void EBDSCashAcceptor::processDeviceData()
 		setDeviceParameter(CDeviceData::Version, answer.right(3).toDouble() / 100, aMainKey); } };
 
 	checkSoftData(CEBDS::Commands::GetAppSoftVersion,  CDeviceData::Firmware);
-	checkSoftData(CEBDS::Commands::GetBootSoftVersion, CDeviceData::BootVersion);
+	checkSoftData(CEBDS::Commands::GetBootSoftVersion, CDeviceData::BootFirmware);
 	checkSoftData(CEBDS::Commands::GetVariantVersion,  CDeviceData::CashAcceptors::BillSet);
 
 	if (getData(CEBDS::Commands::GetVariantName))

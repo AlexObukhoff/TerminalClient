@@ -13,7 +13,7 @@
 // Проект
 #include "IServiceWindow.h"
 #include "ServiceTags.h"
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/NetworkManager.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "MainServiceWindow.h"
@@ -418,7 +418,7 @@ bool MainServiceWindow::closeServiceMenu(bool aExitByNotify, const QString & aMe
 		}
 	}
 
-	if (MessageBox::question(aMessage))
+	if (GUI::MessageBox::question(aMessage))
 	{
 		IServiceWindow * window = dynamic_cast<IServiceWindow *>(twServiceScreens->widget(mCurrentPageIndex));
 		if (window)

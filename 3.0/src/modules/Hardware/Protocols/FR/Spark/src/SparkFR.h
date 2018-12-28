@@ -20,8 +20,8 @@ private:
 	/// Подсчет контрольной суммы пакета данных.
 	char calcCRC(const QByteArray & aData);
 
-	/// Распаковка пришедших из порта данных.
-	bool unpack(QByteArray & aAnswerData);
+	/// Проверка пришедших из порта данных.
+	bool check(const QByteArray & aAnswerData);
 
 	/// Получить данные из порта.
 	bool readData(QByteArray & aAnswerData, int aTimeout);

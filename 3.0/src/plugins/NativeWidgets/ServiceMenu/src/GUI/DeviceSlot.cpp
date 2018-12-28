@@ -15,7 +15,7 @@
 #include <SDK/PaymentProcessor/IDeviceTest.h>
 
 // Project
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/HardwareManager.h"
 #include "Backend/ServiceMenuBackend.h"
 
@@ -187,14 +187,14 @@ void DeviceSlot::onDeviceRunTest()
 
 	if (mDeviceTest->hasResult())
 	{
-		MessageBox::subscribe(this);
+		GUI::MessageBox::subscribe(this);
 	}
 
 	foreach (auto test, mDeviceTest->getTestNames())
 	{
 		if (mDeviceTest->hasResult())
 		{
-			MessageBox::info(test.second);
+			GUI::MessageBox::info(test.second);
 		}
 
 		mDeviceTest->run(test.first);
@@ -232,7 +232,7 @@ void DeviceSlot::onTestResult(const QString & aTestName, const QVariant & aTestR
 		params[SDK::GUI::CMessageBox::TextMessageExt] = aTestResult;
 	}
 
-	MessageBox::update(params);
+	GUI::MessageBox::update(params);
 }
 
 //------------------------------------------------------------------------------
@@ -241,7 +241,7 @@ void DeviceSlot::onClicked(const QVariantMap & /*aParameters*/)
 	mDeviceTest->stop();
 	disconnect(mDeviceTest.data(), SIGNAL(result(const QString &, const QVariant &)), this, SLOT(onTestResult(const QString &, const QVariant &)));
 
-	MessageBox::hide();
+	GUI::MessageBox::hide();
 }
 
 //------------------------------------------------------------------------

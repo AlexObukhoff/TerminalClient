@@ -4,6 +4,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
+#include <QtCore/QSet>
 #include <QtCore/QDateTime>
 #include <Common/QtHeadersEnd.h>
 
@@ -595,10 +596,13 @@ void TerminalService::checkConfigsIntegrity()
 //---------------------------------------------------------------------------
 void TerminalService::sendFeedback(const QString & aSenderSubsystem, const QString & aMessage)
 {
+	// Отбрасываем дубли сообщений
+	static QSet<QString> sentMessages;
+
 	QString url = static_cast<PPSDK::TerminalSettings *>(mApplication->getCore()
 		->getSettingsService()->getAdapter(PPSDK::CAdapterNames::TerminalAdapter))->getFeedbackURL();
 
-	if (!url.isEmpty())
+	if (!url.isEmpty() && !sentMessages.contains(aMessage))
 	{
 		QByteArray sendBody;
 
@@ -662,6 +666,7 @@ void TerminalService::sendFeedback(const QString & aSenderSubsystem, const QStri
 		task->getDataStream()->write(sendBody);
 
 		mApplication->getCore()->getNetworkService()->getNetworkTaskManager()->addTask(task);
+		sentMessages.insert(aMessage);
 	}
 }
 

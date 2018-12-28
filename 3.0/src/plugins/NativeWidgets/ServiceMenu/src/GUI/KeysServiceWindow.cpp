@@ -12,7 +12,7 @@
 #include <SDK/PaymentProcessor/Core/ICore.h>
 
 // Проект
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/KeysManager.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "KeysServiceWindow.h"
@@ -72,10 +72,10 @@ bool KeysServiceWindow::shutdown()
 //------------------------------------------------------------------------
 void KeysServiceWindow::onBeginGenerating()
 {
-	if (MessageBox::question(tr("#question_generate_keys_warning")))
+	if (GUI::MessageBox::question(tr("#question_generate_keys_warning")))
 	{
-		MessageBox::hide();
-		MessageBox::wait(tr("#creating_keys"));
+		GUI::MessageBox::hide();
+		GUI::MessageBox::wait(tr("#creating_keys"));
 		
 		mWindow->doGenerate();
 	}
@@ -84,14 +84,14 @@ void KeysServiceWindow::onBeginGenerating()
 //------------------------------------------------------------------------
 void KeysServiceWindow::onEndGenerating()
 {
-	MessageBox::hide();
+	GUI::MessageBox::hide();
 
 	QString generateResult;
 	generateResult = "\n" + tr("#sd") + " " + mBackend->getKeysManager()->getSD() + "\n";
 	generateResult += tr("#ap") + " " + mBackend->getKeysManager()->getAP() + "\n";
 	generateResult += tr("#op") + " " + mBackend->getKeysManager()->getOP();
 
-	if (MessageBox::question(tr("#question_save_and_register_keys") + generateResult))
+	if (GUI::MessageBox::question(tr("#question_save_and_register_keys") + generateResult))
 	{
 		if (mWindow->save())
 		{
@@ -115,8 +115,8 @@ void KeysServiceWindow::onEndGenerating()
 //------------------------------------------------------------------------
 void KeysServiceWindow::onError(QString aError)
 {
-	MessageBox::hide();
-	MessageBox::critical(aError);
+	GUI::MessageBox::hide();
+	GUI::MessageBox::critical(aError);
 }
 
 //------------------------------------------------------------------------

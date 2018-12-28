@@ -570,7 +570,7 @@ bool UpdaterApp::reRunFromTempDirectory()
 
 		{
 			QString programSettingsFile = QDir(getUpdaterTempDir()).absoluteFilePath(QFileInfo(QCoreApplication::arguments()[0]).baseName()) + ".ini";
-			QSettings tempSettings(programSettingsFile, QSettings::IniFormat);
+			QSettings tempSettings(ISysUtils::rmBOM(programSettingsFile), QSettings::IniFormat);
 
 			tempSettings.setValue("common/working_directory", getWorkingDirectory());
 		}

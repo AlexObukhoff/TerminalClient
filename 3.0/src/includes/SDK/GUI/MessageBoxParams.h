@@ -58,5 +58,7 @@ public:
 
 }} // namespace SDK::GUI
 
+Q_DECLARE_METATYPE(SDK::GUI::MessageBoxParams::Enum)
+
 //---------------------------------------------------------------------------
 

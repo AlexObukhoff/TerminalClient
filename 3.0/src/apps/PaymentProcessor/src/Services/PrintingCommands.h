@@ -90,8 +90,6 @@ class PrintPayment : public PrintFiscalCommand
 {
 	Q_DECLARE_TR_FUNCTIONS(PrintPayment)
 
-	SDK::Driver::TFiscalPaymentData mFiscalPaymentData;
-	SDK::Driver::TComplexFiscalPaymentData mPayOffSubjectData;
 	SDK::Driver::TFiscalFieldData mFiscalFieldData;
 
 public:
@@ -103,9 +101,6 @@ public:
 
 	/// Печать.
 	virtual bool print(SDK::Driver::IPrinter * aPrinter, const QVariantMap & aParameters);
-
-	/// Получить выходные параметры, после печати фискального чека
-	const SDK::Driver::TFiscalPaymentData & getFiscalData() const;
 
 private:
 	/// Добавить данные платежа.

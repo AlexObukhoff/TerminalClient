@@ -25,7 +25,7 @@ protected:
 	virtual bool performZReport(bool aPrintDeferredReports);
 
 	/// Обработка ответа на предыдущей команды. Автоисправление некоторых ошибок.
-	virtual bool processAnswer(const QByteArray & aCommand);
+	virtual bool processAnswer(const QByteArray & aCommand, char aError);
 
 	/// Снять Z-отчет.
 	virtual bool execZReport(bool aAuto);

@@ -45,7 +45,13 @@ protected:
 	virtual bool setFRParameters();
 
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
+
+	/// Получить фискальные теги по номеру документа.
+	virtual bool getFiscalFields(quint32 aFDNumber, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+
+	/// Выполнить итерационный запрос фискальных тегов.
+	TResult getFiscalTLVData(QByteArray & aData);
 
 	/// Печать выплаты.
 	virtual bool performEncashment(const QStringList & aReceipt, double aAmount);
@@ -69,10 +75,13 @@ protected:
 	bool getTLV(int aField, QByteArray & aData, uchar aBlockNumber = 0);
 
 	/// Установить флаги по ошибке в ответе.
-	virtual void setErrorFlags(char aError, const QByteArray & aCommand);
+	virtual void setErrorFlags(const QByteArray & aCommand, char aError);
 
 	/// Получить Id принтера.
 	virtual char getPrinterId();
+
+	/// Выполнить функтор с ожиданием ответа без ошибок транспорта.
+	TResult processDataWaiting(const std::function<TResult()> & aCommand);
 
 	/// Софтварная перезагрузка.
 	bool reboot();

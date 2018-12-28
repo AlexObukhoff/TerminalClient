@@ -203,7 +203,7 @@ bool ShtrihFRBase<T>::printDeferredZReports()
 template<class T>
 bool ShtrihFRBase<T>::prepareZReport(bool aAuto, QVariantMap & aData)
 {
-	bool needCloseSession = mMode == CShtrihFR::InnerModes::NeedCloseSession;
+	bool needCloseSession = mMode == CShtrihFR::InnerModes::SessionExpired;
 
 	if (aAuto)
 	{
@@ -251,7 +251,7 @@ bool ShtrihFRBase<T>::execZReport(bool aAuto)
 
 	if (getLongStatus())
 	{
-		mNeedCloseSession = mMode == CShtrihFR::InnerModes::NeedCloseSession;
+		mNeedCloseSession = mMode == CShtrihFR::InnerModes::SessionExpired;
 	}
 
 	if (success)
@@ -380,14 +380,14 @@ bool ShtrihFRBase<T>::waitForChangeZReportMode()
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ShtrihFRBase<T>::processAnswer(const QByteArray & aCommand)
+bool ShtrihFRBase<T>::processAnswer(const QByteArray & aCommand, char aError)
 {
-	if (ProtoShtrihFR<T>::processAnswer(aCommand))
+	if (ProtoShtrihFR<T>::processAnswer(aCommand, aError))
 	{
 		return true;
 	}
 
-	if (mLastError == CShtrihFR::Errors::ChequeBufferOverflow)
+	if (aError == CShtrihFR::Errors::ChequeBufferOverflow)
 	{
 		mZBufferOverflow = mCanProcessZBuffer;
 	}

@@ -1315,7 +1315,7 @@ void PrintingService::saveReceipt(const QVariantMap & aParameters, const QString
 }
 
 //---------------------------------------------------------------------------
-QString & replaceTags(QString & aMessage)
+QString replaceTags(QString aMessage)
 {
 	aMessage.replace("[br]", "\n", Qt::CaseInsensitive);
 	aMessage.remove(QRegExp("\\[(b|dw|dh)\\]", Qt::CaseInsensitive));

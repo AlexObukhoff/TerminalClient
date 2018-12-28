@@ -6,7 +6,7 @@
 #include <Common/QtHeadersEnd.h>
 
 // Project
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "Backend/KeysManager.h"
 
@@ -419,7 +419,7 @@ void WizardFrame::onChangePage(const QString & aContext)
 //----------------------------------------------------------------------------
 void WizardFrame::onExit()
 {
-	if (MessageBox::question(tr("#question_exit")))
+	if (GUI::MessageBox::question(tr("#question_exit")))
 	{
 		QVariantMap parameters;
 		parameters["signal"] = "exit";

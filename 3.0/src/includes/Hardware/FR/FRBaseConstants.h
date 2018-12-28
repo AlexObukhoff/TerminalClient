@@ -4,7 +4,6 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QDateTime>
 #include <QtCore/QRegExp>
 #include <Common/QtHeadersEnd.h>
 
@@ -107,6 +106,13 @@ namespace CFR
 	/// Признак способа расчета по умолчанию для платежей (тег 1214) (не интернет-магазинов) - Полный расчет.
 	const SDK::Driver::EPayOffSubjectMethodTypes::Enum PayOffSubjectMethodType = SDK::Driver::EPayOffSubjectMethodTypes::Full;
 
+	/// Результаты запроса статуса.
+	namespace Result
+	{
+		const char Error[] = "__ERROR__";    /// Ошибка устройства, либо ответ неверно скомпонован.
+		const char Fail[]  = "__FAIL__";     /// Транспортная/протокольная ошибка.
+	}
+
 	/// ИНН.
 	namespace INN
 	{
@@ -164,10 +170,7 @@ namespace CFR
 	const TStatusCodes XReportFiscalErrors = getFiscalStatusCodes(SDK::Driver::EWarningLevel::Error)
 		<< DeviceStatusCode::Error::Unknown
 		<< FRStatusCode::Error::EKLZ
-		<< FRStatusCode::Error::FiscalMemory;
-
-	/// Сменилась ли ставка НДС с 18% на 20% в РФ.
-	inline bool isRFVAT20() { return QDate::currentDate() >= QDate(2019, 1, 1); }
+		<< FRStatusCode::Error::FM;
 
 	/// Актуальные ставки НДС в России.
 	const SDK::Driver::TVATs RFActualVATs = SDK::Driver::TVATs() << 18 << 10 << 0;
@@ -388,6 +391,22 @@ namespace CFR
 	};
 
 	static CAgentFlags AgentFlags;
+
+	//--------------------------------------------------------------------------------
+	/// Причины перерегистрации (1101).
+	class CReregistrationCauses : public CBitmapDescription<char>
+	{
+	public:
+		CReregistrationCauses()
+		{
+			append(1, "Замена ФН");
+			append(2, "Замена ОФД");
+			append(3, "Изменение реквизитов");
+			append(4, "Изменение настроек ККТ");
+		}
+	};
+
+	static CReregistrationCauses ReregistrationCauses;
 
 	//--------------------------------------------------------------------------------
 	/// Спецификация флагов ФН.

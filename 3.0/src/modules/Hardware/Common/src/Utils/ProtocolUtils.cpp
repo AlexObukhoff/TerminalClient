@@ -8,6 +8,7 @@ template QString ProtocolUtils::toHexLog(uchar);
 template QString ProtocolUtils::toHexLog(ushort);
 template QString ProtocolUtils::toHexLog(unsigned long);
 template QString ProtocolUtils::toHexLog(quint32);
+template QString ProtocolUtils::toHexLog(int);
 
 template QString    ProtocolUtils::clean(const QString & aData);
 template QByteArray ProtocolUtils::clean(const QByteArray & aData);

@@ -51,7 +51,7 @@ protected:
 	virtual bool isNotError(char aCommand);
 
 	/// Обработка ответа на предыдущей команды. Автоисправление некоторых ошибок.
-	virtual bool processAnswer(const QByteArray & aCommand);
+	virtual bool processAnswer(const QByteArray & aCommand, char aError);
 
 	/// Печать выплаты.
 	virtual bool processPayout(double aAmount);
@@ -62,11 +62,8 @@ protected:
 	/// Напечатать строку.
 	virtual bool printLine(const QByteArray & aString);
 
-	/// Проверка готовности фискальника к операциям выплаты и фискального чека.
-	virtual bool prepareFiscal();
-
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
 
 	/// Отмена фискального чека.
 	virtual bool cancelFiscal();
@@ -80,14 +77,11 @@ protected:
 	/// Закрыть чек.
 	virtual bool closeDocument(double aSum, SDK::Driver::EPayTypes::Enum aPayType);
 
-	/// Получить имена секций.
-	void getSectionNames();
-
 	/// Проверить название продажи.
 	virtual void checkSalesName(QString & aName);
 
 	/// Установить флаги по ошибке в ответе.
-	virtual void setErrorFlags(const QByteArray & /*aCommand*/) {}
+	virtual void setErrorFlags() {}
 
 	/// Печать Z отчета.
 	virtual bool performZReport(bool aPrintDeferredReports);
@@ -109,7 +103,7 @@ protected:
 
 	/// После подачи команды, связанной с печатью ждем окончания печати.
 	//TODO: зачем ждем перед ожиданием?
-	bool waitForPrintingEnd(bool aCanBeOff = false);
+	bool waitForPrintingEnd(bool aCanBeOff = false, int aTimeout = CShtrihFR::Timeouts::MaxWaitForPrintingEnd);
 
 	/// Проверить параметры налога.
 	virtual bool checkTax(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData);
@@ -120,13 +114,13 @@ protected:
 	/// Отрезка.
 	virtual bool cut();
 
-	/// Узнать, открыта ли смена.
+	/// Получить состояние смены.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
 
-	/// Установить значение в системной таблице.
+	/// Установить параметр системной таблицы.
 	bool setFRParameter(const CShtrihFR::FRParameters::SData & aData, const QVariant & aValue, char aSeries = 1);
 
-	/// Получить значение из системной таблицы.
+	/// Получить параметр системной таблицы.
 	bool getFRParameter(const CShtrihFR::FRParameters::SData & aData, QByteArray & aValue, char aSeries = 1);
 
 	/// Установить параметры ФР.
@@ -141,8 +135,8 @@ protected:
 	/// Распарсить данные ФР, полученные из длинного статуса.
 	virtual void parseDeviceData(const QByteArray & aData);
 
-	/// Открыт ли чек.
-	bool isFiscalDocumentOpened();
+	/// Получить состояние документа.
+	virtual SDK::Driver::EDocumentState::Enum getDocumentState();
 
 	/// Определяет по ID модели, есть ли в ФР весовой датчик для чековой ленты.
 	bool isPaperWeightSensor() const;
@@ -186,15 +180,14 @@ protected:
 	/// Данные команд.
 	CShtrihFR::Commands::Data mCommandData;
 
-	/// Данные ошибок.
-	typedef QSharedPointer<FRError::CData> PErrorData;
-	PErrorData mErrorData;
-
 	/// Номер шрифта.
 	char mFontNumber;
 
 	/// Таймаут технологических посылок.
 	int mTransportTimeout;
+
+	/// На отмене фискального документа необходима [промотка и] отрезка чека.
+	bool mNeedReceiptProcessingOnCancel;
 };
 
 //--------------------------------------------------------------------------------

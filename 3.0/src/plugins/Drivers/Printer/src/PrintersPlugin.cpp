@@ -160,7 +160,8 @@ template <class T>
 TParameterList SystemPrinterParameters(const QString & aModel)
 {
 	return SystemPrintersParameters<T>(aModel)
-		<< setPaginationDisabled();
+		<< setPaginationDisabled()
+		<< setLeftMargin();
 }
 
 //------------------------------------------------------------------------------

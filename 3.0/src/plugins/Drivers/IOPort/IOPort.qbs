@@ -10,6 +10,7 @@ Project {
 		Depends { name: "DriversSDK" }
 		Depends { name: "HardwareCommon" }
 		Depends { name: "HardwareIOPorts" }
+		Depends { name: "SysUtils" }
 
 		Depends { name: "IOPortTranslations" }
 

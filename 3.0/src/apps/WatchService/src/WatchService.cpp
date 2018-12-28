@@ -16,7 +16,6 @@
 // Modules
 #include <Common/Application.h>
 #include <Common/SleepHelper.h>
-
 #include <SysUtils/ISysUtils.h>
 #include <WatchServiceClient/Constants.h>
 
@@ -337,7 +336,7 @@ void WatchService::loadConfiguration()
 	}
 
 #if 0 // #40592 Пока выключаем данную опцию
-	QSettings userSettings(BasicApplication::getInstance()->getWorkingDirectory() + "/user/user.ini", QSettings::IniFormat);
+	QSettings userSettings(ISysUtils::rmBOM(BasicApplication::getInstance()->getWorkingDirectory() + "/user/user.ini"), QSettings::IniFormat);
 	userSettings.setIniCodec("UTF-8");
 
 	if (userSettings.value("guard/taboo_enabled").toString() == "true")

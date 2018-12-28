@@ -52,6 +52,7 @@ namespace CAtolFR
 
 			SData() : table(0), series(0), field(0) {}
 			SData(uchar aTable, ushort aSeries, uchar aField) : table(aTable), series(aSeries), field(aField) {}
+			QString log() const { return QString("field %1-%2-%3").arg(table).arg(series).arg(field); }
 		};
 
 		typedef SData (*TData)(int aSeries);

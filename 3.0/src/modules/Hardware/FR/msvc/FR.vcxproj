@@ -121,6 +121,7 @@
     <ClCompile Include="..\src\Base\FFEngine.cpp" />
     <ClCompile Include="..\src\Base\Port\PortFRBase.cpp" />
     <ClCompile Include="..\src\Kasbi\KasbiFRBase.cpp" />
+    <ClCompile Include="..\src\MStar\Online\AFPFR.cpp" />
     <ClCompile Include="..\src\Prim\Online\PrimOnlineFRBase.cpp" />
     <ClCompile Include="..\src\Shtrih\Base\ProtoShtrihFR.cpp" />
     <ClCompile Include="..\src\Shtrih\Base\ShtrihSerialFR.cpp" />
@@ -172,6 +173,10 @@
     <ClInclude Include="..\src\Kasbi\KasbiFRBase.h" />
     <ClInclude Include="..\src\Kasbi\KasbiFRConstants.h" />
     <ClInclude Include="..\src\Kasbi\KasbiModelData.h" />
+    <ClInclude Include="..\src\MStar\Online\AFPFR.h" />
+    <ClInclude Include="..\src\MStar\Online\AFPFRConstants.h" />
+    <ClInclude Include="..\src\MStar\Online\AFPFRDataTypes.h" />
+    <ClInclude Include="..\src\MStar\Online\ModelData.h" />
     <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFR.h" />
     <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFRConstants.h" />
     <ClInclude Include="..\src\Prim\Ejector\PrimEjectorFRBase.h" />

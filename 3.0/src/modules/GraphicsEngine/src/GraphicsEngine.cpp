@@ -95,7 +95,8 @@ GraphicsEngine::GraphicsEngine() :
 	mHost(nullptr),
 	mIsVirtualKeyboardVisible(false),
 	mQuickView(nullptr),
-	mRootView(nullptr)
+	mRootView(nullptr),
+	mQuickContainer(nullptr)
 {
 	QDesktopWidget * desktop = QApplication::desktop();
 
@@ -130,9 +131,7 @@ GraphicsEngine::GraphicsEngine() :
 	mRootView->setMouseTracking(true);
 	
 	// для перехвата Alt+F4
-	mRootView->installEventFilter(this);
-
-	// Настраиваем виртуальную клавиатуру
+	mRootView->installEventFilter(this);	
 }
 
 //---------------------------------------------------------------------------
@@ -159,8 +158,8 @@ bool GraphicsEngine::initialize(int aDisplay, int aWidth, int aHeight, bool aSho
 
 	mQuickView = new QQuickWindow;
 
-	QWidget * quickConatiner = QWidget::createWindowContainer(mQuickView, mRootView);
-	quickConatiner->setMinimumSize(mRootView->size());
+	mQuickContainer = QWidget::createWindowContainer(mQuickView, mRootView);
+	mQuickContainer->setMinimumSize(mRootView->size());
 
 	/*
 	mDebugWidget.setPosition(QPoint(0, aHeight));
@@ -601,9 +600,8 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 		{
 			newWidget->graphics.lock()->getWidget()->setParentItem(mQuickView->contentItem());
 		}
-		else if (newWidget->graphics.lock()->getNativeWidget())
+		else if (QWidget * w = newWidget->graphics.lock()->getNativeWidget())
 		{
-
 		}
 	}
 	else
@@ -679,12 +677,16 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 
 	if (newWidget->info.type == "native")
 	{
+		mQuickContainer->setVisible(false);
+		
 		QWidget * w = newWidget->graphics.lock()->getNativeWidget();
 		w->setParent(mRootView);
 		w->setVisible(true);
 	}
 	else
 	{
+		mQuickContainer->setVisible(true);
+		
 		// Отрисовка через очередь, чтобы showHandler/resetHandler успели отработать
 		QMetaObject::invokeMethod(this, "setFrontWidget", Qt::QueuedConnection,
 			Q_ARG(QQuickItem *, dynamic_cast<QQuickItem *>(newWidget->graphics.lock()->getWidget())),

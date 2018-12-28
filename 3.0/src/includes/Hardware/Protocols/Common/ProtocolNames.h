@@ -24,6 +24,7 @@ namespace ProtocolNames
 		const char PRIM[]    = "PRIM";
 		const char SPARK[]   = "SPARK";
 		const char Kasbi[]   = "Kasbi";
+		const char AFP[]     = "AFP";
 		const char Incotex[] = "Incotex";
 	}
 

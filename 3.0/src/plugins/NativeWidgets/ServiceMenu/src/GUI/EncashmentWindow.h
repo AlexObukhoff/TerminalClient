@@ -32,7 +32,7 @@ protected slots:
 	void doEncashment();
 	virtual bool doEncashmentProcess();
 	void onPrintZReport();
-	void onPeceiptPrinted(qint64 aPaymentId, bool aErrorHappened);
+	void onPeceiptPrinted(qint64 aJobIndex, bool aErrorHappened);
 
 protected:
 	virtual void updateUI() = 0;
@@ -41,6 +41,7 @@ protected:
 	QString mMessageSuccess;
 	QString mMessageError;
 	bool mEncashmentWithZReport;
+	qint64 mLastPrintJob;
 
 protected:
 	QTimer mIdleTimer;

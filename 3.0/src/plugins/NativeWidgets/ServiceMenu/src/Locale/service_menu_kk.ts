@@ -40,17 +40,17 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="81"/>
+        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="78"/>
         <source>#terminal_number</source>
         <translation>Терминал №</translation>
     </message>
     <message>
-        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="82"/>
+        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="79"/>
         <source>#software_version</source>
         <translation>Нұсқа </translation>
     </message>
     <message>
-        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="139"/>
+        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="155"/>
         <source>#printer_failed</source>
         <translation>Невозможно распечатать чек.</translation>
     </message>
@@ -338,33 +338,19 @@
 <context>
     <name>DispenserServiceWindow</name>
     <message>
-        <location filename="../GUI/UI/DispenserServiceWindow.ui" line="110"/>
-        <source>x</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../GUI/UI/DispenserServiceWindow.ui" line="123"/>
         <source>0</source>
-        <translation>0</translation>
+        <translation type="obsolete">0</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/DispenserServiceWindow.ui" line="130"/>
         <source>=</source>
-        <translation>=</translation>
+        <translation type="obsolete">=</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/DispenserServiceWindow.ui" line="137"/>
         <source>0.0</source>
-        <translation>0.0</translation>
+        <translation type="obsolete">0.0</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/DispenserServiceWindow.ui" line="144"/>
-        <source>RUR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../GUI/DispenserServiceWindow.cpp" line="60"/>
-        <location filename="../GUI/DispenserServiceWindow.cpp" line="176"/>
+        <location filename="../GUI/DispenserServiceWindow.cpp" line="55"/>
         <source>#pts</source>
         <translation></translation>
     </message>
@@ -409,41 +395,46 @@
 <context>
     <name>EncashmentServiceWindow</name>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="77"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="141"/>
         <source>#title_cash_amount</source>
         <translation>Терминалдағы қолма-қол ақша, барлығы </translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="103"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="167"/>
         <source>#title_note_count</source>
         <translation>Купюралар, барлығы </translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="176"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="49"/>
         <source>#title_last_encashment_date</source>
         <translation>Соңғы инкассация күні </translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="217"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="106"/>
         <source>#title_print_balance</source>
         <translation>Теңгерімді басып шығару </translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="230"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="119"/>
         <source>#title_print_zreport</source>
         <translation>Кейінге қалдырылған Z-есептерінің басып шығарылуын </translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="132"/>
+        <source>#title_payload</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>#print_full_zreport</source>
         <translation type="obsolete">Кейінге қалдырылған Z-есептерінің басып шығарылуын қалайсыз ба?</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="239"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="193"/>
         <source>#title_coin_count</source>
         <translation>Тиындар, барлығы </translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="204"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="93"/>
         <source>#title_encash</source>
         <translation>Инкассация </translation>
     </message>
@@ -476,12 +467,17 @@
         <translation type="obsolete">Инкассация кезінде қате шықты.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentServiceWindow.cpp" line="128"/>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="168"/>
         <source>#balance_printed</source>
         <translation>Теңгерім басып шығарылған.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentServiceWindow.cpp" line="124"/>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="223"/>
+        <source>#check_update_payload_settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="164"/>
         <source>#balance_print_failed</source>
         <translation>Теңгерімді басып шығару мүмкін емес.</translation>
     </message>
@@ -497,63 +493,68 @@
 <context>
     <name>EncashmentWindow</name>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="54"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="60"/>
         <source>#question_encash</source>
         <translation>Инкассация жасалғанын қалайсыз ба?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="54"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="60"/>
         <source>#question_encash_without_receipt</source>
         <translation>Чекті басып шығару мүмкін емес. Инкассация жасалғанын қалайсыз ба?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="66"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="72"/>
         <source>#enter_stacker_id</source>
         <translation>Таспаның нөмірін терiнiз</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="144"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="154"/>
         <source>#print_full_zreport</source>
         <translation>Кейінге қалдырылған Z-есептерінің басып шығарылуын қалайсыз ба?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="141"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="154"/>
+        <source>#full_zreport_print_failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/EncashmentWindow.cpp" line="147"/>
         <source>#zreport_failed</source>
         <translation>Невозможно распечатать Z-отчёт.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="148"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="150"/>
         <source>#zreport_printed</source>
         <translation>Z-отчёт распечатан.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="103"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="107"/>
         <source>#encashment_complete</source>
         <translation>Инкассация жасалды.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="107"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="115"/>
         <source>#encashment_complete_and_printed</source>
         <translation>Инкассация жасалды.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="108"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="111"/>
         <source>#encashment_print_failed</source>
         <translation>Инкассация жасалды.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="110"/>
-        <location filename="../GUI/EncashmentWindow.cpp" line="150"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="116"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="167"/>
         <source>#printing</source>
         <translation>Печать...</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="121"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="127"/>
         <source>#encashment_error_try_later</source>
         <translation>Инкассация кезінде қате шықты.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="125"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="131"/>
         <source>#encashment_error</source>
         <translation>Инкассация кезінде қате шықты.</translation>
     </message>
@@ -574,22 +575,22 @@
 <context>
     <name>HIDTest</name>
     <message>
-        <location filename="../DeviceTests/HIDTest.cpp" line="19"/>
+        <location filename="../DeviceTests/HIDTest.cpp" line="20"/>
         <source>#test_read</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../DeviceTests/HIDTest.cpp" line="27"/>
+        <location filename="../DeviceTests/HIDTest.cpp" line="28"/>
         <source>#read_barcode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../DeviceTests/HIDTest.cpp" line="27"/>
+        <location filename="../DeviceTests/HIDTest.cpp" line="28"/>
         <source>#wait_photo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../DeviceTests/HIDTest.cpp" line="94"/>
+        <location filename="../DeviceTests/HIDTest.cpp" line="99"/>
         <source>#readed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -597,17 +598,17 @@
 <context>
     <name>Hardware::CommonParameters</name>
     <message>
-        <location filename="../GUI/DeviceSlot.cpp" line="255"/>
+        <location filename="../GUI/DeviceSlot.cpp" line="259"/>
         <source>#unknown_model</source>
         <translation>Үлгі таңдалмаған</translation>
     </message>
     <message>
-        <location filename="../GUI/EditorPane.cpp" line="51"/>
+        <location filename="../GUI/EditorPane.cpp" line="52"/>
         <source>#model</source>
         <translation>Үлгісі</translation>
     </message>
     <message>
-        <location filename="../GUI/EditorPane.cpp" line="52"/>
+        <location filename="../GUI/EditorPane.cpp" line="53"/>
         <source>#model_howto</source>
         <translation>Тізімнен құрылғы үлгісін таңдаңыз:</translation>
     </message>
@@ -615,7 +616,7 @@
 <context>
     <name>Hardware::PrinterParameters</name>
     <message>
-        <location filename="../GUI/EditorPane.cpp" line="62"/>
+        <location filename="../GUI/EditorPane.cpp" line="63"/>
         <source>#sytem_printer_name</source>
         <translation>Жүйелік принтер</translation>
     </message>
@@ -696,7 +697,7 @@
         <translation type="obsolete">Мәртебесі анықталмаған</translation>
     </message>
     <message>
-        <location filename="../Backend/HardwareManager.cpp" line="225"/>
+        <location filename="../Backend/HardwareManager.cpp" line="224"/>
         <source>#unknown_status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1260,42 +1261,42 @@
         <translation>Мәзірден шығу </translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="93"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="95"/>
         <source>#terminal_number</source>
         <translation>Терминал №</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="94"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="96"/>
         <source>#software_version</source>
         <translation>Версия </translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="182"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="184"/>
         <source>#title_diagnostic</source>
         <translation>Ақпарат</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="183"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="185"/>
         <source>#title_logs</source>
         <translation>Logs</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="206"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="208"/>
         <source>#title_setup</source>
         <translation>Баптау</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="196"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="198"/>
         <source>#title_payments</source>
         <translation type="unfinished">Платежи</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="189"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="191"/>
         <source>#title_encashment</source>
         <translation>Инкассация</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="372"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="374"/>
         <source>#question_reboot_software</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1305,37 +1306,37 @@
         <translation>Терминалдың қайта жүктелгенін қалайтыныңызға сенімдісіз бе?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="395"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="393"/>
         <source>#question_unblock_terminal</source>
         <translation>Терминалдың шектеуден шығарылуын қалайтыныңызға сенімдісіз бе?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="395"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="393"/>
         <source>#question_block_terminal</source>
         <translation>Терминалдың шектеуге қойылуын қалайтыныңызға сенімдісіз бе?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="406"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="402"/>
         <source>#question_stop_terminal</source>
         <translation>Бағдарламалық қамсыздандырудың тоқтатылуын қалайтыныңызға сенімдісіз бе? </translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="353"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="355"/>
         <source>#error_auth_failed</source>
         <translation>Қате кілтсөз</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="97"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="99"/>
         <source>#title_unlock</source>
         <translation>Шектеуден шығару</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="97"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="99"/>
         <source>#title_lock</source>
         <translation>Шектеуге қою</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="417"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="449"/>
         <source>#question_leave_service_menu</source>
         <translation>Қызметтік мәзірден шыққыңыз келетініңзге сенімдісіз бе?</translation>
     </message>
@@ -1426,7 +1427,7 @@
 <context>
     <name>PaymentManager</name>
     <message>
-        <location filename="../Backend/PaymentManager.cpp" line="401"/>
+        <location filename="../Backend/PaymentManager.cpp" line="471"/>
         <source>#lost_change</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1794,7 +1795,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/ServiceMenu.cpp" line="174"/>
+        <location filename="../GUI/ServiceMenu.cpp" line="168"/>
         <source>#need_restart_application</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2202,27 +2203,31 @@
 <context>
     <name>frmEditorPane</name>
     <message>
-        <location filename="../GUI/UI/EditorPane.ui" line="194"/>
+        <location filename="../GUI/UI/EditorPane.ui" line="197"/>
         <source>#on</source>
         <translation>Иә</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EditorPane.ui" line="207"/>
+        <location filename="../GUI/UI/EditorPane.ui" line="210"/>
         <source>#off</source>
         <translation>Жоқ</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EditorPane.ui" line="477"/>
-        <source>#default</source>
-        <translation>Алдын-ала анықталған тәртіпте (По умолчанию)</translation>
+        <location filename="../GUI/UI/EditorPane.ui" line="492"/>
+        <source>TextLabel</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EditorPane.ui" line="490"/>
+        <source>#default</source>
+        <translation type="obsolete">Алдын-ала анықталған тәртіпте (По умолчанию)</translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/EditorPane.ui" line="517"/>
         <source>#ok</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EditorPane.ui" line="503"/>
+        <location filename="../GUI/UI/EditorPane.ui" line="530"/>
         <source>#cancel</source>
         <translation>Отмена</translation>
     </message>

@@ -685,6 +685,26 @@ bool FFEngine::checkDealerAgentFlag(ERequestStatus::Enum aInitialized, bool aCan
 }
 
 //--------------------------------------------------------------------------------
+bool FFEngine::checkCashier(QString & aCashier)
+{
+	if (!containsConfigParameter(CFiscalSDK::Cashier))
+	{
+		toLog(LogLevel::Warning, mDeviceName + ": Failed to set cashier due to it is absent");
+		return false;
+	}
+
+	aCashier = getConfigParameter(CFiscalSDK::Cashier).toString().simplified();
+
+	if (aCashier.isEmpty())
+	{
+		toLog(LogLevel::Warning, mDeviceName + ": Failed to set cashier due to it is empty");
+		return false;
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
 bool FFEngine::checkTaxSystemOnPayment(SPaymentData & aPaymentData)
 {
 	char taxSystem = char(aPaymentData.taxSystem);
@@ -887,7 +907,7 @@ void FFEngine::filterAfterPayment(TFiscalPaymentData & aFPData, TComplexFiscalPa
 }
 
 //--------------------------------------------------------------------------------
-bool FFEngine::checkINN(const QString & aINN, int aType)
+bool FFEngine::checkINN(const QString & aINN, int aType) const
 {
 	int size = aINN.size();
 	bool wrongSize = (size != CFR::INN::Person::Legal) && (size != CFR::INN::Person::Natural);
@@ -964,7 +984,7 @@ bool FFEngine::checkINN(const QString & aINN, int aType)
 }
 
 //--------------------------------------------------------------------------------
-QString FFEngine::filterPhone(const QString & aData)
+QString FFEngine::filterPhone(const QString & aData) const
 {
 	if (!aData.contains(QRegExp("[0-9]+")))
 	{

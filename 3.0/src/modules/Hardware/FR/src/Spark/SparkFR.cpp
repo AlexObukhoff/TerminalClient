@@ -37,6 +37,9 @@ SparkFR::SparkFR()
 
 	setConfigParameter(CHardware::Printer::RetractorEnable, true);
 
+	// ошибки
+	mErrorData = PErrorData(new CSparkFR::Errors::Data);
+
 	using namespace SDK::Driver::IOPort::COM;
 
 	// данные порта
@@ -302,7 +305,7 @@ bool SparkFR::isConnected()
 	QByteArray answer;
 	TResult result = processCommand(CSparkFR::Commands::GetFWVersion, &answer);
 
-	if (CommandResult::ProtocolErrors.contains(result))
+	if (!CORRECT(result))
 	{
 		return false;
 	}
@@ -339,20 +342,20 @@ QStringList SparkFR::getModelList()
 }
 
 //--------------------------------------------------------------------------------
-TResult SparkFR::processCommand(const QByteArray & aCommand, QByteArray * aAnswer, int aTimeout)
-{
-	QByteArray commandData;
-
-	return processCommand(aCommand, commandData, aAnswer, aTimeout);
-}
-
-//--------------------------------------------------------------------------------
-TResult SparkFR::processCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer, int aTimeout)
+TResult SparkFR::execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
 {
 	MutexLocker locker(&mExternalMutex);
 
 	mProtocol.setPort(mIOPort);
 	mProtocol.setLog(mLog);
+
+	QByteArray answerData;
+	QByteArray & answer = aAnswer ? *aAnswer : answerData;
+
+	if (aCommand == CSparkFR::Commands::ENQT)
+	{
+		return mProtocol.processCommand(aCommand, answer, CSparkFR::Timeouts::Control);
+	}
 
 	CSparkFR::Commands::SData data = CSparkFR::Commands::Data[aCommand];
 
@@ -368,11 +371,18 @@ TResult SparkFR::processCommand(const QByteArray & aCommand, const QByteArray & 
 		}
 	}
 
-	QByteArray answerData;
-	QByteArray & answer = aAnswer ? *aAnswer : answerData;
-	QByteArray commandData = aCommand + aCommandData;
+	int timeout = CSparkFR::Timeouts::Default;
 
-	TResult result = mProtocol.processCommand(commandData, answer, aTimeout);
+	if (aCommand == CSparkFR::Commands::PrintZBuffer)
+	{
+		timeout = qMax(1, mZReports) * CSparkFR::Timeouts::Report;
+	}
+	else if (aCommand == CSparkFR::Commands::Reports)
+	{
+		timeout = aCommandData.endsWith(CSparkFR::ZReport) ? CSparkFR::Timeouts::ZReport : CSparkFR::Timeouts::Report;
+	}
+
+	TResult result = mProtocol.processCommand(aCommand + aCommandData, answer, timeout);
 
 	if (answer == QByteArray(1, ASCII::ENQ))
 	{
@@ -381,15 +391,20 @@ TResult SparkFR::processCommand(const QByteArray & aCommand, const QByteArray & 
 			simplePoll();
 		}
 
-		toLog(LogLevel::Error, QString("%1: Error: %2").arg(mDeviceName).arg(CSparkFR::Errors::Descriptions[mLastError]));
+		toLog(LogLevel::Error, mDeviceName + ": Error: " + mErrorData->value(mLastError).description);
 
 		if (!mProcessingErrors.isEmpty() && (mProcessingErrors.last() == mLastError))
 		{
 			return CommandResult::Device;
 		}
 
-		if (!processAnswer(mLastError))
+		char error = mLastError;
+
+		if (isErrorUnprocessed(aCommand, error) || !processAnswer(error))
 		{
+			mLastError = error;
+			mLastCommand = aCommand;
+
 			return CommandResult::Device;
 		}
 
@@ -401,8 +416,7 @@ TResult SparkFR::processCommand(const QByteArray & aCommand, const QByteArray & 
 	{
 		if (mCheckStatus)
 		{
-			QByteArray ENQTAnswer;
-			TResult ENQTResult = mProtocol.processCommand(CSparkFR::Commands::ENQT, ENQTAnswer, CSparkFR::Timeouts::Control);
+			TResult ENQTResult = processCommand(CSparkFR::Commands::ENQT);
 
 			if (!ENQTResult)
 			{
@@ -455,7 +469,7 @@ bool SparkFR::processAnswer(char aError)
 				if (mOperatorPresence)
 				{
 					toLog(LogLevel::Error, mDeviceName + ": Failed to process auto-Z-report due to presence of the operator.");
-					mNeedCloseSession = mNeedCloseSession || isSessionExpired();
+					mNeedCloseSession = mNeedCloseSession || (getSessionState() == ESessionState::Expired);
 
 					return false;
 				}
@@ -543,31 +557,24 @@ void SparkFR::execTags(Tags::SLexeme & aTagLexeme, QVariant & aLine)
 //--------------------------------------------------------------------------------
 bool SparkFR::getStatus(TStatusCodes & aStatusCodes)
 {
-	mProtocol.setPort(mIOPort);
-	mProtocol.setLog(mLog);
+	QByteArray data = performStatus(aStatusCodes, CSparkFR::Commands::ENQT, 21);
 
-	QByteArray answer;
-
-	if (!mProtocol.processCommand(CSparkFR::Commands::ENQT, answer, CSparkFR::Timeouts::Control))
+	if (data == CFR::Result::Fail)
 	{
 		return false;
 	}
-
-	if (answer.size() > 21)
+	else if (data != CFR::Result::Error)
 	{
-		mSessionOpeningDT = QDateTime(QDate(fromBCD(answer[19]), fromBCD(answer[18]), fromBCD(answer[17])).addYears(2000),
-			QTime(fromBCD(answer[20]), fromBCD(answer[21])));
-	}
-	else
-	{
-		aStatusCodes.insert(DeviceStatusCode::Error::Unknown);
+		QDate date = QDate(fromBCD(data[19]), fromBCD(data[18]), fromBCD(data[17])).addYears(2000);
+		QTime time = QTime(fromBCD(data[20]), fromBCD(data[21]));
+		mSessionOpeningDT = QDateTime(date, time);
 	}
 
-	     if (answer.size() > 7) mDocumentState = answer[7];
-	else if (answer.size() > 6) mLastError = fromBCD<char>(answer.mid(5, 2));
-	else if (answer.size() > 2) CSparkFR::Status3.getSpecification(answer[2], aStatusCodes);
-	else if (answer.size() > 1) CSparkFR::Status2.getSpecification(answer[1], aStatusCodes);
-	else if (answer.size() > 0) CSparkFR::Status1.getSpecification(answer[0], aStatusCodes);
+	     if (data.size() > 7) { mDocumentState = data[7]; }
+	else if (data.size() > 6) { mLastError = fromBCD<char>(data.mid(5, 2)); }    //TODO: mLastCommand 
+	else if (data.size() > 2) CSparkFR::Status3.getSpecification(data[2], aStatusCodes);
+	else if (data.size() > 1) CSparkFR::Status2.getSpecification(data[1], aStatusCodes);
+	else if (data.size() > 0) CSparkFR::Status1.getSpecification(data[0], aStatusCodes);
 
 	mCheckStatus = false;
 
@@ -576,11 +583,13 @@ bool SparkFR::getStatus(TStatusCodes & aStatusCodes)
 		getZBufferState();
 	}
 
-	if (!processCommand(CSparkFR::Commands::GetSensorState, &answer) || (answer.size() < 2))
+	data = performStatus(aStatusCodes, CSparkFR::Commands::GetSensorState, 1);
+
+	if (data == CFR::Result::Fail)
 	{
-		aStatusCodes.insert(DeviceStatusCode::Error::Unknown);
+		return false;
 	}
-	else if (fromBCD<char>(answer.left(2)) & CSparkFR::PaperInPresenter)
+	else if ((data != CFR::Result::Error) && (fromBCD<char>(data.left(2)) & CSparkFR::PaperInPresenter))
 	{
 		aStatusCodes.insert(PrinterStatusCode::OK::PaperInPresenter);
 	}
@@ -668,7 +677,7 @@ bool SparkFR::setFiscalParameters(const QStringList & aReceipt)
 }
 
 //--------------------------------------------------------------------------------
-bool SparkFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+bool SparkFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * /*aFDNumber*/)
 {
 	TSum totalAmount = getTotalAmount(aPaymentData);
 
@@ -835,12 +844,12 @@ bool SparkFR::performZReport(bool aPrintDeferredReports)
 	if (aPrintDeferredReports && mZReports)
 	{
 		toLog(LogLevel::Normal, mDeviceName + ": Printing deferred Z-reports");
-		int timeout = mZReports * CSparkFR::Timeouts::Report;
 
-		printZBufferOK = processCommand(CSparkFR::Commands::PrintZBuffer, CSparkFR::PushZReport, nullptr, timeout);
+		printZBufferOK = processCommand(CSparkFR::Commands::PrintZBuffer, CSparkFR::PushZReport);
+		getZBufferState();
 	}
 
-	bool printZReport = execZReport(false) && processCommand(CSparkFR::Commands::PrintZBuffer, CSparkFR::PushZReport, nullptr, CSparkFR::Timeouts::Report);
+	bool printZReport = execZReport(false) && processCommand(CSparkFR::Commands::PrintZBuffer, CSparkFR::PushZReport);
 
 	return (printZBufferOK && aPrintDeferredReports) || printZReport;
 }
@@ -939,7 +948,7 @@ bool SparkFR::processXReport()
 	int oldDocumentNumber = getLastDocumentNumber();
 
 	QByteArray commandData = QByteArray(1, CSparkFR::SessionReport) + CSparkFR::XReport;
-	TResult result = processCommand(CSparkFR::Commands::Reports, commandData, nullptr, CSparkFR::Timeouts::Report);
+	TResult result = processCommand(CSparkFR::Commands::Reports, commandData);
 	waitNextPrinting();
 
 	if (!result && (oldDocumentNumber != -1))
@@ -978,14 +987,6 @@ bool SparkFR::getKKMData(TKKMInfoData & aData)
 }
 
 //--------------------------------------------------------------------------------
-bool SparkFR::isSessionExpired()
-{
-	TKKMInfoData data;
-
-	return (getSessionState() == ESessionState::Opened) && getKKMData(data) && mSessionOpeningDT.daysTo(parseDateTime(data));
-}
-
-//--------------------------------------------------------------------------------
 int SparkFR::getLastDocumentNumber()
 {
 	TKKMInfoData data;
@@ -996,6 +997,27 @@ int SparkFR::getLastDocumentNumber()
 //--------------------------------------------------------------------------------
 ESessionState::Enum SparkFR::getSessionState()
 {
+	QByteArray data;
+
+	if (!processCommand(CSparkFR::Commands::ENQT, &data) || (data.size() <= 2))
+	{
+		return ESessionState::Error;
+	}
+
+	if (data[2] & CSparkFR::SessionExpired)
+	{
+		return ESessionState::Expired;
+	}
+
+	/*
+	isSessionExpired() - удалено
+	{
+		TKKMInfoData data;
+
+		return (getSessionState() == ESessionState::Opened) && getKKMData(data) && mSessionOpeningDT.daysTo(parseDateTime(data));
+	}
+	*/
+
 	// Т.е. если дата и время начала смены валидны, то она открыта. Возможно - особенность нефискализированного аппарата.
 	bool result = mSessionOpeningDT != CSparkFR::ClosedSession;
 
@@ -1003,21 +1025,32 @@ ESessionState::Enum SparkFR::getSessionState()
 }
 
 //--------------------------------------------------------------------------------
+EDocumentState::Enum SparkFR::getDocumentState()
+{
+	QByteArray data;
+
+	if (!processCommand(CSparkFR::Commands::ENQT, &data) || (data.size() <= 7))
+	{
+		return EDocumentState::Error;
+	}
+
+	return data[7] ? EDocumentState::Opened : EDocumentState::Closed;
+}
+
+//--------------------------------------------------------------------------------
 bool SparkFR::execZReport(bool /*aAuto*/)
 {
-	toLog(LogLevel::Normal, QString("%1: Begin processing %2-report").arg(mDeviceName).arg(CSparkFR::ZReport));
+	toLog(LogLevel::Normal, mDeviceName + QString(": Begin processing %1-report").arg(CSparkFR::ZReport));
+	ESessionState::Enum sessionState = getSessionState();
 
-	if (getSessionState() == ESessionState::Closed)
-	{
-		toLog(LogLevel::Error, mDeviceName + ": Session is closed, exit!");
-		return false;
-	}
+	     if (sessionState == ESessionState::Error)  return false;
+	else if (sessionState == ESessionState::Closed) return true;
 
 	mNeedCloseSession = false;
 	QByteArray commandData = QByteArray(1, CSparkFR::SessionReport) + CSparkFR::ZReport;
-	bool result = processCommand(CSparkFR::Commands::Reports, commandData, nullptr, CSparkFR::Timeouts::ZReport);
+	bool result = processCommand(CSparkFR::Commands::Reports, commandData);
 
-	mNeedCloseSession = isSessionExpired();
+	mNeedCloseSession = getSessionState() == ESessionState::Expired;
 	mZReports += int(result);
 
 	return result;

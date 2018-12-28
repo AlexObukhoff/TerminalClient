@@ -13,6 +13,7 @@ Project {
 		Depends { name: "HardwareIOPorts" }
 		Depends { name: "HardwareScanners" }
 		Depends { name: "OPOSSDK" }
+		Depends { name: "SysUtils" }
 
 		Depends { name: "HIDTranslations" }
 

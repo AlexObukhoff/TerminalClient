@@ -8,7 +8,6 @@
 	<directory source="src/interface/modern/build" target="interface/interface/modern" recursive="true">
 		<exclude>*.wav</exclude>
 	</directory>
-	<file source="{QBS_RESULT_PATH}/plugins/interface/utils.dll" target="interface/interface/modern/plugins/utils.dll"/>
 	
 	<!-- Звуки интерфейса modern -->
 	<directory source="src/interface/modern/build/sounds" target="sounds/interface/modern/sounds" recursive="true"/>
@@ -62,8 +61,8 @@
 	<!-- <file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/uniteller.dll" target="plugins/plugins/uniteller.dll"/> -->
 
 	<!-- UCS plugin -->
-	<option target="user/user/plugins/ucs.ini" key="PaymentProcessor.ChargeProvider.UcsChargeProvider.configuration_singleton/ucs_runtime_path" value="C:/UCS/BIN" />
-	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/ucs.dll" target="plugins/plugins/ucs.dll"/>
+	<!--<option target="user/user/plugins/ucs.ini" key="PaymentProcessor.ChargeProvider.UcsChargeProvider.configuration_singleton/ucs_runtime_path" value="C:/UCS/BIN" />
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/ucs.dll" target="plugins/plugins/ucs.dll"/>-->
 
 	<!-- Драйверы, компонент drivers -->
 	<file source="{QBS_RESULT_PATH}/plugins/drivers/fr.dll" target="drivers/plugins/drivers/fr.dll"/>
@@ -95,7 +94,7 @@
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/platru_ru.qm" target="locale/plugins/platru_ru.qm"/>
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/cyberchange_ru.qm" target="locale/plugins/cyberchange_ru.qm"/>
 	<!-- <file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/uniteller_ru.qm" target="locale/plugins/uniteller_ru.qm"/> -->
-	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/ucs_ru.qm" target="locale/plugins/ucs_ru.qm"/> -->
+	<!--<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/ucs_ru.qm" target="locale/plugins/ucs_ru.qm"/> -->
 	
 	<!-- ######################################################################################  -->
 

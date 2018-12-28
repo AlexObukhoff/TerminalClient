@@ -62,6 +62,7 @@ DeviceBase<T>::DeviceBase() : mExternalMutex(QMutex::Recursive), mResourceMutex(
 	mAutoDetectable = true;
 	mNeedReboot = false;
 	mForceStatusBufferEnabled = false;
+	mInitializationError = false;
 
 	mStatusCodesSpecification = DeviceStatusCode::PSpecifications(new DeviceStatusCode::CSpecifications());
 
@@ -106,6 +107,12 @@ template <class T>
 bool DeviceBase<T>::updateParameters()
 {
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+void DeviceBase<T>::setInitialData()
+{
 }
 
 //--------------------------------------------------------------------------------
@@ -203,6 +210,7 @@ void DeviceBase<T>::initialize()
 	toLog(LogLevel::Normal, "**********************************************************");
 
 	mInitialized = ERequestStatus::InProcess;
+	mInitializationError = false;
 
 	MutexLocker resourceLocker(&mResourceMutex);
 
@@ -230,6 +238,8 @@ void DeviceBase<T>::initialize()
 				}
 
 				MutexLocker externalLocker(&mExternalMutex);
+
+				setInitialData();
 
 				if (updateParameters())
 				{
@@ -341,7 +351,7 @@ bool DeviceBase<T>::isInitializationError(TStatusCodes & aStatusCodes)
 template <class T>
 void DeviceBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 {
-	if (isInitializationError(aStatusCodes))
+	if (isInitializationError(aStatusCodes) || mInitializationError)
 	{
 		aStatusCodes.insert(DeviceStatusCode::Error::Initialization);
 	}
@@ -361,6 +371,7 @@ void DeviceBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 		}
 
 		mNeedReboot = false;
+		mInitializationError = false;
 	}
 
 	if ((aStatusCodes.size() > 1) && (aStatusCodes.contains(DeviceStatusCode::Error::ThirdPartyDriverFail)))

@@ -14,6 +14,7 @@ AtolOnlineFRBase::AtolOnlineFRBase()
 	mNextReceiptProcessing = false;
 	mIsOnline = true;
 	mFRBuildUnifiedTaxes = 3689;
+	setConfigParameter(CHardwareSDK::CanOnline, true);
 
 	mOFDFiscalParametersOnSale
 		<< CFR::FiscalFields::PayOffSubjectMethodType;
@@ -37,8 +38,8 @@ AtolOnlineFRBase::AtolOnlineFRBase()
 	setConfigParameter(CHardware::FR::Commands::PrintingDeferredZReports, CAtolOnlineFR::Commands::PrintDeferredZReports);
 
 	// ошибки
-	mErrorData = PErrorData(new CAtolOnlineFR::Errors::CData());
-	setConfigParameter(CHardwareSDK::CanOnline, true);
+	mErrorData = PErrorData(new CAtolOnlineFR::Errors::Data());
+	mUnprocessedErrorData.add(CAtolOnlineFR::Commands::FS::GetFiscalTLVData, CAtolOnlineFR::Errors::NoRequiedDataInFS);
 }
 
 //--------------------------------------------------------------------------------
@@ -243,7 +244,7 @@ bool AtolOnlineFRBase::setFRParameters()
 //--------------------------------------------------------------------------------
 bool AtolOnlineFRBase::reboot()
 {
-	bool mode = mMode;
+	char mode = mMode;
 
 	if (!enterInnerMode(CAtolFR::InnerModes::Cancel))
 	{
@@ -268,69 +269,113 @@ bool AtolOnlineFRBase::reboot()
 //--------------------------------------------------------------------------------
 bool AtolOnlineFRBase::getStatus(TStatusCodes & aStatusCodes)
 {
-	QByteArray data;
-
-	if (!AtolFRBase::getStatus(aStatusCodes) || !getRegister(CAtolOnlineFR::Registers::OFDNotSentCount, data))
+	if (!AtolFRBase::getStatus(aStatusCodes))
 	{
 		return false;
 	}
 
-	int OFDNotSentCount = data.isEmpty() ? -1 : data.toHex().toInt();
-	checkOFDNotSentCount(OFDNotSentCount, aStatusCodes);
+	QByteArray data = performStatus(aStatusCodes, CAtolOnlineFR::Commands::FS::GetStatus, 6);
+
+	if (data == CFR::Result::Fail)
+	{
+		return false;
+	}
+	else if (data != CFR::Result::Error)
+	{
+		checkFSFlags(data[6], aStatusCodes);
+	}
+
+	TResult result = getRegister(CAtolOnlineFR::Registers::OFDNotSentCount, data);
+
+	if (!CORRECT(result))
+	{
+		return false;
+	}
+	else if (result == CommandResult::Answer)
+	{
+		aStatusCodes.insert(DeviceStatusCode::Warning::OperationError);
+	}
+	else if (result == CommandResult::Device)
+	{
+		int statusCode = getErrorStatusCode(mErrorData->value(mLastError).type);
+		aStatusCodes.insert(statusCode);
+	}
+	else
+	{
+		checkOFDNotSentCount(data.toHex().toInt(), aStatusCodes);
+	}
 
 	return true;
 }
 
 //--------------------------------------------------------------------------------
-bool AtolOnlineFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+bool AtolOnlineFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * aFDNumber)
 {
-	openFRSession();
-
-	bool result = AtolFRBase::performFiscal(aReceipt, aPaymentData, aFPData, aPSData);
-
-	if (result)
+	if (!AtolFRBase::performFiscal(aReceipt, aPaymentData))
 	{
-		auto getDataWaiting = [&] (const std::function<TResult()> & aCommand) -> TResult { TResult result; int i = 0; do { result = aCommand(); }
-			while ((result == CommandResult::Transport) && waitReady(CAtolOnlineFR::GetFiscalWaiting) && (++i < CAtolOnlineFR::MaxRepeatingFiscalData)); return result; };
-		#define GET_FS_DATA_WAITING(aCommand, ...) getDataWaiting([&] () -> TResult { return processCommand(CAtolOnlineFR::Commands::FS::aCommand, __VA_ARGS__); })
-
-		QByteArray data;
-
-		if (GET_FS_DATA_WAITING(GetStatus, &data) && (data.size() >= 32))
-		{
-			uint FDNumber = revert(data.mid(28, 4)).toHex().toUInt(0, 16);
-			mFFEngine.checkFPData(aFPData, CFR::FiscalFields::FDNumber, FDNumber);
-
-			if (GET_FS_DATA_WAITING(StartFiscalTLVData, getHexReverted(FDNumber, 4)))
-			{
-				CFR::STLV TLV;
-
-				while (GET_FS_DATA_WAITING(GetFiscalTLVData, &data))
-				{
-					if (mFFEngine.parseTLV(data.mid(2), TLV))
-					{
-						if (mFFData.data().contains(TLV.field))
-						{
-							mFFEngine.parseSTLVData(TLV, aPSData);
-							mFFEngine.parseTLVData (TLV, aFPData);
-						}
-						else
-						{
-							toLog(LogLevel::Warning, QString("%1: Failed to add fiscal field %2 due to it is unknown").arg(mDeviceName).arg(TLV.field));
-						}
-					}
-				}
-			}
-		}
+		return false;
 	}
 
 	QByteArray data;
 
-	if (getRegister(CAtolOnlineFR::Registers::SessionData, data))
+	if (aFDNumber && PROCESS_ATOL_FD_DATA(GetStatus, &data) && (data.size() >= 32))
 	{
-		uint documentNumber = data.left(3).toHex().toUInt();
-		mFFEngine.checkFPData(aFPData, CFR::FiscalFields::DocumentNumber, documentNumber);
+		*aFDNumber = revert(data.mid(28, 4)).toHex().toUInt(0, 16);
 	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+TResult AtolOnlineFRBase::getFiscalTLVData(QByteArray & aData)
+{
+	TResult result = CommandResult::OK;
+
+	do
+	{
+		QByteArray data;
+		result = PROCESS_ATOL_FD_DATA(GetFiscalTLVData, &data);
+
+		aData += data.mid(2);
+
+		auto getInt = [&aData] (int aIndex, int aShift) -> int { int result = uchar(aData[aIndex]); return result << (8 * aShift); };
+		int size = getInt(2, 0) | getInt(3, 1);
+		int dataSize = aData.size() - 4;
+
+		if (dataSize >= size)
+		{
+			break;
+		}
+	}
+	while (result && (aData.size() >= 4));
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+bool AtolOnlineFRBase::getFiscalFields(quint32 aFDNumber, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+{
+	if (!PROCESS_ATOL_FD_DATA(StartFiscalTLVData, getHexReverted(aFDNumber, 4)))
+	{
+		return false;
+	}
+
+	TGetFiscalTLVData getFiscalTLVData = std::bind(&AtolOnlineFRBase::getFiscalTLVData, this, std::placeholders::_1);
+
+	return processFiscalTLVData(getFiscalTLVData, &aFPData, &aPSData);
+}
+
+//--------------------------------------------------------------------------------
+TResult AtolOnlineFRBase::processDataWaiting(const std::function<TResult()> & aCommand)
+{
+	TResult result;
+	int i = 0;
+
+	do
+	{
+		result = aCommand();
+	}
+	while ((result == CommandResult::Transport) && waitReady(CAtolOnlineFR::GetFiscalWaiting) && (++i < CAtolOnlineFR::MaxRepeatingFiscalData));
 
 	return result;
 }
@@ -350,7 +395,7 @@ bool AtolOnlineFRBase::processAnswer(const QByteArray & aCommand, char aError)
 	{
 		case CAtolOnlineFR::Errors::FSOfflineEnd:
 		{
-			mProcessingErrors.push_back(mLastError);
+			mProcessingErrors.push_back(aError);
 
 			mFSOfflineEnd = true;
 
@@ -368,7 +413,7 @@ bool AtolOnlineFRBase::processAnswer(const QByteArray & aCommand, char aError)
 				{
 					ushort error = data.mid(2, 2).toHex().toUShort(0, 16);
 
-					toLog(LogLevel::Error, "AtolFR: Extended error: " + CAtolOnlineFR::Errors::ExtendedData[error]);
+					toLog(LogLevel::Error, mDeviceName + ": Extended error: " + CAtolOnlineFR::Errors::ExtraData[error]);
 				}
 			}
 
@@ -382,15 +427,7 @@ bool AtolOnlineFRBase::processAnswer(const QByteArray & aCommand, char aError)
 		}
 	}
 
-	bool result = AtolFRBase::processAnswer(aCommand, aError);
-
-	if ((aCommand == CAtolOnlineFR::Commands::FS::GetFiscalTLVData) && !mProcessingErrors.isEmpty() && (mProcessingErrors.last() == CAtolOnlineFR::Errors::NoRequiedDataInFS))
-	{
-		mProcessingErrors.pop_back();
-		mLastError = 0;
-	}
-
-	return result;
+	return AtolFRBase::processAnswer(aCommand, aError);
 }
 
 //---------------------------------------------------------------------------
@@ -533,12 +570,11 @@ bool AtolOnlineFRBase::getTLV(int aField, QByteArray & aData, uchar aBlockNumber
 }
 
 //--------------------------------------------------------------------------------
-void AtolOnlineFRBase::setErrorFlags(char aError, const QByteArray & aCommand)
+void AtolOnlineFRBase::setErrorFlags(const QByteArray & aCommand, char aError)
 {
-	AtolFRBase::setErrorFlags(aError, aCommand);
-	bool noError = (aCommand == CAtolOnlineFR::Commands::FS::GetFiscalTLVData) && (aError == CAtolOnlineFR::Errors::NoRequiedDataInFS);
+	AtolFRBase::setErrorFlags(aCommand, aError);
 
-	if ((mErrorData->value(aError).type == FRError::EType::FS) && !noError)
+	if (mErrorData->value(aError).type == FRError::EType::FS)
 	{
 		mFSError = true;
 	}

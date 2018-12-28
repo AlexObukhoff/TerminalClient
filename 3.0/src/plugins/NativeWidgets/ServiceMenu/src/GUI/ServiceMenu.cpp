@@ -16,7 +16,7 @@
 #include <SDK/PaymentProcessor/Core/EventTypes.h>
 
 // Project
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "ServiceMenu.h"
 
@@ -138,12 +138,15 @@ bool ServiceMenu::isReady() const
 //---------------------------------------------------------------------------
 void ServiceMenu::show()
 {
+	GUI::MessageBox::setParentWidget(mMainServiceWindow);
+
 	mBackend->startHeartbeat();
 }
 
 //---------------------------------------------------------------------------
 void ServiceMenu::hide()
 {
+	GUI::MessageBox::hide();
 	mBackend->stopHeartbeat();
 }
 
@@ -156,7 +159,7 @@ void ServiceMenu::notify(const QString & aReason, const QVariantMap & aParameter
 	}
 	else
 	{
-		MessageBox::emitSignal(aParameters);
+		GUI::MessageBox::emitSignal(aParameters);
 	}
 }
 
@@ -173,8 +176,6 @@ void ServiceMenu::reset(const QVariantMap & /*aParameters*/)
 //---------------------------------------------------------------------------
 QQuickItem * ServiceMenu::getWidget() const
 {
-	//return mMainWidget;
-	//FIXME
 	return nullptr;
 }
 

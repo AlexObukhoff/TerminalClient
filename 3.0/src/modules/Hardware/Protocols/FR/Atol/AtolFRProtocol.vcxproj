@@ -15,7 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8912050F-921E-4480-9597-55D7B8B08831}</ProjectGuid>
+    <ProjectGuid>{C7DF8CCB-E42A-4B4B-BED4-0B55944F4A5A}</ProjectGuid>
     <RootNamespace>ComPortWin</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
   </PropertyGroup>

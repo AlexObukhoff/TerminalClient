@@ -29,47 +29,69 @@
     <Filter Include="EMV">
       <UniqueIdentifier>{5978eb73-6873-4f67-b5d2-2b97079c2e3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Creator">
+      <UniqueIdentifier>{d6deda26-5f55-4c1b-a9f7-b278fa99e401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IDTech">
+      <UniqueIdentifier>{f6bba96d-e796-44ba-b8c4-9a9b29290cf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\CreatorReader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\EMVAdapter.cpp">
-      <Filter>EMV</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\TLV.cpp">
-      <Filter>EMV</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\CreatorReaderModelData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CreatorReaderConstants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\CardReaderStatusCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\CardReaderStatusesDescriptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\EMVAdapter.h">
+    <ClInclude Include="..\src\Creator\CreatorReader.h">
+      <Filter>Creator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Creator\CreatorReaderConstants.h">
+      <Filter>Creator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Creator\CreatorReaderDataTypes.h">
+      <Filter>Creator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Creator\CreatorReaderModelData.h">
+      <Filter>Creator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\EMV\EMVAdapter.h">
       <Filter>EMV</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\EMVConstants.h">
+    <ClInclude Include="..\src\EMV\EMVConstants.h">
       <Filter>EMV</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\TLV.h">
+    <ClInclude Include="..\src\EMV\TLV.h">
       <Filter>EMV</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CreatorReaderDataTypes.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\IDTech\IDTechModelData.h">
+      <Filter>IDTech</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\IDTech\IDTechReader.h">
+      <Filter>IDTech</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\EMVTagData.h">
+      <Filter>IDTech</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\src\CreatorReader.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
+    <ClCompile Include="..\src\Creator\CreatorReader.cpp">
+      <Filter>Creator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EMV\EMVAdapter.cpp">
+      <Filter>EMV</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EMV\TLV.cpp">
+      <Filter>EMV</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\IDTech\IDTechReader.cpp">
+      <Filter>IDTech</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\IDTech\IDTechCallbacks.h">
+      <Filter>IDTech</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\IDTech\IDTechCallbacks.cpp">
+      <Filter>IDTech</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

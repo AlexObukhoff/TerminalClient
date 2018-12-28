@@ -17,10 +17,11 @@ Project {
 		Depends { name: "NetworkTaskManager" }
 		Depends { name: "KeysUtils" }
 		Depends { name: "Log" }
+		Depends { name: "SysUtils" }
 
 		Depends { name: "ServiceMenuTranslations" }
 
-		cpp.includePaths: "src"
+		cpp.includePaths: [ "src", "src/GUI" ]
 
 		files: [
 			"../../../includes/Common/CoreVersion.rc",
@@ -30,6 +31,7 @@ Project {
 			"src/FirstSetup/UI/*.ui",
 			"src/FirstSetup/*.*",
 			"src/GUI/Resources/Resources.qrc",
+			"src/GUI/MessageBox/*.*",
 			"src/GUI/UI/*.ui",
 			"src/GUI/*.*",
 			"src/VirtualKeyboard/*.*",

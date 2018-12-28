@@ -86,9 +86,6 @@ protected:
 	/// Модели данной реализации.
 	QStringList mModels;
 
-	/// Флаг ошибки инициализации.
-	bool mInitializationError;
-
 	/// Время работы буфера статусов после печати.
 	QDateTime mStartPrinting;
 

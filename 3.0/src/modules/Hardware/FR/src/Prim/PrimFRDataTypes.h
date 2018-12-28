@@ -31,48 +31,15 @@ namespace CPrimFR
 		};
 	}
 
-	/// Ошибки выполнения команд.
+	/// Ошибки.
 	namespace Errors
 	{
-		/// Структура описателя ошибок.
-		struct SData
-		{
-			FRError::EType::Enum type;
-			QString description;
-			bool extraData;
-
-			SData() : type(FRError::EType::Unknown), extraData(false) {}
-			SData(FRError::EType::Enum aType, const char * aDescription, bool aExtraData) : type(aType), description(QString::fromUtf8(aDescription)), extraData(aExtraData) {}
-		};
-
-		/// Описатель ошибок выполнения команд.
-		class SpecificationBase : public CSpecification<char, SData>
+		class ExtraDataBase
 		{
 		public:
-			SpecificationBase()
+			virtual QString value(char /*aErrorCode*/, char aErrorReason)
 			{
-				setDefault(SData(FRError::EType::Unknown, "Неизвестная", false));
-			}
-
-			QString operator[] (char aErrorCode) const
-			{
-				return CSpecification<char, SData>::operator[](aErrorCode).description;
-			}
-
-			virtual QString getDescription(ushort /*aFullErrorCode*/)
-			{
-				return getDefault().description;
-			}
-
-		protected:
-			void add(char aCode, FRError::EType::Enum aType, const char * aDescription, bool aExtraData = false)
-			{
-				append(aCode, SData(aType, aDescription, aExtraData));
-			}
-
-			void add(char aCode, const char * aDescription, bool aExtraData = false)
-			{
-				append(aCode, SData(FRError::EType::Unknown, aDescription, aExtraData));
+				return QString::number(uchar(aErrorReason));
 			}
 		};
 	}

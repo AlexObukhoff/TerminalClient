@@ -93,7 +93,6 @@ bool PrinterBase<T>::isConnected()
 	return getStatus(statusCodes) && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable);
 }
 
-
 //---------------------------------------------------------------------------
 template <class T>
 bool PrinterBase<T>::processNonReentrant(TBoolMethod aCommand)
@@ -141,38 +140,14 @@ bool PrinterBase<T>::processNonReentrant(TBoolMethod aCommand)
 
 //---------------------------------------------------------------------------
 template <class T>
-void PrinterBase<T>::cleanReceipt(QStringList & aReceipt)
-{
-	for (int i = 0; i < aReceipt.size(); ++i)
-	{
-		aReceipt[i] = aReceipt[i].replace(ASCII::TAB, ASCII::Space);
-
-		for (auto it = CPrinters::AutoCorrection.data().begin(); it != CPrinters::AutoCorrection.data().end(); ++it)
-		{
-			aReceipt[i] = aReceipt[i].replace(it.key(), it.value());
-		}
-	}
-
-	for (int i = 0; i < aReceipt.size(); ++i)
-	{
-		if (aReceipt[i].simplified().isEmpty())
-		{
-			aReceipt.removeAt(i--);
-		}
-	}
-}
-
-//---------------------------------------------------------------------------
-template <class T>
 bool PrinterBase<T>::print(const QStringList & aReceipt)
 {
-	QStringList receipt(aReceipt);
-	cleanReceipt(receipt);
-
-	if (receipt.isEmpty())
+	if (!isPrintingNeed(aReceipt))
 	{
 		return true;
 	}
+
+	QStringList receipt = simplifyReceipt(aReceipt);
 
 	if (!processNonReentrant(std::bind(&PrinterBase<T>::processReceipt, this, std::ref(receipt), true)))
 	{
@@ -236,30 +211,68 @@ QStringList PrinterBase<T>::simplifyReceipt(const QStringList & aReceipt)
 		}
 	}
 
+	for (int i = 0; i < result.size(); ++i)
+	{
+		result[i] = result[i].replace(ASCII::TAB, ASCII::Space);
+
+		for (auto it = CPrinters::AutoCorrection.data().begin(); it != CPrinters::AutoCorrection.data().end(); ++it)
+		{
+			result[i] = result[i].replace(it.key(), it.value());
+		}
+	}
+
+	for (int i = 0; i < result.size(); ++i)
+	{
+		if (result[i].simplified().isEmpty())
+		{
+			result.removeAt(i--);
+		}
+	}
+
 	return result;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool PrinterBase<T>::isPrintingNeed(const QStringList & aReceipt)
+{
+	if (aReceipt.isEmpty())
+	{
+		toLog(LogLevel::Normal, mDeviceName + ": receipt is empty");
+		return false;
+	}
+
+	QStringList receipt = simplifyReceipt(aReceipt);
+
+	if (receipt.isEmpty())
+	{
+		toLog(LogLevel::Normal, mDeviceName + ": simplified receipt is empty");
+		return false;
+	}
+
+	if (getConfigParameter(CHardwareSDK::FR::CanWithoutPrinting).toBool() &&
+		(getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardwareSDK::Values::Use))
+	{
+		toLog(LogLevel::Normal, mDeviceName + "Receipt has not been printed:\n" + aReceipt.join("\n"));
+		return false;
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
 template <class T>
 bool PrinterBase<T>::processReceipt(const QStringList & aReceipt, bool aProcessing)
 {
-	QStringList receipt = simplifyReceipt(aReceipt);
-
-	if (receipt.isEmpty())
+	if (!isPrintingNeed(aReceipt))
 	{
-		return true;
-	}
-
-	if (getConfigParameter(CHardwareSDK::FR::CanWithoutPrinting).toBool() &&
-	   (getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardwareSDK::Values::Use))
-	{
-		toLog(LogLevel::Normal, "Receipt has not been printed:\n" + aReceipt.join("\n"));
 		return true;
 	}
 
 	toLog(LogLevel::Normal, "Printing receipt:\n" + aReceipt.join("\n"));
 
 	Tags::TLexemeReceipt lexemeReceipt;
+	QStringList receipt = simplifyReceipt(aReceipt);
 	makeLexemeReceipt(receipt, lexemeReceipt);
 
 	bool printing = printReceipt(lexemeReceipt);
@@ -459,7 +472,7 @@ void PrinterBase<T>::execTags(Tags::SLexeme & aTagLexeme, QVariant & aLine)
 
 	foreach(const Tags::TTypes types, mTagEngine->groupsTypesByPrefix(aTagLexeme.tags))
 	{
-		QByteArray openTag = mTagEngine->getTag(types, Tags::Direction::Open);
+		QByteArray openTag  = mTagEngine->getTag(types, Tags::Direction::Open);
 		QByteArray closeTag = mTagEngine->getTag(types, Tags::Direction::Close);
 		data = openTag + data + closeTag;
 	}

@@ -23,6 +23,11 @@ public:
 	bool initialize();
 	void shutdown();
 
+	QWidget * getMainWidget()
+	{
+		return wPasswordPage;
+	}
+
 	WizardWindow * getScreenByName(const QString & aScreenName);
 
 	// Выход из сервисного меню

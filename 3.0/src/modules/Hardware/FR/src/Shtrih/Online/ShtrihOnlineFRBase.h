@@ -41,9 +41,6 @@ protected:
 	/// Снять Z-отчет.
 	virtual bool execZReport(bool aAuto);
 
-	/// Проверка готовности фискальника к операциям выплаты и фискального чека.
-	virtual bool prepareFiscal();
-
 	/// Установить TLV-параметр.
 	virtual bool setTLV(int aField, bool aForSale = false);
 
@@ -51,7 +48,10 @@ protected:
 	virtual void checkSalesName(QString & aName);
 
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
+
+	/// Получить фискальные теги по номеру документа.
+	virtual bool getFiscalFields(quint32 aFDNumber, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
 
 	/// Продажа.
 	virtual bool sale(const SDK::Driver::SUnitData & aUnitData, bool aBack);
@@ -59,20 +59,14 @@ protected:
 	/// Закрыть чек.
 	virtual bool closeDocument(double aSum, SDK::Driver::EPayTypes::Enum aPayType);
 
-	/// Отмена фискального чека.
-	virtual bool cancelFiscal();
-
 	/// Возможно ли принудительное включение буфера статусов после выполнения печатной операции.
 	virtual bool canForceStatusBufferEnable();
 
 	/// Обработка ответа на предыдущей команды. Автоисправление некоторых ошибок.
-	virtual bool processAnswer(const QByteArray & aCommand);
+	virtual bool processAnswer(const QByteArray & aCommand, char aError);
 
 	/// Установить флаги по ошибке в ответе.
-	virtual void setErrorFlags(const QByteArray & /*aCommand*/);
-
-	/// Получить статус принтера.
-	bool getPrinterStatus(TStatusCodes & aStatusCodes);
+	virtual void setErrorFlags();
 
 	/// Открыть смену.
 	virtual bool openSession();

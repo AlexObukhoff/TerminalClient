@@ -71,6 +71,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KasbiFRProtocol", "Hardware
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Acceptors", "Hardware\Acceptors\msvc\Acceptors.vcxproj", "{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AFPFRProtocol", "Hardware\Protocols\FR\AFP\AFPFRProtocol.vcxproj", "{BFDBBDE8-7E2A-44BF-8276-CAAA4D5F5CDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -255,6 +257,12 @@ Global
 		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}.Release|Win32.Build.0 = Release|Win32
 		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
 		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
+		{BFDBBDE8-7E2A-44BF-8276-CAAA4D5F5CDE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BFDBBDE8-7E2A-44BF-8276-CAAA4D5F5CDE}.Debug|Win32.Build.0 = Debug|Win32
+		{BFDBBDE8-7E2A-44BF-8276-CAAA4D5F5CDE}.Release|Win32.ActiveCfg = Release|Win32
+		{BFDBBDE8-7E2A-44BF-8276-CAAA4D5F5CDE}.Release|Win32.Build.0 = Release|Win32
+		{BFDBBDE8-7E2A-44BF-8276-CAAA4D5F5CDE}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
+		{BFDBBDE8-7E2A-44BF-8276-CAAA4D5F5CDE}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -284,6 +292,7 @@ Global
 		{6FED182E-51F4-4292-AF7C-8C584B1C708D} = {FEE80E00-C155-453F-B1A0-1411BF8A2A54}
 		{B5773A56-AE4D-4945-BBFD-5A837DFD2895} = {AA61BBE3-7987-4E4B-9B31-EC490F6004C0}
 		{EE4C0DCD-F8D8-4D13-B028-A0CA7A386EF0} = {FEE80E00-C155-453F-B1A0-1411BF8A2A54}
+		{BFDBBDE8-7E2A-44BF-8276-CAAA4D5F5CDE} = {AA61BBE3-7987-4E4B-9B31-EC490F6004C0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		QtVersion = $(DefaultQtVersion)

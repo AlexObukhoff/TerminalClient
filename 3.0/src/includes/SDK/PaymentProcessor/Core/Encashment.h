@@ -50,9 +50,9 @@ struct SBalance
 		{
 			Currency::Nominal::RawType result = 0;
 
-			foreach (auto & amount, amounts)
+			foreach (auto & a, amounts)
 			{
-				result += amount.value.rawValue() * amount.count;
+				result += a.value.rawValue() * a.count;
 			}
 
 			return Currency::Nominal::fromRawValue(result);
@@ -137,7 +137,7 @@ struct SBalance
 				{
 					QString type = typeToString(sum.type);
 
-					foreach (auto a, sum.amounts)
+					for (auto & a : sum.amounts)
 					{
 						fields[aPrefix + a.value.toString() + "_" + type + "_COUNT"] = a.count;
 						fields[aPrefix + a.value.toString() + "_" + type + "_SUM"] = a.value.toDouble() * a.count;

@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>GraphicsItems/message_box.ini</file>
-        <file>GraphicsItems/message_box.qml</file>
         <file>Scenario/autoencashment_scenario.js</file>
         <file>Scenario/first_setup_scenario.js</file>
         <file>Scenario/service_menu_scenario.js</file>
@@ -17,17 +15,12 @@
         <file>Images/prev_w.png</file>
         <file>Images/right_arrow.png</file>
         <file>Images/up_arrow.png</file>
-        <file>Images/MessageBox/btn_empty.png</file>
         <file>Images/MessageBox/cancel.png</file>
-        <file>Images/MessageBox/cancel_t.png</file>
         <file>Images/MessageBox/critical.png</file>
-        <file>Images/MessageBox/dont_save_t.png</file>
         <file>Images/MessageBox/info.png</file>
         <file>Images/MessageBox/ok.png</file>
         <file>Images/MessageBox/question.png</file>
-        <file>Images/MessageBox/save_t.png</file>
         <file>Images/MessageBox/wait.gif</file>
-        <file>Images/MessageBox/wait.mng</file>
         <file>Images/MessageBox/warning.png</file>
         <file>Scenario/autoencashment_scenario.ini</file>
         <file>Scenario/first_setup_scenario.ini</file>

@@ -49,7 +49,10 @@ protected:
 	virtual bool cut();
 
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
+
+	/// Получить фискальные теги по номеру документа.
+	virtual bool getFiscalFields(quint32 aFDNumber, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
 
 	/// Печать Z отчета.
 	virtual bool performZReport(bool aPrintDeferredReports);
@@ -60,11 +63,11 @@ protected:
 	/// Запросить и вывести в лог критичные параметры ФР.
 	void processDeviceData();
 
-	/// Открыта ли смена. Если будет ошибка - по умолчанию открыта.
+	/// Получить состояние смены.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
 
-	/// Открыт ли документ. Если будет ошибка - по умолчанию закрыт.
-	bool isDocumentOpened();
+	/// Получить состояние документа.
+	virtual SDK::Driver::EDocumentState::Enum getDocumentState();
 
 	/// Получить данные ФН.
 	bool getFSData(CKasbiFR::SFSData & aData);

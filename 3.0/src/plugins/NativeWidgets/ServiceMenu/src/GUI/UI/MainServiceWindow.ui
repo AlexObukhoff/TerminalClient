@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>535</height>
+    <width>1280</width>
+    <height>1024</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -103,7 +103,16 @@ QWidget#wNumericPad QPushButton
 </string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item row="0" column="0">
@@ -146,19 +155,28 @@ QWidget#wNumericPad QPushButton
    <item row="1" column="0">
     <widget class="QStackedWidget" name="swPages">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="wPasswordPage">
       <layout class="QGridLayout" name="gridLayout_4">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item row="3" column="1">
         <widget class="QWidget" name="wNumericPad" native="true">
          <property name="minimumSize">
           <size>
-           <width>400</width>
-           <height>200</height>
+           <width>500</width>
+           <height>400</height>
           </size>
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
@@ -583,7 +601,16 @@ QWidget#wNumericPad QPushButton
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
@@ -728,6 +755,12 @@ QWidget#wNumericPad QPushButton
        </item>
        <item row="2" column="1">
         <widget class="QLineEdit" name="lePassword">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>90</height>
+          </size>
+         </property>
          <property name="inputMask">
           <string notr="true"/>
          </property>
@@ -752,7 +785,16 @@ QWidget#wNumericPad QPushButton
      </widget>
      <widget class="QWidget" name="wServiceMenuPage">
       <layout class="QGridLayout" name="gridLayout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item row="3" column="0">
@@ -764,7 +806,16 @@ QWidget#wNumericPad QPushButton
           </size>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <property name="spacing">

@@ -19,8 +19,11 @@ Project {
 
 		Depends { name: "Core" }
 
+		Depends { name: "IDTech_SDK" }
+		Depends { name: "libusb" }
+
 		files: [ 
-			"Cardreaders/src/*.*", 
+			"Cardreaders/src/*/*.*", 
 			"Cardreaders/Protocols/Creator/src/*.*",
 			"../../includes/Hardware/CardReaders/CardReaderStatusCodes.h"
 		]
@@ -107,6 +110,7 @@ Project {
 			"FR/src/Shtrih/*/*/*.*",
 			"FR/src/Spark/*.*",
 			"FR/src/Kasbi/*.*",
+			"FR/src/MStar/Online/*.*",
 
 			"../../includes/Hardware/FR/FRErrorDescription.h",
 			"../../includes/Hardware/FR/FRStatusCodes.h"
@@ -146,6 +150,7 @@ Project {
 			"Protocols/FR/Shtrih/src/*.*",
 			"Protocols/FR/Spark/src/*.*",
 			"Protocols/FR/Kasbi/src/*.*",
+			"Protocols/FR/AFP/src/*.*",
 			
 			"Protocols/CashAcceptor/*/src/*.*",
 			"Protocols/Watchdog/*/src/*.*"
@@ -159,7 +164,6 @@ Project {
 		Depends { name: "Qt"; submodules: ["core"] }
 
 		Depends { name: "Core" }
-		Depends { name: "OPOSSDK" }
 
 		files: [
 			"Scanners/src/*/*.*",

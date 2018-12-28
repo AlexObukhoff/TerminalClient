@@ -7,6 +7,7 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
+#include "SysUtils/ISysUtils.h"
 #include "Hardware/Common/SafePerformer.h"
 
 // Project
@@ -202,17 +203,10 @@ void AsyncSerialPort::logError(const QString & aFunctionName)
 
 	if (checkHandle() || (mLastErrorChecking != mLastError))
 	{
-		LPVOID lpMsgBuf = 0;
-		FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, mLastError,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&lpMsgBuf, 0, 0);
-
-		toLog(LogLevel::Error, QString("%1: %2 failed with code %3 (%4).")
+		toLog(LogLevel::Error, QString("%1: %2 failed with %3.")
 			.arg(mSystemName)
 			.arg(aFunctionName)
-			.arg(mLastError)
-			.arg(QString::fromWCharArray((LPWSTR)lpMsgBuf).simplified()));
-
-		LocalFree(lpMsgBuf);
+			.arg(ISysUtils::getErrorMessage(mLastError)));
 	}
 
 	if (!checkHandle())
@@ -273,7 +267,7 @@ bool AsyncSerialPort::open()
 
 	if (getConfigParameter(CHardware::Port::Suspended).toBool())
 	{
-		toLog(LogLevel::Error, mSystemName + ": Failed ot open due to there is a suspended task.");
+		toLog(LogLevel::Error, mSystemName + ": Failed to open due to there is a suspended task.");
 		return false;
 	}
 

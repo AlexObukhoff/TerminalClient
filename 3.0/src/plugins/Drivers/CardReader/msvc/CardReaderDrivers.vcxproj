@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -60,7 +60,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(QTDIR)\include\QtCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\IDTech\SDK\C_C++\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;TESTPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -71,9 +71,9 @@
       <AdditionalOptions>/DNOMINMAX %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmain.lib;PluginSDK.lib;DriverSDK.lib;Qt5Core.lib;Common.lib;CardReaders.lib;Creator.lib;IOPorts.lib;Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CardReaders.lib;Creator.lib;IOPorts.lib;Setupapi.lib;SysUtils.lib;libIDTechSDK.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/IDTech/SDK/C_C++/Windows;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -87,7 +87,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(QTDIR)\include\QtCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\IDTech\SDK\C_C++\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;TESTPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -97,9 +97,9 @@
       <AdditionalOptions>/DNOMINMAX %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmain.lib;PluginSDK.lib;DriverSDK.lib;Qt5Cored.lib;Common.lib;CardReaders.lib;Creator.lib;IOPorts.lib;Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;PluginSDK.lib;DriverSDK.lib;Qt5Cored.lib;Common.lib;CardReaders.lib;Creator.lib;IOPorts.lib;Setupapi.lib;SysUtils.lib;libIDTechSDK.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/IDTech/SDK/C_C++/Windows;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -112,7 +112,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(QTDIR)\include\QtCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\IDTech\SDK\C_C++\include;$(QTDIR)\include\QtCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_CORE_LIB;TESTPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -123,9 +123,9 @@
       <AdditionalOptions>/DNOMINMAX %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;CardReadersd.lib;Creatord.lib;IOPortsd.lib;Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmaind.lib;QtCored4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;CardReadersd.lib;Creatord.lib;IOPortsd.lib;Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/IDTech/SDK/C_C++/Windows;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
     </Link>

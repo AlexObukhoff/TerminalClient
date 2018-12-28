@@ -10,7 +10,7 @@
 #include <SDK/Drivers/Components.h>
 
 // Проект
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/NetworkManager.h"
 #include "Backend/HardwareManager.h"
 #include "Backend/ServiceMenuBackend.h"
@@ -101,14 +101,14 @@ bool HardwareWizardPage::deactivate()
 //----------------------------------------------------------------------------
 void HardwareWizardPage::onDetectionStarted()
 {
-	MessageBox::wait(tr("#detecting_devices"), true);
-	MessageBox::subscribe(this);
+	GUI::MessageBox::wait(tr("#detecting_devices"), true);
+	GUI::MessageBox::subscribe(this);
 
 	QVariantMap params;
 	params[SDK::GUI::CMessageBox::ButtonType] = SDK::GUI::MessageBoxParams::Text;
 	params[SDK::GUI::CMessageBox::ButtonText] = tr("#stop_search");
 
-	MessageBox::update(params);
+	GUI::MessageBox::update(params);
 }
 
 //----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ void HardwareWizardPage::onDetectionFinished()
 	// Обновляем статусы найденных железок
 	mBackend->getHardwareManager()->updateStatuses();
 
-	MessageBox::hide();
+	GUI::MessageBox::hide();
 }
 
 //----------------------------------------------------------------------------
@@ -188,13 +188,13 @@ void HardwareWizardPage::onEditFinished()
 //----------------------------------------------------------------------------
 void HardwareWizardPage::onApplyingStarted()
 {
-	MessageBox::wait(tr("#applying_configuration"));
+	GUI::MessageBox::wait(tr("#applying_configuration"));
 }
 
 //----------------------------------------------------------------------------
 void HardwareWizardPage::onApplyingFinished()
 {
-	MessageBox::hide();
+	GUI::MessageBox::hide();
 
 	// Для переинициализации свежедобавленного устройства. В противном случае не работает тест купюроприемника.
 	mHardwareWindow->setConfiguration(mBackend->getHardwareManager()->getConfiguration());
@@ -209,8 +209,8 @@ void HardwareWizardPage::onCurrentFormChanged(int aIndex)
 //------------------------------------------------------------------------
 void HardwareWizardPage::onClicked(const QVariantMap & /*aParameters*/)
 {
-	MessageBox::hide();
-	MessageBox::wait(tr("#waiting_stop_search"));
+	GUI::MessageBox::hide();
+	GUI::MessageBox::wait(tr("#waiting_stop_search"));
 	
 	mHardwareWindow->abortDetection();
 }

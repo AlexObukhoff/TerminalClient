@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -218,7 +218,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;AdBackend.lib;PaymentBase.lib;Qt5Core.lib;Qt5Network.lib;Qt5Sql.lib;Qt5Gui.lib;Qt5Qml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;AdBackend.lib;PaymentBase.lib;Qt5Core.lib;Qt5Network.lib;Qt5Sql.lib;Qt5Gui.lib;Qt5Qml.lib;PaymentBase.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);$(THIRDPARTY_BIN_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -246,7 +246,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;AdBackend.lib;PaymentBase.lib;Qt5Core.lib;Qt5Network.lib;Qt5Sql.lib;Qt5Gui.lib;Qt5Qml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;AdBackend.lib;PaymentBase.lib;Qt5Core.lib;Qt5Network.lib;Qt5Sql.lib;Qt5Gui.lib;Qt5Qml.lib;PaymentBase.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);$(THIRDPARTY_BIN_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -273,7 +273,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Logd.lib;PluginSDKd.lib;NetworkTaskManagerd.lib;PaymentProcessorSDKd.lib;AdBackendd.lib;PaymentBased.lib;Qt5Cored.lib;Qt5Networkd.lib;Qt5Sqld.lib;Qt5Guid.lib;Qt5Qmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Logd.lib;PluginSDKd.lib;NetworkTaskManagerd.lib;PaymentProcessorSDKd.lib;AdBackendd.lib;PaymentBased.lib;Qt5Cored.lib;Qt5Networkd.lib;Qt5Sqld.lib;Qt5Guid.lib;Qt5Qmld.lib;SysUtilsd.lib;PaymentBased.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);$(THIRDPARTY_BIN_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

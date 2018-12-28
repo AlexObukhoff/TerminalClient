@@ -95,7 +95,7 @@ void WorkingThreadProxy::checkThreadStarted()
 	{
 		if (!mWorkingThread->isRunning())
 		{
-			bool res = connect(mWorkingThread, SIGNAL(started()), this, SLOT(checkThreadStarted()), Qt::UniqueConnection);
+			connect(mWorkingThread, SIGNAL(started()), this, SLOT(checkThreadStarted()), Qt::UniqueConnection);
 			mWorkingThread->start();
 
 			QMutexLocker locker(&mStartMutex);

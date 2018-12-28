@@ -17,37 +17,13 @@ PayFRBase<T>::PayFRBase(): mPrinterModelId(0)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool PayFRBase<T>::updateParameters()
-{
-	if (!ShtrihRetractorFRLite<T>::updateParameters())
-	{
-		return false;
-	}
-
-	if (!isFiscal() || mOperatorPresence)
-	{
-		return true;
-	}
-
-	QByteArray data;
-
-	if (!getFRParameter(CShtrihOnlineFR::FRParameters::AutomaticNumber, data))
-	{
-		return false;
-	}
-
-	setDeviceParameter(CDeviceData::FR::AutomaticNumber, ProtocolUtils::clean(data));
-
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-template<class T>
 void PayFRBase<T>::processDeviceData()
 {
 	ShtrihRetractorFRLite<T>::processDeviceData();
 
-	mCanProcessZBuffer = mCanProcessZBuffer && (mModelData.date >= CShtrihOnlineFR::MinFWDate::ZBuffer);
+	QString SDCardData = getDeviceParameter(CDeviceData::SDCard).toString();
+	bool SDCardError = SDCardData.isEmpty() || SDCardData.startsWith(CDeviceData::Error) || SDCardData.startsWith(CDeviceData::NotConnected);
+	mCanProcessZBuffer = mCanProcessZBuffer && !SDCardError && (mModelData.date >= CShtrihOnlineFR::MinFWDate::ZBuffer);
 }
 
 //--------------------------------------------------------------------------------

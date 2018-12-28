@@ -71,7 +71,7 @@ public:
 	/// Загрузить флаги агента.
 	bool checkAgentFlags(char aData, TAgentFlags & aAgentFlags);
 
-	/// Загрузить режимы работы.
+	/// Проверить режимы работы.
 	bool checkOperationModes(char aData, TOperationModes & aOperationModes);
 
 	/// Проверить возможность использования фискального реквизита.
@@ -83,6 +83,9 @@ public:
 	/// Проверить корректность флага агента дилера.
 	bool checkDealerAgentFlag(ERequestStatus::Enum aInitialized, bool aCanLog);
 
+	/// Проверить кассира.
+	bool checkCashier(QString & aCashier);
+
 	/// Проверить корректность СНО на платеже.
 	bool checkTaxSystemOnPayment(SDK::Driver::SPaymentData & aPaymentData);
 
@@ -93,10 +96,10 @@ public:
 	void filterAfterPayment(SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
 
 	/// Проверить ИНН.
-	bool checkINN(const QString & aINN, int aType = CFR::INN::Person::Unknown);
+	bool checkINN(const QString & aINN, int aType = CFR::INN::Person::Unknown) const;
 
 	/// Привести строку с данными телефона к виду +{Ц}.
-	QString filterPhone(const QString & aData);
+	QString filterPhone(const QString & aData) const;
 
 	/// Добавить данные.
 	void addData(const CFR::FiscalFields::TData & aData);

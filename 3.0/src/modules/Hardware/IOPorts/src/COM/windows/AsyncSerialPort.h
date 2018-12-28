@@ -63,7 +63,7 @@ namespace CAsyncSerialPort
 	const char GeneralRS232[] = "ACPI";
 
 	/// Признаки невозможности ожидания результата GetOverlappedResult.
-	const QStringList CannotWaitResult = QStringList() << "FTDI" << "LPC USB VCom Port";
+	const QStringList CannotWaitResult = QStringList() << "FTDI" << "LPC USB VCom Port" << "ATOL" << "MSTAR";
 
 	/// Ошибки не логгировать.
 	const QVector<int> NoLogErrors = QVector<int>()

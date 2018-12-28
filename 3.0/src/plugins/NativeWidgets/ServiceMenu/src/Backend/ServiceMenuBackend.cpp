@@ -28,7 +28,7 @@
 
 // Project
 #include "GUI/ServiceTags.h"
-#include "MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "HardwareManager.h"
 #include "KeysManager.h"
 #include "NetworkManager.h"
@@ -46,7 +46,7 @@ ServiceMenuBackend::ServiceMenuBackend(SDK::Plugin::IEnvironment * aFactory, ILo
 {
 	mCore = dynamic_cast<SDK::PaymentProcessor::ICore *>(mFactory->getInterface(SDK::PaymentProcessor::CInterfaces::ICore));
 	
-	MessageBox::initialize(mCore->getGUIService());
+	GUI::MessageBox::initialize();
 
 	mTerminalSettings = static_cast<SDK::PaymentProcessor::TerminalSettings *>(mCore->getSettingsService()->
 		getAdapter(SDK::PaymentProcessor::CAdapterNames::TerminalAdapter));
@@ -57,7 +57,7 @@ ServiceMenuBackend::ServiceMenuBackend(SDK::Plugin::IEnvironment * aFactory, ILo
 //------------------------------------------------------------------------
 ServiceMenuBackend::~ServiceMenuBackend()
 {
-	MessageBox::shutdown();
+	GUI::MessageBox::shutdown();
 
 	foreach(SDK::Plugin::IPlugin * plugin, mWidgetPluginList)
 	{

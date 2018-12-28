@@ -1,7 +1,7 @@
 /* @file Окно настройки RuToken. */
 
 // Project
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "Backend/KeysManager.h"
 #include "GUI/TokenWindow.h"
@@ -65,8 +65,8 @@ bool TokenWizardPage::deactivate()
 //----------------------------------------------------------------------------
 void TokenWizardPage::onBeginFormat()
 {
-	MessageBox::hide();
-	MessageBox::wait(tr("#format_token"));
+	GUI::MessageBox::hide();
+	GUI::MessageBox::wait(tr("#format_token"));
 
 	killTimer(mUIUpdateTimer);
 
@@ -76,7 +76,7 @@ void TokenWizardPage::onBeginFormat()
 //----------------------------------------------------------------------------
 void TokenWizardPage::onEndFormat()
 {
-	MessageBox::hide();
+	GUI::MessageBox::hide();
 
 	mUIUpdateTimer = startTimer(1000);
 }
@@ -84,8 +84,8 @@ void TokenWizardPage::onEndFormat()
 //----------------------------------------------------------------------------
 void TokenWizardPage::onError(QString aError)
 {
-	MessageBox::hide();
-	MessageBox::critical(aError);
+	GUI::MessageBox::hide();
+	GUI::MessageBox::critical(aError);
 
 	mUIUpdateTimer = startTimer(1000);
 }

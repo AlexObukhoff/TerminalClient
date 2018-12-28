@@ -41,13 +41,14 @@ namespace FRStatusCode
 			ADD_FR_ERROR(FR,                   QCoreApplication::translate("FRStatuses", "#fiscal_add_on_error"));
 			ADD_FR_ERROR(EKLZ,                 QCoreApplication::translate("FRStatuses", "#EKLZ_error"));
 			ADD_FR_ERROR(FiscalCollapse,       QCoreApplication::translate("FRStatuses", "#fiscal_collapse"));
-			ADD_FR_ERROR(FiscalMemory,         QCoreApplication::translate("FRStatuses", "#FM_error"));
+			ADD_FR_ERROR(FM,                   QCoreApplication::translate("FRStatuses", "#FM_error"));
 			ADD_FR_ERROR(ZBuffer,              QCoreApplication::translate("FRStatuses", "#z_buffer_error"));
 			ADD_FR_ERROR(ZBufferOverflow,      QCoreApplication::translate("FRStatuses", "#z_buffer_overflow"));
 			ADD_FR_ERROR(NeedCloseSession,     QCoreApplication::translate("FRStatuses", "#need_close_session"));
 			ADD_FR_ERROR(FSEnd,                QCoreApplication::translate("FRStatuses", "#fs_end"));
 			ADD_FR_ERROR(NeedOFDConnection,    QCoreApplication::translate("FRStatuses", "#need_ofd_connection"));
 			ADD_FR_ERROR(FS,                   QCoreApplication::translate("FRStatuses", "#fs"));
+			ADD_FR_ERROR(FSClosed,             QCoreApplication::translate("FRStatuses", "#fs_closed"));
 			ADD_FR_ERROR(NoMoney,              QCoreApplication::translate("FRStatuses", "#no_money"));
 			ADD_FR_ERROR(WrongDealerTaxSystem, QCoreApplication::translate("FRStatuses", "#wrong_dealer_tax_system"));
 			ADD_FR_ERROR(WrongDealerAgentFlag, QCoreApplication::translate("FRStatuses", "#wrong_dealer_agent_flag"));

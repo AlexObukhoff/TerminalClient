@@ -1,7 +1,7 @@
 /* @file Окно настройки ключей. */
 
 // Project
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "Backend/KeysManager.h"
 #include "GUI/KeysWindow.h"
@@ -60,7 +60,7 @@ bool KeysWizardPage::deactivate()
 //----------------------------------------------------------------------------
 void KeysWizardPage::onBeginGenerating()
 {
-	MessageBox::wait(tr("#creating_keys"));
+	GUI::MessageBox::wait(tr("#creating_keys"));
 	
 	mKeysWindow->doGenerate();
 }
@@ -68,12 +68,12 @@ void KeysWizardPage::onBeginGenerating()
 //----------------------------------------------------------------------------
 void KeysWizardPage::onEndGenerating()
 {
-	MessageBox::hide();
+	GUI::MessageBox::hide();
 
 	// Сохраняем ключи
 	if (!mKeysWindow->save())
 	{
-		MessageBox::critical(tr("#cannot_save_keys"));
+		GUI::MessageBox::critical(tr("#cannot_save_keys"));
 		emit pageEvent("#can_proceed", false);
 	}
 	else
@@ -85,8 +85,8 @@ void KeysWizardPage::onEndGenerating()
 //----------------------------------------------------------------------------
 void KeysWizardPage::onError(QString aError)
 {
-	MessageBox::hide();
-	MessageBox::critical(aError);
+	GUI::MessageBox::hide();
+	GUI::MessageBox::critical(aError);
 
 	emit pageEvent("#can_proceed", false);
 }

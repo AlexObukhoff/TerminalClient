@@ -38,6 +38,10 @@ KasbiFRBase::KasbiFRBase()
 
 	// теги
 	mTagEngine = Tags::PEngine(new CKasbiFR::TagEngine());
+
+	// ошибки
+	mErrorData = PErrorData(new CKasbiFR::Errors::Data());
+	mUnprocessedErrorData.add(CKasbiFR::Commands::GetFiscalTLVData, CKasbiFR::Errors::NoRequiedDataInFS);
 }
 
 //--------------------------------------------------------------------------------
@@ -107,7 +111,7 @@ bool KasbiFRBase::isConnected()
 //--------------------------------------------------------------------------------
 bool KasbiFRBase::updateParameters()
 {
-	if (isDocumentOpened())
+	if (getDocumentState() == EDocumentState::Opened)
 	{
 		processCommand(CKasbiFR::Commands::CancelDocument);
 	}
@@ -338,21 +342,27 @@ TResult KasbiFRBase::execCommand(const QByteArray & aCommand, const QByteArray &
 		return CommandResult::Answer;
 	}
 
-	char error = answer[1];
-	toLog(LogLevel::Error, mDeviceName + ": Error: " + CKasbiFR::Errors::Data[error].description);
+	mLastError = answer[1];
+	mLastCommand = aCommand;
+	toLog(LogLevel::Error, mDeviceName + ": Error: " + mErrorData->value(mLastError).description);
 
-	if (error == CKasbiFR::Errors::Protocol)
+	if (mLastError == CKasbiFR::Errors::Protocol)
 	{
 		return CommandResult::Protocol;
 	}
 
-	if (!mProcessingErrors.isEmpty() && (mProcessingErrors.last() == error))
+	if (!mProcessingErrors.isEmpty() && (mProcessingErrors.last() == mLastError))
 	{
 		return CommandResult::Device;
 	}
 
-	if (!processAnswer(aCommand[0], error))
+	char error = mLastError;
+
+	if (isErrorUnprocessed(aCommand, error) || !processAnswer(aCommand[0], error))
 	{
+		mLastError = error;
+		mLastCommand = aCommand;
+
 		return CommandResult::Device;
 	}
 
@@ -362,11 +372,16 @@ TResult KasbiFRBase::execCommand(const QByteArray & aCommand, const QByteArray &
 }
 
 //--------------------------------------------------------------------------------
-bool KasbiFRBase::isDocumentOpened()
+EDocumentState::Enum KasbiFRBase::getDocumentState()
 {
 	CKasbiFR::SFSData data;
 
-	return getFSData(data) && data.documentOpened;
+	if (!getFSData(data))
+	{
+		return EDocumentState::Error;
+	}
+
+	return data.documentOpened ? EDocumentState::Opened : EDocumentState::Closed;
 }
 
 //--------------------------------------------------------------------------------
@@ -385,7 +400,7 @@ bool KasbiFRBase::processAnswer(char aCommand, char aError)
 				return false;
 			}
 
-			if (isDocumentOpened())
+			if (getDocumentState() == EDocumentState::Opened)
 			{
 				return processCommand(CKasbiFR::Commands::CancelDocument);
 			}
@@ -416,31 +431,30 @@ bool KasbiFRBase::processAnswer(char aCommand, char aError)
 //--------------------------------------------------------------------------------
 bool KasbiFRBase::getStatus(TStatusCodes & aStatusCodes)
 {
-	QByteArray data;
+	QByteArray data = performStatus(aStatusCodes, CKasbiFR::Commands::GetStatus, 18);
 
-	if (!processCommand(CKasbiFR::Commands::GetStatus, &data))
+	if (data == CFR::Result::Fail)
 	{
 		return false;
 	}
-
-	if (data.size() < 19)
-	{
-		aStatusCodes.insert(DeviceStatusCode::Error::Unknown);
-	}
-	else if (data[18])
+	else if (data != CFR::Result::Error)
 	{
 		aStatusCodes.insert(CKasbiFR::Statuses[data[18]]);
 	}
 
-	if (!processCommand(CKasbiFR::Commands::GetOFDNotSentCount, &data))
+	data = performStatus(aStatusCodes, CKasbiFR::Commands::GetOFDNotSentCount, 1);
+
+	if (data == CFR::Result::Fail)
 	{
 		return false;
 	}
+	else if (data != CFR::Result::Error)
+	{
+		auto getInt = [&] (int aIndex, int aShift) -> int { int result = uchar(data[aIndex]); return result << (8 * aShift); };
 
-	auto getInt = [&] (int aIndex, int aShift) -> int { int result = uchar(data[aIndex]); return result << (8 * aShift); };
-
-	int OFDNotSentCount = (data.size() < 2) ? -1 : (getInt(0, 0) | getInt(1, 1));
-	checkOFDNotSentCount(OFDNotSentCount, aStatusCodes);
+		int OFDNotSentCount = (data.size() < 2) ? -1 : (getInt(0, 0) | getInt(1, 1));
+		checkOFDNotSentCount(OFDNotSentCount, aStatusCodes);
+	}
 
 	return true;
 }
@@ -506,12 +520,6 @@ ESessionState::Enum KasbiFRBase::getSessionState()
 //--------------------------------------------------------------------------------
 bool KasbiFRBase::openSession()
 {
-	if (getSessionState() == ESessionState::Opened)
-	{
-		toLog(LogLevel::Warning, mDeviceName + ": Session is opened already");
-		return true;
-	}
-
 	return processCommand(CKasbiFR::Commands::StartOpeningSession, QByteArray(1, CKasbiFR::Print::No)) &&
 	       processCommand(CKasbiFR::Commands::OpenSession);
 }
@@ -519,7 +527,13 @@ bool KasbiFRBase::openSession()
 //--------------------------------------------------------------------------------
 bool KasbiFRBase::execZReport(bool aAuto)
 {
-	bool needCloseSession = true; //TODO: isSessionExpired();
+	toLog(LogLevel::Normal, mDeviceName + QString(": Begin processing %1Z-report").arg(aAuto ? "auto-" : ""));
+	ESessionState::Enum sessionState = getSessionState();
+
+	     if (sessionState == ESessionState::Error)  return false;
+	else if (sessionState == ESessionState::Closed) return true;
+
+	bool needCloseSession = true; //TODO: sessionState
 	bool cannotAutoZReport = mOperatorPresence && !getConfigParameter(CHardware::FR::ForcePerformZReport).toBool();
 
 	if (aAuto && cannotAutoZReport)
@@ -529,14 +543,6 @@ bool KasbiFRBase::execZReport(bool aAuto)
 			": has no Z-buffer, so it is impossible to perform auto-Z-report."));
 		mNeedCloseSession = mNeedCloseSession || needCloseSession;
 
-		return false;
-	}
-
-	toLog(LogLevel::Normal, mDeviceName + QString(": Begin processing %1Z-report").arg(aAuto ? "auto-" : ""));
-
-	if (getSessionState() == ESessionState::Closed)
-	{
-		toLog(LogLevel::Error, mDeviceName + QString(": Session is closed, exit!"));
 		return false;
 	}
 
@@ -577,14 +583,9 @@ bool KasbiFRBase::sale(const SUnitData & aUnitData)
 }
 
 //--------------------------------------------------------------------------------
-bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * aFDNumber)
 {
-	if ((getSessionState() == ESessionState::Closed) && !openFRSession())
-	{
-		return false;
-	}
-
-	if (isDocumentOpened() && (!processCommand(CKasbiFR::Commands::CancelDocument) || !receiptProcessing()))
+	if (((getDocumentState() == EDocumentState::Opened) && !processCommand(CKasbiFR::Commands::CancelDocument)) || !receiptProcessing())
 	{
 		return false;
 	}
@@ -644,7 +645,7 @@ bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData
 	commandData = QByteArray(1, payOffType) + commandData + QByteArray(5 - commandData.size(), ASCII::NUL);
 	bool closingResult = processCommand(CKasbiFR::Commands::CloseDocument, commandData);
 
-	if (!result || (!closingResult && isDocumentOpened()))
+	if (!result || (!closingResult && (getDocumentState() == EDocumentState::Opened)))
 	{
 		processCommand(CKasbiFR::Commands::CancelDocument);
 		receiptProcessing();
@@ -654,34 +655,25 @@ bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData
 
 	CKasbiFR::SFSData FSData;
 
-	if (getFSData(FSData))
+	if (aFDNumber && getFSData(FSData))
 	{
-		mFFEngine.checkFPData(aFPData, CFR::FiscalFields::FDNumber, FSData.lastFDNumber);
-
-		if (processCommand(CKasbiFR::Commands::StartFiscalTLVData, getHexReverted(FSData.lastFDNumber, 4)))
-		{
-			CFR::STLV TLV;
-			QByteArray data;
-
-			while (processCommand(CKasbiFR::Commands::GetFiscalTLVData, &data))
-			{
-				if (mFFEngine.parseTLV(data, TLV))
-				{
-					if (mFFData.data().contains(TLV.field))
-					{
-						mFFEngine.parseSTLVData(TLV, aPSData);
-						mFFEngine.parseTLVData (TLV, aFPData);
-					}
-					else
-					{
-						toLog(LogLevel::Warning, QString("%1: Failed to add fiscal field %2 due to it is unknown").arg(mDeviceName).arg(TLV.field));
-					}
-				}
-			}
-		}
+		*aFDNumber = FSData.lastFDNumber;
 	}
 
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+bool KasbiFRBase::getFiscalFields(quint32 aFDNumber, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+{
+	if (!processCommand(CKasbiFR::Commands::StartFiscalTLVData, getHexReverted(aFDNumber, 4)))
+	{
+		return false;
+	}
+
+	TGetFiscalTLVData getFiscalTLVData = [&] (QByteArray & aData) -> TResult { return processCommand(CKasbiFR::Commands::GetFiscalTLVData, &aData); };
+
+	return processFiscalTLVData(getFiscalTLVData, &aFPData, &aPSData);
 }
 
 //--------------------------------------------------------------------------------

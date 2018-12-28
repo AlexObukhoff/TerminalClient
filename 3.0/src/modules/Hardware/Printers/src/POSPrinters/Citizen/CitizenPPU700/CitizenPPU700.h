@@ -11,8 +11,8 @@ namespace CCitizenPPU700
 	/// Команды.
 	namespace Command
 	{
-		const char GetFirmwareVersion[] = "\x1D\x49\x41";    /// Получение версии прошивки.
-		const char GetSerialNumber[]    = "\x1D\x49\x44";    /// Получение серийного номера.
+		const char GetFirmware[]     = "\x1D\x49\x41";    /// Получение версии прошивки.
+		const char GetSerialNumber[] = "\x1D\x49\x44";    /// Получение серийного номера.
 	}
 }
 

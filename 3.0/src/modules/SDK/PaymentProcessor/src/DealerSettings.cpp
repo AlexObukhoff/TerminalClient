@@ -745,7 +745,7 @@ SProvider DealerSettings::getMNPProvider(qint64 aId, qint64 aCidIn, qint64 aCidO
 
 	auto providers = getProvidersByCID(aCidOut);
 	
-	if (providers.isEmpty())
+	if (providers.isEmpty() && aCidIn > 0)
 	{
 		providers = getProvidersByCID(aCidIn);
 	}

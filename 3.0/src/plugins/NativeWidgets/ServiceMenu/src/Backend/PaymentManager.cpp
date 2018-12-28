@@ -221,7 +221,7 @@ bool PaymentManager::printUnprintedReceiptsRegistry(const QSet<qint64> & aPaymen
 		int vat = 0;
 		int payTool = 0;
 
-		foreach (auto parameter, mPaymentService->getPaymentFields(id))
+		for (auto & parameter : mPaymentService->getPaymentFields(id))
 		{
 			     if (parameter.name == CPayment::Amount)         amount        = parameter.value.toDouble();
 			else if (parameter.name == CPayment::DealerFee)      dealerFee     = parameter.value.toDouble();
@@ -323,7 +323,7 @@ void PaymentManager::onReceiptPrinted(int aJobIndex, bool aErrorHappened)
 	}
 	else
 	{
-		emit receiptPrinted(0, aErrorHappened);
+		emit receiptPrinted(aJobIndex, aErrorHappened);
 	}
 }
 
@@ -401,11 +401,11 @@ bool PaymentManager::printBalance() const
 }
 
 //------------------------------------------------------------------------
-bool PaymentManager::printZReport(bool aFullZReport)
+int PaymentManager::printZReport(bool aFullZReport)
 {
 	if (mEncashment.balance.notPrintedPayments.isEmpty() || !mUseFiscalPrinter)
 	{
-		return mPrinterService->printReport(aFullZReport ? PPSDK::CReceiptType::ZReportFull : PPSDK::CReceiptType::ZReport, QVariantMap());
+		return !!mPrinterService->printReport(aFullZReport ? PPSDK::CReceiptType::ZReportFull : PPSDK::CReceiptType::ZReport, QVariantMap());
 	}
 	else
 	{

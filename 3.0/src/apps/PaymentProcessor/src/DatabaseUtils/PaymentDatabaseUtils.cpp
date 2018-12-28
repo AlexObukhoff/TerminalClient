@@ -738,7 +738,7 @@ void DatabaseUtils::fillEncashmentReport(PPSDK::SEncashment & aEncashment)
 		PPSDK::DealerSettings * settings = SettingsService::instance(mApplication)->getAdapter<PPSDK::DealerSettings>();
 		auto provider = settings->getProvider(PPSDK::IPayment::parameterByName(PPSDK::CPayment::Parameters::Provider, parameters).value.toLongLong());
 
-		foreach(auto field, provider.fields)
+		for (auto & field : provider.fields)
 		{
 			auto parameter = PPSDK::IPayment::parameterByName(field.id, parameters);
 
@@ -844,7 +844,7 @@ PPSDK::SEncashment DatabaseUtils::performEncashment(const QVariantMap & aParamet
 
 		foreach (auto & bal, result.balance.detailedSums)
 		{
-			foreach (auto amount, bal.amounts)
+			for (auto & amount : bal.amounts)
 			{
 				auto elem = QString("%1:%2").arg(amount.value.toString()).arg(amount.count);
 
@@ -985,23 +985,23 @@ QList<SDK::PaymentProcessor::SEncashment> DatabaseUtils::getLastEncashments(int 
 		// 2. Получаем дату предыдущей инкассации
 		{
 			queryStr = "SELECT `date` FROM `encashment` WHERE `id` = :id";
-			QScopedPointer<IDatabaseQuery> query(mDatabase.createQuery(queryStr));
+			QScopedPointer<IDatabaseQuery> q(mDatabase.createQuery(queryStr));
 
-			if (!query)
+			if (!q)
 			{
 				LOG(mLog, LogLevel::Error, QString("failed to get previous encashment date"));
 
 				break;
 			}
 
-			query->bindValue(":id", encashment.id - 1);
+			q->bindValue(":id", encashment.id - 1);
 
-			if (query->exec() && query->first())
+			if (q->exec() && q->first())
 			{
-				if (query->isValid())
+				if (q->isValid())
 				{
 					encashment.balance.lastEncashmentId = encashment.id;
-					encashment.balance.lastEncashmentDate = query->value(0).toDateTime();
+					encashment.balance.lastEncashmentDate = q->value(0).toDateTime();
 				}
 			}
 		}
@@ -1010,31 +1010,31 @@ QList<SDK::PaymentProcessor::SEncashment> DatabaseUtils::getLastEncashments(int 
 		{
 			queryStr = "SELECT `type`, `nominal`, COUNT(*), GROUP_CONCAT(`serial`, ',') FROM `payment_note` WHERE `ejection` = :ejection "
 				"GROUP BY `type`, `nominal` ORDER BY `type` ASC, `nominal` DESC";
-			QScopedPointer<IDatabaseQuery> query(mDatabase.createQuery(queryStr));
+			QScopedPointer<IDatabaseQuery> q(mDatabase.createQuery(queryStr));
 
-			if (!query)
+			if (!q)
 			{
 				LOG(mLog, LogLevel::Error, QString("failed to calculate notes"));
 
 				break;
 			}
 
-			query->bindValue(":ejection", encashment.date.toString(CIDatabaseProxy::DateFormat));
+			q->bindValue(":ejection", encashment.date.toString(CIDatabaseProxy::DateFormat));
 
-			if (query->exec() && query->first())
+			if (q->exec() && q->first())
 			{
 				QMap<PPSDK::EAmountType::Enum, PPSDK::SBalance::SAmounts> amounts;
 
-				for (; query->isValid(); query->next())
+				for (; q->isValid(); q->next())
 				{
-					PPSDK::EAmountType::Enum type = static_cast<PPSDK::EAmountType::Enum>(query->value(0).toInt());
+					PPSDK::EAmountType::Enum type = static_cast<PPSDK::EAmountType::Enum>(q->value(0).toInt());
 
 					if (!amounts.contains(type))
 					{
 						amounts[type].type = type;
 					}
 
-					amounts[type].amounts << PPSDK::SBalance::SAmounts::SAmount(query->value(1).toDouble(), query->value(2).toInt(), query->value(3).toString());
+					amounts[type].amounts << PPSDK::SBalance::SAmounts::SAmount(q->value(1).toDouble(), q->value(2).toInt(), q->value(3).toString());
 				}
 
 				if (!amounts.isEmpty())
@@ -1069,31 +1069,31 @@ QList<SDK::PaymentProcessor::SEncashment> DatabaseUtils::getLastEncashments(int 
 		{
 			queryStr = "SELECT `type`, `nominal`, COUNT(*), GROUP_CONCAT(`serial`, ',') FROM `dispensed_note` WHERE `reported` = :reported "
 				"GROUP BY `type`, `nominal` ORDER BY `type` ASC, `nominal` DESC";
-			QScopedPointer<IDatabaseQuery> query(mDatabase.createQuery(queryStr));
+			QScopedPointer<IDatabaseQuery> q(mDatabase.createQuery(queryStr));
 
-			if (!query)
+			if (!q)
 			{
 				LOG(mLog, LogLevel::Error, QString("failed to calculate notes"));
 
 				break;
 			}
 
-			query->bindValue(":reported", encashment.date.toString(CIDatabaseProxy::DateFormat));
+			q->bindValue(":reported", encashment.date.toString(CIDatabaseProxy::DateFormat));
 
-			if (query->exec() && query->first())
+			if (q->exec() && q->first())
 			{
 				QMap<PPSDK::EAmountType::Enum, PPSDK::SBalance::SAmounts> amounts;
 
-				for (; query->isValid(); query->next())
+				for (; q->isValid(); q->next())
 				{
-					PPSDK::EAmountType::Enum type = static_cast<PPSDK::EAmountType::Enum>(query->value(0).toInt());
+					PPSDK::EAmountType::Enum type = static_cast<PPSDK::EAmountType::Enum>(q->value(0).toInt());
 
 					if (!amounts.contains(type))
 					{
 						amounts[type].type = type;
 					}
 
-					amounts[type].amounts << PPSDK::SBalance::SAmounts::SAmount(query->value(1).toDouble(), query->value(2).toInt(), query->value(3).toString());
+					amounts[type].amounts << PPSDK::SBalance::SAmounts::SAmount(q->value(1).toDouble(), q->value(2).toInt(), q->value(3).toString());
 				}
 
 				if (!amounts.isEmpty())
@@ -1107,46 +1107,46 @@ QList<SDK::PaymentProcessor::SEncashment> DatabaseUtils::getLastEncashments(int 
 		{
 			queryStr = "SELECT P.`id` FROM `payment` AS P, `payment_note` AS PN WHERE PN.`fk_payment_id` = P.`id` "
 				"AND PN.`ejection` = :ejection ORDER BY P.`id`";
-			QScopedPointer<IDatabaseQuery> query(mDatabase.createQuery(queryStr));
+			QScopedPointer<IDatabaseQuery> q(mDatabase.createQuery(queryStr));
 
-			if (!query)
+			if (!q)
 			{
 				LOG(mLog, LogLevel::Error, QString("failed get payment list for last encashment (prepare query error)."));
 
 				break;
 			}
 
-			query->bindValue(":ejection", encashment.date.toString(CIDatabaseProxy::DateFormat));
+			q->bindValue(":ejection", encashment.date.toString(CIDatabaseProxy::DateFormat));
 
-			if (query->exec() && query->first())
+			if (q->exec() && q->first())
 			{
 				do
 				{
-					encashment.balance.payments << query->value(0).toLongLong();
-				} while (query->next());
+					encashment.balance.payments << q->value(0).toLongLong();
+				} while (q->next());
 			}
 		}
 
 		// 7. Загружаем параметры инкассации
 		{
 			queryStr = "SELECT `name`, `value` FROM `encashment_param` WHERE `fk_encashment_id` = :id";
-			QScopedPointer<IDatabaseQuery> query(mDatabase.createQuery(queryStr));
+			QScopedPointer<IDatabaseQuery> q(mDatabase.createQuery(queryStr));
 
-			if (!query)
+			if (!q)
 			{
 				LOG(mLog, LogLevel::Error, QString("failed get encashment params for encashment (prepare query error)."));
 
 				break;
 			}
 
-			query->bindValue(":id", encashment.id);
+			q->bindValue(":id", encashment.id);
 
-			if (query->exec() && query->first())
+			if (q->exec() && q->first())
 			{
 				do
 				{
-					encashment.parameters.insert(query->value(0).toString(), query->value(1).toString());
-				} while (query->next());
+					encashment.parameters.insert(q->value(0).toString(), q->value(1).toString());
+				} while (q->next());
 			}
 		}
 

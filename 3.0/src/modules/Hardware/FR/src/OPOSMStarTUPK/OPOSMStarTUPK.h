@@ -81,7 +81,7 @@ protected:
 	virtual bool updateParameters();
 
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
 
 	/// Печать Z отчета.
 	virtual bool performZReport(bool aPrintDeferredReports);
@@ -111,8 +111,11 @@ protected:
 	/// Вызывает int-метод в рабочем потоке, возвращает и обработывает результат.
 	virtual SOPOSResult processIntMethod(TIntMethod aMethod, const QString & aFunctionData);
 
-	/// Открыт фискальный/нефискальный документ?
-	bool isDocumentOpened();
+	/// Получить состояние смены.
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
+
+	/// Получить состояние документа.
+	virtual SDK::Driver::EDocumentState::Enum getDocumentState();
 
 	/// Сделать фискальный чек.
 	bool makeFiscal(const SDK::Driver::SPaymentData & aPaymentData);

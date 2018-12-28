@@ -170,7 +170,7 @@ namespace CAtolFR
 	namespace States
 	{
 		const char Fiscalized           = 0x01;     /// Признак фискализированности ККМ.
-		const char SessionOpen          = 0x02;     /// Признак открытой смены.
+		const char SessionOpened        = 0x02;     /// Признак открытой смены.
 		const char CoverIsOpened        = 0x20;     /// Признак открытия крышки ККМ.
 	}
 

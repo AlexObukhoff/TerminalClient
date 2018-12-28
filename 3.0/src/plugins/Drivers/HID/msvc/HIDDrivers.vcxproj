@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -70,7 +70,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Qt5Core.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Widgets.lib;Qt5Gui.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Core.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Widgets.lib;Qt5Gui.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/ACR120U/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -96,7 +96,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Qt5Core.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Widgets.lib;Qt5Gui.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Core.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Widgets.lib;Qt5Gui.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/ACR120U/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -121,7 +121,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Qt5Cored.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;Scannersd.lib;OPOSSDKd.lib;ACR120U.lib;IOPortsd.lib;Setupapi.lib;Qt5AxContainerd.lib;Qt5AxBased.lib;Qt5Widgetsd.lib;Qt5Guid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Cored.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;Scannersd.lib;OPOSSDKd.lib;ACR120U.lib;IOPortsd.lib;Setupapi.lib;Qt5AxContainerd.lib;Qt5AxBased.lib;Qt5Widgetsd.lib;Qt5Guid.lib;SysUtilsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/ACR120U/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

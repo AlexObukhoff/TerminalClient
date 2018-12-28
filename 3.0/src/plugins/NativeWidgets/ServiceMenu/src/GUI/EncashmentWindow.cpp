@@ -1,6 +1,9 @@
 /* @file Базовый виджет для инкасации */
 
+// Qt
+#include <Common/QtHeadersBegin.h>
 #include <QtCore/QDebug>
+#include <Common/QtHeadersEnd.h>
 
 // SDK
 #include <SDK/PaymentProcessor/Core/ICore.h>
@@ -13,8 +16,9 @@
 #include <SDK/PaymentProcessor/Core/ServiceParameters.h>
 
 // Project
-#include "Backend/MessageBox.h"
+#include "MessageBox/MessageBox.h"
 #include "Backend/PaymentManager.h"
+#include "Backend/HardwareManager.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "ServiceTags.h"
 #include "InputBox.h"
@@ -39,8 +43,10 @@ EncashmentWindow::EncashmentWindow(ServiceMenuBackend * aBackend, QWidget * aPar
 	ServiceWindowBase(aBackend),
 	mEncashmentWithZReport(false),
 	mInputBox(nullptr),
-	mHistoryWindow(nullptr)
+	mHistoryWindow(nullptr),
+	mLastPrintJob(0)
 {
+	connect(mBackend->getPaymentManager(), SIGNAL(receiptPrinted(qint64, bool)), this, SLOT(onPeceiptPrinted(qint64, bool)));
 }
 
 //---------------------------------------------------------------------------
@@ -57,7 +63,7 @@ void EncashmentWindow::doEncashment()
 
 	safeDelete(mInputBox);
 
-	if (MessageBox::question(text))
+	if (GUI::MessageBox::question(text))
 	{
 		// Если баланс не пустой и нужно ввести номер кассеты
 		if (paymentManager->getBalanceInfo()[CServiceTags::CashAmount].toDouble() > 0.0 &&
@@ -100,7 +106,7 @@ bool EncashmentWindow::doEncashmentProcess()
 	case PPSDK::EncashmentResult::OK:
 		result = true;
 
-		MessageBox::info(tr("#encashment_complete"));
+		GUI::MessageBox::info(tr("#encashment_complete"));
 		
 		if (!printerOK)
 		{
@@ -109,7 +115,7 @@ bool EncashmentWindow::doEncashmentProcess()
 		else
 		{
 			mMessageSuccess = tr("#encashment_complete_and_printed");
-			MessageBox::wait(tr("#printing"));
+			GUI::MessageBox::wait(tr("#printing"));
 		}
 
 		// Даже если принтер недоступен сохраним электронную копию чека инкассации
@@ -120,11 +126,11 @@ bool EncashmentWindow::doEncashmentProcess()
 		break;
 
 	case PPSDK::EncashmentResult::TryLater:
-		MessageBox::critical(tr("#encashment_error_try_later"));
+		GUI::MessageBox::critical(tr("#encashment_error_try_later"));
 		break;
 
 	default:
-		MessageBox::critical(tr("#encashment_error"));
+		GUI::MessageBox::critical(tr("#encashment_error"));
 		break;
 	}
 
@@ -137,45 +143,67 @@ bool EncashmentWindow::doEncashmentProcess()
 void EncashmentWindow::onPrintZReport()
 {
 	QPushButton * zReportButton = dynamic_cast<QPushButton *>(sender());
-
-	MessageBox::hide();
+	GUI::MessageBox::hide();
 
 	mMessageError = tr("#zreport_failed");
 	if (mBackend->getPaymentManager()->canPrint(PPSDK::CReceiptType::ZReport))
 	{
-		bool fullZReport = MessageBox::question(tr("#print_full_zreport"));
-
-		mIdleTimer.stop();
-
 		mMessageSuccess = tr("#zreport_printed");
+		bool fullZReport = false;
+		bool canPrintFullZReport = mBackend->getHardwareManager()->isFiscalPrinterPresent(false, true);
 
-		MessageBox::wait(tr("#printing"));
-		if (!mBackend->getPaymentManager()->printZReport(fullZReport) && zReportButton)
+		QString msg = canPrintFullZReport ? tr("#print_full_zreport") : tr("#full_zreport_print_failed");
+		
+		if (canPrintFullZReport)
 		{
-			zReportButton->setEnabled(false);
+			fullZReport	= GUI::MessageBox::question(msg);
 		}
+		else
+		{
+			GUI::MessageBox::modal(msg, SDK::GUI::MessageBoxParams::Warning);
+		}		 
+
+		mIdleTimer.stop();		 
+
+
+		GUI::MessageBox::wait(tr("#printing"));
+
+		//if (zReportButton)
+		{
+			int jobIndex = mBackend->getPaymentManager()->printZReport(fullZReport);
+			mBackend->toLog(QString("JOB id=%1 CREATE.").arg(jobIndex));
+			//zReportButton->setEnabled(false);
+		}
+		
 	}
 	else
 	{
 		// TODO Дополнять статусом принтера
-		MessageBox::critical(mMessageError);
+		GUI::MessageBox::critical(mMessageError);
 	}
 }
 
 //------------------------------------------------------------------------
-void EncashmentWindow::onPeceiptPrinted(qint64 aPaymentId, bool aErrorHappened)
+void EncashmentWindow::onPeceiptPrinted(qint64 aJobIndex, bool aErrorHappened)
 {
-	Q_UNUSED(aPaymentId);
+	if (mLastPrintJob && mLastPrintJob == aJobIndex)
+	{
+		mBackend->toLog(QString("JOB id=%1 ALREADY COMPLETE. SKIP SLOT.").arg(aJobIndex));
+		MessageBox::hide();
+		return;
+	}
 
+	mLastPrintJob = aJobIndex;
+
+	mBackend->toLog(QString("JOB id=%1 COMPLETE. Error status: %2").arg(aJobIndex).arg(aErrorHappened));
+	
 	if (!mMessageError.isEmpty() && aErrorHappened)
 	{
-		MessageBox::hide();
-		MessageBox::critical(mMessageError);
+		GUI::MessageBox::critical(mMessageError);
 	}
 	else if (!mMessageSuccess.isEmpty() && !aErrorHappened)
 	{
-		MessageBox::hide();
-		MessageBox::info(mMessageSuccess);
+		GUI::MessageBox::info(mMessageSuccess);
 	}
 
 	mMessageError.clear();

@@ -67,7 +67,7 @@ namespace CShtrihFR
 	/// Полная отрезка.
 	const char FullCutting = 0x00;
 
-	/// Неполная отрезка.
+	/// Неполная отрезка (для ФР с ретрактором - полная).
 	const char PartialCutting = 0x01;
 
 	/// При выдачи чека не задействовать презентер.
@@ -159,7 +159,7 @@ namespace CShtrihFR
 			Work             =  0,      /// Принтер в рабочем режиме.
 			DataEjecting     =  1,      /// Выдача данных.
 			SessionOpened    =  2,      /// Открытая смена, 24 часа не кончились.
-			NeedCloseSession =  3,      /// Открытая смена, 24 часа кончились.
+			SessionExpired   =  3,      /// Открытая смена, 24 часа кончились.
 			SessionClosed    =  4,      /// Закрытая смена.
 			DocumentOpened   =  8,      /// Открытый документ.
 			PrintFullZReport = 11,      /// Печать полного фис. отчета.
@@ -229,16 +229,16 @@ namespace CShtrihFR
 		const char NoError = '\x00';    /// Ошибок нет.
 
 		const char WrongParametersInCommand = '\x33';      /// Некорректные параметры в команде.
+		const char BadModelForCommand       = '\x37';      /// Команда не поддерживается в данной реализации ФР.
 		const char NotEnoughMoney           = '\x46';      /// Не хватает наличности в кассе.
 		const char DocumentIsOpened         = '\x4A';      /// Открыт чек - операция невозможна.
 		const char ChequeBufferOverflow     = '\x4B';      /// Буфер чеков переполнен.
+		const char NeedZReport              = '\x4E';      /// Смена превысила 24 часа.
 		const char NeedWaitForPrinting      = '\x50';      /// Ожидание окончания печати предыдущей команды.
 		const char NeedExtentionPrinting    = '\x58';      /// Ожидание команды продолжения печати.
+		const char Cutter                   = '\x71';      /// Ошибка отрезчика.
 		const char BadModeForCommand        = '\x73';      /// Команда не поддерживается в данном режиме.
 		const char RAM                      = '\x74';      /// Ошибка ОЗУ.
-		const char NeedZReport              = '\x4E';      /// Смена превысила 24 часа.
-		const char Cutter                   = '\x71';      /// Ошибка отрезчика.
-		const char BadModelForCommand       = '\x37';      /// Команда не поддерживается в данной реализации ФР.
 	}
 
 	/// Коды статусов (некоторых).

@@ -42,7 +42,7 @@ protected:
 	bool canPerformEKLZRequest();
 
 	/// Установить флаги по ошибке в ответе.
-	virtual void setErrorFlags(char aError, const QByteArray & aCommand);
+	virtual void setErrorFlags(const QByteArray & aCommand, char aError);
 
 	/// Критична ли ошибка ЭКЛЗ.
 	bool isEKLZErrorCritical(const char aError, bool aIsDirectRequest = false) const;

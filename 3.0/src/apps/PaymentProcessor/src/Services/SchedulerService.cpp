@@ -12,6 +12,7 @@
 #include <SDK/PaymentProcessor/Core/ISettingsService.h>
 
 // Модули
+#include <SysUtils/ISysUtils.h>
 #include <System/IApplication.h>
 #include <System/SettingsConstants.h>
 #include <Services/ServiceNames.h>

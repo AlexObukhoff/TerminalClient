@@ -22,7 +22,19 @@ namespace ESessionState
 	{
 		Error,     /// Ошибка определения.
 		Opened,    /// Открыта.
-		Closed     /// Закрыта.
+		Closed,    /// Закрыта.
+		Expired    /// Истекла.
+	};
+}
+
+/// Состояние документа.
+namespace EDocumentState
+{
+	enum Enum
+	{
+		Error,     /// Ошибка определения.
+		Opened,    /// Открыт.
+		Closed     /// Закрыт.
 	};
 }
 
@@ -35,7 +47,10 @@ public:
 
 public:
 	/// Печать фискального чека.
-	virtual bool printFiscal(const QStringList & aStrings, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData) = 0;
+	virtual bool printFiscal(const QStringList & aStrings, const SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr) = 0;
+
+	/// Получить фискальные теги по номеру документа.
+	virtual bool checkFiscalFields(quint32 aFDNumber, TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData) = 0;
 
 	/// Выполнить Z-отчет [и распечатать отложенные Z-отчеты.
 	virtual bool printZReport(bool aPrintDeferredReports) = 0;
@@ -50,8 +65,11 @@ public:
 	/// Готов ли к обработке данной фискальной команды.
 	virtual bool isFiscalReady(bool aOnline, EFiscalPrinterCommand::Enum aCommand = EFiscalPrinterCommand::Sale) = 0;
 
-	/// Открыта ли сессия.
-	//virtual ESessionState::Enum getSessionState() = 0;
+	/// Получить состояние смены.
+	virtual ESessionState::Enum checkSessionState() = 0;
+
+	/// Получить состояние документа.
+	virtual EDocumentState::Enum checkDocumentState() = 0;
 
 	/// Находится ли в фискальном режиме.
 	virtual bool isFiscal() const = 0;
