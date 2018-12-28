@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MessageWindow</class>
+ <widget class="QWidget" name="MessageWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>846</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MessageWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* common styles */
+QPushButton 
+{
+	color: white;
+	background-color: rgba(80, 107, 176);
+	border: 1px solid gray;
+	border-radius: 8px;
+	padding-left: 1px;
+	padding-right: 1px;
+	font: 28pt &quot;MS Shell Dlg 2&quot;;
+}
+
+QPushButton:disabled
+{
+	color: gray;
+	background-color: lightgray;
+}
+
+QPushButton:pressed 
+{
+	background-color: rgba(98, 141, 191);
+}
+
+QLineEdit:disabled {
+	color: #808080;
+	background-color: #d3d3d3;
+	border: 2px solid #a6a6a6;
+}
+
+QLabel:disabled {
+	color: #808080;
+}
+
+/* MainServiceWindow styles*/
+QWidget#MessageWindow
+{
+	border: 6px solid gray;
+}
+
+
+</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="1">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>33</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnCancel">
+       <property name="minimumSize">
+        <size>
+         <width>260</width>
+         <height>80</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>261</width>
+         <height>113</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnOK">
+       <property name="minimumSize">
+        <size>
+         <width>260</width>
+         <height>80</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>261</width>
+         <height>113</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>33</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="lbIcon">
+       <property name="minimumSize">
+        <size>
+         <width>188</width>
+         <height>188</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>188</width>
+         <height>188</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../Resources/Resources.qrc">:/Images/MessageBox/critical.png</pixmap>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbText">
+       <property name="minimumSize">
+        <size>
+         <width>630</width>
+         <height>250</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>28</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Блокчейны – технология распределённых вычислениях и общем консенсусе пользователей, созданная таинственным Сатоши Накамото.</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="../Resources/Resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
