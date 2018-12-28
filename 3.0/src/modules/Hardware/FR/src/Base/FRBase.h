@@ -78,6 +78,9 @@ protected:
 	/// Получить и обработать статус.
 	virtual bool processStatus(TStatusCodes & aStatusCodes);
 
+	/// Фоновая логика при появлении определенных состояний устройства.
+	virtual void postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection);
+
 	/// Проверить установки сервера ОФД.
 	bool checkOFDData(const QByteArray & aAddressData, const QByteArray & aPortData);
 

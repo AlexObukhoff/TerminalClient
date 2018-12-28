@@ -1275,6 +1275,31 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 
 //--------------------------------------------------------------------------------
 template <class T>
+void FRBase<T>::postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection)
+{
+	QDateTime currentDT = QDateTime::currentDateTime();
+	int year = currentDT.date().year();
+	ESessionState::Enum sessionState = getSessionState();
+
+	bool needCloseSession2018 = (currentDT >= CFR::ClosingSessionDTVAT20) && (year == 2018);
+	bool oldTax2019 = mTaxData.data().contains(18) && (year == 2019);
+
+	if (!mOperatorPresence && (mRegion == ERegion::RF) && (needCloseSession2018 || oldTax2019) && (sessionState != ESessionState::Closed))
+	{
+		execZReport(true);
+
+		if (oldTax2019)
+		{
+			toLog(LogLevel::Normal, mDeviceName + ": Closing session with VAT 18%, trying to re-initialize");
+			reInitialize();
+		}
+	}
+
+	T::postPollingAction(aNewStatusCollection, aOldStatusCollection);
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
 TSum FRBase<T>::getTotalAmount(const SPaymentData & aPaymentData) const
 {
 	return std::accumulate(aPaymentData.unitDataList.begin(), aPaymentData.unitDataList.end(), TSum(0), [] (TSum aSum, const SUnitData & aData) -> TSum { return aSum + aData.sum; });

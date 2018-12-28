@@ -106,6 +106,9 @@ namespace CFR
 	/// Признак способа расчета по умолчанию для платежей (тег 1214) (не интернет-магазинов) - Полный расчет.
 	const SDK::Driver::EPayOffSubjectMethodTypes::Enum PayOffSubjectMethodType = SDK::Driver::EPayOffSubjectMethodTypes::Full;
 
+	/// Дата и время одноразового закрытия смены перед применением НДС 20% в 2019 году.
+	const QDateTime ClosingSessionDTVAT20 = QDateTime(QDate(2018, 12, 31), QTime(23, 57));
+
 	/// Результаты запроса статуса.
 	namespace Result
 	{
