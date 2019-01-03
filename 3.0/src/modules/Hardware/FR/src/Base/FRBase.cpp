@@ -59,8 +59,6 @@ FRBase<T>::FRBase(): mFFEngine(mLog)
 	mCanProcessZBuffer = false;
 	mFFEngine.setCodec(mCodec);
 
-	mRecoverableErrors.insert(FRStatusCode::Error::Taxes);
-
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, false);
 	setConfigParameter(CHardwareSDK::FR::WithoutPrinting, CHardwareSDK::Values::Auto);
 	setConfigParameter(CHardware::CanSoftReboot, false);
@@ -535,7 +533,7 @@ bool FRBase<T>::checkTaxes()
 		{
 			mTaxError = true;
 
-			return !isFiscal();
+			// return !isFiscal();
 		}
 	}
 
@@ -1199,7 +1197,7 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 	if (mNotPrintingError) aStatusCodes.insert(DeviceStatusCode::Error::Initialization);
 	if (mCashierINNError)  aStatusCodes.insert(FRStatusCode::Error::CashierINN);
 	if (mFSOfflineEnd)     aStatusCodes.insert(FRStatusCode::Error::NeedOFDConnection);
-	if (mTaxError)         aStatusCodes.insert(FRStatusCode::Error::Taxes);
+	if (mTaxError)         aStatusCodes.insert(FRStatusCode::Warning::Taxes);
 
 	if (mIsOnline)
 	{

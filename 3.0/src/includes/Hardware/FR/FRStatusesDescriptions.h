@@ -36,6 +36,7 @@ namespace FRStatusCode
 			ADD_FR_WARNING(WrongDealerTaxSystem,       QCoreApplication::translate("FRStatuses", "#wrong_dealer_tax_system"));
 			ADD_FR_WARNING(WrongDealerAgentFlag,       QCoreApplication::translate("FRStatuses", "#wrong_dealer_agent_flag"));
 			ADD_FR_WARNING(WrongFiscalizationSettings, QCoreApplication::translate("FRStatuses", "#wrong_fiscalization_settings"));
+			ADD_FR_WARNING(Taxes,                      QCoreApplication::translate("FRStatuses", "#taxes"));
 
 			/// Ошибки.
 			ADD_FR_ERROR(FR,                   QCoreApplication::translate("FRStatuses", "#fiscal_add_on_error"));
@@ -53,7 +54,6 @@ namespace FRStatusCode
 			ADD_FR_ERROR(WrongDealerTaxSystem, QCoreApplication::translate("FRStatuses", "#wrong_dealer_tax_system"));
 			ADD_FR_ERROR(WrongDealerAgentFlag, QCoreApplication::translate("FRStatuses", "#wrong_dealer_agent_flag"));
 			ADD_FR_ERROR(CashierINN,           QCoreApplication::translate("FRStatuses", "#cashier_inn"));
-			ADD_FR_ERROR(Taxes,                QCoreApplication::translate("FRStatuses", "#taxes"));
 		}
 
 		TStatusCodes getFiscalStatusCodes()
