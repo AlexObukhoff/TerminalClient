@@ -179,16 +179,18 @@ typedef QList<SUnitData> TUnitDataList;
 /// Фискальные данные платежа
 struct SPaymentData
 {
-	TUnitDataList unitDataList;      /// Список данных товара
-	bool back;                       /// Признак возврата товара
-	EPayTypes::Enum payType;         /// Тип оплаты
-	ETaxSystems::Enum taxSystem;     /// Система налогообложения (СНО)
-	EAgentFlags::Enum agentFlag;     /// Флаг агента
-	QVariantMap fiscalParameters;    /// Параметры платежа - теги или имеют к ним отношение
+	TUnitDataList unitDataList;       /// Список данных товара
+	EPayOffTypes::Enum payOffType;    /// Признак расчета
+	EPayTypes::Enum payType;          /// Тип оплаты
+	ETaxSystems::Enum taxSystem;      /// Система налогообложения (СНО)
+	EAgentFlags::Enum agentFlag;      /// Флаг агента
+	QVariantMap fiscalParameters;     /// Параметры платежа - теги или имеют к ним отношение
 
-	SPaymentData(): back(false), payType(EPayTypes::None), taxSystem(ETaxSystems::None), agentFlag(EAgentFlags::None) {}
-	SPaymentData(const TUnitDataList & aUnitDataList, bool aBack, EPayTypes::Enum aPayType = EPayTypes::None, ETaxSystems::Enum aTaxSystem = ETaxSystems::None, EAgentFlags::Enum aAgentFlag = EAgentFlags::None):
-		back(aBack), unitDataList(aUnitDataList), taxSystem(aTaxSystem), payType(aPayType), agentFlag(aAgentFlag) {}
+	SPaymentData(): payOffType(EPayOffTypes::None), payType(EPayTypes::None), taxSystem(ETaxSystems::None), agentFlag(EAgentFlags::None) {}
+	SPaymentData(const TUnitDataList & aUnitDataList, EPayOffTypes::Enum aPayOffType, EPayTypes::Enum aPayType = EPayTypes::None, ETaxSystems::Enum aTaxSystem = ETaxSystems::None, EAgentFlags::Enum aAgentFlag = EAgentFlags::None):
+		payOffType(aPayOffType), unitDataList(aUnitDataList), taxSystem(aTaxSystem), payType(aPayType), agentFlag(aAgentFlag) {}
+
+	bool back() const { return (payOffType == EPayOffTypes::DebitBack) || (payOffType == EPayOffTypes::Credit); }
 };
 
 //--------------------------------------------------------------------------------

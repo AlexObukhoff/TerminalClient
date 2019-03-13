@@ -102,7 +102,14 @@ template <class T>
 TParameterList CitizenPPU700Parameters(const QString & aModel)
 {
 	return singleParameters<T>(aModel)
-		<< setRemoteSensor(false)
+		<< setRemoteSensor(false);
+}
+
+//------------------------------------------------------------------------------
+template <class T>
+TParameterList CitizenPPU700IIParameters(const QString & aModel)
+{
+	return CitizenPPU700Parameters<T>(aModel)
 		<< setLineSpacing(1, 40, 10, 5);
 }
 
@@ -192,6 +199,7 @@ BEGIN_REGISTER_PLUGIN
 	SINGLE_PRINTER_PLUGIN(CustomVKP80, CustomVKP80Parameters, Custom VKP-80)
 	SINGLE_PRINTER_PLUGIN(CustomVKP80III, CustomVKP80IIIParameters, Custom VKP-80 III)
 	SINGLE_PRINTER_PLUGIN(CitizenPPU700, CitizenPPU700Parameters, Citizen PPU-700) // TODO: добавить параметры как у Custom VKP-80
+	SINGLE_PRINTER_PLUGIN(CitizenPPU700II, CitizenPPU700IIParameters, Citizen PPU-700II)
 	SINGLE_PRINTER_PLUGIN(CitizenPPU231, CitizenPPU231Parameters, Citizen PPU-231)
 	SINGLE_PRINTER_PLUGIN(CitizenCTS310II, singleParameters, Citizen CT-S310II)
 	SINGLE_PRINTER_PLUGIN(EpsonEUT400, EpsonEUT400Parameters, Epson EU-T400)

@@ -69,10 +69,10 @@ protected:
 	virtual bool cancelFiscal();
 
 	/// Открыть чек.
-	bool openDocument(bool aBack);
+	bool openDocument(SDK::Driver::EPayOffTypes::Enum aPayOffType);
 
 	/// Продажа.
-	virtual bool sale(const SDK::Driver::SUnitData & aUnitData, bool aBack);
+	virtual bool sale(const SDK::Driver::SUnitData & aUnitData, SDK::Driver::EPayOffTypes::Enum aPayOffType);
 
 	/// Закрыть чек.
 	virtual bool closeDocument(double aSum, SDK::Driver::EPayTypes::Enum aPayType);
@@ -106,7 +106,7 @@ protected:
 	bool waitForPrintingEnd(bool aCanBeOff = false, int aTimeout = CShtrihFR::Timeouts::MaxWaitForPrintingEnd);
 
 	/// Проверить параметры налога.
-	virtual bool checkTax(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData);
+	virtual bool checkTax(SDK::Driver::TVAT aVAT, CFR::Taxes::SData & aData);
 
 	/// Установить значение налога.
 	virtual bool setTaxValue(SDK::Driver::TVAT aVAT, int aGroup);

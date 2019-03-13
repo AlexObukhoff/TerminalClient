@@ -8,14 +8,14 @@
 
 // Project
 #include "Hardware/FR/AtolOnlinePrinters.h"
-#include "../Base/AtolFRBase.h"
+#include "../Base/Atol2FRBase.h"
+#include "../Base/Atol3/Atol3FRBase.h"
 #include "AtolOnlineFRConstants.h"
 
 //--------------------------------------------------------------------------------
-class AtolOnlineFRBase : public AtolFRBase
+template<class T>
+class AtolOnlineFRBase : public T
 {
-	SET_SERIES("AtolOnline")
-
 public:
 	AtolOnlineFRBase();
 
@@ -63,7 +63,7 @@ protected:
 	virtual bool checkTaxes();
 
 	/// Проверить параметры налога.
-	virtual bool checkTax(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData);
+	virtual bool checkTax(SDK::Driver::TVAT aVAT, CFR::Taxes::SData & aData);
 
 	/// Продажа.
 	virtual bool sale(const SDK::Driver::SUnitData & aUnitData);
@@ -88,6 +88,18 @@ protected:
 
 	/// Версия ПО ФР, начиная с которой унифицирован порядок налоговых ставок.
 	int mFRBuildUnifiedTaxes;
+};
+
+//--------------------------------------------------------------------------------
+class Atol2OnlineFRBase: public AtolOnlineFRBase<Atol2FRBase>
+{
+	SET_SERIES("ATOL2Online")
+};
+
+//--------------------------------------------------------------------------------
+class Atol3OnlineFRBase: public AtolOnlineFRBase<Atol3FRBase>
+{
+	SET_SERIES("ATOL3Online")
 };
 
 //--------------------------------------------------------------------------------

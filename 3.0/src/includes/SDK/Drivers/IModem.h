@@ -26,7 +26,7 @@ namespace GSM
 }
 
 //--------------------------------------------------------------------------------
-class IModem: virtual public IDevice
+class IModem: public IDevice
 {
 public:
 	/// Сброс.

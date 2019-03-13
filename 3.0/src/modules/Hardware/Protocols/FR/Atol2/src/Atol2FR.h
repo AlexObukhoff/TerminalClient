@@ -6,24 +6,21 @@
 
 //--------------------------------------------------------------------------------
 /// Класс протокола KKM.
-class AtolFRProtocol: public ProtocolBase
+class Atol2FRProtocol: public ProtocolBase
 {
 public:
 	/// Выполнить команду протокола.
 	TResult processCommand(const QByteArray & aCommandData, QByteArray & aUnpackedAnswer, int aTimeout);
 
 private:
-	/// Подсчет контрольной суммы пакета данных.
-	const ushort calcCRC(const QByteArray & aData);
+	/// Вычислить CRC.
+	char calcCRC(const QByteArray & aData);
 
 	/// Исполнить команду.
 	bool execCommand(QByteArray & aPacket);
 
-	/// Упаковка команды и данных в пакет.
-	void packData(const QByteArray & aCommandPacket, QByteArray & aPacket);
-
-	/// Распаковка пришедших из порта данных.
-	bool unpackData(const QByteArray & aPacket, QByteArray & aData);
+	/// Распаковать данные.
+	bool unpack(QByteArray & aAnswer);
 
 	/// Получить пакет данных из порта.
 	bool read(QByteArray & aData);

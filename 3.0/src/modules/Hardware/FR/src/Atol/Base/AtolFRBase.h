@@ -1,10 +1,9 @@
-/* @file ФР АТОЛ и Пэй Киоск. */
+/* @file Базовый ФР на протоколе АТОЛ. */
 
 #pragma once
 
 // Modules
 #include "Hardware/FR/PortFRBase.h"
-#include "Hardware/Protocols/FR/AtolFR.h"
 
 // Project
 #include "../AtolModelData.h"
@@ -15,11 +14,9 @@ class AtolSeriesType {};
 //--------------------------------------------------------------------------------
 class AtolFRBase : public TSerialFRBase
 {
-	SET_SERIES("ATOL")
-
+public:
 	typedef AtolSeriesType TSeriesType;
 
-public:
 	AtolFRBase();
 
 	/// Готов ли к обработке данной фискальной команды.
@@ -43,6 +40,9 @@ protected:
 
 	/// Получить дату и время ФР.
 	virtual QDateTime getDateTime();
+
+	/// Установить начальные параметры.
+	virtual void setInitialData();
 
 	/// Получить параметры печати.
 	virtual bool getPrintingSettings();
@@ -87,13 +87,13 @@ protected:
 	virtual TResult execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
 
 	/// Выполнить команду.
-	virtual TResult performCommand(const QByteArray & aCommandData, QByteArray & aAnswer, int aTimeout);
+	virtual TResult performCommand(const QByteArray & /*aCommandData*/, QByteArray & /*aAnswer*/, int /*aTimeout*/) { return CommandResult::NoAnswer; }
 
 	/// Войти в расширенный режим снятия Z-отчетов.
 	virtual bool enterExtendedMode() { return true; }
 
 	/// Открыть чек.
-	virtual bool openDocument(bool aBack);
+	virtual bool openDocument(SDK::Driver::EPayOffTypes::Enum aPayOffType);
 
 	/// Закрыть чек.
 	bool closeDocument(SDK::Driver::EPayTypes::Enum aPayType);
@@ -111,13 +111,16 @@ protected:
 	virtual void processDeviceData();
 
 	/// Проверить налоговую ставку.
-	bool checkTaxValue(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData, const CAtolFR::FRParameters::TData & aFRParameterData, bool aCanCorrectTaxValue);
+	bool checkTaxValue(SDK::Driver::TVAT aVAT, CFR::Taxes::SData & aData, const CAtolFR::FRParameters::TData & aFRParameterData, bool aCanCorrectTaxValue);
 
 	/// Получить данные о текущей смене.
 	bool getLastSessionDT(QDateTime & aLastSessionDT);
 
 	/// Обработка ответа на предыдущей команды. Автоисправление некоторых ошибок.
 	virtual bool processAnswer(const QByteArray & aCommand, char aError);
+
+	/// Проверить параметры налогов.
+	virtual bool checkTaxes();
 
 	/// Получить состояние фискального чека.
 	bool getFiscalDocumentState(EFiscalDocumentState::Enum & aState);
@@ -194,9 +197,6 @@ protected:
 
 	/// Заблокирован ли ФР.
 	bool mLocked;
-
-	/// Протокол.
-	AtolFRProtocol mProtocol;
 
 	/// Список поддерживаемых плагином моделей.
 	QStringList mSupportedModels;

@@ -9,7 +9,7 @@
 #include "Hardware/Common/ProtoDevice.h"
 
 //--------------------------------------------------------------------------------
-class ProtoDispenser : public ProtoDevice, public SDK::Driver::IDispenser
+class ProtoDispenser : public ProtoDevice, public MetaDevice<SDK::Driver::IDispenser>
 {
 	Q_OBJECT
 

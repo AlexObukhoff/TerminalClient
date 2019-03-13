@@ -31,6 +31,7 @@ void MessageBox::initialize()
 //------------------------------------------------------------------------
 void MessageBox::shutdown()
 {
+	mInstance->hideWindow();
 	delete mInstance;
 	mInstance = 0;
 }
@@ -154,7 +155,7 @@ void MessageBox::emitPopupSignal(const QVariantMap & aParameters)
 {
 	if (mSignalReceiver)
 	{
-		QObject::connect(this, SIGNAL(clicked(const QVariantMap &)), mSignalReceiver, SLOT(onClicked(const QVariantMap &)));
+		QObject::connect(this, SIGNAL(clicked(const QVariantMap &)), mSignalReceiver, SLOT(onClicked(const QVariantMap &)), Qt::UniqueConnection);
 		emit clicked(aParameters);
 	}
 }

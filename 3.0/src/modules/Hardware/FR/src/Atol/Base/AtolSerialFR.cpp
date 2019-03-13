@@ -34,7 +34,7 @@ AtolSerialFR::AtolSerialFR()
 }
 
 //--------------------------------------------------------------------------------
-bool AtolSerialFR::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
+bool AtolSerialFR::checkTax(TVAT aVAT, CFR::Taxes::SData & aData)
 {
 	if (!checkTaxValue(aVAT, aData, CAtolFR::FRParameters::Tax, true))
 	{

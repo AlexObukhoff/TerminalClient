@@ -62,7 +62,7 @@ public:
 	virtual bool close();
 
 	/// Чтение данных.
-	virtual bool read(QByteArray & aData, int aTimeout = DefaultReadTimeout);
+	virtual bool read(QByteArray & aData, int aTimeout = DefaultReadTimeout, int aMinSize = 1);
 
 	/// Передача данных.
 	virtual bool write(const QByteArray & aData);
@@ -101,7 +101,7 @@ protected:
 	bool performClose();
 
 	/// Чтение данных.
-	bool performRead(QByteArray & aData, int aTimeout = DefaultReadTimeout);
+	bool performRead(QByteArray & aData, int aTimeout = DefaultReadTimeout, int aMinSize = 1);
 
 	/// Передача данных.
 	bool performWrite(const QByteArray & aData);

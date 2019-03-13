@@ -35,9 +35,7 @@ TResult PrimFRProtocol::check(const QByteArray & aRequest, const QByteArray & aA
 
 	if (aAnswer[0] != CPrimFR::Prefix)
 	{
-		toLog(LogLevel::Error, QString("PRIM: Invalid prefix = %1, need = %2")
-			.arg(toHexLog(aAnswer[0]))
-			.arg(toHexLog(CPrimFR::Prefix)));
+		toLog(LogLevel::Error, QString("PRIM: Invalid prefix = %1, need = %2").arg(toHexLog(aAnswer[0])).arg(toHexLog(CPrimFR::Prefix)));
 		return CommandResult::Protocol;
 	}
 
@@ -45,17 +43,13 @@ TResult PrimFRProtocol::check(const QByteArray & aRequest, const QByteArray & aA
 
 	if (postfix != CPrimFR::Postfix)
 	{
-		toLog(LogLevel::Error, QString("PRIM: Invalid postfix = %1, need = %2")
-			.arg(toHexLog(postfix))
-			.arg(toHexLog(CPrimFR::Postfix)));
+		toLog(LogLevel::Error, QString("PRIM: Invalid postfix = %1, need = %2").arg(toHexLog(postfix)).arg(toHexLog(CPrimFR::Postfix)));
 		return CommandResult::Protocol;
 	}
 
 	if ((aAnswer[1] != char(mDifferential)) && !aPrinterMode)
 	{
-		toLog(LogLevel::Error, QString("PRIM: Invalid differential = %1, need = %2")
-			.arg(toHexLog(aAnswer[1]))
-			.arg(toHexLog(mDifferential)));
+		toLog(LogLevel::Error, QString("PRIM: Invalid differential = %1, need = %2").arg(toHexLog(aAnswer[1])).arg(toHexLog(mDifferential)));
 		return CommandResult::Id;
 	}
 
@@ -64,9 +58,7 @@ TResult PrimFRProtocol::check(const QByteArray & aRequest, const QByteArray & aA
 
 	if ((requestCommand != answerCommand) && !aPrinterMode)
 	{
-		toLog(LogLevel::Error, QString("PRIM: Invalid command in answer = \"%1\", need = \"%2\"")
-			.arg(answerCommand)
-			.arg(requestCommand));
+		toLog(LogLevel::Error, QString("PRIM: Invalid command in answer = \"%1\", need = \"%2\"").arg(answerCommand).arg(requestCommand));
 		return CommandResult::Id;
 	}
 

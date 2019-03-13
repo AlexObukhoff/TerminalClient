@@ -7,10 +7,6 @@
 #include <SDK/Plugins/IPluginFactory.h>
 #include <SDK/Plugins/IPluginLoader.h>
 
-#pragma warning ( disable : 4250 ) // warning 4250: 'class1' : inherits 'class2::member' via dominance
-// Есть ветки наследования, интерфейсная и базовой реализации. Последняя содержит вызываемый функционал и
-// сделана специально выше по уровню, чем соответствующий интерфейс, поэтому предупреждение подавлено и включается во все файлы.
-
 //------------------------------------------------------------------------------
 template <class T>
 class DevicePluginBase : public SDK::Plugin::IPlugin, public T

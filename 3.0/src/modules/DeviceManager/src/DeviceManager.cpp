@@ -758,6 +758,16 @@ void DeviceManager::checkITInstancePath(QString & aInstancePath)
 	          << "Common.Driver.FiscalRegistrator.COM.ShtrihOnline.PayVKP80FA");
 
 	changeInstancePath(aInstancePath, configPath, paths);
+
+	QStringList pathData = aInstancePath.split(".");
+
+	if (pathData.size() > 4)
+	{
+		if (!pathData[4].compare("ATOL",       Qt::CaseInsensitive)) pathData[4] = pathData[4].replace("ATOL",       "ATOL2",       Qt::CaseInsensitive);
+		if (!pathData[4].compare("AtolOnline", Qt::CaseInsensitive)) pathData[4] = pathData[4].replace("AtolOnline", "ATOL2Online", Qt::CaseInsensitive);
+
+		aInstancePath = pathData.join(".");
+	}
 }
 
 //------------------------------------------------------------------------------

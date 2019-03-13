@@ -19,6 +19,7 @@ CCNetCreator::CCNetCreator()
 	// данные устройства
 	mDeviceName = CCCNet::Models::CreatorC100;
 	mSupportedModels = QStringList() << mDeviceName;
+	mNeedChangeBaudrate = true;
 	setConfigParameter(CHardware::UpdatingFilenameExtension, "dat");
 
 	setConfigParameter(CHardware::CashAcceptor::InitializeTimeout, CCCNetCreator::ExitInitializeTimeout);
@@ -132,12 +133,6 @@ bool CCNetCreator::performUpdateFirmware(const QByteArray & aBuffer)
 		}
 	}
 
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-bool CCNetCreator::canChangeBaudrate()
-{
 	return true;
 }
 

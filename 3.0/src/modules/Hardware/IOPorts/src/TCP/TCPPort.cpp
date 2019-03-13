@@ -194,15 +194,15 @@ bool TCPPort::performCheckReady()
 }
 
 //--------------------------------------------------------------------------------
-bool TCPPort::read(QByteArray & aData, int aTimeout)
+bool TCPPort::read(QByteArray & aData, int aTimeout, int aMinSize)
 {
 	QMutexLocker locker(&mSocketGuard);
 
-	return PERFORM_IN_THREAD(performRead, std::ref(aData), aTimeout);
+	return PERFORM_IN_THREAD(performRead, std::ref(aData), aTimeout, aMinSize);
 }
 
 //--------------------------------------------------------------------------------
-bool TCPPort::performRead(QByteArray & aData, int aTimeout)
+bool TCPPort::performRead(QByteArray & aData, int aTimeout, int aMinSize)
 {
 	aData.clear();
 
@@ -214,7 +214,7 @@ bool TCPPort::performRead(QByteArray & aData, int aTimeout)
 	QTime waitingTimer;
 	waitingTimer.start();
 
-	while ((waitingTimer.elapsed() < aTimeout) && aData.isEmpty())
+	while ((waitingTimer.elapsed() < aTimeout) && (aData.size() < aMinSize))
 	{
 		mSocket->waitForReadyRead(CTCPPort::ReadingTimeout);
 

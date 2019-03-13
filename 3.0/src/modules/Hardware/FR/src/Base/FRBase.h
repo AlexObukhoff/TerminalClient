@@ -81,6 +81,9 @@ protected:
 	/// Фоновая логика при появлении определенных состояний устройства.
 	virtual void postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection);
 
+	/// Проверить соответствие налогов нормам 2019 года.
+	void checkTaxes2019();
+
 	/// Проверить установки сервера ОФД.
 	bool checkOFDData(const QByteArray & aAddressData, const QByteArray & aPortData);
 
@@ -94,7 +97,7 @@ protected:
 	virtual bool openSession() { return false; }
 
 	/// Открыть смену.
-	bool openFRSession();
+	virtual bool openFRSession();
 
 	/// Установить начальные параметры.
 	virtual void setInitialData();
@@ -127,7 +130,7 @@ protected:
 	bool checkSumInCash(const SDK::Driver::SPaymentData & aPaymentData);
 
 	/// Проверить налоги на платеже.
-	bool checkVATsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
+	bool checkTaxesOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
 	/// Добавить фискальные теги в платеж.
 	void addFiscalFieldsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
@@ -139,7 +142,7 @@ protected:
 	virtual bool checkTaxes();
 
 	/// Проверить параметры налога.
-	virtual bool checkTax(SDK::Driver::TVAT /*aVAT*/, const CFR::Taxes::SData & /*aData*/) { return true; }
+	virtual bool checkTax(SDK::Driver::TVAT /*aVAT*/, CFR::Taxes::SData & /*aData*/) { return true; }
 
 	/// Локальная печать X-отчета.
 	virtual bool processXReport() = 0;
@@ -206,6 +209,9 @@ protected:
 
 	/// Получить налоговые ставки региона.
 	SDK::Driver::TVATs getActualVATs() const;
+
+	/// Получить налоговые ставки.
+	SDK::Driver::TVATs getDeviceVATs();
 
 	/// Получить все налоговые ставки платежа.
 	SDK::Driver::TVATs getVATs(const SDK::Driver::SPaymentData & aPaymentData) const;
@@ -344,6 +350,12 @@ protected:
 
 	/// Ошибка налоговых ставок.
 	bool mTaxError;
+
+	/// Необходима синхронизация с системным временем.
+	bool mNeedTimeSynchronization;
+
+	/// Неверная налоговая ставка на платеже.
+	bool mWrongTaxOnPayment;
 };
 
 //--------------------------------------------------------------------------------

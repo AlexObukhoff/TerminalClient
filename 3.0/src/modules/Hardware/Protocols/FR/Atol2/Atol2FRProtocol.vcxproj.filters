@@ -20,18 +20,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AtolFR.cpp">
+    <ClCompile Include="src\Atol2FR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AtolFRConstants.h">
+    <ClInclude Include="src\Atol2FRConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="src\AtolFR.h">
+    <ClInclude Include="src\Atol2FR.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -143,15 +143,17 @@ Project {
 		files: [
 			"../../includes/Hardware/Protocols/Common/ProtocolNames.h",
 			"../../includes/Hardware/Protocols/FR/FiscalChequeStates.h",
-			
-			"Protocols/FR/Atol/src/*.*",
+
+			"Protocols/FR/Atol2/src/*.*",
+			"Protocols/FR/Atol3/src/*.*",
 			"Protocols/FR/Common/src/*.*",
 			"Protocols/FR/Prim/src/*.*",
 			"Protocols/FR/Shtrih/src/*.*",
 			"Protocols/FR/Spark/src/*.*",
 			"Protocols/FR/Kasbi/src/*.*",
+
 			"Protocols/FR/AFP/src/*.*",
-			
+
 			"Protocols/CashAcceptor/*/src/*.*",
 			"Protocols/Watchdog/*/src/*.*"
 		]

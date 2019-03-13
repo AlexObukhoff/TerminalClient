@@ -61,7 +61,7 @@ protected:
 	virtual void cancelDocument(bool aDocumentIsOpened);
 
 	/// Открыть чек.
-	virtual bool openDocument(bool aBack);
+	virtual bool openDocument(SDK::Driver::EPayOffTypes::Enum aPayOffType);
 
 	/// Установить режим снятия Z-отчета.
 	virtual bool setEjectorMode(char aEjectorMode);

@@ -24,12 +24,22 @@ namespace CPrimFR
 	/// Минимальный размер пакета для identification.
 	const int MinIdentSize = 109;
 
-	/// Типы фискальных чеков.
-	namespace FDTypes
+	/// Данные типов фискальных документов.
+	class CPayOffTypeData: public CSpecification<SDK::Driver::EPayOffTypes::Enum, QByteArray>
 	{
-		const char Sale[]     = "00";    /// Продажа.
-		const char SaleBack[] = "02";    /// Возврат продажи.
-	}
+	public:
+		CPayOffTypeData()
+		{
+			using namespace SDK::Driver;
+
+			append(EPayOffTypes::Debit,      "00");
+			append(EPayOffTypes::DebitBack,  "02");
+			append(EPayOffTypes::Credit,     "04");
+			append(EPayOffTypes::CreditBack, "05");
+		}
+	};
+
+	static CPayOffTypeData PayOffTypeData;
 
 	/// Количество чеков.
 	const char ChecksQuantity[] = "01";

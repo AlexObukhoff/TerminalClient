@@ -10,7 +10,7 @@
 #include "Hardware/Common/MetaDevice.h"
 
 //--------------------------------------------------------------------------------
-class IOPortBase : public MetaDevice, public SDK::Driver::IIOPort
+class IOPortBase : public MetaDevice<SDK::Driver::IIOPort>
 {
 public:
 	IOPortBase();

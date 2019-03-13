@@ -4,7 +4,7 @@
 	<!-- Общий контент Российской площадки -->
 	<directory source="src/runtimes/ru/common" target="" recursive="true"/>
 
-	<!-- Интерфейс Modern, компонент interface -->
+	<!-- Интерфейс modern, компонент interface -->
 	<directory source="src/interface/modern/build" target="interface/interface/modern" recursive="true">
 		<exclude>*.wav</exclude>
 	</directory>
@@ -35,11 +35,7 @@
 	<option target="interface/interface/modern/interface.ini" key="ui/show_sms_spam" value="true" />
 	<option target="interface/interface/modern/interface.ini" key="ui/icon_set" value="modern" />
 	<option target="interface/interface/modern/interface.ini" key="ui/layouts" value="ru,en" />
-	
-	<!-- Для работы "бенчмарка" -->
-	<option target="interface/interface/modern/interface.ini" key="ui/show_gfx" value="true" />
-	
-	<!-- Настройка ГосУслуг -->
+	<!-- Настройка ГосУслуг -->	
 	<option target="interface/interface/modern/interface.ini" key="ui/use_smart_grid" value="9144,9176,9196,9200,9209,9210,9211" />
 	<!-- Настройка автоматического перевода остатка на ПК -->	
 	<option target="interface/interface/modern/interface.ini" key="ui/use_platru_changeback" value="true" />
@@ -61,8 +57,8 @@
 	<!-- <file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/uniteller.dll" target="plugins/plugins/uniteller.dll"/> -->
 
 	<!-- UCS plugin -->
-	<!--<option target="user/user/plugins/ucs.ini" key="PaymentProcessor.ChargeProvider.UcsChargeProvider.configuration_singleton/ucs_runtime_path" value="C:/UCS/BIN" />
-	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/ucs.dll" target="plugins/plugins/ucs.dll"/>-->
+	<option target="user/user/plugins/ucs.ini" key="PaymentProcessor.ChargeProvider.UcsChargeProvider.configuration_singleton/ucs_runtime_path" value="C:/UCS/BIN" />
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/ucs.dll" target="plugins/plugins/ucs.dll"/>
 
 	<!-- Драйверы, компонент drivers -->
 	<file source="{QBS_RESULT_PATH}/plugins/drivers/fr.dll" target="drivers/plugins/drivers/fr.dll"/>
@@ -94,7 +90,7 @@
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/platru_ru.qm" target="locale/plugins/platru_ru.qm"/>
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/cyberchange_ru.qm" target="locale/plugins/cyberchange_ru.qm"/>
 	<!-- <file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/uniteller_ru.qm" target="locale/plugins/uniteller_ru.qm"/> -->
-	<!--<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/ucs_ru.qm" target="locale/plugins/ucs_ru.qm"/> -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/ucs_ru.qm" target="locale/plugins/ucs_ru.qm"/> -->
 	
 	<!-- ######################################################################################  -->
 
@@ -109,8 +105,11 @@
 
 	<!-- ######################################################################################  -->
 
+	<!-- Token plugin -->
+	<file if="{TC_USE_TOKEN} &amp;&amp; {CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/drivers/token.dll" target="drivers/plugins/drivers/token.dll"/>
+
 	<!-- Fiscal client plugin -->
-	<!--<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/fiscal_client.dll" target="plugins/plugins/fiscal_client.dll"/>-->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/fiscal_client.dll" target="plugins/plugins/fiscal_client.dll"/>
 	
 	<!-- ######################################################################################  -->
 	

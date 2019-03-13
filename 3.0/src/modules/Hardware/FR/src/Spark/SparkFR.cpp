@@ -310,6 +310,11 @@ bool SparkFR::isConnected()
 		return false;
 	}
 
+	if (answer.isEmpty() && isAutoDetecting())
+	{
+		return false;
+	}
+
 	QString answerData = mCodec->toUnicode(answer);
 	QRegExp regExp(CSparkFR::Models::RegExpData);
 	CSparkFR::Models::SData data;
@@ -408,9 +413,14 @@ TResult SparkFR::execCommand(const QByteArray & aCommand, const QByteArray & aCo
 			return CommandResult::Device;
 		}
 
-		mProcessingErrors.pop_back();
+		result = processCommand(aCommand, aCommandData, aAnswer);
 
-		return processCommand(aCommand, aCommandData, aAnswer);
+		if (result)
+		{
+			mProcessingErrors.pop_back();
+		}
+
+		return result;
 	}
 	else if (result == CommandResult::NoAnswer)
 	{

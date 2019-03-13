@@ -47,11 +47,20 @@ public:
 	bool formatToken();
 	
 public:
+	/// Возвращает загруженные номера пар ключей
+	QList<int> getLoadedKeys() const;
+
+	/// Проверяет принадлежит ли Код Оператора нулевой паре ключей
+	bool isDefaultKeyOP(const QString & aOP);
+
 	/// Генерирует и регистрирует ключ на сервере.
 	bool generateKey(QVariantMap & aKeysParam);
 
 	/// Сохраняет сгенерированный ключ.
 	bool saveKey();
+
+	/// Возвращает разрешение на создание ненулевых пар ключей
+	bool allowAnyKeyPair() const;
 
 	/// Параметры, получаемые от ICryptService в случае успешной регистрации ключей
 	QString getSD() const;

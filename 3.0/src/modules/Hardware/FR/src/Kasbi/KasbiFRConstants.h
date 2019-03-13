@@ -34,7 +34,7 @@ namespace CKasbiFR
 	const char FS11Id[] = "v_1_1";
 
 	/// Последняя актуальная прошивка.
-	const char LastFirmware[] = "1.0.21";
+	const char LastFirmware[] = "1.0.25";
 
 	/// Признак вывода на печать.
 	namespace Print

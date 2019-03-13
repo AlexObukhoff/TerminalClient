@@ -54,7 +54,7 @@ QVariantMap toUpperCaseKeys(const QVariantMap & aParameters)
 #endif
 
 //---------------------------------------------------------------------------
-SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap & aParameters)
+DSDK::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap & aParameters)
 {
 	DSDK::TUnitDataList unitDataList;
 
@@ -114,7 +114,7 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 	auto taxSystem = aParameters.contains(CPrintConstants::DealerTaxSystem) ? static_cast<DSDK::ETaxSystems::Enum>(aParameters.value(CPrintConstants::DealerTaxSystem).toInt()) : DSDK::ETaxSystems::None;
 	auto agentFlag = aParameters.contains(CPrintConstants::DealerAgentFlag) ? static_cast<DSDK::EAgentFlags::Enum>(aParameters.value(CPrintConstants::DealerAgentFlag).toInt()) : DSDK::EAgentFlags::None;
 
-	DSDK::SPaymentData result(unitDataList, false, payType, taxSystem, agentFlag);
+	DSDK::SPaymentData result(unitDataList, DSDK::EPayOffTypes::Debit, payType, taxSystem, agentFlag);
 
 	result.fiscalParameters[CHardwareSDK::FR::UserPhone] = QString();
 	result.fiscalParameters[CHardwareSDK::FR::UserMail] = QString();
@@ -269,8 +269,8 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 				mFiscalFieldData = aPrinter->getDeviceConfiguration().value(CHardwareSDK::FR::FiscalFieldData).value<DSDK::TFiscalFieldData>();
 			}
 
-			SDK::Driver::TFiscalPaymentData fiscalPaymentData;
-			SDK::Driver::TComplexFiscalPaymentData payOffSubjectData;
+			DSDK::TFiscalPaymentData fiscalPaymentData;
+			DSDK::TComplexFiscalPaymentData payOffSubjectData;
 			fiscalPrinter->checkFiscalFields(FDNumber, fiscalPaymentData, payOffSubjectData);
 
 			addFiscalPaymentData(fiscalPaymentData, receipt);

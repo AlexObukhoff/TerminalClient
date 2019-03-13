@@ -1447,6 +1447,7 @@ void PrintingService::updateHardwareConfiguration()
 			QVariantMap dealerSettings;
 			if (mStaticParameters.contains(CPrintConstants::DealerTaxSystem)) dealerSettings.insert(CHardwareSDK::FR::DealerTaxSystem, mStaticParameters[CPrintConstants::DealerTaxSystem]);
 			if (mStaticParameters.contains(CPrintConstants::DealerAgentFlag)) dealerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters[CPrintConstants::DealerAgentFlag]);
+			if (mStaticParameters.contains(CPrintConstants::DealerVAT))       dealerSettings.insert(CHardwareSDK::FR::DealerVAT,       mStaticParameters[CPrintConstants::DealerVAT]);
 
 			mPrinterDevices.append(device);
 

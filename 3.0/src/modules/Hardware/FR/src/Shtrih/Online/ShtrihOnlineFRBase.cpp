@@ -38,7 +38,8 @@ ShtrihOnlineFRBase<T>::ShtrihOnlineFRBase()
 
 	// ошибки
 	mErrorData = PErrorData(new CShtrihOnlineFR::Errors::Data);
-	mUnprocessedErrorData.add(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, CShtrihFR::Errors::BadModeForCommand);
+	mUnprocessedErrorData.add(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, CShtrihOnlineFR::Errors::NoRequiedDataInFS);
+	mUnprocessedErrorData.add(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData,   CShtrihFR::Errors::BadModeForCommand);
 }
 
 //--------------------------------------------------------------------------------
@@ -121,23 +122,28 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 		return false;
 	}
 
-	if (!processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, data.mid(43, 4)))
+	if (processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, data.mid(43, 4)))
 	{
-		return false;
-	}
+		bool needWaitReady = getLongStatus() && (mMode == CShtrihFR::InnerModes::SessionClosed) || (mMode == CShtrihFR::InnerModes::DataEjecting);
 
-	bool needWaitReady = getLongStatus() && (mMode == CShtrihFR::InnerModes::SessionClosed) || (mMode == CShtrihFR::InnerModes::DataEjecting);
+		if (needWaitReady)
+		{
+			waitReady(CShtrihOnlineFR::ReadyWaiting);
+		}
 
-	if (needWaitReady && !waitReady(CShtrihOnlineFR::ReadyWaiting))
-	{
-		return false;
-	}
-
-	TGetFiscalTLVData getFiscalTLVData = [&] (QByteArray & aData) -> TResult { TResult result = processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, &aData);
+		TGetFiscalTLVData getFiscalTLVData = [&] (QByteArray & aData) -> TResult { TResult result = processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, &aData);
 		aData = aData.mid(3); return result; };
-	TProcessTLVAction checkingAgentFlags = [&] (const CFR::STLV & aTLV) -> bool { return (aTLV.field != CFR::FiscalFields::AgentFlagsReg) || checkAgentFlags(aTLV.data[0]); };
+		TProcessTLVAction checkingAgentFlags = [&] (const CFR::STLV & aTLV) -> bool { return (aTLV.field != CFR::FiscalFields::AgentFlagsReg) || checkAgentFlags(aTLV.data[0]); };
 
-	return processTLVData(getFiscalTLVData, checkingAgentFlags);
+		processTLVData(getFiscalTLVData, checkingAgentFlags);
+	}
+	else if (isErrorUnprocessed(mLastCommand, mLastError))
+	{
+		mProcessingErrors.pop_back();
+		mLastError = 0;
+	}
+
+	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -475,14 +481,13 @@ void ShtrihOnlineFRBase<T>::checkSalesName(QString & aName)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, bool aBack)
+bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, EPayOffTypes::Enum aPayOffType)
 {
 	if (mModelData.date < CShtrihOnlineFR::MinFWDate::V2)
 	{
-		return ShtrihFRBase<T>::sale(aUnitData, aBack);
+		return ShtrihFRBase<T>::sale(aUnitData, aPayOffType);
 	}
 
-	char documentType = aBack ? CShtrihOnlineFR::DocumentTypes::SaleBack : CShtrihOnlineFR::DocumentTypes::Sale;
 	char taxIndex = char(mTaxData[aUnitData.VAT].group);
 	char section = (aUnitData.section == -1) ? CShtrihFR::SectionNumber : char(aUnitData.section);
 	QByteArray sum = getHexReverted(aUnitData.sum, 5, 2);
@@ -490,7 +495,7 @@ bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, bool aBack)
 	QString name = aUnitData.name;
 
 	QByteArray commandData;
-	commandData.append(documentType);                      // тип операции
+	commandData.append(char(aPayOffType));                 // тип операции
 	commandData.append(getHexReverted(1, 6, 6));           // количество
 	commandData.append(sum);                               // цена
 	commandData.append(sum);                               // сумма операций

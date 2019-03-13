@@ -145,7 +145,7 @@ bool PrimOnlineFRBase::updateParameters()
 		bool canCheckAgentFlags = (mLastError != CPrimOnlineFR::Errors::NoRequiedData) && !FSVersion.contains(CPrimOnlineFR::FSNoAgentFlags);
 		uchar FFData;
 
-		if (canCheckAgentFlags && (!getRegTLVData(CFR::FiscalFields::AgentFlagsReg, FFData) || !checkAgentFlags(char(FFData))))
+		if (canCheckAgentFlags && getRegTLVData(CFR::FiscalFields::AgentFlagsReg, FFData) && !checkAgentFlags(char(FFData)))
 		{
 			return false;
 		}
@@ -465,7 +465,7 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 	auto getAmountY = [&] (const TSum & aSum) -> int { return getDataY(getAmountData(aSum).size()); };
 
 	QByteArray sumData = getAmountData(getTotalAmount(aPaymentData));
-	QByteArray FDType = aPaymentData.back ? CPrimFR::FDTypes::SaleBack : CPrimFR::FDTypes::Sale;
+	QByteArray FDType = CPrimFR::PayOffTypeData[aPaymentData.payOffType];
 
 	QString cashierValue = mFFEngine.getConfigParameter(CFiscalSDK::Cashier).toString();
 	QString cashierINN = CFR::INNToString(mFFEngine.getConfigParameter(CFiscalSDK::CashierINN).toByteArray());

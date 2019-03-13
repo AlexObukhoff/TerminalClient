@@ -39,6 +39,7 @@ CCNetCashAcceptorBase::CCNetCashAcceptorBase(): mFirmware(0)
 	mCurrencyCode = Currency::NoCurrency;
 	setConfigParameter(CHardwareSDK::WaitUpdatingTimeout, CCCNet::WaitUpdatingTimeout);
 	mSupportedModels = getModelList();
+	mNeedChangeBaudrate = false;
 
 	setConfigParameter(CHardware::CashAcceptor::InitializeTimeout, CCCNet::Timeouts::ExitInitialize);
 
@@ -187,7 +188,7 @@ bool CCNetCashAcceptorBase::checkConnection(QByteArray & aAnswer)
 
 	PollingExpector expector;
 	TStatusCodes statusCodes;
-	bool result;
+	bool result = true;
 	auto statusPoll = [&] () -> bool { statusCodes.clear(); result = getStatus(std::ref(statusCodes)); return result; };
 
 	if (expector.wait<bool>(statusPoll, [&] () -> bool { return !result && !mLastAnswer.isEmpty(); }, CCCNet::FalseAutoDetectionWaiting))
@@ -596,7 +597,7 @@ bool CCNetCashAcceptorBase::performUpdateFirmware(const QByteArray & aBuffer)
 //--------------------------------------------------------------------------------
 bool CCNetCashAcceptorBase::changeBaudRate(bool aHigh)
 {
-	if (!canChangeBaudrate())
+	if (!mNeedChangeBaudrate)
 	{
 		return true;
 	}
@@ -625,12 +626,6 @@ bool CCNetCashAcceptorBase::changeBaudRate(bool aHigh)
 	SleepHelper::msleep(CCCNet::ChangingBaudratePause);
 
 	return true;
-}
-
-//--------------------------------------------------------------------------------
-bool CCNetCashAcceptorBase::canChangeBaudrate()
-{
-	return false;
 }
 
 //--------------------------------------------------------------------------------

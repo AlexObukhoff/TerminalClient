@@ -247,21 +247,19 @@ void POSPrinter::checkVerifying()
 bool POSPrinter::updateParameters()
 {
 	//TODO: устанавливать размеры ячейки сетки для печати, с учетом выбранного режима.
-	char lineSpacing = char(getConfigParameter(CHardware::Printer::Settings::LineSpacing, 0).toInt());
-	QByteArray setLineSpacing;
+	QByteArray command = QByteArray(CPOSPrinter::Command::Initialize) +
+		CPOSPrinter::Command::SetEnabled + 
+		CPOSPrinter::Command::SetCodePage(mRussianCodePage) +
+		CPOSPrinter::Command::SetUSCharacterSet +
+		CPOSPrinter::Command::SetStandartMode +
+		CPOSPrinter::Command::AlignLeft;
+
+	int lineSpacing = getConfigParameter(CHardware::Printer::Settings::LineSpacing, 0).toInt();
 
 	if (lineSpacing)
 	{
-		setLineSpacing = QByteArray(CPOSPrinter::Command::SetLineWidthMultiplier) + lineSpacing;
+		command += CPOSPrinter::Command::SetLineSpacing(lineSpacing);
 	}
-
-	QByteArray command = QByteArray(CPOSPrinter::Command::Initialize) +
-		CPOSPrinter::Command::SetEnabled + 
-		setLineSpacing +
-		CPOSPrinter::Command::SetCodePage + mRussianCodePage +
-		CPOSPrinter::Command::SetCharacterSet + CPOSPrinter::USACharacters +
-		CPOSPrinter::Command::SetStandartMode +
-		CPOSPrinter::Command::AlignLeft;
 
 	if (!mIOPort->write(command))
 	{
@@ -341,7 +339,7 @@ bool POSPrinter::getStatus(TStatusCodes & aStatusCodes)
 		QList<char> bytes = it->keys();
 		qSort(bytes);
 
-		if (!mIOPort->write(QByteArray(CPOSPrinter::Command::GetStatus) + it.key()) || !readStatusAnswer(answer, CPOSPrinter::Timeouts::Status, int(bytes.last())) || answer.isEmpty())
+		if (!mIOPort->write(CPOSPrinter::Command::GetStatus(it.key())) || !readStatusAnswer(answer, CPOSPrinter::Timeouts::Status, int(bytes.last())) || answer.isEmpty())
 		{
 			return false;
 		}

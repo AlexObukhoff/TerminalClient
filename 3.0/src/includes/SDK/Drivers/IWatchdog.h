@@ -9,7 +9,7 @@ namespace SDK {
 namespace Driver {
 
 //--------------------------------------------------------------------------------
-class IWatchdog: virtual public IDevice
+class IWatchdog: public IDevice
 {
 public:
 	/// Предметы выданы.

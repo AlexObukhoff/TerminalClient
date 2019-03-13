@@ -174,11 +174,6 @@ bool DeviceBase<T>::checkExistence()
 		toLog(LogLevel::Error, mDeviceName + " can not be found via autodetecting as unsupported by plugin " + getConfigParameter(CHardware::PluginPath).toString());
 		return false;
 	}
-	else if (!mVerified && autoDetecting)
-	{
-		toLog(LogLevel::Error, mDeviceName + " can not be found via autodetecting as unverified.");
-		return false;
-	}
 	else if (!mConnected)
 	{
 		toLog(LogLevel::Error, QString("Failed to identify %1.").arg(mDeviceName));

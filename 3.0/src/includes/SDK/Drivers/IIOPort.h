@@ -25,7 +25,7 @@ namespace EPortTypes
 }
 
 //--------------------------------------------------------------------------------
-class IIOPort: virtual public IDevice
+class IIOPort: public IDevice
 {
 public: // константы
 	/// Таймаут чтения по умолчанию, [мс].
@@ -51,7 +51,7 @@ public: // методы
 	virtual void getParameters(TPortParameters & aParameters) = 0;
 
 	/// Чтение данных.
-	virtual bool read(QByteArray & aData, int aTimeout = DefaultReadTimeout) = 0;
+	virtual bool read(QByteArray & aData, int aTimeout = DefaultReadTimeout, int aMinSize = 1) = 0;
 
 	/// Передача данных.
 	virtual bool write(const QByteArray & aData) = 0;

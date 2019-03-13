@@ -24,7 +24,9 @@ namespace FRStatusCode
 		const int WrongDealerTaxSystem       = 261;  /// Неверно настроена СНО (1! СНО в ФР).
 		const int WrongDealerAgentFlag       = 262;  /// Неверно настроен признак агента (1! признак агента в ФР).
 		const int WrongFiscalizationSettings = 263;  /// Параметры фискализации некорректны.
-		const int Taxes                      = 264;  /// Налоговые ставки неверны.
+		const int WrongTaxOnPayment          = 264;  /// Неверная налоговая ставка на платеже.
+		const int NeedTimeSynchronization    = 265;  /// Необходима синхронизация с системным временем.
+		const int FSVirtualEnd               = 266;  /// Срок действия ФН должен был закончиться.
 	}
 
 	/// Ошибки.
@@ -45,6 +47,7 @@ namespace FRStatusCode
 		const int WrongDealerTaxSystem = 282;    /// Неверно настроена СНО.
 		const int WrongDealerAgentFlag = 283;    /// Неверно настроен признак агента.
 		const int CashierINN           = 284;    /// Неправильный ИНН кассира.
+		const int Taxes                = 285;    /// Налоговые ставки неверны.
 	}
 }
 

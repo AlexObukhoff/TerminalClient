@@ -77,7 +77,7 @@ namespace EFFD
 namespace CFR
 {
 	/// Актуальный ФФД.
-	const EFFD::Enum ActualFFD = EFFD::F10;
+	const EFFD::Enum ActualFFD = EFFD::F105;
 
 	/// Формат представления даты.
 	const char DateFormat[] = "ddMMyyyy";
@@ -258,10 +258,11 @@ namespace CFR
 		struct SData
 		{
 			int group;
+			SDK::Driver::TVAT deviceVAT;
 			QString description;
 
 			SData() : group(0) {}
-			SData(int aGroup, const QString & aDescription = "") : group(aGroup), description(aDescription) {}
+			SData(int aGroup, SDK::Driver::TVAT aDeviceVAT, const QString & aDescription = "") : group(aGroup), deviceVAT(aDeviceVAT), description(aDescription) {}
 		};
 
 		class Data : public CSpecification<SDK::Driver::TVAT, SData>
@@ -269,7 +270,7 @@ namespace CFR
 		public:
 			void add(SDK::Driver::TVAT aVAT, int aGroup)
 			{
-				append(aVAT, SData(aGroup));
+				append(aVAT, SData(aGroup, aVAT));
 			}
 		};
 
@@ -277,7 +278,7 @@ namespace CFR
 	}
 
 	/// Скорректировать ставку НДС с 18% на 20% в РФ.
-	inline void adjustRFVAT(Taxes::TData & aData) { if (aData.contains(18) && isRFVAT20()) { aData.insert(20, aData[18]); aData.remove(18); }}
+	inline void adjustRFVAT(Taxes::TData & aData) { if (aData.contains(18) && isRFVAT20()) { aData.insert(20, aData[18]); aData[20].description.replace("18", "20"); aData.remove(18); }}
 
 	//--------------------------------------------------------------------------------
 	/// Типы оплаты
@@ -430,7 +431,7 @@ namespace CFR
 
 	//--------------------------------------------------------------------------------
 	/// Признаки расчета (1054).
-	class CPayOffTypes : public CDescription<SDK::Driver::EPayOffTypes::Enum>
+	class CPayOffTypes : public CDescription<char>
 	{
 	public:
 		CPayOffTypes()

@@ -42,13 +42,6 @@ namespace CShtrihFR
 	/// Фиксированное количество символов в строке.
 	const int FixedStringSize = 40;
 
-	/// Типы фискальных чеков.
-	namespace DocumentTypes
-	{
-		const char Sale     = '\x00';    /// Продажа.
-		const char SaleBack = '\x02';    /// Возврат продажи.
-	}
-
 	/// Номер отдела для продажи.
 	const char SectionNumber = 0x00;
 
@@ -208,7 +201,9 @@ namespace CShtrihFR
 		const char OpenDocument            = '\x8D';     /// Открыть фискальный чек.
 		const char CloseDocument           = '\x85';     /// Закрыть фискальный чек.
 		const char Sale                    = '\x80';     /// Продажа.
+		const char Buy                     = '\x81';     /// Покупка.
 		const char SaleBack                = '\x82';     /// Возврат продажи.
+		const char BuyBack                 = '\x83';     /// Возврат покупки.
 		const char CancelDocument          = '\x88';     /// Аннулировать фискальный чек.
 		const char XReport                 = '\x40';     /// Снятие X отчета.
 		const char ZReport                 = '\x41';     /// Снятие Z отчета.
@@ -239,6 +234,40 @@ namespace CShtrihFR
 		const char Cutter                   = '\x71';      /// Ошибка отрезчика.
 		const char BadModeForCommand        = '\x73';      /// Команда не поддерживается в данном режиме.
 		const char RAM                      = '\x74';      /// Ошибка ОЗУ.
+	}
+
+	namespace PayOffType
+	{
+		struct SData
+		{
+			char FDType;
+			char command;
+
+			SData(): FDType(ASCII::Full), command(ASCII::NUL) {}
+			SData(char aFDType, char aCommand): FDType(aFDType), command(aCommand) {}
+		};
+
+		class CData: public CSpecification<SDK::Driver::EPayOffTypes::Enum, SData>
+		{
+		public:
+			CData()
+			{
+				using namespace SDK::Driver;
+
+				add(EPayOffTypes::Debit,      0, Commands::Sale);
+				add(EPayOffTypes::DebitBack,  2, Commands::SaleBack);
+				add(EPayOffTypes::Credit,     1, Commands::Buy);
+				add(EPayOffTypes::CreditBack, 3, Commands::BuyBack);
+			}
+
+		private:
+			void add(SDK::Driver::EPayOffTypes::Enum aPayOffType, char aFDType, char aCommand)
+			{
+				append(aPayOffType, SData(aFDType, aCommand));
+			}
+		};
+
+		static CData Data;
 	}
 
 	/// Коды статусов (некоторых).

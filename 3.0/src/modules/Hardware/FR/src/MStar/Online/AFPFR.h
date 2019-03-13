@@ -53,6 +53,7 @@ protected:
 	TResult processCommand(char aCommand, const CAFPFR::TData & aCommandData, CAFPFR::TData * aAnswer, const CAFPFR::TAnswerTypes & aAnswerTypes);
 
 	TResult processCommand(char aCommand, const QVariant & aCommandData, CAFPFR::TData * aAnswer = nullptr);
+	TResult processCommand(char aCommand, const QVariant & aCommandData, CAFPFR::TData * aAnswer, CAFPFR::EAnswerTypes::Enum aAnswerType);
 	TResult processCommand(char aCommand, const QVariant & aCommandData, CAFPFR::TData * aAnswer, const CAFPFR::TAnswerTypes & aAnswerTypes);
 
 	/// Выполнить команду.

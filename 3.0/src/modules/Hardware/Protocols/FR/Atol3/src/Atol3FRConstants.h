@@ -2,13 +2,19 @@
 
 #pragma once
 
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QByteArray>
+#include <Common/QtHeadersEnd.h>
+
+// Modules
 #include "Hardware/Common/ASCII.h"
 
 //--------------------------------------------------------------------------------
 namespace CAtol3FR
 {
-	const char STX = '\xFE';    /// STX.
-	const char ESC = '\xFD';    /// ESC.
+	const char Prefix = '\xFE';    /// STX.
+	const char ESC    = '\xFD';    /// ESC.
 	const char ESCTSTX[] = "\xFD\xEE";    /// Экранирующий STX.
 	const char ESCTESC[] = "\xFD\xED";    /// Экранирующий ESC.
 
@@ -17,6 +23,15 @@ namespace CAtol3FR
 
 	/// Последний Id.
 	const char LastId = '\xDF';
+
+	/// Асинхронный Id.
+	const char AsyncId = '\xF0';
+
+	/// Пароль.
+	const QByteArray Password = QByteArray(2, ASCII::NUL);
+
+	/// Минимальный размер транспортной части ответа.
+	const int MinAnswerSize = 5;
 
 	/// Подсчет CRC.
 	namespace CRC
@@ -38,24 +53,11 @@ namespace CAtol3FR
 		const char WaitAsyncData = '\x04';    /// Ожидание выполнения задания.
 	}
 
-	/// Состояния.
-	namespace States
-	{
-		const char Pending     = '\xA1';    /// Помещено в буфер, ждем.
-		const char InProgress  = '\xA2';    /// Исполняется.
-		const char Result      = '\xA3';    /// Исполнено, ошибок нет.
-		const char Error       = '\xA4';    /// Исполнено, есть ошибка.
-		const char Stopped     = '\xA5';    /// Было в Pending, когда возникла ошибка при исполнении предшествующих заданий.
-		const char AsyncResult = '\xA6';    /// В асинхронном ответе - исполнено, ошибок нет.
-		const char AsyncError  = '\xA7';    /// В асинхронном ответе - исполнено, есть ошибка.
-		const char Waiting     = '\xA8';    /// Исполняется в фоновом режиме. ждем данные от внешнего устройства.
-	}
-
 	/// Команды.
 	namespace Commands
 	{
 		const char Add    = '\xC1';    /// Добавить задание в буфер.
-		const char Ack    = '\xC2';    /// Подтвердить получение результата.
+		const char ACK    = '\xC2';    /// Подтвердить получение результата.
 		const char Req    = '\xC3';    /// Получить состояние задания.
 		const char Cancel = '\xC4';    /// Очистить буфер.
 		const char AckAdd = '\xC5';    /// Подтвердить получение результата + очистить буфер.
@@ -73,8 +75,11 @@ namespace CAtol3FR
 	/// Таймауты ожидания ответа, [мс].
 	namespace Timeouts
 	{
+		/// На ACK.
+		const int ACK = 500;
+
 		/// На очистку буфера.
-		const int Cancel = 500;
+		const int Cancel = 100;
 
 		/// На запрос результата.
 		const int GetResult = 500;

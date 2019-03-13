@@ -276,7 +276,7 @@ bool PrimFRBase::setTaxData(int aGroup, const CPrimFR::Taxes::SData & aData)
 }
 
 //--------------------------------------------------------------------------------
-bool PrimFRBase::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
+bool PrimFRBase::checkTax(TVAT aVAT, CFR::Taxes::SData & aData)
 {
 	CPrimFR::Taxes::SData taxData;
 
@@ -303,6 +303,8 @@ bool PrimFRBase::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 	{
 		return true;
 	}
+
+	aData.deviceVAT = taxData.value;
 
 	toLog(logLevel, mDeviceName + QString(": Wrong %1 for %2 tax group").arg(log.join("; ")).arg(aData.group));
 
@@ -483,9 +485,14 @@ TResult PrimFRBase::processCommand(char aCommand, const CPrimFR::TData & aComman
 		return CommandResult::Device;
 	}
 
-	mProcessingErrors.pop_back();
+	result = processCommand(aCommand, aCommandData, aAnswer);
 
-	return processCommand(aCommand, aCommandData, aAnswer);
+	if (result)
+	{
+		mProcessingErrors.pop_back();
+	}
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -615,7 +622,7 @@ TResult PrimFRBase::checkAnswer(TResult aResult, const QByteArray & aAnswer, CPr
 
 	if (errorCode)
 	{
-		FRError::SData errorData = mErrorData->value(mLastError);
+		FRError::SData errorData = mErrorData->value(errorCode);
 		QString log = mDeviceName + ": Error: " + errorData.description;
 
 		if (errorData.extraData)
@@ -889,7 +896,7 @@ bool PrimFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 	int receiptSize = receipt.size();
 
 	int verificationCode = getVerificationCode();
-	QByteArray FDType = aPaymentData.back ? CPrimFR::FDTypes::SaleBack : CPrimFR::FDTypes::Sale;
+	QByteArray FDType = CPrimFR::PayOffTypeData[aPaymentData.payOffType];
 	QByteArray payTypeData = int2ByteArray(mPayTypeData[aPaymentData.payType].value);
 
 	CPrimFR::TData commandData = CPrimFR::TData()

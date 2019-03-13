@@ -28,7 +28,7 @@ namespace ECardType
 	};
 }
 
-class ICardReader: virtual public IDevice
+class ICardReader: public IDevice
 {
 public:
 	/// Карта вставлена.

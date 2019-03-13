@@ -19,7 +19,8 @@ namespace ProtocolNames
 
 	namespace FR
 	{
-		const char ATOL[]    = "ATOL";
+		const char ATOL2[]   = "ATOL2";
+		const char ATOL3[]   = "ATOL3";
 		const char Shtrih[]  = "Shtrih";
 		const char PRIM[]    = "PRIM";
 		const char SPARK[]   = "SPARK";

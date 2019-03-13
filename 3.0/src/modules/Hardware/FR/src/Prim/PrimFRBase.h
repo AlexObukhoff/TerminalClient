@@ -83,7 +83,7 @@ protected:
 	bool setMode(EFRMode::Enum aMode);
 
 	/// Проверить параметры налога.
-	virtual bool checkTax(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData);
+	virtual bool checkTax(SDK::Driver::TVAT aVAT, CFR::Taxes::SData & aData);
 
 	/// Получить параметры налога.
 	bool getTaxData(int aGroup, CPrimFR::Taxes::SData & aData);

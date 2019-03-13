@@ -138,8 +138,8 @@ SOPOSResult OPOSMStarTUPK::processIntMethod(TIntMethod aMethod, const QString & 
 
 				if (!mErrors.contains(errorData))
 				{
-					auto repeatMethod = [&]() -> SOPOSResult {mErrors.removeLast(); toOPOS_LOG(LogLevel::Normal, QString("repeat previous method %1.").arg(aFunctionData));
-					return processIntMethod(aMethod, aFunctionData); };
+					auto repeatMethod = [&] () -> SOPOSResult {mErrors.removeLast(); toOPOS_LOG(LogLevel::Normal, QString("repeat previous method %1.").arg(aFunctionData));
+						return processIntMethod(aMethod, aFunctionData); };
 
 					mErrors.append(errorData);
 
@@ -245,7 +245,7 @@ bool OPOSMStarTUPK::updateParameters()
 }
 
 //--------------------------------------------------------------------------------
-bool OPOSMStarTUPK::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
+bool OPOSMStarTUPK::checkTax(TVAT aVAT, CFR::Taxes::SData & aData)
 {
 	QString canAutoCloseSession = getConfigParameter(CHardware::FR::CanAutoCloseSession).toString();
 
@@ -277,6 +277,8 @@ bool OPOSMStarTUPK::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 	{
 		return false;
 	}
+
+	aData.deviceVAT = VAT;
 
 	if (VAT == aVAT)
 	{

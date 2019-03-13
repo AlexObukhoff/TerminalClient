@@ -126,7 +126,7 @@ bool ProtoShtrihFR<T>::setTaxValue(TVAT aVAT, int aGroup)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ProtoShtrihFR<T>::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
+bool ProtoShtrihFR<T>::checkTax(TVAT aVAT, CFR::Taxes::SData & aData)
 {
 	if (!aData.group)
 	{
@@ -145,6 +145,7 @@ bool ProtoShtrihFR<T>::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
 
 	int value = int(aVAT * 100);
 	int FRValue = revert(rawValue).toHex().toUShort(0, 16);
+	aData.deviceVAT = FRValue / 100;
 
 	if (value != FRValue)
 	{
@@ -179,7 +180,7 @@ bool ProtoShtrihFR<T>::performFiscal(const QStringList & aReceipt, const SPaymen
 		return false;
 	}
 
-	if (!processReceipt(aReceipt, false) || !openDocument(aPaymentData.back))
+	if (!processReceipt(aReceipt, false) || !openDocument(aPaymentData.payOffType))
 	{
 		return false;
 	}
@@ -188,7 +189,7 @@ bool ProtoShtrihFR<T>::performFiscal(const QStringList & aReceipt, const SPaymen
 
 	foreach (auto unitData, aPaymentData.unitDataList)
 	{
-		result = result && sale(unitData, aPaymentData.back);
+		result = result && sale(unitData, aPaymentData.payOffType);
 	}
 
 	result = result && setOFDParameters() && closeDocument(getTotalAmount(aPaymentData), aPaymentData.payType);
@@ -196,7 +197,7 @@ bool ProtoShtrihFR<T>::performFiscal(const QStringList & aReceipt, const SPaymen
 	waitForPrintingEnd(true);
 	//getDocumentState() == EDocumentState::Opened;
 
-	if (!result && aPaymentData.back && (mLastError == CShtrihFR::Errors::NotEnoughMoney))
+	if (!result && aPaymentData.back() && (mLastError == CShtrihFR::Errors::NotEnoughMoney))
 	{
 		emitStatusCode(FRStatusCode::Error::NoMoney, EFRStatus::NoMoneyForSellingBack);
 	}
@@ -451,9 +452,14 @@ TResult ProtoShtrihFR<T>::execCommand(const QByteArray & aCommand, const QByteAr
 		return CommandResult::Device;
 	}
 
-	mProcessingErrors.pop_back();
+	TResult result = processCommand(aCommand, aCommandData, aAnswer);
 
-	return processCommand(aCommand, aCommandData, aAnswer);
+	if (result)
+	{
+		mProcessingErrors.pop_back();
+	}
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -551,11 +557,11 @@ EDocumentState::Enum ProtoShtrihFR<T>::getDocumentState()
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ProtoShtrihFR<T>::openDocument(bool aBack)
+bool ProtoShtrihFR<T>::openDocument(EPayOffTypes::Enum aPayOffType)
 {
-	char documentType = aBack ? CShtrihFR::DocumentTypes::SaleBack : CShtrihFR::DocumentTypes::Sale;
+	char FDType = CShtrihFR::PayOffType::Data[aPayOffType].FDType;
 
-	if (!processCommand(CShtrihFR::Commands::OpenDocument, QByteArray(1, documentType)))
+	if (!processCommand(CShtrihFR::Commands::OpenDocument, QByteArray(1, FDType)))
 	{
 		toLog(LogLevel::Error, "ShtrihFR: Failed to open document, feed, cut and exit");
 		return false;
@@ -603,7 +609,7 @@ void ProtoShtrihFR<T>::checkSalesName(QString & aName)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ProtoShtrihFR<T>::sale(const SUnitData & aUnitData, bool aBack)
+bool ProtoShtrihFR<T>::sale(const SUnitData & aUnitData, EPayOffTypes::Enum aPayOffType)
 {
 	int taxIndex = mTaxData[aUnitData.VAT].group;
 	QString name = aUnitData.name;
@@ -617,7 +623,7 @@ bool ProtoShtrihFR<T>::sale(const SUnitData & aUnitData, bool aBack)
 	commandData.append(getHexReverted(taxIndex, 4));            // налоги
 	commandData.append(mCodec->fromUnicode(name));              // текст продажи
 
-	char command = aBack ? CShtrihFR::Commands::SaleBack : CShtrihFR::Commands::Sale;
+	char command = CShtrihFR::PayOffType::Data[aPayOffType].command;
 
 	if (!processCommand(command, commandData))
 	{

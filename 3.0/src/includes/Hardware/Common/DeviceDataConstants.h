@@ -139,6 +139,8 @@ namespace CDeviceData
 		const char AutomaticNumber[] = "automatic_number";
 		const char DTDBuild[] = "dtd_build";    // data transfer device
 		const char CanProcessZBuffer[] = "can_process_z_buffer";
+		const char Taxes[] = "taxes";
+		const char Taxes2019Applied[] = "taxes_2019_applied";
 	}
 
 	/// ЭКЛЗ.

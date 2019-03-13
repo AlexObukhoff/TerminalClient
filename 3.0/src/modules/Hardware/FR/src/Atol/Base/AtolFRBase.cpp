@@ -1,4 +1,4 @@
-/* @file ФР АТОЛ и Пэй Киоск. */
+/* @file Базовый ФР на протоколе АТОЛ. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -33,7 +33,6 @@ AtolFRBase::AtolFRBase()
 	mLineFeed = false;
 	mMode = CAtolFR::InnerModes::NoMode;
 	mSubmode = CAtolFR::InnerSubmodes::NoSubmode;
-	mFRBuild = 0;
 	mLocked = false;
 	mNonNullableAmount = 0;
 
@@ -75,6 +74,14 @@ AtolFRBase::AtolFRBase()
 }
 
 //--------------------------------------------------------------------------------
+void AtolFRBase::setInitialData()
+{
+	TSerialFRBase::setInitialData();
+
+	mFRBuild = 0;
+}
+
+//--------------------------------------------------------------------------------
 QDateTime AtolFRBase::getDateTime()
 {
 	QByteArray data;
@@ -90,7 +97,7 @@ QDateTime AtolFRBase::getDateTime()
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::checkTaxValue(TVAT aVAT, const CFR::Taxes::SData & aData, const CAtolFR::FRParameters::TData & aFRParameterData, bool aCanCorrectTaxValue)
+bool AtolFRBase::checkTaxValue(TVAT aVAT, CFR::Taxes::SData & aData, const CAtolFR::FRParameters::TData & aFRParameterData, bool aCanCorrectTaxValue)
 {
 	QByteArray taxData;
 
@@ -106,6 +113,10 @@ bool AtolFRBase::checkTaxValue(TVAT aVAT, const CFR::Taxes::SData & aData, const
 	if (!OK)
 	{
 		FRValue = -1;
+	}
+	else
+	{
+		aData.deviceVAT = FRValue / 100;
 	}
 
 	int value = int(aVAT * 100);
@@ -265,17 +276,8 @@ QByteArray AtolFRBase::getBCD(double aValue, int aSize, int aPrecision, int aMan
 }
 
 //--------------------------------------------------------------------------------
-TResult AtolFRBase::performCommand(const QByteArray & aCommandData, QByteArray & aAnswer, int aTimeout)
-{
-	return mProtocol.processCommand(aCommandData, aAnswer, aTimeout);
-}
-
-//--------------------------------------------------------------------------------
 TResult AtolFRBase::execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
 {
-	mProtocol.setPort(mIOPort);
-	mProtocol.setLog(mLog);
-
 	// для пересчета ошибки виртуального конца буфера Z-отчетов:
 	// если открываем чек, либо делаем выплату (- операции, открывающие смену) и сессия сейчас закрыта, то
 	// после открытия чека она будет открыта открытием чека. Тогда потом просто обновим время последнего открытия смены.
@@ -300,9 +302,12 @@ TResult AtolFRBase::execCommand(const QByteArray & aCommand, const QByteArray & 
 		return mLastCommandResult;
 	}
 
-	if (answer.size() < CAtolFR::MinUnPacketAnswerSize)
+	CAtolFR::SCommadData commandInfo = mCommandData[aCommand];
+	int minAnswerSize = int(commandInfo.error) + int(commandInfo.prefix);
+
+	if (answer.size() < minAnswerSize)
 	{
-		toLog(LogLevel::Error, "AtolFR: Data in packet is less than " + QString::number(CAtolFR::MinUnPacketAnswerSize));
+		toLog(LogLevel::Error, "AtolFR: Data in packet is less than " + QString::number(minAnswerSize));
 		return CommandResult::Answer;
 	}
 
@@ -342,9 +347,14 @@ TResult AtolFRBase::execCommand(const QByteArray & aCommand, const QByteArray & 
 		return CommandResult::Device;
 	}
 
-	mProcessingErrors.pop_back();
+	TResult result = processCommand(aCommand, aCommandData, aAnswer);
 
-	return processCommand(aCommand, aCommandData, aAnswer);
+	if (result)
+	{
+		mProcessingErrors.pop_back();
+	}
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -356,15 +366,12 @@ char AtolFRBase::getError(char aCommand, const QByteArray & aAnswer)
 //--------------------------------------------------------------------------------
 char AtolFRBase::getError(const QByteArray & aCommand, const QByteArray & aAnswer)
 {
-	char result = 0;
+	CAtolFR::SCommadData commandData = mCommandData[aCommand];
 
-	if (mCommandData[aCommand].error)
-	{
-		int index = mCommandData[aCommand].prefix ? 1 : 0;
-		result = aAnswer[index];
-	}
+	     if (!commandData.error) return ASCII::NUL;
+	else if (commandData.prefix) return aAnswer[1];
 
-	return result;
+	return aAnswer[0];
 }
 
 //--------------------------------------------------------------------------------
@@ -487,6 +494,22 @@ bool AtolFRBase::processAnswer(const QByteArray & aCommand, char aError)
 	}
 
 	return false;
+}
+
+//---------------------------------------------------------------------------
+bool AtolFRBase::checkTaxes()
+{
+	char mode = mMode;
+
+	if (!enterInnerMode(CAtolFR::InnerModes::Programming))
+	{
+		return false;
+	}
+
+	bool result = TSerialFRBase::checkTaxes();
+	enterInnerMode(mode);
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -617,7 +640,7 @@ void AtolFRBase::execTags(Tags::SLexeme & aTagLexeme, QVariant & aLine)
 //--------------------------------------------------------------------------------
 bool AtolFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * /*aFDNumber*/)
 {
-	if (!enterInnerMode(CAtolFR::InnerModes::Register) || (!openDocument(aPaymentData.back) && !mLocked))
+	if (!enterInnerMode(CAtolFR::InnerModes::Register) || (!openDocument(aPaymentData.payOffType) && !mLocked))
 	{
 		return false;
 	}
@@ -635,7 +658,7 @@ bool AtolFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 		{
 			result = setOFDParameters() && closeDocument(aPaymentData.payType);
 		}
-		else if (aPaymentData.back && (mLastError == CAtolFR::Errors::NoMoneyForPayout))
+		else if (aPaymentData.back() && (mLastError == CAtolFR::Errors::NoMoneyForPayout))
 		{
 			emitStatusCode(FRStatusCode::Error::NoMoney, EFRStatus::NoMoneyForSellingBack);
 		}
@@ -776,13 +799,11 @@ bool AtolFRBase::performZReport(bool aPrintDeferredReports)
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::openDocument(bool aBack)
+bool AtolFRBase::openDocument(EPayOffTypes::Enum aPayOffType)
 {
-	char documentType = aBack ? CAtolFR::DocumentTypes::SaleBack : CAtolFR::DocumentTypes::Sale;
-
 	QByteArray commandData;
 	commandData.append(CAtolFR::FiscalFlags::ExecutionMode);
-	commandData.append(documentType);
+	commandData.append(CAtolFR::PayOffTypeData[aPayOffType]);
 
 	if (processCommand(CAtolFR::Commands::OpenDocument, commandData))
 	{
@@ -1088,6 +1109,7 @@ bool AtolFRBase::setFRParameters()
 
 	return true;
 }
+
 //--------------------------------------------------------------------------------
 bool AtolFRBase::getFRParameter(const CAtolFR::FRParameters::SData & aData, QByteArray & aValue)
 {
@@ -1392,15 +1414,16 @@ bool AtolFRBase::execZReport(bool aAuto)
 
 	QVariantMap outData;
 	QByteArray data;
+	char FDType = CAtolFR::PayOffTypeData[EPayOffTypes::Debit];
 
-	if (getRegister(CAtolFR::Registers::PaymentCount, data, CAtolFR::DocumentTypes::Sale))
+	if (getRegister(CAtolFR::Registers::PaymentCount, data, FDType))
 	{
 		outData.insert(CFiscalPrinter::PaymentCount, data.toHex().toUShort());
 	}
 
 	double paymentAmount = 0;
 
-	if (getRegister(CAtolFR::Registers::PaymentAmount, data, CAtolFR::DocumentTypes::Sale, CAtolFR::PaymentSource::Cash))
+	if (getRegister(CAtolFR::Registers::PaymentAmount, data, FDType, CAtolFR::PaymentSource::Cash))
 	{
 		paymentAmount = qlonglong(data.toHex().toULongLong()) / 100.0;
 		outData.insert(CFiscalPrinter::PaymentAmount, paymentAmount);

@@ -16,7 +16,7 @@ namespace Driver {
 typedef QVector<int> TUnitData;
 
 //--------------------------------------------------------------------------------
-class IDispenser: virtual public IDevice
+class IDispenser: public IDevice
 {
 public:
 	/// Предметы выданы.

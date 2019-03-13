@@ -25,8 +25,8 @@ AFPFR::AFPFR()
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, true);
 
 	// налоги. Таблица налогов программно недоступна.
-	mTaxData.add(10, 0);
-	mTaxData.add(18, 1);
+	mTaxData.add(10, 1);
+	mTaxData.add(18, 0);
 	mTaxData.add( 0, 5);
 
 	// ошибки
@@ -93,20 +93,8 @@ bool AFPFR::updateParameters()
 		return false;
 	}
 
-	if (!processCommand(CAFPFR::Commands::GetFiscalTLVData, data[7], &data))
-	{
-		return false;
-	}
-
-	CFR::TTLVList totalTLVs = mFFEngine.parseSTLV(getBufferFromString(data[0].toString()));
-	TFiscalPaymentData totalTLVData;
-
-	for (auto it = totalTLVs.begin(); it != totalTLVs.end(); ++it)
-	{
-		mFFEngine.parseTLVData(CFR::STLV(it.key(), it.value()), totalTLVData);
-	}
-
-	if (totalTLVData.contains(CFiscalSDK::AgentFlagsReg) && !checkAgentFlags(char(totalTLVData[CFiscalSDK::AgentFlagsReg].toInt())))
+	if (!processCommand(CAFPFR::Commands::GetLastFiscalizationData, CFR::FiscalFields::AgentFlagsReg, &data, CAFPFR::EAnswerTypes::FInt) ||
+	    !checkAgentFlags(char(data[0].toInt())))
 	{
 		return false;
 	}
@@ -321,6 +309,12 @@ TResult AFPFR::processCommand(char aCommand, const CAFPFR::TData & aCommandData,
 TResult AFPFR::processCommand(char aCommand, const CAFPFR::TData & aCommandData, CAFPFR::TData * aAnswer, CAFPFR::EAnswerTypes::Enum aAnswerType)
 {
 	return processCommand(aCommand, aCommandData, aAnswer, CAFPFR::TAnswerTypes() << aAnswerType);
+}
+
+//--------------------------------------------------------------------------------
+TResult AFPFR::processCommand(char aCommand, const QVariant & aCommandData, CAFPFR::TData * aAnswer, CAFPFR::EAnswerTypes::Enum aAnswerType)
+{
+	return processCommand(aCommand, CAFPFR::TData() << aCommandData, aAnswer, CAFPFR::TAnswerTypes() << aAnswerType);
 }
 
 //--------------------------------------------------------------------------------
@@ -547,9 +541,14 @@ TResult AFPFR::processCommand(char aCommand, const CAFPFR::TData & aCommandData,
 		return CommandResult::Device;
 	}
 
-	mProcessingErrors.pop_back();
+	TResult result = processCommand(aCommand, aCommandData, aAnswer, aAnswerTypes);
 
-	return processCommand(aCommand, aCommandData, aAnswer, aAnswerTypes);
+	if (result)
+	{
+		mProcessingErrors.pop_back();
+	}
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -614,9 +613,9 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 		return false;
 	}
 
-	char command = aPaymentData.back ? CAFPFR::DocumentTypes::SaleBack : CAFPFR::DocumentTypes::Sale;
+	char FDType = CAFPFR::PayOffTypeData[aPaymentData.payOffType];
 
-	if (!processReceipt(aReceipt, false) || !openDocument(command))
+	if (!processReceipt(aReceipt, false) || !openDocument(FDType))
 	{
 		return false;
 	}
@@ -916,7 +915,7 @@ double AFPFR::getAmountInCash()
 //--------------------------------------------------------------------------------
 bool AFPFR::processPayout(double aAmount)
 {
-	if (!openDocument(CAFPFR::DocumentTypes::Payout))
+	if (!openDocument(CAFPFR::DocumentTypes::PayOut))
 	{
 		return false;
 	}

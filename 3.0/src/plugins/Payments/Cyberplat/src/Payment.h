@@ -54,6 +54,12 @@ protected:
 	/// Попытка проведения платежа.
 	virtual void performTransaction();
 
+	/// Проведение PAY части платежа
+	void performTransactionPay();
+
+	/// Пересчитываем кол-во попыток и время следующей
+	void updateNumberOfTries();
+
 	/// Критичекая ошибка, проведение платежа прекращается.
 	virtual bool isCriticalError(int aError) const;
 

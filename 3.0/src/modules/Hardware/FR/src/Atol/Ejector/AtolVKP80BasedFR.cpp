@@ -4,7 +4,10 @@
 
 //--------------------------------------------------------------------------------
 template class AtolVKP80BasedFR<AtolSerialFR>;
-template class AtolVKP80BasedFR<AtolOnlineFRBase>;
+template class AtolVKP80BasedFR<Atol2OnlineFRBase>;
+template class AtolVKP80BasedFR<Atol3OnlineFRBase>;
+
+using namespace SDK::Driver;
 
 //--------------------------------------------------------------------------------
 template <class T>
@@ -136,7 +139,7 @@ bool AtolVKP80BasedFR<T>::processReceipt(const QStringList & aReceipt, bool aPro
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool AtolVKP80BasedFR<T>::performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber)
+bool AtolVKP80BasedFR<T>::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * aFDNumber)
 {
 	char ejectorMode = mEjectorSettings.receipt | (char(mNextDocument) * mEjectorSettings.nextMask);
 	setEjectorMode(ejectorMode);
@@ -173,9 +176,9 @@ bool AtolVKP80BasedFR<T>::performZReport(bool aPrintDeferredReports)
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool AtolVKP80BasedFR<T>::openDocument(bool aBack)
+bool AtolVKP80BasedFR<T>::openDocument(EPayOffTypes::Enum aPayOffType)
 {
-	bool result = AtolEjectorFR<T>::openDocument(aBack);
+	bool result = AtolEjectorFR<T>::openDocument(aPayOffType);
 	char ejectorMode = mEjectorSettings.receipt | CEjectorAtolFR::PushLastDocument;
 
 	if (mLocked && !setEjectorMode(ejectorMode))

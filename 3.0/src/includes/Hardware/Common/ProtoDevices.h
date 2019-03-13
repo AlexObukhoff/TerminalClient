@@ -10,9 +10,9 @@
 #include "Hardware/Common/ProtoDevice.h"
 
 //--------------------------------------------------------------------------------
-class ProtoDeviceBase: virtual public SDK::Driver::IDevice, public ProtoDevice {};
+class ProtoDeviceBase: public ProtoDevice, public MetaDevice<SDK::Driver::IDevice> {};
 
-class ProtoPrinter: public ProtoDevice, public SDK::Driver::IPrinter { SET_DEVICE_TYPE(Printer) };
-class ProtoModem  : public ProtoDevice, public SDK::Driver::IModem   { SET_DEVICE_TYPE(Modem) };
+class ProtoPrinter: public ProtoDevice, public MetaDevice<SDK::Driver::IPrinter> { SET_DEVICE_TYPE(Printer) };
+class ProtoModem  : public ProtoDevice, public MetaDevice<SDK::Driver::IModem>   { SET_DEVICE_TYPE(Modem) };
 
 //--------------------------------------------------------------------------------

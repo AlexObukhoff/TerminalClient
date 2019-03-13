@@ -63,7 +63,7 @@ namespace CAsyncSerialPort
 	const char GeneralRS232[] = "ACPI";
 
 	/// Признаки невозможности ожидания результата GetOverlappedResult.
-	const QStringList CannotWaitResult = QStringList() << "FTDI" << "LPC USB VCom Port" << "ATOL" << "MSTAR";
+	const QStringList CannotWaitResult = QStringList() << "FTDI" << "LPC USB VCom Port" << "ATOL" << "MSTAR" << "CP210" << "STMicroelectronics";
 
 	/// Ошибки не логгировать.
 	const QVector<int> NoLogErrors = QVector<int>()
@@ -155,7 +155,7 @@ public:
 	virtual void getParameters(SDK::Driver::TPortParameters & aParameters);
 
 	/// Чтение данных.
-	virtual bool read(QByteArray & aData, int aTimeout = DefaultReadTimeout);
+	virtual bool read(QByteArray & aData, int aTimeout = DefaultReadTimeout, int aMinSize = 1);
 
 	/// Передача данных.
 	virtual bool write(const QByteArray & aData);

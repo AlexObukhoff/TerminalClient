@@ -162,6 +162,11 @@ bool ID003CashAcceptor::isConnected()
 		return false;
 	}
 
+	if (answerData.isEmpty() && isAutoDetecting())
+	{
+		return false;
+	}
+
 	QString answer = QString(answerData).trimmed() + ASCII::Space;
 	mVerified = false;
 

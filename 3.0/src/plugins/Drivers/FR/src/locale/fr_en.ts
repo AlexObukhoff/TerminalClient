@@ -156,13 +156,13 @@
     </message>
     <message>
         <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="36"/>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="53"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="56"/>
         <source>#wrong_dealer_tax_system</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="37"/>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="54"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="57"/>
         <source>#wrong_dealer_agent_flag</source>
         <translation type="unfinished"></translation>
     </message>
@@ -172,72 +172,87 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="39"/>
+        <source>#wrong_tax_on_payment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="40"/>
+        <source>#need_time_synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="41"/>
+        <source>#fs_virtual_end</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="44"/>
         <source>#fiscal_add_on_error</source>
         <translation>fiscal add-on error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="42"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="45"/>
         <source>#EKLZ_error</source>
         <translation>Fiscal memory device error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="43"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="46"/>
         <source>#fiscal_collapse</source>
         <translation>fiscal add-on error, printing is unavailable</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="44"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="47"/>
         <source>#FM_error</source>
         <translation>fiscal memory error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="45"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="48"/>
         <source>#z_buffer_error</source>
         <translation>Z-report buffer error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="46"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="49"/>
         <source>#z_buffer_overflow</source>
         <translation>Z-report buffer overflow</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="47"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="50"/>
         <source>#need_close_session</source>
         <translation>execute Z-report</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="48"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="51"/>
         <source>#fs_end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="49"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="52"/>
         <source>#need_ofd_connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="50"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="53"/>
         <source>#fs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="51"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="54"/>
         <source>#fs_closed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="52"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="55"/>
         <source>#no_money</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="55"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="58"/>
         <source>#cashier_inn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="56"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="59"/>
         <source>#taxes</source>
         <translation type="unfinished"></translation>
     </message>

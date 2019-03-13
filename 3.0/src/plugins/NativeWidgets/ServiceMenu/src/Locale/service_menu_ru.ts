@@ -398,7 +398,7 @@
         <translation>Нажмите на кнопку для печати дубликата чека инкассации</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentHistoryWindow.cpp" line="51"/>
+        <location filename="../GUI/EncashmentHistoryWindow.cpp" line="53"/>
         <source>#total</source>
         <translation>Всего</translation>
     </message>
@@ -482,17 +482,17 @@
         <translation type="obsolete">Во время инкассации произошла ошибка.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentServiceWindow.cpp" line="168"/>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="166"/>
         <source>#balance_printed</source>
         <translation>Баланс распечатан.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentServiceWindow.cpp" line="223"/>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="221"/>
         <source>#check_update_payload_settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentServiceWindow.cpp" line="164"/>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="162"/>
         <source>#balance_print_failed</source>
         <translation>Невозможно распечатать баланс.</translation>
     </message>
@@ -508,68 +508,68 @@
 <context>
     <name>EncashmentWindow</name>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="60"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="62"/>
         <source>#question_encash</source>
         <translation>Произвести инкассацию?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="60"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="62"/>
         <source>#question_encash_without_receipt</source>
         <translation>Печать чека невозможна. Произвести инкассацию?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="72"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="74"/>
         <source>#enter_stacker_id</source>
         <translation>Введите номер кассеты:</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="154"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="155"/>
         <source>#print_full_zreport</source>
         <translation>Печатать отложенные Z-отчеты?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="154"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="155"/>
         <source>#full_zreport_print_failed</source>
         <translation>Невозможно распечатать отложенные Z-отчеты. Будет распечатан Z-отчет.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="147"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="148"/>
         <source>#zreport_failed</source>
         <translation>Невозможно распечатать Z-отчёт.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="150"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="151"/>
         <source>#zreport_printed</source>
         <translation>Z-отчёт распечатан.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="107"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="109"/>
         <source>#encashment_complete</source>
         <translation>Инкассация произведена.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="115"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="117"/>
         <source>#encashment_complete_and_printed</source>
         <translation>Инкассация произведена и распечатана.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="111"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="113"/>
         <source>#encashment_print_failed</source>
         <translation>Инкассацция произведена без печати.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="116"/>
-        <location filename="../GUI/EncashmentWindow.cpp" line="167"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="118"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="168"/>
         <source>#printing</source>
         <translation>Подождите, идет печать...</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="127"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="129"/>
         <source>#encashment_error_try_later</source>
         <translation>Во время инкассации произошла ошибка. Повторите операцию через минуту.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="131"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="133"/>
         <source>#encashment_error</source>
         <translation>Во время инкассации произошла ошибка.</translation>
     </message>
@@ -1054,48 +1054,48 @@
 <context>
     <name>KeysManager</name>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="120"/>
+        <location filename="../Backend/KeysManager.cpp" line="137"/>
         <source>#ok</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="121"/>
+        <location filename="../Backend/KeysManager.cpp" line="138"/>
         <source>#network_error</source>
         <translation>Во время обмена с сервером произошла сетевая ошибка</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="122"/>
+        <location filename="../Backend/KeysManager.cpp" line="139"/>
         <source>#wrong_login_or_password</source>
         <translation> Неправильный логин или пароль для генерации карточки ключа</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="123"/>
+        <location filename="../Backend/KeysManager.cpp" line="140"/>
         <source>#wrong_server_answer</source>
         <translation>Сервер вернул неполную информацию</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="124"/>
+        <location filename="../Backend/KeysManager.cpp" line="141"/>
         <source>#wrong_local_time</source>
         <translation>Некорректное локальное время.
 Пожалуйста, синхронизируйте системное время аппарата.</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="125"/>
+        <location filename="../Backend/KeysManager.cpp" line="142"/>
         <source>#unknown_server_error</source>
         <translation>Неизвестная ошибка скрипта генерации карточки ключа</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="126"/>
+        <location filename="../Backend/KeysManager.cpp" line="143"/>
         <source>#key_pair_create_error</source>
         <translation>Ошибка при создании пары ключей из карточки</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="127"/>
+        <location filename="../Backend/KeysManager.cpp" line="144"/>
         <source>#key_export_error</source>
         <translation>Невозможно экспортировать ключ из хранилища</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="130"/>
+        <location filename="../Backend/KeysManager.cpp" line="147"/>
         <source>#unknown_error</source>
         <translation>Неизвестная ошибка</translation>
     </message>
@@ -1139,48 +1139,73 @@
         <translation>Сохранить и зарегистрировать ключи?
 Для сохранения ключей ПО будет перезапущено.</translation>
     </message>
+    <message>
+        <location filename="../GUI/KeysServiceWindow.cpp" line="102"/>
+        <source>#question_need_new_config</source>
+        <translation>Ключи  обновлены. Обновить файл конфигурации?</translation>
+    </message>
 </context>
 <context>
     <name>KeysWindow</name>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="73"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="54"/>
+        <source>#enable_keypair_change</source>
+        <translation>Разрешить смену номера пары ключей</translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/KeysWindow.ui" line="84"/>
+        <source>#change_keypair</source>
+        <translation>Создать пару с номером</translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/KeysWindow.ui" line="109"/>
         <source>#login</source>
         <translation>Логин</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="100"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="136"/>
         <source>#password</source>
         <translation>Пароль</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="146"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="163"/>
+        <source>#key_description</source>
+        <translation>Описание (можно оставить пустым)</translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/KeysWindow.ui" line="203"/>
         <source>#generate_keys</source>
         <translation>Сгенерировать ключи</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="185"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="242"/>
         <source>#successful_generation</source>
         <translation>Ключи были успешно сгенерированы со следующими параметрами:</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="195"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="252"/>
         <source>#sd</source>
         <translation>SD:</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="212"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="269"/>
         <source>#ap</source>
         <translation>AP:</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="229"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="286"/>
         <source>#op</source>
         <translation>OP:</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="289"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="346"/>
         <source>#repeat</source>
         <translation>Повторить</translation>
+    </message>
+    <message>
+        <location filename="../GUI/KeysWindow.cpp" line="109"/>
+        <source>#keypair_already_exist</source>
+        <translation>Пара ключей с таким номером уже существует. Перезаписать?</translation>
     </message>
 </context>
 <context>

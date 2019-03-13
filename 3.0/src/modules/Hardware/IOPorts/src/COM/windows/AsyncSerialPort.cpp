@@ -483,7 +483,7 @@ bool AsyncSerialPort::waitAsyncAction(DWORD & aResult, int aTimeout)
 }
 
 //--------------------------------------------------------------------------------
-bool AsyncSerialPort::read(QByteArray & aData, int aTimeout)
+bool AsyncSerialPort::read(QByteArray & aData, int aTimeout, int aMinSize)
 {
 	aData.clear();
 
@@ -492,12 +492,12 @@ bool AsyncSerialPort::read(QByteArray & aData, int aTimeout)
 		return false;
 	}
 
-	int readingTimeout = (aTimeout > CAsyncSerialPort::ReadingTimeout) ? CAsyncSerialPort::ReadingTimeout : aTimeout;
+	int readingTimeout = qMin(aTimeout, CAsyncSerialPort::ReadingTimeout);
 
 	QTime timer;
 	timer.start();
 
-	while ((timer.elapsed() < aTimeout) && aData.isEmpty())
+	while ((timer.elapsed() < aTimeout) && (aData.size() < aMinSize))
 	{
 		if (!processReading(aData, readingTimeout))
 		{

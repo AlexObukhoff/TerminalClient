@@ -267,6 +267,7 @@ QMap<int, SKeySettings> TerminalSettings::getKeys() const
 			key.publicKeyPath = value.second.get<QString>("public_key");
 			key.secretKeyPath = value.second.get<QString>("secret_key");
 			key.secretPassword = value.second.get<QString>("secret_password");
+			key.description = value.second.get<QString>("description", QString());
 			key.isValid = true;
 
 			if (keys.contains(key.id))
@@ -300,6 +301,7 @@ void TerminalSettings::setKey(const SKeySettings & aKey, bool aReplaceIfExists)
 		aPair.put("public_key", aKey.publicKeyPath);
 		aPair.put("secret_key", aKey.secretKeyPath);
 		aPair.put("secret_password", aKey.secretPassword);
+		aPair.put("description", aKey.description);
 	};
 
 	TPtree empty;
@@ -598,6 +600,16 @@ SServiceMenuPasswords TerminalSettings::getServiceMenuPasswords() const
 	}
 
 	return passwords;
+}
+
+//---------------------------------------------------------------------------
+SServiceMenuSettings TerminalSettings::getServiceMenuSettings() const
+{
+	SServiceMenuSettings settings;
+
+	settings.allowAnyKeyPair = mProperties.get("config.service_menu.alloy_any_keypair", false);
+
+	return settings;
 }
 
 //---------------------------------------------------------------------------

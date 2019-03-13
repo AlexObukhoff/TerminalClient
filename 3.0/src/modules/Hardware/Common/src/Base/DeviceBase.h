@@ -40,7 +40,7 @@ namespace CDevice
 
 //--------------------------------------------------------------------------------
 template <class T>
-class DeviceBase : public T, public MetaDevice
+class DeviceBase : public T
 {
 public:
 	DeviceBase();

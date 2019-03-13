@@ -91,13 +91,6 @@ namespace CShtrihOnlineFR
 		const char InAutomateMode    = '\x08';     // Признак установки в автомате (1221).
 	}
 
-	/// Типы фискальных чеков.
-	namespace DocumentTypes
-	{
-		const char Sale     = '\x01';    /// Продажа.
-		const char SaleBack = '\x02';    /// Возврат продажи.
-	}
-
 	/// Параметры ФР.
 	namespace FRParameters
 	{

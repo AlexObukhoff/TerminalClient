@@ -72,7 +72,7 @@ protected:
 	virtual void postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection);
 
 	/// Проверить параметры налога.
-	virtual bool checkTax(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData);
+	virtual bool checkTax(SDK::Driver::TVAT aVAT, CFR::Taxes::SData & aData);
 
 	/// Напечатать [и выдать] чек.
 	virtual bool processReceipt(const QStringList & aReceipt, bool aProcessing = true);

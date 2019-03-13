@@ -9,7 +9,7 @@ namespace SDK {
 namespace Driver {
 
 //--------------------------------------------------------------------------------
-class IPrinter: virtual public IDevice
+class IPrinter: public IDevice
 {
 public: // методы
 	/// Напечатать.

@@ -69,7 +69,7 @@
       </DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;AtolFRProtocol.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Widgets.lib;;AFPFRProtocol.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;Atol2FRProtocold.lib;Atol3FRProtocold.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Widgets.lib;;AFPFRProtocol.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -94,7 +94,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;AtolFRProtocol.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Widgets.lib;;AFPFRProtocol.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;Atol2FRProtocold.lib;Atol3FRProtocold.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Widgets.lib;;AFPFRProtocol.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -118,7 +118,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;OPOSSDKd.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;printersd.lib;frd.lib;PrimFRProtocold.lib;AtolFRProtocold.lib;ShtrihFRProtocold.lib;SparkFRProtocold.lib;KasbiFRProtocold.lib;Qt5AxContainerd.lib;Qt5AxBased.lib;Qt5Widgetsd.lib;AFPFRProtocold.lib;SysUtilsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;OPOSSDKd.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;printersd.lib;frd.lib;PrimFRProtocold.lib;Atol2FRProtocold.lib;Atol3FRProtocold.lib;ShtrihFRProtocold.lib;SparkFRProtocold.lib;KasbiFRProtocold.lib;Qt5AxContainerd.lib;Qt5AxBased.lib;Qt5Widgetsd.lib;AFPFRProtocold.lib;SysUtilsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

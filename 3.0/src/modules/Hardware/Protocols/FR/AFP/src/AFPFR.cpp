@@ -156,7 +156,7 @@ bool AFPFRProtocol::getAnswer(QByteArray & aAnswer, int aTimeout)
 	{
 		QByteArray data;
 
-		if (!mPort->read(data, 50))
+		if (!mPort->read(data, 20))
 		{
 			return false;
 		}

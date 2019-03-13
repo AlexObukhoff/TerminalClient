@@ -92,12 +92,27 @@ namespace CAFPFR
 
 	//------------------------------------------------------------------------------------------------
 	/// Типы документов.
+	class CPayOffTypeData: public CSpecification<SDK::Driver::EPayOffTypes::Enum, char>
+	{
+	public:
+		CPayOffTypeData()
+		{
+			using namespace SDK::Driver;
+
+			append(EPayOffTypes::Debit,      2);
+			append(EPayOffTypes::DebitBack,  3);
+			append(EPayOffTypes::Credit,     6);
+			append(EPayOffTypes::CreditBack, 7);
+		}
+	};
+
+	static CPayOffTypeData PayOffTypeData;
+
 	namespace DocumentTypes
 	{
-		const char NonFiscal = '\x01';    /// Нефискальный документ.
-		const char Sale      = '\x02';    /// Приход.
-		const char SaleBack  = '\x03';    /// Возврат прихода.
-		const char Payout    = '\x05';    /// Выплата.
+		const char NonFiscal = 1;    /// Нефискальный документ.
+		const char PayIn     = 4;    /// Внесение.
+		const char PayOut    = 5;    /// Выплата.
 	}
 
 	//------------------------------------------------------------------------------------------------
@@ -125,29 +140,30 @@ namespace CAFPFR
 	/// Команды.
 	namespace Commands
 	{
-		const char GetFRData             = '\x02';    /// Запрос сведений.
-		const char GetPrinterStatus      = '\x04';    /// Запрос статуса ПУ.
-		const char GetFRStatus           = '\x05';    /// Запрос статуса ФР.
-		const char GetFRParameter        = '\x11';    /// Получить параметр таблицы.
-		const char SetFRParameter        = '\x12';    /// Установить параметр таблицы.
-		const char GetFRDateTime         = '\x13';    /// Чтение даты-времени.
-		const char XReport               = '\x20';    /// Печать X-отчета.
-		const char ZReport               = '\x21';    /// Печать Z-отчета.
-		const char OpenDocument          = '\x30';    /// Открыть документ.
-		const char CloseDocument         = '\x31';    /// Закрыть документ.
-		const char CancelDocument        = '\x32';    /// Аннулировать документ.
-		const char PrintLine             = '\x40';    /// Печать строки.
-		const char Sale                  = '\x42';    /// Продажа.
-		const char Total                 = '\x47';    /// Оплата.
-		const char PayIO                 = '\x48';    /// Внесение/выплата.
-		const char OpenSession           = '\x54';    /// Открыть смену.
-		const char GetFSStatus           = '\xB0';    /// Запрос статуса ФН.
-		const char GetOFDStatus          = '\xB2';    /// Запрос параметров обмена с сервером ОФД.
-		const char GetFiscalizationTotal = '\xB6';    /// Получить итоги регистрации.
-		const char SetUserMail           = '\xB8';    /// Установить электронный адрес покупателя.
-		const char SetTaxSystem          = '\xBF';    /// Установить СНО.
-		const char SetAgentFlag          = '\xC0';    /// Установить флаг агента.
-		const char GetFiscalTLVData      = '\xC4';    /// Получить данные фискального документа в TLV-формате.
+		const char GetFRData                = '\x02';    /// Запрос сведений.
+		const char GetPrinterStatus         = '\x04';    /// Запрос статуса ПУ.
+		const char GetFRStatus              = '\x05';    /// Запрос статуса ФР.
+		const char GetFRParameter           = '\x11';    /// Получить параметр таблицы.
+		const char SetFRParameter           = '\x12';    /// Установить параметр таблицы.
+		const char GetFRDateTime            = '\x13';    /// Чтение даты-времени.
+		const char XReport                  = '\x20';    /// Печать X-отчета.
+		const char ZReport                  = '\x21';    /// Печать Z-отчета.
+		const char OpenDocument             = '\x30';    /// Открыть документ.
+		const char CloseDocument            = '\x31';    /// Закрыть документ.
+		const char CancelDocument           = '\x32';    /// Аннулировать документ.
+		const char PrintLine                = '\x40';    /// Печать строки.
+		const char Sale                     = '\x42';    /// Продажа.
+		const char Total                    = '\x47';    /// Оплата.
+		const char PayIO                    = '\x48';    /// Внесение/выплата.
+		const char OpenSession              = '\x54';    /// Открыть смену.
+		const char GetFSStatus              = '\xB0';    /// Запрос статуса ФН.
+		const char GetOFDStatus             = '\xB2';    /// Запрос параметров обмена с сервером ОФД.
+		const char GetFiscalizationTotal    = '\xB6';    /// Получить итоги регистрации.
+		const char SetUserMail              = '\xB8';    /// Установить электронный адрес покупателя.
+		const char SetTaxSystem             = '\xBF';    /// Установить СНО.
+		const char SetAgentFlag             = '\xC0';    /// Установить флаг агента.
+		const char GetFiscalTLVData         = '\xC4';    /// Получить данные фискального документа в TLV-формате.
+		const char GetLastFiscalizationData = '\xC7';    /// Получить данные последней фискализации из архива ФН.
 	}
 
 	//------------------------------------------------------------------------------------------------
@@ -162,16 +178,17 @@ namespace CAFPFR
 				using namespace EAnswerTypes;
 				using namespace Commands;
 
-				add(GetFRData,             TAnswerTypes() << Int  << Unknown);
-				add(GetPrinterStatus,      TAnswerTypes() << Int, 7 * 1000);    //TODO: если нет бумаги - запрос статуса идет 5000..5500 мс
-				add(GetFRStatus,           TAnswerTypes() << Int  << Int);
-				add(GetFRParameter,        TAnswerTypes() << Unknown);
-				add(GetFRDateTime,         TAnswerTypes() << Date << Time);
-				add(GetFSStatus,           TAnswerTypes() << Int  << Int  << Int  << Int  << Int  << Date << Time << String << Int << String << Int << Date << Int << Int);
-				add(GetOFDStatus,          TAnswerTypes() << Int  << Int  << Int  << Int  << Date << Time);
-				add(GetFiscalizationTotal, TAnswerTypes() << Date << Time << FInt << FInt << FInt << Int  << Int  << FInt   << FInt);
-				add(GetFiscalTLVData,      TAnswerTypes() << String, 5000);
-				//                                            0        1      2       3       4       5       6       7         8       9        10     11      12     13
+				add(GetFRData,                TAnswerTypes() << Int  << Unknown, 2000);
+				add(GetPrinterStatus,         TAnswerTypes() << Int, 7 * 1000);    //TODO: если нет бумаги - запрос статуса идет 5000..5500 мс
+				add(GetFRStatus,              TAnswerTypes() << Int  << Int);
+				add(GetFRParameter,           TAnswerTypes() << Unknown);
+				add(GetFRDateTime,            TAnswerTypes() << Date << Time);
+				add(GetFSStatus,              TAnswerTypes() << Int  << Int  << Int  << Int  << Int  << Date << Time << String << Int << String << Int << Date << Int << Int);
+				add(GetOFDStatus,             TAnswerTypes() << Int  << Int  << Int  << Int  << Date << Time);
+				add(GetFiscalizationTotal,    TAnswerTypes() << Date << Time << FInt << FInt << FInt << Int  << Int  << FInt   << FInt);
+				add(GetFiscalTLVData,         TAnswerTypes() << String, 5000);
+				add(GetLastFiscalizationData, TAnswerTypes() << Unknown);
+				//                                               0        1      2       3       4       5       6       7         8       9        10     11      12     13
 
 				add(ZReport,       10 * 1000);
 				add(OpenDocument,   3 * 1000);

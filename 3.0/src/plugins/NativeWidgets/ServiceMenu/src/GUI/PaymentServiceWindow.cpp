@@ -22,6 +22,7 @@
 #include<SDK/PaymentProcessor/Payment/Step.h>
 #include <SDK/PaymentProcessor/Payment/Parameters.h>
 #include <SDK/PaymentProcessor/Core/IPaymentService.h>
+#include <SDK/PaymentProcessor/Core/ReceiptTypes.h>
 
 // Проект
 #include "ServiceTags.h"
@@ -181,6 +182,13 @@ bool PaymentServiceWindow::shutdown()
 //----------------------------------------------------------------------------
 bool PaymentServiceWindow::activate()
 {
+	// Обновим состояние кнопок печати
+	bool canPrint = mBackend->getPaymentManager()->canPrint(PPSDK::CReceiptType::Payment);
+
+	btnPrintCurrentReceipt->setEnabled(canPrint);
+	btnPrintReceipts->setEnabled(canPrint);
+	btnPrintFilteredReceipts->setEnabled(canPrint);
+	
 	// Обновляем все данные по платежам
 	onUpdatePayments();
 

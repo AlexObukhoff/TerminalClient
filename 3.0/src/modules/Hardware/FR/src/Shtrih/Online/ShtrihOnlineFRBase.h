@@ -54,7 +54,7 @@ protected:
 	virtual bool getFiscalFields(quint32 aFDNumber, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
 
 	/// Продажа.
-	virtual bool sale(const SDK::Driver::SUnitData & aUnitData, bool aBack);
+	virtual bool sale(const SDK::Driver::SUnitData & aUnitData, SDK::Driver::EPayOffTypes::Enum aPayOffType);
 
 	/// Закрыть чек.
 	virtual bool closeDocument(double aSum, SDK::Driver::EPayTypes::Enum aPayType);

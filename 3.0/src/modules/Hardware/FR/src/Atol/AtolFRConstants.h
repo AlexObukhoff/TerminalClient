@@ -16,9 +16,6 @@ namespace CAtolFR
 	/// Количество товара.
 	const int GoodsCountByte = 1;
 
-	/// Минимальный размер распакованных данных.
-	const int MinUnPacketAnswerSize = 2;
-
 	/// Минимальный код ошибки.
 	const uchar MinErrorCode = 0x02;
 
@@ -106,12 +103,21 @@ namespace CAtolFR
 		const int XReportPoll = 500;
 	}
 
-	/// Тип фискального документа.
-	namespace DocumentTypes
+	class CPayOffTypeData: public CSpecification<SDK::Driver::EPayOffTypes::Enum, char>
 	{
-		const char Sale     = 1;    /// Продажа.   
-		const char SaleBack = 2;    /// Возврат продажи.
-	}
+	public:
+		CPayOffTypeData()
+		{
+			using namespace SDK::Driver;
+
+			append(EPayOffTypes::Debit,      1);
+			append(EPayOffTypes::DebitBack,  2);
+			append(EPayOffTypes::Credit,     4);
+			append(EPayOffTypes::CreditBack, 5);
+		}
+	};
+
+	static CPayOffTypeData PayOffTypeData;
 
 	/// Тип оплаты.
 	namespace PaymentSource

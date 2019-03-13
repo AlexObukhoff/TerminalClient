@@ -11,7 +11,8 @@
 
 //--------------------------------------------------------------------------------
 template class AtolEjectorFR<AtolSerialFR>;
-template class AtolEjectorFR<AtolOnlineFRBase>;
+template class AtolEjectorFR<Atol2OnlineFRBase>;
+template class AtolEjectorFR<Atol3OnlineFRBase>;
 
 //--------------------------------------------------------------------------------
 template <class T>

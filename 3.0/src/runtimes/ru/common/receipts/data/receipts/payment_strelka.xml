@@ -9,7 +9,7 @@
 	<string>[b]%DEALER_NAME%[/b]</string>
 	<string>ИНН [b]%DEALER_INN%[/b]</string>
 	<string if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') == 0">[b]НДС не облагается[/b]</string>
-	<else if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') > 0">[b]НДС 18%[/b]</else>
+	<else if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') > 0">[b]НДС 20%[/b]</else>
 	<string>Место нахождения:[b]%DEALER_BUSINESS_ADDRESS%[/b]</string>
 	<string>Терминал [b]%TERMINAL_NUMBER%[/b]</string>
 	<string>Адрес терминала: [b]%POINT_ADDRESS%[/b]</string>
@@ -38,7 +38,7 @@
 	<string>Номер билета/транзакции : %TRANSID%</string>
 	<string>Назначение платежа:"Перевод для оплаты </string>
 	<string>транспортных услуг"</string>
-	<string>Получатель: ООО НКО "УЭК"</string>
+	<string>Получатель: АО "РАСЧЕТНЫЕ РЕШЕНИЯ"</string>
 	<string>Пополнение электронного транспортного </string>
 	<string>приложения проведено успешно</string>
     <string>По вопросам записи и обслуживания</string>

@@ -1,5 +1,10 @@
 /* @file Базовый фискальный регистратор. */
 
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QSettings>
+#include <Common/QtHeadersEnd.h>
+
 // STL
 #include <numeric>
 
@@ -59,6 +64,8 @@ FRBase<T>::FRBase(): mFFEngine(mLog)
 	mCanProcessZBuffer = false;
 	mFFEngine.setCodec(mCodec);
 
+	mRecoverableErrors.insert(FRStatusCode::Error::Taxes);
+
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, false);
 	setConfigParameter(CHardwareSDK::FR::WithoutPrinting, CHardwareSDK::Values::Auto);
 	setConfigParameter(CHardware::CanSoftReboot, false);
@@ -92,9 +99,11 @@ void FRBase<T>::setInitialData()
 	mOFDDataError      = false;
 	mNeedCloseSession  = false;
 	mNotPrintingError  = false;
-	mWrongFiscalizationSettings = false;
 	mCashierINNError   = false;
 	mTaxError          = false;
+	mWrongTaxOnPayment = false;
+	mWrongFiscalizationSettings = false;
+	mNeedTimeSynchronization    = false;
 
 	mEKLZ              = true;
 	mWhiteSpaceZBuffer = -1;
@@ -184,6 +193,8 @@ bool FRBase<T>::isConnected()
 template <class T>
 void FRBase<T>::finaliseOnlineInitialization()
 {
+	checkTaxes();
+
 	TTaxSystemData taxSystemData;
 
 	foreach(char taxSystem, mTaxSystems)
@@ -268,11 +279,23 @@ void FRBase<T>::finaliseInitialization()
 		{
 			finaliseOnlineInitialization();
 		}
+
+		QStringList taxes;
+
+		foreach (auto taxData, mTaxData.data().values())
+		{
+			taxes << QString::number(taxData.deviceVAT);
+		}
+
+		auto pred = [] (const QString & arg1, const QString & arg2) -> bool { return arg1.toLower() > arg2.toLower(); };
+		qSort(taxes.begin(), taxes.end(), pred);
+		setDeviceParameter(CDeviceData::FR::Taxes, taxes.join(", "));
 	}
 
 	T::finaliseInitialization();
 
-	QVariant configData = mFFEngine.getConfigParameter(CHardware::ConfigData);
+	QVariantMap configData = mFFEngine.getConfigParameter(CHardware::ConfigData).toMap();
+	configData.insert(CHardwareSDK::FR::DealerVAT, getConfigParameter(CHardwareSDK::FR::DealerVAT));
 	setConfigParameter(CHardware::ConfigData, configData);
 
 	if (mConnected && mIsOnline)
@@ -391,12 +414,6 @@ bool FRBase<T>::checkAgentFlags(char aData)
 {
 	bool result = mFFEngine.checkAgentFlags(aData, mAgentFlags);
 
-	if (mAgentFlags.contains(char(EAgentFlags::Agent)) && (mAgentFlags.size() > 1))
-	{
-		mWrongFiscalizationSettings = true;
-		toLog(LogLevel::Error, mDeviceName + ": There are several agent flags and among them is the simple agent");
-	}
-
 	if (mAgentFlags.size() >= 1)
 	{
 		mOFDFiscalParameters.insert(CFR::FiscalFields::AgentFlagsReg);
@@ -447,13 +464,15 @@ void FRBase<T>::checkDateTime()
 
 	if (secs)
 	{
-		FSDifferenceDT += (secs < 0) ? "- " : "+ ";
+		bool fallsBehind = secs < 0;
+		FSDifferenceDT += fallsBehind ? "- " : "+ ";
 		secs = std::abs(secs);
 		int days = secs/CFR::SecsInDay;
 
 		if (days)
 		{
 			FSDifferenceDT += QString("%1 day(s), ").arg(days);
+			mNeedTimeSynchronization = fallsBehind;
 		}
 
 		QTime time = QTime(0, 0).addSecs(secs % CFR::SecsInDay);
@@ -523,21 +542,39 @@ bool FRBase<T>::checkTaxes()
 	if (mRegion == ERegion::RF)
 	{
 		CFR::adjustRFVAT(mTaxData.data());
-	}
 
-	for (auto it = mTaxData.data().begin(); it != mTaxData.data().end(); ++it)
-	{
-		it->description = CFR::VATTr[it.key()];
-
-		if (!checkTax(it.key(), it.value()))
+		if (mIsOnline && mTaxSystems.isEmpty())
 		{
-			mTaxError = true;
+			if (mInitialized == ERequestStatus::Success)
+			{
+				mTaxError = true;
+			}
 
-			// return !isFiscal();
+			return true;
 		}
 	}
 
-	return true;
+	mTaxError = false;
+	TVAT dealerVAT = TVAT(getConfigParameter(CHardwareSDK::FR::DealerVAT).toDouble());
+	bool dealerVATCritical = (dealerVAT == 18) || (dealerVAT == 20);
+
+	for (auto it = mTaxData.data().begin(); it != mTaxData.data().end(); ++it)
+	{
+		TVAT tax = it.key();
+		it->description = CFR::VATTr[tax];
+		it->deviceVAT = -1;
+
+		if (checkTax(tax, it.value()))
+		{
+			it->deviceVAT = tax;
+		}
+		else if ((mRegion != ERegion::RF) || (tax != 20) || dealerVATCritical)
+		{
+			mTaxError = true;
+		}
+	}
+
+	return !mTaxError || !isFiscal();
 }
 
 //---------------------------------------------------------------------------
@@ -671,6 +708,12 @@ void FRBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 {
 	T::cleanStatusCodes(aStatusCodes);
 
+	// фильтр виртуального конца ФН, если есть ошибка окончания ФН
+	if (aStatusCodes.contains(Error::FSEnd))
+	{
+		aStatusCodes.remove(Warning::FSVirtualEnd);
+	}
+
 	// фильтр ошибки ФН, если есть конкретная ошибка ФН или необходимо подключение к ОФД
 	if (aStatusCodes.contains(Error::FSEnd) || aStatusCodes.contains(Error::NeedOFDConnection))
 	{
@@ -798,13 +841,16 @@ bool FRBase<T>::processFiscal(const QStringList & aReceipt, const SPaymentData &
 		}
 	}
 
+	bool taxesOK = checkTaxesOnPayment(paymentData);
+	mWrongTaxOnPayment = mWrongTaxOnPayment || !taxesOK;
+
 	if (!checkAmountsOnPayment(paymentData) ||
 	    !checkSumInCash(paymentData)        ||
-	    !checkVATsOnPayment(paymentData)    ||
 	    !checkPayTypeOnPayment(paymentData) ||
 		!checkNotPrinting()                 ||
 	    !mFFEngine.checkTaxSystemOnPayment(paymentData) ||
-	    !mFFEngine.checkAgentFlagOnPayment(paymentData))
+	    !mFFEngine.checkAgentFlagOnPayment(paymentData) ||
+		!taxesOK)
 	{
 		return false;
 	}
@@ -844,6 +890,7 @@ bool FRBase<T>::processFiscalFields(quint32 aFDNumber, TFiscalPaymentData & aFPD
 {
 	if (!getFiscalFields(aFDNumber, aFPData, aPSData))
 	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to process fiscal fields for FD " + QString::number(aFDNumber));
 		return false;
 	}
 
@@ -1154,6 +1201,11 @@ EDocumentState::Enum FRBase<T>::checkDocumentState()
 template <class T>
 bool FRBase<T>::openFRSession()
 {
+	if (!mIsOnline)
+	{
+		return true;
+	}
+
 	ESessionState::Enum sessionState = getSessionState();
 
 	if (sessionState == ESessionState::Opened)
@@ -1187,17 +1239,19 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 		return false;
 	}
 
-	if (mZBufferFull)      aStatusCodes.insert(FRStatusCode::Warning::ZBufferFull);
-	if (mZBufferOverflow)  aStatusCodes.insert(FRStatusCode::Error::ZBufferOverflow);
-	if (mPrinterCollapse)  aStatusCodes.insert(PrinterStatusCode::Error::PrinterFRCollapse);
-	if (!mFiscalized)      aStatusCodes.insert(FRStatusCode::Warning::NotFiscalized);
-	if (mZBufferError)     aStatusCodes.insert(FRStatusCode::Error::ZBuffer);
-	if (mFiscalCollapse)   aStatusCodes.insert(FRStatusCode::Error::FiscalCollapse);
-	if (mNeedCloseSession) aStatusCodes.insert(FRStatusCode::Error::NeedCloseSession);
-	if (mNotPrintingError) aStatusCodes.insert(DeviceStatusCode::Error::Initialization);
-	if (mCashierINNError)  aStatusCodes.insert(FRStatusCode::Error::CashierINN);
-	if (mFSOfflineEnd)     aStatusCodes.insert(FRStatusCode::Error::NeedOFDConnection);
-	if (mTaxError)         aStatusCodes.insert(FRStatusCode::Warning::Taxes);
+	if (mZBufferFull)       aStatusCodes.insert(FRStatusCode::Warning::ZBufferFull);
+	if (mZBufferOverflow)   aStatusCodes.insert(FRStatusCode::Error::ZBufferOverflow);
+	if (mPrinterCollapse)   aStatusCodes.insert(PrinterStatusCode::Error::PrinterFRCollapse);
+	if (!mFiscalized)       aStatusCodes.insert(FRStatusCode::Warning::NotFiscalized);
+	if (mZBufferError)      aStatusCodes.insert(FRStatusCode::Error::ZBuffer);
+	if (mFiscalCollapse)    aStatusCodes.insert(FRStatusCode::Error::FiscalCollapse);
+	if (mNeedCloseSession)  aStatusCodes.insert(FRStatusCode::Error::NeedCloseSession);
+	if (mNotPrintingError)  aStatusCodes.insert(DeviceStatusCode::Error::Initialization);
+	if (mCashierINNError)   aStatusCodes.insert(FRStatusCode::Error::CashierINN);
+	if (mFSOfflineEnd)      aStatusCodes.insert(FRStatusCode::Error::NeedOFDConnection);
+	if (mTaxError)          aStatusCodes.insert(FRStatusCode::Error::Taxes);
+	if (mWrongTaxOnPayment) aStatusCodes.insert(FRStatusCode::Warning::WrongTaxOnPayment);
+	if (mNeedTimeSynchronization) aStatusCodes.insert(FRStatusCode::Warning::NeedTimeSynchronization);
 
 	if (mIsOnline)
 	{
@@ -1258,6 +1312,15 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 		{
 			aStatusCodes.insert(FRStatusCode::Warning::WrongFiscalizationSettings);
 		}
+
+		QString validityFSData = getDeviceParameter(CDeviceData::FS::ValidityData).toString();
+		QDate validityFSDate = QDate::fromString(validityFSData, CFR::DateLogFormat);
+		QDate currentDate = QDate::currentDate();
+
+		if (validityFSDate.isValid() && (currentDate >= validityFSDate))
+		{
+			aStatusCodes.insert(FRStatusCode::Warning::FSVirtualEnd);
+		}
 	}
 	else
 	{
@@ -1275,25 +1338,63 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 template <class T>
 void FRBase<T>::postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection)
 {
-	QDateTime currentDT = QDateTime::currentDateTime();
-	int year = currentDT.date().year();
-	ESessionState::Enum sessionState = getSessionState();
-
-	bool needCloseSession2018 = (currentDT >= CFR::ClosingSessionDTVAT20) && (year == 2018);
-	bool oldTax2019 = mTaxData.data().contains(18) && (year == 2019);
-
-	if (!mOperatorPresence && (mRegion == ERegion::RF) && (needCloseSession2018 || oldTax2019) && (sessionState != ESessionState::Closed))
+	if (mConnected && (mRegion == ERegion::RF))
 	{
-		execZReport(true);
+		checkTaxes2019();
+	}
 
-		if (oldTax2019)
+	T::postPollingAction(aNewStatusCollection, aOldStatusCollection);
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+void FRBase<T>::checkTaxes2019()
+{
+	QSettings settings;
+	int year = QDateTime::currentDateTime().date().year();
+	bool taxes2019Applied = false;
+
+	auto check = [&] (const QString & aChildKey, const QString & aKey) -> bool { QString key = aChildKey + "/" + aKey;
+		return settings.value(key, "").toString() == getDeviceParameter(aKey).toString().simplified(); };
+	auto set = [&] (const QString & aChildKey, const QString & aKey) { QString key = aChildKey + "/" + aKey;
+		settings.setValue(key, getDeviceParameter(aKey).toString().simplified()); };
+
+	foreach (auto childKey, settings.childGroups())
+	{
+		if ((childKey == mDeviceName) && check(childKey, CDeviceData::SerialNumber))
 		{
+			QString key = childKey + "/" + CDeviceData::FR::Taxes2019Applied;
+			taxes2019Applied = settings.value(key).toString() == CDeviceData::Values::Yes;
+		}
+	}
+
+	setDeviceParameter(CDeviceData::FR::Taxes2019Applied, taxes2019Applied);
+
+	bool canZReportWithoutPrinting = getConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, false).toBool() || getConfigParameter(CHardware::FR::CanZReportWithoutPrinting, false).toBool();
+	bool cannotReopenSession = !mOperatorPresence && !mCanProcessZBuffer && !canZReportWithoutPrinting;
+	/*
+	не переоткрываем смену, если:
+	1. ТК.
+	2. Нет буфера Z-отчетов.
+	3. ФР не умеет формировать ФД без ПФ вообще и Z-отчет в частности.
+	4. Смена незакрыта или ошибка получения статуса смены.
+	*/
+
+	if (!taxes2019Applied && (year == 2019) && !(cannotReopenSession && (checkSessionState() != ESessionState::Closed)))
+	{
+		execZReport(!mOperatorPresence);
+
+		if (openFRSession())
+		{
+			setDeviceParameter(CDeviceData::FR::Taxes2019Applied, CDeviceData::Values::Yes);
+
+			set(mDeviceName, CDeviceData::SerialNumber);
+			set(mDeviceName, CDeviceData::FR::Taxes2019Applied);
+
 			toLog(LogLevel::Normal, mDeviceName + ": Closing session with VAT 18%, trying to re-initialize");
 			reInitialize();
 		}
 	}
-
-	T::postPollingAction(aNewStatusCollection, aOldStatusCollection);
 }
 
 //--------------------------------------------------------------------------------
@@ -1331,6 +1432,20 @@ TVATs FRBase<T>::getActualVATs() const
 
 //--------------------------------------------------------------------------------
 template <class T>
+TVATs FRBase<T>::getDeviceVATs()
+{
+	TVATs result;
+
+	foreach (auto taxData, mTaxData.data())
+	{
+		result << taxData.deviceVAT;
+	}
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
 bool FRBase<T>::checkAmountsOnPayment(const SPaymentData & aPaymentData)
 {
 	if (aPaymentData.unitDataList.isEmpty())
@@ -1339,11 +1454,13 @@ bool FRBase<T>::checkAmountsOnPayment(const SPaymentData & aPaymentData)
 		return false;
 	}
 
+	QString payOffType = CFR::PayOffTypes[char(aPaymentData.payOffType)];
+
 	foreach(const SUnitData & unitData, aPaymentData.unitDataList)
 	{
 		if (unitData.sum <= 0)
 		{
-			toLog(LogLevel::Error, QString("%1: Failed to sale%2 for sum = %3").arg(mDeviceName).arg(aPaymentData.back ? " back" : "").arg(unitData.sum, 0, 'f', 2));
+			toLog(LogLevel::Error, mDeviceName + QString(": Failed to process %1 for sum = %2").arg(payOffType).arg(unitData.sum, 0, 'f', 2));
 			return false;
 		}
 	}
@@ -1355,21 +1472,22 @@ bool FRBase<T>::checkAmountsOnPayment(const SPaymentData & aPaymentData)
 template <class T>
 bool FRBase<T>::checkSumInCash(const SPaymentData & aPaymentData)
 {
-	if (!aPaymentData.back)
+	if (!aPaymentData.back())
 	{
 		return true;
 	}
 
 	double amountInCash = WorkingThreadProxy(&mThread).invokeMethod<double>(std::bind(&FRBase<T>::getAmountInCash, this));
 	TSum totalAmount = getTotalAmount(aPaymentData);
+	QString payOffType = CFR::PayOffTypes[char(aPaymentData.payOffType)];
 
 	if (amountInCash < 0)
 	{
-		toLog(LogLevel::Error, mDeviceName + ": Failed to get valid amount in cash for selling back");
+		toLog(LogLevel::Error, mDeviceName + ": Failed to get valid amount in cash for process " + payOffType);
 	}
 	else if (totalAmount > amountInCash)
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to sale back for %2 > %3 in cash").arg(mDeviceName).arg(totalAmount, 0, 'f', 2).arg(amountInCash, 0, 'f', 2));
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to process %1 for %2 > %3 in cash").arg(payOffType).arg(totalAmount, 0, 'f', 2).arg(amountInCash, 0, 'f', 2));
 
 		emitStatusCode(FRStatusCode::Error::NoMoney, EFRStatus::NoMoneyForSellingBack);
 
@@ -1381,13 +1499,13 @@ bool FRBase<T>::checkSumInCash(const SPaymentData & aPaymentData)
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool FRBase<T>::checkVATsOnPayment(const SPaymentData & aPaymentData)
+bool FRBase<T>::checkTaxesOnPayment(const SPaymentData & aPaymentData)
 {
-	TVATs errorVATs = getVATs(aPaymentData) - getActualVATs();
+	TVATs errorVATs = getVATs(aPaymentData) - getDeviceVATs();
 
 	if (!errorVATs.isEmpty())
 	{
-		toLog(LogLevel::Error, mDeviceName + ": The actual taxes does not contain VAT(s): " + getVATLog(errorVATs));
+		toLog(LogLevel::Error, mDeviceName + ": The device taxes does not contain VAT(s): " + getVATLog(errorVATs));
 		return false;
 	}
 
@@ -1413,8 +1531,7 @@ void FRBase<T>::addFiscalFieldsOnPayment(const SPaymentData & aPaymentData)
 	auto addMail = [&] (const QString & aField, const QVariant & aData) { QString mail = aData.toString();
 		if (mail.contains(QRegExp("^[^@]+@[^@]+$"))) mFFEngine.setConfigParameter(aField, mail); };
 
-	EPayOffTypes::Enum payOffType = aPaymentData.back ? EPayOffTypes::DebitBack : EPayOffTypes::Debit;
-	mFFEngine.setConfigParameter(CFiscalSDK::PayOffType, payOffType);
+	mFFEngine.setConfigParameter(CFiscalSDK::PayOffType, aPaymentData.payOffType);
 
 	QVariantMap receiptParameters = getConfigParameter(CHardwareSDK::Printer::ReceiptParameters).toMap();
 

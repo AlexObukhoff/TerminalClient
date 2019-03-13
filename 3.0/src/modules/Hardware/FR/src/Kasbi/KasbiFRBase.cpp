@@ -366,9 +366,14 @@ TResult KasbiFRBase::execCommand(const QByteArray & aCommand, const QByteArray &
 		return CommandResult::Device;
 	}
 
-	mProcessingErrors.pop_back();
+	result = processCommand(aCommand, aCommandData, aAnswer);
 
-	return processCommand(aCommand, aCommandData, aAnswer);
+	if (result)
+	{
+		mProcessingErrors.pop_back();
+	}
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------

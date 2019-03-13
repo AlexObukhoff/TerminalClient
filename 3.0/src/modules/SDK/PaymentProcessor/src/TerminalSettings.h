@@ -51,6 +51,7 @@ struct SKeySettings
 	QString publicKeyPath;  /// Путь к открытому ключу терминала.
 	QString secretKeyPath;  /// Путь к закрытому ключу терминала.
 	QString secretPassword; /// Кодовая фраза.
+	QString description;    /// Поле для заметок
 
 	SKeySettings() : isValid(false), id(-100), engine(0), serialNumber(0), bankSerialNumber(0) {}
 };
@@ -191,6 +192,14 @@ struct SServiceMenuPasswords
 };
 
 //----------------------------------------------------------------------------
+struct  SServiceMenuSettings
+{
+	bool allowAnyKeyPair; //Разрешаем генерировать ключи с произвольным номером пары
+
+	SServiceMenuSettings() : allowAnyKeyPair(false) {}
+};
+
+//----------------------------------------------------------------------------
 namespace CServiceMenuPasswords
 {
 	const char Service[] = "service_password";
@@ -265,6 +274,9 @@ public:
 	/// Пароли для доступа к сервисному меню.
 	SServiceMenuPasswords getServiceMenuPasswords() const;
 
+	/// Обобщенные настройки для сервисного меню.
+	SServiceMenuSettings getServiceMenuSettings() const;
+
 	/// Пути к данным.
 	SAppEnvironment getAppEnvironment() const;
 	void setAppEnvironment(const SAppEnvironment & aEnv);
@@ -288,9 +300,9 @@ public:
 	const QSet<int> & getCriticalErrors() const;
 
 private:
-	TerminalSettings(const TerminalSettings &);
-	void operator =(const TerminalSettings &);
+	Q_DISABLE_COPY(TerminalSettings)
 
+private:
 	TPtree & mProperties;
 
 	/// Список критичных ошибок процессинга

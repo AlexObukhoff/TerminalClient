@@ -111,6 +111,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Atol\Base\Atol3\Atol3FRBase.cpp" />
     <ClCompile Include="..\src\Atol\Base\AtolSerialFR.cpp" />
     <ClCompile Include="..\src\Atol\Ejector\AtolEjectorFR.cpp" />
     <ClCompile Include="..\src\Atol\AtolModelData.cpp" />
@@ -155,6 +156,9 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRStatusesDescriptions.h" />
     <ClInclude Include="..\src\Atol\AtolCodec.h" />
     <ClInclude Include="..\src\Atol\AtolDataTypes.h" />
+    <ClInclude Include="..\src\Atol\Base\Atol2FRBase.h" />
+    <ClInclude Include="..\src\Atol\Base\Atol3\Atol3FRBase.h" />
+    <ClInclude Include="..\src\Atol\Base\Atol3\Atol3FRBaseConstants.h" />
     <ClInclude Include="..\src\Atol\Base\AtolFR.h" />
     <ClInclude Include="..\src\Atol\Base\AtolFRBaseConstants.h" />
     <ClInclude Include="..\src\Atol\Base\AtolSerialFR.h" />

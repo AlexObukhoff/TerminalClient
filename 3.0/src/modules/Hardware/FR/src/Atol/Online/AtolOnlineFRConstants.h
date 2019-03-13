@@ -51,7 +51,7 @@ namespace CAtolOnlineFR
 	const int MaxRepeatingFiscalData = 3;
 
 	/// Пауза после перезагрузки по питанию, [мс].
-	const int RebootPause = 1000;
+	const int RebootPause = 20 * 1000;
 
 	/// Ожидание выхода из анабиоза, [мс].
 	const SWaitingData RebootWaiting = SWaitingData(1000, 20000);
@@ -104,7 +104,7 @@ namespace CAtolOnlineFR
 		const char GetOFDParameter       = '\xE9';    /// Получение реквизита.
 		const char PrintDeferredZReports = '\x95';    /// Распечатать отложенные Z-отчеты.
 		const char ClearZBuffer          = '\x97';    /// Очистить буфер Z-отчетов.
-		const char Reboot                = '\xCE';    /// Перезагрузить ФР по питанию.
+		const char Reboot[]              = "\xCE\x41";    /// Перезагрузить ФР по питанию.
 		const char GetInternalFirmware[] = "\x9D\x91";    /// Получить внутренний номер прошивки.
 
 		/// Коды команд ФН-а.

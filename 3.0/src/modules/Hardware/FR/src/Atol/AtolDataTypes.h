@@ -34,11 +34,11 @@ namespace CAtolFR
 	{
 		bool error;     /// Код ошибки бывает в ответе
 		bool status;    /// Команда содержится в запросе статуса
-		bool prefix;    /// Префикс бывает в ответе
 		int timeout;    /// Таймаут на ENQ запроса чтения от устройства
+		bool prefix;    /// Префикс бывает в ответе
 
-		SCommadData() : error(true), status(false), prefix(true), timeout(0) {}
-		SCommadData(bool aError, bool aStatus, bool aPrefix, int aTimeout) : error(aError), status(aStatus), prefix(aPrefix), timeout(aTimeout) {}
+		SCommadData() : error(true), status(false), timeout(0), prefix(false) {}
+		SCommadData(bool aError, bool aStatus, int aTimeout, bool aPrefix) : error(aError), status(aStatus), timeout(aTimeout), prefix(aPrefix) {}
 	};
 
 	/// Параметры.
@@ -92,11 +92,11 @@ namespace CAtolFR
 	public:
 		CommandData()
 		{
-			setDefault(SCommadData(true, false, true, Timeouts::CommandDefault));
+			setDefault(SCommadData(true, false, Timeouts::CommandDefault, true));
 		}
 
-		void add(char aCommand, bool aError = true, bool aStatus = false, bool aPrefix = true) { append(QByteArray(1, aCommand), SCommadData(aError, aStatus, aPrefix, Timeouts::CommandDefault)); }
-		void add(char aCommand, int aTimeout, bool aStatus = false) { append(QByteArray(1, aCommand), SCommadData(true, aStatus, true, aTimeout)); }
+		void add(char aCommand, bool aError = true, bool aStatus = false, bool aPrefix = true) { append(QByteArray(1, aCommand), SCommadData(aError, aStatus, Timeouts::CommandDefault, aPrefix)); }
+		void add(char aCommand, int aTimeout, bool aStatus = false) { append(QByteArray(1, aCommand), SCommadData(true, aStatus, aTimeout, true)); }
 	};
 
 	/// Структура для статических данных моделей.
