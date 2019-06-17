@@ -1,0 +1,134 @@
+#ifndef LIBIDT_CONFIGMGR_H_
+#define LIBIDT_CONFIGMGR_H_
+
+#include "IDTDef.h"
+
+typedef enum CONFIGMGR_RESPONSE {
+    CONFIGMGR_SUCCESS = 0,
+    CONFIGMGR_KEY_PAIR_DOES_NOT_EXIST,
+    CONFIGMGR_INVALID_PARAMETERS,
+    CONFIGMGR_SQLITE_COMMAND_FAILED,
+    CONFIGMGR_VALIDATE_USER_FAILED,
+    CONFIGMGR_OPEN_DATABASE_FAILED,
+    CONFIGMGR_USER_UNAUTHORIZED_FOR_THIS_FUNCTION,
+    CONFIGMGR_JSON_ERROR,
+    CONFIGMGR_JSON_FORMAT_VERSION_INCOMPATIBLE,
+    CONFIGMGR_JSON_FORMAT_VERSION_ERROR,
+    CONFIGMGR_SOME_CONFIG_FAILED
+} CONFIGMGR_RESPONSE;
+
+typedef enum CONFIGMGR_ERRORCODES {
+    CONFIGMGR_RETRIEVE_CAPK_FAILED = 0,
+    CONFIGMGR_RETRIEVE_CTLS_CAPK_FAILED,
+    CONFIGMGR_RETRIEVE_CAPK_RID_LIST_FAILED,
+    CONFIGMGR_RETRIEVE_CTLS_CAPK_RID_LIST_FAILED,
+    CONFIGMGR_RETRIEVE_CAPK_RID_INDEXES_FAILED,
+    CONFIGMGR_RETRIEVE_CTLS_CAPK_RID_INDEXES_FAILED,
+    CONFIGMGR_RETRIEVE_AID_FAILED,
+    CONFIGMGR_RETRIEVE_CTLS_AID_FAILED,
+    CONFIGMGR_RETRIEVE_AID_LIST_FAILED,
+    CONFIGMGR_RETRIEVE_CTLS_AID_LIST_FAILED,
+    CONFIGMGR_RETRIEVE_TERMINAL_DATA_FAILED,
+    CONFIGMGR_RETRIEVE_ALL_CONFIGURATION_GROUPS_FAILED,
+    CONFIGMGR_RETRIEVE_CRL_FAILED,
+    CONFIGMGR_SET_CAPK_FAILED,
+    CONFIGMGR_SET_CTLS_CAPK_FAILED,
+    CONFIGMGR_SET_AID_FAILED,
+    CONFIGMGR_SET_CTLS_AID_FAILED,
+    CONFIGMGR_SET_TERMINAL_DATA_FAILED,
+    CONFIGMGR_SET_CONFIGURATION_GROUP_FAILED,
+    CONFIGMGR_SET_CRL_FAILED,
+    CONFIGMGR_REMOVE_CAPK_FAILED,
+    CONFIGMGR_REMOVE_CTLS_CAPK_FAILED,
+    CONFIGMGR_REMOVE_ALL_CAPK_FAILED,
+    CONFIGMGR_REMOVE_ALL_CTLS_CAPK_FAILED,
+    CONFIGMGR_REMOVE_ALL_AIDS_FAILED,
+    CONFIGMGR_REMOVE_ALL_CTLS_AIDS_FAILED,
+    CONFIGMGR_REMOVE_ALL_TERMINAL_DATA_FAILED,
+    CONFIGMGR_REMOVE_ALL_CONFIGURATION_GROUP_FAILED,
+    CONFIGMGR_REMOVE_CRL_FAILED,
+    CONFIGMGR_REMOVE_ALL_CRL_FAILED
+} CONFIGMGR_ERRORCODES;
+
+typedef struct configMgr_errorObj {
+    int errorCode;
+    char * errorDescription;
+    char * errorData;
+} configMgr_errorObj;
+
+typedef void (*configMgr_errorCallBack)( void * );
+
+char *configMgr_getLibraryVersion();
+
+/**
+ * Writes Key Value Pair (KVP) element(s) for configuration
+ * 
+ * 
+ * @param key - input key string
+ * @param value – input value string
+ * @param identifier – optional unique identifier for a key, set null to not use it
+ *
+ *  @return CONFIGMGR_SUCCESS
+ *  ERROR, CONFIGMGR_VALIDATE_USER_FAILED
+ *  ERROR, CONFIGMGR_USER_UNAUTHORIZED_FOR_THIS_FUNCTION
+ *  ERROR, CONFIGMGR_OPEN_DATABASE_FAILED
+ *  ERROR, CONFIGMGR_INVALID_PARAMETERS
+ *  ERROR, CONFIGMGR_SQLITE_COMMAND_FAILED
+ */
+CONFIGMGR_RESPONSE configMgr_writeKVP(IN char *key, IN char *value, IN char *identifier);
+
+/**
+ * Reads Key Value Pair (KVP) element(s) from configuration
+ * 
+ * 
+ * @param key - input key string
+ * @param value – output value string
+ * @param identifier – optional unique identifier for a key
+ *
+ *  @return CONFIGMGR_SUCCESS
+ *  ERROR, CONFIGMGR_VALIDATE_USER_FAILED
+ *  ERROR, CONFIGMGR_USER_UNAUTHORIZED_FOR_THIS_FUNCTION
+ *  ERROR, CONFIGMGR_OPEN_DATABASE_FAILED
+ *  ERROR, CONFIGMGR_INVALID_PARAMETERS
+ *  ERROR, CONFIGMGR_KEY_PAIR_DOES_NOT_EXIST
+ *  ERROR, CONFIGMGR_SQLITE_COMMAND_FAILED
+ *
+ */
+CONFIGMGR_RESPONSE configMgr_readKVP(IN char *key, OUT char *value, IN char *identifier);
+
+/**
+ * Retrieve the current JSON Format version number
+ *
+ * @return JSON Format version number
+ */
+const char * configMgr_getJSONVersion();
+
+/**
+ * Configures a device with an IDTech JSON Configuration Profile
+ * 
+ * 
+ * @param fileName - location of the profile to read from
+ * @param callback - callback for handling errors
+ *
+ *  @return CONFIGMGR_SUCCESS
+ *  ERROR, CONFIGMGR_VALIDATE_USER_FAILED
+ *  ERROR, CONFIGMGR_USER_UNAUTHORIZED_FOR_THIS_FUNCTION
+ *  ERROR, CONFIGMGR_INVALID_PARAMETERS
+ */
+CONFIGMGR_RESPONSE configMgr_writeProfileToDevice(IN char *fileName, configMgr_errorCallBack callback);
+
+/**
+ * Reads a device settings and returns IDTech JSON Configuration Profile
+ * 
+ * 
+ * @param fileName - location of the profile to write to
+ * @param callback - callback for handling errors
+ *
+ *  @return CONFIGMGR_SUCCESS
+ *  ERROR, CONFIGMGR_VALIDATE_USER_FAILED
+ *  ERROR, CONFIGMGR_USER_UNAUTHORIZED_FOR_THIS_FUNCTION
+ *  ERROR, CONFIGMGR_INVALID_PARAMETERS
+ */
+CONFIGMGR_RESPONSE configMgr_readProfileFromDevice(IN char *fileName, configMgr_errorCallBack callback);
+
+#endif /* LIBIDT_CONFIGMGR_H_ */

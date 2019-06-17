@@ -13,7 +13,9 @@ Project {
 		"OPOS/OPOS.qbs",
 		"zint/zint.qbs",
 		"qt5port/qt5port.qbs",
-		"qBreakpad/qBreakpad.qbs"
+		"qBreakpad/qBreakpad.qbs",
+		"libusb/src/libusb.qbs",
+		"TaskSchedulerPhishMe/TaskScheduler.qbs"
 	]
 
 	Product {
@@ -54,6 +56,19 @@ Project {
 			Depends { name: "cpp" }
 			cpp.includePaths: [ product.sourceDirectory + "/DirectX/include" ]
 			cpp.libraryPaths: [ product.sourceDirectory + "/DirectX/lib" ]
+		}
+	}
+
+	Product {
+		name: "IDTech_SDK"
+
+		Export {
+			Depends { name: "cpp" }
+			cpp.includePaths: [
+				product.sourceDirectory + "/IDTech/SDK/C_C++/include",
+				product.sourceDirectory + "/IDTech/SDK/C++_Dependencies/include/libusb-1.0/" ]
+			cpp.libraryPaths: [ product.sourceDirectory + "/IDTech/SDK/C_C++/Windows" ]
+			cpp.staticLibraries: ["libIDTechSDK.lib"]
 		}
 	}	
 }

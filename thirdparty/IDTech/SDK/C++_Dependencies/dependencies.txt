@@ -1,0 +1,102 @@
+### Dependency list for SDK:
+
+IDTechSDK:
+    Pisces:
+        dl
+        pthread
+        vpu_trace
+        vre_ui
+        vre_picc
+        vre_pci
+        vre_ser
+        vre_appmgr
+        vpu_buffer
+        vpu_system
+        vpu_event
+        vpu_log
+        vpu_vector
+        rt
+        vre_cfg
+        vpu_quikparse
+
+
+IDT_comm:
+    Pisces:
+        IDTechSDK
+        curl
+
+IDT_compress:
+    Pisces:
+        archive
+
+IDT_configMgr:
+    Pisces:
+        sqlite3
+        IDT_tlv
+        IDT_security
+        IDTechSDK
+
+IDT_crypto:
+    Pisces:
+        IDTechSDK
+        crypto
+
+IDT_devMgr:
+    Pisces:
+        sqlite3
+        IDTechSDK
+
+IDT_iso8583:
+    Pisces:
+        IDTechSDK
+
+IDT_log:
+    Pisces:
+        IDTechSDK
+
+IDT_logMgr:
+    Pisces:
+        sqlite3
+        IDT_comm
+        IDT_security
+        IDT_log
+
+IDT_resMgr:
+    Pisces:
+        IDTechSDK
+        IDT_security
+        IDT_crypto
+
+IDT_security:
+    Pisces:
+        crypto
+        sqlite3
+        IDTechSDK
+        IDT_crypto
+
+IDT_tlv:
+    Pisces:
+
+### List of third party dependencies:
+
+dl
+pthread
+curl
+archive
+sqlite3
+crypto
+
+vpu_trace
+vre_ui
+vre_picc
+vre_pci
+vre_ser
+vre_appmgr
+vpu_buffer
+vpu_system
+vpu_event
+vpu_log
+vpu_vector
+rt
+vre_cfg
+vpu_quikparse
