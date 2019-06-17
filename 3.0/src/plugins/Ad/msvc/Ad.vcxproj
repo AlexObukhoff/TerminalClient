@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -192,7 +192,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtSql4.lib;QtScript4.lib;QtNetwork4.lib;Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;AdBackend.lib;PaymentBase.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;QtSql4.lib;QtScript4.lib;QtNetwork4.lib;Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;AdBackend.lib;PaymentBase.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);$(THIRDPARTY_BIN_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -220,7 +220,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtSql4.lib;QtScript4.lib;QtNetwork4.lib;Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;AdBackend.lib;PaymentBase.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;QtSql4.lib;QtScript4.lib;QtNetwork4.lib;Log.lib;PluginSDK.lib;NetworkTaskManager.lib;PaymentProcessorSDK.lib;AdBackend.lib;PaymentBase.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);$(THIRDPARTY_BIN_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -247,7 +247,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCored4.lib;QtSqld4.lib;QtScriptd4.lib;QtNetworkd4.lib;Logd.lib;PluginSDKd.lib;NetworkTaskManagerd.lib;PaymentProcessorSDKd.lib;AdBackendd.lib;PaymentBased.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCored4.lib;QtSqld4.lib;QtScriptd4.lib;QtNetworkd4.lib;Logd.lib;PluginSDKd.lib;NetworkTaskManagerd.lib;PaymentProcessorSDKd.lib;AdBackendd.lib;SysUtilsd.lib;PaymentBased.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR);$(THIRDPARTY_BIN_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

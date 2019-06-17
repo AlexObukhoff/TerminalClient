@@ -1,6 +1,9 @@
 /* @file Окно инкассации. */
 
+// Qt
+#include <Common/QtHeadersBegin.h>
 #include <QtCore/QSettings>
+#include <Common/QtHeadersEnd.h>
 
 // SDK
 #include <SDK/PaymentProcessor/Core/ReceiptTypes.h>
@@ -8,10 +11,11 @@
 #include <SDK/PaymentProcessor/Core/IService.h>
 #include <SDK/PaymentProcessor/Core/ISettingsService.h>
 #include <SDK/PaymentProcessor/Settings/UserSettings.h>
-#include <SDK/PaymentProcessor/Core/ServiceParameters.h>
-#include <SDK/PaymentProcessor/Core/ITerminalService.h>
 #include <SDK/PaymentProcessor/Settings/TerminalSettings.h>
 #include <SDK/PaymentProcessor/Core/IFundsService.h>
+
+//
+#include <SysUtils/ISysUtils.h>
 
 // Проект
 #include "Backend/MessageBox.h"
@@ -50,7 +54,7 @@ EncashmentServiceWindow::EncashmentServiceWindow(ServiceMenuBackend * aBackend, 
 	
 	if (QFile::exists(mPayloadSettingsPath))
 	{
-		QSettings settings(mPayloadSettingsPath, QSettings::IniFormat);
+		QSettings settings(ISysUtils::rmBOM(mPayloadSettingsPath), QSettings::IniFormat);
 
 		foreach(QString deviceGuid, settings.childGroups())
 		{
@@ -62,10 +66,6 @@ EncashmentServiceWindow::EncashmentServiceWindow(ServiceMenuBackend * aBackend, 
 		connect(ui.btnPayload, SIGNAL(clicked()), this, SLOT(doPayload()));
 	}
 		
-	connect(ui.btnEncash, SIGNAL(clicked()), this, SLOT(doEncashment()));
-	connect(ui.btnPrintBalance, SIGNAL(clicked()), this, SLOT(onPrintBalance()));
-	connect(ui.btnPrintZReport, SIGNAL(clicked()), this, SLOT(onPrintZReport()));
-
 	mHistoryWindow = new EncashmentHistoryWindow(aBackend, this);
 	ui.gridLayoutEncashment->addWidget(mHistoryWindow, 2, 0);
 }
@@ -102,7 +102,8 @@ void EncashmentServiceWindow::updateUI()
 //------------------------------------------------------------------------
 bool EncashmentServiceWindow::activate()
 {
-	connect(mBackend->getPaymentManager(), SIGNAL(receiptPrinted(qint64, bool)), this, SLOT(onPeceiptPrinted(qint64, bool)));
+	EncashmentWindow::activate();
+
 	connect(mBackend->getHardwareManager(), SIGNAL(deviceStatusChanged(const QString &, const QString &, const QString &, SDK::Driver::EWarningLevel::Enum)), 
 		this, SLOT(onDeviceStatusChanged(const QString &, const QString &, const QString &, SDK::Driver::EWarningLevel::Enum)));
 
@@ -110,15 +111,24 @@ bool EncashmentServiceWindow::activate()
 
 	mHistoryWindow->updateHistory();
 
+	connect(ui.btnEncash, SIGNAL(clicked()), this, SLOT(doEncashment()));
+	connect(ui.btnPrintBalance, SIGNAL(clicked()), this, SLOT(onPrintBalance()));
+	connect(ui.btnPrintZReport, SIGNAL(clicked()), this, SLOT(onPrintZReport()));
+
 	return true;
 }
 
 //------------------------------------------------------------------------
 bool EncashmentServiceWindow::deactivate()
 {
-	disconnect(mBackend->getPaymentManager(), SIGNAL(receiptPrinted(qint64, bool)), this, SLOT(onPeceiptPrinted(qint64, bool)));
+	EncashmentWindow::deactivate();
+	
 	disconnect(mBackend->getHardwareManager(), SIGNAL(deviceStatusChanged(const QString &, const QString &, const QString &, SDK::Driver::EWarningLevel::Enum)), 
 		this, SLOT(onDeviceStatusChanged(const QString &, const QString &, const QString &, SDK::Driver::EWarningLevel::Enum)));
+
+	disconnect(ui.btnEncash, SIGNAL(clicked()), this, SLOT(doEncashment()));
+	disconnect(ui.btnPrintBalance, SIGNAL(clicked()), this, SLOT(onPrintBalance()));
+	disconnect(ui.btnPrintZReport, SIGNAL(clicked()), this, SLOT(onPrintZReport()));
 
 	return EncashmentWindow::deactivate();
 }

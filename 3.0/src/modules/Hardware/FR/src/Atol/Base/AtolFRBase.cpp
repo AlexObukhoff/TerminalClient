@@ -1,4 +1,4 @@
-/* @file ФР АТОЛ и Пэй Киоск. */
+/* @file Базовый ФР на протоколе АТОЛ. */
 
 // Qt
 #include <Common/QtHeadersBegin.h>
@@ -9,6 +9,7 @@
 #include "AtolFRBase.h"
 
 using namespace SDK::Driver;
+using namespace ProtocolUtils;
 
 //--------------------------------------------------------------------------------
 AtolFRBase::AtolFRBase()
@@ -32,7 +33,6 @@ AtolFRBase::AtolFRBase()
 	mLineFeed = false;
 	mMode = CAtolFR::InnerModes::NoMode;
 	mSubmode = CAtolFR::InnerSubmodes::NoSubmode;
-	mFRBuild = 0;
 	mLocked = false;
 	mNonNullableAmount = 0;
 
@@ -64,13 +64,21 @@ AtolFRBase::AtolFRBase()
 	mCommandData.add(ExitFromMode,   10 * 1000);
 	mCommandData.add(OpenFRSession,  10 * 1000);
 
+	// ошибки
+	mUnprocessedErrorData.add(CAtolFR::Commands::GetFRParameter, CAtolFR::Errors::WrongSeriesNumber);
+
 	// налоги
 	mTaxData.add(10, 2);
 	mTaxData.add(18, 3);
 	mTaxData.add( 0, 4);
+}
 
-	// ошибки
-	mErrorData = PErrorData(new FRError::CData());
+//--------------------------------------------------------------------------------
+void AtolFRBase::setInitialData()
+{
+	TSerialFRBase::setInitialData();
+
+	mFRBuild = 0;
 }
 
 //--------------------------------------------------------------------------------
@@ -89,7 +97,7 @@ QDateTime AtolFRBase::getDateTime()
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::checkTaxValue(TVAT aVAT, const CFR::Taxes::SData & aData, const CAtolFR::FRParameters::TData & aFRParameterData, bool aCanCorrectTaxValue)
+bool AtolFRBase::checkTaxValue(TVAT aVAT, CFR::Taxes::SData & aData, const CAtolFR::FRParameters::TData & aFRParameterData, bool aCanCorrectTaxValue)
 {
 	QByteArray taxData;
 
@@ -105,6 +113,10 @@ bool AtolFRBase::checkTaxValue(TVAT aVAT, const CFR::Taxes::SData & aData, const
 	if (!OK)
 	{
 		FRValue = -1;
+	}
+	else
+	{
+		aData.deviceVAT = FRValue / 100;
 	}
 
 	int value = int(aVAT * 100);
@@ -126,51 +138,6 @@ bool AtolFRBase::checkTaxValue(TVAT aVAT, const CFR::Taxes::SData & aData, const
 	}
 
 	return true;
-}
-
-//--------------------------------------------------------------------------------
-void AtolFRBase::getSectionNames()
-{
-	TSectionNames sectionNames;
-	ushort group = 1;
-	char lastError = 0;
-	TResult lastCommandResult = CommandResult::OK;
-
-	QTextCodec * codec = CodecByName[CHardware::Codepages::ATOL];
-
-	do
-	{
-		QByteArray data;
-
-		if (!getFRParameter(CAtolFR::FRParameters::SectionName(group++), data) || data.isEmpty())
-		{
-			toLog(LogLevel::Error, mDeviceName + QString(": Failed to get name for %1 section").arg(group));
-		}
-		else
-		{
-			sectionNames.insert(group - 1, codec->toUnicode(data).simplified());
-		}
-
-		if (!mLastCommandResult && (mLastCommandResult == lastCommandResult) && CommandResult::ProtocolErrors.contains(mLastCommandResult))
-		{
-			break;
-		}
-
-		lastCommandResult = mLastCommandResult;
-
-		if (mLastError && (lastError == mLastError))
-		{
-			break;
-		}
-
-		lastError = mLastError;
-	}
-	while (mLastError != CAtolFR::Errors::WrongSeriesNumber);
-
-	if (!sectionNames.isEmpty())
-	{
-		setConfigParameter(CHardwareSDK::FR::SectionNames, QVariant::fromValue<TSectionNames>(sectionNames));
-	}
 }
 
 //--------------------------------------------------------------------------------
@@ -205,7 +172,13 @@ bool AtolFRBase::updateParameters()
 		return true;
 	}
 
-	getSectionNames();
+	TLoadSectionName loadSectionName = [&] (int aIndex, QByteArray & aData) -> bool { return getFRParameter(CAtolFR::FRParameters::SectionName(aIndex), aData); };
+
+	if (mOperatorPresence && !loadSectionNames(loadSectionName))
+	{
+		return false;
+	}
+
 	mZBufferError = !enterExtendedMode();
 
 	return checkTaxes();
@@ -303,17 +276,8 @@ QByteArray AtolFRBase::getBCD(double aValue, int aSize, int aPrecision, int aMan
 }
 
 //--------------------------------------------------------------------------------
-TResult AtolFRBase::performCommand(const QByteArray & aCommandData, QByteArray & aAnswer, int aTimeout)
-{
-	return mProtocol.processCommand(aCommandData, aAnswer, aTimeout);
-}
-
-//--------------------------------------------------------------------------------
 TResult AtolFRBase::execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
 {
-	mProtocol.setPort(mIOPort);
-	mProtocol.setLog(mLog);
-
 	// для пересчета ошибки виртуального конца буфера Z-отчетов:
 	// если открываем чек, либо делаем выплату (- операции, открывающие смену) и сессия сейчас закрыта, то
 	// после открытия чека она будет открыта открытием чека. Тогда потом просто обновим время последнего открытия смены.
@@ -338,9 +302,12 @@ TResult AtolFRBase::execCommand(const QByteArray & aCommand, const QByteArray & 
 		return mLastCommandResult;
 	}
 
-	if (answer.size() < CAtolFR::MinUnPacketAnswerSize)
+	CAtolFR::SCommadData commandInfo = mCommandData[aCommand];
+	int minAnswerSize = int(commandInfo.error) + int(commandInfo.prefix);
+
+	if (answer.size() < minAnswerSize)
 	{
-		toLog(LogLevel::Error, "AtolFR: Data in packet is less than " + QString::number(CAtolFR::MinUnPacketAnswerSize));
+		toLog(LogLevel::Error, "AtolFR: Data in packet is less than " + QString::number(minAnswerSize));
 		return CommandResult::Answer;
 	}
 
@@ -358,23 +325,36 @@ TResult AtolFRBase::execCommand(const QByteArray & aCommand, const QByteArray & 
 	}
 
 	mLastError = error;
+	mLastCommand = aCommand;
 
-	toLog(LogLevel::Error, "AtolFR: Error: " + mErrorData->value(mLastError).description);
-	setErrorFlags(mLastError, aCommand);
+	toLog(LogLevel::Error, mDeviceName + ": Error: " + mErrorData->value(mLastError).description);
+
+	if (!isErrorUnprocessed(aCommand, mLastError))
+	{
+		setErrorFlags(aCommand, mLastError);
+	}
 
 	if (!mProcessingErrors.isEmpty() && (mProcessingErrors.last() == mLastError))
 	{
 		return CommandResult::Device;
 	}
 
-	if (!processAnswer(aCommand, mLastError))
+	if (isErrorUnprocessed(aCommand, error) || !processAnswer(aCommand, error))
 	{
+		mLastError = error;
+		mLastCommand = aCommand;
+
 		return CommandResult::Device;
 	}
 
-	mProcessingErrors.pop_back();
+	TResult result = processCommand(aCommand, aCommandData, aAnswer);
 
-	return processCommand(aCommand, aCommandData, aAnswer);
+	if (result)
+	{
+		mProcessingErrors.pop_back();
+	}
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -386,19 +366,16 @@ char AtolFRBase::getError(char aCommand, const QByteArray & aAnswer)
 //--------------------------------------------------------------------------------
 char AtolFRBase::getError(const QByteArray & aCommand, const QByteArray & aAnswer)
 {
-	char result = 0;
+	CAtolFR::SCommadData commandData = mCommandData[aCommand];
 
-	if (mCommandData[aCommand].error)
-	{
-		int index = mCommandData[aCommand].prefix ? 1 : 0;
-		result = aAnswer[index];
-	}
+	     if (!commandData.error) return ASCII::NUL;
+	else if (commandData.prefix) return aAnswer[1];
 
-	return result;
+	return aAnswer[0];
 }
 
 //--------------------------------------------------------------------------------
-void AtolFRBase::setErrorFlags(char aError, const QByteArray & /*aCommand*/)
+void AtolFRBase::setErrorFlags(const QByteArray & /*aCommand*/, char aError)
 {
 	if (aError == CAtolFR::Errors::PrinterHeadOverheat)
 	{
@@ -409,11 +386,6 @@ void AtolFRBase::setErrorFlags(char aError, const QByteArray & /*aCommand*/)
 //--------------------------------------------------------------------------------
 bool AtolFRBase::openSession()
 {
-	if (getSessionState() == ESessionState::Opened)
-	{
-		return true;
-	}
-
 	char mode = mMode;
 
 	if (!enterInnerMode(CAtolFR::InnerModes::Register))
@@ -496,7 +468,7 @@ bool AtolFRBase::processAnswer(const QByteArray & aCommand, char aError)
 
 				if ((aCommand[0] == CAtolFR::Commands::ZReport) && mCanProcessZBuffer)
 				{
-					bool & ZBufferFlag = isSessionExpired() ? mZBufferOverflow : mZBufferFull;
+					bool & ZBufferFlag = (getSessionState() == ESessionState::Expired) ? mZBufferOverflow : mZBufferFull;
 					ZBufferFlag = true;
 				}
 				else
@@ -522,6 +494,22 @@ bool AtolFRBase::processAnswer(const QByteArray & aCommand, char aError)
 	}
 
 	return false;
+}
+
+//---------------------------------------------------------------------------
+bool AtolFRBase::checkTaxes()
+{
+	char mode = mMode;
+
+	if (!enterInnerMode(CAtolFR::InnerModes::Programming))
+	{
+		return false;
+	}
+
+	bool result = TSerialFRBase::checkTaxes();
+	enterInnerMode(mode);
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -557,14 +545,18 @@ bool AtolFRBase::processReceipt(const QStringList & aReceipt, bool aProcessing)
 //--------------------------------------------------------------------------------
 bool AtolFRBase::getCommonStatus(TStatusCodes & aStatusCodes)
 {
-	QByteArray data;
-
-	if (!getShortStatus(aStatusCodes) || !getLongStatus(data))
+	if (!getShortStatus(aStatusCodes))
 	{
 		return false;
 	}
 
-	if (data[9] & CAtolFR::States::CoverIsOpened)
+	QByteArray data = performStatus(aStatusCodes, CAtolFR::Commands::GetLongStatus, 9);
+
+	if (data == CFR::Result::Fail)
+	{
+		return false;
+	}
+	else if ((data != CFR::Result::Error) && (data[9] & CAtolFR::States::CoverIsOpened))
 	{
 		aStatusCodes.insert(DeviceStatusCode::Error::CoverIsOpened);
 	}
@@ -646,9 +638,9 @@ void AtolFRBase::execTags(Tags::SLexeme & aTagLexeme, QVariant & aLine)
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & /*aFPData*/, TComplexFiscalPaymentData & /*aPSData*/)
+bool AtolFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * /*aFDNumber*/)
 {
-	if (!enterInnerMode(CAtolFR::InnerModes::Register) || (!openDocument(aPaymentData.back) && !mLocked))
+	if (!enterInnerMode(CAtolFR::InnerModes::Register) || (!openDocument(aPaymentData.payOffType) && !mLocked))
 	{
 		return false;
 	}
@@ -666,7 +658,7 @@ bool AtolFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 		{
 			result = setOFDParameters() && closeDocument(aPaymentData.payType);
 		}
-		else if (aPaymentData.back && (mLastError == CAtolFR::Errors::NoMoneyForPayout))
+		else if (aPaymentData.back() && (mLastError == CAtolFR::Errors::NoMoneyForPayout))
 		{
 			emitStatusCode(FRStatusCode::Error::NoMoney, EFRStatus::NoMoneyForSellingBack);
 		}
@@ -807,13 +799,11 @@ bool AtolFRBase::performZReport(bool aPrintDeferredReports)
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::openDocument(bool aBack)
+bool AtolFRBase::openDocument(EPayOffTypes::Enum aPayOffType)
 {
-	char documentType = aBack ? CAtolFR::DocumentTypes::SaleBack : CAtolFR::DocumentTypes::Sale;
-
 	QByteArray commandData;
 	commandData.append(CAtolFR::FiscalFlags::ExecutionMode);
-	commandData.append(documentType);
+	commandData.append(CAtolFR::PayOffTypeData[aPayOffType]);
 
 	if (processCommand(CAtolFR::Commands::OpenDocument, commandData))
 	{
@@ -940,7 +930,7 @@ void AtolFRBase::cancelDocument(bool aDocumentIsOpened)
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::getSessionInfo(bool & aOpened, QDateTime & aLastOpenedSessionDT)
+bool AtolFRBase::getLastSessionDT(QDateTime & aLastSessionDT)
 {
 	QByteArray data;
 
@@ -950,11 +940,10 @@ bool AtolFRBase::getSessionInfo(bool & aOpened, QDateTime & aLastOpenedSessionDT
 		return false;
 	}
 
-	aOpened = bool(data[0]);
 	QString dateDataTime = data.mid(1, 6).toHex().insert(4, "20");
-	aLastOpenedSessionDT = QDateTime::fromString(dateDataTime, CAtolFR::SessionDTFormat);
+	aLastSessionDT = QDateTime::fromString(dateDataTime, CAtolFR::SessionDTFormat);
 
-	return true;
+	return aLastSessionDT.isValid();
 }
 
 //--------------------------------------------------------------------------------
@@ -997,18 +986,16 @@ void AtolFRBase::processDeviceData()
 		mSerial = CFR::serialToString(data.toHex());
 	}
 
-	bool sessionOpened;
-	QDateTime lastOpenedSessionDT;
-
 	removeDeviceParameter(CDeviceData::FR::Session);
+	QDateTime lastSessionDT;
 
-	if (getSessionInfo(sessionOpened, lastOpenedSessionDT))
+	if (getLastSessionDT(lastSessionDT) && getLongStatus(data))
 	{
-		QString sessionDT = lastOpenedSessionDT.toString(CFR::DateTimeLogFormat);
+		QString sessionDT = lastSessionDT.toString(CFR::DateTimeLogFormat);
 
-		if (sessionOpened)
+		if (data[9] & CAtolFR::States::SessionOpened)
 		{
-			mLastOpenSession = lastOpenedSessionDT.addDays(-1);
+			mLastOpenSession = lastSessionDT.addDays(-1);
 
 			setDeviceParameter(CDeviceData::FR::Session, CDeviceData::Values::Opened);
 			setDeviceParameter(CDeviceData::FR::FutureClosingDate, sessionDT, CDeviceData::FR::Session);
@@ -1034,7 +1021,13 @@ bool AtolFRBase::setFRParameter(const CAtolFR::FRParameters::SData & aData, cons
 	else if (aValue.type() == QVariant::String) commandData.append(mCodec->fromUnicode(aValue.toString()));
 	else commandData.append(char(aValue.toInt()));
 
-	return processCommand(CAtolFR::Commands::SetFRParameters, commandData);
+	if (!processCommand(CAtolFR::Commands::SetFRParameters, commandData))
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to set %1 = %2").arg(aData.log()).arg(aValue.toString()));
+		return false;
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -1116,8 +1109,9 @@ bool AtolFRBase::setFRParameters()
 
 	return true;
 }
+
 //--------------------------------------------------------------------------------
-bool AtolFRBase::getFRParameter(const CAtolFR::FRParameters::SData & aData, QByteArray & aParameter)
+bool AtolFRBase::getFRParameter(const CAtolFR::FRParameters::SData & aData, QByteArray & aValue)
 {
 	QByteArray commandData;
 	commandData.append(aData.table);
@@ -1125,48 +1119,45 @@ bool AtolFRBase::getFRParameter(const CAtolFR::FRParameters::SData & aData, QByt
 	commandData.append(uchar(aData.series << 0));
 	commandData.append(aData.field);
 
-	if (!processCommand(CAtolFR::Commands::GetFRParameter, commandData, &aParameter))
+	if (!processCommand(CAtolFR::Commands::GetFRParameter, commandData, &aValue))
 	{
-		toLog(LogLevel::Error, QString("AtolFR: Failed to get field %1 (series %2) of system table %3").arg(uint(aData.field)).arg(aData.series).arg(uint(aData.table)));
+		toLog(LogLevel::Error, mDeviceName + ": Failed to get " + aData.log());
 		return false;
 	}
 
-	aParameter = aParameter.mid(2);
+	aValue = aValue.mid(2);
 
 	return true;
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::getRegister(const QString & aRegister, QByteArray & aData, char aParameter1, char aParameter2)
+TResult AtolFRBase::getRegister(const QString & aRegister, QByteArray & aData, char aParameter1, char aParameter2)
 {
 	CAtolFR::Registers::SData registerData = mRegisterData[aRegister];
-	toLog(LogLevel::Normal, QString("AtolFR: Begin to get FR register 0x%1 (%2)")
-		.arg(QString("%1").arg(registerData.number, 2, 16, QChar(ASCII::Zero)).right(2).toUpper())
-		.arg(aRegister));
+	toLog(LogLevel::Normal, mDeviceName + QString(": Begin to get FR register %1 (%2)").arg(toHexLog(registerData.number)).arg(aRegister));
 
 	QByteArray commandData;
 	commandData.append(registerData.number);
 	commandData.append(aParameter1);
 	commandData.append(aParameter2);
 
-	if (!processCommand(CAtolFR::Commands::GetFRRegister, commandData, &aData))
+	TResult result = processCommand(CAtolFR::Commands::GetFRRegister, commandData, &aData);
+
+	if (!CORRECT(result) || (result == CommandResult::Device))
 	{
-		return false;
+		return result;
+	}
+
+	if (aData.size() < (2 + registerData.size))
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": invalid answer size for register %1: %2, need %3 minimum")
+			.arg(toHexLog(registerData.number)).arg(aData.size()).arg(2 + registerData.size));
+		return CommandResult::Answer;
 	}
 
 	aData = aData.mid(2);
 
-	if (aData.size() < registerData.size)
-	{
-		toLog(LogLevel::Error, QString("AtolFR: invalid answer size for register 0x%1: %2, need %3 minimum")
-			.arg(QString("%1").arg(registerData.number, 2, 16, QChar(ASCII::Zero)).right(2).toUpper())
-			.arg(aData.size())
-			.arg(registerData.size));
-
-		return false;
-	}
-
-	return true;
+	return CommandResult::OK;
 }
 
 //--------------------------------------------------------------------------------
@@ -1391,24 +1382,16 @@ bool AtolFRBase::processXReport()
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::isSessionExpired()
-{
-	QDateTime FRDateTime = getDateTime();
-	bool sessionOpened;
-	QDateTime lastOpenedSessionDT;
-
-	if (!FRDateTime.isValid() || !getSessionInfo(sessionOpened, lastOpenedSessionDT))
-	{
-		return false;
-	}
-
-	return sessionOpened && (lastOpenedSessionDT.addDays(1) < FRDateTime);
-}
-
-//--------------------------------------------------------------------------------
 bool AtolFRBase::execZReport(bool aAuto)
 {
-	bool needCloseSession = isSessionExpired();
+	toLog(LogLevel::Normal, mDeviceName + QString(": Begin processing %1Z-report").arg(aAuto ? "auto-" : ""));
+	ESessionState::Enum sessionState = getSessionState();
+
+	ExitAction exitAction([&] () { mZBufferError = !enterExtendedMode(); });
+
+	     if (sessionState == ESessionState::Error)  return false;
+	else if (sessionState == ESessionState::Closed) return true;
+
 	bool cannotAutoZReport = !mCanProcessZBuffer || (mOperatorPresence && !getConfigParameter(CHardware::FR::ForcePerformZReport).toBool());
 
 	if (aAuto && cannotAutoZReport)
@@ -1416,85 +1399,76 @@ bool AtolFRBase::execZReport(bool aAuto)
 		toLog(LogLevel::Error, mDeviceName + (mOperatorPresence ?
 			": Failed to process auto-Z-report due to presence of the operator." :
 			": has no Z-buffer, so it is impossible to perform auto-Z-report."));
-		mNeedCloseSession = mNeedCloseSession || needCloseSession;
+
+		mNeedCloseSession = mNeedCloseSession || (sessionState == ESessionState::Expired);
 
 		return false;
 	}
 
-	toLog(LogLevel::Normal, QString("AtolFR: Begin processing %1Z-report").arg(aAuto ? "auto-" : ""));
+	char innerMode = mMode;
 
-	bool success = false;
-
-	if (getSessionState() == ESessionState::Opened)
+	if (!enterInnerMode(CAtolFR::InnerModes::Cancel))
 	{
-		char innerMode = mMode;
-
-		if (enterInnerMode(CAtolFR::InnerModes::Cancel))
-		{
-			QVariantMap outData;
-			QByteArray data;
-
-			if (getRegister(CAtolFR::Registers::PaymentCount, data, CAtolFR::DocumentTypes::Sale))
-			{
-				outData.insert(CFiscalPrinter::PaymentCount, data.toHex().toUShort());
-			}
-
-			double paymentAmount = 0;
-
-			if (getRegister(CAtolFR::Registers::PaymentAmount, data, CAtolFR::DocumentTypes::Sale, CAtolFR::PaymentSource::Cash))
-			{
-				paymentAmount = qlonglong(data.toHex().toULongLong()) / 100.0;
-				outData.insert(CFiscalPrinter::PaymentAmount, paymentAmount);
-			}
-
-			mNonNullableAmount += paymentAmount;
-			outData.insert(CFiscalPrinter::NonNullableAmount, mNonNullableAmount);
-
-			if (getLongStatus(data))
-			{
-				int closedSessionNumber = data.mid(20, 2).toHex().toUShort();
-				outData.insert(CFiscalPrinter::ZReportNumber, closedSessionNumber + 1);
-			}
-
-			outData.insert(CFiscalPrinter::Serial, mSerial);
-			outData.insert(CFiscalPrinter::RNM, mRNM);
-
-			QDateTime FRDateTime = getDateTime();
-
-			if (FRDateTime.isValid())
-			{
-				outData.insert(CFiscalPrinter::FRDateTime, FRDateTime.toString(CFR::DateTimeLogFormat));
-			}
-
-			QString systemDateTime = QDateTime::currentDateTime().toString(CFR::DateTimeLogFormat);
-			outData.insert(CFiscalPrinter::SystemDateTime, systemDateTime);
-
-			// делаем закрытие смены и ждем смены состояний
-			mNeedCloseSession = false;
-			success = processCommand(CAtolFR::Commands::ZReport) && waitForChangeZReportMode();
-			mNeedCloseSession = isSessionExpired();
-
-			if (!mNeedCloseSession)
-			{
-				mProcessingErrors.removeAll(CAtolFR::Errors::NeedZReport);
-			}
-
-			if (success)
-			{
-				emit FRSessionClosed(outData);
-			}
-
-			enterInnerMode(innerMode);
-		}
-	}
-	else
-	{
-		toLog(LogLevel::Error, "AtolFR: Session is closed, exit!");
+		return false;
 	}
 
-	mZBufferError = !enterExtendedMode();
+	QVariantMap outData;
+	QByteArray data;
+	char FDType = CAtolFR::PayOffTypeData[EPayOffTypes::Debit];
 
-	return success;
+	if (getRegister(CAtolFR::Registers::PaymentCount, data, FDType))
+	{
+		outData.insert(CFiscalPrinter::PaymentCount, data.toHex().toUShort());
+	}
+
+	double paymentAmount = 0;
+
+	if (getRegister(CAtolFR::Registers::PaymentAmount, data, FDType, CAtolFR::PaymentSource::Cash))
+	{
+		paymentAmount = qlonglong(data.toHex().toULongLong()) / 100.0;
+		outData.insert(CFiscalPrinter::PaymentAmount, paymentAmount);
+	}
+
+	mNonNullableAmount += paymentAmount;
+	outData.insert(CFiscalPrinter::NonNullableAmount, mNonNullableAmount);
+
+	if (getLongStatus(data))
+	{
+		int closedSessionNumber = data.mid(20, 2).toHex().toUShort();
+		outData.insert(CFiscalPrinter::ZReportNumber, closedSessionNumber + 1);
+	}
+
+	outData.insert(CFiscalPrinter::Serial, mSerial);
+	outData.insert(CFiscalPrinter::RNM, mRNM);
+
+	QDateTime FRDateTime = getDateTime();
+
+	if (FRDateTime.isValid())
+	{
+		outData.insert(CFiscalPrinter::FRDateTime, FRDateTime.toString(CFR::DateTimeLogFormat));
+	}
+
+	QString systemDateTime = QDateTime::currentDateTime().toString(CFR::DateTimeLogFormat);
+	outData.insert(CFiscalPrinter::SystemDateTime, systemDateTime);
+
+	// делаем закрытие смены и ждем смены состояний
+	mNeedCloseSession = false;
+	bool success = processCommand(CAtolFR::Commands::ZReport) && waitForChangeZReportMode();
+	mNeedCloseSession = getSessionState() == ESessionState::Expired;
+
+	if (!mNeedCloseSession)
+	{
+		mProcessingErrors.removeAll(CAtolFR::Errors::NeedZReport);
+	}
+
+	if (success)
+	{
+		emit FRSessionClosed(outData);
+	}
+
+	enterInnerMode(innerMode);
+
+	return success && exitAction.reset();
 }
 
 //--------------------------------------------------------------------------------
@@ -1518,14 +1492,26 @@ ESessionState::Enum AtolFRBase::getSessionState()
 {
 	QByteArray data;
 
-	if (!getLongStatus(data) || (data.size() <= 9))
+	if (!getLongStatus(data))
 	{
 		return ESessionState::Error;
 	}
 
-	bool result = bool(data[9] & CAtolFR::States::SessionOpen);
+	if (~data[9] & CAtolFR::States::SessionOpened)
+	{
+		return ESessionState::Closed;
+	}
 
-	return result ? ESessionState::Opened : ESessionState::Closed;
+	QString dateDataTime = data.mid(3, 6).toHex().prepend("20");
+	QDateTime currentDT = QDateTime::fromString(dateDataTime, CAtolFR::DateTimeFormat);
+	QDateTime lastSessionDT;
+
+	if (!currentDT.isValid() || !getLastSessionDT(lastSessionDT))
+	{
+		return ESessionState::Error;
+	}
+
+	return (lastSessionDT.addDays(1) <= currentDT) ? ESessionState::Expired : ESessionState::Opened;
 }
 
 //--------------------------------------------------------------------------------
@@ -1559,6 +1545,19 @@ bool AtolFRBase::getFiscalDocumentState(EFiscalDocumentState::Enum & aState)
 }
 
 //--------------------------------------------------------------------------------
+EDocumentState::Enum AtolFRBase::getDocumentState()
+{
+	EFiscalDocumentState::Enum state;
+
+	if (!getFiscalDocumentState(state))
+	{
+		return EDocumentState::Error;
+	}
+
+	return (state == EFiscalDocumentState::Closed) ? EDocumentState::Closed : EDocumentState::Opened;
+}
+
+//--------------------------------------------------------------------------------
 bool AtolFRBase::getLongStatus(QByteArray & aData)
 {
 	return processCommand(CAtolFR::Commands::GetLongStatus, &aData) && (aData.size() >= 28);
@@ -1567,17 +1566,19 @@ bool AtolFRBase::getLongStatus(QByteArray & aData)
 //--------------------------------------------------------------------------------
 bool AtolFRBase::getShortStatus(TStatusCodes & aStatusCodes)
 {
-	QByteArray answer;
+	QByteArray data = performStatus(aStatusCodes, CAtolFR::Commands::GetShortStatus, 2);
 
-	if (!processCommand(CAtolFR::Commands::GetShortStatus, &answer))
+	if (data == CFR::Result::Fail)
 	{
 		return false;
 	}
+	else if (data != CFR::Result::Error)
+	{
+		mMode    = (data[1] >> 0) & CAtolFR::ModeMask;
+		mSubmode = (data[1] >> 4) & CAtolFR::ModeMask;
 
-	mMode    = (answer[1] >> 0) & CAtolFR::ModeMask;
-	mSubmode = (answer[1] >> 4) & CAtolFR::ModeMask;
-
-	parseShortStatusFlags(answer[2], aStatusCodes);
+		parseShortStatusFlags(data[2], aStatusCodes);
+	}
 
 	return true;
 }

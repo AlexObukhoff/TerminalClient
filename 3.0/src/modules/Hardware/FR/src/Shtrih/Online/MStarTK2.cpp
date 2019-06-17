@@ -10,10 +10,15 @@ MStarTK2FR::MStarTK2FR()
 	mDeviceName = CShtrihFR::Models::CData()[CShtrihFR::Models::ID::MStarTK2].name;
 	mOFDFiscalParameters << CFR::FiscalFields::Cashier;
 	mPrinterStatusEnabled = false;
+	mNeedReceiptProcessingOnCancel = false;
 
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, false);
+	setConfigParameter(CHardware::FR::CanZReportWithoutPrinting, true);
 
 	mSupportedModels = getModelList();
+
+	// ошибки
+	mUnprocessedErrorData.add(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, CShtrihOnlineFR::Errors::NoRequiedDataInFS);
 }
 
 //--------------------------------------------------------------------------------
@@ -25,13 +30,22 @@ QStringList MStarTK2FR::getModelList()
 }
 
 //--------------------------------------------------------------------------------
-TResult MStarTK2FR::processCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
+void MStarTK2FR::setDeviceConfiguration(const QVariantMap & aConfiguration)
+{
+	QVariantMap configuration(aConfiguration);
+	configuration.insert(CHardware::Printer::Settings::LeftReceiptTimeout, CMStarTK2FR::LeftReceiptTimeout);
+
+	TMStarTK2FR::setDeviceConfiguration(configuration);
+}
+
+//--------------------------------------------------------------------------------
+TResult MStarTK2FR::execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
 {
 	QVariantMap configuration;
 	configuration.insert(CHardware::Port::COM::WaitResult, true);
 	mIOPort->setDeviceConfiguration(configuration);
 
-	return TMStarTK2FR::processCommand(aCommand, aCommandData, aAnswer);
+	return TMStarTK2FR::execCommand(aCommand, aCommandData, aAnswer);
 }
 
 //--------------------------------------------------------------------------------

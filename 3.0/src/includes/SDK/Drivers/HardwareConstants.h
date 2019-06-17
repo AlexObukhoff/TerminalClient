@@ -26,6 +26,7 @@ namespace CAllHardware
 	const char OptionalPortSettingsEnable[] = "optional_port_settings_enable";
 	const char SerialNumber[] = "serial_number";
 	const char CanOnline[] = "can_online";
+	const char LibraryVersion[] = "library_version";
 
 	/// Значения настроек.
 	namespace Values
@@ -64,6 +65,7 @@ namespace CAllHardware
 		const char SectionNames[] = "section_names";
 		const char DealerTaxSystem[] = "dealer_tax_system";
 		const char DealerAgentFlag[] = "dealer_agent_flag";
+		const char DealerVAT[] = "dealer_vat";
 		const char UserPhone[] = "user_phone";
 		const char UserMail[] = "user_mail";
 		const char ZReportTime[] = "z_report_time";

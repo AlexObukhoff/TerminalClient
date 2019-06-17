@@ -14,10 +14,10 @@ var processOffline;
 var processTryCount;
 
 // Чек по умолчанию - обычный успешный платёж.
-var receiptState;
+var RECEIPT_STATE;
 
 // Если принтер готов к печати, то это переманная - true.
-var printerIsReady;
+var PRINTER_IS_READY;
 
 // Если запустили сервисное меню из этого сценария, то флаг - true.
 var serviceMenuStarted;
@@ -26,7 +26,10 @@ var serviceMenuStarted;
 var isMultistage;
 
 // Требуется ли автоматически переводить сдачу
-var useAutoChangeback;
+var USE_AUTO_CHANGEBACK = false;
+
+// Пропустим печать только основного чека
+var SKIP_PRINT_RECEIPT = false;
 
 var skipFillFields;
 
@@ -118,11 +121,11 @@ function onStart() {
 	processTryCount = 0;
 	processOffline = false;
 	serviceMenuStarted = false;
-	receiptState = Scenario.Payment.ReceiptState.Default;
-	printerIsReady = false;
+	RECEIPT_STATE = Scenario.Payment.ReceiptState.Default;
+	PRINTER_IS_READY = false;
 	isMultistage = false;
 	needChooseService = false;
-	useAutoChangeback = false;
+	USE_AUTO_CHANGEBACK = false;
 
 	Core.userProperties.set("operator_id", ScenarioEngine.context.id);
 
@@ -181,6 +184,8 @@ function connectAll() {
 	if (!ScenarioEngine.context.hasOwnProperty("skip_fill_fields") || !Boolean(ScenarioEngine.context.skip_fill_fields)) {
 		Core.hid.HIDData.connect(onHIDDataReceived);
 	}
+
+	Core.hid.enable();
 }
 
 //------------------------------------------------------------------------------
@@ -252,9 +257,9 @@ function fillEnterHandler(aParameters) {
 		GUI.notify("append_fields", {forward: forward});
 	}
 	else {
-		printerIsReady = Core.printer.checkPrinter(false);
+		PRINTER_IS_READY = Core.printer.checkPrinter(false);
 
-		if (!printerIsReady && Core.payment.getProvider(ScenarioEngine.context.id).requirePrinter) {
+		if (!PRINTER_IS_READY && Core.payment.getProvider(ScenarioEngine.context.id).requirePrinter) {
 			GUI.notification({tr: QT_TR_NOOP("payment_scenario#cannot_use_provider_without_printer")}, 5000, Scenario.Payment.Event.Abort);
 		}
 		else {
@@ -274,12 +279,24 @@ function fillEnterHandler(aParameters) {
 				Core.postEvent(EventType.UpdateScenario, parameters);
 			} else {
 				parameters.reset = aParameters && aParameters.signal != Scenario.Payment.Event.Back;
-				parameters.printerIsReady = printerIsReady;
+				parameters.printerIsReady = PRINTER_IS_READY;
 				parameters.id = ScenarioEngine.context.id;
 
 				if (ScenarioEngine.context.hasOwnProperty("cyberpay")) {
 					parameters.templateId = ScenarioEngine.context.templateId;
 					parameters.cyberpay = true;
+				}
+
+				// Сбросим сохраненные в прошлый раз значения в платеже
+				if (aParameters.signal == Scenario.Payment.Event.Back) {
+					Core.payment.setParameter("101", "");
+					var addFields = Core.userProperties.get("payment.add_fields");
+					for (var field in addFields) {
+						Core.payment.setParameter("%1".arg(addFields[field]), "");
+						Core.payment.setParameter("%1_RAW".arg(addFields[field]), "");
+						Core.payment.setParameter("%1_DISPLAY".arg(addFields[field]), "");
+					}
+					Core.userProperties.set("payment.add_fields", "");
 				}
 
 				GUI.show("EditPaymentScene", parameters);
@@ -454,7 +471,7 @@ function addinfoEnterHandler(aParameters) {
 		GUI.show("AddInfoScene",
 						 {
 							 reset: true, id: p.id, addInfo: info, addFields: fields.length ? fields : "", needChooseService: needChooseService,
-																																								canPayProcess: aParameters.hasOwnProperty("canPayProcess") ? aParameters.canPayProcess : true
+							 canPayProcess: aParameters.hasOwnProperty("canPayProcess") ? aParameters.canPayProcess : true
 						 });
 
 		return;
@@ -466,7 +483,7 @@ function addinfoEnterHandler(aParameters) {
 
 //------------------------------------------------------------------------------
 function payEnterHandler(aParameters) {
-	if (Core.payment.getProvider().requirePrinter && !printerIsReady) {
+	if (Core.payment.getProvider().requirePrinter && !PRINTER_IS_READY) {
 		GUI.notification({tr: QT_TR_NOOP("payment_scenario#cannot_use_provider")}, 5000, Scenario.Payment.Event.Back);
 	}
 	else {
@@ -508,10 +525,10 @@ function payEnterHandler(aParameters) {
 				}
 				else if (Core.charge.getPaymentMethods().length) {
 					if (Core.charge.getPaymentMethods().length > 1) {
-						GUI.show("PaymentMethodSelectorScene", {reset: true, id: ScenarioEngine.context.id, printerIsReady: printerIsReady});
+						GUI.show("PaymentMethodSelectorScene", {reset: true, id: ScenarioEngine.context.id, printerIsReady: PRINTER_IS_READY});
 					}
 					else {
-						Core.postEvent(EventType.StartScenario, {name: Core.charge.getPaymentMethods()[0] + "_charge", printerIsReady: printerIsReady});
+						Core.postEvent(EventType.StartScenario, {name: Core.charge.getPaymentMethods()[0] + "_charge", printerIsReady: PRINTER_IS_READY});
 					}
 				}
 				else {
@@ -531,7 +548,7 @@ function processEnterHandler() {
 
 	// Если не удалось начать проведение платежа, то смотрим ошибку: возможно, не хватает денег.
 	if (result != Scenario.Payment.ProcessError.OK) {
-		receiptState = result == Scenario.Payment.ProcessError.LowMoney ? Scenario.Payment.ReceiptState.LowMoney : Scenario.Payment.ReceiptState.Error;
+		RECEIPT_STATE = result == Scenario.Payment.ProcessError.LowMoney ? Scenario.Payment.ReceiptState.LowMoney : Scenario.Payment.ReceiptState.Error;
 		Core.postEvent(EventType.UpdateScenario, {signal: Scenario.Payment.Event.Forward, payment_result: result});
 	}
 	else {
@@ -594,7 +611,7 @@ function onPaymentStepCompleted(aPayment, aStep, aError) {
 					var errorMesage = Core.payment.getParameter(Scenario.Payment.Parameters.ErrorMessage);
 					Core.payment.stop(errorCode, "Stop online processing by error %1 (%2).".arg(errorCode).arg(errorMesage));
 
-					if (Core.graphics.ui["use_bad_online_payment_as_change"] == "true") {
+					if (GUI.toBool(GUI.ui("use_bad_online_payment_as_change"))) {
 						if (Number(Core.payment.getParameter("SERVER_ERROR")) == -1) {
 							if (Number(Core.payment.getParameter("STEP") != 2)) {
 								Core.payment.useChangeBack();
@@ -609,7 +626,7 @@ function onPaymentStepCompleted(aPayment, aStep, aError) {
 						processOffline = true;
 					}
 
-					receiptState = Scenario.Payment.ReceiptState.Error;
+					RECEIPT_STATE = Scenario.Payment.ReceiptState.Error;
 					Core.postEvent(EventType.UpdateScenario, {signal: Scenario.Payment.Event.Forward, payment_result: Scenario.Payment.ProcessError.BadPayment});
 					return;
 				}
@@ -626,6 +643,22 @@ function onPaymentStepCompleted(aPayment, aStep, aError) {
 
 //------------------------------------------------------------------------------
 function finishEnterHandler(aParameters) {
+	var minAmount = parseFloat(Core.payment.getParameter(Scenario.Payment.Parameters.MinAmount));
+	var amount = parseFloat(Core.payment.getParameter(Scenario.Payment.Parameters.Amount));
+	var amountAll = parseFloat(Core.payment.getParameter(Scenario.Payment.Parameters.AmountAll));
+	var zeroAmount = Number(0).toFixed(2);
+
+	// Если не хватило денег на оплату, превращаем внесенную сумму в сдачу
+	if (GUI.toBool(GUI.ui("use_bad_payment_as_change")) && (amount ==  zeroAmount || amount < minAmount)) {
+		Core.payment.useChangeBack();
+
+		// Ломаем печать, чтобы не было чеков с нулевой суммой
+		SKIP_PRINT_RECEIPT = true;
+	}
+	else {
+		SKIP_PRINT_RECEIPT = false;
+	}
+
 	function changeback_ok() {
 		return GUI.toBool(GUI.ui("use_auto_changeback")) || GUI.toInt(GUI.ui("use_auto_changeback"))
 	}
@@ -634,40 +667,45 @@ function finishEnterHandler(aParameters) {
 		return (!GUI.ui("show_get_change") || GUI.toInt(GUI.ui("show_get_change")) === 0 || GUI.toBool(GUI.ui("show_get_change")) === false)
 	}
 
-	useAutoChangeback =
+	USE_AUTO_CHANGEBACK =
 			Core.payment.getParameter("CONTACT")
 			&& changeback_ok()
 			&& disable_show_change()
 			&& Core.payment.getChangeAmount() > 0;
 
 	// Скорректируем время ожидания для сцены("пропустим")
-	if (useAutoChangeback) {
+	if (USE_AUTO_CHANGEBACK) {
 		ScenarioEngine.setStateTimeout(1);
 		ScenarioEngine.resetTimeout();
 	}
 
-	if (aParameters && Core.payment.getParameter(Scenario.Payment.Parameters.AmountAll) > 0
+	if (aParameters && amountAll > 0
 			&& (!Core.payment.getParameter(Scenario.Payment.Parameters.ReceiptPrinted)
 					|| ScenarioEngine.context.resultError == Scenario.Payment.ReceiptState.ValidatorError)
 			&& aParameters.signal !== Scenario.Event.Resume
 			&& aParameters.signal != Scenario.Payment.Event.Retry) {
 
 		GUI.show("ResultScene", {reset: true, id: ScenarioEngine.context.id, receipt_printed: false,
-							 auto_changeback: useAutoChangeback ? useAutoChangeback : false,
-																										payment_result: aParameters.hasOwnProperty("payment_result") ? aParameters.payment_result : Scenario.Payment.ProcessError.OK});
+							 auto_changeback: USE_AUTO_CHANGEBACK ? USE_AUTO_CHANGEBACK : false,
+							 payment_result: aParameters.hasOwnProperty("payment_result") ? aParameters.payment_result : Scenario.Payment.ProcessError.OK});
 
-		if (printerIsReady) {
+		if (PRINTER_IS_READY && !SKIP_PRINT_RECEIPT) {
 			GUI.waiting({tr: QT_TR_NOOP("payment_scenario#printing_receipt")});
-			printReceipt(Scenario.Payment.ReceiptType.Payment, receiptState, useAutoChangeback ? true: false);
+			if (RECEIPT_STATE == Scenario.Payment.ReceiptState.Default) {
+				printReceipt(Scenario.Payment.ReceiptType.Payment, RECEIPT_STATE, USE_AUTO_CHANGEBACK ? true: false);
+			}
+			else {
+				printReceipt(Scenario.Payment.ReceiptType.NoFiscal, RECEIPT_STATE, USE_AUTO_CHANGEBACK ? true: false);
+			}
 		}
 		else {
-			printReceipt(Scenario.Payment.ReceiptType.Payment, receiptState, false, true);
+			printReceipt(Scenario.Payment.ReceiptType.Payment, RECEIPT_STATE, false, true);
 			GUI.notify(Scenario.Payment.Event.ReceiptPrinted, {receipt_printed: false});
 		}
 	}
 	//TODO Костыль для Самары
 	else if (aParameters && aParameters.signal == Scenario.Payment.Event.Retry) {
-		GUI.notify(Scenario.Payment.Event.ReceiptPrinted, {receipt_printed: printerIsReady});
+		GUI.notify(Scenario.Payment.Event.ReceiptPrinted, {receipt_printed: PRINTER_IS_READY});
 		ScenarioEngine.resetTimeout();
 
 		if (Core.payment.getParameter("CHANGE_AMOUNT") > 0 && Core.graphics.ui["show_get_change"] === "2") {
@@ -685,7 +723,7 @@ function finishExitHandler(aParameters) {
 		printReceipt("", "change", true)
 	}
 
-	if (useAutoChangeback) {
+	if (USE_AUTO_CHANGEBACK) {
 		var phone = Core.payment.getParameter("CONTACT");
 		var operatorMnp = GUI.toInt(GUI.ui("use_auto_changeback")) ?
 					GUI.toInt(GUI.ui("use_auto_changeback")) : Scenario.CyberService.ChangebackProvider;
@@ -759,7 +797,7 @@ function printReceipt(aType, aState, aContinuousMode, aSaveReceiptOnly) {
 
 //------------------------------------------------------------------------------
 function onPrinterChecked(aError) {
-	printerIsReady = !aError;
+	PRINTER_IS_READY = !aError;
 }
 
 //------------------------------------------------------------------------------

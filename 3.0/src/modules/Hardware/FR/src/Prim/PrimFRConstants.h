@@ -24,12 +24,22 @@ namespace CPrimFR
 	/// Минимальный размер пакета для identification.
 	const int MinIdentSize = 109;
 
-	/// Типы фискальных чеков.
-	namespace FDTypes
+	/// Данные типов фискальных документов.
+	class CPayOffTypeData: public CSpecification<SDK::Driver::EPayOffTypes::Enum, QByteArray>
 	{
-		const char Sale[]     = "00";    /// Продажа.
-		const char SaleBack[] = "02";    /// Возврат продажи.
-	}
+	public:
+		CPayOffTypeData()
+		{
+			using namespace SDK::Driver;
+
+			append(EPayOffTypes::Debit,      "00");
+			append(EPayOffTypes::DebitBack,  "02");
+			append(EPayOffTypes::Credit,     "04");
+			append(EPayOffTypes::CreditBack, "05");
+		}
+	};
+
+	static CPayOffTypeData PayOffTypeData;
 
 	/// Количество чеков.
 	const char ChecksQuantity[] = "01";
@@ -109,7 +119,13 @@ namespace CPrimFR
 	const int MaxLengthGField = 80;
 
 	/// Маски открытой сессии для парсинга текущего статуса ККМ.
-	const ushort SessionOpenedMask = 0x0800;
+	const ushort SessionOpened = 0x0800;
+
+	/// Маски истекшей сессии для парсинга текущего статуса ККМ.
+	const ushort SessionExpired = 0x0010;
+
+	/// Маска состояния документа для парсинга текущего статуса ККМ.
+	const ushort DocumentMask = 0x0007;
 
 	/// Таймаут входа в фискальный режим, [мс]
 	const int SetFiscalModeTimeout = 3 * 1000;
@@ -220,7 +236,7 @@ namespace CPrimFR
 		CStatusInfo()
 		{
 			append(0, DeviceStatusCode::Error::Unknown);
-			append(1, FRStatusCode::Error::FiscalMemory);
+			append(1, FRStatusCode::Error::FM);
 			append(2, FRStatusCode::Error::EKLZ);
 			append(4, FRStatusCode::Warning::EKLZNearEnd);
 			append(5, FRStatusCode::Error::EKLZ);
@@ -245,10 +261,10 @@ namespace CPrimFR
 		const char IncorrigibleError      = '\x17';    /// Неисправимая ошибка принтера.
 		const char NotReadyForPrint       = '\x18';    /// Принтер не готов к печати.
 
-		class Specification : public SpecificationBase
+		class Data: public FRError::Data
 		{
 		public:
-			Specification()
+			Data()
 			{
 				/// Коды ошибок.
 				add('\x01', "Неверный формат сообщения");
@@ -322,19 +338,26 @@ namespace CPrimFR
 				add('\x51', "Требуется распечатка СКЛ");
 				add('\x52', "Аварийное состояние СКЛ");
 				add('\x95', "Ошибка при формировании строки для печати, номер процесса ", true);
+			}
+		};
 
+		class ExtraData : public ExtraDataBase
+		{
+		public:
+			ExtraData()
+			{
 				/// Причины переполнения денежного счетчика.
-				mMoneyCounterOverflowReason.append('\x01', "Сумма составляющих не равна общей сумме");
-				mMoneyCounterOverflowReason.append('\x02', "Сумма по видам оплат не равна общей сумме");
-				mMoneyCounterOverflowReason.append('\xA0', "Ошибка умножения");
-				mMoneyCounterOverflowReason.append('\xA1', "Ошибка деления");
-				mMoneyCounterOverflowReason.append('\xFA', "Переполнение для процента");
-				mMoneyCounterOverflowReason.append('\xFB', "Переполнение для счетчиков накопления");
-				mMoneyCounterOverflowReason.append('\xFC', "Переполнение для суммы в кассе");
-				mMoneyCounterOverflowReason.append('\xFD', "Переполнение для дневного счетчика");
-				mMoneyCounterOverflowReason.append('\xFE', "Переполнение для суммы документа");
-				mMoneyCounterOverflowReason.append('\xFF', "Переполнение для суммы операции");
-				mMoneyCounterOverflowReason.setDefault("Неизвестна");
+				mMoneyCounterOverflows.append('\x01', "Сумма составляющих не равна общей сумме");
+				mMoneyCounterOverflows.append('\x02', "Сумма по видам оплат не равна общей сумме");
+				mMoneyCounterOverflows.append('\xA0', "Ошибка умножения");
+				mMoneyCounterOverflows.append('\xA1', "Ошибка деления");
+				mMoneyCounterOverflows.append('\xFA', "Переполнение для процента");
+				mMoneyCounterOverflows.append('\xFB', "Переполнение для счетчиков накопления");
+				mMoneyCounterOverflows.append('\xFC', "Переполнение для суммы в кассе");
+				mMoneyCounterOverflows.append('\xFD', "Переполнение для дневного счетчика");
+				mMoneyCounterOverflows.append('\xFE', "Переполнение для суммы документа");
+				mMoneyCounterOverflows.append('\xFF', "Переполнение для суммы операции");
+				mMoneyCounterOverflows.setDefault("Неизвестна");
 
 				/// Причины некорректного состояния ЭКЛЗ.
 				mEKLZIncorrectStateReason.append('\x00', "Требуется активизация ЭКЛЗ или ответ 02 из ЭКЛЗ");
@@ -345,34 +368,16 @@ namespace CPrimFR
 				mEKLZIncorrectStateReason.setDefault("Неизвестна");
 			}
 
-			virtual QString getDescription(ushort aFullErrorCode)
+			virtual QString value(char aErrorCode, char aErrorReason)
 			{
-				char errorCode   = char(aFullErrorCode);
-				char errorReason = char(aFullErrorCode >> 8);
+				     if (aErrorCode == Errors::EKLZIncorrectState)   return mEKLZIncorrectStateReason[aErrorReason];
+				else if (aErrorCode == Errors::MoneyCounterOverflow) return mMoneyCounterOverflows[aErrorReason];
 
-				QString result = SpecificationBase::operator[](errorCode);
-
-				if (mBuffer[errorCode].extraData)
-				{
-					if (errorCode == Errors::EKLZIncorrectState)
-					{
-						result += mEKLZIncorrectStateReason[errorReason];
-					}
-					else if (errorCode == Errors::MoneyCounterOverflow)
-					{
-						result += mMoneyCounterOverflowReason[errorReason];
-					}
-					else
-					{
-						result += QString::number(errorReason);
-					}
-				}
-
-				return result;
+				return ExtraDataBase::value(aErrorCode, aErrorReason);
 			}
 
-		protected:
-			CDescription<char> mMoneyCounterOverflowReason;
+		private:
+			CDescription<char> mMoneyCounterOverflows;
 			CDescription<char> mEKLZIncorrectStateReason;
 		};
 	}

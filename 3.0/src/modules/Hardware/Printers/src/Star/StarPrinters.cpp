@@ -59,7 +59,6 @@ StarPrinter::StarPrinter()
 	setConfigParameter(CHardware::Printer::Commands::Cutting, "\x1B\x64\x30");
 	setConfigParameter(CHardware::Printer::Commands::Pushing, CSTAR::Commands::Reset);
 	setConfigParameter(CHardware::Printer::Commands::Retraction, "\x1B\x16\x30\x30");
-	mInitializationError = false;
 	mIOMessageLogging = ELoggingType::Write;
 	mNeedPaperTakeOut = false;
 
@@ -623,11 +622,6 @@ void StarPrinter::cleanStatusCodes(TStatusCodes & aStatusCodes)
 	if (!CSTAR::Models::Data[mDeviceName].ejector && (mDeviceName != CSTAR::Models::Unknown))
 	{
 		aStatusCodes.remove(DeviceStatusCode::Error::PowerSupply);
-	}
-
-	if (mInitializationError)
-	{
-		aStatusCodes.insert(DeviceStatusCode::Error::Initialization);
 	}
 
 	SerialPrinterBase::cleanStatusCodes(aStatusCodes);

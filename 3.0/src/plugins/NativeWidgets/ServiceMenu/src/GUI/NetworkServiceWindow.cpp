@@ -7,7 +7,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QtConcurrentRun>
-#include <QtCore/QFuture>
 #include <Common/QtHeadersEnd.h>
 
 // Модули

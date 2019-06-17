@@ -35,6 +35,8 @@ bool KeysManager::generateKey(QVariantMap & aKeysParam)
 {
 	QString login(aKeysParam[CServiceTags::Login].toString());
 	QString password(aKeysParam[CServiceTags::Password].toString());
+	QString description(aKeysParam[CServiceTags::KeyPairDescription].toString());
+	QString keyPairNumber(aKeysParam[CServiceTags::KeyPairNumber].toString());
 	QString url(mTerminalSettings->getKeygenURL());
 
 	if (url.isEmpty())
@@ -43,7 +45,7 @@ bool KeysManager::generateKey(QVariantMap & aKeysParam)
 		mIsGenerated = false;
 	}
 
-	EKeysUtilsError::Enum result = static_cast<EKeysUtilsError::Enum>(mCryptService->generateKey(0, login, password, url, mSD, mAP, mOP));
+	EKeysUtilsError::Enum result = static_cast<EKeysUtilsError::Enum>(mCryptService->generateKey(keyPairNumber.toInt(), login, password, url, mSD, mAP, mOP, description));
 
 	aKeysParam[CServiceTags::Error] = errorToString(result);
 
@@ -70,6 +72,21 @@ bool KeysManager::formatToken()
 	return false;
 }
 
+
+//------------------------------------------------------------------------
+QList<int> KeysManager::getLoadedKeys() const
+{
+	return mCryptService->getLoadedKeys();
+}
+
+//------------------------------------------------------------------------
+bool KeysManager::isDefaultKeyOP(const QString & aOP)
+{
+	PPSDK::ICryptService::SKeyInfo key = mCryptService->getKeyInfo(0);
+
+	return key.isValid() && key.op == aOP;
+}
+
 //------------------------------------------------------------------------
 CCrypt::TokenStatus KeysManager::tokenStatus() const
 {
@@ -80,6 +97,12 @@ CCrypt::TokenStatus KeysManager::tokenStatus() const
 bool KeysManager::saveKey()
 {
 	return mCryptService->saveKey();
+}
+
+//------------------------------------------------------------------------
+bool KeysManager::allowAnyKeyPair() const
+{
+	return mTerminalSettings->getServiceMenuSettings().allowAnyKeyPair;
 }
 
 //------------------------------------------------------------------------

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/CA">
+        <file>GlobalSignRootCA.pem</file>
+        <file>GlobalSignDomainValidationCA-SHA256-G2.pem</file>
+        <file>ThawteRSACA2018.pem</file>
+        <file>DigiCertGlobalRootCA.pem</file>
+    </qresource>
+</RCC>

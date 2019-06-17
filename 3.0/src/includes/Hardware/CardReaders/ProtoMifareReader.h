@@ -9,7 +9,7 @@
 #include "Hardware/Common/ProtoDevice.h"
 
 //--------------------------------------------------------------------------------
-class ProtoMifareReader : public ProtoDevice, public SDK::Driver::IMifareReader
+class ProtoMifareReader : public ProtoDevice, public MetaDevice<SDK::Driver::IMifareReader>
 {
 	Q_OBJECT
 

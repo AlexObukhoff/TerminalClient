@@ -57,6 +57,7 @@ namespace DeviceStatusCode
 			ADD_OK_STATUS(Unknown,           QCoreApplication::translate("GeneralStatuses", "#unknown_state"));
 
 			ADD_WARNING_STATUS(Firmware,            QCoreApplication::translate("GeneralStatuses", "#need_firmware_update"));
+			ADD_WARNING_STATUS(BootFirmware,        QCoreApplication::translate("GeneralStatuses", "#need_boot_firmware_update"));
 			ADD_WARNING_STATUS(NeedReboot,          QCoreApplication::translate("GeneralStatuses", "#need_reboot"));
 			ADD_WARNING_STATUS(ThirdPartyDriver,    QCoreApplication::translate("GeneralStatuses", "#thirdparty_driver_warning"));
 			ADD_WARNING_STATUS(WrongSwitchesConfig, QCoreApplication::translate("GeneralStatuses", "#wrong_switches_configuration"));

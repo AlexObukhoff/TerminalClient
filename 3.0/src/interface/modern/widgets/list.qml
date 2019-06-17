@@ -62,10 +62,9 @@ Item {
 		ListView {
 			id: view
 
-			anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
+			anchors { left: parent.left; top: parent.top; bottom: parent.bottom; right: scroller.left; rightMargin: 5 }
 			snapMode: ListView.SnapToItem
 			interactive: scrollBar.visible
-			width: scrollBar.visible ? 1131 : 1222
 			model: em
 
 			delegate: BorderImage {

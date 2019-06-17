@@ -55,6 +55,8 @@ FocusScope {
 
 	property alias capitalization: input.font.capitalization
 
+	property alias readonly: input.readOnly
+
 	// Изменение значения
 	signal changed(string aValue)
 

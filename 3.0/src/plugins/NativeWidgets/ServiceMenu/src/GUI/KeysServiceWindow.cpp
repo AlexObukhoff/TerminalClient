@@ -3,8 +3,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTime>
-#include <QtCore/QTimer>
-#include <QtCore/QDir>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
@@ -96,7 +94,14 @@ void KeysServiceWindow::onEndGenerating()
 		if (mWindow->save())
 		{
 			mBackend->saveConfiguration();
-			mBackend->needUpdateConfigs();
+
+			if (mBackend->getKeysManager()->isDefaultKeyOP(mBackend->getKeysManager()->getOP()))
+			{
+				if (MessageBox::question(tr("#question_need_new_config")))
+				{
+					mBackend->needUpdateConfigs();
+				}
+			}
 
 			QVariantMap params;
 			params["signal"] = "close";

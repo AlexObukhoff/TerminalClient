@@ -131,6 +131,9 @@
     <ClCompile Include="..\src\MultistagePaymentGetStepResponse.cpp">
       <Filter>Multistage\Requests</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\DealerLocalData.cpp">
+      <Filter>DealerPayment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Payment.h">
@@ -183,6 +186,9 @@
     </ClInclude>
     <ClInclude Include="..\src\MultistagePaymentGetStepResponse.h">
       <Filter>Multistage\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\DealerLocalData.h">
+      <Filter>DealerPayment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,7 +8,6 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QKeySequence>
 #include <QtGui/QApplication>
-#include <QtGui/QWidget>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsSceneMouseEvent>
@@ -204,6 +203,7 @@ bool GraphicsEngine::finalize()
 	}
 
 	mWidgets.clear();
+	mPopupWidget = mWidgets.end();
 	mContentDirectories.clear();
 	mIsVirtualKeyboardVisible = false;
 
@@ -799,15 +799,15 @@ bool GraphicsEngine::eventFilter(QObject * aObject, QEvent * aEvent)
 	switch (type)
 	{
 	case QEvent::GraphicsSceneMouseMove:
-	{
-		QGraphicsSceneMouseEvent * mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(aEvent);
-		mDebugWidget.updateMousePos(mouseEvent->scenePos().toPoint());
+		{
+			auto * mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(aEvent);
+			mDebugWidget.updateMousePos(mouseEvent->scenePos().toPoint());
 
-			if (++intruder >= CGraphicsEngine::IntruderTreshold)
+			if (mouseEvent->buttons() != Qt::LeftButton && ++intruder >= CGraphicsEngine::IntruderTreshold)
 			{
 				emit intruderActivity();
 			}
-	}
+		}
 		break;
 	
 	case QEvent::GraphicsSceneWheel:
@@ -818,7 +818,7 @@ bool GraphicsEngine::eventFilter(QObject * aObject, QEvent * aEvent)
 	case QEvent::GraphicsSceneMouseDoubleClick:
 		if (mIsVirtualKeyboardVisible)
 		{
-			QGraphicsSceneMouseEvent * mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(aEvent);
+			auto * mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(aEvent);
 			TWidgetList::Iterator widget = mWidgets.find(CGraphicsEngine::InputContextName);
 			QGraphicsItem * keyboardItem = widget->graphics.lock()->getWidget();
 			QRectF keyboardRect(keyboardItem->sceneBoundingRect());
@@ -837,7 +837,7 @@ bool GraphicsEngine::eventFilter(QObject * aObject, QEvent * aEvent)
 		{
 			if (!mHandledKeyList.isEmpty())
 			{
-				QKeyEvent * keyEvent = static_cast<QKeyEvent *>(aEvent);
+				auto * keyEvent = static_cast<QKeyEvent *>(aEvent);
 
 				QString key = QKeySequence(keyEvent->key()).toString();
 				if (mHandledKeyList.indexOf(key) != -1)

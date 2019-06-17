@@ -134,6 +134,18 @@ namespace CShtrihFR
 
 			SData() : field(NA), table(0) {}
 			SData(int aField, int aTable, const QString & aDescription = "") : field(aField), table(aTable), description(aDescription) {}
+
+			QString log(char aSeries) const
+			{
+				QString result = QString("field %1-%2-%3").arg(table).arg(uchar(aSeries)).arg(field);
+
+				if (!description.isEmpty())
+				{
+					result += QString(" (%1)").arg(description);
+				}
+
+				return result;
+			}
 		};
 
 		typedef QList<SData> TData;
@@ -198,7 +210,7 @@ namespace CShtrihFR
 		private:
 			void add(const TData & aData)
 			{
-				#define ADD_SHTRIH_FIELD(aIndex, aName) if (aData.size() > aIndex) aName = aData[aIndex]; aName.description = #aName##" ("#aIndex##")"; \
+				#define ADD_SHTRIH_FIELD(aIndex, aName) if (aData.size() > aIndex) aName = aData[aIndex]; aName.description = #aName; \
 					if ((aData.size() > aIndex) && (aName.field == NA)) mMaxNADescriptionSize = qMax(mMaxNADescriptionSize, aName.description.size());
 
 				mMaxNADescriptionSize = 0;

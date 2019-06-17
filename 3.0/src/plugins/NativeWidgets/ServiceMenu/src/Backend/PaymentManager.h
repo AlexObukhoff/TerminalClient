@@ -59,7 +59,7 @@ public:
 	bool printTestPage();
 	bool printEncashment(int aIndex = -1);
 	bool printBalance() const;
-	bool printZReport(bool aFullZReport);
+	int printZReport(bool aFullZReport);
 
 	/// Получить информацию о платежах
 	bool getPaymentsInfo(QVariantMap & aPaymentsInfo) const;

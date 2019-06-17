@@ -59,6 +59,9 @@ protected:
 	/// Напечатать [и выдать] чек.
 	virtual bool processReceipt(const QStringList & aReceipt, bool aProcessing = true);
 
+	/// Проверить необходимость печати.
+	bool isPrintingNeed(const QStringList & aReceipt);
+
 	/// Удалить строки, содержащие только ' ', \n, \r и \t.
 	QStringList simplifyReceipt(const QStringList & aReceipt);
 
@@ -82,9 +85,6 @@ protected:
 
 	/// Очистить диспенсер.
 	bool clearDispenser(const QString & aCondition);
-
-	/// Очистить квитанцию от пустых строк (или с пробелами, TAB), прочего.
-	void cleanReceipt(QStringList & aReceipt);
 
 	/// Применить теги.
 	virtual void execTags(Tags::SLexeme & aTagLexeme, QVariant & aLine);

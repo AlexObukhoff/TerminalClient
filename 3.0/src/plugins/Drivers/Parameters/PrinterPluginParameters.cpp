@@ -17,7 +17,20 @@ namespace PPT = PluginParameterTranslations;
 //------------------------------------------------------------------------------
 SPluginParameter setPaginationDisabled()
 {
-	return SPluginParameter(CHardware::Printer::PrintPageNumber, SPluginParameter::Bool, false, PPT::PrintPageNumber, QString(), false, QVariantMap());
+	return SPluginParameter(PrinterSettings::PrintPageNumber, SPluginParameter::Bool, false, PPT::PrintPageNumber, QString(), false, QVariantMap());
+}
+
+//------------------------------------------------------------------------------
+SPluginParameter setLeftMargin()
+{
+	QStringList values;
+
+	for (int i = 0; i <= 15; ++i)
+	{
+		values << QString::number(i);
+	}
+
+	return SPluginParameter(PrinterSettings::LeftMargin, false, PPT::LeftMargin, QString(), "1", values, false);	       
 }
 
 //------------------------------------------------------------------------------

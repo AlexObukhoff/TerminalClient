@@ -8,9 +8,6 @@
 #include <QtCore/QStringList>
 #include <Common/QtHeadersEnd.h>
 
-// SDK
-#include <SDK/Drivers/IIOPort.h>
-
 // Modules
 #include "Hardware/IOPorts/IOPortBase.h"
 
@@ -60,10 +57,10 @@ public:
 	/// Закрыть порт.
 	virtual bool close();
 
-	/// Чтение данных.
-	virtual bool read(QByteArray & aData, int aTimeout = DefaultReadTimeout);
+	/// Прочитать данные.
+	virtual bool read(QByteArray & aData, int aTimeout = DefaultReadTimeout, int aMinSize = 1);
 
-	/// Передача данных.
+	/// Передать данные.
 	virtual bool write(const QByteArray & aData);
 
 	/// Подключено новое устройство?
@@ -99,16 +96,16 @@ protected:
 	/// Закрыть порт.
 	bool performClose();
 
-	/// Чтение данных.
-	bool performRead(QByteArray & aData, int aTimeout = DefaultReadTimeout);
+	/// Прочитать данные.
+	bool performRead(QByteArray & aData, int aTimeout = DefaultReadTimeout, int aMinSize = 1);
 
-	/// Передача данных.
+	/// Передать данные.
 	bool performWrite(const QByteArray & aData);
 
-	/// Проверка готовности порта.
+	/// Проверить готовность порта.
 	virtual bool performCheckReady();
 
-	/// Проверка готовности порта.
+	/// Проверить готовность порта.
 	virtual bool checkReady();
 
 	/// TCP-сокет.

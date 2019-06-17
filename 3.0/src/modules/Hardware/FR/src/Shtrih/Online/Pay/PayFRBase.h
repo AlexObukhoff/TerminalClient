@@ -13,9 +13,6 @@ public:
 	PayFRBase();
 
 protected:
-	/// Инициализация устройства.
-	virtual bool updateParameters();
-
 	/// Запросить и вывести в лог критичные параметры ФР.
 	virtual void processDeviceData();
 

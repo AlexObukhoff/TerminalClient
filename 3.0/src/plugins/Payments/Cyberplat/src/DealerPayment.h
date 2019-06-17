@@ -2,8 +2,18 @@
 
 #pragma once
 
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QSharedPointer>
+#include <Common/QtHeadersEnd.h>
+
+// SDK
+#include <SDK/PaymentProcessor/Payment/IPaymentFactory.h>
+
 // Project
 #include "Payment.h"
+#include "DealerLocalData.h"
+
 
 //------------------------------------------------------------------------------
 class DealerPayment : public Payment
@@ -24,6 +34,16 @@ protected:
 protected:
 	/// Выставляет коды ошибок сервера в OK
 	void setStateOk();
+
+	bool haveLocalData();
+
+	QString getAddinfo(QMap<QString, QString> & aValues);
+
+	QString getAddFields();
+
+protected:
+	PaymentFactory * mFactory;
+	DealerLocalData mLocalData;
 };
 
 //---------------------------------------------------------------------------

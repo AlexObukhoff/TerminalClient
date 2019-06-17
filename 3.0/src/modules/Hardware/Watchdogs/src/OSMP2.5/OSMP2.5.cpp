@@ -31,8 +31,22 @@ bool OSMP25::isConnected()
 		return false;
 	}
 
+	if (ProtocolUtils::clean(answer).isEmpty() && isAutoDetecting())
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Unknown device trying to impersonate this device");
+		return false;
+	}
+
 	mVerified = answer.contains(COSMP25::ModelTag);
 	setDeviceParameter(CDeviceData::Version, answer);
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+bool OSMP25::updateParameters()
+{
+	QByteArray answer;
 
 	if (processCommand(COSMP25::Commands::SerialNumber, &answer))
 	{
@@ -58,14 +72,6 @@ bool OSMP25::isConnected()
 		}
 	}
 
-	setDeviceParameter(CDeviceData::Watchdogs::CanWakeUpPC, true);
-
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-bool OSMP25::updateParameters()
-{
 	return processCommand(COSMP25::Commands::SetModemPause,  QByteArray(1, COSMP25::ModemResettingPause)) &&
 	       processCommand(COSMP25::Commands::SetPCPause,     QByteArray(1, COSMP25::PCResettingPause)) &&
 	       processCommand(COSMP25::Commands::SetPingTimeout, QByteArray(1, COSMP25::PingTimeout));
@@ -159,40 +165,14 @@ bool OSMP25::getStatus(TStatusCodes & aStatusCodes)
 }
 
 //----------------------------------------------------------------------------
-bool OSMP25::processCommand(char aCommand, QByteArray * aAnswer)
-{
-	QByteArray commandData;
-
-	return processCommand(aCommand, commandData, aAnswer);
-}
-
-//----------------------------------------------------------------------------
-bool OSMP25::processCommand(const QByteArray & aCommand, QByteArray * aAnswer)
-{
-	QByteArray commandData;
-
-	return processCommand(aCommand, commandData, aAnswer);
-}
-
-//----------------------------------------------------------------------------
-bool OSMP25::processCommand(char aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
-{
-	return processCommand(QByteArray(1, aCommand), aCommandData, aAnswer);
-}
-
-//----------------------------------------------------------------------------
-bool OSMP25::processCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
+TResult OSMP25::execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
 {
 	MutexLocker lock(&mExternalMutex);
 
 	mProtocol.setPort(mIOPort);
 	mProtocol.setLog(mLog);
 
-	QByteArray answerData;
-	QByteArray & answer = aAnswer ? *aAnswer : answerData;
-	bool needAnswer = COSMP25::Commands::Data[aCommand];
-
-	return mProtocol.processCommand(aCommand + aCommandData, answer, needAnswer);
+	return mProtocol.processCommand(aCommand + aCommandData, aAnswer);
 }
 
 //----------------------------------------------------------------------------

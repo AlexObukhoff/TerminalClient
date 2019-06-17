@@ -56,7 +56,7 @@ protected:
 	virtual void execTags(Tags::SLexeme & aTagLexeme, QVariant & aLine);
 
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
 
 	/// Печать Z отчета.
 	virtual bool performZReport(bool aPrintDeferredReports);
@@ -77,8 +77,7 @@ protected:
 	virtual bool retract();
 
 	/// Выполнить команду.
-	TResult processCommand(const QByteArray & aCommand, QByteArray * aAnswer = nullptr, int aTimeout = CSparkFR::Timeouts::Default);
-	TResult processCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr, int aTimeout = CSparkFR::Timeouts::Default);
+	virtual TResult execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
 
 	/// Получить состояние Z-буффера.
 	void getZBufferState();
@@ -96,17 +95,17 @@ protected:
 	/// Получить дату и время из запроса данных о ККМ.
 	QDateTime parseDateTime(TKKMInfoData & aData);
 
-	/// Сессия истекла?
-	bool isSessionExpired();
-
 	/// Обработка ответа на предыдущей команды. Автоисправление некоторых ошибок.
 	bool processAnswer(char aError);
 
 	/// Выполнить Z-отчет.
 	virtual bool execZReport(bool aAuto);
 
-	/// Узнать, открыта ли смена.
+	/// Получить состояние смены.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
+
+	/// Получить состояние документа.
+	virtual SDK::Driver::EDocumentState::Enum getDocumentState();
 
 	/// Получить номер последнего фискального документа.
 	int getLastDocumentNumber();

@@ -7,14 +7,12 @@
 #include <QtCore/QVariant>
 #include <QtCore/QSharedPointer>
 #include <QtCore/QPointer>
-#include <QtGui/QWidget>
 #include "ui_DeviceSlot.h"
 #include <Common/QtHeadersEnd.h>
 
 // SDK
 #include <Common/ObjectPointer.h>
 #include <SDK/Drivers/WarningLevel.h>
-#include <SDK/Plugins/PluginParameters.h>
 
 namespace SDK {
 namespace PaymentProcessor {

@@ -46,7 +46,7 @@ protected:
 	virtual bool processReceipt(const QStringList & aReceipt, bool aProcessing = true);
 
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
 
 	/// Печать Z отчета.
 	virtual bool performZReport(bool aPrintDeferredReports);
@@ -61,7 +61,7 @@ protected:
 	virtual void cancelDocument(bool aDocumentIsOpened);
 
 	/// Открыть чек.
-	virtual bool openDocument(bool aBack);
+	virtual bool openDocument(SDK::Driver::EPayOffTypes::Enum aPayOffType);
 
 	/// Установить режим снятия Z-отчета.
 	virtual bool setEjectorMode(char aEjectorMode);

@@ -8,6 +8,11 @@
 // STL
 #include <algorithm>
 
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QFile>
+#include <Common/QtHeadersEnd.h>
+
 // Модули
 #include "SysUtils/ISysUtils.h"
 #include "SysUtils/windows/PrivilegeElevator.h"
@@ -125,21 +130,33 @@ void ISysUtils::displayOn(bool aOn)
 }
 
 //--------------------------------------------------------------------------------
-QString getLastErrorMessage()
+QString ISysUtils::getLastErrorMessage()
 {
-	HLOCAL hlocal = NULL;
-	FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, GetLastError(), 
-		MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), (LPTSTR) &hlocal, 0, NULL);
+	return getErrorMessage(GetLastError());
+}
 
-	QString msg;
+//--------------------------------------------------------------------------------
+QString ISysUtils::getErrorMessage(ulong aError, bool aNativeLanguage)
+{
+	LPVOID data = 0;
+	DWORD languageId = aNativeLanguage ? MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT) : MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
+	FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, aError, languageId, (LPWSTR)&data, 0, 0);
 
-	if (hlocal != NULL)
+	QString result = "error: " + QString::number(aError);
+
+	if (data)
 	{
-		msg = QString::fromWCharArray((const wchar_t *)LocalLock(hlocal));
-		LocalFree(hlocal);
+		QString description = aNativeLanguage ? QString::fromWCharArray((LPWSTR)data).simplified() : QString::fromUtf16((const wchar_t *)LocalLock(data));
+
+		if (!description.isEmpty())
+		{
+			result += QString(" (%2)").arg(description);
+		}
+
+		LocalFree(data);
 	}
 
-	return QString("%1 (%2)").arg(GetLastError()).arg(msg.trimmed());
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -176,7 +193,7 @@ void ISysUtils::setSystemTime(QDateTime aDateTime) throw (...)
 
 	if (!result)
 	{
-		throw Exception(ECategory::System, ESeverity::Major, GetLastError(), QString("Windows error: %1.").arg(getLastErrorMessage()));
+		throw Exception(ECategory::System, ESeverity::Major, GetLastError(), QString("Windows %1.").arg(getLastErrorMessage()));
 	}
 }
 
@@ -269,7 +286,7 @@ bool ISysUtils::bringWindowToFront(const QString & aWindowTitle)
 }
 
 //---------------------------------------------------------------------------------
-bool ISysUtils::getAllProcessHandleCount(quint32 & aCountOfHandles)
+bool ISysUtils::getAllProcessHandleCount(quint64 & aCountOfHandles)
 {
 	QList<SProcessInfo> processes = getAllProcessInfo();
 
@@ -295,9 +312,9 @@ void ISysUtils::runScreenSaver()
 }
 
 //--------------------------------------------------------------------------------
-QList<ISysUtils::SProcessInfo> ISysUtils::getAllProcessInfo()
+ISysUtils::TProcessInfo ISysUtils::getAllProcessInfo()
 {
-	QList<SProcessInfo> procesInfos;
+	TProcessInfo procesInfos;
 
 	PROCESSENTRY32 pe32;
 	HANDLE hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -320,12 +337,14 @@ QList<ISysUtils::SProcessInfo> ISysUtils::getAllProcessInfo()
 		if (hProcess != INVALID_HANDLE_VALUE && hProcess != NULL)
 		{
 			DWORD handleCount = 0;
+
 			if (GetProcessHandleCount(hProcess, &handleCount))
 			{
 				pInfo.handlers = handleCount;
 			}
 
 			PROCESS_MEMORY_COUNTERS_EX pmc;
+
 			if (GetProcessMemoryInfo(hProcess, reinterpret_cast<PROCESS_MEMORY_COUNTERS *>(&pmc), sizeof(pmc)))
 			{
 				pInfo.memoryUsage = pmc.WorkingSetSize;
@@ -336,9 +355,32 @@ QList<ISysUtils::SProcessInfo> ISysUtils::getAllProcessInfo()
 
 		procesInfos << pInfo;
 
-	} while (Process32Next(hProcessSnap, &pe32));
+	}
+	while (Process32Next(hProcessSnap, &pe32));
 
 	return procesInfos;
+}
+
+//--------------------------------------------------------------------------------
+QString ISysUtils::rmBOM(const QString & aFile)
+{
+	QFile file(aFile);
+
+	if (file.open(QIODevice::ReadWrite))
+	{
+		QByteArray data = file.readAll();
+
+		// detect utf8 BOM
+		// https://codereview.qt-project.org/#/c/93658/5/src/corelib/io/qsettings.cpp
+		const uchar *dd = (const uchar *)data.constData();
+		if (data.size() >= 3 && dd[0] == 0xef && dd[1] == 0xbb && dd[2] == 0xbf)
+		{
+			file.resize(0);
+			file.write(QString::fromUtf8(data.remove(0, 3)).toUtf8());
+		}
+	}
+
+	return aFile;
 }
 
 //--------------------------------------------------------------------------------

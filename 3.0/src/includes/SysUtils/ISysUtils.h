@@ -16,6 +16,8 @@
 // Modules
 #include <Common/Exception.h>
 
+class Ilog;
+
 typedef QSet<int> TStatusCodes;
 typedef QSet<QString> TStatusNames;
 typedef QMap<QString, TStatusNames> TStatusGroupNames;
@@ -55,10 +57,10 @@ public:
 	static void getPrinterStatus(const QString & aPrinterName, TStatusCodes & aStatusCodes, TStatusGroupNames & aGroupNames);
 
 	/// Установить режим печати через очередь
-	static bool setPrinterQueuedMode(const QString & aPrinterName, QString & aErrorMessage);
+	static bool setPrintingQueuedMode(const QString & aPrinterName, QString & aErrorMessage);
 
 	/// Получить количество всех системных дескрипторов
-	static bool getAllProcessHandleCount(quint32 & aCountOfHandles);
+	static bool getAllProcessHandleCount(quint64 & aCountOfHandles);
 
 	struct MemoryInfo
 	{
@@ -94,22 +96,27 @@ public:
 	/// Информация о процессе
 	struct SProcessInfo
 	{
-		qint64 id;
+		quint64 id;
 		QString path;
-		qint64 memoryUsage;
-		qint64 handlers;
+		quint64 memoryUsage;
+		quint64 handlers;
 
 		SProcessInfo() : id(0), memoryUsage(0), handlers(0) {}
-
-		QString toString() const
-		{
-			return QString("%1 %2 Memory: %3, handlers: %4.").arg(id).arg(path).arg(memoryUsage).arg(handlers);
-		}
 	};
 
 	/// Получить список работающих процессов
-	static QList<SProcessInfo> getAllProcessInfo();
+	typedef QList<SProcessInfo> TProcessInfo;
+	static TProcessInfo getAllProcessInfo();
 
+	/// Удалить сигнатуру BOM из файла
+	/// WORKAROUND для QTBUG-23381
+	static QString rmBOM(const QString & aFile);
+
+	/// Получить описание последней системной ошибки.
+	static QString getLastErrorMessage();
+
+	/// Получить описание системной ошибки.
+	static QString getErrorMessage(ulong aError, bool aNativeLanguage = true);
 };
 
 //--------------------------------------------------------------------------------

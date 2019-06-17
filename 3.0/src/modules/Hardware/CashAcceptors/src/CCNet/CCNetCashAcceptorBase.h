@@ -95,9 +95,6 @@ protected:
 	/// Поддерживается ли монетоприемник.
 	bool isCoinAcceptorSupported() const;
 
-	/// Может менять скорость?
-	virtual bool canChangeBaudrate();
-
 	/// Протокол.
 	CCNetProtocol mProtocol;
 
@@ -119,6 +116,9 @@ protected:
 
 	/// Данные команд и ответов.
 	CCCNet::Commands::Data mCommandData;
+
+	/// Нужно менять скорость при перепрошивке?
+	bool mNeedChangeBaudrate;
 };
 
 //--------------------------------------------------------------------------------

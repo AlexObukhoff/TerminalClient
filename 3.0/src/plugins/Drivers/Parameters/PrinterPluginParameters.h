@@ -9,6 +9,9 @@
 /// Выводить номера страниц на печать - не выводить.
 SDK::Plugin::SPluginParameter setPaginationDisabled();
 
+/// Выводить номера страниц на печать - не выводить.
+SDK::Plugin::SPluginParameter setLeftMargin();
+
 /// Датчик скорого конца бумаги.
 SDK::Plugin::SPluginParameter setRemoteSensor(bool aEnabled);
 

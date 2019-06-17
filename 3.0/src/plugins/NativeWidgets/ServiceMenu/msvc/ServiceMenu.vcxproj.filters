@@ -634,9 +634,6 @@
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_EncashmentWindow.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\GUI\EncashmentWindow.cpp">
-      <Filter>Backend</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_ServiceMenuBackend.cpp">
       <Filter>Generated Files\ReleaseWithDebugInfo</Filter>
     </ClCompile>
@@ -645,6 +642,9 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_ServiceMenuBackend.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GUI\EncashmentWindow.cpp">
+      <Filter>Plugins\ServiceMenu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1114,11 +1114,11 @@
     <CustomBuild Include="..\src\GUI\UI\InputBox.ui">
       <Filter>Backend\Form files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\src\GUI\EncashmentWindow.h">
-      <Filter>Backend</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\src\Backend\ServiceMenuBackend.h">
       <Filter>Backend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\GUI\EncashmentWindow.h">
+      <Filter>Plugins\ServiceMenu</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

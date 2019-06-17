@@ -685,6 +685,26 @@ bool FFEngine::checkDealerAgentFlag(ERequestStatus::Enum aInitialized, bool aCan
 }
 
 //--------------------------------------------------------------------------------
+bool FFEngine::checkCashier(QString & aCashier)
+{
+	if (!containsConfigParameter(CFiscalSDK::Cashier))
+	{
+		toLog(LogLevel::Warning, mDeviceName + ": Failed to set cashier due to it is absent");
+		return false;
+	}
+
+	aCashier = getConfigParameter(CFiscalSDK::Cashier).toString().simplified();
+
+	if (aCashier.isEmpty())
+	{
+		toLog(LogLevel::Warning, mDeviceName + ": Failed to set cashier due to it is empty");
+		return false;
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
 bool FFEngine::checkTaxSystemOnPayment(SPaymentData & aPaymentData)
 {
 	char taxSystem = char(aPaymentData.taxSystem);
@@ -876,6 +896,7 @@ void FFEngine::filterAfterPayment(TFiscalPaymentData & aFPData, TComplexFiscalPa
 
 	ADD_SPEC_DFIELD(aFPData, AgentFlagsReg, AgentFlags);
 	ADD_SPEC_DFIELD_SAME(aFPData, TaxSystem);
+	ADD_SPEC_DFIELD_SAME(aFPData, PayOffType);
 
 	for (int i = 0; i < aPSData.size(); ++i)
 	{
@@ -887,7 +908,7 @@ void FFEngine::filterAfterPayment(TFiscalPaymentData & aFPData, TComplexFiscalPa
 }
 
 //--------------------------------------------------------------------------------
-bool FFEngine::checkINN(const QString & aINN, int aType)
+bool FFEngine::checkINN(const QString & aINN, int aType) const
 {
 	int size = aINN.size();
 	bool wrongSize = (size != CFR::INN::Person::Legal) && (size != CFR::INN::Person::Natural);
@@ -964,7 +985,7 @@ bool FFEngine::checkINN(const QString & aINN, int aType)
 }
 
 //--------------------------------------------------------------------------------
-QString FFEngine::filterPhone(const QString & aData)
+QString FFEngine::filterPhone(const QString & aData) const
 {
 	if (!aData.contains(QRegExp("[0-9]+")))
 	{
@@ -1009,8 +1030,14 @@ QString FFEngine::filterPhone(const QString & aData)
 	}
 
 	index = result.indexOf(QRegExp(QString::fromUtf8("[a-zA-Zа-яА-Я\\.\\,\\;\\+]+")), 1);
+	result = result.left(index).remove(QRegExp("[^0-9\\+]+"));
 
-	return result.left(index).remove(QRegExp("[^0-9\\+]+"));
+	if (result.size() == 10)
+	{
+		result.prepend("+7");
+	}
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------

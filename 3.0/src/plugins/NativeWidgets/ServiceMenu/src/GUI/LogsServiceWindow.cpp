@@ -8,14 +8,11 @@
 
 // SDK
 #include <SDK/PaymentProcessor/Core/ICore.h>
-#include <SDK/PaymentProcessor/Core/IService.h>
-#include <SDK/PaymentProcessor/Core/IGUIService.h>
 #include <SDK/PaymentProcessor/Core/ISettingsService.h>
 #include <SDK/PaymentProcessor/Settings/TerminalSettings.h>
 
 // Project
 #include "Backend/ServiceMenuBackend.h"
-#include "ServiceTags.h"
 #include "LogsServiceWindow.h"
 
 //------------------------------------------------------------------------

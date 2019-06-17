@@ -1,6 +1,9 @@
 /* @file Базовый виджет для инкасации */
 
+// Qt
+#include <Common/QtHeadersBegin.h>
 #include <QtCore/QDebug>
+#include <Common/QtHeadersEnd.h>
 
 // SDK
 #include <SDK/PaymentProcessor/Core/ICore.h>
@@ -15,6 +18,7 @@
 // Project
 #include "Backend/MessageBox.h"
 #include "Backend/PaymentManager.h"
+#include "Backend/HardwareManager.h"
 #include "Backend/ServiceMenuBackend.h"
 #include "ServiceTags.h"
 #include "InputBox.h"
@@ -39,13 +43,30 @@ EncashmentWindow::EncashmentWindow(ServiceMenuBackend * aBackend, QWidget * aPar
 	ServiceWindowBase(aBackend),
 	mEncashmentWithZReport(false),
 	mInputBox(nullptr),
-	mHistoryWindow(nullptr)
+	mHistoryWindow(nullptr),
+	mLastPrintJob(0)
 {
 }
 
 //---------------------------------------------------------------------------
 EncashmentWindow::~EncashmentWindow()
 {
+}
+
+bool EncashmentWindow::activate()
+{
+	connect(mBackend->getPaymentManager(), SIGNAL(receiptPrinted(qint64, bool)), this, SLOT(onPeceiptPrinted(qint64, bool)));
+	return true;
+}
+
+//---------------------------------------------------------------------------
+bool EncashmentWindow::deactivate()
+{
+	safeDelete(mInputBox);
+
+	disconnect(mBackend->getPaymentManager(), SIGNAL(receiptPrinted(qint64, bool)), this, SLOT(onPeceiptPrinted(qint64, bool)));
+
+	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -137,22 +158,42 @@ bool EncashmentWindow::doEncashmentProcess()
 void EncashmentWindow::onPrintZReport()
 {
 	QPushButton * zReportButton = dynamic_cast<QPushButton *>(sender());
-
 	MessageBox::hide();
 
 	mMessageError = tr("#zreport_failed");
 	if (mBackend->getPaymentManager()->canPrint(PPSDK::CReceiptType::ZReport))
 	{
-		bool fullZReport = MessageBox::question(tr("#print_full_zreport"));
+		mMessageSuccess = tr("#zreport_printed");
+		bool fullZReport = false;
+		bool canPrintFullZReport = mBackend->getHardwareManager()->isFiscalPrinterPresent(false, true);
+
+		QString msg = canPrintFullZReport ? tr("#print_full_zreport") : tr("#full_zreport_print_failed");
+		
+		if (canPrintFullZReport)
+		{
+			fullZReport	= MessageBox::question(msg);
+		}
+		else
+		{
+			MessageBox::modal(msg, SDK::GUI::MessageBoxParams::Warning);
+		}		 
 
 		mIdleTimer.stop();
 
-		mMessageSuccess = tr("#zreport_printed");
-
 		MessageBox::wait(tr("#printing"));
-		if (!mBackend->getPaymentManager()->printZReport(fullZReport) && zReportButton)
+
+		//if (zReportButton)
 		{
-			zReportButton->setEnabled(false);
+			int jobIndex = mBackend->getPaymentManager()->printZReport(fullZReport);
+			if (jobIndex == -1)
+			{
+				mBackend->toLog(LogLevel::Debug, QString("JOB id=%1 CREATE FAIL.").arg(jobIndex));
+				MessageBox::warning(tr("#full_zreport_print_failed"));
+			}
+			else
+			{
+				mBackend->toLog(LogLevel::Debug, QString("JOB id=%1 CREATE.").arg(jobIndex));
+			}			
 		}
 	}
 	else
@@ -163,18 +204,25 @@ void EncashmentWindow::onPrintZReport()
 }
 
 //------------------------------------------------------------------------
-void EncashmentWindow::onPeceiptPrinted(qint64 aPaymentId, bool aErrorHappened)
+void EncashmentWindow::onPeceiptPrinted(qint64 aJobIndex, bool aErrorHappened)
 {
-	Q_UNUSED(aPaymentId);
+	if (mLastPrintJob && mLastPrintJob == aJobIndex)
+	{
+		mBackend->toLog(LogLevel::Debug, QString("JOB id=%1 ALREADY COMPLETE. SKIP SLOT.").arg(aJobIndex));
+		MessageBox::hide();
+		return;
+	}
 
+	mLastPrintJob = aJobIndex;
+
+	mBackend->toLog(LogLevel::Debug, QString("JOB id=%1 COMPLETE. Error status: %2").arg(aJobIndex).arg(aErrorHappened));
+	
 	if (!mMessageError.isEmpty() && aErrorHappened)
 	{
-		MessageBox::hide();
 		MessageBox::critical(mMessageError);
 	}
 	else if (!mMessageSuccess.isEmpty() && !aErrorHappened)
 	{
-		MessageBox::hide();
 		MessageBox::info(mMessageSuccess);
 	}
 
@@ -189,14 +237,6 @@ void EncashmentWindow::onPeceiptPrinted(qint64 aPaymentId, bool aErrorHappened)
 	}
 
 	mIdleTimer.start();;
-}
-
-//---------------------------------------------------------------------------
-bool EncashmentWindow::deactivate()
-{
-	safeDelete(mInputBox);
-
-	return true;
 }
 
 //---------------------------------------------------------------------------

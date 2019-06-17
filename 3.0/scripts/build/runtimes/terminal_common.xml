@@ -12,9 +12,10 @@
 	<file source="{QBS_RESULT_PATH}/plugins/drivers/card_readers.dll" target="drivers/plugins/drivers/card_readers.dll"/>
 	<file source="{QBS_RESULT_PATH}/plugins/drivers/health.dll" target="drivers/plugins/drivers/health.dll"/>
 	
-	<!-- Интерфейс 12", компонент interface -->
-	<!--
-	<directory source="src/interface/touch12/build" target="interface/interface/touch12" recursive="true"/>
-	<file source="{QBS_RESULT_PATH}/plugins/interface/utils.dll" target="interface/interface/touch12/plugins/utils.dll"/>
-	-->
+	<!-- Интерфейс modern, компонент interface_plugins -->
+	<file source="{QBS_RESULT_PATH}/plugins/interface/utils.dll" target="interface_plugins/interface/modern/plugins/utils.dll"/>
+	
+	<!-- Выключение BITS -->
+	<option target="data/updater.ini" key="bits/ignore" value="true" />
+	
 </runtime>

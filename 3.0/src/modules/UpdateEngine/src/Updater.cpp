@@ -8,6 +8,7 @@
 #include <QtCore/QScopedPointer>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
+#include <QtCore/QSettings>
 #include <QtXml/QDomDocument>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDateTime>
@@ -32,6 +33,8 @@
 #include "Updater.h"
 #include "Package.h"
 #include "Folder.h"
+#include "WindowsBITS.h"
+
 
 Q_DECLARE_METATYPE(CUpdaterErrors::Enum)
 
@@ -50,6 +53,25 @@ namespace CUpdater
 
 	QString UpdaterConfigurationDir = "/update/";
 	QString UpdaterConfiguration = "configuration_%1";
+
+	const QString BitsJobNamePrefix = "TCUpdater_";
+}
+
+//---------------------------------------------------------------------------
+Updater::Updater(QObject * aParent)
+	: QObject(aParent),
+	mFailCount(0),
+	mAllTasksCount(0),
+	mProgressPercent(0),
+	mBitsManager(ILog::getInstance(CUpdater::Name)),
+	mUseBITS(true),
+	mJobPriority(CBITS::HIGH)
+{
+	mNetworkTaskManager.setLog(ILog::getInstance(CUpdater::Name));
+
+	mNetworkTaskManager.setDownloadSpeedLimit(80);
+
+	connect(&mProgressTimer, SIGNAL(timeout()), this, SLOT(showProgress()));
 }
 
 //---------------------------------------------------------------------------
@@ -59,13 +81,16 @@ Updater::Updater(const QString & aConfigURL, const QString & aUpdateURL, const Q
 	mVersion(aVersion), 
 	mAppId(aAppId), 
 	mConfiguration(aConfiguration), 
+	mNetworkTaskManager(ILog::getInstance(CUpdater::Name)),
+	mCurrentTaskSize(0),
+	mWaitUpdateServer(false),
 	mFailCount(0), 
 	mAP(aPointId),
 	mAllTasksCount(0),
-	mProgressPercent(0)
+	mProgressPercent(0),
+	mBitsManager(ILog::getInstance(CUpdater::Name)),
+	mUseBITS(true)
 {
-	mNetworkTaskManager.setLog(ILog::getInstance(CUpdater::Name));
-	
 	mNetworkTaskManager.setDownloadSpeedLimit(80);
 
 	connect(&mProgressTimer, SIGNAL(timeout()), this, SLOT(showProgress()));
@@ -386,13 +411,16 @@ void Updater::download()
 		return;
 	}
 
-	auto task = mActiveTasks.front();
-	task->connect(task, SIGNAL(onComplete()), this, SLOT(downloadComplete()), Qt::UniqueConnection);
+	if (!bitsDownload())
+	{
+		auto task = mActiveTasks.front();
+		task->connect(task, SIGNAL(onComplete()), this, SLOT(downloadComplete()), Qt::UniqueConnection);
 
-	mCurrentTaskSize = task->getDataStream()->size();
-	mNetworkTaskManager.addTask(task);
+		mCurrentTaskSize = task->getDataStream()->size();
+		mNetworkTaskManager.addTask(task);
 
-	Log(LogLevel::Normal, QString("%1 downloading...").arg(task->getUrl().toString()));
+		Log(LogLevel::Normal, QString("%1 downloading...").arg(task->getUrl().toString()));
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -812,6 +840,13 @@ int Updater::checkInterity()
 }
 
 //---------------------------------------------------------------------------
+void Updater::useBITS(bool aUseBITS, int aJobPriority)
+{
+	mUseBITS = aUseBITS;
+	mJobPriority = aJobPriority;
+}
+
+//---------------------------------------------------------------------------
 void Updater::runUpdate()
 {
 	Log(LogLevel::Normal, "Downloading package description...");
@@ -1052,6 +1087,191 @@ bool Updater::validateConfiguration(const TComponentList & aComponents)
 }
 
 //---------------------------------------------------------------------------
+bool Updater::bitsDownload()
+{
+	if (!mBitsManager.isReady() || !mUseBITS)
+	{
+		return false;
+	}
+
+	if (bitsInProgress())
+	{
+		return true;
+	}
+
+	bitsCleanupOldTasks();
+
+	// Save job info into ini file with current updater arguments
+	bitsSaveState();
+
+	// Устанавливаем после выполнения задачи запуск себя с теми же самыми параметрами
+	mBitsManager.setNotify(qApp->applicationFilePath(), QString("--command bits --workdir %1").arg(mWorkingDir));
+
+	CBITS::SJob job;
+	if (mBitsManager.createJob(bitsJobName(), job, mJobPriority))
+	{
+		foreach (auto task, mActiveTasks)
+		{
+			auto fileTask = dynamic_cast<FileDownloadTask *>(task);
+			if (fileTask)
+			{
+				fileTask->closeFile();
+				if (!mBitsManager.addTask(fileTask->getUrl(), fileTask->getPath()))
+				{
+					Log(LogLevel::Error, "Error add task to BITS job.");
+
+					mBitsManager.shutdown();
+					// перейти обратно к схеме скачивания вручную
+					return false;
+				}
+			}
+		}
+
+		// Запускаем на скачивание задание		
+		if (mBitsManager.resume())
+		{
+			Log(LogLevel::Normal, QString("BITS job '%1' create successful.").arg(bitsJobName()));
+
+			// закрываем updater с кодом - "команда выполняется"
+			emit done(CUpdaterErrors::BitsInProgress);
+			return true;
+		}
+		else
+		{
+			Log(LogLevel::Error, QString("Error resume BITS job '%1'.").arg(bitsJobName()));
+		}
+	}
+	else
+	{
+		Log(LogLevel::Error, "Error create BITS job.");
+	}
+
+	mBitsManager.shutdown();
+
+	// перейти обратно к схеме скачивания вручную
+	return false;
+}
+
+//---------------------------------------------------------------------------
+void Updater::bitsCompleteAllJobs(int & aCount, int & aCountComplete, int & aCountError)
+{
+	auto jobs = mBitsManager.getJobs(bitsJobName());
+	aCount = jobs.size();
+	aCountComplete = 0;
+	aCountError = 0;
+
+	auto complete = [this](const CBITS::SJob & job) -> bool {
+		if (!mBitsManager.openJob(job))
+		{
+			Log(LogLevel::Error, QString("BITS job '%1' error open.").arg(job.mName));
+
+			return false;
+		}
+
+		if (!mBitsManager.complete())
+		{
+			Log(LogLevel::Error, QString("BITS job '%1' failed complete.").arg(job.mName));
+
+			return false;
+		}
+
+		return true;
+	};
+
+	foreach(QString jobName, jobs.keys())
+	{
+		// Проверяем состояние таска
+		auto job = jobs.value(jobName);
+
+		if (job.isComplete())
+		{
+			Log(LogLevel::Normal, QString("BITS job '%1' download complete.").arg(job.mName));
+
+			if (!complete(job))
+			{
+				aCountError++;
+			}
+			else
+			{
+				aCountComplete++;
+			}
+		}
+		else if (job.isFatal())
+		{
+			// Всё равно коммитим то, что удалось скачать
+			Log(LogLevel::Error, QString("BITS job '%1' failed.").arg(job.mName));
+
+			complete(job);
+
+			aCountError++;
+		}
+		else
+		{
+			Log(LogLevel::Normal, QString("BITS job '%1' in progress.").arg(job.mName));
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
+bool Updater::bitsInProgress()
+{
+	int count = 0;
+	int countComplete = 0;
+	int countError = 0;
+
+	bitsCompleteAllJobs(count, countError, countComplete);
+
+	if (countError)
+	{
+		bitsCleanupOldTasks();
+
+		// возвращаем ошибку скачивания задания
+		emit done(CUpdaterErrors::NetworkError);
+		return true;
+	}
+	else if (count && countComplete == count)
+	{
+		// передаем управление дальше на распаковку
+		emit downloadAccomplished();
+		return true;
+	}
+	else if (count)
+	{
+		// Скачивание в процессе, просто выходим со статусом "в процессе"
+		emit done(CUpdaterErrors::BitsInProgress);
+		return true;
+	}
+
+	return false;
+}
+
+//---------------------------------------------------------------------------
+void Updater::bitsCleanupOldTasks()
+{
+	Log(LogLevel::Normal, QString("Cancel all bits jobs."));
+
+	// Останавливаем все наши таски от предыдущих версий.
+	auto jobs = mBitsManager.getJobs(CUpdater::BitsJobNamePrefix);
+
+	foreach(const QString & jobName, jobs.keys())
+	{
+		if (jobName.startsWith(CUpdater::BitsJobNamePrefix) &&
+			mBitsManager.openJob(jobs[jobName]))
+		{
+			Log(LogLevel::Normal, QString("Cancel old bits job '%1'.").arg(jobName));
+
+			mBitsManager.cancel();
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
+QString Updater::bitsJobName() const
+{
+	return CUpdater::BitsJobNamePrefix + QString("%1_%2_%3").arg(mAppId).arg(mConfiguration).arg(mVersion);
+}
+
+//---------------------------------------------------------------------------
 CUpdaterErrors::Enum Updater::loadComponents(const QByteArray & aContent, Updater::TComponentList & aComponents, QString & aRevision)
 {
 	QDomDocument description;
@@ -1159,6 +1379,145 @@ CUpdaterErrors::Enum Updater::loadComponents(const QByteArray & aContent, Update
 void Updater::setAcceptedKeys(const QString & aAcceptedKeys)
 {
 	mAcceptedKeys = aAcceptedKeys;
+}
+
+//---------------------------------------------------------------------------
+void Updater::bitsSaveState()
+{
+	QSettings settings(QDir(mWorkingDir + CUpdater::UpdaterConfigurationDir).absoluteFilePath("bits.ini"), QSettings::IniFormat);
+
+	settings.beginGroup("bits");
+	settings.setValue("job_name", bitsJobName());
+	settings.setValue("create_stamp", QDateTime::currentMSecsSinceEpoch());
+	settings.setValue("create_stamp_for_user", QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss"));
+	settings.endGroup();
+
+	settings.beginGroup("updater");
+	settings.setValue("working_dir", mWorkingDir);
+	settings.setValue("config_url", mConfigURL);
+	settings.setValue("update_url", mUpdateURL);
+	settings.setValue("version", mVersion);
+	settings.setValue("app_id", mAppId);
+	settings.setValue("configuration", mConfiguration);
+	settings.setValue("ap", mAP);
+	settings.endGroup();
+
+	auto params = qApp->arguments();
+	params.takeFirst();
+
+	settings.beginWriteArray("parameters");
+	for (int i = 0; i < params.size(); i++)
+	{
+		settings.setArrayIndex(i);
+		settings.setValue("arg", params[i]);
+	}
+	settings.endArray();
+}
+
+//---------------------------------------------------------------------------
+bool Updater::bitsLoadState(QStringList * aParameters)
+{
+	QSettings settings(QDir(mWorkingDir + CUpdater::UpdaterConfigurationDir).absoluteFilePath("bits.ini"), QSettings::IniFormat);
+
+	if (settings.status() != QSettings::NoError)
+	{
+		return false;
+	}
+
+	settings.beginGroup("updater");
+	mWorkingDir = settings.value("working_dir").toString();
+	mConfigURL = settings.value("config_url").toString();
+	mUpdateURL = settings.value("update_url").toString();
+	mVersion = settings.value("version").toString();
+	mAppId = settings.value("app_id").toString();
+	mConfiguration = settings.value("configuration").toString();
+	mAP = settings.value("ap").toString();
+	settings.endGroup();
+
+	if (aParameters)
+	{
+		int count = settings.beginReadArray("parameters");
+		for (int i = 0; i < count; i++)
+		{
+			settings.setArrayIndex(i);
+			aParameters->append(settings.value("arg").toString());
+		}
+		settings.endArray();
+	}
+
+	return !mAppId.isEmpty() && !mConfiguration.isEmpty() && !mVersion.isEmpty();
+}
+
+//---------------------------------------------------------------------------
+bool Updater::bitsIsComplete()
+{
+	Log(LogLevel::Normal, QString("BITS job name: %1.").arg(bitsJobName()));
+
+	auto jobs = mBitsManager.getJobs(bitsJobName());
+	int countComplete = 0;
+
+	foreach(QString jobName, jobs.keys())
+	{
+		// Проверяем состояние таска
+		auto job = jobs.value(jobName);
+
+		Log(LogLevel::Normal, QString("JOB: %1 has state=%2.").arg(job.mName).arg(job.mState));
+
+		if (job.isComplete())
+		{
+			Log(LogLevel::Normal, QString("BITS job '%1' complete.").arg(job.mName));
+
+			countComplete++;
+		}
+	}
+
+	return jobs.count() && jobs.count() == countComplete;
+}
+
+//---------------------------------------------------------------------------
+bool Updater::bitsIsError()
+{
+	auto jobs = mBitsManager.getJobs(bitsJobName());
+	int badJobs = 0;
+
+	foreach(QString jobName, jobs.keys())
+	{
+		// Проверяем состояние таска
+		auto job = jobs.value(jobName);
+
+		if (job.isFatal())
+		{
+			Log(LogLevel::Normal, QString("BITS job '%1' failed.").arg(job.mName));
+
+			if (mBitsManager.openJob(job))
+			{
+				mBitsManager.complete();
+			}
+
+			badJobs++;
+		}
+	}
+
+	if (badJobs)
+	{
+		// Если есть плохие, то остальные закрываем в любом случае.
+
+		foreach(QString jobName, jobs.keys())
+		{
+			// Проверяем состояние таска
+			auto job = jobs.value(jobName);
+
+			if (!job.isFatal())
+			{
+				if (mBitsManager.openJob(job))
+				{
+					mBitsManager.complete();
+				}
+			}
+		}
+	}
+
+	return badJobs > 0;
 }
 
 //---------------------------------------------------------------------------

@@ -162,6 +162,12 @@ bool ID003CashAcceptor::isConnected()
 		return false;
 	}
 
+	if (answerData.isEmpty() && isAutoDetecting())
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Unknown device trying to impersonate this device");
+		return false;
+	}
+
 	QString answer = QString(answerData).trimmed() + ASCII::Space;
 	mVerified = false;
 

@@ -45,7 +45,7 @@ Item {
 						onPressed: {
 							timer.start();
 							global.key += String(about.model.indexOf(modelData));
-							if (global.key === "11111") {
+							if (global.key === "00000" || global.key === "11111") {
 								GUI.notification(Core.environment.terminal.version);
 							}
 						}
@@ -77,7 +77,11 @@ Item {
 		var model = [];
 		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#about_terminal")));
 		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#terminal")).arg(Core.environment.terminal.AP));
-		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#terminal_address")).arg(Core.environment.dealer.pointAddress));
+
+		if (Core.environment.dealer.pointAddress) {
+			model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#terminal_address")).arg(Core.environment.dealer.pointAddress));
+		}
+
 		model.push(Core.environment.dealer.isBank == "1" ?
 								 Utils.locale.tr(QT_TR_NOOP("terminal_info#about_bank_agent")) :
 								 Utils.locale.tr(QT_TR_NOOP("terminal_info#about_agent")));
@@ -91,13 +95,32 @@ Item {
 		}
 
 		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#about_processing")));
-		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#processing_name_inn")).arg(Core.environment.dealer.operatorName).arg(Core.environment.dealer.operatorInn));
-		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#processing_address")).arg(Core.environment.dealer.operatorAddress));
-		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#processing_contract")).arg(Core.environment.dealer.operatorContractNumber));
+
+		if (Core.environment.dealer.operatorName || Core.environment.dealer.operatorInn) {
+			model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#processing_name_inn")).arg(Core.environment.dealer.operatorName).arg(Core.environment.dealer.operatorInn));
+		}
+
+		if (Core.environment.dealer.operatorAddress) {
+			model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#processing_address")).arg(Core.environment.dealer.operatorAddress));
+		}
+
+		if (Core.environment.dealer.operatorContractNumber) {
+			model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#processing_contract")).arg(Core.environment.dealer.operatorContractNumber));
+		}
+
 		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#about_bank")));
-		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#bank_name_inn_bik")).arg(Core.environment.dealer.bankName).arg(Core.environment.dealer.bankInn).arg(Core.environment.dealer.bankBik));
-		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#bank_address_phone")).arg(Core.environment.dealer.bankAddress).arg(Core.environment.dealer.bankPhone));
-		model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#bank_contract")).arg(Core.environment.dealer.bankContractNumber));
+
+		if (Core.environment.dealer.bankName || Core.environment.dealer.bankInn || Core.environment.dealer.bankBik) {
+			model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#bank_name_inn_bik")).arg(Core.environment.dealer.bankName).arg(Core.environment.dealer.bankInn).arg(Core.environment.dealer.bankBik));
+		}
+
+		if (Core.environment.dealer.bankAddress || Core.environment.dealer.bankPhone) {
+			model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#bank_address_phone")).arg(Core.environment.dealer.bankAddress).arg(Core.environment.dealer.bankPhone));
+		}
+
+		if (Core.environment.dealer.bankContractNumber) {
+			model.push(Utils.locale.tr(QT_TR_NOOP("terminal_info#bank_contract")).arg(Core.environment.dealer.bankContractNumber));
+		}
 
 		about.model = model;
 	}

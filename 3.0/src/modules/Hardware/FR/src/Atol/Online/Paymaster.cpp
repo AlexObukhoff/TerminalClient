@@ -6,8 +6,12 @@
 
 using namespace SDK::Driver;
 
+template class Paymaster<Atol2OnlineFRBase>;
+template class Paymaster<Atol3OnlineFRBase>;
+
 //--------------------------------------------------------------------------------
-Paymaster::Paymaster()
+template<class T>
+Paymaster<T>::Paymaster()
 {
 	mDeviceName = CAtolFR::Models::Paymaster;
 	mSupportedModels = QStringList() << mDeviceName;
@@ -23,9 +27,10 @@ Paymaster::Paymaster()
 }
 
 //--------------------------------------------------------------------------------
-void Paymaster::setDeviceConfiguration(const QVariantMap & aConfiguration)
+template<class T>
+void Paymaster<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
-	TPaymaster::setDeviceConfiguration(aConfiguration);
+	AtolVKP80BasedFR<T>::setDeviceConfiguration(aConfiguration);
 
 	bool notPrinting = getConfigParameter(CHardwareSDK::FR::WithoutPrinting) == CHardwareSDK::Values::Use;
 	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel, CAtolOnlinePrinters::Default).toString();
@@ -37,7 +42,8 @@ void Paymaster::setDeviceConfiguration(const QVariantMap & aConfiguration)
 }
 
 //--------------------------------------------------------------------------------
-char Paymaster::getPrinterId()
+template<class T>
+char Paymaster<T>::getPrinterId()
 {
 	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel).toString();
 	char result = CAtolOnlinePrinters::Models.data().key(printerModel, 0);
@@ -51,9 +57,17 @@ char Paymaster::getPrinterId()
 }
 
 //--------------------------------------------------------------------------------
-bool Paymaster::updateParameters()
+template<class T>
+bool Paymaster<T>::updateParameters()
 {
-	if (!TPaymaster::updateParameters())
+	bool result = AtolVKP80BasedFR<T>::updateParameters();
+
+	if (mFRBuild)
+	{
+		mOldFirmware = mFRBuild < CPaymaster::MinFRBuild;
+	}
+
+	if (!result)
 	{
 		return false;
 	}
@@ -88,9 +102,10 @@ bool Paymaster::updateParameters()
 }
 
 //--------------------------------------------------------------------------------
-void Paymaster::processDeviceData()
+template<class T>
+void Paymaster<T>::processDeviceData()
 {
-	TPaymaster::processDeviceData();
+	AtolVKP80BasedFR<T>::processDeviceData();
 
 	QByteArray data;
 	char mode = mMode;
@@ -119,9 +134,10 @@ void Paymaster::processDeviceData()
 }
 
 //--------------------------------------------------------------------------------
-bool Paymaster::enterExtendedMode()
+template<class T>
+bool Paymaster<T>::enterExtendedMode()
 {
-	bool mode = mMode;
+	char mode = mMode;
 
 	if (!enterInnerMode(CAtolFR::InnerModes::Programming))
 	{
@@ -159,7 +175,8 @@ bool Paymaster::enterExtendedMode()
 }
 
 //--------------------------------------------------------------------------------
-bool Paymaster::setNotPrintDocument(bool aEnabled, bool /*aZReport*/)
+template<class T>
+bool Paymaster<T>::setNotPrintDocument(bool aEnabled, bool /*aZReport*/)
 {
 	char printingValue = aEnabled ? CAtolOnlinePrinters::Memory : getPrinterId();
 
@@ -190,9 +207,10 @@ bool Paymaster::setNotPrintDocument(bool aEnabled, bool /*aZReport*/)
 }
 
 //--------------------------------------------------------------------------------
-bool Paymaster::printDeferredZReports()
+template<class T>
+bool Paymaster<T>::printDeferredZReports()
 {
-	if (!TPaymaster::printDeferredZReports())
+	if (!AtolVKP80BasedFR<T>::printDeferredZReports())
 	{
 		return false;
 	}
@@ -206,7 +224,8 @@ bool Paymaster::printDeferredZReports()
 }
 
 //--------------------------------------------------------------------------------
-bool Paymaster::performZReport(bool /*aPrintDeferredReports*/)
+template<class T>
+bool Paymaster<T>::performZReport(bool /*aPrintDeferredReports*/)
 {
 	toLog(LogLevel::Normal, "AtolFR: Processing Z-report");
 
@@ -234,9 +253,10 @@ bool Paymaster::performZReport(bool /*aPrintDeferredReports*/)
 }
 
 //--------------------------------------------------------------------------------
-bool Paymaster::setFRParameters()
+template<class T>
+bool Paymaster<T>::setFRParameters()
 {
-	if (!TPaymaster::setFRParameters())
+	if (!AtolVKP80BasedFR<T>::setFRParameters())
 	{
 		return false;
 	}
@@ -245,9 +265,10 @@ bool Paymaster::setFRParameters()
 }
 
 //--------------------------------------------------------------------------------
-void Paymaster::parseShortStatusFlags(char aFlags, TStatusCodes & aStatusCodes)
+template<class T>
+void Paymaster<T>::parseShortStatusFlags(char aFlags, TStatusCodes & aStatusCodes)
 {
-	TPaymaster::parseShortStatusFlags(aFlags, aStatusCodes);
+	AtolVKP80BasedFR<T>::parseShortStatusFlags(aFlags, aStatusCodes);
 
 	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel).toString();
 

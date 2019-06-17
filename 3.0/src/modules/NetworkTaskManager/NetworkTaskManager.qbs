@@ -8,7 +8,7 @@ StaticLibrary {
 
 	Depends { name: "Core" }
 
-	files: [ "src/*.cpp", "src/*.h" ]
+	files: [ "src/*.cpp", "src/*.h", "res/*.qrc" ]
 	
 	Export {
 		Depends { name: "cpp" }

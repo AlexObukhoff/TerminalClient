@@ -40,7 +40,7 @@ namespace CDevice
 
 //--------------------------------------------------------------------------------
 template <class T>
-class DeviceBase : public T, public MetaDevice
+class DeviceBase : public T
 {
 public:
 	DeviceBase();
@@ -113,6 +113,9 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
+	/// Установить начальные параметры.
+	virtual void setInitialData();
+
 	/// Завершение инициализации.
 	virtual void finaliseInitialization();
 
@@ -168,7 +171,7 @@ protected:
 	/// Максимальное число демпфируемых полловых запросов c некорректным ответом.
 	int mMaxBadAnswers;
 
-	/// Максимальное число демпфируемых полловых запросов c некорректным ответом.
+	/// Признак принудительного включения буфера статусов.
 	bool mForceStatusBufferEnabled;
 
 	/// Версия драйвера.

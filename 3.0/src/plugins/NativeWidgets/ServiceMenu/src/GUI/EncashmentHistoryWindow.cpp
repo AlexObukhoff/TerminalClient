@@ -4,8 +4,9 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtGui/QWidget>
 #include <QtGui/QPushButton>
-#include <QtGui/QSpacerItem>
 #include <Common/QtHeadersEnd.h>
+
+#include <SDK/PaymentProcessor/Core/ReceiptTypes.h>
 
 // Project
 #include "Backend/PaymentManager.h"
@@ -53,6 +54,7 @@ void EncashmentHistoryWindow::updateHistory()
 		QPushButton * button = new QPushButton(text, this);
 		button->setMinimumHeight(35);
 		button->setMaximumWidth(250);
+		button->setEnabled(paymentManager->canPrint(SDK::PaymentProcessor::CReceiptType::Encashment));
 
 		connect(button, SIGNAL(clicked()), mSignalMapper, SLOT(map()));
 		mSignalMapper->setMapping(button, i);

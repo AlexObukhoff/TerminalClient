@@ -8,7 +8,6 @@
 	<directory source="src/interface/modern/build" target="interface/interface/modern" recursive="true">
 		<exclude>*.wav</exclude>
 	</directory>
-	<file source="{QBS_RESULT_PATH}/plugins/interface/utils.dll" target="interface/interface/modern/plugins/utils.dll"/>
 	
 	<!-- Звуки интерфейса modern -->
 	<directory source="src/interface/modern/build/sounds" target="sounds/interface/modern/sounds" recursive="true"/>
@@ -105,15 +104,6 @@
 	<directory source="src/runtimes/ru/dealers/_interface_mts" target="_interface_mts" recursive="true"/>
 
 	<!-- ######################################################################################  -->
-
-	<!-- Контент Самарского дистрибутива -->
-	<directory source="src/runtimes/ru/samara" target="" recursive="true"/>
-
-	<!-- Плагин сценария samaraticket, компонент plugins -->
-	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/samara_ticket.dll" target="_tclib/plugins/samara_ticket.dll"/>
-	
-	<!-- Локализации плагинов -->
-	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/samara_ticket_ru.qm" target="_tclib/plugins/samara_ticket_ru.qm"/>
 
 	<!-- Token plugin -->
 	<file if="{TC_USE_TOKEN} &amp;&amp; {CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/drivers/token.dll" target="drivers/plugins/drivers/token.dll"/>

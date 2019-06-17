@@ -2,7 +2,12 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
+#include <QtCore/QStringList>
+#include <QtCore/QResource>
+#include <QtCore/QByteArray>
 #include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QHostInfo>
+#include <QtNetwork/QSslConfiguration>
 #include <Common/QtHeadersEnd.h>
 
 // Project
@@ -10,11 +15,14 @@
 #include "NetworkTask.h"
 #include "NetworkTaskManager.h"
 
+
 //------------------------------------------------------------------------
-NetworkTaskManager::NetworkTaskManager()
+NetworkTaskManager::NetworkTaskManager(ILog * aLog) : ILogable(aLog)
 {
 	qRegisterMetaType<QNetworkProxy>("QNetworkProxy");
 	qRegisterMetaType<NetworkTask *>("NetworkTask");
+
+	loadCerts();
 
 	moveToThread(this);
 
@@ -417,6 +425,44 @@ void NetworkTaskManager::run()
 	onClearTasks();
 
 	mNetwork.clear();
+}
+
+//------------------------------------------------------------------------
+QSslCertificate NetworkTaskManager::loadCertResource(const QString & aPath)
+{
+	QResource res(aPath);
+	QByteArray buffer(reinterpret_cast<const char *>(res.data()), res.size());
+
+	QSslCertificate cert(buffer);
+	
+	if (cert.isNull() || !cert.isValid())
+	{
+		toLog(LogLevel::Error, QString("Failed load cert: %1.").arg(aPath));
+	}
+	else
+	{
+		toLog(LogLevel::Normal, QString("Load CA cert: %1.").arg(cert.subjectInfo(QSslCertificate::CommonName)));
+	}
+
+	return cert;
+}
+
+//------------------------------------------------------------------------
+void NetworkTaskManager::loadCerts()
+{
+	Q_INIT_RESOURCE(NetworkTaskManager);
+		
+	auto config = QSslConfiguration::defaultConfiguration();
+	
+	QList<QSslCertificate> caCerts = config.caCertificates();
+	caCerts
+		<< loadCertResource(":/CA/GlobalSignRootCA.pem")
+		<< loadCertResource(":/CA/GlobalSignDomainValidationCA-SHA256-G2.pem")
+		<< loadCertResource(":/CA/ThawteRSACA2018.pem")
+		<< loadCertResource(":/CA/DigiCertGlobalRootCA.pem");
+
+	config.setCaCertificates(caCerts);
+	QSslConfiguration::setDefaultConfiguration(config);
 }
 
 //------------------------------------------------------------------------

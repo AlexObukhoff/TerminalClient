@@ -16,6 +16,7 @@
 #endif
 
 #include <Common/Version.h>
+#include <SysUtils/ISysUtils.h>
 
 // Проект
 #include "SimpleLog.h"
@@ -172,16 +173,15 @@ bool SimpleLog::init()
 			QString logPath;
 			QString workingDirectory;
 
-#ifdef Q_OS_WIN			
+#ifdef Q_OS_WIN
 			TCHAR szPath[MAX_PATH] = { 0 };
 			
 			if (GetModuleFileName(0, szPath, MAX_PATH))
 			{
 				QFileInfo info(QDir::toNativeSeparators(QString::fromWCharArray(szPath)));
 				QString settingsFilePath = QDir::toNativeSeparators(info.absolutePath() + "/" + info.completeBaseName() + ".ini");
-				QSettings mSettings(settingsFilePath, QSettings::IniFormat);
+				QSettings mSettings(ISysUtils::rmBOM(settingsFilePath), QSettings::IniFormat);
 				mSettings.setIniCodec("UTF-8");
-				
 
 				if (mSettings.contains("common/working_directory"))
 				{
@@ -192,7 +192,7 @@ bool SimpleLog::init()
 				{
 					workingDirectory = info.absolutePath();
 				}
-			}			
+			}
 #else
 #pragma error
 #endif

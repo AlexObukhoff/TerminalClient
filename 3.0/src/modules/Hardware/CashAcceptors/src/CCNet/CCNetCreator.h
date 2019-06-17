@@ -19,9 +19,6 @@ protected:
 	/// Обновить прошивку.
 	virtual bool performUpdateFirmware(const QByteArray & aBuffer);
 
-	/// Может менять скорость?
-	virtual bool canChangeBaudrate();
-
 	/// Изменить скорость работы.
 	virtual bool performBaudRateChanging(const SDK::Driver::TPortParameters & aPortParameters);
 

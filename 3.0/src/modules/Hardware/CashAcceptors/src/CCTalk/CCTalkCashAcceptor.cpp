@@ -101,7 +101,7 @@ bool CCTalkCashAcceptor::loadParTable()
 				}
 				else
 				{
-					toLog(LogLevel::Error, QString("%1: Failed ot parse nominal value %2 (0x%3)").arg(mDeviceName).arg(valueData.data()).arg(valueData.toHex().toUpper().data()));
+					toLog(LogLevel::Error, QString("%1: Failed to parse nominal value %2 (0x%3)").arg(mDeviceName).arg(valueData.data()).arg(valueData.toHex().toUpper().data()));
 				}
 			}
 		}

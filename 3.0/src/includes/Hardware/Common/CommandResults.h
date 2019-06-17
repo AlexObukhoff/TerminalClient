@@ -20,15 +20,22 @@ namespace CommandResult
 	const int Protocol  = 3;    /// Ответ некорректен по протоколу.
 	const int Driver    = 4;    /// Ошибка драйвера.
 	const int NoAnswer  = 5;    /// Нет ответа.
+	const int Id        = 6;    /// Id пакета или команда.
+	const int CRC       = 7;    /// CRC.
 
 	// девайс
 	const int Answer = 100;     /// Ответ логически некорректен.
 	const int Device = 101;     /// Логическая ошибка устройства.
 
 	typedef QSet<int> TResults;
-	const TResults ProtocolErrors = TResults() << Port << Transport << Protocol << Driver << NoAnswer;
+	const TResults ProtocolErrors = TResults() << Port << Transport << Protocol << Driver << NoAnswer << Id << CRC;
 }
 
 #define CORRECT(aResult) !CommandResult::ProtocolErrors.contains(aResult)
+
+namespace EResult
+{
+	enum Enum { OK, Fail, Error };
+}
 
 //--------------------------------------------------------------------------------

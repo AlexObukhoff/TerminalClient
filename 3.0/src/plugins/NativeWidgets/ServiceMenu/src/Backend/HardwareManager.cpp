@@ -4,7 +4,6 @@
 #include <SDK/Drivers/IFiscalPrinter.h>
 #include <SDK/Drivers/Components.h>
 #include <SDK/PaymentProcessor/Core/ICore.h>
-#include <SDK/PaymentProcessor/Core/ISettingsService.h>
 #include <SDK/PaymentProcessor/Core/IPrinterService.h>
 #include <SDK/PaymentProcessor/Core/ReceiptTypes.h>
 #include <SDK/PaymentProcessor/Settings/TerminalSettings.h>
@@ -249,7 +248,7 @@ void HardwareManager::deviceStatusChanged(const QString & aConfigName, DSDK::EWa
 }
 
 //---------------------------------------------------------------------------
-bool HardwareManager::isFiscalPrinterPresent(bool aVirtual)
+bool HardwareManager::isFiscalPrinterPresent(bool aVirtual, bool aCheckPrintFullZReport)
 {
 	bool isFiscal = false;
 	bool isVirtualFiscal = false;
@@ -277,7 +276,13 @@ bool HardwareManager::isFiscalPrinterPresent(bool aVirtual)
 			auto device = getDevice(config);
 			auto fiscalPrinter = device ? dynamic_cast<DSDK::IFiscalPrinter *>(device) : nullptr;
 
-			isFiscal = isFiscal || (fiscalPrinter && fiscalPrinter->isFiscal() && fiscalPrinter->isDeviceReady(false));
+			isFiscal = isFiscal || 
+				(
+					fiscalPrinter && 
+					fiscalPrinter->isFiscal() && 
+					fiscalPrinter->isDeviceReady(false) &&
+					(aCheckPrintFullZReport ? fiscalPrinter->canProcessZBuffer() : true)
+				);
 		}
 	}
 

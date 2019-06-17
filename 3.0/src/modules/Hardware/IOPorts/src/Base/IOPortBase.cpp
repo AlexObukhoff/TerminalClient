@@ -80,3 +80,31 @@ void IOPortBase::setDeviceConfiguration(const QVariantMap & aConfiguration)
 }
 
 //--------------------------------------------------------------------------------
+void IOPortBase::adjustData(const QStringList & aMine, const QStringList & aOther)
+{
+	QVariantMap outDeviceData;
+	outDeviceData.insert(CDeviceData::Ports::Mine,   aMine.join("\n"));
+	outDeviceData.insert(CDeviceData::Ports::Other, aOther.join("\n"));
+	setConfigParameter(CHardwareSDK::DeviceData, outDeviceData);
+
+	if (!isAutoDetecting())
+	{
+		QString portData = outDeviceData[CDeviceData::Ports::Mine].toString();
+		QString otherData = outDeviceData[CDeviceData::Ports::Other].toString();
+
+		LogLevel::Enum logLevel = LogLevel::Normal;
+
+		if (!portData.isEmpty())
+		{
+			logLevel = LogLevel::Debug;
+			toLog(LogLevel::Normal, "Port data:\n" + portData);
+		}
+
+		if (!otherData.isEmpty())
+		{
+			toLog(logLevel, "Port data additional:\n" + otherData);
+		}
+	}
+}
+
+//--------------------------------------------------------------------------------

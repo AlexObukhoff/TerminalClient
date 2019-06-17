@@ -56,7 +56,7 @@ BasicApplication::BasicApplication(const QString& aName, const QString& aVersion
 	QFileInfo info(QString::fromLocal8Bit(mArguments[0]));
 
 	QString settingsFilePath = QDir::toNativeSeparators(info.absolutePath() + "/" + info.completeBaseName() + ".ini");
-	mSettings = QSharedPointer<QSettings>(new QSettings(settingsFilePath, QSettings::IniFormat));
+	mSettings = QSharedPointer<QSettings>(new QSettings(ISysUtils::rmBOM(settingsFilePath), QSettings::IniFormat));
 	mSettings->setIniCodec("UTF-8");
 
 	mWorkingDirectory = info.absolutePath();
@@ -70,9 +70,9 @@ BasicApplication::BasicApplication(const QString& aName, const QString& aVersion
 	mInstance = this;
 
 	// Выставим уровень логирования
-	QSettings userSettings(mWorkingDirectory + QDir::separator() + mSettings->value("common/user_data_path").toString()
-		+ QDir::separator() + "user.ini", QSettings::IniFormat);
-	
+	QString userFilePath = mWorkingDirectory + QDir::separator() + mSettings->value("common/user_data_path").toString() + QDir::separator() + "user.ini";
+	QSettings userSettings(ISysUtils::rmBOM(userFilePath), QSettings::IniFormat);
+
 	if (userSettings.contains("log/level"))
 	{
 		int level = userSettings.value("log/level").toInt();
@@ -85,10 +85,10 @@ BasicApplication::BasicApplication(const QString& aName, const QString& aVersion
 		{
 			level = LogLevel::Max;
 		}
-			  
+
 		ILog::setGlobalLevel(static_cast<LogLevel::Enum>(level));
 	}
-	
+
 	mLog = ILog::getInstance(mName);
 
 	// Выводим стандартный заголовок в лог

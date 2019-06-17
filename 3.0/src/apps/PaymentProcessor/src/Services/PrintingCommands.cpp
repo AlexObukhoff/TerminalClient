@@ -54,7 +54,7 @@ QVariantMap toUpperCaseKeys(const QVariantMap & aParameters)
 #endif
 
 //---------------------------------------------------------------------------
-SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap & aParameters)
+DSDK::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap & aParameters)
 {
 	DSDK::TUnitDataList unitDataList;
 
@@ -95,18 +95,33 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 		}
 	}
 
-	if (!qFuzzyIsNull(fee))
-	{
-		QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
-		unitDataList << (dealerIsBank ?
-			DSDK::SUnitData(fee, dealerVAT, tr("#bank_fee"),   dealerINN, DSDK::EPayOffSubjectTypes::Payment) :
-			DSDK::SUnitData(fee, dealerVAT, tr("#dealer_fee"), dealerINN, DSDK::EPayOffSubjectTypes::AgentFee));
-	}
+	bool combineFeeWithZeroVAT = aParameters.value("COMBINE_FEE_WITH_ZERO_VAT", false).toBool();
+	QString feeName = combineFeeWithZeroVAT ? tr("#dealer_bpa_fee") : tr("#dealer_fee");
 
-	if (!qFuzzyIsNull(processingFee))
+	if (dealerVAT == 0 && combineFeeWithZeroVAT)
 	{
-		QString bankINN = aParameters.value(CPrintConstants::BankInn).toString();
-		unitDataList << DSDK::SUnitData(processingFee, 0, tr("#processing_fee"), bankINN, DSDK::EPayOffSubjectTypes::Payment);
+		fee = aParameters.value("FEE").toDouble();
+		if (!qFuzzyIsNull(fee))
+		{
+			QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
+			unitDataList << DSDK::SUnitData(fee, dealerVAT, feeName, dealerINN, DSDK::EPayOffSubjectTypes::AgentFee);
+		}
+	}
+	else
+	{
+		if (!qFuzzyIsNull(fee))
+		{
+			QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
+			unitDataList << (dealerIsBank ?
+				DSDK::SUnitData(fee, dealerVAT, tr("#bank_fee"), dealerINN, DSDK::EPayOffSubjectTypes::Payment) :
+				DSDK::SUnitData(fee, dealerVAT, feeName, dealerINN, DSDK::EPayOffSubjectTypes::AgentFee));
+		}
+
+		if (!qFuzzyIsNull(processingFee))
+		{
+			QString bankINN = aParameters.value(CPrintConstants::BankInn).toString();
+			unitDataList << DSDK::SUnitData(processingFee, 0, tr("#processing_fee"), bankINN, DSDK::EPayOffSubjectTypes::Payment);
+		}
 	}
 
 	bool EMoney = aParameters.value(PPSDK::CPayment::Parameters::PayTool).toInt() > 0;
@@ -114,7 +129,7 @@ SDK::Driver::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap &
 	auto taxSystem = aParameters.contains(CPrintConstants::DealerTaxSystem) ? static_cast<DSDK::ETaxSystems::Enum>(aParameters.value(CPrintConstants::DealerTaxSystem).toInt()) : DSDK::ETaxSystems::None;
 	auto agentFlag = aParameters.contains(CPrintConstants::DealerAgentFlag) ? static_cast<DSDK::EAgentFlags::Enum>(aParameters.value(CPrintConstants::DealerAgentFlag).toInt()) : DSDK::EAgentFlags::None;
 
-	DSDK::SPaymentData result(unitDataList, false, payType, taxSystem, agentFlag);
+	DSDK::SPaymentData result(unitDataList, DSDK::EPayOffTypes::Debit, payType, taxSystem, agentFlag);
 
 	result.fiscalParameters[CHardwareSDK::FR::UserPhone] = QString();
 	result.fiscalParameters[CHardwareSDK::FR::UserMail] = QString();
@@ -257,10 +272,10 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 	else if (canFiscalPrint(aPrinter, false))
 	{
 		DSDK::SPaymentData paymentData = getPaymentData(actualParameters);
+		DSDK::IFiscalPrinter * fiscalPrinter = static_cast<DSDK::IFiscalPrinter *>(aPrinter);
 
-		mFiscalPaymentData.clear();
-		mPayOffSubjectData.clear();
-		result = static_cast<DSDK::IFiscalPrinter *>(aPrinter)->printFiscal(receipt, paymentData, mFiscalPaymentData, mPayOffSubjectData);
+		quint32 FDNumber = 0;
+		result = fiscalPrinter->printFiscal(receipt, paymentData, &FDNumber);
 
 		if (result)
 		{
@@ -269,11 +284,15 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 				mFiscalFieldData = aPrinter->getDeviceConfiguration().value(CHardwareSDK::FR::FiscalFieldData).value<DSDK::TFiscalFieldData>();
 			}
 
-			addFiscalPaymentData(mFiscalPaymentData, receipt);
+			DSDK::TFiscalPaymentData fiscalPaymentData;
+			DSDK::TComplexFiscalPaymentData payOffSubjectData;
+			fiscalPrinter->checkFiscalFields(FDNumber, fiscalPaymentData, payOffSubjectData);
 
-			for (int i = 0; i < mPayOffSubjectData.size(); ++i)
+			addFiscalPaymentData(fiscalPaymentData, receipt);
+
+			for (int i = 0; i < payOffSubjectData.size(); ++i)
 			{
-				addFiscalPaymentData(mPayOffSubjectData[i], receipt);
+				addFiscalPaymentData(payOffSubjectData[i], receipt);
 			}
 		}
 	}
@@ -306,12 +325,6 @@ void PrintPayment::addFiscalPaymentData(const DSDK::TFiscalPaymentData & aFPData
 			aData << text.simplified();
 		}
 	}
-}
-
-//---------------------------------------------------------------------------
-const DSDK::TFiscalPaymentData & PrintPayment::getFiscalData() const
-{
-	return mFiscalPaymentData;
 }
 
 //---------------------------------------------------------------------------

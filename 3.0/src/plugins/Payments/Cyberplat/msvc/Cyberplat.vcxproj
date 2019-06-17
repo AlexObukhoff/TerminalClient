@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\DealerLocalData.cpp" />
     <ClCompile Include="..\src\DealerPayment.cpp" />
     <ClCompile Include="..\src\MultistagePayment.cpp" />
     <ClCompile Include="..\src\MultistagePaymentGetStepRequest.cpp" />
@@ -209,6 +210,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
+    <ClInclude Include="..\src\DealerLocalData.h" />
     <ClInclude Include="..\src\DealerPayment.h" />
     <ClInclude Include="..\src\MultistagePayment.h" />
     <ClInclude Include="..\src\MultistagePaymentGetStepRequest.h" />

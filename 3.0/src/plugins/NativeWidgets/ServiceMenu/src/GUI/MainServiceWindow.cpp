@@ -3,12 +3,10 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtGui/QStatusBar>
-#include <QtCore/QDateTime>
 #include <Common/QtHeadersEnd.h>
 
 // Модули
 #include <SDK/PaymentProcessor/Core/ICore.h>
-#include <SDK/PaymentProcessor/Connection/ConnectionTypes.h>
 
 // Проект
 #include "IServiceWindow.h"

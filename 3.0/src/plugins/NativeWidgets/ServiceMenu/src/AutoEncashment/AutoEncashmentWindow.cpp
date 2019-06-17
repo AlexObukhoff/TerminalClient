@@ -3,13 +3,11 @@
 // Qt
 #include "Common/QtHeadersBegin.h"
 #include <QtCore/QDateTime>
-#include <QtGui/QInputDialog>
 #include "Common/QtHeadersEnd.h"
 
 // SDK
 #include <SDK/PaymentProcessor/Core/ICore.h>
 #include <SDK/PaymentProcessor/Core/IService.h>
-#include <SDK/PaymentProcessor/Core/ServiceParameters.h>
 #include <SDK/PaymentProcessor/Core/ReceiptTypes.h>
 
 // Project

@@ -10,7 +10,7 @@
 #include "Hardware/Watchdogs/WatchdogStatusCodes.h"
 
 //--------------------------------------------------------------------------------
-class ProtoWatchdog : public ProtoDevice, public SDK::Driver::IWatchdog
+class ProtoWatchdog : public ProtoDevice, public MetaDevice<SDK::Driver::IWatchdog>
 {
 	Q_OBJECT
 

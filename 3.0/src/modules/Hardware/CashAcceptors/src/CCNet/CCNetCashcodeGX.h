@@ -35,9 +35,6 @@ protected:
 	/// Отправить буфер данных обновления прошивки для купюроприемника Cashcode GX.
 	virtual bool processUpdating(const QByteArray & aBuffer, int aSectionSize);
 
-	/// Может менять скорость?
-	virtual bool canChangeBaudrate();
-
 	/// Изменить скорость работы.
 	virtual bool performBaudRateChanging(const SDK::Driver::TPortParameters & aPortParameters);
 };

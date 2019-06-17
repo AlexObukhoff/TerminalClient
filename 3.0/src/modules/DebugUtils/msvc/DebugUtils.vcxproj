@@ -15,7 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>
+    <ProjectGuid>{BC9F914F-5B3C-499A-B137-F114238C905F}</ProjectGuid>
     <RootNamespace>DebugUtils</RootNamespace>
     <Keyword>Qt4VS</Keyword>
   </PropertyGroup>

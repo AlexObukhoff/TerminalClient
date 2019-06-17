@@ -5,7 +5,6 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QList>
 #include <QtCore/QDebug>
 #include <QtCore/QCache>
 #include <Common/QtHeadersEnd.h>
@@ -18,7 +17,6 @@
 #include <SDK/PaymentProcessor/Core/IPrinterService.h>
 #include <SDK/PaymentProcessor/Core/ICryptService.h>
 #include <SDK/PaymentProcessor/Core/ReceiptTypes.h>
-#include <SDK/PaymentProcessor/Core/ServiceParameters.h>
 #include <SDK/PaymentProcessor/Core/ISettingsService.h>
 #include <SDK/PaymentProcessor/Settings/TerminalSettings.h>
 #include <SDK/PaymentProcessor/Payment/Step.h>
@@ -323,7 +321,7 @@ void PaymentManager::onReceiptPrinted(int aJobIndex, bool aErrorHappened)
 	}
 	else
 	{
-		emit receiptPrinted(0, aErrorHappened);
+		emit receiptPrinted(aJobIndex, aErrorHappened);
 	}
 }
 
@@ -401,7 +399,7 @@ bool PaymentManager::printBalance() const
 }
 
 //------------------------------------------------------------------------
-bool PaymentManager::printZReport(bool aFullZReport)
+int PaymentManager::printZReport(bool aFullZReport)
 {
 	if (mEncashment.balance.notPrintedPayments.isEmpty() || !mUseFiscalPrinter)
 	{
@@ -409,16 +407,20 @@ bool PaymentManager::printZReport(bool aFullZReport)
 	}
 	else
 	{
+		int result = 0;
 		if (mPaymentsRegistryPrintJob == 0)
 		{
 			// Перед отчётом печатаем все не напечатанные чеки
-			printUnprintedReceiptsRegistry(mEncashment.balance.notPrintedPayments);
+			if (!printUnprintedReceiptsRegistry(mEncashment.balance.notPrintedPayments))
+			{
+				result = -1;
+			}
 		}
 
 		// Оставляем пометку что мы хотели напечатать Z-отчет, но у нас есть не напечатанные чеки
 		mNeedPrintZReport = aFullZReport ? PPSDK::CReceiptType::ZReportFull : PPSDK::CReceiptType::ZReport;
 
-		return false;
+		return result;
 	}
 }
 

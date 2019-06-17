@@ -40,3 +40,32 @@ bool DeviceUtils::isComplexFirmwareOld(const QString & aFirmware, const QString 
 }
 
 //--------------------------------------------------------------------------------
+QString DeviceUtils::getPartDeviceData(const TDeviceData & aData, bool aHideEmpty, int aLevel)
+{
+	QStringList keys = aData.keys();
+	int maxSize = 0;
+
+	foreach(auto key, keys)
+	{
+		maxSize = qMax(maxSize, key.size());
+	}
+
+	keys.sort();
+	QString result;
+
+	for (int i = 0; i < keys.size(); ++i)
+	{
+		QString key = keys[i];
+		QString value = aData[key];
+
+		if (!aHideEmpty || !value.isEmpty())
+		{
+			key = QString(aLevel, ASCII::TAB) + key + QString(maxSize - key.size(), QChar(ASCII::Space));
+			result += QString("\n%1 : %2").arg(key).arg(value);
+		}
+	}
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------

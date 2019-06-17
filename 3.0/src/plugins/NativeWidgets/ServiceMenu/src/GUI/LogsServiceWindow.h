@@ -4,7 +4,6 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QTimer>
 #include <QtCore/QFutureWatcher>
 #include <QtGui/QStringListModel>
 #include "ui_LogsServiceWindow.h"

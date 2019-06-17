@@ -110,6 +110,12 @@ bool DeviceBase<T>::updateParameters()
 
 //--------------------------------------------------------------------------------
 template <class T>
+void DeviceBase<T>::setInitialData()
+{
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
 bool DeviceBase<T>::isConnected()
 {
 	return true;
@@ -167,11 +173,6 @@ bool DeviceBase<T>::checkExistence()
 		toLog(LogLevel::Error, mDeviceName + " can not be found via autodetecting as unsupported by plugin " + getConfigParameter(CHardware::PluginPath).toString());
 		return false;
 	}
-	else if (!mVerified && autoDetecting)
-	{
-		toLog(LogLevel::Error, mDeviceName + " can not be found via autodetecting as unverified.");
-		return false;
-	}
 	else if (!mConnected)
 	{
 		toLog(LogLevel::Error, QString("Failed to identify %1.").arg(mDeviceName));
@@ -203,6 +204,7 @@ void DeviceBase<T>::initialize()
 	toLog(LogLevel::Normal, "**********************************************************");
 
 	mInitialized = ERequestStatus::InProcess;
+	mInitializationError = false;
 
 	MutexLocker resourceLocker(&mResourceMutex);
 
@@ -230,6 +232,8 @@ void DeviceBase<T>::initialize()
 				}
 
 				MutexLocker externalLocker(&mExternalMutex);
+
+				setInitialData();
 
 				if (updateParameters())
 				{
@@ -341,7 +345,7 @@ bool DeviceBase<T>::isInitializationError(TStatusCodes & aStatusCodes)
 template <class T>
 void DeviceBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 {
-	if (isInitializationError(aStatusCodes))
+	if (isInitializationError(aStatusCodes) || mInitializationError)
 	{
 		aStatusCodes.insert(DeviceStatusCode::Error::Initialization);
 	}
@@ -361,6 +365,7 @@ void DeviceBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 		}
 
 		mNeedReboot = false;
+		mInitializationError = false;
 	}
 
 	if ((aStatusCodes.size() > 1) && (aStatusCodes.contains(DeviceStatusCode::Error::ThirdPartyDriverFail)))

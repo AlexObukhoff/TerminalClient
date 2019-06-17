@@ -16,7 +16,7 @@ ShtrihSerialFR::ShtrihSerialFR()
 	mCommandData.add(CShtrihFRBase::Commands::GetFMTotalSum, 30 * 1000);
 
 	// ошибки
-	mErrorData = PErrorData(new CShtrihFRBase::Errors::CData);
+	mErrorData = PErrorData(new CShtrihFRBase::Errors::Data);
 
 	// данные налогов
 	mTaxData.add(0, 3);
@@ -66,17 +66,17 @@ bool ShtrihSerialFR::isNotError(char aCommand)
 }
 
 //--------------------------------------------------------------------------------
-bool ShtrihSerialFR::processAnswer(const QByteArray & aCommand)
+bool ShtrihSerialFR::processAnswer(const QByteArray & aCommand, char aError)
 {
-	if (mLastError == CShtrihFRBase::Errors::FMInDataEntryMode)
+	if (aError == CShtrihFRBase::Errors::FMInDataEntryMode)
 	{
-		mProcessingErrors.push_back(mLastError);
+		mProcessingErrors.push_back(aError);
 
 		return processCommand(CShtrihFR::Commands::BreakDataEjecting);
 	}
-	else if (mLastError == CShtrihFRBase::Errors::CannotSetModeTable)
+	else if (aError == CShtrihFRBase::Errors::CannotSetModeTable)
 	{
-		mProcessingErrors.push_back(mLastError);
+		mProcessingErrors.push_back(aError);
 
 		if (!getLongStatus())
 		{
@@ -84,7 +84,7 @@ bool ShtrihSerialFR::processAnswer(const QByteArray & aCommand)
 			return false;
 		}
 
-		if ((mMode != CShtrihFR::InnerModes::SessionOpened) && (mMode != CShtrihFR::InnerModes::NeedCloseSession))
+		if ((mMode != CShtrihFR::InnerModes::SessionOpened) && (mMode != CShtrihFR::InnerModes::SessionExpired))
 		{
 			toLog(LogLevel::Error, "ShtrihFR: mode is not session opened or need close session, so the error cannot be processed");
 			return false;
@@ -93,7 +93,7 @@ bool ShtrihSerialFR::processAnswer(const QByteArray & aCommand)
 		return execZReport(true);
 	}
 
-	return TShtrihSerialFRBase::processAnswer(aCommand);
+	return TShtrihSerialFRBase::processAnswer(aCommand, aError);
 }
 
 //--------------------------------------------------------------------------------
@@ -171,7 +171,7 @@ void ShtrihSerialFR::parseDeviceData(const QByteArray & aData)
 }
 
 //--------------------------------------------------------------------------------
-void ShtrihSerialFR::setErrorFlags(const QByteArray & /*aCommand*/)
+void ShtrihSerialFR::setErrorFlags()
 {
 	if (isEKLZErrorCritical(mLastError))
 	{
@@ -290,16 +290,15 @@ bool ShtrihSerialFR::getStatus(TStatusCodes & aStatusCodes)
 		return false;
 	}
 
-	QByteArray answer;
-	TResult result = processCommand(CShtrihFR::Commands::GetShortStatus, &answer);
+	QByteArray data = performStatus(aStatusCodes, CShtrihFR::Commands::GetShortStatus, 11);
 
-	if (!CORRECT(result))
+	if (data == CFR::Result::Fail)
 	{
 		return false;
 	}
-	else if (result && (answer.size() > 11))
+	else if (data != CFR::Result::Error)
 	{
-		int statusCode = CShtrihFRBase::EKLZStatusDescription[answer[11]];
+		int statusCode = CShtrihFRBase::EKLZStatusDescription[data[11]];
 		aStatusCodes.insert(statusCode);
 
 		if (statusCode == FRStatusCode::Error::EKLZ)
@@ -307,9 +306,9 @@ bool ShtrihSerialFR::getStatus(TStatusCodes & aStatusCodes)
 			mEKLZError = true;
 		}
 
-		if (isFMErrorCritical(answer[10]))
+		if (isFMErrorCritical(data[10]))
 		{
-			aStatusCodes.insert(FRStatusCode::Error::FiscalMemory);
+			aStatusCodes.insert(FRStatusCode::Error::FM);
 		}
 	}
 

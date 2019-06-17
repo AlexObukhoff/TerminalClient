@@ -15,6 +15,7 @@
 #include <AdBackend/DatabaseUtils.h>
 #include <AdBackend/Client.h>
 #include <AdBackend/Campaign.h>
+#include <SysUtils/ISysUtils.h>
 
 // Project
 #include "System/IApplication.h"
@@ -60,7 +61,7 @@ AdService::AdService(IApplication * aApplication)
 	  mSettings(nullptr)
 {
 	QString userPath = IApplication::toAbsolutePath(mApplication->getSettings().value(CSettings::UserDataPath).toString());
-	mSettings = new QSettings(userPath + QDir::separator() + CAdService::SettingsName, QSettings::IniFormat, this);
+	mSettings = new QSettings(ISysUtils::rmBOM(userPath + QDir::separator() + CAdService::SettingsName), QSettings::IniFormat, this);
 	mSettings->setIniCodec("utf-8");
 }
 

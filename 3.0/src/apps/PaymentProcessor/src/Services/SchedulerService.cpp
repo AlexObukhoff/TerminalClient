@@ -12,6 +12,7 @@
 #include <SDK/PaymentProcessor/Core/ISettingsService.h>
 
 // Модули
+#include <SysUtils/ISysUtils.h>
 #include <System/IApplication.h>
 #include <System/SettingsConstants.h>
 #include <Services/ServiceNames.h>
@@ -99,8 +100,8 @@ SchedulerService::~SchedulerService()
 //---------------------------------------------------------------------------
 bool SchedulerService::initialize()
 {
-	QSettings settings(IApplication::toAbsolutePath(IApplication::getWorkingDirectory() + CScheduler::ConfigName), QSettings::IniFormat);
-	QSettings userSettings(IApplication::toAbsolutePath(IApplication::getWorkingDirectory() + CScheduler::UserConfigName), QSettings::IniFormat);
+	QSettings settings(ISysUtils::rmBOM(IApplication::toAbsolutePath(IApplication::getWorkingDirectory() + CScheduler::ConfigName)), QSettings::IniFormat);
+	QSettings userSettings(ISysUtils::rmBOM(IApplication::toAbsolutePath(IApplication::getWorkingDirectory() + CScheduler::UserConfigName)), QSettings::IniFormat);
 
 	foreach (QString taskName, settings.childGroups())
 	{

@@ -36,7 +36,7 @@ class NetworkTaskManager : public QThread, public ILogable
 	Q_OBJECT
 
 public:
-	NetworkTaskManager();
+	NetworkTaskManager(ILog * aLog = nullptr);
 	virtual ~NetworkTaskManager();
 
 	/// Установка proxy сервера.
@@ -88,6 +88,9 @@ private:
 	/// Рабочая процедура нити.
 	void run();
 
+	/// Загрузка сертификата из ресурсов
+	QSslCertificate loadCertResource(const QString & aPath);
+
 signals:
 	/// Сигнал об неуспешном сетевом соединении
 	void networkTaskStatus(bool aFailure);
@@ -98,6 +101,7 @@ private:
 	TTaskMap mTasks;
 	QSharedPointer<QNetworkAccessManager> mNetwork;
 	QString mUserAgent;
+	void loadCerts();
 };
 
 //------------------------------------------------------------------------

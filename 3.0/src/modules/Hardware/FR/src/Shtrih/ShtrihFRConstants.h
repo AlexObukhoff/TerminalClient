@@ -42,13 +42,6 @@ namespace CShtrihFR
 	/// Фиксированное количество символов в строке.
 	const int FixedStringSize = 40;
 
-	/// Типы фискальных чеков.
-	namespace DocumentTypes
-	{
-		const char Sale     = '\x00';    /// Продажа.
-		const char SaleBack = '\x02';    /// Возврат продажи.
-	}
-
 	/// Номер отдела для продажи.
 	const char SectionNumber = 0x00;
 
@@ -67,7 +60,7 @@ namespace CShtrihFR
 	/// Полная отрезка.
 	const char FullCutting = 0x00;
 
-	/// Неполная отрезка.
+	/// Неполная отрезка (для ФР с ретрактором - полная).
 	const char PartialCutting = 0x01;
 
 	/// При выдачи чека не задействовать презентер.
@@ -159,7 +152,7 @@ namespace CShtrihFR
 			Work             =  0,      /// Принтер в рабочем режиме.
 			DataEjecting     =  1,      /// Выдача данных.
 			SessionOpened    =  2,      /// Открытая смена, 24 часа не кончились.
-			NeedCloseSession =  3,      /// Открытая смена, 24 часа кончились.
+			SessionExpired   =  3,      /// Открытая смена, 24 часа кончились.
 			SessionClosed    =  4,      /// Закрытая смена.
 			DocumentOpened   =  8,      /// Открытый документ.
 			PrintFullZReport = 11,      /// Печать полного фис. отчета.
@@ -208,7 +201,9 @@ namespace CShtrihFR
 		const char OpenDocument            = '\x8D';     /// Открыть фискальный чек.
 		const char CloseDocument           = '\x85';     /// Закрыть фискальный чек.
 		const char Sale                    = '\x80';     /// Продажа.
+		const char Buy                     = '\x81';     /// Покупка.
 		const char SaleBack                = '\x82';     /// Возврат продажи.
+		const char BuyBack                 = '\x83';     /// Возврат покупки.
 		const char CancelDocument          = '\x88';     /// Аннулировать фискальный чек.
 		const char XReport                 = '\x40';     /// Снятие X отчета.
 		const char ZReport                 = '\x41';     /// Снятие Z отчета.
@@ -229,16 +224,50 @@ namespace CShtrihFR
 		const char NoError = '\x00';    /// Ошибок нет.
 
 		const char WrongParametersInCommand = '\x33';      /// Некорректные параметры в команде.
+		const char BadModelForCommand       = '\x37';      /// Команда не поддерживается в данной реализации ФР.
 		const char NotEnoughMoney           = '\x46';      /// Не хватает наличности в кассе.
 		const char DocumentIsOpened         = '\x4A';      /// Открыт чек - операция невозможна.
 		const char ChequeBufferOverflow     = '\x4B';      /// Буфер чеков переполнен.
+		const char NeedZReport              = '\x4E';      /// Смена превысила 24 часа.
 		const char NeedWaitForPrinting      = '\x50';      /// Ожидание окончания печати предыдущей команды.
 		const char NeedExtentionPrinting    = '\x58';      /// Ожидание команды продолжения печати.
+		const char Cutter                   = '\x71';      /// Ошибка отрезчика.
 		const char BadModeForCommand        = '\x73';      /// Команда не поддерживается в данном режиме.
 		const char RAM                      = '\x74';      /// Ошибка ОЗУ.
-		const char NeedZReport              = '\x4E';      /// Смена превысила 24 часа.
-		const char Cutter                   = '\x71';      /// Ошибка отрезчика.
-		const char BadModelForCommand       = '\x37';      /// Команда не поддерживается в данной реализации ФР.
+	}
+
+	namespace PayOffType
+	{
+		struct SData
+		{
+			char FDType;
+			char command;
+
+			SData(): FDType(ASCII::Full), command(ASCII::NUL) {}
+			SData(char aFDType, char aCommand): FDType(aFDType), command(aCommand) {}
+		};
+
+		class CData: public CSpecification<SDK::Driver::EPayOffTypes::Enum, SData>
+		{
+		public:
+			CData()
+			{
+				using namespace SDK::Driver;
+
+				add(EPayOffTypes::Debit,      0, Commands::Sale);
+				add(EPayOffTypes::DebitBack,  2, Commands::SaleBack);
+				add(EPayOffTypes::Credit,     1, Commands::Buy);
+				add(EPayOffTypes::CreditBack, 3, Commands::BuyBack);
+			}
+
+		private:
+			void add(SDK::Driver::EPayOffTypes::Enum aPayOffType, char aFDType, char aCommand)
+			{
+				append(aPayOffType, SData(aFDType, aCommand));
+			}
+		};
+
+		static CData Data;
 	}
 
 	/// Коды статусов (некоторых).

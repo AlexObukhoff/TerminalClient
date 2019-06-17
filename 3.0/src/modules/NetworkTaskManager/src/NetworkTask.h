@@ -128,6 +128,9 @@ protected:
 
 	/// Перезапустить таймер завершения таска по таймауту
 	void resetTimer();
+	
+	/// Сбросить ошибки предыдущей попытки скачивания
+	void clearErrors();
 
 private:
 	bool                        mProcessing;

@@ -17,6 +17,7 @@ Project {
 		Depends { name: "NetworkTaskManager" }
 		Depends { name: "KeysUtils" }
 		Depends { name: "Log" }
+		Depends { name: "SysUtils" }
 
 		Depends { name: "ServiceMenuTranslations" }
 

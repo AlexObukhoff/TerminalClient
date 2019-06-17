@@ -44,6 +44,9 @@ namespace CAtolOnlineFR
 	/// Формат представления даты для вывода в лог.
 	const char TimeLogFormat[] = "hh:mm";
 
+	/// Знак скидки (0 – скидка; 1 – надбавка). Скидка не используется.
+	const char DiscountSign = ASCII::NUL;
+
 	/// Ожидание оживания ФР при получении фискальных данных после закрытия чека, [мс].
 	const SWaitingData GetFiscalWaiting = SWaitingData(200, 1000);
 
@@ -51,7 +54,7 @@ namespace CAtolOnlineFR
 	const int MaxRepeatingFiscalData = 3;
 
 	/// Пауза после перезагрузки по питанию, [мс].
-	const int RebootPause = 1000;
+	const int RebootPause = 20 * 1000;
 
 	/// Ожидание выхода из анабиоза, [мс].
 	const SWaitingData RebootWaiting = SWaitingData(1000, 20000);
@@ -91,6 +94,8 @@ namespace CAtolOnlineFR
 		const char SessionData[] = "session data";
 	}
 
+	#define PROCESS_ATOL_FD_DATA(aCommand, ...) processDataWaiting([&] () -> TResult { return processCommand(CAtolOnlineFR::Commands::FS::aCommand, __VA_ARGS__); })
+
 	//------------------------------------------------------------------------------------------------
 	/// Команды.
 	namespace Commands
@@ -102,7 +107,7 @@ namespace CAtolOnlineFR
 		const char GetOFDParameter       = '\xE9';    /// Получение реквизита.
 		const char PrintDeferredZReports = '\x95';    /// Распечатать отложенные Z-отчеты.
 		const char ClearZBuffer          = '\x97';    /// Очистить буфер Z-отчетов.
-		const char Reboot                = '\xCE';    /// Перезагрузить ФР по питанию.
+		const char Reboot[]              = "\xCE\x41";    /// Перезагрузить ФР по питанию.
 		const char GetInternalFirmware[] = "\x9D\x91";    /// Получить внутренний номер прошивки.
 
 		/// Коды команд ФН-а.
@@ -127,11 +132,13 @@ namespace CAtolOnlineFR
 		const char FSOfflineEnd          = '\xEB';    /// Исчерпан ресурс хранения ФН.
 		const char NeedExtendedErrorCode = '\xEE';    /// Запросить расширенный код ошибки в регистре 55.
 
-		class CData : public FRError::CData
+		class Data : public FRError::Data
 		{
 		public:
-			CData()
+			Data()
 			{
+				using namespace FRError;
+
 				add('\x01', "Контрольная лента обработана без ошибок");
 				add('\x08', "Неверная цена (сумма)");
 				add('\x0A', "Неверное количество");
@@ -245,16 +252,16 @@ namespace CAtolOnlineFR
 				add('\xCD', "Неверный делитель");
 				add('\xD0', "Активизация данного ФН в составе данной ККТ невозможна");
 				add('\xD1', "Перегрев головки принтера");
-				add('\xD2', "Ошибка обмена с ФН на уровне интерфейса I2C", FRError::EType::FS);
-				add('\xD3', "Ошибка формата передачи ФН",                  FRError::EType::FS);
+				add('\xD2', "Ошибка обмена с ФН на уровне интерфейса I2C", EType::FS);
+				add('\xD3', "Ошибка формата передачи ФН",                  EType::FS);
 				add('\xD4', "Неверное состояние ФН");
-				add('\xD5', "Неисправимая ошибка ФН",                      FRError::EType::FS);
-				add('\xD6', "Ошибка КС ФН",                                FRError::EType::FS);
-				add('\xD7', "Закончен срок эксплуатации ФН",               FRError::EType::FS);
-				add('\xD8', "Архив ФН переполнен",                         FRError::EType::FS);
-				add('\xD9', "В ФН переданы неверная дата или время",       FRError::EType::FS);
-				add('\xDA', "В ФН нет запрошенных данных",                 FRError::EType::FS);
-				add('\xDB', "Переполнение ФН (итог чека)",                 FRError::EType::FS);
+				add('\xD5', "Неисправимая ошибка ФН",                      EType::FS);
+				add('\xD6', "Ошибка КС ФН",                                EType::FS);
+				add('\xD7', "Закончен срок эксплуатации ФН",               EType::FS);
+				add('\xD8', "Архив ФН переполнен",                         EType::FS);
+				add('\xD9', "В ФН переданы неверная дата или время",       EType::FS);
+				add('\xDA', "В ФН нет запрошенных данных",                 EType::FS);
+				add('\xDB', "Переполнение ФН (итог чека)",                 EType::FS);
 				add('\xDC', "Буфер переполнен");
 				add('\xDD', "Невозможно напечатать вторую фискальную копию");
 				add('\xDE', "Требуется гашение ЭЖ");
@@ -262,13 +269,13 @@ namespace CAtolOnlineFR
 				add('\xE0', "Начисление налога на последнюю операцию невозможно");
 				add('\xE1', "Неверный номер ФН");
 				add('\xE4', "Сумма сторно налога больше суммы зарегистрированного налога данного типа");
-				add('\xE5', "Ошибка SD");
+				add('\xE5', "Ошибка SD",                                   EType::SD);
 				add('\xE6', "Операция невозможна, недостаточно питания");
-				add('\xE7', "Некорректное значение параметров команды ФН", FRError::EType::FS);
-				add('\xE8', "Превышение размеров TLV данных ФН",           FRError::EType::FS);
-				add('\xE9', "Нет транспортного соединения ФН",             FRError::EType::FS);
-				add('\xEA', "Исчерпан ресурс КС ФН",                       FRError::EType::FS);
-				add('\xEB', "Исчерпан ресурс хранения ФН",                 FRError::EType::FS);
+				add('\xE7', "Некорректное значение параметров команды ФН", EType::FS);
+				add('\xE8', "Превышение размеров TLV данных ФН",           EType::FS);
+				add('\xE9', "Нет транспортного соединения ФН",             EType::FS);
+				add('\xEA', "Исчерпан ресурс КС ФН",                       EType::FS);
+				add('\xEB', "Исчерпан ресурс хранения ФН",                 EType::FS);
 				add('\xEC', "Сообщение от ОФД не может быть принято ФН");
 				add('\xED', "В ФН есть неотправленные ФД");
 				add('\xEE', "Запросить расширенный код ошибки в регистре 55");
@@ -278,10 +285,10 @@ namespace CAtolOnlineFR
 			}
 		};
 
-		class CExtendedData : public CDescription<ushort>
+		class CExtraData : public CDescription<ushort>
 		{
 		public:
-			CExtendedData()
+			CExtraData()
 			{
 				append(0x0101, "Недопустимо более одной регистрации в чеке коррекции");
 				append(0x0102, "Недопустимо передавать более 10 регистраций при наличии в чеке кода товарной номенклатуры в автономном режиме");
@@ -306,7 +313,7 @@ namespace CAtolOnlineFR
 			}
 		};
 
-		static CExtendedData ExtendedData;
+		static CExtraData ExtraData;
 	}
 }
 

@@ -5,6 +5,7 @@
 #include <QtCore/QtConcurrentRun>
 #include <QtCore/QFuture>
 #include <QtCore/QUrl>
+#include <qjson.h>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
@@ -23,6 +24,8 @@
 #include <SDK/PaymentProcessor/Core/IPrinterService.h>
 #include <SDK/PaymentProcessor/Core/IPaymentService.h>
 #include <SDK/PaymentProcessor/CyberPlat/RequestSender.h>
+#include <DatabaseProxy/IDatabaseQuery.h>
+#include <SDK/PaymentProcessor/Core/IDatabaseService.h>
 
 namespace SDK {
 namespace PaymentProcessor {
@@ -213,14 +216,63 @@ Response * NetworkService::sendRequestInternal(Request * aRequest, const QString
 	return dynamic_cast<Response *>(response.take());
 }
 
+
 //------------------------------------------------------------------------------
 void NetworkService::sendReceipt(const QString & aEmail, const QString & aContact)
 {
 	QVariantMap params;
 	params.insert("PAYER_EMAIL", aEmail);
 	params.insert("CONTACT", aContact);
-	params.insert("PAYER_EMAIL_MESSAGE", mCore->getPrinterService()->loadReceipt(mCore->getPaymentService()->getActivePayment()).toLocal8Bit().toPercentEncoding());
+	
+	QString queryStr = QString("SELECT `response` FROM `fiscal_client` WHERE `payment` = %1").arg(mCore->getPaymentService()->getActivePayment());
+	QSharedPointer<IDatabaseQuery> query(mCore->getDatabaseService()->createAndExecQuery(queryStr));
 
+	QString fiscalResponse;
+	QVariantMap fiscalResult;
+	if (query && query->first())
+	{
+		fiscalResponse = query->value(0).toString();
+	}
+
+	if (!fiscalResponse.isEmpty())
+	{
+		QJsonDocument doc = QJsonDocument::fromJson(fiscalResponse.toUtf8());
+		QVariantMap payment = doc.object().toVariantMap().value("payment").toMap();
+		QVariantMap fiscalFieldData = payment.value("fiscal_field_data").toMap();
+		QVariantMap fiscalPaymentData = payment.value("fiscal_payment_data").toMap();
+
+		if (!fiscalPaymentData.isEmpty() && !fiscalPaymentData.isEmpty())
+		{
+			foreach (auto paymentData, fiscalPaymentData.keys())
+			{
+				QString val = fiscalPaymentData.value(paymentData).toString();
+				if (val.isEmpty())
+				{
+					continue;
+				}
+
+				QString tr = fiscalFieldData.value(paymentData).toMap().value("translation").toString();
+
+				if (tr.isEmpty())
+				{
+					continue;
+				}
+
+				fiscalResult.insert(tr, val);
+			}
+		}
+	}
+
+	QString message = mCore->getPrinterService()->loadReceipt(mCore->getPaymentService()->getActivePayment());
+	message.append("-----------------------------------");
+
+	foreach (auto key, fiscalResult.keys())
+	{
+		message += QString("\n%1\t%2").arg(key, fiscalResult.value(key).toString());
+	}	
+	
+	params.insert("PAYER_EMAIL_MESSAGE", message.toLocal8Bit().toPercentEncoding());
+	
 	PPSDK::TerminalSettings * terminalSettings = static_cast<PPSDK::TerminalSettings *>(mCore->getSettingsService()->
 		getAdapter(PPSDK::CAdapterNames::TerminalAdapter));
 

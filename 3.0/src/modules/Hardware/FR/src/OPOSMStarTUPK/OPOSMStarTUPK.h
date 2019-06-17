@@ -54,7 +54,7 @@ protected:
 	virtual void postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection);
 
 	/// Проверить параметры налога.
-	virtual bool checkTax(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData);
+	virtual bool checkTax(SDK::Driver::TVAT aVAT, CFR::Taxes::SData & aData);
 
 	/// Напечатать [и выдать] чек.
 	virtual bool processReceipt(const QStringList & aReceipt, bool aProcessing = true);
@@ -63,7 +63,7 @@ protected:
 	virtual bool updateParameters();
 
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
 
 	/// Печать Z отчета.
 	virtual bool performZReport(bool aPrintDeferredReports);
@@ -93,8 +93,11 @@ protected:
 	/// Вызывает int-метод в рабочем потоке, возвращает и обработывает результат.
 	virtual SOPOSResult processIntMethod(TIntMethod aMethod, const QString & aFunctionData);
 
-	/// Открыт фискальный/нефискальный документ?
-	bool isDocumentOpened();
+	/// Получить состояние смены.
+	virtual SDK::Driver::ESessionState::Enum getSessionState();
+
+	/// Получить состояние документа.
+	virtual SDK::Driver::EDocumentState::Enum getDocumentState();
 
 	/// Сделать фискальный чек.
 	bool makeFiscal(const SDK::Driver::SPaymentData & aPaymentData);

@@ -18,7 +18,9 @@ namespace CHardware
 	const char RequiredResourceNames[] = "required_resource_names";
 	const char PluginPath[] = "plugin_path";
 	const char ConfigData[] = "config_data";
-	const char CanSoftReboot[] = "can_soft_reboot";	const char ProtocolType[] = "protocol_type";
+	const char CanSoftReboot[] = "can_soft_reboot";
+	const char ProtocolType[] = "protocol_type";
+
 	/// Типы вызова функционала драйвера.
 	namespace CallingTypes
 	{
@@ -71,6 +73,13 @@ namespace CHardware
 			const char DTR[] = "dtr";
 			const char WaitResult[] = "wait_result";
 			const char ControlRemoving[] = "control_removing";
+		}
+
+		/// Константы USB-порта.
+		namespace USB
+		{
+			const char VID[] = "vid";
+			const char PID[] = "pid";
 		}
 	}
 
@@ -132,7 +141,6 @@ namespace CHardware
 		const char NeedSeparating[] = "need_separating";
 		const char ByteString[] = "byte_string";
 		const char Receipt[] = "receipt";
-		const char PrintPageNumber[] = "print_page_number";
 		const char PresenterEnable[] = "presenter_enable";
 		const char RetractorEnable[] = "retractor_enable";
 		const char PresenterStatusEnable[] = "presenter_status_enable";
@@ -179,6 +187,8 @@ namespace CHardware
 			const char PaperWeightSensors[] = "paper_weight_sensors";
 			const char DocumentCap[] = "document_cap";
 			const char BackFeed[] = "back_feed";
+			const char PrintPageNumber[] = "print_page_number";
+			const char LeftMargin[] = "left_margin";
 		}
 
 		/// Параметры обработки чека после отрезки.
@@ -237,6 +247,7 @@ namespace CHardware
 		const char CVCNumber[] = "cvc_number";
 		const char ForcePerformZReport[] = "force_perform_z_report";
 		const char PrinterModel[] = "printer_model";
+		const char CanZReportWithoutPrinting[] = "can_z_report_without_printing";
 
 		/// Команды.
 		namespace Commands

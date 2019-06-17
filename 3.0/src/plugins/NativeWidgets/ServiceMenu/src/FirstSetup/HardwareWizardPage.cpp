@@ -2,7 +2,6 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QTimer>
 #include <QtGui/QStackedLayout>
 #include <Common/QtHeadersEnd.h>
 

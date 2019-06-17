@@ -50,9 +50,9 @@ struct SBalance
 		{
 			Currency::Nominal::RawType result = 0;
 
-			foreach (auto & amount, amounts)
+			foreach (auto & a, amounts)
 			{
-				result += amount.value.rawValue() * amount.count;
+				result += a.value.rawValue() * a.count;
 			}
 
 			return Currency::Nominal::fromRawValue(result);

@@ -7,6 +7,8 @@
 #include "OSMPWD.h"
 #include "OSMPWDConstants.h"
 
+using namespace ProtocolUtils;
+
 //--------------------------------------------------------------------------------
 const uchar OSMPWDProtocol::calcCRC(const QByteArray & aData)
 {
@@ -30,9 +32,7 @@ bool OSMPWDProtocol::checkAnswer(const QByteArray & aAnswerData)
 
 	if (prefix != COSMPWD::Prefix)
 	{
-		toLog(LogLevel::Error, QString("OSMPWD: Invalid prefix = %1, need = %2")
-			.arg(ProtocolUtils::toHexLog(prefix))
-			.arg(ProtocolUtils::toHexLog(COSMPWD::Prefix)));
+		toLog(LogLevel::Error, QString("OSMPWD: Invalid prefix = %1, need = %2").arg(toHexLog(prefix)).arg(toHexLog(COSMPWD::Prefix)));
 		return false;
 	}
 
@@ -53,9 +53,7 @@ bool OSMPWDProtocol::checkAnswer(const QByteArray & aAnswerData)
 
 	if (CRC != answerCRC)
 	{
-		toLog(LogLevel::Error, QString("OSMPWD: Invalid CRC = %1, need %2")
-			.arg(ProtocolUtils::toHexLog(CRC))
-			.arg(ProtocolUtils::toHexLog(answerCRC)));
+		toLog(LogLevel::Error, QString("OSMPWD: Invalid CRC = %1, need %2").arg(toHexLog(CRC)).arg(toHexLog(answerCRC)));
 		return false;
 	}
 
@@ -63,7 +61,7 @@ bool OSMPWDProtocol::checkAnswer(const QByteArray & aAnswerData)
 }
 
 //--------------------------------------------------------------------------------
-TResult OSMPWDProtocol::processCommand(const QByteArray & aCommandData, QByteArray & aUnpackedData, bool aNeedAnswer)
+TResult OSMPWDProtocol::processCommand(const QByteArray & aCommandData, QByteArray * aUnpackedData)
 {
 	QByteArray packet;
 	packet.append(COSMPWD::Prefix);
@@ -73,7 +71,6 @@ TResult OSMPWDProtocol::processCommand(const QByteArray & aCommandData, QByteArr
 	packet.append(aCommandData.mid(1));
 	packet.append(calcCRC(packet));
 
-	// Выполняем команду
 	toLog(LogLevel::Normal, QString("OSMPWD: >> {%1}").arg(packet.toHex().data()));
 	QByteArray answerData;
 
@@ -89,16 +86,15 @@ TResult OSMPWDProtocol::processCommand(const QByteArray & aCommandData, QByteArr
 		return CommandResult::NoAnswer;
 	}
 
-	// распаковываем
 	if (!checkAnswer(answerData))
 	{
 		toLog(LogLevel::Error, "OSMPWD: Failed to unpack data");
 		return CommandResult::Protocol;
 	}
 
-	if (aNeedAnswer)
+	if (aUnpackedData)
 	{
-		aUnpackedData = answerData.mid(3, answerData.size() - 4);
+		*aUnpackedData = answerData.mid(3, answerData.size() - 4);
 	}
 
 	return CommandResult::OK;

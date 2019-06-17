@@ -18,16 +18,17 @@ namespace DeviceStatusCode
 	namespace Warning
 	{
 		const int Firmware               = 30;    /// Необходимо обновить прошивку.
-		const int NeedReboot             = 31;    /// Необходимо перезагрузить устройство по питанию.
-		const int ThirdPartyDriver       = 32;    /// Ошибка драйвера стороннего ПО и/или прошивки устройства при выполнении операции.
-		const int WrongSwitchesConfig    = 33;    /// Устройство неверно сконфигурировано.
-		const int Developing             = 34;    /// Ошибка проектирования (прошивки).
-		const int Compatibility          = 35;    /// Версия плагина не соответствует версии PP.
-		const int OperationError         = 36;    /// Ошибка выполнения команды.
-		const int UnknownDataExchange    = 37;    /// Ошибка при получении данных от устройства.
-		const int ModelNotVerified       = 38;    /// Не гарантирована полная совместимость с ПО.
-		const int ModelNotCompatible     = 39;    /// Модель соответствует другому плагину.
-		const int Unknown                = 40;    /// Неизвестное (подозрительное) состояние.
+		const int BootFirmware           = 31;    /// Необходимо обновить прошивку загрузчика.
+		const int NeedReboot             = 32;    /// Необходимо перезагрузить устройство по питанию.
+		const int ThirdPartyDriver       = 33;    /// Ошибка драйвера стороннего ПО и/или прошивки устройства при выполнении операции.
+		const int WrongSwitchesConfig    = 34;    /// Устройство неверно сконфигурировано.
+		const int Developing             = 35;    /// Ошибка проектирования (прошивки).
+		const int Compatibility          = 36;    /// Версия плагина не соответствует версии PP.
+		const int OperationError         = 37;    /// Ошибка выполнения команды.
+		const int UnknownDataExchange    = 38;    /// Ошибка при получении данных от устройства.
+		const int ModelNotVerified       = 39;    /// Не гарантирована полная совместимость с ПО.
+		const int ModelNotCompatible     = 40;    /// Модель соответствует другому плагину.
+		const int Unknown                = 41;    /// Неизвестное (подозрительное) состояние.
 	}
 
 	/// Ошибки.

@@ -14,10 +14,9 @@ namespace CDeviceData
 	const char ModelNumber[] = "model_number";
 	const char Revision[] = "revision";
 	const char Firmware[] = "firmware";
+	const char BootFirmware[] = "boot_firmware";
 	const char CheckSum[] = "check_sum";
 	const char SerialNumber[] = "serial_number";
-	const char BootVersion[] = "boot_version";
-	const char BootFirmware[] = "boot_firmware";
 	const char BoardVersion[] = "board_version";
 	const char Build[] = "build";
 	const char Switches[] = "switches";
@@ -32,6 +31,7 @@ namespace CDeviceData
 	const char ProtocolVersion[] = "protocol_version";
 	const char SDCard[] = "sd_card";
 	const char Error[] = "error";
+	const char NotConnected[] = "not_connected";
 	const char Identity[] = "identity";
 	const char Token[] = "token_data";
 	const char InternalFirmware[] = "device_id_key";
@@ -56,6 +56,85 @@ namespace CDeviceData
 	{
 		const char Mine[] = "port_data";
 		const char Other[] = "other_port_data";
+
+		namespace USB
+		{
+			const char ConfigAmount[] = "config_amount";
+			const char BusNumber[] = "device_bus_number";
+			const char Address[] = "device_address";
+			const char PortNumber[] = "device_port_number";
+			const char ConfigData[] = "config_data";
+			const char Specification[] = "usb_specification";
+			const char FirmwareVersion[] = "device_firmware_version";
+			const char Code[] = "device_code";
+			const char Description[] = "device_description";
+			const char EP0PacketSize[] = "ep0_packet_size";
+			const char Vendor[] = "device_vendor";
+			const char Product[] = "device_product";
+			const char BOSData[] = "bos_data";
+
+			namespace BOS
+			{
+				const char Capability[] = "capability";
+
+				namespace Capability2_0
+				{
+					const char Attributes[] = "2_0_attributes";
+				}
+
+				namespace Capability3_0
+				{
+					const char Attributes[] = "3_0_attributes";
+					const char SpeedSupported[] = "speed_supported";
+					const char FunctionalitySupport[] = "functionality_support";
+					const char U1ExitLatency[] = "u1_exit_latency";
+					const char U2ExitLatency[] = "u2_exit_latency";
+				}
+			}
+
+			namespace Config
+			{
+				const char InterfaceAmount[] = "interface_amount";
+				const char InterfaceData[] = "interface_data";
+				const char Index[] = "config_index";
+				const char Value[] = "config_value";
+				const char Attributes[] = "config_attributes";
+				const char MaxPower[] = "config_max_power";
+
+				namespace Interface
+				{
+					const char EndpointAmount[] = "endpoint_amount";
+					const char EndpointData[] = "endpoint_data";
+					const char Number[] = "interface_number";
+					const char Index[] = "interface_index";
+					const char AlternateSetting[] = "interface_alternate_setting";
+					const char Code[] = "interface_code";
+					const char Description[] = "interface_description";
+
+					namespace Endpoint
+					{
+						const char TransferType[] = "ep_transfer_type";
+						const char IsoSyncType[] = "ep_iso_sync_type";
+						const char IsoUsageType[] = "ep_iso_usage_type";
+						const char CompanionAmount[] = "ep_companion_amount";
+						const char CompanionData[] = "ep_companion_data";
+						const char Address[] = "ep_address";
+						const char Attributes[] = "ep_attributes";
+						const char MaxPacketSize[] = "ep_max_packet_size";
+						const char PollingInterval[] = "ep_polling_interval";
+						const char SyncRefreshRate[] = "ep_sync_refresh_rate";
+						const char SynchAddress[] = "ep_sync_address";
+
+						namespace Companion
+						{
+							const char MaxBurstPacketAmount[] = "companion_ep_max_burst";
+							const char Attributes[] = "companion_ep_attributes";
+							const char BytesPerInterval[] = "companion_ep_bytes_per_interval";
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/// OPOS-устройства.
@@ -124,6 +203,7 @@ namespace CDeviceData
 		const char OwnerId[] = "owner_id";
 		const char ReregistrationNumber[] = "reregistration_number";
 		const char FreeReregistrations[] = "free_reregistrations";
+		const char LastRegistrationDate[] = "last_registration_date";
 		const char Activated[] = "activated";
 		const char Language[] = "language";
 		const char CurrentDate[] = "fr_current_date";
@@ -137,6 +217,9 @@ namespace CDeviceData
 		const char OperationModes[] = "operation_modes";
 		const char AutomaticNumber[] = "automatic_number";
 		const char DTDBuild[] = "dtd_build";    // data transfer device
+		const char CanProcessZBuffer[] = "can_process_z_buffer";
+		const char Taxes[] = "taxes";
+		const char Taxes2019Applied[] = "taxes_2019_applied";
 	}
 
 	/// ЭКЛЗ.

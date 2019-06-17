@@ -8,7 +8,7 @@ namespace SDK {
 namespace Driver {
 
 //--------------------------------------------------------------------------------
-class IHID: virtual public IDevice
+class IHID: public IDevice
 {
 public: // константы
 	/// Событие о новых введённых данных.

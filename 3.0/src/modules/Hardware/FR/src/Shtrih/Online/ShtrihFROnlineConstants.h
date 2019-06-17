@@ -39,8 +39,18 @@ namespace CShtrihOnlineFR
 	/// Данные налога для продажи - налог вычисляется ФР.
 	const char FiscalTaxData[] = "\xFF\xFF\xFF\xFF\xFF";
 
-	/// Параметр софтварной перезагрузки ФР.
-	const QByteArray Reboot = QByteArray::fromRawData("\xF3\x00\x00\x00\x00", 5);
+	/// Сервисные команды (параметры).
+	namespace Service
+	{
+		/// Cофтварная перезагрузка.
+		const QByteArray Reboot = QByteArray::fromRawData("\xF3\x00\x00\x00\x00", 5);
+
+		/// Прошивка загрузчика.
+		const QByteArray BootFirmware = QByteArray::fromRawData("\xEC\x00\x00\x00\x00", 5);
+	}
+
+	/// Минимально рекомендованная версия загрузчика.
+	const uint MinBootFirmware = 133;
 
 	/// Пауза после софтварной перезагрузки ФР, [мс].
 	const int RebootPause = 5 * 1000;
@@ -63,6 +73,15 @@ namespace CShtrihOnlineFR
 	/// Ожидание готовности, [мс].
 	const SWaitingData ReadyWaiting = SWaitingData(200, 15 * 1000);
 
+	/// Максимальный ожидания допечати отчета по отделам.
+	const int MaxWaitForPrintingSectionReport = 20 * 1000;
+
+	/// Максимальный ожидания допечати отчета по налогам.
+	const int MaxWaitForPrintingTaxReport = 20 * 1000;
+
+	/// Максимальный ожидания допечати отчета по кассирам.
+	const int MaxWaitForPrintingCashierReport = 20 * 1000;
+
 	/// Маски для парсинга режимо работы.
 	namespace OperationModeMask
 	{
@@ -70,13 +89,6 @@ namespace CShtrihOnlineFR
 		const char GamblingMode      = '\x02';     // Проведение азартных игр (1193).
 		const char LotteryMode       = '\x04';     // Проведение лотереи (1126).
 		const char InAutomateMode    = '\x08';     // Признак установки в автомате (1221).
-	}
-
-	/// Типы фискальных чеков.
-	namespace DocumentTypes
-	{
-		const char Sale     = '\x01';    /// Продажа.
-		const char SaleBack = '\x02';    /// Возврат продажи.
 	}
 
 	/// Параметры ФР.
@@ -143,7 +155,7 @@ namespace CShtrihOnlineFR
 	namespace Commands
 	{
 		const char GetPrinterStatus  = '\xD1';    /// Получить статус принтера.
-		const char Reboot            = '\xFE';    /// Софтварная перезагрузка ФР
+		const char Service           = '\xFE';    /// Сервисная команда.
 
 		/// Коды команд ФН.
 		namespace FS
@@ -173,30 +185,32 @@ namespace CShtrihOnlineFR
 		const char FSOfflineEnd      = '\x14';    /// ФН Исчерпан ресурс хранения.
 		const char NeedZReport       = '\x16';    /// ФН Продолжительность смены более 24 часов.
 
-		class CData : public FRError::CData
+		class Data : public FRError::Data
 		{
 		public:
-			CData()
+			Data()
 			{
+				using namespace FRError;
+
 				add('\x01', "Неизвестная команда, неверный формат посылки или неизвестные параметры");
 				add('\x02', "Неверное состояние ФН");
-				add('\x03', "Ошибка ФН", FRError::EType::FS);
-				add('\x04', "Ошибка КС", FRError::EType::FS);
-				add('\x05', "Закончен срок эксплуатации ФН", FRError::EType::FS);
-				add('\x06', "Архив ФН переполнен", FRError::EType::FS);
-				add('\x07', "ФН Неверные дата и/или время", FRError::EType::FS);
-				add('\x08', "Нет запрошенных данных", FRError::EType::FS);
-				add('\x09', "Некорректное значение параметров команды", FRError::EType::FS);
-				add('\x10', "Превышение размеров TLV данных", FRError::EType::FS);
-				add('\x11', "Нет транспортного соединения", FRError::EType::FS);
-				add('\x12', "ФН Исчерпан ресурс КС", FRError::EType::FS);
-				add('\x14', "ФН Исчерпан ресурс хранения", FRError::EType::FS);
-				add('\x15', "ФН Исчерпан ресурс ожидания передачи сообщения", FRError::EType::FS);
+				add('\x03', "Ошибка ФН",                                      EType::FS);
+				add('\x04', "Ошибка КС",                                      EType::FS);
+				add('\x05', "Закончен срок эксплуатации ФН",                  EType::FS);
+				add('\x06', "Архив ФН переполнен",                            EType::FS);
+				add('\x07', "ФН Неверные дата и/или время",                   EType::FS);
+				add('\x08', "Нет запрошенных данных",                         EType::FS);
+				add('\x09', "Некорректное значение параметров команды",       EType::FS);
+				add('\x10', "Превышение размеров TLV данных",                 EType::FS);
+				add('\x11', "Нет транспортного соединения",                   EType::FS);
+				add('\x12', "ФН Исчерпан ресурс КС",                          EType::FS);
+				add('\x14', "ФН Исчерпан ресурс хранения",                    EType::FS);
+				add('\x15', "ФН Исчерпан ресурс ожидания передачи сообщения", EType::FS);
 				add('\x16', "ФН Продолжительность смены более 24 часов");
 				add('\x17', "ФН Неверная разница во времени между 2 операцими");
 				add('\x20', "ФН Сообщение от ОФД не может быть принято");
-				add('\x2F', "Таймаут обмена с ФН", FRError::EType::FS);
-				add('\x30', "ФН не отвечает", FRError::EType::FS);
+				add('\x2F', "Таймаут обмена с ФН",                            EType::FS);
+				add('\x30', "ФН не отвечает",                                 EType::FS);
 				add('\x33', "Некорректные параметры в команде");
 				add('\x34', "Нет данных");
 				add('\x35', "Некорректный параметр при данных настройках");

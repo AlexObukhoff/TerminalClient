@@ -53,6 +53,33 @@ CitizenPPU700::CitizenPPU700()
 	mModelData.add(mModelID, true, mDeviceName, parameters);
 	mPortParameters = parameters.portSettings->data();
 	mMaxBadAnswers = 4;
+	mOptionMSW = false;
+}
+
+//--------------------------------------------------------------------------------
+bool CitizenPPU700::isConnected()
+{
+	if (!CitizenBase<EjectorPOS>::isConnected())
+	{
+		return false;
+	}
+
+	if (mModelCompatibility)
+	{
+		QByteArray answer;
+
+		if (!mIOPort->write(CCitizenPPU700::Command::GetMemorySwitch5) || !mIOPort->read(answer, CCitizenPPU700::MemorySwitches::ReadingTimeout, CCitizenPPU700::MemorySwitches::AnswerSize))
+		{
+			return false;
+		}
+
+		toLog(LogLevel::Normal, QString("%1: << {%2}").arg(mDeviceName).arg(answer.toHex().data()));
+
+		mModelCompatibility = mOptionMSW == !answer.isEmpty();
+		mDeviceName = answer.isEmpty() ? "Citizen PPU-700" : "Citizen PPU-700II";
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -61,15 +88,45 @@ void CitizenPPU700::processDeviceData()
 	EjectorPOS::processDeviceData();
 	QByteArray answer;
 
-	if (mIOPort->write(CCitizenPPU700::Command::GetFirmwareVersion) && getAnswer(answer, CPOSPrinter::Timeouts::Info))
+	if (mIOPort->write(CCitizenPPU700::Command::GetFirmware) && getNULStoppedAnswer(answer, CPOSPrinter::Timeouts::Info))
 	{
 		setDeviceParameter(CDeviceData::Firmware, answer);
 	}
 
-	if (mIOPort->write(CCitizenPPU700::Command::GetSerialNumber) && getAnswer(answer, CPOSPrinter::Timeouts::Info))
+	if (mIOPort->write(CCitizenPPU700::Command::GetSerialNumber) && getNULStoppedAnswer(answer, CPOSPrinter::Timeouts::Info))
 	{
 		setDeviceParameter(CDeviceData::SerialNumber, answer);
 	}
+}
+
+//--------------------------------------------------------------------------------
+bool CitizenPPU700::getNULStoppedAnswer(QByteArray & aAnswer, int aTimeout) const
+{
+	QVariantMap configuration;
+	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(ELoggingType::Write));
+	mIOPort->setDeviceConfiguration(configuration);
+
+	aAnswer.clear();
+
+	QTime timer;
+	timer.start();
+
+	do
+	{
+		QByteArray data;
+
+		if (!mIOPort->read(data, 10))
+		{
+			return false;
+		}
+
+		aAnswer.append(data);
+	}
+	while (!aAnswer.endsWith(ASCII::NUL) && (timer.elapsed() < aTimeout));
+
+	toLog(aAnswer.isEmpty() ? LogLevel::Warning : LogLevel::Normal, QString("%1: << {%2}").arg(mDeviceName).arg(aAnswer.toHex().data()));
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------

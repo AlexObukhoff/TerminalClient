@@ -27,10 +27,6 @@
 #include "Hardware/Protocols/Common/ProtocolUtils.h"
 #include "Hardware/Common/DeviceUtils.h"
 
-#pragma warning(disable : 4250) // warning 4250: 'class1' : inherits 'class2::member' via dominance
-// Есть ветки наследования, интерфейсная и базовой реализации. Последняя содержит вызываемый функционал и
-// сделана специально выше по уровню, чем соответствующий интерфейс, поэтому предупреждение подавлено и включается во все файлы.
-
 //--------------------------------------------------------------------------------
 /// Общие константы мета-устройств.
 namespace CMetaDevice
@@ -64,11 +60,9 @@ struct SLogData
 
 class DefaultSeriesType {};
 
-/// Данные устройств.
-typedef QMap<QString, QString> TDeviceData;
-
 //--------------------------------------------------------------------------------
-class MetaDevice : virtual private SDK::Driver::IDevice, public SDK::Driver::IDevice::IDetectingIterator, public DeviceLogicManager
+template <class T>
+class MetaDevice : public T, public SDK::Driver::IDevice::IDetectingIterator, public DeviceLogicManager
 {
 	SET_INTERACTION_TYPE(System)
 	SET_SERIES("")
@@ -144,9 +138,6 @@ protected:
 	/// Логгирование параметров устройства.
 	void logDeviceData(const SLogData & aData) const;
 
-	/// Получение заданной компоненты параметров устройства.
-	QString getPartDeviceData(const TDeviceData & aData, bool aHideEmpty = true) const;
-
 	/// Из рабочего ли потока происходит вызов.
 	bool isWorkingThread();
 
@@ -173,6 +164,9 @@ protected:
 
 	/// Таймаут ожидания потока при его завершении.
 	unsigned long mExitTimeout;
+
+	/// Ошибка инициализации.
+	bool mInitializationError;
 };
 
 //---------------------------------------------------------------------------

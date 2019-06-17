@@ -69,7 +69,7 @@ FocusScope {
 	function save(aField) {
 		aField.rawValue = updateCapital(inputField.value, inputField.capitalization);
 		aField.value = updateCapital(inputField.displayText, inputField.capitalization);
-		aField.formattedValue = Utils.format(inputField.value, global.field.format);
+		aField.formattedValue = updateCapital(Utils.format(inputField.value, global.field.format), inputField.capitalization);
 
 		aField.value.replace("\u2022", "*");
 		aField.formattedValue.replace("\u2022", "*");

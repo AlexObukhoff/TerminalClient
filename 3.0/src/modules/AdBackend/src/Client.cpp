@@ -21,6 +21,7 @@
 // Modules
 #include <NetworkTaskManager/DataStream.h>
 #include <NetworkTaskManager/FileDownloadTask.h>
+#include <SysUtils/ISysUtils.h>
 
 // Project
 #include <AdBackend/IDatabaseUtils.h>
@@ -85,7 +86,8 @@ Client::Client(SDK::PaymentProcessor::ICore * aCore, ILog * aLog, int aKeyPair) 
 		toLog(LogLevel::Error, QString("Cannot create path %1.").arg(mContentPath));
 	}
 
-	mSettings = QSharedPointer<QSettings>(new QSettings(mContentPath + QDir::separator() + Ad::SettingsName, QSettings::IniFormat));
+	
+	mSettings = QSharedPointer<QSettings>(new QSettings(ISysUtils::rmBOM(mContentPath + QDir::separator() + Ad::SettingsName), QSettings::IniFormat));
 	mSettings->setIniCodec("utf-8");
 	mSettings->moveToThread(&mThread);
 

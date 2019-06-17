@@ -18,6 +18,7 @@
 #include <Common/Version.h>
 #include <SysUtils/ISysUtils.h>
 #include <WatchServiceClient/Constants.h>
+#include <PhishMeWrapper.h>
 
 // Project
 #include "UpdaterApp.h"
@@ -41,6 +42,7 @@ namespace Opt
 	const char NoRestart[] = "no-restart";
 	const char DestinationSubdirs[] = "destination-subdir";
 	const char AcceptKeys[] = "accept-keys";
+	const char WithoutBITS[] = "no-bits";
 }
 
 namespace Command
@@ -49,6 +51,7 @@ namespace Command
 	const char UserPack[] = "userpack";
 	const char Update[] = "update";
 	const char Integrity[] = "integrity";
+	const char Bits[] = "bits";
 }
 
 //---------------------------------------------------------------------------
@@ -72,13 +75,14 @@ UpdaterApp::~UpdaterApp()
 	SDK::PaymentProcessor::IRemoteService::EStatus status;
 
 	// Обновляем отчет.
-	switch (mResultCode)
+	switch (mResultCode_)
 	{
 	case CUpdaterApp::ExitCode::NoError:
 		status = SDK::PaymentProcessor::IRemoteService::OK;
 		break;
 
 	case CUpdaterApp::ExitCode::ContunueExecution:
+	case CUpdaterApp::ExitCode::WorkInProgress:
 		status = SDK::PaymentProcessor::IRemoteService::Executing;
 		break;
 
@@ -86,24 +90,7 @@ UpdaterApp::~UpdaterApp()
 		status = SDK::PaymentProcessor::IRemoteService::Error;
 	}
 
-	QMap<int, QString> descriptions;
-
-	descriptions.insert(CUpdaterApp::ExitCode::ErrorRunFromTempDir, tr("#error_run_from_temp_dir"));
-	descriptions.insert(CUpdaterApp::ExitCode::NoWatchService, tr("#error_connection_to_guard"));
-	descriptions.insert(CUpdaterApp::ExitCode::UnknownCommand, tr("#error_unknown_command"));
-	descriptions.insert(CUpdaterApp::ExitCode::SecondInstance, tr("#error_second_instance"));
-	descriptions.insert(CUpdaterApp::ExitCode::UnknownError, tr("#error_unknown"));
-	descriptions.insert(CUpdaterApp::ExitCode::NetworkError, tr("#error_network"));
-	descriptions.insert(CUpdaterApp::ExitCode::ParseError, tr("#error_parse_response"));
-	descriptions.insert(CUpdaterApp::ExitCode::DeployError, tr("#error_deploy"));
-	descriptions.insert(CUpdaterApp::ExitCode::Aborted, tr("#error_aborted"));
-	descriptions.insert(CUpdaterApp::ExitCode::Blocked, tr("#error_update_blocked"));
-	descriptions.insert(CUpdaterApp::ExitCode::FailIntegrity, tr("#error_check_integrity"));
-
-	if (descriptions.contains(mResultCode))
-	{
-		mReportBuilder.setStatusDescription(descriptions.value(mResultCode));
-	}
+	mReportBuilder.setStatusDescription(mResultDescription);
 	mReportBuilder.setStatus(status);
 }
 
@@ -125,7 +112,7 @@ void UpdaterApp::onCloseCommandReceived()
 	{
 		getLog()->write(LogLevel::Normal, "Receive close signal from watch service. Update aborted.");
 
-		mResultCode = CUpdaterApp::ExitCode::Aborted;
+		setResultCode(CUpdaterApp::ExitCode::Aborted);
 
 		errorExit();
 	}
@@ -219,6 +206,10 @@ void UpdaterApp::run()
 	bool woRestart = getArgument(Opt::NoRestart).compare("true", Qt::CaseInsensitive) == 0;
 	// подпапка, в которую распаковываем архив
 	QString subdir = getArgument(Opt::DestinationSubdirs);
+	bool woBITS = getArgument(Opt::WithoutBITS).compare("true", Qt::CaseInsensitive) == 0;
+
+	// Отключение BITS через updater.ini
+	woBITS = settings.value("bits/ignore", woBITS).toBool();
 
 	// Создаем файл с отчетом.
 	mReportBuilder.open(cmndId, server, md5);
@@ -226,10 +217,28 @@ void UpdaterApp::run()
 
 	// Проверка на запуск второй копии программы.
 	QtLocalPeer * peer = new QtLocalPeer(this, getName());
+
+	if (command == Command::Bits)
+	{
+		mUpdater = new Updater(this);
+		mUpdater->setWorkingDir(workingDir);
+		CUpdaterApp::ExitCode::Enum result = bitsCheckStatus(peer->isClient());
+		if (result == CUpdaterApp::ExitCode::ContunueExecution)
+		{
+			setResultCode(CUpdaterApp::ExitCode::NoError, tr("Update in progress"));
+		}
+		else 
+		{
+			setResultCode(result);
+		}
+		return;
+	}
+
+	// Проверка на запуск второй копии программы.
 	if (peer->isClient())
 	{
 		getLog()->write(LogLevel::Warning, "Another instance is already running.");
-		mResultCode = CUpdaterApp::ExitCode::SecondInstance;
+		setResultCode(CUpdaterApp::ExitCode::SecondInstance);
 		return;
 	}
 
@@ -237,8 +246,10 @@ void UpdaterApp::run()
 	if (!mWatchServiceClient->start())
 	{
 		getLog()->write(LogLevel::Error, "Cannot connect to watch service.");
-		mResultCode = CUpdaterApp::ExitCode::NoWatchService;
+		setResultCode(CUpdaterApp::ExitCode::NoWatchService);
+#ifndef _DEBUG
 		return;
+#endif
 	}
 
 	QTimer * tooLongDownloadTimer = new QTimer(this);
@@ -250,6 +261,7 @@ void UpdaterApp::run()
 	mUpdater->setParent(this);
 	mUpdater->setProxy(proxy);
 	mUpdater->setAcceptedKeys(acceptKeys);
+	mUpdater->useBITS(!woBITS, settings.value("bits/priority", CBITS::HIGH).toInt());
 	connect(mUpdater, SIGNAL(progress(int)), &mReportBuilder, SLOT(setProgress(int)));
 
 	// Создаем файл отчета.
@@ -283,13 +295,13 @@ void UpdaterApp::run()
 			if (reRunFromTempDirectory())
 			{
 				getLog()->write(LogLevel::Normal, QString("Run updater from temp path: '%1' is OK.").arg(getUpdaterTempDir()));
-				mResultCode = CUpdaterApp::ExitCode::ContunueExecution;
+				setResultCode(CUpdaterApp::ExitCode::ContunueExecution);
 				return;
 			}
 			else
 			{
 				getLog()->write(LogLevel::Error, QString("Failed run updater from temp path: '%1'.").arg(getUpdaterTempDir()));
-				mResultCode = CUpdaterApp::ExitCode::ErrorRunFromTempDir;
+				setResultCode(CUpdaterApp::ExitCode::ErrorRunFromTempDir);
 				return;
 			}
 		}
@@ -330,16 +342,16 @@ void UpdaterApp::run()
 		
 		if (result < 0)
 		{
-			mResultCode = CUpdaterApp::ExitCode::UnknownCommand;
+			setResultCode(CUpdaterApp::ExitCode::UnknownCommand);
 		}
 		else if (result > 0)
 		{
-			mResultCode = CUpdaterApp::ExitCode::FailIntegrity;
+			setResultCode(CUpdaterApp::ExitCode::FailIntegrity);
 			mReportBuilder.setStatusDescription(tr("#error_check_integrity").arg(result));
 		}
 		else
 		{
-			mResultCode = CUpdaterApp::ExitCode::NoError;
+			setResultCode(CUpdaterApp::ExitCode::NoError);
 		}
 
 		return;
@@ -347,11 +359,93 @@ void UpdaterApp::run()
 	else
 	{
 		getLog()->write(LogLevel::Error, QString("Unknown command: %1.").arg(command));
-		mResultCode = CUpdaterApp::ExitCode::UnknownCommand;
+		setResultCode(CUpdaterApp::ExitCode::UnknownCommand);
 		return;
 	}
 
-	mResultCode = exec();
+	int result = exec();
+	if (result != mResultCode_)
+	{
+		setResultCode(static_cast<CUpdaterApp::ExitCode::Enum>(result));
+	}
+}
+
+//---------------------------------------------------------------------------
+CUpdaterApp::ExitCode::Enum UpdaterApp::bitsCheckStatus(bool aAlreadyRunning)
+{
+	getLog()->write(LogLevel::Normal, QString("Check bits status '%1'...").arg(qApp->applicationFilePath()));
+
+	QStringList parameters;
+
+	if (!mUpdater->bitsLoadState(&parameters))
+	{
+		getLog()->write(LogLevel::Error, QString("Failed load bits.ini."));
+		return CUpdaterApp::ExitCode::ParseError;
+	}
+
+	if (mUpdater->bitsIsComplete())
+	{
+		getLog()->write(LogLevel::Normal, QString("BITS jobs are complete. Restart for deploy."));
+
+		if (!aAlreadyRunning)
+		{
+			int stub = 0;
+			mUpdater->bitsCompleteAllJobs(stub, stub, stub);
+
+			// Restart for deploy
+			if (!QProcess::startDetached(qApp->applicationFilePath(), parameters))
+			{
+				getLog()->write(LogLevel::Fatal, QString("Couldn't start updater from '%1'.").arg(qApp->applicationFilePath()));
+				return CUpdaterApp::ExitCode::UnknownError;
+			}
+		}
+		else
+		{
+			QString commanLine = QDir::toNativeSeparators(qApp->applicationFilePath());
+			QString arguments = QString("--command bits --workdir %1").arg(mUpdater->getWorkingDir());
+			QString workDir = QDir::toNativeSeparators(mUpdater->getWorkingDir());
+
+			try
+			{
+				// Shedule restart myself
+				PhishMe::AddScheduledTask(L"TC_Updater", 
+					commanLine.toStdWString(), 
+					arguments.toStdWString(), 
+					workDir.toStdWString(), 
+					CUpdaterApp::BITSCompleteTimeout);
+
+				getLog()->write(LogLevel::Normal, QString("Do create updater restart scheduler task OK. Timeout: %1 min.").arg(CUpdaterApp::BITSCompleteTimeout / 60));
+			}
+			catch (std::exception & ex)
+			{
+				// Something seriously went wrong inside ScheduleTask
+				getLog()->write(LogLevel::Fatal, QString("Didn't create updater restart scheduler task '%1'. Reason: %2.")
+					.arg(commanLine).arg(QString::fromLocal8Bit(ex.what())));
+
+				return CUpdaterApp::ExitCode::UnknownError;
+			}
+		}
+
+		return CUpdaterApp::ExitCode::NoError;
+	}
+
+	if (mUpdater->bitsIsError())
+	{
+		getLog()->write(LogLevel::Error, QString("BITS jobs are failed. Restart for download w/o bits."));
+
+		// Restart for download w/o bits
+		parameters << "--no-bits" << "true";
+
+		if (!QProcess::startDetached(qApp->applicationFilePath(), parameters))
+		{
+			getLog()->write(LogLevel::Fatal, QString("Couldn't start updater from '%1'.").arg(qApp->applicationFilePath()));
+		}
+
+		return CUpdaterApp::ExitCode::NetworkError;
+	}
+	
+	getLog()->write(LogLevel::Normal, QString("BITS contunue execution."));
+	return CUpdaterApp::ExitCode::ContunueExecution;
 }
 
 //---------------------------------------------------------------------------
@@ -490,13 +584,18 @@ void UpdaterApp::onUpdateComplete(CUpdaterErrors::Enum aError)
 //---------------------------------------------------------------------------
 void UpdaterApp::errorExit()
 {
-	getQtApplication().exit(mResultCode ? mResultCode : CUpdaterApp::ExitCode::UnknownError);
+	if (!mResultCode_)
+	{
+		mResultCode_ = CUpdaterApp::ExitCode::UnknownError;
+	}
+
+	getQtApplication().exit(mResultCode_);
 }
 
 //---------------------------------------------------------------------------
 int UpdaterApp::getResultCode() const
 {
-	return mResultCode;
+	return mResultCode_;
 }
 
 //---------------------------------------------------------------------------
@@ -528,7 +627,7 @@ void UpdaterApp::delayedExit(int aTimeout, CUpdaterErrors::Enum aError)
 	
 	getLog()->write(aError ? LogLevel::Error : LogLevel::Normal, QString("Closing after %1 seconds.").arg(aTimeout));
 
-	if (aError)
+	if (mResultCode_)
 	{
 		QTimer::singleShot(aTimeout * 1000, this, SLOT(errorExit()));
 	}
@@ -569,7 +668,7 @@ bool UpdaterApp::reRunFromTempDirectory()
 
 		{
 			QString programSettingsFile = QDir(getUpdaterTempDir()).absoluteFilePath(QFileInfo(QCoreApplication::arguments()[0]).baseName()) + ".ini";
-			QSettings tempSettings(programSettingsFile, QSettings::IniFormat);
+			QSettings tempSettings(ISysUtils::rmBOM(programSettingsFile), QSettings::IniFormat);
 
 			tempSettings.setValue("common/working_directory", getWorkingDirectory());
 		}
@@ -685,32 +784,81 @@ bool UpdaterApp::cleanDir(const QString & dirName)
 }
 
 //---------------------------------------------------------------------------
-void UpdaterApp::setResultCode(CUpdaterErrors::Enum aError)
+void UpdaterApp::setResultCode(CUpdaterErrors::Enum aError, const QString aMessage /*= QString()*/)
 {
+	mResultDescription = aMessage;
+
 	switch (aError)
 	{
+	case CUpdaterErrors::OK:
+		setResultCode(CUpdaterApp::ExitCode::NoError, aMessage);
+		break;
+
 	case CUpdaterErrors::UnknownError:
-		mResultCode = CUpdaterApp::ExitCode::UnknownError;
+		setResultCode(CUpdaterApp::ExitCode::UnknownError, aMessage);
 		break;
 
 	case CUpdaterErrors::NetworkError:
-		mResultCode = CUpdaterApp::ExitCode::NetworkError;
+		setResultCode(CUpdaterApp::ExitCode::NetworkError, aMessage);
 		break;
 
 	case CUpdaterErrors::ParseError:
-		mResultCode = CUpdaterApp::ExitCode::ParseError;
+		setResultCode(CUpdaterApp::ExitCode::ParseError, aMessage);
 		break;
 
 	case CUpdaterErrors::DeployError:
-		mResultCode = CUpdaterApp::ExitCode::DeployError;
+		setResultCode(CUpdaterApp::ExitCode::DeployError, aMessage);
 		break;
 
 	case CUpdaterErrors::UpdateBlocked:
-		mResultCode = CUpdaterApp::ExitCode::Blocked;
+		setResultCode(CUpdaterApp::ExitCode::Blocked, aMessage);
+		break;
+
+	case CUpdaterErrors::BitsInProgress:
+		setResultCode(CUpdaterApp::ExitCode::NoError, tr("Update in progress"));
 		break;
 
 	default:
+
 		break;
+	}
+	
+	updateErrorDescription();
+}
+
+//---------------------------------------------------------------------------
+void UpdaterApp::setResultCode(CUpdaterApp::ExitCode::Enum aExitCode, const QString aMessage /*= QString()*/)
+{
+	mResultCode_ = aExitCode;
+	mResultDescription = aMessage;
+
+	updateErrorDescription();
+}
+
+//---------------------------------------------------------------------------
+void UpdaterApp::updateErrorDescription()
+{
+	static QMap<int, QString> descriptions;
+
+	if (descriptions.isEmpty())
+	{
+		descriptions.insert(CUpdaterApp::ExitCode::ErrorRunFromTempDir, tr("#error_run_from_temp_dir"));
+		descriptions.insert(CUpdaterApp::ExitCode::NoWatchService, tr("#error_connection_to_guard"));
+		descriptions.insert(CUpdaterApp::ExitCode::UnknownCommand, tr("#error_unknown_command"));
+		descriptions.insert(CUpdaterApp::ExitCode::SecondInstance, tr("#error_second_instance"));
+		descriptions.insert(CUpdaterApp::ExitCode::UnknownError, tr("#error_unknown"));
+		descriptions.insert(CUpdaterApp::ExitCode::NetworkError, tr("#error_network"));
+		descriptions.insert(CUpdaterApp::ExitCode::ParseError, tr("#error_parse_response"));
+		descriptions.insert(CUpdaterApp::ExitCode::DeployError, tr("#error_deploy"));
+		descriptions.insert(CUpdaterApp::ExitCode::Aborted, tr("#error_aborted"));
+		descriptions.insert(CUpdaterApp::ExitCode::Blocked, tr("#error_update_blocked"));
+		descriptions.insert(CUpdaterApp::ExitCode::FailIntegrity, tr("#error_check_integrity"));
+		descriptions.insert(CUpdaterApp::ExitCode::WorkInProgress, tr("#work_in_progress"));
+	}
+
+	if (mResultDescription.isEmpty() && descriptions.contains(mResultCode_))
+	{
+		mResultDescription = descriptions.value(mResultCode_);
 	}
 }
 

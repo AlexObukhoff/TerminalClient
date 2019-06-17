@@ -26,7 +26,7 @@ protected:
 	virtual bool isNotError(char aCommand);
 
 	/// Обработка ответа на предыдущей команды. Автоисправление некоторых ошибок.
-	virtual bool processAnswer(const QByteArray & aCommand);
+	virtual bool processAnswer(const QByteArray & aCommand, char aError);
 
 	/// Добавить общие статусы.
 	virtual void appendStatusCodes(ushort aFlags, TStatusCodes & aStatusCodes);
@@ -47,7 +47,7 @@ protected:
 	virtual void parseDeviceData(const QByteArray & aData);
 
 	/// Установить флаги по ошибке в ответе.
-	virtual void setErrorFlags(const QByteArray & /*aCommand*/);
+	virtual void setErrorFlags();
 
 	/// Критична ли ошибка ЭКЛЗ (ошибки).
 	bool isEKLZErrorCritical(char aError) const;

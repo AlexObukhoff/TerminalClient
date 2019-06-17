@@ -58,7 +58,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(TC_DIR);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);.\src;$(QTDIR)\include;$(THIRDPARTY_DIR)\SmsMessage\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(TC_DIR);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);.\src;$(QTDIR)\include;$(THIRDPARTY_DIR)\SmsMessage\src;$(THIRDPARTY_DIR)\IDTech\SDK\C_C++\include;$(THIRDPARTY_DIR)\IDTech\SDK\C++_Dependencies\include\libusb-1.0\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QCOMPORTWIN_LIB;CYBERPLAT_DRIVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
@@ -80,7 +80,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(TC_DIR);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);.\src;$(QTDIR)\include;$(THIRDPARTY_DIR)\SmsMessage\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(TC_DIR);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);.\src;$(QTDIR)\include;$(THIRDPARTY_DIR)\SmsMessage\src;$(THIRDPARTY_DIR)\IDTech\SDK\C_C++\include;$(THIRDPARTY_DIR)\IDTech\SDK\C++_Dependencies\include\libusb-1.0\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QCOMPORTWIN_LIB;CYBERPLAT_DRIVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
@@ -101,7 +101,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(TC_DIR);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);.\src;$(QTDIR)\include;$(THIRDPARTY_DIR)\SmsMessage\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(TC_DIR);$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);.\src;$(QTDIR)\include;$(THIRDPARTY_DIR)\SmsMessage\src;$(THIRDPARTY_DIR)\IDTech\SDK\C_C++\include;$(THIRDPARTY_DIR)\IDTech\SDK\C++_Dependencies\include\libusb-1.0\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_THREAD_SUPPORT;QT_CORE_LIB;COMPORTWIN_LIB;CYBERPLAT_DRIVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
@@ -128,18 +128,24 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\CardReaderStatusCodes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\CardReaderStatusesDescriptions.h" />
-    <ClInclude Include="..\src\CreatorReaderConstants.h" />
-    <ClInclude Include="..\src\CreatorReaderDataTypes.h" />
-    <ClInclude Include="..\src\CreatorReaderModelData.h" />
-    <ClInclude Include="..\src\EMVAdapter.h" />
-    <ClInclude Include="..\src\EMVConstants.h" />
-    <ClInclude Include="..\src\TLV.h" />
-    <CustomBuild Include="..\src\CreatorReader.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\EMVTagData.h" />
+    <ClInclude Include="..\src\Creator\CreatorReader.h" />
+    <ClInclude Include="..\src\Creator\CreatorReaderConstants.h" />
+    <ClInclude Include="..\src\Creator\CreatorReaderDataTypes.h" />
+    <ClInclude Include="..\src\Creator\CreatorReaderModelData.h" />
+    <ClInclude Include="..\src\EMV\EMVAdapter.h" />
+    <ClInclude Include="..\src\EMV\EMVConstants.h" />
+    <ClInclude Include="..\src\EMV\TLV.h" />
+    <ClInclude Include="..\src\IDTech\IDTechModelData.h" />
+    <ClInclude Include="..\src\IDTech\IDTechReader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\CreatorReader.cpp" />
-    <ClCompile Include="..\src\EMVAdapter.cpp" />
-    <ClCompile Include="..\src\TLV.cpp" />
+    <ClCompile Include="..\src\Creator\CreatorReader.cpp" />
+    <ClCompile Include="..\src\EMV\EMVAdapter.cpp" />
+    <ClCompile Include="..\src\EMV\TLV.cpp" />
+    <ClCompile Include="..\src\IDTech\IDTechCallbacks.cpp" />
+    <ClCompile Include="..\src\IDTech\IDTechCallbacks.h" />
+    <ClCompile Include="..\src\IDTech\IDTechReader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,6 +15,7 @@
 #include <SDK/PaymentProcessor/Settings/ExtensionsSettings.h>
 
 // Modules
+#include <SysUtils/ISysUtils.h>
 #include <SettingsManager/SettingsManager.h>
 
 // Project
@@ -56,7 +57,7 @@ bool SettingsService::initialize()
 	// Регистрируем все конфиги.
 	QList<SSettingsSource> settingsSources;
 	settingsSources
-		<< SSettingsSource(mApplication->getWorkingDirectory() + "/data/system.ini", AdapterNames::TerminalAdapter, true)
+		<< SSettingsSource(ISysUtils::rmBOM(mApplication->getWorkingDirectory() + "/data/system.ini"), AdapterNames::TerminalAdapter, true)
 		<< SSettingsSource("terminal.ini", AdapterNames::TerminalAdapter, false)
 		<< SSettingsSource("keys.xml", AdapterNames::TerminalAdapter, false)
 		<< SSettingsSource("config.xml", AdapterNames::TerminalAdapter, true)

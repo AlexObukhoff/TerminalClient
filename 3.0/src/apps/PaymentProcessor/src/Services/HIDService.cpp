@@ -83,10 +83,6 @@ void HIDService::updateHardwareConfiguration()
 
 			// Подписываемся на сигнал от устройства.
 			device->subscribe(SDK::Driver::IHID::DataSignal, this, SIGNAL(data(const QVariantMap &)));
-
-			// Включаем устройство на чтение
-			device->enable(true);
-
 			toLog(LogLevel::Normal, QString("Device '%1' added...").arg(device->getName()));
 		}
 		else
@@ -221,6 +217,11 @@ bool HIDService::setEnable(bool aEnable, const QString & aDevice)
 			}
 		}
 	}
+
+	toLog(LogLevel::Debug, QString("Update HID device state: name [%1], state [%2], result: [%3]")
+		.arg(aDevice)
+		.arg(aEnable ? "ENABLE" : "DISABLE")
+		.arg(result ? "OK" : "ERROR"));
 
 	return result;
 }

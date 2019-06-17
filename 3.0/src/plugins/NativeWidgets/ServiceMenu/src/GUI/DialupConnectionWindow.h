@@ -4,7 +4,6 @@
 
 // Qt headers
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QStringList>
 #include "ui_DialupConnectionWindow.h"
 #include <Common/QtHeadersEnd.h>
 

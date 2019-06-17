@@ -14,12 +14,14 @@ namespace CPaymaster
 		const char PaperJam  = '\x20';    /// Замятие бумаги.
 		const char Presenter = '\x40';    /// Только для PPU-700: Ошибка презентера или в презентере осталась бумага.
 	}
+
+	/// Минимально рекомендованный билд прошивки.
+	const int MinFRBuild = 7942;
 }
 
 //--------------------------------------------------------------------------------
-typedef AtolVKP80BasedFR<AtolOnlineFRBase> TPaymaster;
-
-class Paymaster : public TPaymaster
+template<class T>
+class Paymaster : public AtolVKP80BasedFR<T>
 {
 	SET_SUBSERIES("Paymaster")
 
@@ -57,5 +59,8 @@ protected:
 	/// Получить Id принтера.
 	virtual char getPrinterId();
 };
+
+typedef class Paymaster<Atol2OnlineFRBase> Paymaster2;
+typedef class Paymaster<Atol3OnlineFRBase> Paymaster3;
 
 //--------------------------------------------------------------------------------

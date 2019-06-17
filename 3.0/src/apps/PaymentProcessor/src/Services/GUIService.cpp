@@ -127,7 +127,7 @@ bool GUIService::initialize()
 
 	auto parseIni = [&](const QString & aIniFile) 
 	{
-		QSettings settings(aIniFile, QSettings::IniFormat);
+		QSettings settings(ISysUtils::rmBOM(aIniFile), QSettings::IniFormat);
 		settings.setIniCodec("UTF-8");
 
 		foreach (auto key, settings.allKeys())
@@ -513,7 +513,9 @@ void GUIService::onIntruderActivity()
 		break;
 	}
 
-	mEventManager->sendEvent(PPSDK::Event(event, CGUIService::LogName, message));
+#ifndef _DEBUG
+	ILog::getInstance(CGUIService::IntruderLogName)->write(LogLevel::Warning, message);
+#endif
 }
 
 //---------------------------------------------------------------------------

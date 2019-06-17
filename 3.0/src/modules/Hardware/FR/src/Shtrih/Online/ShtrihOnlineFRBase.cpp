@@ -22,6 +22,7 @@ ShtrihOnlineFRBase<T>::ShtrihOnlineFRBase()
 	mIsOnline = true;
 	mOFDFiscalParameters.remove(CFR::FiscalFields::Cashier);
 	mOFDFiscalParameters.remove(CFR::FiscalFields::TaxSystem);
+	mNeedReceiptProcessingOnCancel = true;
 
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, true);
 
@@ -33,10 +34,12 @@ ShtrihOnlineFRBase<T>::ShtrihOnlineFRBase()
 	mPayTypeData.add(EPayTypes::CounterOffer, 16);
 
 	// данные команд
-	mCommandData.add(CShtrihOnlineFR::Commands::Reboot, CShtrihFR::Timeouts::Default, false);
+	mCommandData.add(CShtrihOnlineFR::Commands::Service, CShtrihFR::Timeouts::Default, false);
 
 	// ошибки
-	mErrorData = PErrorData(new CShtrihOnlineFR::Errors::CData);
+	mErrorData = PErrorData(new CShtrihOnlineFR::Errors::Data);
+	mUnprocessedErrorData.add(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, CShtrihOnlineFR::Errors::NoRequiedDataInFS);
+	mUnprocessedErrorData.add(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData,   CShtrihFR::Errors::BadModeForCommand);
 }
 
 //--------------------------------------------------------------------------------
@@ -103,6 +106,11 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 
 	QByteArray data;
 
+	if (getFRParameter(CShtrihOnlineFR::FRParameters::AutomaticNumber, data) && !clean(data).isEmpty())
+	{
+		setDeviceParameter(CDeviceData::FR::AutomaticNumber, clean(data));
+	}
+
 	if (!processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalizationTotal, &data) || (data.size() <= 46))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to get fiscalization total");
@@ -114,56 +122,38 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 		return false;
 	}
 
-	bool result = true;
-	bool FSError = mFSError;
-	bool needWaitReady = getLongStatus() && (mMode == CShtrihFR::InnerModes::SessionClosed) || (mMode == CShtrihFR::InnerModes::DataEjecting);
-
-	TResult commandResult = processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, data.mid(43, 4));
-
-	if (commandResult)
+	if (processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, data.mid(43, 4)))
 	{
-		if (needWaitReady && !waitReady(CShtrihOnlineFR::ReadyWaiting))
+		bool needWaitReady = getLongStatus() && (mMode == CShtrihFR::InnerModes::SessionClosed) || (mMode == CShtrihFR::InnerModes::DataEjecting);
+
+		if (needWaitReady)
 		{
-			return false;
+			waitReady(CShtrihOnlineFR::ReadyWaiting);
 		}
 
-		CFR::STLV TLV;
+		TGetFiscalTLVData getFiscalTLVData = [&] (QByteArray & aData) -> TResult { TResult result = processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, &aData);
+		aData = aData.mid(3); return result; };
+		TProcessTLVAction checkingAgentFlags = [&] (const CFR::STLV & aTLV) -> bool { return (aTLV.field != CFR::FiscalFields::AgentFlagsReg) || checkAgentFlags(aTLV.data[0]); };
 
-		while (processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, &data))
-		{
-			if (mFFEngine.parseTLV(data.mid(3), TLV))
-			{
-				if (TLV.field == CFR::FiscalFields::AgentFlagsReg)
-				{
-					result = checkAgentFlags(TLV.data[0]);
-				}
-			}
-		}
+		processTLVData(getFiscalTLVData, checkingAgentFlags);
 	}
-	else if ((commandResult == CommandResult::Device) && (mLastError == CShtrihOnlineFR::Errors::NoRequiedDataInFS))
+	else if (isErrorUnprocessed(mLastCommand, mLastError))
 	{
-		mFSError = FSError;
 		mProcessingErrors.pop_back();
+		mLastError = 0;
 	}
 
-	return result;
+	return true;
 }
 
 //---------------------------------------------------------------------------
 template <class T>
 bool ShtrihOnlineFRBase<T>::setCashier()
 {
-	if (!mFFEngine.containsConfigParameter(CFiscalSDK::Cashier))
-	{
-		toLog(LogLevel::Warning, mDeviceName + ": Failed to set cashier due to it is absent");
-		return false;
-	}
+	QString cashier;
 
-	QString cashier = mFFEngine.getConfigParameter(CFiscalSDK::Cashier).toString().simplified();
-
-	if (cashier.isEmpty())
+	if (!mFFEngine.checkCashier(cashier))
 	{
-		toLog(LogLevel::Warning, mDeviceName + ": Failed to set cashier due to it is empty");
 		return false;
 	}
 
@@ -199,28 +189,30 @@ bool ShtrihOnlineFRBase<T>::setTaxValue(TVAT /*aVAT*/, int /*aGroup*/)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ShtrihOnlineFRBase<T>::getPrinterStatus(TStatusCodes & aStatusCodes)
-{
-	QByteArray answer;
-	TResult result = processCommand(CShtrihOnlineFR::Commands::GetPrinterStatus, &answer);
-
-	if (result == CommandResult::Device)
-	{
-		aStatusCodes.insert(PrinterStatusCode::Error::PrinterFR);
-
-		return true;
-	}
-
-	return result;
-}
-
-//--------------------------------------------------------------------------------
-template<class T>
 bool ShtrihOnlineFRBase<T>::getStatus(TStatusCodes & aStatusCodes)
 {
-	if (!ShtrihFRBase<T>::getStatus(aStatusCodes) || (mPrinterStatusEnabled && !getPrinterStatus(aStatusCodes)))
+	if (!ShtrihFRBase<T>::getStatus(aStatusCodes))
 	{
 		return false;
+	}
+
+	uint bootFirmware = getDeviceParameter(CDeviceData::BootFirmware).toUInt();
+
+	if ((mModel != CShtrihFR::Models::ID::MStarTK2) && (bootFirmware < CShtrihOnlineFR::MinBootFirmware))
+	{
+		aStatusCodes.insert(DeviceStatusCode::Warning::BootFirmware);
+	}
+
+	if (mPrinterStatusEnabled)
+	{
+		TResult result = processCommand(CShtrihOnlineFR::Commands::GetPrinterStatus);
+
+		     if (result == CommandResult::Device) aStatusCodes.insert(PrinterStatusCode::Error::PrinterFR);
+		else if (result == CommandResult::Answer) aStatusCodes.insert(DeviceStatusCode::Warning::OperationError);
+		else if (!result)
+		{
+			return false;
+		}
 	}
 
 	if (mNotEnableFirmwareUpdating)
@@ -228,26 +220,25 @@ bool ShtrihOnlineFRBase<T>::getStatus(TStatusCodes & aStatusCodes)
 		aStatusCodes.insert(FRStatusCode::Warning::FirmwareUpdating);
 	}
 
-	QByteArray data;
+	QByteArray data = performStatus(aStatusCodes, CShtrihOnlineFR::Commands::FS::GetOFDInterchangeStatus, 6);
 
-	if (!processCommand(CShtrihOnlineFR::Commands::FS::GetOFDInterchangeStatus, &data))
+	if (data == CFR::Result::Fail)
 	{
 		return false;
 	}
+	else if (data != CFR::Result::Error)
+	{
+		int OFDNotSentCount = (data.size() < 7) ? -1 : revert(data.mid(5, 2)).toHex().toUShort(0, 16);
+		checkOFDNotSentCount(OFDNotSentCount, aStatusCodes);
+	}
 
-	int OFDNotSentCount = (data.size() < 7) ? -1 : revert(data.mid(5, 2)).toHex().toUShort(0, 16);
-	checkOFDNotSentCount(OFDNotSentCount, aStatusCodes);
+	data = performStatus(aStatusCodes, CShtrihOnlineFR::Commands::FS::GetStatus, 7);
 
-	if (!processCommand(CShtrihOnlineFR::Commands::FS::GetStatus, &data))
+	if (data == CFR::Result::Fail)
 	{
 		return false;
 	}
-
-	if (data.size() < 7)
-	{
-		aStatusCodes.insert(DeviceStatusCode::Error::Unknown);
-	}
-	else
+	else if (data != CFR::Result::Error)
 	{
 		checkFSFlags(data[7], aStatusCodes);
 	}
@@ -269,6 +260,19 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 		int FDCount = revert(data.right(4)).toHex().toUInt(0, 16);
 
 		setDeviceParameter(CDeviceData::FR::FiscalDocuments, FDCount);
+	}
+
+	if ((mModel != CShtrihFR::Models::ID::MStarTK2) && processCommand(CShtrihOnlineFR::Commands::Service, CShtrihOnlineFR::Service::BootFirmware, &data))
+	{
+		if (data == QByteArray(data.size(), ASCII::NUL))
+		{
+			toLog(LogLevel::Warning, mDeviceName + ": Failed to get boot firmware version due to the answer is NUL.");
+		}
+		else
+		{
+			uint bootFirmware = revert(data.mid(2)).toHex().toUInt(0, 16);
+			setDeviceParameter(CDeviceData::BootFirmware, bootFirmware);
+		}
 	}
 
 	if (processCommand(CShtrihOnlineFR::Commands::FS::GetValidity, &data))
@@ -343,7 +347,7 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 	{
 		if (data[0] == CShtrihOnlineFR::SDNotConnected)
 		{
-			setDeviceParameter(CDeviceData::SDCard, "not connected");
+			setDeviceParameter(CDeviceData::SDCard, CDeviceData::NotConnected);
 		}
 		else if (data[0])
 		{
@@ -430,7 +434,7 @@ template<class T>
 bool ShtrihOnlineFRBase<T>::reboot()
 {
 	QVariantMap portConfig = mIOPort->getDeviceConfiguration();
-	TResult result = processCommand(CShtrihOnlineFR::Commands::Reboot, CShtrihOnlineFR::Reboot);
+	TResult result = processCommand(CShtrihOnlineFR::Commands::Service, CShtrihOnlineFR::Service::Reboot);
 
 	CommandResult::TResults errors = CommandResult::TResults()
 		<< CommandResult::Port
@@ -460,11 +464,9 @@ bool ShtrihOnlineFRBase<T>::reboot()
 
 //--------------------------------------------------------------------------------
 template<class T>
-void ShtrihOnlineFRBase<T>::setErrorFlags(const QByteArray & aCommand)
+void ShtrihOnlineFRBase<T>::setErrorFlags()
 {
-	bool noError = (aCommand == CShtrihOnlineFR::Commands::FS::GetFiscalTLVData) && (mLastError == CShtrihOnlineFR::Errors::NoRequiedDataInFS);
-
-	if (!noError && (mErrorData->value(mLastError).type == FRError::EType::FS))
+	if (mErrorData->value(mLastError).type == FRError::EType::FS)
 	{
 		mFSError = true;
 	}
@@ -479,14 +481,13 @@ void ShtrihOnlineFRBase<T>::checkSalesName(QString & aName)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, bool aBack)
+bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, EPayOffTypes::Enum aPayOffType)
 {
 	if (mModelData.date < CShtrihOnlineFR::MinFWDate::V2)
 	{
-		return ShtrihFRBase<T>::sale(aUnitData, aBack);
+		return ShtrihFRBase<T>::sale(aUnitData, aPayOffType);
 	}
 
-	char documentType = aBack ? CShtrihOnlineFR::DocumentTypes::SaleBack : CShtrihOnlineFR::DocumentTypes::Sale;
 	char taxIndex = char(mTaxData[aUnitData.VAT].group);
 	char section = (aUnitData.section == -1) ? CShtrihFR::SectionNumber : char(aUnitData.section);
 	QByteArray sum = getHexReverted(aUnitData.sum, 5, 2);
@@ -494,7 +495,7 @@ bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, bool aBack)
 	QString name = aUnitData.name;
 
 	QByteArray commandData;
-	commandData.append(documentType);                      // тип операции
+	commandData.append(char(aPayOffType));                 // тип операции
 	commandData.append(getHexReverted(1, 6, 6));           // количество
 	commandData.append(sum);                               // цена
 	commandData.append(sum);                               // сумма операций
@@ -548,7 +549,7 @@ bool ShtrihOnlineFRBase<T>::closeDocument(double aSum, EPayTypes::Enum aPayType)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * aFDNumber)
 {
 	if ((mModelData.date < CShtrihOnlineFR::MinFWDate::V2) || (mModel == CShtrihFR::Models::ID::MStarTK2))
 	{
@@ -561,56 +562,34 @@ bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SP
 		}
 	}
 
-	bool result = ShtrihFRBase<T>::performFiscal(aReceipt, aPaymentData, aFPData, aPSData);
-
-	if (result)
+	if (!ShtrihFRBase<T>::performFiscal(aReceipt, aPaymentData))
 	{
-		QByteArray data;
-
-		if (processCommand(CShtrihOnlineFR::Commands::FS::GetStatus, &data) && (data.size() >= 33))
-		{
-			uint FDNumber = revert(data.mid(29, 4)).toHex().toUInt(0, 16);
-			mFFEngine.checkFPData(aFPData, CFR::FiscalFields::FDNumber, FDNumber);
-
-			if (processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, getHexReverted(FDNumber, 4)))
-			{
-				CFR::STLV TLV;
-
-				while (processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, &data))
-				{
-					if (mFFEngine.parseTLV(data.mid(3), TLV))
-					{
-						if (mFFData.data().contains(TLV.field))
-						{
-							mFFEngine.parseSTLVData(TLV, aPSData);
-							mFFEngine.parseTLVData (TLV, aFPData);
-						}
-						else
-						{
-							toLog(LogLevel::Warning, QString("%1: Failed to add fiscal field %2 due to it is unknown").arg(mDeviceName).arg(TLV.field));
-						}
-					}
-				}
-			}
-		}
-
-		CShtrihFR::TRegisterId registerId = aPaymentData.back ? CShtrihFR::Registers::SalesBackCount : CShtrihFR::Registers::SalesCount;
-
-		if (getRegister(registerId, data))
-		{
-			uint documentNumber = revert(data).toHex().toUInt(0, 16);
-			mFFEngine.checkFPData(aFPData, CFR::FiscalFields::DocumentNumber, documentNumber);
-		}
+		return false;
 	}
 
-	return result;
+	QByteArray data;
+
+	if (aFDNumber && processCommand(CShtrihOnlineFR::Commands::FS::GetStatus, &data) && (data.size() >= 33))
+	{
+		*aFDNumber = revert(data.mid(29, 4)).toHex().toUInt(0, 16);
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ShtrihOnlineFRBase<T>::cancelFiscal()
+bool ShtrihOnlineFRBase<T>::getFiscalFields(quint32 aFDNumber, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
 {
-	return ShtrihFRBase<T>::cancelFiscal() && receiptProcessing();
+	if (!processCommand(CShtrihOnlineFR::Commands::FS::StartFiscalTLVData, getHexReverted(aFDNumber, 4)))
+	{
+		return false;
+	}
+
+	TGetFiscalTLVData getFiscalTLVData = [&] (QByteArray & aData) -> TResult { TResult result = processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, &aData);
+		aData = aData.mid(3); return result; };
+
+	return processFiscalTLVData(getFiscalTLVData, &aFPData, &aPSData);
 }
 
 //--------------------------------------------------------------------------------
@@ -638,16 +617,16 @@ bool ShtrihOnlineFRBase<T>::execZReport(bool aAuto)
 
 	if (!result && aAuto)
 	{
-		mNeedCloseSession = mNeedCloseSession || (mMode == CShtrihFR::InnerModes::NeedCloseSession);
+		mNeedCloseSession = mNeedCloseSession || (mMode == CShtrihFR::InnerModes::SessionExpired);
 
 		return false;
 	}
 
 	if (mOperatorPresence)
 	{
-		processCommand(CShtrihFR::Commands::SectionReport);
-		processCommand(CShtrihFR::Commands::TaxReport);
-		processCommand(CShtrihFR::Commands::CashierReport);
+		processCommand(CShtrihFR::Commands::SectionReport);    waitForPrintingEnd(true, CShtrihOnlineFR::MaxWaitForPrintingSectionReport);
+		processCommand(CShtrihFR::Commands::TaxReport);        waitForPrintingEnd(true, CShtrihOnlineFR::MaxWaitForPrintingTaxReport);
+		processCommand(CShtrihFR::Commands::CashierReport);    waitForPrintingEnd(true, CShtrihOnlineFR::MaxWaitForPrintingCashierReport);
 	}
 
 	mNeedCloseSession = false;
@@ -662,7 +641,7 @@ bool ShtrihOnlineFRBase<T>::execZReport(bool aAuto)
 
 	if (getLongStatus())
 	{
-		mNeedCloseSession = mMode == CShtrihFR::InnerModes::NeedCloseSession;
+		mNeedCloseSession = mMode == CShtrihFR::InnerModes::SessionExpired;
 	}
 
 	if (result)
@@ -681,13 +660,13 @@ bool ShtrihOnlineFRBase<T>::execZReport(bool aAuto)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ShtrihOnlineFRBase<T>::processAnswer(const QByteArray & aCommand)
+bool ShtrihOnlineFRBase<T>::processAnswer(const QByteArray & aCommand, char aError)
 {
-	switch (mLastError)
+	switch (aError)
 	{
 		case CShtrihOnlineFR::Errors::FSOfflineEnd:
 		{
-			mProcessingErrors.push_back(mLastError);
+			mProcessingErrors.push_back(aError);
 
 			mFSOfflineEnd = true;
 
@@ -695,67 +674,34 @@ bool ShtrihOnlineFRBase<T>::processAnswer(const QByteArray & aCommand)
 		}
 		case CShtrihOnlineFR::Errors::NeedZReport:
 		{
-			mProcessingErrors.push_back(mLastError);
+			mProcessingErrors.push_back(aError);
 
 			return execZReport(true);
 		}
 		case CShtrihOnlineFR::Errors::WrongFSState:
 		{
-			mProcessingErrors.push_back(mLastError);
+			mProcessingErrors.push_back(aError);
 
 			if (aCommand[0] != CShtrihFR::Commands::OpenFRSession)
 			{
-				getLongStatus();
-
-				return (mMode == CShtrihFR::InnerModes::SessionClosed) && openFRSession();
+				return (getSessionState() == ESessionState::Closed) && openFRSession();
 			}
 
 			break;
 		}
 	}
 
-	bool result = ShtrihFRBase<T>::processAnswer(aCommand);
+	bool result = ShtrihFRBase<T>::processAnswer(aCommand, aError);
 
-	if (!mProcessingErrors.isEmpty() && (mProcessingErrors.last() == CShtrihFR::Errors::BadModeForCommand))
+	if (!mProcessingErrors.isEmpty() && (mProcessingErrors.last() == CShtrihFR::Errors::BadModeForCommand) && getLongStatus() && (mMode == CShtrihFR::InnerModes::DataEjecting))
 	{
-		bool needCleanErrors = false;
-		QByteArray data;
+		TGetFiscalTLVData getFiscalTLVData = [&] (QByteArray & aData) -> TResult { TResult result = processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, &aData);
+			aData = aData.mid(3); return result; };
 
-		if (getLongStatus() && (mMode == CShtrihFR::InnerModes::DataEjecting))
-		{
-			while (processCommand(CShtrihOnlineFR::Commands::FS::GetFiscalTLVData, &data))
-			{
-			}
-
-			result = mProcessingErrors.last() == CShtrihFR::Errors::BadModeForCommand;
-			needCleanErrors = true;
-		}
-
-		if (needCleanErrors || (aCommand == CShtrihOnlineFR::Commands::FS::GetFiscalTLVData))
-		{
-			mProcessingErrors.pop_back();
-			mLastError = 0;
-		}
+		result = processTLVData(getFiscalTLVData);
 	}
 
 	return result;
-}
-
-//--------------------------------------------------------------------------------
-template<class T>
-bool ShtrihOnlineFRBase<T>::prepareFiscal()
-{
-	if (!ShtrihFRBase<T>::prepareFiscal() || !getLongStatus())
-	{
-		return false;
-	}
-
-	if (mMode == CShtrihFR::InnerModes::SessionClosed)
-	{
-		return openFRSession();
-	}
-
-	return true;
 }
 
 //--------------------------------------------------------------------------------

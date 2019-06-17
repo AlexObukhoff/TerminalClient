@@ -12,8 +12,6 @@
 //---------------------------------------------------------------------------
 typedef QList<ulong> TJobsStatus;
 
-QString getLastErrorMessage();
-
 //---------------------------------------------------------------------------
 bool getPrinterStatusData(const QString & aPrinterName, TJobsStatus & aJobsStatus, ulong & aStatus, ulong & aAttributes)
 {
@@ -159,7 +157,7 @@ void ISysUtils::getPrinterStatus(const QString & aPrinterName, TStatusCodes & aS
 		}
 	}
 
-	if (!ISysUtils::setPrinterQueuedMode(aPrinterName, errorMessage))
+	if (!ISysUtils::setPrintingQueuedMode(aPrinterName, errorMessage))
 	{
 		aStatusCodes.insert(DeviceStatusCode::Warning::ThirdPartyDriver);
 	}
@@ -174,7 +172,7 @@ void ISysUtils::getPrinterStatus(const QString & aPrinterName, TStatusCodes & aS
 }
 
 //--------------------------------------------------------------------------------
-bool ISysUtils::setPrinterQueuedMode(const QString & aPrinterName, QString & aErrorMessage)
+bool ISysUtils::setPrintingQueuedMode(const QString & aPrinterName, QString & aErrorMessage)
 {
 	bool result = false;
 
@@ -194,7 +192,7 @@ bool ISysUtils::setPrinterQueuedMode(const QString & aPrinterName, QString & aEr
 		// Get the buffer size needed.
 		if (!GetPrinter(printer, 2, NULL, 0, &byteNeeded) && GetLastError() != ERROR_INSUFFICIENT_BUFFER)
 		{
-			aErrorMessage = QString("GetPrinter error: %1").arg(getLastErrorMessage());
+			aErrorMessage = QString("GetPrinter %1").arg(getLastErrorMessage());
 			ClosePrinter(printer);
 			return false;
 		}

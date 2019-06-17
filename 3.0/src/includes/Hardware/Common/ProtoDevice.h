@@ -12,6 +12,9 @@
 #include <SDK/Drivers/WarningLevel.h>
 #include <SDK/Drivers/Components.h>
 
+// Project
+#include "Hardware/Common/MetaDevice.h"
+
 #define SET_DEVICE_TYPE(aType) public: static QString getDeviceType() { return SDK::Driver::CComponents::aType; }
 
 //--------------------------------------------------------------------------------

@@ -4,37 +4,37 @@
 <context>
     <name>main_menu_scene</name>
     <message>
-        <location filename="../main_menu_scene.qml" line="131"/>
+        <location filename="../main_menu_scene.qml" line="133"/>
         <source>main_menu_scene#platru</source>
         <translation>Платёжная книжка</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="108"/>
+        <location filename="../main_menu_scene.qml" line="110"/>
         <source>main_menu_scene#info</source>
         <translation>Помощь</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="96"/>
+        <location filename="../main_menu_scene.qml" line="98"/>
         <source>main_menu_scene#search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="120"/>
+        <location filename="../main_menu_scene.qml" line="122"/>
         <source>main_menu_scene#language</source>
         <translation>Язык</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="166"/>
+        <location filename="../main_menu_scene.qml" line="186"/>
         <source>main_menu_scene#invalid_provider</source>
         <translation>Извините, оплата в пользу данного оператора временно невозможна. Попробуйте позже.</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="278"/>
+        <location filename="../main_menu_scene.qml" line="302"/>
         <source>main_menu_scene#rest_howto_title</source>
         <translation>Остаток средств %REST% %CURRENCY%</translation>
     </message>
     <message>
-        <location filename="../main_menu_scene.qml" line="279"/>
+        <location filename="../main_menu_scene.qml" line="303"/>
         <source>main_menu_scene#rest_howto_description</source>
         <translation>Нажмите «Закрыть» и выберите любого оператора для оплаты.</translation>
     </message>

@@ -6,17 +6,17 @@
     <message>
         <location filename="../send_receipt_scene.qml" line="16"/>
         <source>send_receipt_scene#type_email</source>
-        <translation type="unfinished"></translation>
+        <translation>E-mail жазыңыз</translation>
     </message>
     <message>
         <location filename="../send_receipt_scene.qml" line="92"/>
         <source>send_receipt_scene#sending_receipt</source>
-        <translation type="unfinished"></translation>
+        <translation>Жіберілуде...</translation>
     </message>
     <message>
         <location filename="../send_receipt_scene.qml" line="99"/>
         <source>send_receipt_scene#send_receipt_ok</source>
-        <translation type="unfinished"></translation>
+        <translation>Түбіртек жіберілді.</translation>
     </message>
 </context>
 </TS>

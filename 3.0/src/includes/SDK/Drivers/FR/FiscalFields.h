@@ -4,39 +4,44 @@
 
 namespace SDK { namespace Driver { namespace CAllHardware { namespace FiscalFields
 {
-	const char FDName[]          = "fd_name";             // 1000 (Наименование фискального документа).
-	const char UserContact[]     = "user_contact";        // 1008 (Телефон или электронный адрес покупателя).
-	const char PayOffAddress[]   = "payoff_address";      // 1009 (Адрес расчетов).
-	const char FDDateTime[]      = "fd_date_time";        // 1012 (Дата и время ФД).
-	const char SerialFRNumber[]  = "serial_fr_number";    // 1013 (Заводской номер ФР).
-	const char OFDINN[]          = "ofd_inn";             // 1017 (ИНН ОФД).
-	const char INN[]             = "inn";                 // 1018 (ИНН пользователя).
-	const char PayOffAmount[]    = "payoff_amount";       // 1020 (Сумма расчета в чеке).
-	const char Cashier[]         = "cashier";             // 1021 (Кассир).
-	const char UnitName[]        = "unit_name";           // 1030 (Наименование товара).
-	const char AutomaticNumber[] = "automatic_number";    // 1036 (Номер автомата).
-	const char RNM[]             = "rnm";                 // 1037 (Регистрационный номер ККТ).
-	const char SessionNumber[]   = "session_number";      // 1038 (Номер смены).
-	const char FDNumber[]        = "fd_number";           // 1040 (Номер ФД).
-	const char SerialFSNumber[]  = "serial_fs_number";    // 1041 (Заводской номер ФН).
-	const char DocumentNumber[]  = "document_number";     // 1042 (Номер чека за смену).
-	const char OFDName[]         = "ofd_name";            // 1046 (Наименование ОФД).
-	const char LegalOwner[]      = "legal_owner";         // 1048 (Наименование юр. лица владельца).
-	const char PayOffType[]      = "payoff_type";         // 1054 (Признак расчета).
-	const char TaxSystem[]       = "tax_system";          // 1055 (СНО на платеже).
-	const char FTSURL[]          = "fts_url";             // 1060 (Адрес сайта ФНС).
-	const char TaxSystemsReg[]   = "tax_systems_reg";     // 1062 (СНО из итогов регистрации).
-	const char ProcessingPhone[] = "processing_phone";    // 1074 (Телефон оператора по приему платежей).
-	const char FDSign[]          = "fd_sign";             // 1077 (Фискальный признак документа).
-	const char SenderMail[]      = "sender_mail";         // 1117 (Электронная почта отправителя чека).
-	const char PayOffPlace[]     = "payoff_place";        // 1187 (Место расчетов).
-	const char ModelVersion[]    = "model_version";       // 1188 (Версия модели ККТ).
-	const char FFDFR[]           = "ffd_fr";              // 1189 (Версия ФФД ФР).
-	const char FFDFS[]           = "ffd_fs";              // 1190 (Версия ФФД ФН).
-	const char VATRate[]         = "vat_rate";            // 1199 (Ставка НДС).
-	const char CashierINN[]      = "cashier_inn";         // 1203 (ИНН кассира).
-	const char OFDURL[]          = "ofd_url";             // 1208 (Адрес сайта для получения чека).
-	const char FFD[]             = "ffd";                 // 1209 (Версия ФФД).
+	const char FDName[]                 = "fd_name";                      // 1000 (Наименование фискального документа).
+	const char UserContact[]            = "user_contact";                 // 1008 (Телефон или электронный адрес покупателя).
+	const char PayOffAddress[]          = "payoff_address";               // 1009 (Адрес расчетов).
+	const char FDDateTime[]             = "fd_date_time";                 // 1012 (Дата и время ФД).
+	const char SerialFRNumber[]         = "serial_fr_number";             // 1013 (Заводской номер ФР).
+	const char OFDINN[]                 = "ofd_inn";                      // 1017 (ИНН ОФД).
+	const char INN[]                    = "inn";                          // 1018 (ИНН пользователя).
+	const char PayOffAmount[]           = "payoff_amount";                // 1020 (Сумма расчета в чеке).
+	const char Cashier[]                = "cashier";                      // 1021 (Кассир).
+	const char UnitName[]               = "unit_name";                    // 1030 (Наименование товара).
+	const char AutomaticNumber[]        = "automatic_number";             // 1036 (Номер автомата).
+	const char RNM[]                    = "rnm";                          // 1037 (Регистрационный номер ККТ).
+	const char SessionNumber[]          = "session_number";               // 1038 (Номер смены).
+	const char FDNumber[]               = "fd_number";                    // 1040 (Номер ФД).
+	const char SerialFSNumber[]         = "serial_fs_number";             // 1041 (Заводской номер ФН).
+	const char DocumentNumber[]         = "document_number";              // 1042 (Номер чека за смену).
+	const char OFDName[]                = "ofd_name";                     // 1046 (Наименование ОФД).
+	const char LegalOwner[]             = "legal_owner";                  // 1048 (Наименование юр. лица владельца).
+	const char PayOffType[]             = "payoff_type";                  // 1054 (Признак расчета).
+	const char TaxSystem[]              = "tax_system";                   // 1055 (СНО на платеже).
+	const char FTSURL[]                 = "fts_url";                      // 1060 (Адрес сайта ФНС).
+	const char TaxSystemsReg[]          = "tax_systems_reg";              // 1062 (СНО из итогов регистрации).
+	const char ProcessingPhone[]        = "processing_phone";             // 1074 (Телефон оператора по приему платежей).
+	const char FDSign[]                 = "fd_sign";                      // 1077 (Фискальный признак документа).
+	const char OFDNotSentFDQuantity[]   = "ofd_not_sent_fd_quantity";     // 1097 (Количество непереданных ФД).
+	const char OFDNotSentFDDateTime[]   = "ofd_not_sent_fd_date_time";    // 1098 (Дата и время первого из непереданных ФД).
+	const char ReregistrationCause[]    = "reregistration_cause";         // 1101 (Код причины перерегистрации).
+	const char FDForSessionTotal[]      = "fd_for_session_total";         // 1111 (Общее количество ФД за смену).
+	const char SenderMail[]             = "sender_mail";                  // 1117 (Электронная почта отправителя чека).
+	const char FiscalsForSessionTotal[] = "fiscals_for_session_total";    // 1118 (Количество кассовых чеков (БСО) за смену).
+	const char PayOffPlace[]            = "payoff_place";                 // 1187 (Место расчетов).
+	const char ModelVersion[]           = "model_version";                // 1188 (Версия модели ККТ).
+	const char FFDFR[]                  = "ffd_fr";                       // 1189 (Версия ФФД ФР).
+	const char FFDFS[]                  = "ffd_fs";                       // 1190 (Версия ФФД ФН).
+	const char VATRate[]                = "vat_rate";                     // 1199 (Ставка НДС).
+	const char CashierINN[]             = "cashier_inn";                  // 1203 (ИНН кассира).
+	const char OFDURL[]                 = "ofd_url";                      // 1208 (Адрес сайта для получения чека).
+	const char FFD[]                    = "ffd";                          // 1209 (Версия ФФД).
 
 	// Данные оператора перевода
 	const char TransferOperatorAddress[] = "transfer_operator_address";    // 1005 (Адрес оператора перевода).
@@ -53,6 +58,12 @@ namespace SDK { namespace Driver { namespace CAllHardware { namespace FiscalFiel
 	const char AgentFlagsReg[]   = "agent_flags_reg";    // 1057 (Признак(и) платежного агента из итогов регистрации и на платеже).
 	const char AgentPhone[]      = "agent_phone";        // 1073 (Телефон платежного агента).
 	const char AgentFlag[]       = "agent_flag";         // 1222 (Признак платежного агента на платеже).
+
+	// Статусы
+	const char FSExpiredStatus[]    = "fs_expired_status";           // 1050 (Признак исчерпания ресурса ФН).
+	const char FSNeedChangeStatus[] = "fs_need_change_status";       // 1051 (Признак необходимости срочной замены ФН).
+	const char FSMemoryEnd[]        = "fs_memory_end_status";        // 1052 (Признак заполнения памяти ФН).
+	const char OFDNoConnection[]    = "ofd_no_connection_status";    // 1053 (Признак превышения времени ожидания ответа ОФД).
 
 	// Режимы работы
 	const char AutomaticMode[]      = "automatic_mode";          // 1001 (Признак автоматического режима).

@@ -89,9 +89,7 @@ bool CustomPrinter::printImageDefault(const QImage & aImage, const Tags::TTypes 
 		return false;
 	}
 
-	QByteArray lineSpacing = CPOSPrinter::Command::SetLineWidthMultiplier;
-
-	if (!mIOPort->write(lineSpacing + ASCII::NUL))
+	if (!mIOPort->write(CPOSPrinter::Command::SetLineSpacing(0)))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to set null line spacing for printing the image");
 		return false;
@@ -146,9 +144,9 @@ bool CustomPrinter::printImageDefault(const QImage & aImage, const Tags::TTypes 
 		}
 	}
 
-	char lineSpacingValue = char(getConfigParameter(CHardware::Printer::Settings::LineSpacing).toInt());
+	int lineSpacing = getConfigParameter(CHardware::Printer::Settings::LineSpacing).toInt();
 
-	if (!mIOPort->write(lineSpacing + lineSpacingValue))
+	if (!mIOPort->write(CPOSPrinter::Command::SetLineSpacing(lineSpacing)))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to set line spacing after printing the image");
 	}

@@ -30,6 +30,7 @@ NetworkTaskManager * NetworkTask::getManager() const
 	return mManager;
 }
 
+//------------------------------------------------------------------------
 QString qtNetworkError(QNetworkReply::NetworkError aError)
 {
 	switch(aError)
@@ -107,6 +108,8 @@ void NetworkTask::setProcessing(NetworkTaskManager * aManager, bool aProcessing)
 			mTimer.start();
 		}
 
+		clearErrors();
+
 		this->moveToThread(getManager()->thread());
 
 		mProcessingMutex.lock();
@@ -155,6 +158,14 @@ void NetworkTask::resetTimer()
 			mTimer.start();
 		}
 	}
+}
+
+//------------------------------------------------------------------------
+void NetworkTask::clearErrors()
+{
+	mError = QNetworkReply::NoError;
+	mNetworkReplyError.clear();
+	mHttpError = 0;
 }
 
 //------------------------------------------------------------------------

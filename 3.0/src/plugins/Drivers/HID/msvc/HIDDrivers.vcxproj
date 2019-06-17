@@ -70,7 +70,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;QAxContainer.lib;QtGui4.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;QAxContainer.lib;QtGui4.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/ACR120U/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -96,7 +96,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;QAxContainer.lib;QtGui4.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Scanners.lib;OPOSSDK.lib;QAxContainer.lib;QtGui4.lib;ACR120U.lib;IOPorts.lib;Setupapi.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/ACR120U/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -121,7 +121,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCored4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;Scannersd.lib;OPOSSDKd.lib;QAxContainerd.lib;QtGuid4.lib;ACR120U.lib;IOPortsd.lib;Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCored4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;Scannersd.lib;OPOSSDKd.lib;QAxContainerd.lib;QtGuid4.lib;ACR120U.lib;IOPortsd.lib;Setupapi.lib;SysUtilsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);$(THIRDPARTY_DIR)/ACR120U/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

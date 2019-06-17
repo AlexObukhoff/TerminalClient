@@ -8,7 +8,7 @@
 namespace CHHP
 {
 	/// ID производителя.
-	const quint32 VendorID = 0x0536;
+	const quint16 VendorID = 0x0536;
 
 	class CModelData : public CUSBDevice::CData
 	{

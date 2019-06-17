@@ -179,24 +179,27 @@ TParameterList MStarTK2Parameters(const QStringList & aModels)
 	return modifyPriority(ShtrihOnlineParameters<T>(aModels), EDetectingPriority::High)
 		//<< setRemoteSensor(true)
 		<< setLoopEnabled("", false)
-		<< setPresentationLength()
-		<< setLeftReceiptTimeout(true);
+		<< setPresentationLength();
 }
 
 //------------------------------------------------------------------------------
 template <class T>
-TParameterList AtolParameters(const QStringList & aModels, const QString & aDeviceType)
+TParameterList AtolParameters(const QStringList & aModels, const QString & aDeviceType, const QString & aProtocol)
 {
+	QVariantMap protocolNames;
+	protocolNames.insert("ATOL", ProtocolNames::FR::ATOL2);
+
 	return defaultParameters<T>(aModels, aDeviceType)
-		<< setProtocol(ProtocolNames::FR::ATOL)
-		<< setNullingSumInCash();
+		<< setProtocol(aProtocol)
+		<< setNullingSumInCash()
+		<< setModifiedValues(CHardwareSDK::ProtocolName, protocolNames);
 }
 
 //------------------------------------------------------------------------------
 template <class T>
-TParameterList AtolLSParameters(const QStringList & aModels, const QString & aDeviceType)
+TParameterList AtolLSParameters(const QStringList & aModels, const QString & aDeviceType, const QString & aProtocol)
 {
-	return AtolParameters<T>(aModels, aDeviceType)
+	return AtolParameters<T>(aModels, aDeviceType, aProtocol)
 		<< setLineSpacing(1, 9, 3, 3);
 }
 
@@ -204,7 +207,7 @@ TParameterList AtolLSParameters(const QStringList & aModels, const QString & aDe
 template <class T>
 TParameterList PayParameters(const QStringList & aModels)
 {
-	return AtolLSParameters<T>(aModels, CComponents::FiscalRegistrator);
+	return AtolLSParameters<T>(aModels, CComponents::FiscalRegistrator, ProtocolNames::FR::ATOL2);
 }
 
 //------------------------------------------------------------------------------
@@ -226,17 +229,20 @@ TParameterList PayPPU700Parameters(const QStringList & aModels)
 			<< FRValues::LoopAndPushNotTakenOnTimeout
 			<< FRValues::NoLoopAndPushNotTakenOnTimeout
 			<< FRValues::NoLoopAndRetractNotTakenOnTimeout, false)
-		<< setLeftReceiptTimeout();
+			<< setLeftReceiptTimeout();
 }
 
 //------------------------------------------------------------------------------
 template <class T>
-TParameterList PaymasterParameters(const QStringList & aModels)
+TParameterList PaymasterParameters(const QStringList & aModels, const QString & aProtocol)
 {
 	QVariantMap modelNames;
 	modelNames.insert("Sensis Paymaster", "Sensis Kaznachej");
 
-	return PayVKP80Parameters<T>(aModels)
+	return AtolLSParameters<T>(aModels, CComponents::FiscalRegistrator, aProtocol)
+		<< setLoopEnabled(PPT::ForFiscalDocuments, false)
+		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, true, PrinterValues::Retract, false, PPT::ForFiscalDocuments)
+		<< setPresentationLength("", 2, 14)
 		<< setNotPrinting()
 		<< setPrinterModel(CAtolOnlinePrinters::CModels().getNames(), CAtolOnlinePrinters::Default)
 		<< setRemoteSensor(true)
@@ -282,10 +288,22 @@ TParameterList KasbiParameters(const QStringList & aModels)
 }
 
 //------------------------------------------------------------------------------
+template <class T>
+TParameterList AFPParameters(const QStringList & aModels)
+{
+	return modifyPriority(defaultParameters<T>(aModels, CComponents::FiscalRegistrator), EDetectingPriority::High)
+		<< setNullingSumInCash()
+		<< setProtocol(ProtocolNames::FR::AFP);
+}
+
+//------------------------------------------------------------------------------
 #define SINGLE_FR_PLUGIN(aClassName, aParameters, aName) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName>, QStringList() << #aName))
 #define COMMON_FR_PLUGIN(aClassName, aParameters)        COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName>, aClassName::getModelList()))
 
-#define ATOL_FR_PLUGIN(aClassName, aDeviceType, aParameters) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName>, aClassName::getModelList(), CComponents::aDeviceType))
+#define SINGLE_ATOL_PLUGIN(aClassName, aParameters, aName, aProtocol) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName>, QStringList() << #aName, ProtocolNames::FR::aProtocol))
+#define COMMON_ATOL_PLUGIN(aClassName, aDeviceType, aParameters, aProtocol) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName>, aClassName::getModelList(), CComponents::aDeviceType, ProtocolNames::FR::aProtocol))
+#define COMMON_ATOL2_PLUGIN(aClassName, aDeviceType, aParameters) COMMON_ATOL_PLUGIN(aClassName, aDeviceType, aParameters, ATOL2)
+#define COMMON_ATOL3_PLUGIN(aClassName, aDeviceType, aParameters) COMMON_ATOL_PLUGIN(aClassName, aDeviceType, aParameters, ATOL3)
 
 //------------------------------------------------------------------------------
 BEGIN_REGISTER_PLUGIN
@@ -297,17 +315,19 @@ BEGIN_REGISTER_PLUGIN
 	SINGLE_FR_PLUGIN(PrimPresenterOnlineFR, PresenterPrimParameters, Iskra PRIM 21-FA)
 	SINGLE_FR_PLUGIN(PrimEjectorOnlineFR,   EjectorPrimParameters,   Iskra PRIM 21-FA)
 
-	ATOL_FR_PLUGIN(AtolFR,       FiscalRegistrator, AtolLSParameters)
-	ATOL_FR_PLUGIN(AtolFRSingle, FiscalRegistrator, AtolParameters)
-	ATOL_FR_PLUGIN(AtolDP,       DocumentPrinter,   AtolLSParameters)
-	ATOL_FR_PLUGIN(AtolDPSingle, DocumentPrinter,   AtolParameters)
+	COMMON_ATOL2_PLUGIN(AtolFR,       FiscalRegistrator, AtolLSParameters)
+	COMMON_ATOL2_PLUGIN(AtolFRSingle, FiscalRegistrator, AtolParameters)
+	COMMON_ATOL2_PLUGIN(AtolDP,       DocumentPrinter,   AtolLSParameters)
+	COMMON_ATOL2_PLUGIN(AtolDPSingle, DocumentPrinter,   AtolParameters)
 
 	SINGLE_FR_PLUGIN(PayVKP80,   PayVKP80Parameters,  PayVKP-80K)
 	SINGLE_FR_PLUGIN(PayPPU700,  PayPPU700Parameters, PayPPU-700K)
 	SINGLE_FR_PLUGIN(PayCTS2000, PayParameters,       PayCTS-2000K)
 
-	ATOL_FR_PLUGIN(AtolOnlineFRBase, FiscalRegistrator, AtolLSParameters)
-	SINGLE_FR_PLUGIN(Paymaster,  PaymasterParameters, Sensis Kaznachej)
+	COMMON_ATOL2_PLUGIN(Atol2OnlineFRBase, FiscalRegistrator, AtolLSParameters)
+	COMMON_ATOL3_PLUGIN(Atol3OnlineFRBase, FiscalRegistrator, AtolLSParameters)
+	SINGLE_ATOL_PLUGIN(Paymaster2,  PaymasterParameters, Sensis Kaznachej, ATOL2)
+	SINGLE_ATOL_PLUGIN(Paymaster3,  PaymasterParameters, Sensis Kaznachej, ATOL3)
 
 	COMMON_FR_PLUGIN(ShtrihSerialFR, ShtrihParameters)
 	COMMON_FR_PLUGIN(ShtrihRetractorFR, ShtrihRetractorFRParameters)
@@ -327,6 +347,7 @@ BEGIN_REGISTER_PLUGIN
 	COMMON_FR_PLUGIN(SparkFR, SparkParameters)
 	SINGLE_FR_PLUGIN(OPOSMStarTUPK, OPOSFRParameters, Multisoft MStar-TUP-K)
 	SINGLE_FR_PLUGIN(KasbiFRBase, KasbiParameters, Kasbi Terminal-FA)
+	COMMON_FR_PLUGIN(AFPFR, AFPParameters)
 END_REGISTER_PLUGIN
 
 //------------------------------------------------------------------------------

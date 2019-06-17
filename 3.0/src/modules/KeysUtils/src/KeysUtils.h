@@ -51,7 +51,9 @@ struct SKeyPair
 	QByteArray ap;
 	QByteArray sd;
 	QByteArray op;
+	QString description;
 	int engine;
+
 
 	QByteArray serverPublicKey;
 };

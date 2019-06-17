@@ -1,10 +1,5 @@
 /* @file Менеджер для работы с сетью */
 
-// Qt
-#include <Common/QtHeadersBegin.h>
-#include <QtCore/QCoreApplication>
-#include <Common/QtHeadersEnd.h>
-
 #include <SDK/PaymentProcessor/Core/ICore.h>
 #include <SDK/PaymentProcessor/Core/IService.h>
 #include <SDK/PaymentProcessor/Core/INetworkService.h>

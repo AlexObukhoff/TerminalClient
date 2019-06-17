@@ -94,7 +94,7 @@ public:
 	void updateStatuses();
 
 	/// Присутствует ли фискальный принтер
-	bool isFiscalPrinterPresent(bool aVirtual);
+	bool isFiscalPrinterPresent(bool aVirtual, bool aCheckPrintFullZReport = false);
 
 private slots:
 	void deviceStatusChanged(const QString & aConfigName, SDK::Driver::EWarningLevel::Enum aLevel, const QString & aDescription);

@@ -3,7 +3,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QRegExp>
-#include <QtGui/QTextCursor>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
@@ -11,6 +10,8 @@
 
 // Project
 #include "SystemPrinter.h"
+
+namespace PrinterSettings = CHardware::Printer::Settings;
 
 //--------------------------------------------------------------------------------
 SystemPrinter::SystemPrinter()
@@ -46,9 +47,9 @@ bool SystemPrinter::updateParameters()
 
 		QString errorMessage;
 
-		if (!ISysUtils::setPrinterQueuedMode(mPrinter.printerName(), errorMessage))
+		if (!ISysUtils::setPrintingQueuedMode(mPrinter.printerName(), errorMessage))
 		{
-			toLog(LogLevel::Warning, QString("Error change queue printing mode: %1").arg(errorMessage));
+			toLog(LogLevel::Warning, "Failed to change printing queued mode, " + errorMessage);
 		}
 	}
 
@@ -82,14 +83,15 @@ bool SystemPrinter::printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt)
 	}
 
 	// Увеличиваем отступ от нижнего края листа, если требуется вывод номеров страниц
-	qreal bottomMargin = getConfigParameter(CHardware::Printer::PrintPageNumber).toBool() ? 12.7 : CSystemPrinter::DefaultMargin;
-	mPrinter.setPageMargins(mSideMargin, CSystemPrinter::DefaultMargin, mSideMargin, bottomMargin, QPrinter::Millimeter);
+	qreal bottomMargin = getConfigParameter(PrinterSettings::PrintPageNumber).toBool() ? 12.7 : CSystemPrinter::DefaultMargin;
+	qreal leftMargin   = getConfigParameter(PrinterSettings::LeftMargin, mSideMargin).toDouble();
+	mPrinter.setPageMargins(leftMargin, CSystemPrinter::DefaultMargin, mSideMargin, bottomMargin, QPrinter::Millimeter);
 
 	QTextDocument document;	
 	QString toPrint = receipt.join(CSystemPrinter::BRtag) + CSystemPrinter::BRtag;
 
-	int lineSpacing = getConfigParameter(CHardware::Printer::Settings::LineSpacing).toInt();
-	int fontSize = getConfigParameter(CHardware::Printer::Settings::FontSize).toInt();
+	int lineSpacing = getConfigParameter(PrinterSettings::LineSpacing).toInt();
+	int fontSize    = getConfigParameter(PrinterSettings::FontSize).toInt();
 
 	if (fontSize || lineSpacing)
 	{

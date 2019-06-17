@@ -3,8 +3,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTimer>
-#include <QtCore/QVariant>
-#include <QtCore/QDir>
 #include <QtCore/QUrl>
 #include <QtCore/QBuffer>
 #include <Common/QtHeadersEnd.h>
@@ -26,7 +24,6 @@
 #include "DeviceTests/HIDTest.h"
 #include "DeviceTests/DispenserTest.h"
 
-#include "IDeviceBackend.h"
 #include "DeviceSlot.h"
 
 //------------------------------------------------------------------------
@@ -185,16 +182,12 @@ void DeviceSlot::onDeviceRunTest()
 {
 	connect(mDeviceTest.data(), SIGNAL(result(const QString &, const QVariant &)), this, SLOT(onTestResult(const QString &, const QVariant &)));
 
-	if (mDeviceTest->hasResult())
-	{
-		MessageBox::subscribe(this);
-	}
-
 	foreach (auto test, mDeviceTest->getTestNames())
 	{
 		if (mDeviceTest->hasResult())
 		{
 			MessageBox::info(test.second);
+			MessageBox::subscribe(this);
 		}
 
 		mDeviceTest->run(test.first);

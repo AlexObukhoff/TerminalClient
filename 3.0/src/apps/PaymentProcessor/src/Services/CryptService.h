@@ -51,13 +51,19 @@ public:
 	#pragma region SDK::PaymentProcessor::ICryptService interface
 
 	/// Сгенерировать и зарегистрировать ключ на сервере. Возвращает EKeysUtilsError::Enum.
-	virtual int generateKey(int aKeyId, const QString & aLogin, const QString & aPassword, const QString & aURL, QString & aSD, QString & aAP, QString & aOP);
+	virtual int generateKey(int aKeyId, const QString & aLogin, const QString & aPassword, const QString & aURL, QString & aSD, QString & aAP, QString & aOP, const QString & aDescription = QString());
 
 	/// Сохранить сгенерированный ключ.
 	virtual bool saveKey();
 
 	/// Меняем ключи местами
 	virtual bool replaceKeys(int aKeyIdSrc, int aKeyIdDst);
+
+	/// Получить информацию о ключе по номеру пары
+	virtual SDK::PaymentProcessor::ICryptService::SKeyInfo getKeyInfo(int aKeyId);
+
+	/// Возвращает загруженные номера пар ключей
+	virtual QList<int> getLoadedKeys() const;
 
 	/// Возвращает интерфейс криптодвижка.
 	virtual ICryptEngine * getCryptEngine();

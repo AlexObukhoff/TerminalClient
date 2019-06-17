@@ -40,6 +40,8 @@
 /src/interface/modern/
 /src/interface/plugins/
 /src/interface/qmlcontrols/
+/src/interface/.gitignore
+/src/interface/interface.qbs
 /src/modules/AdBackend/
 /src/modules/Common/
 /src/modules/Connection/
@@ -82,6 +84,7 @@
 /src/plugins/Drivers/Watchdog/
 /src/plugins/GraphicBackends/
 /src/plugins/NativeScenarios/ScreenMaker/
+/src/plugins/NativeScenarios/Migrator3000/
 /src/plugins/NativeWidgets/ServiceMenu/
 /src/plugins/Payments/Cyberplat/
 /src/plugins/Plugins.sln

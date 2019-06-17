@@ -39,17 +39,17 @@
         <translation>Back</translation>
     </message>
     <message>
-        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="81"/>
+        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="78"/>
         <source>#terminal_number</source>
         <translation>Terminal #</translation>
     </message>
     <message>
-        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="82"/>
+        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="79"/>
         <source>#software_version</source>
         <translation>Version </translation>
     </message>
     <message>
-        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="139"/>
+        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="155"/>
         <source>#printer_failed</source>
         <translation>Failed to print out.</translation>
     </message>
@@ -337,37 +337,31 @@ Warning! Accepted coins will not be registered in fiscal documents</translation>
 <context>
     <name>DispenserServiceWindow</name>
     <message>
-        <location filename="../GUI/UI/DispenserServiceWindow.ui" line="110"/>
         <source>x</source>
-        <translation>x</translation>
+        <translation type="obsolete">x</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/DispenserServiceWindow.ui" line="123"/>
         <source>0</source>
-        <translation>0</translation>
+        <translation type="obsolete">0</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/DispenserServiceWindow.ui" line="130"/>
         <source>=</source>
-        <translation>=</translation>
+        <translation type="obsolete">=</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/DispenserServiceWindow.ui" line="137"/>
         <source>0.0</source>
-        <translation>0.0</translation>
+        <translation type="obsolete">0.0</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/DispenserServiceWindow.ui" line="144"/>
         <source>RUR</source>
-        <translation>RUR</translation>
+        <translation type="obsolete">RUR</translation>
     </message>
     <message>
         <source>#title_update_cash_unit</source>
         <translation type="obsolete">Save changes</translation>
     </message>
     <message>
-        <location filename="../GUI/DispenserServiceWindow.cpp" line="60"/>
-        <location filename="../GUI/DispenserServiceWindow.cpp" line="176"/>
+        <location filename="../GUI/DispenserServiceWindow.cpp" line="55"/>
         <source>#pts</source>
         <translation>pts</translation>
     </message>
@@ -408,7 +402,7 @@ Warning! Accepted coins will not be registered in fiscal documents</translation>
         <translation>Press the button to print a copy of the cash collection receipt</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentHistoryWindow.cpp" line="51"/>
+        <location filename="../GUI/EncashmentHistoryWindow.cpp" line="53"/>
         <source>#total</source>
         <translation>Total</translation>
     </message>
@@ -416,41 +410,46 @@ Warning! Accepted coins will not be registered in fiscal documents</translation>
 <context>
     <name>EncashmentServiceWindow</name>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="77"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="141"/>
         <source>#title_cash_amount</source>
         <translation>Total cash in terminal</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="103"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="167"/>
         <source>#title_note_count</source>
         <translation>Total notes</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="176"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="49"/>
         <source>#title_last_encashment_date</source>
         <translation>Last encashment date</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="217"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="106"/>
         <source>#title_print_balance</source>
         <translation>Print balance</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="230"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="119"/>
         <source>#title_print_zreport</source>
         <translation>Print Z-report</translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="132"/>
+        <source>#title_payload</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>#print_full_zreport</source>
         <translation type="obsolete">Print deferred Z-reports</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="239"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="193"/>
         <source>#title_coin_count</source>
         <translation>Total coins</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="204"/>
+        <location filename="../GUI/UI/EncashmentServiceWindow.ui" line="93"/>
         <source>#title_encash</source>
         <translation>Encash</translation>
     </message>
@@ -483,12 +482,17 @@ Warning! Accepted coins will not be registered in fiscal documents</translation>
         <translation type="obsolete">Error during encashment.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentServiceWindow.cpp" line="128"/>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="166"/>
         <source>#balance_printed</source>
         <translation>Balance printed out.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentServiceWindow.cpp" line="124"/>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="221"/>
+        <source>#check_update_payload_settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="162"/>
         <source>#balance_print_failed</source>
         <translation>Failed to print out balance.</translation>
     </message>
@@ -504,63 +508,68 @@ Warning! Accepted coins will not be registered in fiscal documents</translation>
 <context>
     <name>EncashmentWindow</name>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="54"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="62"/>
         <source>#question_encash</source>
         <translation>Proceed with encashment?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="54"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="62"/>
         <source>#question_encash_without_receipt</source>
         <translation>Cannot print receipt, still want to encash?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="66"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="74"/>
         <source>#enter_stacker_id</source>
         <translation>Enter stacker ID:</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="144"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="155"/>
         <source>#print_full_zreport</source>
         <translation>Print deferred Z-reports?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="141"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="155"/>
+        <source>#full_zreport_print_failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/EncashmentWindow.cpp" line="148"/>
         <source>#zreport_failed</source>
         <translation>Failed to print out Z-report.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="148"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="151"/>
         <source>#zreport_printed</source>
         <translation>Z-report printed out.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="103"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="109"/>
         <source>#encashment_complete</source>
         <translation>Encashment complete.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="107"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="117"/>
         <source>#encashment_complete_and_printed</source>
         <translation>Encashment complete and printed</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="108"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="113"/>
         <source>#encashment_print_failed</source>
         <translation>Encashment print failed.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="110"/>
-        <location filename="../GUI/EncashmentWindow.cpp" line="150"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="118"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="168"/>
         <source>#printing</source>
         <translation>Please wait while printing...</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="121"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="129"/>
         <source>#encashment_error_try_later</source>
         <translation>Error during encashment. Try later.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="125"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="133"/>
         <source>#encashment_error</source>
         <translation>Error during encashment.</translation>
     </message>
@@ -581,22 +590,22 @@ Warning! Accepted coins will not be registered in fiscal documents</translation>
 <context>
     <name>HIDTest</name>
     <message>
-        <location filename="../DeviceTests/HIDTest.cpp" line="19"/>
+        <location filename="../DeviceTests/HIDTest.cpp" line="20"/>
         <source>#test_read</source>
         <translation>Scanner test</translation>
     </message>
     <message>
-        <location filename="../DeviceTests/HIDTest.cpp" line="27"/>
+        <location filename="../DeviceTests/HIDTest.cpp" line="28"/>
         <source>#read_barcode</source>
         <translation>Scan barcode...</translation>
     </message>
     <message>
-        <location filename="../DeviceTests/HIDTest.cpp" line="27"/>
+        <location filename="../DeviceTests/HIDTest.cpp" line="28"/>
         <source>#wait_photo</source>
         <translation>Wait image...</translation>
     </message>
     <message>
-        <location filename="../DeviceTests/HIDTest.cpp" line="94"/>
+        <location filename="../DeviceTests/HIDTest.cpp" line="99"/>
         <source>#readed</source>
         <translation>
 </translation>
@@ -605,17 +614,17 @@ Warning! Accepted coins will not be registered in fiscal documents</translation>
 <context>
     <name>Hardware::CommonParameters</name>
     <message>
-        <location filename="../GUI/DeviceSlot.cpp" line="255"/>
+        <location filename="../GUI/DeviceSlot.cpp" line="259"/>
         <source>#unknown_model</source>
         <translation>Model is not selected</translation>
     </message>
     <message>
-        <location filename="../GUI/EditorPane.cpp" line="51"/>
+        <location filename="../GUI/EditorPane.cpp" line="52"/>
         <source>#model</source>
         <translation>Model</translation>
     </message>
     <message>
-        <location filename="../GUI/EditorPane.cpp" line="52"/>
+        <location filename="../GUI/EditorPane.cpp" line="53"/>
         <source>#model_howto</source>
         <translation>Select the device model from the list.</translation>
     </message>
@@ -623,7 +632,7 @@ Warning! Accepted coins will not be registered in fiscal documents</translation>
 <context>
     <name>Hardware::PrinterParameters</name>
     <message>
-        <location filename="../GUI/EditorPane.cpp" line="62"/>
+        <location filename="../GUI/EditorPane.cpp" line="63"/>
         <source>#sytem_printer_name</source>
         <translation>System printer</translation>
     </message>
@@ -708,7 +717,7 @@ Warning! Accepted coins will not be registered in fiscal documents</translation>
         <translation type="obsolete">Status undefined</translation>
     </message>
     <message>
-        <location filename="../Backend/HardwareManager.cpp" line="225"/>
+        <location filename="../Backend/HardwareManager.cpp" line="224"/>
         <source>#unknown_status</source>
         <translation>Unknown status</translation>
     </message>
@@ -1049,48 +1058,48 @@ Warning! Accepted coins will not be registered in fiscal documents</translation>
 <context>
     <name>KeysManager</name>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="120"/>
+        <location filename="../Backend/KeysManager.cpp" line="137"/>
         <source>#ok</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="121"/>
+        <location filename="../Backend/KeysManager.cpp" line="138"/>
         <source>#network_error</source>
         <translation>A network error occured during the exchange with the server</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="122"/>
+        <location filename="../Backend/KeysManager.cpp" line="139"/>
         <source>#wrong_login_or_password</source>
         <translation>Wrong login or password for creating card-key</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="123"/>
+        <location filename="../Backend/KeysManager.cpp" line="140"/>
         <source>#wrong_server_answer</source>
         <translation>Incomplete server answer</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="124"/>
+        <location filename="../Backend/KeysManager.cpp" line="141"/>
         <source>#wrong_local_time</source>
         <translation>Wrong local time
 Please, syncronize terminal system time</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="125"/>
+        <location filename="../Backend/KeysManager.cpp" line="142"/>
         <source>#unknown_server_error</source>
         <translation>Unknown script error while creating card-key</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="126"/>
+        <location filename="../Backend/KeysManager.cpp" line="143"/>
         <source>#key_pair_create_error</source>
         <translation>Key create error</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="127"/>
+        <location filename="../Backend/KeysManager.cpp" line="144"/>
         <source>#key_export_error</source>
         <translation>Key export error</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="130"/>
+        <location filename="../Backend/KeysManager.cpp" line="147"/>
         <source>#unknown_error</source>
         <translation>Unknown  error</translation>
     </message>
@@ -1134,48 +1143,73 @@ NOTE: afterwards the keys must be verified on the dealer&apos;s office web site!
         <translation>Save and register the keys?
 To save the keys the software will be restarted</translation>
     </message>
+    <message>
+        <location filename="../GUI/KeysServiceWindow.cpp" line="102"/>
+        <source>#question_need_new_config</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>KeysWindow</name>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="73"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="54"/>
+        <source>#enable_keypair_change</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/KeysWindow.ui" line="84"/>
+        <source>#change_keypair</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/KeysWindow.ui" line="109"/>
         <source>#login</source>
         <translation>Login</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="100"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="136"/>
         <source>#password</source>
         <translation>Password</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="146"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="163"/>
+        <source>#key_description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/KeysWindow.ui" line="203"/>
         <source>#generate_keys</source>
         <translation>Generate keys</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="185"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="242"/>
         <source>#successful_generation</source>
         <translation>Keys successfully generated with the following parameters:</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="195"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="252"/>
         <source>#sd</source>
         <translation>SD:</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="212"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="269"/>
         <source>#ap</source>
         <translation>AP:</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="229"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="286"/>
         <source>#op</source>
         <translation>OP:</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/KeysWindow.ui" line="289"/>
+        <location filename="../GUI/UI/KeysWindow.ui" line="346"/>
         <source>#repeat</source>
         <translation>Repeat</translation>
+    </message>
+    <message>
+        <location filename="../GUI/KeysWindow.cpp" line="109"/>
+        <source>#keypair_already_exist</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1271,42 +1305,42 @@ To save the keys the software will be restarted</translation>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="93"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="95"/>
         <source>#terminal_number</source>
         <translation>Terminal #</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="94"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="96"/>
         <source>#software_version</source>
         <translation>Version </translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="182"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="184"/>
         <source>#title_diagnostic</source>
         <translation>Diagnostics</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="183"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="185"/>
         <source>#title_logs</source>
         <translation>Logs</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="206"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="208"/>
         <source>#title_setup</source>
         <translation>Setup</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="196"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="198"/>
         <source>#title_payments</source>
         <translation>Payments</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="189"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="191"/>
         <source>#title_encashment</source>
         <translation>Encashment</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="372"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="374"/>
         <source>#question_reboot_software</source>
         <translation>Are you sure you want to reboot the software?</translation>
     </message>
@@ -1316,37 +1350,37 @@ To save the keys the software will be restarted</translation>
         <translation>Reboot terminal?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="395"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="393"/>
         <source>#question_unblock_terminal</source>
         <translation>Unlock terminal?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="395"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="393"/>
         <source>#question_block_terminal</source>
         <translation>Lock terminal?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="406"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="402"/>
         <source>#question_stop_terminal</source>
         <translation>Stop terminal software?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="353"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="355"/>
         <source>#error_auth_failed</source>
         <translation>Wrong password</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="97"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="99"/>
         <source>#title_unlock</source>
         <translation>Unlock</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="97"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="99"/>
         <source>#title_lock</source>
         <translation>Lock</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="417"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="449"/>
         <source>#question_leave_service_menu</source>
         <translation>Quit service menu?</translation>
     </message>
@@ -1437,7 +1471,7 @@ To save the keys the software will be restarted</translation>
 <context>
     <name>PaymentManager</name>
     <message>
-        <location filename="../Backend/PaymentManager.cpp" line="401"/>
+        <location filename="../Backend/PaymentManager.cpp" line="471"/>
         <source>#lost_change</source>
         <translation>Change</translation>
     </message>
@@ -1809,7 +1843,7 @@ To save the keys the software will be restarted</translation>
         <translation>Processing</translation>
     </message>
     <message>
-        <location filename="../GUI/ServiceMenu.cpp" line="174"/>
+        <location filename="../GUI/ServiceMenu.cpp" line="168"/>
         <source>#need_restart_application</source>
         <translation>Software reboot is required for changes to take effect.
 Reboot now?</translation>
@@ -2221,27 +2255,31 @@ After the keys are generated, proceed to the last stage of the set up process.</
 <context>
     <name>frmEditorPane</name>
     <message>
-        <location filename="../GUI/UI/EditorPane.ui" line="194"/>
+        <location filename="../GUI/UI/EditorPane.ui" line="197"/>
         <source>#on</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EditorPane.ui" line="207"/>
+        <location filename="../GUI/UI/EditorPane.ui" line="210"/>
         <source>#off</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EditorPane.ui" line="477"/>
-        <source>#default</source>
-        <translation>Default</translation>
+        <location filename="../GUI/UI/EditorPane.ui" line="492"/>
+        <source>TextLabel</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EditorPane.ui" line="490"/>
+        <source>#default</source>
+        <translation type="obsolete">Default</translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/EditorPane.ui" line="517"/>
         <source>#ok</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/EditorPane.ui" line="503"/>
+        <location filename="../GUI/UI/EditorPane.ui" line="530"/>
         <source>#cancel</source>
         <translation>Cancel</translation>
     </message>

@@ -24,6 +24,9 @@ namespace FRStatusCode
 		const int WrongDealerTaxSystem       = 261;  /// Неверно настроена СНО (1! СНО в ФР).
 		const int WrongDealerAgentFlag       = 262;  /// Неверно настроен признак агента (1! признак агента в ФР).
 		const int WrongFiscalizationSettings = 263;  /// Параметры фискализации некорректны.
+		const int WrongTaxOnPayment          = 264;  /// Неверная налоговая ставка на платеже.
+		const int NeedTimeSynchronization    = 265;  /// Необходима синхронизация с системным временем.
+		const int FSVirtualEnd               = 266;  /// Срок действия ФН должен был закончиться.
 	}
 
 	/// Ошибки.
@@ -32,18 +35,19 @@ namespace FRStatusCode
 		const int FR                   = 270;    /// Неизвестная ошибка фискальной доработки.
 		const int EKLZ                 = 271;    /// Ошибка ЭКЛЗ.
 		const int FiscalCollapse       = 272;    /// Глобальная ошибка фискальной части ФР, печать невозможна.
-		const int FiscalMemory         = 273;    /// Ошибка фискальной памяти.
+		const int FM                   = 273;    /// Ошибка фискальной памяти.
 		const int ZBuffer              = 274;    /// Ошибка буфера Z-отчетов ФР.
 		const int ZBufferOverflow      = 275;    /// Переполнен буфер z-отчётов.
 		const int NeedCloseSession     = 276;    /// Необходимо выполнить Z-отчет.
 		const int FSEnd                = 277;    /// Срок действия ФН кончился.
 		const int NeedOFDConnection    = 278;    /// Необходимо подключение к серверу ОФД.
 		const int FS                   = 279;    /// Ошибка ФН.
-		const int NoMoney              = 280;    /// Не хватает денег для какой-либо операции.
-		const int WrongDealerTaxSystem = 281;    /// Неверно настроена СНО.
-		const int WrongDealerAgentFlag = 282;    /// Неверно настроен признак агента.
-		const int CashierINN           = 283;    /// Неправильный ИНН кассира.
-		const int Taxes                = 284;    /// Налоговые ставки неверны.
+		const int FSClosed             = 280;    /// ФН закрыт.
+		const int NoMoney              = 281;    /// Не хватает денег для какой-либо операции.
+		const int WrongDealerTaxSystem = 282;    /// Неверно настроена СНО.
+		const int WrongDealerAgentFlag = 283;    /// Неверно настроен признак агента.
+		const int CashierINN           = 284;    /// Неправильный ИНН кассира.
+		const int Taxes                = 285;    /// Налоговые ставки неверны.
 	}
 }
 

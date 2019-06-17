@@ -6,12 +6,10 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QFutureWatcher>
 #include <QtCore/QPointer>
-#include <QtGui/QToolBar>
 #include <QtGui/QCheckBox>
 #include <QtGui/QSortFilterProxyModel>
 #include <QtCore/QList>
 #include <QtCore/QMap>
-#include <QtCore/QQueue>
 #include "ui_PaymentServiceWindow.h"
 #include <Common/QtHeadersEnd.h>
 

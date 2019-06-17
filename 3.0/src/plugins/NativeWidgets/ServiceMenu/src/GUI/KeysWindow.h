@@ -15,6 +15,7 @@ namespace CKeysWindow
 {
 	const QString WarningStyleSheet = "background-color: rgb(255, 192, 192);";
 	const QString DefaultStyleSheet = "";
+	const int ReservedKeyNumber = 100;
 }
 
 //------------------------------------------------------------------------
@@ -47,6 +48,8 @@ signals:
 protected slots:
 	void onCreateButtonClicked();
 	void onRepeatButtonClicked();
+
+	void onCheckedKeyPairChanged(int aState);
 
 	void onGenerateTaskFinished();
 

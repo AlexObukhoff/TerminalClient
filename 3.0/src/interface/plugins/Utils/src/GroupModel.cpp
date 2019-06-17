@@ -43,6 +43,28 @@ namespace CGroupModel
 }
 
 //------------------------------------------------------------------------------
+static QString rmBom(const QString & aFile)
+{
+	QFile file(aFile);
+
+	if (file.open(QIODevice::ReadWrite))
+	{
+		QByteArray data = file.readAll();
+
+		// detect utf8 BOM
+		// https://codereview.qt-project.org/#/c/93658/5/src/corelib/io/qsettings.cpp
+		const uchar *dd = (const uchar *)data.constData();
+		if (data.size() >= 3 && dd[0] == 0xef && dd[1] == 0xbb && dd[2] == 0xbf)
+		{
+			file.resize(0);
+			file.write(QString::fromUtf8(data.remove(0, 3)).toUtf8());
+		}
+	}
+
+	return aFile;
+};
+
+//------------------------------------------------------------------------------
 GroupModel::GroupModel() :
 mRootElement(-1),
 mCurrentCategory(0)
@@ -139,7 +161,7 @@ bool GroupModel::loadContent(const QString & aFileName, QDomDocument & aDocument
 
 		// Загружаем настройки размеров для групп
 		{
-			QSettings ini(QString(aFileName).replace(".xml", ".ini"), QSettings::IniFormat);
+			QSettings ini(rmBom(QString(aFileName).replace(".xml", ".ini")), QSettings::IniFormat);
 			ini.setIniCodec("UTF-8");
 			ini.beginGroup("columns");
 

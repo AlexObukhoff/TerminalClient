@@ -3,7 +3,6 @@
 #pragma once
 
 // SDK
-#include <SDK/Drivers/IIOPort.h>
 #include <SDK/Drivers/IOPort/COMParameters.h>
 
 // Project

@@ -19,9 +19,8 @@ StaticLibrary {
 	}
 
 	Export {
-		Properties {
-			condition: qbs.targetOS == "windows"
-		}
+		Depends { name: 'cpp' }
+		cpp.staticLibraries: ["Advapi32"]
 	}
 }
 

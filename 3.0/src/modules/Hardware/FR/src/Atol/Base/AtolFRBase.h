@@ -1,10 +1,9 @@
-/* @file ФР АТОЛ и Пэй Киоск. */
+/* @file Базовый ФР на протоколе АТОЛ. */
 
 #pragma once
 
 // Modules
 #include "Hardware/FR/PortFRBase.h"
-#include "Hardware/Protocols/FR/AtolFR.h"
 
 // Project
 #include "../AtolModelData.h"
@@ -15,11 +14,9 @@ class AtolSeriesType {};
 //--------------------------------------------------------------------------------
 class AtolFRBase : public TSerialFRBase
 {
-	SET_SERIES("ATOL")
-
+public:
 	typedef AtolSeriesType TSeriesType;
 
-public:
 	AtolFRBase();
 
 	/// Готов ли к обработке данной фискальной команды.
@@ -44,6 +41,9 @@ protected:
 	/// Получить дату и время ФР.
 	virtual QDateTime getDateTime();
 
+	/// Установить начальные параметры.
+	virtual void setInitialData();
+
 	/// Получить параметры печати.
 	virtual bool getPrintingSettings();
 
@@ -54,7 +54,7 @@ protected:
 	virtual bool printLine(const QByteArray & aString);
 
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
 
 	/// Печать Z отчета.
 	virtual bool performZReport(bool aPrintDeferredReports);
@@ -87,13 +87,13 @@ protected:
 	virtual TResult execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
 
 	/// Выполнить команду.
-	virtual TResult performCommand(const QByteArray & aCommandData, QByteArray & aAnswer, int aTimeout);
+	virtual TResult performCommand(const QByteArray & /*aCommandData*/, QByteArray & /*aAnswer*/, int /*aTimeout*/) { return CommandResult::NoAnswer; }
 
 	/// Войти в расширенный режим снятия Z-отчетов.
 	virtual bool enterExtendedMode() { return true; }
 
 	/// Открыть чек.
-	virtual bool openDocument(bool aBack);
+	virtual bool openDocument(SDK::Driver::EPayOffTypes::Enum aPayOffType);
 
 	/// Закрыть чек.
 	bool closeDocument(SDK::Driver::EPayTypes::Enum aPayType);
@@ -111,22 +111,22 @@ protected:
 	virtual void processDeviceData();
 
 	/// Проверить налоговую ставку.
-	bool checkTaxValue(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData, const CAtolFR::FRParameters::TData & aFRParameterData, bool aCanCorrectTaxValue);
-
-	/// Получить имена секций.
-	void getSectionNames();
+	bool checkTaxValue(SDK::Driver::TVAT aVAT, CFR::Taxes::SData & aData, const CAtolFR::FRParameters::TData & aFRParameterData, bool aCanCorrectTaxValue);
 
 	/// Получить данные о текущей смене.
-	bool getSessionInfo(bool & aOpened, QDateTime & aLastOpenedSessionDT);
-
-	/// Сессия истекла?
-	bool isSessionExpired();
+	bool getLastSessionDT(QDateTime & aLastSessionDT);
 
 	/// Обработка ответа на предыдущей команды. Автоисправление некоторых ошибок.
 	virtual bool processAnswer(const QByteArray & aCommand, char aError);
 
+	/// Проверить параметры налогов.
+	virtual bool checkTaxes();
+
 	/// Получить состояние фискального чека.
 	bool getFiscalDocumentState(EFiscalDocumentState::Enum & aState);
+
+	/// Получить состояние документа.
+	virtual SDK::Driver::EDocumentState::Enum getDocumentState();
 
 	/// Войти в режим.
 	bool enterInnerMode(char aInnerMode);
@@ -140,14 +140,14 @@ protected:
 	/// Установить параметры ФР.
 	virtual bool setFRParameters();
 
-	/// Вернуть параметр системной таблицы ФР.
-	bool getFRParameter(const CAtolFR::FRParameters::SData & aData, QByteArray & aParameter);
+	/// Получить параметр системной таблицы.
+	bool getFRParameter(const CAtolFR::FRParameters::SData & aData, QByteArray & aValue);
 
-	/// Программировать таблицу (2) режимов работы ФР.
+	/// Установить параметр системной таблицы.
 	bool setFRParameter(const CAtolFR::FRParameters::SData & aData, const QVariant & aValue);
 
 	/// Вернуть регистр ФР.
-	bool getRegister(const QString & aRegister, QByteArray & aData, char aParameter1 = ASCII::NUL, char aParameter2 = ASCII::NUL);
+	TResult getRegister(const QString & aRegister, QByteArray & aData, char aParameter1 = ASCII::NUL, char aParameter2 = ASCII::NUL);
 
 	/// После подачи команды X-отчета ждем смены режима.
 	bool waitForChangeXReportMode();
@@ -161,7 +161,7 @@ protected:
 	/// Проверить состояние буфера Z-отчетов.
 	void checkZBufferState();
 
-	/// Узнать, открыта ли смена.
+	/// Получить состояние смены.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
 
 	/// Получить короткий статус.
@@ -174,7 +174,7 @@ protected:
 	bool getLongStatus(QByteArray & aData);
 
 	/// Установить флаги по ошибке в ответе.
-	virtual void setErrorFlags(char aError, const QByteArray & aCommand);
+	virtual void setErrorFlags(const QByteArray & aCommand, char aError);
 
 	/// Получить BCD из int-а.
 	QByteArray getBCD(double aValue, int aSize, int aPrecision = 0, int aMantissa = 0) const;
@@ -198,9 +198,6 @@ protected:
 	/// Заблокирован ли ФР.
 	bool mLocked;
 
-	/// Протокол.
-	AtolFRProtocol mProtocol;
-
 	/// Список поддерживаемых плагином моделей.
 	QStringList mSupportedModels;
 
@@ -212,10 +209,6 @@ protected:
 
 	/// Данные команд.
 	CAtolFR::CommandData mCommandData;
-
-	/// Данные ошибок.
-	typedef QSharedPointer<FRError::CData> PErrorData;
-	PErrorData mErrorData;
 
 	/// Данные регистров.
 	CAtolFR::Registers::CData mRegisterData;

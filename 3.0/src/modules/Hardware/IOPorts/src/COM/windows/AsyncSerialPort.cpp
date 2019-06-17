@@ -7,6 +7,7 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
+#include "SysUtils/ISysUtils.h"
 #include "Hardware/Common/SafePerformer.h"
 
 // Project
@@ -51,48 +52,24 @@ void AsyncSerialPort::initialize()
 	TIOPortDeviceData deviceData;
 	getDeviceProperties(mUuids, mPathProperty, false, &deviceData);
 
-	QVariantMap outDeviceData;
+	QStringList minePortData;
 	QStringList otherPortData;
 
 	for (auto it = deviceData.begin(); it != deviceData.end(); ++it)
 	{
-		QString systemData = it.key() + "\n" + it.value() + "\n";
+		bool mine = !mSystemName.isEmpty() && it->contains(mSystemName);
+		QStringList & target = mine ? minePortData : otherPortData;
+		target << it.key() + "\n" + it.value() + "\n";
 
-		if (!mSystemName.isEmpty() && it->contains(mSystemName))
+		if (mine)
 		{
-			outDeviceData.insert(CDeviceData::Ports::Mine, systemData);
-
 			bool сannotWaitResult = std::find_if(CAsyncSerialPort::CannotWaitResult.begin(), CAsyncSerialPort::CannotWaitResult.end(), [&] (const QString & aLexeme) -> bool
 				{ return it->contains(aLexeme, Qt::CaseInsensitive); }) != CAsyncSerialPort::CannotWaitResult.end();
 			setConfigParameter(CHardware::Port::COM::ControlRemoving, сannotWaitResult);
 		}
-		else
-		{
-			otherPortData << systemData;
-		}
 	}
 
-	outDeviceData.insert(CDeviceData::Ports::Other, otherPortData.join("\n"));
-	setConfigParameter(CHardwareSDK::DeviceData, outDeviceData);
-
-	if (!isAutoDetecting())
-	{
-		QString portData = outDeviceData[CDeviceData::Ports::Mine].toString();
-		QString otherData = outDeviceData[CDeviceData::Ports::Other].toString();
-
-		LogLevel::Enum logLevel = LogLevel::Normal;
-
-		if (!portData.isEmpty())
-		{
-			logLevel = LogLevel::Debug;
-			toLog(LogLevel::Normal, "Port data:\n" + portData);
-		}
-
-		if (!otherData.isEmpty())
-		{
-			toLog(logLevel, "Port data additional:\n" + otherData);
-		}
-	}
+	adjustData(minePortData, otherPortData);
 }
 
 //--------------------------------------------------------------------------------
@@ -202,17 +179,10 @@ void AsyncSerialPort::logError(const QString & aFunctionName)
 
 	if (checkHandle() || (mLastErrorChecking != mLastError))
 	{
-		LPVOID lpMsgBuf = 0;
-		FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, mLastError,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&lpMsgBuf, 0, 0);
-
-		toLog(LogLevel::Error, QString("%1: %2 failed with code %3 (%4).")
+		toLog(LogLevel::Error, QString("%1: %2 failed with %3.")
 			.arg(mSystemName)
 			.arg(aFunctionName)
-			.arg(mLastError)
-			.arg(QString::fromWCharArray((LPWSTR)lpMsgBuf).simplified()));
-
-		LocalFree(lpMsgBuf);
+			.arg(ISysUtils::getErrorMessage(mLastError)));
 	}
 
 	if (!checkHandle())
@@ -273,7 +243,7 @@ bool AsyncSerialPort::open()
 
 	if (getConfigParameter(CHardware::Port::Suspended).toBool())
 	{
-		toLog(LogLevel::Error, mSystemName + ": Failed ot open due to there is a suspended task.");
+		toLog(LogLevel::Error, mSystemName + ": Failed to open due to there is a suspended task.");
 		return false;
 	}
 
@@ -489,7 +459,7 @@ bool AsyncSerialPort::waitAsyncAction(DWORD & aResult, int aTimeout)
 }
 
 //--------------------------------------------------------------------------------
-bool AsyncSerialPort::read(QByteArray & aData, int aTimeout)
+bool AsyncSerialPort::read(QByteArray & aData, int aTimeout, int aMinSize)
 {
 	aData.clear();
 
@@ -498,12 +468,12 @@ bool AsyncSerialPort::read(QByteArray & aData, int aTimeout)
 		return false;
 	}
 
-	int readingTimeout = (aTimeout > CAsyncSerialPort::ReadingTimeout) ? CAsyncSerialPort::ReadingTimeout : aTimeout;
+	int readingTimeout = qMin(aTimeout, CAsyncSerialPort::ReadingTimeout);
 
 	QTime timer;
 	timer.start();
 
-	while ((timer.elapsed() < aTimeout) && aData.isEmpty())
+	while ((timer.elapsed() < aTimeout) && (aData.size() < aMinSize))
 	{
 		if (!processReading(aData, readingTimeout))
 		{

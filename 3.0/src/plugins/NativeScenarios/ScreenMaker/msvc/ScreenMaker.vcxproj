@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -16,7 +16,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>screen_maker_scenario</ProjectName>
-    <ProjectGuid>{1E957C35-C767-4943-816F-E644C6949332}</ProjectGuid>
+    <ProjectGuid>{98FDC5A6-BFEA-4FBE-9CE3-BB6A4D087246}</ProjectGuid>
     <RootNamespace>UADispenser</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
   </PropertyGroup>

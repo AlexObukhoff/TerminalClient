@@ -2,17 +2,17 @@
 
 #pragma once
 
-#include "AtolFRBase.h"
+#include "Atol2FRBase.h"
 
 //--------------------------------------------------------------------------------
-class AtolSerialFR : public AtolFRBase
+class AtolSerialFR : public Atol2FRBase
 {
 public:
 	AtolSerialFR();
 
 protected:
 	/// Проверить параметры налога.
-	virtual bool checkTax(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData);
+	virtual bool checkTax(SDK::Driver::TVAT aVAT, CFR::Taxes::SData & aData);
 
 	/// Получить общие для всех ФР статусы.
 	virtual bool getCommonStatus(TStatusCodes & aStatusCodes);
@@ -42,7 +42,7 @@ protected:
 	bool canPerformEKLZRequest();
 
 	/// Установить флаги по ошибке в ответе.
-	virtual void setErrorFlags(char aError, const QByteArray & aCommand);
+	virtual void setErrorFlags(const QByteArray & aCommand, char aError);
 
 	/// Критична ли ошибка ЭКЛЗ.
 	bool isEKLZErrorCritical(const char aError, bool aIsDirectRequest = false) const;

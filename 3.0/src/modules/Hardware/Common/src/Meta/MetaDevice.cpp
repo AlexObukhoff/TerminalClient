@@ -7,36 +7,67 @@
 #include <QtCore/QReadLocker>
 #include <Common/QtHeadersEnd.h>
 
+// SDK
+#include <SDK/Drivers/ICardReader.h>
+#include <SDK/Drivers/ICashAcceptor.h>
+#include <SDK/Drivers/IDevice.h>
+#include <SDK/Drivers/IDispenser.h>
+#include <SDK/Drivers/IFiscalPrinter.h>
+#include <SDK/Drivers/IHID.h>
+#include <SDK/Drivers/IIOPort.h>
+#include <SDK/Drivers/IMifareReader.h>
+#include <SDK/Drivers/IModem.h>
+#include <SDK/Drivers/IPrinter.h>
+#include <SDK/Drivers/IWatchdog.h>
+
 // Project
 #include "MetaDevice.h"
 
 using namespace SDK::Driver;
 
 //-------------------------------------------------------------------------------
-MetaDevice::MetaDevice() :
+template class MetaDevice<ICardReader>;
+template class MetaDevice<ICashAcceptor>;
+template class MetaDevice<IDevice>;
+template class MetaDevice<IDispenser>;
+template class MetaDevice<IFiscalPrinter>;
+template class MetaDevice<IHID>;
+template class MetaDevice<IIOPort>;
+template class MetaDevice<IMifareReader>;
+template class MetaDevice<IModem>;
+template class MetaDevice<IPrinter>;
+template class MetaDevice<IWatchdog>;
+
+//-------------------------------------------------------------------------------
+template <class T>
+MetaDevice<T>::MetaDevice() :
 	mDeviceName(CMetaDevice::DefaultName),
 	mLogDate(QDate::currentDate()),
 	mOperatorPresence(false),
 	mDetectingPosition(0),
 	mInitialized(ERequestStatus::Fail),
-	mExitTimeout(ULONG_MAX)
+	mExitTimeout(ULONG_MAX),
+	mInitializationError(false)
 {
 }
 
 //--------------------------------------------------------------------------------
-bool MetaDevice::subscribe(const char * /*aSignal*/, QObject * /*aReceiver*/, const char * /*aSlot*/)
-{
-	return false;
-}
-
-//--------------------------------------------------------------------------------
-bool MetaDevice::unsubscribe(const char * /*aSignal*/, QObject * /*aReceiver*/)
+template <class T>
+bool MetaDevice<T>::subscribe(const char * /*aSignal*/, QObject * /*aReceiver*/, const char * /*aSlot*/)
 {
 	return false;
 }
 
 //--------------------------------------------------------------------------------
-QString MetaDevice::getName() const
+template <class T>
+bool MetaDevice<T>::unsubscribe(const char * /*aSignal*/, QObject * /*aReceiver*/)
+{
+	return false;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+QString MetaDevice<T>::getName() const
 {
 	QString deviceName = getConfigParameter(CHardwareSDK::ModelName).toString();
 
@@ -44,7 +75,8 @@ QString MetaDevice::getName() const
 }
 
 //--------------------------------------------------------------------------------
-void MetaDevice::initialize()
+template <class T>
+void MetaDevice<T>::initialize()
 {
 	logDeviceData(getDeviceData());
 
@@ -52,7 +84,8 @@ void MetaDevice::initialize()
 }
 
 //--------------------------------------------------------------------------------
-bool MetaDevice::release()
+template <class T>
+bool MetaDevice<T>::release()
 {
 	if (mThread.isRunning())
 	{
@@ -70,24 +103,28 @@ bool MetaDevice::release()
 }
 
 //--------------------------------------------------------------------------------
-void MetaDevice::updateFirmware(const QByteArray & /*aBuffer*/)
+template <class T>
+void MetaDevice<T>::updateFirmware(const QByteArray & /*aBuffer*/)
 {
 }
 
 //--------------------------------------------------------------------------------
-bool MetaDevice::canUpdateFirmware()
+template <class T>
+bool MetaDevice<T>::canUpdateFirmware()
 {
 	return false;
 }
 
 //--------------------------------------------------------------------------------
-bool MetaDevice::isAutoDetecting() const
+template <class T>
+bool MetaDevice<T>::isAutoDetecting() const
 {
 	return getConfigParameter(CHardwareSDK::SearchingType).toString() == CHardwareSDK::SearchingTypes::AutoDetecting;
 }
 
 //--------------------------------------------------------------------------------
-void MetaDevice::setDeviceConfiguration(const QVariantMap & aConfiguration)
+template <class T>
+void MetaDevice<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	for (auto it = aConfiguration.begin(); it != aConfiguration.end(); ++it)
 	{
@@ -98,7 +135,8 @@ void MetaDevice::setDeviceConfiguration(const QVariantMap & aConfiguration)
 }
 
 //--------------------------------------------------------------------------------
-QVariantMap MetaDevice::getDeviceConfiguration() const
+template <class T>
+QVariantMap MetaDevice<T>::getDeviceConfiguration() const
 {
 	QReadLocker lock(&mConfigurationGuard);
 
@@ -106,7 +144,8 @@ QVariantMap MetaDevice::getDeviceConfiguration() const
 }
 
 //--------------------------------------------------------------------------------
-void MetaDevice::setDeviceParameter(const QString & aName, const QVariant & aValue, const QString & aExtensibleName, bool aUpdateExtensible)
+template <class T>
+void MetaDevice<T>::setDeviceParameter(const QString & aName, const QVariant & aValue, const QString & aExtensibleName, bool aUpdateExtensible)
 {
 	QString value = aValue.toString().simplified();
 	QVariant::Type type = aValue.type();
@@ -155,7 +194,8 @@ void MetaDevice::setDeviceParameter(const QString & aName, const QVariant & aVal
 }
 
 //--------------------------------------------------------------------------------
-QVariant MetaDevice::getDeviceParameter(const QString & aName) const
+template <class T>
+QVariant MetaDevice<T>::getDeviceParameter(const QString & aName) const
 {
 	QReadLocker lock(&mConfigurationGuard);
 
@@ -163,7 +203,8 @@ QVariant MetaDevice::getDeviceParameter(const QString & aName) const
 }
 
 //--------------------------------------------------------------------------------
-bool MetaDevice::containsDeviceParameter(const QString & aName) const
+template <class T>
+bool MetaDevice<T>::containsDeviceParameter(const QString & aName) const
 {
 	QReadLocker lock(&mConfigurationGuard);
 
@@ -171,7 +212,8 @@ bool MetaDevice::containsDeviceParameter(const QString & aName) const
 }
 
 //--------------------------------------------------------------------------------
-void MetaDevice::removeDeviceParameter(const QString & aName)
+template <class T>
+void MetaDevice<T>::removeDeviceParameter(const QString & aName)
 {
 	QWriteLocker lock(&mConfigurationGuard);
 
@@ -179,7 +221,8 @@ void MetaDevice::removeDeviceParameter(const QString & aName)
 }
 
 //---------------------------------------------------------------------------
-void MetaDevice::logDeviceData(const SLogData & aData) const
+template <class T>
+void MetaDevice<T>::logDeviceData(const SLogData & aData) const
 {
 	toLog(LogLevel::Normal, "Plugin path: " + getConfigParameter(CHardware::PluginPath).toString());
 
@@ -196,7 +239,8 @@ void MetaDevice::logDeviceData(const SLogData & aData) const
 }
 
 //---------------------------------------------------------------------------
-SLogData MetaDevice::getDeviceData() const
+template <class T>
+SLogData MetaDevice<T>::getDeviceData() const
 {
 	QReadLocker lock(&mConfigurationGuard);
 
@@ -215,7 +259,7 @@ SLogData MetaDevice::getDeviceData() const
 			data.insert(key, configuration[key].toString());
 		}
 
-		result.requiedDevice = getPartDeviceData(data);
+		result.requiedDevice = DeviceUtils::getPartDeviceData(data);
 	}
 
 	TDeviceData data;
@@ -227,8 +271,8 @@ SLogData MetaDevice::getDeviceData() const
 		data.insert(key, getConfigParameter(key).toString());
 	}
 
-	result.plugin = getPartDeviceData(data, false);
-	result.device = getPartDeviceData(mDeviceData, false);
+	result.plugin = DeviceUtils::getPartDeviceData(data, false);
+	result.device = DeviceUtils::getPartDeviceData(mDeviceData, false);
 
 	QVariantMap dealerSettings = getConfigParameter(CHardware::ConfigData).toMap();
 	names = dealerSettings.keys();
@@ -240,42 +284,14 @@ SLogData MetaDevice::getDeviceData() const
 		data.insert(key, dealerSettings[key].toString());
 	}
 
-	result.config = getPartDeviceData(data);
+	result.config = DeviceUtils::getPartDeviceData(data);
 
 	return result;
 }
 
 //--------------------------------------------------------------------------------
-QString MetaDevice::getPartDeviceData(const TDeviceData & aData, bool aHideEmpty) const
-{
-	QStringList keys = aData.keys();
-	int maxSize = 0;
-
-	foreach(auto key, keys)
-	{
-		maxSize = qMax(maxSize, key.size());
-	}
-
-	keys.sort();
-	QString result;
-
-	for (int i = 0; i < keys.size(); ++i)
-	{
-		QString key = keys[i];
-		QString value = aData[key];
-
-		if (!aHideEmpty || !value.isEmpty())
-		{
-			key += QString(maxSize - key.size(), QChar(ASCII::Space));
-			result += QString("\n%1 : %2").arg(key).arg(value);
-		}
-	}
-
-	return result;
-}
-
-//--------------------------------------------------------------------------------
-IDevice::IDetectingIterator * MetaDevice::getDetectingIterator()
+template <class T>
+IDevice::IDetectingIterator * MetaDevice<T>::getDetectingIterator()
 {
 	mDetectingPosition = 0;
 
@@ -283,25 +299,29 @@ IDevice::IDetectingIterator * MetaDevice::getDetectingIterator()
 }
 
 //--------------------------------------------------------------------------------
-bool MetaDevice::find()
+template <class T>
+bool MetaDevice<T>::find()
 {
 	return false;
 }
 
 //--------------------------------------------------------------------------------
-bool MetaDevice::moveNext()
+template <class T>
+bool MetaDevice<T>::moveNext()
 {
 	return (mDetectingPosition++ == 0);
 }
 
 //--------------------------------------------------------------------------------
-void MetaDevice::setLog(ILog * aLog)
+template <class T>
+void MetaDevice<T>::setLog(ILog * aLog)
 {
 	mLog = aLog;
 }
 
 //--------------------------------------------------------------------------------
-bool MetaDevice::isWorkingThread()
+template <class T>
+bool MetaDevice<T>::isWorkingThread()
 {
 	return &mThread == QThread::currentThread();
 }

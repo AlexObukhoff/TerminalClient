@@ -49,6 +49,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../../Parameters/PrinterPluginParameterTranslations.h" line="23"/>
+        <source>PrinterParameters#left_margin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../../Parameters/PrinterPluginParameterTranslations.h" line="16"/>
         <source>PrinterParameters#not_taken_receipt</source>
         <translation>Actions with not taken timed out receipt</translation>

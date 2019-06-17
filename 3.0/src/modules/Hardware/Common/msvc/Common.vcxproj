@@ -132,6 +132,7 @@
     <ClCompile Include="..\src\Polling\PollingExpector.cpp" />
     <ClCompile Include="..\src\Base\DeviceBase.cpp" />
     <ClCompile Include="..\src\PortPolling\PortPollingDeviceBase.cpp" />
+    <ClCompile Include="..\src\Port\LibUSB\LibUSBDeviceBase.cpp" />
     <ClCompile Include="..\src\Port\PortDeviceBase.cpp" />
     <ClCompile Include="..\src\Port\Serial\SerialDeviceBase.cpp" />
     <ClCompile Include="..\src\Port\TCP\TCPDeviceBase.cpp" />
@@ -363,6 +364,7 @@
     <ClInclude Include="..\src\ConfigManager\DeviceConfigManager.h" />
     <ClInclude Include="..\src\OPOS\OPOSPollingDeviceBase.h" />
     <ClInclude Include="..\src\PortPolling\PortPollingDeviceBase.h" />
+    <ClInclude Include="..\src\Port\LibUSB\LibUSBDeviceBase.h" />
     <ClInclude Include="..\src\Port\PortDeviceBase.h" />
     <ClInclude Include="..\src\Port\TCP\TCPDeviceBase.h" />
     <ClInclude Include="..\src\Port\USB\USBDeviceBase.h" />

@@ -4,7 +4,6 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QDateTime>
 #include <QtCore/QRegExp>
 #include <Common/QtHeadersEnd.h>
 
@@ -78,7 +77,7 @@ namespace EFFD
 namespace CFR
 {
 	/// Актуальный ФФД.
-	const EFFD::Enum ActualFFD = EFFD::F10;
+	const EFFD::Enum ActualFFD = EFFD::F105;
 
 	/// Формат представления даты.
 	const char DateFormat[] = "ddMMyyyy";
@@ -106,6 +105,16 @@ namespace CFR
 
 	/// Признак способа расчета по умолчанию для платежей (тег 1214) (не интернет-магазинов) - Полный расчет.
 	const SDK::Driver::EPayOffSubjectMethodTypes::Enum PayOffSubjectMethodType = SDK::Driver::EPayOffSubjectMethodTypes::Full;
+
+	/// Дата и время одноразового закрытия смены перед применением НДС 20% в 2019 году.
+	const QDateTime ClosingSessionDTVAT20 = QDateTime(QDate(2018, 12, 31), QTime(23, 57));
+
+	/// Результаты запроса статуса.
+	namespace Result
+	{
+		const char Error[] = "__ERROR__";    /// Ошибка устройства, либо ответ неверно скомпонован.
+		const char Fail[]  = "__FAIL__";     /// Транспортная/протокольная ошибка.
+	}
 
 	/// ИНН.
 	namespace INN
@@ -164,10 +173,7 @@ namespace CFR
 	const TStatusCodes XReportFiscalErrors = getFiscalStatusCodes(SDK::Driver::EWarningLevel::Error)
 		<< DeviceStatusCode::Error::Unknown
 		<< FRStatusCode::Error::EKLZ
-		<< FRStatusCode::Error::FiscalMemory;
-
-	/// Сменилась ли ставка НДС с 18% на 20% в РФ.
-	inline bool isRFVAT20() { return QDate::currentDate() >= QDate(2019, 1, 1); }
+		<< FRStatusCode::Error::FM;
 
 	/// Актуальные ставки НДС в России.
 	const SDK::Driver::TVATs RFActualVATs = SDK::Driver::TVATs() << 18 << 10 << 0;
@@ -252,10 +258,11 @@ namespace CFR
 		struct SData
 		{
 			int group;
+			SDK::Driver::TVAT deviceVAT;
 			QString description;
 
 			SData() : group(0) {}
-			SData(int aGroup, const QString & aDescription = "") : group(aGroup), description(aDescription) {}
+			SData(int aGroup, SDK::Driver::TVAT aDeviceVAT, const QString & aDescription = "") : group(aGroup), deviceVAT(aDeviceVAT), description(aDescription) {}
 		};
 
 		class Data : public CSpecification<SDK::Driver::TVAT, SData>
@@ -263,7 +270,7 @@ namespace CFR
 		public:
 			void add(SDK::Driver::TVAT aVAT, int aGroup)
 			{
-				append(aVAT, SData(aGroup));
+				append(aVAT, SData(aGroup, aVAT));
 			}
 		};
 
@@ -271,7 +278,7 @@ namespace CFR
 	}
 
 	/// Скорректировать ставку НДС с 18% на 20% в РФ.
-	inline void adjustRFVAT(Taxes::TData & aData) { if (aData.contains(18) && isRFVAT20()) { aData.insert(20, aData[18]); aData.remove(18); }}
+	inline void adjustRFVAT(Taxes::TData & aData) { if (aData.contains(18) && isRFVAT20()) { aData.insert(20, aData[18]); aData[20].description.replace("18", "20"); aData.remove(18); }}
 
 	//--------------------------------------------------------------------------------
 	/// Типы оплаты
@@ -390,6 +397,22 @@ namespace CFR
 	static CAgentFlags AgentFlags;
 
 	//--------------------------------------------------------------------------------
+	/// Причины перерегистрации (1101).
+	class CReregistrationCauses : public CBitmapDescription<char>
+	{
+	public:
+		CReregistrationCauses()
+		{
+			append(1, "Замена ФН");
+			append(2, "Замена ОФД");
+			append(3, "Изменение реквизитов");
+			append(4, "Изменение настроек ККТ");
+		}
+	};
+
+	static CReregistrationCauses ReregistrationCauses;
+
+	//--------------------------------------------------------------------------------
 	/// Спецификация флагов ФН.
 	class CFSFlagData : public CSpecification<char, int>
 	{
@@ -408,7 +431,7 @@ namespace CFR
 
 	//--------------------------------------------------------------------------------
 	/// Признаки расчета (1054).
-	class CPayOffTypes : public CDescription<SDK::Driver::EPayOffTypes::Enum>
+	class CPayOffTypes : public CDescription<char>
 	{
 	public:
 		CPayOffTypes()

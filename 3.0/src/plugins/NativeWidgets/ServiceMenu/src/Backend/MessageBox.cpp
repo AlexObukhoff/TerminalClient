@@ -29,6 +29,7 @@ void MessageBox::initialize(SDK::PaymentProcessor::IGUIService * aGUIService)
 //------------------------------------------------------------------------
 void MessageBox::shutdown()
 {
+	mInstance->hideWindow();
 	delete mInstance;
 	mInstance = 0;
 }
@@ -111,6 +112,8 @@ void MessageBox::emitSignal(const QVariantMap & aParameters)
 //------------------------------------------------------------------------
 void MessageBox::showPopup(const QString & aText, SDK::GUI::MessageBoxParams::Enum aIcon, SDK::GUI::MessageBoxParams::Enum aButton)
 {
+	hideWindow();
+	
 	QVariantMap params;
 	params[SDK::GUI::CMessageBox::TextMessage] = aText;
 	params[SDK::GUI::CMessageBox::Icon] = aIcon;
@@ -123,6 +126,8 @@ void MessageBox::showPopup(const QString & aText, SDK::GUI::MessageBoxParams::En
 //------------------------------------------------------------------------
 bool MessageBox::showModal(const QString & aText, SDK::GUI::MessageBoxParams::Enum aIcon)
 {
+	hideWindow();
+	
 	QVariantMap params;
 	params[SDK::GUI::CMessageBox::TextMessage] = aText;
 	params[SDK::GUI::CMessageBox::Icon] = aIcon;
@@ -160,7 +165,7 @@ void MessageBox::emitPopupSignal(const QVariantMap & aParameters)
 {
 	if (mSignalReceiver)
 	{
-		QObject::connect(this, SIGNAL(clicked(const QVariantMap &)), mSignalReceiver, SLOT(onClicked(const QVariantMap &)));
+		QObject::connect(this, SIGNAL(clicked(const QVariantMap &)), mSignalReceiver, SLOT(onClicked(const QVariantMap &)), Qt::UniqueConnection);
 		emit clicked(aParameters);
 	}
 }

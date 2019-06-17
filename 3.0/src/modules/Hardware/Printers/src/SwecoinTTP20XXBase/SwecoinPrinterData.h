@@ -108,7 +108,7 @@ namespace CSwecoinPrinter
 			append('\x09', SDeviceParameters(6, CDeviceData::SerialNumber, processDigit));
 			append('\x07', SDeviceParameters(2, CDeviceData::Firmware,     processFloat));
 			append('\x0A', SDeviceParameters(1, CDeviceData::BoardVersion, getAnswer));
-			append('\x0C', SDeviceParameters(2, CDeviceData::BootVersion,  processFloat));
+			append('\x0C', SDeviceParameters(2, CDeviceData::BootFirmware, processFloat));
 		}
 	};
 }

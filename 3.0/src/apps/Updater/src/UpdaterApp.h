@@ -26,6 +26,9 @@ namespace CUpdaterApp
 	/// Глобальный таймаут скачивания обновлений
 	const int MaxDownloadTime = 4 * 60 * 60 * 1000; // 4 часа
 
+	/// Таймаут попыток повторнго запуска по финишу BITS
+	const long BITSCompleteTimeout = 15 * 60;  // 15 минут
+
 	typedef enum 
 	{
 		Download, // закачиваем обновления
@@ -49,6 +52,7 @@ namespace CUpdaterApp
 			Aborted,                  /// Команда прервана снаружи
 			Blocked,                  /// Обновление заблокировано на стороне сервера
 			FailIntegrity,            /// Проверка целостности закончилась неуспехом
+			WorkInProgress,           /// Фоновая обработка задания
 			ContunueExecution = 54321 /// Перезапуск из временной папки
 		};
 	}
@@ -64,6 +68,8 @@ public:
 	~UpdaterApp();
 
 	void run();
+
+	CUpdaterApp::ExitCode::Enum bitsCheckStatus(bool aAlreadyRunning);
 
 	int getResultCode() const;
 
@@ -115,9 +121,11 @@ private:
 
 	SplashScreen mSplashScreen;
 	ReportBuilder mReportBuilder;
-	int mResultCode;
 	CUpdaterApp::State mState;
 	QPointer<QTimer> mErrorStopTimer;
+
+	int mResultCode_;
+	QString mResultDescription;
 
 private:
 	/// Получить значение параметра командной строки
@@ -139,7 +147,9 @@ private:
 	void delayedExit(int aTimeout, CUpdaterErrors::Enum aError);
 
 	/// Выставить код возврата updater
-	void setResultCode(CUpdaterErrors::Enum aError);
+	void setResultCode(CUpdaterErrors::Enum aResult, const QString aMessage = QString());
+	void setResultCode(CUpdaterApp::ExitCode::Enum aExitCode, const QString aMessage = QString());
+	void updateErrorDescription();
 
 private:
 	/// Скопировать файлы

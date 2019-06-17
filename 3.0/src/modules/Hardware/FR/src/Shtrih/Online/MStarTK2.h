@@ -11,9 +11,12 @@ namespace CMStarTK2FR
 	namespace Printing
 	{
 		const char All       = '\x00';    /// Печатать всё.
-		const char NoFiscal  = '\x00';    /// Не печатать фисклаьный чек.
+		const char NoFiscal  = '\x00';    /// Не печатать фискальный чек.
 		const char NoZReport = '\x03';    /// Не печатать Z-отчёт.
 	}
+
+	/// Таймаут незабранного чека. Валики почти сразу отпускают распечатанный чек. 0 - не отпустят совсем.
+	const int LeftReceiptTimeout = 1;
 }
 
 //--------------------------------------------------------------------------------
@@ -29,9 +32,12 @@ public:
 	/// Возвращает список поддерживаемых устройств.
 	static QStringList getModelList();
 
+	/// Устанавливает конфигурацию устройству.
+	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
+
 protected:
 	/// Выполнить команду.
-	virtual TResult processCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
+	virtual TResult execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
 
 	/// Включить/выключить режим непечати документов.
 	virtual bool setNotPrintDocument(bool aEnabled, bool aZReport = false);

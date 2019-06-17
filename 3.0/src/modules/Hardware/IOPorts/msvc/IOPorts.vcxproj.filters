@@ -22,7 +22,7 @@
     <Filter Include="AsyncSerialPort">
       <UniqueIdentifier>{32de8b29-978f-499c-8a1d-42091056a8e0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="USBSerialPort">
+    <Filter Include="USBPort">
       <UniqueIdentifier>{78c8f221-3f40-4e93-bb8d-f5dcb44f9dad}</UniqueIdentifier>
     </Filter>
     <Filter Include="TCPPort">
@@ -49,13 +49,16 @@
     <Filter Include="SystemDeviceUtils">
       <UniqueIdentifier>{bd51fc38-afb3-47db-b267-c922e1a7ef0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LibUSBPort">
+      <UniqueIdentifier>{662e85e9-d680-4ec0-b5b0-6b178cc5465e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\COM\windows\AsyncSerialPort.cpp">
       <Filter>AsyncSerialPort</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\USB\USBSerialPort.cpp">
-      <Filter>USBSerialPort</Filter>
+    <ClCompile Include="..\src\USB\USBPort.cpp">
+      <Filter>USBPort</Filter>
     </ClCompile>
     <ClCompile Include="..\src\TCP\TCPPort.cpp">
       <Filter>TCPPort</Filter>
@@ -72,6 +75,15 @@
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_TCPPort.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\LibUSB\LibUSBPort.cpp">
+      <Filter>LibUSBPort</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LibUSB\USBClassCodes.cpp">
+      <Filter>LibUSBPort</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LibUSB\LibUSBUtils.cpp">
+      <Filter>LibUSBPort</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\COM\windows\SystemDeviceUtils.cpp">
       <Filter>SystemDeviceUtils</Filter>
     </ClCompile>
@@ -80,8 +92,8 @@
     <ClInclude Include="..\src\COM\windows\AsyncSerialPort.h">
       <Filter>AsyncSerialPort</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\USB\USBSerialPort.h">
-      <Filter>USBSerialPort</Filter>
+    <ClInclude Include="..\src\USB\USBPort.h">
+      <Filter>USBPort</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\IOPortStatusCodes.h">
       <Filter>Header Files</Filter>
@@ -95,8 +107,20 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\IOPortGUIDs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\LibUSB\LibUSBPort.h">
+      <Filter>LibUSBPort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LibUSB\USBClassCodes.h">
+      <Filter>LibUSBPort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LibUSB\LibUSBUtils.h">
+      <Filter>LibUSBPort</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\COM\windows\SystemDeviceUtils.h">
       <Filter>SystemDeviceUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\LibUSBDeviceDataTypes.h">
+      <Filter>LibUSBPort</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

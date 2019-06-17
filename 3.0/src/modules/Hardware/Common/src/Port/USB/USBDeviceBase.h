@@ -4,7 +4,7 @@
 
 #include "Hardware/Common/BaseStatusTypes.h"
 #include "Hardware/Common/USBDeviceModelData.h"
-#include "Hardware/IOPorts/USBSerialPort.h"
+#include "Hardware/IOPorts/USBPort.h"
 
 //--------------------------------------------------------------------------------
 template <class T>

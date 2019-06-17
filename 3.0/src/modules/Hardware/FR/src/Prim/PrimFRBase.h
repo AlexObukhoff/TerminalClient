@@ -44,7 +44,7 @@ protected:
 	virtual bool printLine(const QByteArray & aString);
 
 	/// Печать фискального чека.
-	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
 
 	/// Преобразование нефискальной квитанции для ПФД.
 	void makeAFDReceipt(QStringList & aReceipt);
@@ -83,7 +83,7 @@ protected:
 	bool setMode(EFRMode::Enum aMode);
 
 	/// Проверить параметры налога.
-	virtual bool checkTax(SDK::Driver::TVAT aVAT, const CFR::Taxes::SData & aData);
+	virtual bool checkTax(SDK::Driver::TVAT aVAT, CFR::Taxes::SData & aData);
 
 	/// Получить параметры налога.
 	bool getTaxData(int aGroup, CPrimFR::Taxes::SData & aData);
@@ -150,8 +150,11 @@ protected:
 	/// Распарсить реал-тайм статусы принтера по реал-тайм коду.
 	TStatusCodes parseRTStatus(int aCommand, char aAnswer);
 
-	/// Узнать, открыта ли смена.
+	/// Получить состояние смены.
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
+
+	/// Получить состояние документа.
+	virtual SDK::Driver::EDocumentState::Enum getDocumentState();
 
 	/// Получить ASCII-представление 1-байтного целочисленного числа.
 	inline QString int2String(int aValue);
@@ -176,8 +179,8 @@ protected:
 	PrimFRProtocol mProtocol;
 
 	/// Ошибки.
-	typedef QSharedPointer<CPrimFR::Errors::SpecificationBase> PErrorData;
-	PErrorData mErrorData;
+	typedef QSharedPointer<CPrimFR::Errors::ExtraDataBase> PExtraErrorData;
+	PExtraErrorData mExtraErrorData;
 
 	/// Таймауты.
 	CPrimFR::CommandTimouts mCommandTimouts;

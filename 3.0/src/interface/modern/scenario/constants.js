@@ -94,7 +94,8 @@ var Payment = {
 		"change": "payment_change"
 	},
 	ReceiptType: {
-		Payment: "payment"
+		Payment: "payment",
+		NoFiscal: "no_fiscal",
 	},
 	ProcessTryCount: 3
 };

@@ -16,6 +16,7 @@ Project {
 		Depends { name: "UpdateEngine" }
 		Depends { name: "Packer" }
 		Depends { name: "qBreakpad" }
+		Depends { name: "TaskScheduler" }
 
 		Depends { name: "UpdaterTranslations" }
 

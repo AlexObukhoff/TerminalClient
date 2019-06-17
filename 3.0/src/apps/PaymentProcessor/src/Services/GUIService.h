@@ -27,6 +27,7 @@ class GuardService;
 namespace CGUIService
 {
 	const char LogName[] = "Interface";
+	const char IntruderLogName[] = "Penetration";
 	const char BackedObjectPrefix[] = "Backend$";
 	const char IdleScenarioName[] = "idle";
 	const int CheckTopmostWindowTimeout = 5 * 1000;

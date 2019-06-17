@@ -322,7 +322,13 @@ bool CryptService::addKey(const PP::SKeySettings & aKey)
 }
 
 //---------------------------------------------------------------------------
-int CryptService::generateKey(int aKeyId, const QString & aLogin, const QString & aPassword, const QString & aURL, QString & aSD, QString & aAP, QString & aOP)
+QList<int> CryptService::getLoadedKeys() const
+{
+	return mKeys.keys();
+}
+
+//---------------------------------------------------------------------------
+int CryptService::generateKey(int aKeyId, const QString & aLogin, const QString & aPassword, const QString & aURL, QString & aSD, QString & aAP, QString & aOP, const QString & aDescription)
 {
 	PP::INetworkService * networkService = mApplication->getCore()->getNetworkService();
 
@@ -342,6 +348,7 @@ int CryptService::generateKey(int aKeyId, const QString & aLogin, const QString 
 	}
 
 	mKeyPair = keyPair;
+	mKeyPair.description = aDescription;
 
 	if ((result = registerKeyPair(getCryptEngine(), aKeyId, networkService->getNetworkTaskManager(), aURL, aLogin, aPassword, mKeyPair)) != EKeysUtilsError::Ok)
 	{
@@ -404,6 +411,18 @@ bool CryptService::replaceKeys(int aKeyIdSrc, int aKeyIdDst)
 	return result;
 }
 
+//---------------------------------------------------------------------------
+SDK::PaymentProcessor::ICryptService::SKeyInfo CryptService::getKeyInfo(int aKeyId)
+{
+	SDK::PaymentProcessor::SKeySettings key = getKey(aKeyId);
+	SDK::PaymentProcessor::ICryptService::SKeyInfo keyInfo;
+
+	keyInfo.sd = key.sd;
+	keyInfo.ap = key.ap;
+	keyInfo.op = key.op;
+
+	return keyInfo;
+}
 
 //---------------------------------------------------------------------------
 bool CryptService::saveKey()
@@ -420,6 +439,7 @@ bool CryptService::saveKey()
 	key.op = mKeyPair.op;
 	key.sd = mKeyPair.sd;
 	key.engine = mKeyPair.engine;
+	key.description = mKeyPair.description;
 
 	QByteArray serverPublicKey = mKeyPair.serverPublicKey;
 

@@ -12,6 +12,7 @@ CCNetCashcodeGX::CCNetCashcodeGX()
 	// данные устройства
 	mDeviceName = CCCNet::Models::CashcodeGX;
 	mSupportedModels = QStringList() << mDeviceName;
+	mNeedChangeBaudrate = true;
 
 	setConfigParameter(CHardware::CashAcceptor::InitializeTimeout, CCCNetCashcodeGX::ExitInitializeTimeout);
 }
@@ -90,20 +91,6 @@ bool CCNetCashcodeGX::processUpdating(const QByteArray & aBuffer, int aSectionSi
 	SleepHelper::msleep(CCCNet::ExitUpdatingPause);
 
 	return result;
-}
-
-//--------------------------------------------------------------------------------
-bool CCNetCashcodeGX::canChangeBaudrate()
-{
-	if (mIOPort->getType() == EPortTypes::COM)
-	{
-		return true;
-	}
-
-	TPortParameters portParameters;
-	mIOPort->getParameters(portParameters);
-
-	return portParameters[EParameters::BaudRate] == EBaudRate::BR9600;
 }
 
 //--------------------------------------------------------------------------------

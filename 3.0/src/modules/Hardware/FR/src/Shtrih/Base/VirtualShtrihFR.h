@@ -26,7 +26,7 @@ public:
 		mPortParameters[EParameters::BaudRate].append(EBaudRate::BR115200);
 
 		// ошибки
-		mErrorData = PErrorData(new CShtrihFRBase::Errors::CData);
+		mErrorData = PErrorData(new CShtrihFRBase::Errors::Data);
 
 		// данные налогов
 		mTaxData.data().clear();

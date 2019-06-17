@@ -19,6 +19,7 @@ StaticLibrary {
 			"src/COM/windows/*.*",
 			"src/Base/*.*",
 			"src/USB/*.*",
+			"src/LibUSB/*.*",
 			"src/TCP/*.*",
 			"../../../includes/Hardware/IOPorts/DeviceWinProperties.h"
 		]

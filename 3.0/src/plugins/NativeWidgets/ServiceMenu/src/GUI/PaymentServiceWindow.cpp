@@ -8,19 +8,15 @@
 #include <QtCore/QTimer>
 #include <QtCore/QtConcurrentRun>
 #include <QtCore/QFuture>
-#include <QtCore/QDateTime>
 #include <QtCore/QSettings>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QItemSelectionModel>
 #include <QtGui/QLayout>
-#include <QtGui/QCheckBox>
-#include <QtGui/QButtonGroup>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
 #include<SDK/PaymentProcessor/Payment/Step.h>
 #include <SDK/PaymentProcessor/Payment/Parameters.h>
 #include <SDK/PaymentProcessor/Core/IPaymentService.h>
+#include <SDK/PaymentProcessor/Core/ReceiptTypes.h>
 
 // Проект
 #include "ServiceTags.h"
@@ -180,6 +176,13 @@ bool PaymentServiceWindow::shutdown()
 //----------------------------------------------------------------------------
 bool PaymentServiceWindow::activate()
 {
+	// Обновим состояние кнопок печати
+	bool canPrint = mBackend->getPaymentManager()->canPrint(PPSDK::CReceiptType::Payment);
+
+	btnPrintCurrentReceipt->setEnabled(canPrint);
+	btnPrintReceipts->setEnabled(canPrint);
+	btnPrintFilteredReceipts->setEnabled(canPrint);
+	
 	// Обновляем все данные по платежам
 	onUpdatePayments();
 

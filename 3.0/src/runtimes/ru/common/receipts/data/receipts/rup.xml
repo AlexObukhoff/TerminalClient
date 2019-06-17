@@ -3,7 +3,7 @@
 	<string>Точка %TERMINAL_NUMBER%</string>
 	<string>Адрес: %POINT_ADDRESS%</string>
 	<string>-----------------------------------</string>
-	<string>[b]    Внесение в ЭКЛЗ сумм [/b]</string>
+	<string>[b]    Внесение в ФН сумм [/b]</string>
 	<string>[b]нераспечатанных квитанций[/b]</string>
 	<string>-----------------------------------</string>
 	<string>Список платежей:</string>

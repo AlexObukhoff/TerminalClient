@@ -37,7 +37,7 @@ protected:
 	ushort calcCRC(const QByteArray & aData);
 
 	/// Распаковка пришедших из порта данных.
-	bool check(const QByteArray & aRequest, const QByteArray & aAnswer, bool aPrinterMode);
+	TResult check(const QByteArray & aRequest, const QByteArray & aAnswer, bool aPrinterMode);
 
 	/// Считываем данные из порта.
 	bool readData(QByteArray & aData, int aTimeout);

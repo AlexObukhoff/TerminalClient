@@ -9,7 +9,7 @@
 #include "Hardware/Common/ProtoDevice.h"
 
 //--------------------------------------------------------------------------------
-class ProtoFR: public ProtoDevice, public SDK::Driver::IFiscalPrinter
+class ProtoFR: public ProtoDevice, public MetaDevice<SDK::Driver::IFiscalPrinter>
 {
 	Q_OBJECT
 

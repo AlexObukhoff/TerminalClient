@@ -270,7 +270,7 @@ bool SystemDeviceUtils::enumerateSystemDevices(const QUuid & aUuid, TWinDevicePr
 
 				if (parseOK)
 				{
-					aDeviceProperties[pathProperty].VID = value;
+					aDeviceProperties[pathProperty].VID = quint16(value);
 				}
 			}
 
@@ -283,7 +283,7 @@ bool SystemDeviceUtils::enumerateSystemDevices(const QUuid & aUuid, TWinDevicePr
 
 				if (parseOK)
 				{
-					aDeviceProperties[pathProperty].PID = value;
+					aDeviceProperties[pathProperty].PID = quint16(value);
 				}
 			}
 

@@ -11,7 +11,7 @@ namespace SDK {
 namespace Driver {
 
 //--------------------------------------------------------------------------------
-class ICashAcceptor: virtual public IDevice
+class ICashAcceptor: public IDevice
 {
 public:
 	/// Была принята купюра номиналом aPar.

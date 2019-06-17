@@ -91,6 +91,8 @@ namespace CServiceTags
 	const QString OP                       = "#op";
 	const QString KeysGateways             = "#keys_gateways";
 	const QString ServerPublicKey          = "#server_public_key";
+	const QString KeyPairNumber            = "#key_pair_number";
+	const QString KeyPairDescription       = "#key_pair_description";
 }
 
 //------------------------------------------------------------------------

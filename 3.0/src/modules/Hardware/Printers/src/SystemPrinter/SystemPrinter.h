@@ -5,7 +5,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtGui/QPrinter>
-#include <QtGui/QBitmap>
 #include <QtGui/QTextDocument>
 #include <Common/QtHeadersEnd.h>
 
@@ -61,11 +60,8 @@ protected:
 	/// Напечатать чек.
 	virtual bool printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt);
 
-	/// Кутэшный принтер.
+	/// Qt-принтер.
 	QPrinter mPrinter;
-
-	/// Битмап c картинкой.
-	QBitmap mBitmap;
 
 	/// Боковой отступ.
 	qreal mSideMargin;

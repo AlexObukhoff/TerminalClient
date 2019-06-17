@@ -30,11 +30,11 @@ AtolSerialFR::AtolSerialFR()
 	setConfigParameter(CHardware::FR::Commands::PrintingDeferredZReports, PrintDeferredZReports);
 
 	// ошибки
-	mErrorData = PErrorData(new CAtolFRBase::Errors::CData());
+	mErrorData = PErrorData(new CAtolFRBase::Errors::Data());
 }
 
 //--------------------------------------------------------------------------------
-bool AtolSerialFR::checkTax(TVAT aVAT, const CFR::Taxes::SData & aData)
+bool AtolSerialFR::checkTax(TVAT aVAT, CFR::Taxes::SData & aData)
 {
 	if (!checkTaxValue(aVAT, aData, CAtolFR::FRParameters::Tax, true))
 	{
@@ -283,9 +283,9 @@ void AtolSerialFR::getEKLZStatus(TStatusCodes & aStatusCodes)
 }
 
 //--------------------------------------------------------------------------------
-void AtolSerialFR::setErrorFlags(char aError, const QByteArray & aCommand)
+void AtolSerialFR::setErrorFlags(const QByteArray & aCommand, char aError)
 {
-	AtolFRBase::setErrorFlags(aError, aCommand);
+	AtolFRBase::setErrorFlags(aCommand, aError);
 
 	if (isEKLZErrorCritical(aError))
 	{

@@ -83,6 +83,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{787b3b22-f593-4381-bd16-9d26d1a8676d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Port\LibUSB">
+      <UniqueIdentifier>{ac83c76a-6c06-48a5-8ec6-3dd2c2910ac4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PollingExpector.cpp">
@@ -238,6 +241,9 @@
     <ClCompile Include="..\src\Utils\ProtocolUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Port\LibUSB\LibUSBDeviceBase.cpp">
+      <Filter>Port\LibUSB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ASCII.h">
@@ -353,6 +359,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Utils\ProtocolUtils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Port\LibUSB\LibUSBDeviceBase.h">
+      <Filter>Port\LibUSB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

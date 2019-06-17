@@ -1,5 +1,13 @@
 /* @file Вспомогательные функции для протоколов. */
 
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QFile>
+#include <QtCore/QRegExp>
+#include <QtCore/QTextStream>
+#include <Common/QtHeadersEnd.h>
+
+// Project
 #include "ProtocolUtils.h"
 
 // Инстанциирование возможных типов для toHexLog. Добавлять при необходимости.
@@ -7,7 +15,9 @@ template QString ProtocolUtils::toHexLog(char);
 template QString ProtocolUtils::toHexLog(uchar);
 template QString ProtocolUtils::toHexLog(ushort);
 template QString ProtocolUtils::toHexLog(unsigned long);
+template QString ProtocolUtils::toHexLog(quint16);
 template QString ProtocolUtils::toHexLog(quint32);
+template QString ProtocolUtils::toHexLog(int);
 
 template QString    ProtocolUtils::clean(const QString & aData);
 template QByteArray ProtocolUtils::clean(const QByteArray & aData);
@@ -86,23 +96,69 @@ bool ProtocolUtils::getBit(const QByteArray & aBuffer, int aShift, bool invert)
 }
 
 //--------------------------------------------------------------------------------
-QByteArray ProtocolUtils::getBufferFromString(const QString & aData)
+QByteArray ProtocolUtils::getBufferFromString(QString aData)
 {
-	QString data(aData);
-	data.replace(" ", "");
+	aData = aData.replace("0x", "").replace(" ", "");
 	QByteArray result;
 
-	if (data.size() % 2)
+	if (aData.size() % 2)
 	{
-		data = "0" + data;
+		aData = "0" + aData;
 	}
 
-	for (int i = 0; i < data.size() / 2; ++i)
+	for (int i = 0; i < aData.size() / 2; ++i)
 	{
-		result += uchar(data.mid(i * 2, 2).toUShort(0, 16));
+		result += uchar(aData.mid(i * 2, 2).toUShort(0, 16));
 	}
 
 	return result;
+}
+
+//--------------------------------------------------------------------------------
+ProtocolUtils::TBufferList ProtocolUtils::getBufferListFromStrings(QStringList aDataList)
+{
+	ProtocolUtils::TBufferList result;
+
+	aDataList.removeAll("");
+	QRegExp regex(CProtocolUtils::LogRexExp);
+
+	for (int i = 0; i < aDataList.size(); ++i)
+	{
+		QString rawLine = aDataList[i];
+
+		if (regex.indexIn(aDataList[i]) && (regex.capturedTexts()[1].size() > 4))
+		{
+			QString lineData = regex.capturedTexts()[1];
+			result << ProtocolUtils::getBufferFromString(lineData);
+		}
+	}
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+ProtocolUtils::TBufferList ProtocolUtils::getBufferListFromLog(const QString & aData)
+{
+	return getBufferListFromStrings(aData.split("\t"));
+}
+
+//--------------------------------------------------------------------------------
+ProtocolUtils::TBufferList ProtocolUtils::getBufferListFromFile(const QString & aFileName)
+{
+	ProtocolUtils::TBufferList result;
+
+	QFile file(aFileName);
+
+	if (!file.exists() || !file.open(QIODevice::ReadOnly))
+	{
+		return ProtocolUtils::TBufferList();
+	}
+
+	QTextStream ts(&file);
+	QString data = ts.readAll();
+	file.close();
+
+	return getBufferListFromStrings(data.split("\r\n"));
 }
 
 //--------------------------------------------------------------------------------

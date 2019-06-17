@@ -3,7 +3,7 @@
 // Stl
 #include <math.h>
 
-// SDK
+// Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QStringList>
 #include <QtCore/QRegExp>
@@ -360,57 +360,66 @@ void Payment::performTransaction()
 {
 	toLog(LogLevel::Normal, QString("Payment %1. Processing...").arg(getID()));
 
-	if (!check(false))
+	if (check(false))
 	{
-		setProcessError();
-
-		int serverError = getParameter(PPSDK::CPayment::Parameters::ServerError).value.toInt();
-
-		if (serverError == ELocalError::NetworkError)
-		{
-			return;
-		}
-		else
-		{
-			if (isCriticalError(serverError))
-			{
-				toLog(LogLevel::Normal, QString("Payment %1. Server error %2 is critical. Payment marked as bad.").arg(getID()).arg(serverError));
-
-				setStatus(PPSDK::EPaymentStatus::BadPayment);
-				setPriority(Low);
-			}
-			else if (serverError == EServerError::OperatorNumberReject)
-			{
-				int tryCount = getParameter(PPSDK::CPayment::Parameters::NumberOfTries).value.toInt();
-
-				switch (tryCount)
-				{
-					case 1:
-					case 2:
-					{
-						setNextTryDate(QDateTime::currentDateTime().addSecs(((tryCount - 1) * 24 + 1) * 60 * 60));
-
-						toLog(LogLevel::Normal, QString("Payment %1. Number rejected, next try date: %2.")
-							.arg(getID())
-							.arg(getNextTryDate().toString(CPayment::DateLogFormat)));
-
-						break;
-					}
-
-					default:
-					{
-						setStatus(PPSDK::EPaymentStatus::BadPayment);
-						setPriority(Low);
-
-						toLog(LogLevel::Normal, QString("Payment %1. Number rejected 3 times. Payment marked as bad.").arg(getID()));
-					}
-				}
-			}
-		}
+		performTransactionPay();
 
 		return;
 	}
 
+	setProcessError();
+
+	int serverError = getParameter(PPSDK::CPayment::Parameters::ServerError).value.toInt();
+
+	if (serverError == ELocalError::NetworkError)
+	{
+		return;
+	}
+
+	if (isCriticalError(serverError))
+	{
+		toLog(LogLevel::Normal, QString("Payment %1. Server error %2 is critical. Payment marked as bad.").arg(getID()).arg(serverError));
+
+		setStatus(PPSDK::EPaymentStatus::BadPayment);
+		setPriority(Low);
+
+		return;
+	}
+		
+	if (serverError == EServerError::OperatorNumberReject)
+	{
+		updateNumberOfTries();
+
+		return;
+	}
+
+	// Проверим статус если сессия уже существует...
+	if (serverError == EServerError::SessionAlreadyExist && status())
+	{
+		serverError = getParameter(PPSDK::CPayment::Parameters::ServerError).value.toInt();
+		int serverResult = getParameter(PPSDK::CPayment::Parameters::ServerResult).value.toInt();
+
+		if (serverResult >= EServerResult::Error3 && serverError == EServerError::Ok)
+		{
+			toLog(LogLevel::Normal, QString("Payment %1. Already complete. STATUS=%2 ERROR=%3.").arg(getID()).arg(serverResult).arg(serverError));
+
+			setParameter(SParameter(PPSDK::CPayment::Parameters::Step, CPayment::Steps::Pay, true));
+			setStatus(PPSDK::EPaymentStatus::Completed);
+
+			if (!getPaymentFactory()->savePayment(this))
+			{
+				toLog(LogLevel::Error, QString("Payment %1. Failed to save data before pay request.").arg(getID()));
+
+				setParameter(SParameter(PPSDK::CPayment::Parameters::ServerError, ELocalError::DatabaseError, true));
+			}
+		}
+	}
+}
+
+
+//------------------------------------------------------------------------------
+void Payment::performTransactionPay()
+{
 	// Если дошли до этапа оплаты, сохраняем данные в базу, чтобы предотвратить задвоение платежа.
 	setParameter(SParameter(PPSDK::CPayment::Parameters::Step, CPayment::Steps::Pay, true));
 
@@ -423,7 +432,13 @@ void Payment::performTransaction()
 		return;
 	}
 
-	if (!pay())
+	if (pay())
+	{
+		setStatus(PPSDK::EPaymentStatus::Completed);
+
+		toLog(LogLevel::Normal, QString("Payment %1. Complete.").arg(getID()));
+	}
+	else
 	{
 		setProcessError();
 
@@ -434,13 +449,32 @@ void Payment::performTransaction()
 			setStatus(PPSDK::EPaymentStatus::BadPayment);
 			setPriority(Low);
 		}
-
-		return;
 	}
+}
 
-	setStatus(PPSDK::EPaymentStatus::Completed);
+//------------------------------------------------------------------------------
+void Payment::updateNumberOfTries()
+{
+	int tryCount = getParameter(PPSDK::CPayment::Parameters::NumberOfTries).value.toInt();
 
-	toLog(LogLevel::Normal, QString("Payment %1. Complete.").arg(getID()));
+	switch (tryCount)
+	{
+	case 1:
+	case 2:
+		setNextTryDate(QDateTime::currentDateTime().addSecs(((tryCount - 1) * 24 + 1) * 60 * 60));
+
+		toLog(LogLevel::Normal, QString("Payment %1. Number rejected, next try date: %2.")
+			.arg(getID())
+			.arg(getNextTryDate().toString(CPayment::DateLogFormat)));
+
+		break;
+
+	default:
+		setStatus(PPSDK::EPaymentStatus::BadPayment);
+		setPriority(Low);
+
+		toLog(LogLevel::Normal, QString("Payment %1. Number rejected 3 times. Payment marked as bad.").arg(getID()));
+	}
 }
 
 //------------------------------------------------------------------------------

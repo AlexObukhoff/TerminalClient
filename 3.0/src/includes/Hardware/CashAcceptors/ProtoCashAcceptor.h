@@ -9,7 +9,7 @@
 #include "Hardware/Common/ProtoDevice.h"
 
 //--------------------------------------------------------------------------------
-class ProtoCashAcceptor : public ProtoDevice, public SDK::Driver::ICashAcceptor
+class ProtoCashAcceptor : public ProtoDevice, public MetaDevice<SDK::Driver::ICashAcceptor>
 {
 	Q_OBJECT
 

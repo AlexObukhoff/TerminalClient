@@ -12,17 +12,22 @@ public:
 	Atol3FRProtocol();
 
 	/// Выполнить команду протокола.
-	TResult processCommand(const QByteArray & aCommandData, QByteArray & aUnpackedAnswer, int aTimeout);
+	TResult processCommand(uchar aTId, const QByteArray & aCommandData, QByteArray & aUnpackedAnswer, int aTimeout);
 
 	/// Запросить результат предыдущей операции.
-	TResult getResult(const QByteArray & aCommandData, QByteArray & aUnpackedAnswer);
+	TResult getResult(uchar aTId, QByteArray & aUnpackedAnswer);
 
-//private:
-	/// Упаковка данных (транспортный уровень).
-	void pack(QByteArray & aData);
+	/// Подождать ответ.
+	TResult waitForAnswer(QByteArray & aUnpackedAnswer);
 
-	/// Отменить задания.
-	TResult execCommand(char aCommand, QByteArray & aAnswer, int aTimeout);
+	/// ACK.
+	TResult sendACK(uchar aTId);
+
+	/// Отмена всех заданий и очистка буфера.
+	TResult cancel();
+
+private:
+	/// Выполнить задание.
 	TResult execCommand(char aCommand, const QByteArray & aCommandData, QByteArray & aAnswer, int aTimeout);
 
 	/// Подсчет CRC.
@@ -33,6 +38,9 @@ public:
 
 	/// Проверка пришедших из порта данных.
 	bool check(const QByteArray & aAnswer);
+
+	/// Заменить экранирующие символы.
+	void replace(QByteArray & aData, int & aIndex, bool aDirection) const;
 
 	/// Транспортный Id.
 	uchar mId;

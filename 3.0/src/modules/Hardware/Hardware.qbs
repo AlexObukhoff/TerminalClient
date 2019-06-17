@@ -19,8 +19,10 @@ Project {
 
 		Depends { name: "Core" }
 
+		Depends { name: "IDTech_SDK" }
+
 		files: [ 
-			"Cardreaders/src/*.*", 
+			"Cardreaders/src/*/*.*", 
 			"Cardreaders/Protocols/Creator/src/*.*",
 			"../../includes/Hardware/CardReaders/CardReaderStatusCodes.h"
 		]
@@ -107,6 +109,7 @@ Project {
 			"FR/src/Shtrih/*/*/*.*",
 			"FR/src/Spark/*.*",
 			"FR/src/Kasbi/*.*",
+			"FR/src/MStar/Online/*.*",
 
 			"../../includes/Hardware/FR/FRErrorDescription.h",
 			"../../includes/Hardware/FR/FRStatusCodes.h"
@@ -139,14 +142,17 @@ Project {
 		files: [
 			"../../includes/Hardware/Protocols/Common/ProtocolNames.h",
 			"../../includes/Hardware/Protocols/FR/FiscalChequeStates.h",
-			
-			"Protocols/FR/Atol/src/*.*",
+
+			"Protocols/FR/Atol2/src/*.*",
+			"Protocols/FR/Atol3/src/*.*",
 			"Protocols/FR/Common/src/*.*",
 			"Protocols/FR/Prim/src/*.*",
 			"Protocols/FR/Shtrih/src/*.*",
 			"Protocols/FR/Spark/src/*.*",
 			"Protocols/FR/Kasbi/src/*.*",
-			
+
+			"Protocols/FR/AFP/src/*.*",
+
 			"Protocols/CashAcceptor/*/src/*.*",
 			"Protocols/Watchdog/*/src/*.*"
 		]
@@ -159,7 +165,6 @@ Project {
 		Depends { name: "Qt"; submodules: ["core"] }
 
 		Depends { name: "Core" }
-		Depends { name: "OPOSSDK" }
 
 		files: [
 			"Scanners/src/*/*.*",
