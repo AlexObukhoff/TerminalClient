@@ -4,7 +4,6 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtWidgets/QWidget>
 #include <QtCore/QTimer>
 #include <QtCore/QSharedPointer>
 #include "ui_AutoEncashmentWindow.h"

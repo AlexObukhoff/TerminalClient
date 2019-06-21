@@ -4,7 +4,6 @@
 #include <SDK/Drivers/IFiscalPrinter.h>
 #include <SDK/Drivers/Components.h>
 #include <SDK/PaymentProcessor/Core/ICore.h>
-#include <SDK/PaymentProcessor/Core/ISettingsService.h>
 #include <SDK/PaymentProcessor/Core/IPrinterService.h>
 #include <SDK/PaymentProcessor/Core/ReceiptTypes.h>
 #include <SDK/PaymentProcessor/Settings/TerminalSettings.h>

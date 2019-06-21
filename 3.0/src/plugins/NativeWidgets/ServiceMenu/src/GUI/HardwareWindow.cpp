@@ -2,9 +2,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QSet>
 #include <QtConcurrent/QtConcurrentRun>
-#include <QtWidgets/QVBoxLayout>
 #include <Common/QtHeadersEnd.h>
 
 // SDK

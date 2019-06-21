@@ -46,8 +46,13 @@ bool PortScanner<T>::getData(QByteArray & aAnswer)
 		}
 
 		aAnswer.append(data);
+
+		if (!data.isEmpty())
+		{
+			clockTimer.restart();
+		}
 	}
-	while (!(data.isEmpty() && (!aAnswer.isEmpty() || (clockTimer.elapsed() > CScanner::PollingInterval))));
+	while (clockTimer.elapsed() < CScanner::PollingInterval);
 
 	return true;
 }

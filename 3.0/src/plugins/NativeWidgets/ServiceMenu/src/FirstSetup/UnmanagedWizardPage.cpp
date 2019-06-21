@@ -3,8 +3,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtConcurrent/QtConcurrentRun>
-#include <QtCore/QFuture>
-#include <QtWidgets/QHBoxLayout>
 #include <Common/QtHeadersEnd.h>
 
 // SDK

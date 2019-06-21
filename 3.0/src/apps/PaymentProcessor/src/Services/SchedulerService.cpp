@@ -100,8 +100,8 @@ SchedulerService::~SchedulerService()
 //---------------------------------------------------------------------------
 bool SchedulerService::initialize()
 {
-	QSettings settings(IApplication::toAbsolutePath(IApplication::getWorkingDirectory() + CScheduler::ConfigName), QSettings::IniFormat);
-	QSettings userSettings(IApplication::toAbsolutePath(IApplication::getWorkingDirectory() + CScheduler::UserConfigName), QSettings::IniFormat);
+	QSettings settings(ISysUtils::rmBOM(IApplication::toAbsolutePath(IApplication::getWorkingDirectory() + CScheduler::ConfigName)), QSettings::IniFormat);
+	QSettings userSettings(ISysUtils::rmBOM(IApplication::toAbsolutePath(IApplication::getWorkingDirectory() + CScheduler::UserConfigName)), QSettings::IniFormat);
 
 	foreach (QString taskName, settings.childGroups())
 	{

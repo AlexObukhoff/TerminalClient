@@ -56,6 +56,85 @@ namespace CDeviceData
 	{
 		const char Mine[] = "port_data";
 		const char Other[] = "other_port_data";
+
+		namespace USB
+		{
+			const char ConfigAmount[] = "config_amount";
+			const char BusNumber[] = "device_bus_number";
+			const char Address[] = "device_address";
+			const char PortNumber[] = "device_port_number";
+			const char ConfigData[] = "config_data";
+			const char Specification[] = "usb_specification";
+			const char FirmwareVersion[] = "device_firmware_version";
+			const char Code[] = "device_code";
+			const char Description[] = "device_description";
+			const char EP0PacketSize[] = "ep0_packet_size";
+			const char Vendor[] = "device_vendor";
+			const char Product[] = "device_product";
+			const char BOSData[] = "bos_data";
+
+			namespace BOS
+			{
+				const char Capability[] = "capability";
+
+				namespace Capability2_0
+				{
+					const char Attributes[] = "2_0_attributes";
+				}
+
+				namespace Capability3_0
+				{
+					const char Attributes[] = "3_0_attributes";
+					const char SpeedSupported[] = "speed_supported";
+					const char FunctionalitySupport[] = "functionality_support";
+					const char U1ExitLatency[] = "u1_exit_latency";
+					const char U2ExitLatency[] = "u2_exit_latency";
+				}
+			}
+
+			namespace Config
+			{
+				const char InterfaceAmount[] = "interface_amount";
+				const char InterfaceData[] = "interface_data";
+				const char Index[] = "config_index";
+				const char Value[] = "config_value";
+				const char Attributes[] = "config_attributes";
+				const char MaxPower[] = "config_max_power";
+
+				namespace Interface
+				{
+					const char EndpointAmount[] = "endpoint_amount";
+					const char EndpointData[] = "endpoint_data";
+					const char Number[] = "interface_number";
+					const char Index[] = "interface_index";
+					const char AlternateSetting[] = "interface_alternate_setting";
+					const char Code[] = "interface_code";
+					const char Description[] = "interface_description";
+
+					namespace Endpoint
+					{
+						const char TransferType[] = "ep_transfer_type";
+						const char IsoSyncType[] = "ep_iso_sync_type";
+						const char IsoUsageType[] = "ep_iso_usage_type";
+						const char CompanionAmount[] = "ep_companion_amount";
+						const char CompanionData[] = "ep_companion_data";
+						const char Address[] = "ep_address";
+						const char Attributes[] = "ep_attributes";
+						const char MaxPacketSize[] = "ep_max_packet_size";
+						const char PollingInterval[] = "ep_polling_interval";
+						const char SyncRefreshRate[] = "ep_sync_refresh_rate";
+						const char SynchAddress[] = "ep_sync_address";
+
+						namespace Companion
+						{
+							const char MaxBurstPacketAmount[] = "companion_ep_max_burst";
+							const char Attributes[] = "companion_ep_attributes";
+							const char BytesPerInterval[] = "companion_ep_bytes_per_interval";
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/// OPOS-устройства.

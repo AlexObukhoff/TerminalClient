@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <body>
-	<string> </string>
+	<string>-----------------------------------</string>
 	<string>Чек активации карты "%CARD_TYPE_NAME%"</string>
 	<string>-----------------------------------</string>
 	<string>Номер точки: %TERMINAL_NUMBER%</string>

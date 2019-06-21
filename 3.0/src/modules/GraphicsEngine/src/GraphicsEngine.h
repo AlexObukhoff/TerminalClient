@@ -9,8 +9,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QMap>
-#include <QtCore/QStack>
-#include <QtCore/QSharedPointer>
 #include <QtGui/QInputEvent>
 #include <QtGui/QColor>
 #include <QtQuick/QQuickView>

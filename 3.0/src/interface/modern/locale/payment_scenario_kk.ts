@@ -4,13 +4,13 @@
 <context>
     <name>payment_scenario</name>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="425"/>
+        <location filename="../scenario/payment_scenario.js" line="433"/>
         <source>payment_scenario#checking_payment</source>
         <translation>Күте тұрыңыз, төлем тексеріліп жатыр...</translation>
     </message>
     <message>
         <location filename="../scenario/payment_scenario.js" line="390"/>
-        <location filename="../scenario/payment_scenario.js" line="470"/>
+        <location filename="../scenario/payment_scenario.js" line="478"/>
         <source>payment_scenario#cannot_use_provider</source>
         <translation>Кешіріңіз, бұл төлемді қабылдау уақытша мүмкін емес. Кейінірек байқап көріңіз.</translation>
     </message>
@@ -20,17 +20,17 @@
         <translation>Кешіріңіз, принтердің істемеуі себебінен бұл төлем қабылданбайды. Кейінірек  қайталап көріңіз.</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="502"/>
+        <location filename="../scenario/payment_scenario.js" line="510"/>
         <source>payment_scenario#submit_ok</source>
         <translation>Сіздің тапсырысыңыз қабылданды</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="518"/>
+        <location filename="../scenario/payment_scenario.js" line="526"/>
         <source>cash_charge_scenario#cannot_enable_validator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="546"/>
+        <location filename="../scenario/payment_scenario.js" line="554"/>
         <source>payment_scenario#processing_payment</source>
         <translation>Төлем өткізілу үстінде...</translation>
     </message>
@@ -41,8 +41,8 @@
         <translation>Тексеру кезінде қате шықты.</translation>
     </message>
     <message>
-        <location filename="../scenario/payment_scenario.js" line="476"/>
-        <location filename="../scenario/payment_scenario.js" line="652"/>
+        <location filename="../scenario/payment_scenario.js" line="484"/>
+        <location filename="../scenario/payment_scenario.js" line="677"/>
         <source>payment_scenario#printing_receipt</source>
         <translation>Күте тұрыңыз, чек басылып шығарылады...</translation>
     </message>

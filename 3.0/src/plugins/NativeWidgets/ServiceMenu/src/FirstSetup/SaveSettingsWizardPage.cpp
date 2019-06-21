@@ -2,7 +2,6 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QTimer>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QFuture>
 #include <Common/QtHeadersEnd.h>

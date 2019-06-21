@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -22,15 +22,15 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -114,7 +114,10 @@
     <ClCompile Include="..\src\COM\windows\AsyncSerialPort.cpp" />
     <ClCompile Include="..\src\Base\IOPortBase.cpp" />
     <ClCompile Include="..\src\COM\windows\SystemDeviceUtils.cpp" />
-    <ClCompile Include="..\src\USB\USBSerialPort.cpp" />
+    <ClCompile Include="..\src\LibUSB\LibUSBPort.cpp" />
+    <ClCompile Include="..\src\LibUSB\LibUSBUtils.cpp" />
+    <ClCompile Include="..\src\LibUSB\USBClassCodes.cpp" />
+    <ClCompile Include="..\src\USB\USBPort.cpp" />
     <ClCompile Include="..\src\TCP\TCPPort.cpp" />
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_TCPPort.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
@@ -133,10 +136,14 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\DeviceWinProperties.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\IOPortGUIDs.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\IOPortStatusCodes.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\LibUSBDeviceDataTypes.h" />
     <ClInclude Include="..\src\COM\windows\AsyncSerialPort.h" />
     <ClInclude Include="..\src\Base\IOPortBase.h" />
     <ClInclude Include="..\src\COM\windows\SystemDeviceUtils.h" />
-    <ClInclude Include="..\src\USB\USBSerialPort.h" />
+    <ClInclude Include="..\src\LibUSB\LibUSBPort.h" />
+    <ClInclude Include="..\src\LibUSB\LibUSBUtils.h" />
+    <ClInclude Include="..\src\LibUSB\USBClassCodes.h" />
+    <ClInclude Include="..\src\USB\USBPort.h" />
     <CustomBuild Include="..\src\TCP\TCPPort.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing TCPPort.h...</Message>

@@ -19,8 +19,6 @@ bool SerialScanner::getData(QByteArray & aAnswer)
 		QVariantMap configuration;
 		configuration.insert(CHardware::Port::COM::WaitResult, true);
 		mIOPort->setDeviceConfiguration(configuration);
-
-		return mIOPort->read(aAnswer, CScanner::PollingInterval);
 	}
 
 	return TSerialScanner::getData(aAnswer);

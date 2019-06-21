@@ -4,12 +4,18 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <QtCore/QByteArray>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
 #include "Hardware/Common/ASCII.h"
+
+namespace CProtocolUtils
+{
+	/// Регэксп для парсинга дампов в логах;
+	const char LogRexExp[] = "\\{([0-9a-fA-F]+)\\}";
+}
 
 //--------------------------------------------------------------------------------
 namespace ProtocolUtils
@@ -26,7 +32,17 @@ namespace ProtocolUtils
 	bool getBit(const QByteArray & aBuffer, int aShift, bool invert = false);
 
 	/// Получить массив байтов по строке лога.
-	QByteArray getBufferFromString(const QString & aData);
+	QByteArray getBufferFromString(QString aData);
+
+	/// Получить список из массивов байтов по массиву строк.
+	typedef QList<QByteArray> TBufferList;
+	TBufferList getBufferListFromStrings(QStringList aDataList);
+
+	/// Получить список из массивов байтов по строке логов. Логи должны быть разделены \t.
+	TBufferList getBufferListFromLog(const QString & aData);
+
+	/// Получить список из массивов байтов из файла.
+	TBufferList getBufferListFromFile(const QString & aFileName);
 
 	/// Маскировать байт.
 	char mask(char aData, const QString & aMask);

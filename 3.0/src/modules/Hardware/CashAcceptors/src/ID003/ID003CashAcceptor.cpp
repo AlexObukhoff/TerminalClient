@@ -164,6 +164,7 @@ bool ID003CashAcceptor::isConnected()
 
 	if (answerData.isEmpty() && isAutoDetecting())
 	{
+		toLog(LogLevel::Error, mDeviceName + ": Unknown device trying to impersonate this device");
 		return false;
 	}
 

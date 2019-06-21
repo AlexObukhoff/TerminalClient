@@ -46,7 +46,8 @@ MetaDevice<T>::MetaDevice() :
 	mOperatorPresence(false),
 	mDetectingPosition(0),
 	mInitialized(ERequestStatus::Fail),
-	mExitTimeout(ULONG_MAX)
+	mExitTimeout(ULONG_MAX),
+	mInitializationError(false)
 {
 }
 
@@ -258,7 +259,7 @@ SLogData MetaDevice<T>::getDeviceData() const
 			data.insert(key, configuration[key].toString());
 		}
 
-		result.requiedDevice = getPartDeviceData(data);
+		result.requiedDevice = DeviceUtils::getPartDeviceData(data);
 	}
 
 	TDeviceData data;
@@ -270,8 +271,8 @@ SLogData MetaDevice<T>::getDeviceData() const
 		data.insert(key, getConfigParameter(key).toString());
 	}
 
-	result.plugin = getPartDeviceData(data, false);
-	result.device = getPartDeviceData(mDeviceData, false);
+	result.plugin = DeviceUtils::getPartDeviceData(data, false);
+	result.device = DeviceUtils::getPartDeviceData(mDeviceData, false);
 
 	QVariantMap dealerSettings = getConfigParameter(CHardware::ConfigData).toMap();
 	names = dealerSettings.keys();
@@ -283,37 +284,7 @@ SLogData MetaDevice<T>::getDeviceData() const
 		data.insert(key, dealerSettings[key].toString());
 	}
 
-	result.config = getPartDeviceData(data);
-
-	return result;
-}
-
-//--------------------------------------------------------------------------------
-template <class T>
-QString MetaDevice<T>::getPartDeviceData(const TDeviceData & aData, bool aHideEmpty) const
-{
-	QStringList keys = aData.keys();
-	int maxSize = 0;
-
-	foreach(auto key, keys)
-	{
-		maxSize = qMax(maxSize, key.size());
-	}
-
-	keys.sort();
-	QString result;
-
-	for (int i = 0; i < keys.size(); ++i)
-	{
-		QString key = keys[i];
-		QString value = aData[key];
-
-		if (!aHideEmpty || !value.isEmpty())
-		{
-			key += QString(maxSize - key.size(), QChar(ASCII::Space));
-			result += QString("\n%1 : %2").arg(key).arg(value);
-		}
-	}
+	result.config = DeviceUtils::getPartDeviceData(data);
 
 	return result;
 }

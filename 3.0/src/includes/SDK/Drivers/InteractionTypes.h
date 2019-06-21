@@ -11,6 +11,7 @@ namespace CInteractionTypes
 {
 	ADD_IT(COM)
 	ADD_IT(USB)
+	ADD_IT(LibUSB)
 	ADD_IT(TCP)
 	ADD_IT(OPOS)
 	ADD_IT(System)

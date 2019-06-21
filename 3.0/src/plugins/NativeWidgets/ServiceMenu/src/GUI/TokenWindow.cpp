@@ -2,12 +2,10 @@
 
 // boost
 #include <boost/bind.hpp>
-#include <boost/ref.hpp>
 
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtConcurrent/QtConcurrentRun>
-#include <QtCore/QFuture>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -18,7 +16,6 @@
 #include "Backend/KeysManager.h"
 #include "Backend/ServiceMenuBackend.h"
 
-#include "ServiceTags.h"
 #include "TokenWindow.h"
 
 //------------------------------------------------------------------------

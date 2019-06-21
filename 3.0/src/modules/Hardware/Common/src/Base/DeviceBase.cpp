@@ -62,7 +62,6 @@ DeviceBase<T>::DeviceBase() : mExternalMutex(QMutex::Recursive), mResourceMutex(
 	mAutoDetectable = true;
 	mNeedReboot = false;
 	mForceStatusBufferEnabled = false;
-	mInitializationError = false;
 
 	mStatusCodesSpecification = DeviceStatusCode::PSpecifications(new DeviceStatusCode::CSpecifications());
 

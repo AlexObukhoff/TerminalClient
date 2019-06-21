@@ -26,6 +26,7 @@ namespace CAllHardware
 	const char OptionalPortSettingsEnable[] = "optional_port_settings_enable";
 	const char SerialNumber[] = "serial_number";
 	const char CanOnline[] = "can_online";
+	const char LibraryVersion[] = "library_version";
 
 	/// Значения настроек.
 	namespace Values

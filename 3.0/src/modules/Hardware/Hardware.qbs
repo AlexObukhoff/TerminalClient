@@ -20,7 +20,6 @@ Project {
 		Depends { name: "Core" }
 
 		Depends { name: "IDTech_SDK" }
-		Depends { name: "libusb" }
 
 		files: [ 
 			"Cardreaders/src/*/*.*", 

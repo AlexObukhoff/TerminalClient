@@ -3,8 +3,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTime>
-#include <QtCore/QTimer>
-#include <QtCore/QDir>
 #include <Common/QtHeadersEnd.h>
 
 // Modules

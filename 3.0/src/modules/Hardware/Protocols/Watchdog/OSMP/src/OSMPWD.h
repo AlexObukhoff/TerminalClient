@@ -10,7 +10,7 @@ class OSMPWDProtocol: public ProtocolBase
 {
 public:
 	/// Выполнить команду протокола.
-	TResult processCommand(const QByteArray & aCommandData, QByteArray & aUnpackedData, bool aNeedAnswer);
+	TResult processCommand(const QByteArray & aCommandData, QByteArray * aUnpackedData = nullptr);
 
 private:
 	/// Подсчет контрольной суммы пакета данных.

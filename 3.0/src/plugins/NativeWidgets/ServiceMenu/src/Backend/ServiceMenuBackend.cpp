@@ -23,9 +23,6 @@
 #include <SDK/Plugins/IPluginLoader.h>
 #include <SDK/GUI/IGraphicsItem.h>
 
-// Modules
-#include <Common/ILog.h>
-
 // Project
 #include "GUI/ServiceTags.h"
 #include "MessageBox/MessageBox.h"
@@ -117,7 +114,13 @@ PaymentManager * ServiceMenuBackend::getPaymentManager()
 //------------------------------------------------------------------------
 void ServiceMenuBackend::toLog(const QString & aMessage)
 {
-	mLog->write(LogLevel::Normal, aMessage);
+	toLog(LogLevel::Normal, aMessage);
+}
+
+//------------------------------------------------------------------------
+void ServiceMenuBackend::toLog(LogLevel::Enum aLevel, const QString & aMessage)
+{
+	mLog->write(aLevel, aMessage);
 }
 
 //------------------------------------------------------------------------
@@ -300,7 +303,7 @@ bool ServiceMenuBackend::authorize(const QString & aPassword)
 	SDK::PaymentProcessor::SServiceMenuPasswords serviceMenuSettings = mTerminalSettings->getServiceMenuPasswords();
 
 	// Роль администратора
-	if (hash == serviceMenuSettings.passwords[SDK::PaymentProcessor::CServiceMenuPasswords::Service])
+	if (hash == serviceMenuSettings.passwords[SDK::PaymentProcessor::CServiceMenuPasswords::Service].toLower())
 	{
 		mAccessRights
 			<< ServiceMenuBackend::Diagnostic
@@ -318,7 +321,7 @@ bool ServiceMenuBackend::authorize(const QString & aPassword)
 		mUserRole = CServiceTags::UserRole::RoleAdministrator;
 	}
 	// Роль техника
-	else if (hash == serviceMenuSettings.passwords[SDK::PaymentProcessor::CServiceMenuPasswords::Technician])
+	else if (hash == serviceMenuSettings.passwords[SDK::PaymentProcessor::CServiceMenuPasswords::Technician].toLower())
 	{
 		mAccessRights
 			<< ServiceMenuBackend::Diagnostic
@@ -332,7 +335,7 @@ bool ServiceMenuBackend::authorize(const QString & aPassword)
 		mUserRole = CServiceTags::UserRole::RoleTechnician;
 	}
 	// Роль инкассатора
-	else if (hash == serviceMenuSettings.passwords[SDK::PaymentProcessor::CServiceMenuPasswords::Collection])
+	else if (hash == serviceMenuSettings.passwords[SDK::PaymentProcessor::CServiceMenuPasswords::Collection].toLower())
 	{
 		mAccessRights << ServiceMenuBackend::Encash;
 		mUserRole = CServiceTags::UserRole::RoleCollector;

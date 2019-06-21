@@ -160,7 +160,6 @@ Widgets.SceneBase2 {
 			}
 
 			if (global.needChooseService) {
-				Core.payment.setExternalParameter(Core.payment.findAliasFromRequest("EXTACCOUNT"), "");
 				Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Retry);
 			}
 			else {
@@ -236,6 +235,13 @@ Widgets.SceneBase2 {
 			// Если есть доп-поля, то обновляем редакторы после того, как распарсится модель
 			if (addFields) {
 				addFields.forEach(function(aItem){fields.push(aItem)})
+
+				// Сохраним имена полей, полученных в ADD_FIELDS
+				var af = [];
+				for (var i in addFields) {
+					af.push(addFields[i].id);
+				}
+				Core.userProperties.set("payment.add_fields", af);
 			}
 
 			global.fields = fields;

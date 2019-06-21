@@ -19,16 +19,22 @@
 #include "Hardware/Common/ASCII.h"
 
 //--------------------------------------------------------------------------------
+struct SVPID
+{
+	quint16 VID;
+	quint16 PID;
+
+	SVPID(): VID(0), PID(0) {}
+	SVPID(quint16 aVID, quint16 aPID): VID(aVID), PID(aPID) {}
+	bool isValid() { return VID && PID; }
+};
+
 typedef QMap<QString, QString> TWinProperties;
 
-struct SWinDeviceProperties
+struct SWinDeviceProperties: public SVPID
 {
 	QString path;
-	quint32 VID;
-	quint32 PID;
 	TWinProperties data;
-
-	SWinDeviceProperties() : VID(0), PID(0) {}
 };
 
 typedef QMap<QString, SWinDeviceProperties> TWinDeviceProperties;

@@ -3,8 +3,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QTimer>
-#include <QtCore/QVariant>
-#include <QtCore/QDir>
 #include <QtCore/QUrl>
 #include <QtCore/QBuffer>
 #include <Common/QtHeadersEnd.h>
@@ -26,7 +24,6 @@
 #include "DeviceTests/HIDTest.h"
 #include "DeviceTests/DispenserTest.h"
 
-#include "IDeviceBackend.h"
 #include "DeviceSlot.h"
 
 //------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-/* @file Mainline. */
+﻿/* @file Mainline. */
 
 #ifdef Q_OS_WIN
 #define NOMINMAX

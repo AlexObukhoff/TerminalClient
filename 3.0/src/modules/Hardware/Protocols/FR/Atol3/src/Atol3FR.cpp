@@ -101,7 +101,10 @@ TResult Atol3FRProtocol::execCommand(char aCommand, const QByteArray & aCommandD
 	request.prepend(CAtol3FR::Prefix);
 	request.append(calcCRC(request.mid(3)));
 
-	request = request.left(4) + request.mid(4).replace(CAtol3FR::Prefix, CAtol3FR::ESCTSTX).replace(CAtol3FR::ESC, CAtol3FR::ESCTESC);
+	for (int i = 4; i < request.size(); ++i)
+	{
+		replace(request, i, true);
+	}
 
 	toLog(LogLevel::Normal, QString("ATOL3: >> {%1}").arg(request.toHex().data()));
 
@@ -123,7 +126,10 @@ TResult Atol3FRProtocol::waitForAnswer(QByteArray & aUnpackedAnswer)
 		return CommandResult::Transport;
 	}
 
-	answer.replace(CAtol3FR::ESCTSTX, QByteArray(1, CAtol3FR::Prefix)).replace(CAtol3FR::ESCTESC, QByteArray(1, CAtol3FR::ESC));
+	for (int i = 0; i < answer.size(); ++i)
+	{
+		replace(answer, i, false);
+	}
 
 	if (answer.isEmpty())
 	{
@@ -213,12 +219,32 @@ bool Atol3FRProtocol::read(QByteArray & aAnswer, int aTimeout)
 	if (index)
 	{
 		aAnswer = aAnswer.mid(index);
-		log += QString(" -> {%1}").arg(aAnswer.toHex().data());
 	}
 
-	toLog(LogLevel::Normal, QString("ATOL3: << {%1}").arg(aAnswer.toHex().data()));
+	toLog(LogLevel::Normal, QString("ATOL3: << {%1}").arg(log));
 
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+void Atol3FRProtocol::replace(QByteArray & aData, int & aIndex, bool aDirection) const
+{
+	for (int i = 0; i < CAtol3FR::ReplaceableDataList.size(); ++i)
+	{
+		QByteArray before = CAtol3FR::ReplaceableDataList[i].first;
+		QByteArray after  = CAtol3FR::ReplaceableDataList[i].second;
+
+		if (!aDirection)
+		{
+			qSwap(before, after);
+		}
+
+		if (aData.mid(aIndex, before.size()) == before)
+		{
+			aData.replace(aIndex, before.size(), after);
+			aIndex += after.size() - before.size();
+		}
+	}
 }
 
 //--------------------------------------------------------------------------------

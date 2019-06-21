@@ -63,7 +63,7 @@ namespace CAsyncSerialPort
 	const char GeneralRS232[] = "ACPI";
 
 	/// Признаки невозможности ожидания результата GetOverlappedResult.
-	const QStringList CannotWaitResult = QStringList() << "FTDI" << "LPC USB VCom Port" << "ATOL" << "MSTAR" << "CP210" << "STMicroelectronics";
+	const QStringList CannotWaitResult = QStringList() << "FTDI" << "LPC USB VCom Port" << "ATOL" << "MSTAR" << "CP210" << "STMicroelectronics" << "Honeywell";
 
 	/// Ошибки не логгировать.
 	const QVector<int> NoLogErrors = QVector<int>()
@@ -145,19 +145,19 @@ public:
 	/// Закрыть порт.
 	virtual bool close();
 
-	/// Очистка буферов порта.
+	/// Очистить буферы порта.
 	virtual bool clear();
 
-	/// Установка параметров порта.
+	/// Установить параметры порта.
 	virtual bool setParameters(const SDK::Driver::TPortParameters & aParameters);
 
-	/// Получение параметров порта.
+	/// Получить параметры порта.
 	virtual void getParameters(SDK::Driver::TPortParameters & aParameters);
 
-	/// Чтение данных.
+	/// Прочитать данные.
 	virtual bool read(QByteArray & aData, int aTimeout = DefaultReadTimeout, int aMinSize = 1);
 
-	/// Передача данных.
+	/// Передать данные.
 	virtual bool write(const QByteArray & aData);
 
 	/// Подключено новое устройство?
@@ -174,7 +174,7 @@ protected:
 	/// Открыть порт.
 	virtual bool performOpen();
 
-	/// Чтение данных.
+	/// Прочитать данные.
 	virtual bool processReading(QByteArray & aData, int aTimeout);
 
 	/// Выполнить команду.
@@ -186,7 +186,7 @@ protected:
 	/// Логгирование ошибки.
 	void logError(const QString & aFunctionName);
 
-	/// Проверка готовности порта.
+	/// Проверить готовность порта.
 	virtual bool checkReady();
 
 	/// Ждет окончание асинхронной операции.

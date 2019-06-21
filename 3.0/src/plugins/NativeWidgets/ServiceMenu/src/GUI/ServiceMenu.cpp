@@ -94,8 +94,6 @@ ServiceMenu::~ServiceMenu()
 	if (mMainServiceWindow)
 	{
 		saveConfiguration();
-		mMainServiceWindow->shutdown();
-		mMainServiceWindow->deleteLater();
 	}
 }
 

@@ -2,8 +2,12 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
+<<<<<<< HEAD
 #include <QtCore/QTimer>
 #include <QtWidgets/QStackedLayout>
+=======
+#include <QtGui/QStackedLayout>
+>>>>>>> release
 #include <Common/QtHeadersEnd.h>
 
 // SDK

@@ -64,9 +64,6 @@ protected:
 	/// Qt-принтер.
 	QPrinter mPrinter;
 
-	/// Битмап c картинкой.
-	QBitmap mBitmap;
-
 	/// Боковой отступ.
 	qreal mSideMargin;
 

@@ -33,13 +33,12 @@
 	<string>%OPERATOR_FIELD%</string>
 	<string>%OPERATOR_FIELD%</string>
 	<string>%OPERATOR_FIELD%</string>
-	<string> </string>
+	<string>-----------------------------------</string>
 	<string>Принято        : %AMOUNT_ALL% %CURRENCY%</string>
 	<string>Комиссия агента: %DEALER_FEE% %CURRENCY%</string>
 	<string>Комиссия Банка Платина: %PROCESSING_FEE% %CURRENCY%</string>
 	<string>Общая комиссия : %FEE% %CURRENCY%</string>
 	<string>К зачислению   : %AMOUNT% %CURRENCY%</string>
-	<string> </string>
 	<string>-----------------------------------</string>
 	<string>СОХРАНЯЙТЕ ЧЕК ДО ЗАЧИСЛЕНИЯ СРЕДСТВ!</string>
 	<string>Информационно-технологическое обеспечение</string>

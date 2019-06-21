@@ -2,6 +2,7 @@
 
 #pragma once
 
+// Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
@@ -64,7 +65,8 @@ protected:
 	}
 };
 
-#define APPEND(Key) append(Key, #Key)
+#define APPEND(aKey) append(aKey, #aKey)
+#define ADD(aKey) add(aKey, #aKey)
 
 // базовый класс для хранения данных в виде пар ключ-значение со статическим заполнением данных
 template <class T1, class T2>

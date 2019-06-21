@@ -122,7 +122,7 @@ Widgets.SceneBase2 {
 				Image {
 					visible: !global.editMode
 					source: "image://ui/logoprovider/" + operatorId + "/button.operator.blank/" + name
-					anchors { left: parent.left; leftMargin: 33; verticalCenter: parent.verticalCenter }
+					anchors { left: parent.left; verticalCenter: parent.verticalCenter }
 				}
 
 				Column {
@@ -161,7 +161,8 @@ Widgets.SceneBase2 {
 				Row {
 					anchors { left: parent.left; leftMargin: 25; verticalCenter: parent.verticalCenter }
 
-					opacity: global.editMode
+					// Записи с признаком автоплатежа не редактируем и не удаляем
+					opacity: global.editMode && !autoPay
 					Behavior on opacity {
 						NumberAnimation { duration: 200 }
 					}
@@ -327,7 +328,7 @@ Widgets.SceneBase2 {
 		id: entryModel
 
 		ListElement {
-			entryId: -1; operatorId: -1; name: ""; comment: ""; parameters: ""
+			entryId: -1; operatorId: -1; name: ""; comment: ""; parameters: ""; autoPay: false
 		}
 	}
 
@@ -346,6 +347,7 @@ Widgets.SceneBase2 {
 			entryModel.append({"entryId": entries[i].id,
 													"operatorId": Core.payment.getProvider(entries[i].provider).id,
 													"name": Core.payment.getProvider(entries[i].provider).name,
+													"autoPay": entries[i].autoPay,
 													"comment": entries[i].comment, "parameters": entries[i].parameters
 												});
 		}

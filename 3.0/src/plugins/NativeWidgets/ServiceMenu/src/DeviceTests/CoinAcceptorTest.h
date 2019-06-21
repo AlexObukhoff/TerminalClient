@@ -2,11 +2,6 @@
 
 #pragma once
 
-// Qt
-#include <Common/QtHeadersBegin.h>
-#include <QtCore/QFutureWatcher>
-#include <Common/QtHeadersEnd.h>
-
 // SDK
 #include <Common/ObjectPointer.h>
 #include <SDK/Drivers/ICashAcceptor.h>

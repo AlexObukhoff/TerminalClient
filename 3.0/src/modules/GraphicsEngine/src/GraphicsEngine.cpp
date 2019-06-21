@@ -214,6 +214,7 @@ bool GraphicsEngine::finalize()
 	}
 
 	mWidgets.clear();
+	mPopupWidget = mWidgets.end();
 	mContentDirectories.clear();
 	mIsVirtualKeyboardVisible = false;
 
@@ -832,11 +833,10 @@ bool GraphicsEngine::eventFilter(QObject * aObject, QEvent * aEvent)
 	switch (type)
 	{
 	case QEvent::MouseMove:
-	{
+    {
 		QMouseEvent * mouseEvent = static_cast<QMouseEvent *>(aEvent);
 		mDebugWidget.updateMousePos(mouseEvent->screenPos().toPoint());
-
-		if (++intruder >= CGraphicsEngine::IntruderTreshold)
+		if (mouseEvent->buttons() != Qt::LeftButton && ++intruder >= CGraphicsEngine::IntruderTreshold)
 		{
 			emit intruderActivity();
 		}
@@ -851,7 +851,7 @@ bool GraphicsEngine::eventFilter(QObject * aObject, QEvent * aEvent)
 	case QEvent::MouseButtonDblClick:
 		if (mIsVirtualKeyboardVisible)
 		{
-			/*QGraphicsSceneMouseEvent * mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(aEvent);
+			/*auto * mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(aEvent);
 			TWidgetList::Iterator widget = mWidgets.find(CGraphicsEngine::InputContextName);
 			QGraphicsItem * keyboardItem = widget->graphics.lock()->getWidget();
 			QRectF keyboardRect(keyboardItem->sceneBoundingRect());
@@ -870,7 +870,7 @@ bool GraphicsEngine::eventFilter(QObject * aObject, QEvent * aEvent)
 	{
 		if (!mHandledKeyList.isEmpty())
 		{
-			QKeyEvent * keyEvent = static_cast<QKeyEvent *>(aEvent);
+			auto * keyEvent = static_cast<QKeyEvent *>(aEvent);
 
 			QString key = QKeySequence(keyEvent->key()).toString();
 			if (mHandledKeyList.indexOf(key) != -1)

@@ -25,7 +25,7 @@ public:
 	virtual ~EncashmentWindow();
 
 public:
-	virtual bool activate() { return true; }
+	virtual bool activate();
 	virtual bool deactivate();
 
 protected slots:

@@ -24,10 +24,10 @@ namespace CUSBDevice
 	};
 
 	/// данные моделей по PID-ам.
-	class CData : public CSpecification<quint32, SData>
+	class CData : public CSpecification<quint16, SData>
 	{
 	public:
-		void add(quint32 aPID, const QString & aModel, bool aVerified = false)
+		void add(quint16 aPID, const QString & aModel, bool aVerified = false)
 		{
 			append(aPID, SData(aModel, aVerified));
 		}
@@ -39,10 +39,10 @@ namespace CUSBDevice
 	};
 
 	/// Данные моделей по VID-ам.
-	class CDetectingData : public CSpecification<quint32, CData>
+	class CDetectingData : public CSpecification<quint16, CData>
 	{
 	public:
-		void add(quint32 aVID, quint32 aPID, const QString & aModel, bool aVerified = false)
+		void add(quint16 aVID, quint16 aPID, const QString & aModel, bool aVerified = false)
 		{
 			data()[aVID].append(aPID, SData(aModel, aVerified));
 		}

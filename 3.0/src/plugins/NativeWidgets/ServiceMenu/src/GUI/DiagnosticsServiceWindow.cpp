@@ -10,7 +10,6 @@
 #include <SDK/PaymentProcessor/Core/ICore.h>
 #include <SDK/PaymentProcessor/Core/IService.h>
 #include <SDK/PaymentProcessor/Core/ServiceParameters.h>
-#include <SDK/PaymentProcessor/Connection/Connection.h>
 
 // Project
 #include "Backend/PaymentManager.h"

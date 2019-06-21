@@ -7,7 +7,6 @@
 
 // SDK
 #include <SDK/PaymentProcessor/Core/ICore.h>
-#include <SDK/PaymentProcessor/Core/IHIDService.h>
 
 // Project
 #include "DispenserTest.h"

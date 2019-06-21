@@ -2,7 +2,8 @@
 
 #include "Hardware/Plugins/CommonParameters.h"
 #include "Hardware/IOPorts/AsyncSerialPort.h"
-#include "Hardware/IOPorts/USBSerialPort.h"
+#include "Hardware/IOPorts/USBPort.h"
+#include "Hardware/IOPorts/LibUSBPort.h"
 #include "Hardware/IOPorts/TCPPort.h"
 
 //------------------------------------------------------------------------
@@ -85,6 +86,7 @@ TParameterList COMParameters()
 BEGIN_REGISTER_PLUGIN
 	COMMON_DRIVER(AsyncSerialPort, &COMParameters)
 	COMMON_DRIVER(USBPort, &PluginInitializer::emptyParameterList)
+	//COMMON_DRIVER(LibUSBPort, &PluginInitializer::emptyParameterList)
 	COMMON_DRIVER(TCPPort, &TCPParameters)
 END_REGISTER_PLUGIN
 

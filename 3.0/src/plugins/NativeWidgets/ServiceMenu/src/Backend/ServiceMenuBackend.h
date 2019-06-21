@@ -15,6 +15,9 @@
 #include <SDK/PaymentProcessor/Core/EventTypes.h>
 #include <SDK/PaymentProcessor/Core/ICashDispenserManager.h>
 
+// Modules
+#include <Common/ILog.h>
+
 namespace SDK {
 namespace PaymentProcessor {
 	class ICore;
@@ -26,7 +29,6 @@ namespace Plugin {
 	class IPlugin;
 }}
 
-class ILog;
 class IConfigManager;
 class HardwareManager;
 class KeysManager;
@@ -104,6 +106,7 @@ public:
 
 public:
 	void toLog(const QString & aMessage);
+	void toLog(LogLevel::Enum aLevel, const QString & aMessage);
 	SDK::PaymentProcessor::ICore * getCore() const;
 
 public:

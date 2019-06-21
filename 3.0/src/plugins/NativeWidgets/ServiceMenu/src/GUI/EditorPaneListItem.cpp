@@ -2,7 +2,6 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtGui/QPainter>
 #include <QtWidgets/QApplication>
 #include <Common/QtHeadersEnd.h>
 

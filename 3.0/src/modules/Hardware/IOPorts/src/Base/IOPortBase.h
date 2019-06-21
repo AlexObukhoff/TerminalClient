@@ -26,21 +26,24 @@ public:
 	/// Освобождает ресурсы, связанные с устройством, возвращается в состояние до вызова initialize().
 	virtual bool release();
 
-	/// Очистка буферов порта.
+	/// Очистить буферы порта.
 	virtual bool clear();
 
-	/// Установка параметров порта.
+	/// Установить параметры порта.
 	virtual bool setParameters(const SDK::Driver::TPortParameters & /*aParameters*/) { return true; }
 
-	/// Получение параметров порта.
+	/// Получить параметры порта.
 	virtual void getParameters(SDK::Driver::TPortParameters & /*aParameters*/) {}
 
-	/// Возвращает тип порта.
+	/// Получить тип порта.
 	virtual SDK::Driver::EPortTypes::Enum getType();
 
 protected:
 	/// Установить таймаут открытия порта.
 	void setOpeningTimeout(int aTimeout);
+
+	/// Заносит данные портов в конфигурацию и печатает лог.
+	void adjustData(const QStringList & aMine, const QStringList & aOther);
 
 	/// Имя системного порта.
 	QString mSystemName;

@@ -19,12 +19,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../edit_amount_scene.qml" line="108"/>
+        <location filename="../edit_amount_scene.qml" line="109"/>
         <source>edit_amount_scene#enter_amount</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../edit_amount_scene.qml" line="115"/>
+        <location filename="../edit_amount_scene.qml" line="116"/>
         <source>edit_amount_scene#confirm_payment</source>
         <translation type="unfinished"></translation>
     </message>

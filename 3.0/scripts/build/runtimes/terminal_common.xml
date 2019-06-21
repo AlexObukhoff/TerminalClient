@@ -13,4 +13,8 @@
 	
 	<!-- Интерфейс modern, компонент interface_plugins -->
 	<file source="{QBS_RESULT_PATH}/plugins/interface/utils.dll" target="interface_plugins/interface/modern/plugins/utils.dll"/>
+	
+	<!-- Выключение BITS -->
+	<option target="data/updater.ini" key="bits/ignore" value="true" />
+	
 </runtime>

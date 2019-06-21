@@ -137,6 +137,12 @@ bool V2eCashAcceptor::isConnected()
 		return false;
 	}
 
+	if (answer.isEmpty() && isAutoDetecting())
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Unknown device trying to impersonate this device");
+		return false;
+	}
+
 	QByteArray dbVersion = answer.mid(CV2e::FirmwareBytesAmount);
 	QString hexDBVersion = "0x" + dbVersion.toHex().toUpper();
 	QString logDBVersion = ProtocolUtils::clean(dbVersion);

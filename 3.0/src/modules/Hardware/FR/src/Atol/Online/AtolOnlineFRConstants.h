@@ -44,6 +44,9 @@ namespace CAtolOnlineFR
 	/// Формат представления даты для вывода в лог.
 	const char TimeLogFormat[] = "hh:mm";
 
+	/// Знак скидки (0 – скидка; 1 – надбавка). Скидка не используется.
+	const char DiscountSign = ASCII::NUL;
+
 	/// Ожидание оживания ФР при получении фискальных данных после закрытия чека, [мс].
 	const SWaitingData GetFiscalWaiting = SWaitingData(200, 1000);
 

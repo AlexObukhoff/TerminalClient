@@ -212,7 +212,6 @@ Widgets.SceneBase {
 	}
 
 	function showHandler() {
-		GUI.log("#show")
 		GUI.log(inputField.empty,  global.addButtonClicked)
 	}
 }

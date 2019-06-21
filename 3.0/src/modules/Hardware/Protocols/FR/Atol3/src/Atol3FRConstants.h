@@ -13,10 +13,15 @@
 //--------------------------------------------------------------------------------
 namespace CAtol3FR
 {
-	const char Prefix = '\xFE';    /// STX.
-	const char ESC    = '\xFD';    /// ESC.
-	const char ESCTSTX[] = "\xFD\xEE";    /// Экранирующий STX.
-	const char ESCTESC[] = "\xFD\xED";    /// Экранирующий ESC.
+	typedef QPair<QByteArray, QByteArray> TReplaceableData;
+	typedef QList<TReplaceableData> TReplaceableDataList; 
+
+	const TReplaceableDataList ReplaceableDataList = TReplaceableDataList()
+		<< TReplaceableData("\xFE", "\xFD\xEE")
+		<< TReplaceableData("\xFD", "\xFD\xED");
+
+	/// Префикс.
+	const char Prefix = '\xFE';
 
 	/// Маска длины.
 	const char SizeMask = '\x7F';

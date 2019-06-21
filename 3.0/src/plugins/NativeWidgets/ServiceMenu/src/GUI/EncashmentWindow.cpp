@@ -46,12 +46,27 @@ EncashmentWindow::EncashmentWindow(ServiceMenuBackend * aBackend, QWidget * aPar
 	mHistoryWindow(nullptr),
 	mLastPrintJob(0)
 {
-	connect(mBackend->getPaymentManager(), SIGNAL(receiptPrinted(qint64, bool)), this, SLOT(onPeceiptPrinted(qint64, bool)));
 }
 
 //---------------------------------------------------------------------------
 EncashmentWindow::~EncashmentWindow()
 {
+}
+
+bool EncashmentWindow::activate()
+{
+	connect(mBackend->getPaymentManager(), SIGNAL(receiptPrinted(qint64, bool)), this, SLOT(onPeceiptPrinted(qint64, bool)));
+	return true;
+}
+
+//---------------------------------------------------------------------------
+bool EncashmentWindow::deactivate()
+{
+	safeDelete(mInputBox);
+
+	disconnect(mBackend->getPaymentManager(), SIGNAL(receiptPrinted(qint64, bool)), this, SLOT(onPeceiptPrinted(qint64, bool)));
+
+	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -163,7 +178,7 @@ void EncashmentWindow::onPrintZReport()
 			GUI::MessageBox::modal(msg, SDK::GUI::MessageBoxParams::Warning);
 		}		 
 
-		mIdleTimer.stop();		 
+		mIdleTimer.stop();
 
 
 		GUI::MessageBox::wait(tr("#printing"));
@@ -171,10 +186,16 @@ void EncashmentWindow::onPrintZReport()
 		//if (zReportButton)
 		{
 			int jobIndex = mBackend->getPaymentManager()->printZReport(fullZReport);
-			mBackend->toLog(QString("JOB id=%1 CREATE.").arg(jobIndex));
-			//zReportButton->setEnabled(false);
+			if (jobIndex == -1)
+			{
+				mBackend->toLog(LogLevel::Debug, QString("JOB id=%1 CREATE FAIL.").arg(jobIndex));
+				MessageBox::warning(tr("#full_zreport_print_failed"));
+			}
+			else
+			{
+				mBackend->toLog(LogLevel::Debug, QString("JOB id=%1 CREATE.").arg(jobIndex));
+			}			
 		}
-		
 	}
 	else
 	{
@@ -188,14 +209,14 @@ void EncashmentWindow::onPeceiptPrinted(qint64 aJobIndex, bool aErrorHappened)
 {
 	if (mLastPrintJob && mLastPrintJob == aJobIndex)
 	{
-		mBackend->toLog(QString("JOB id=%1 ALREADY COMPLETE. SKIP SLOT.").arg(aJobIndex));
+		mBackend->toLog(LogLevel::Debug, QString("JOB id=%1 ALREADY COMPLETE. SKIP SLOT.").arg(aJobIndex));
 		MessageBox::hide();
 		return;
 	}
 
 	mLastPrintJob = aJobIndex;
 
-	mBackend->toLog(QString("JOB id=%1 COMPLETE. Error status: %2").arg(aJobIndex).arg(aErrorHappened));
+	mBackend->toLog(LogLevel::Debug, QString("JOB id=%1 COMPLETE. Error status: %2").arg(aJobIndex).arg(aErrorHappened));
 	
 	if (!mMessageError.isEmpty() && aErrorHappened)
 	{
@@ -217,14 +238,6 @@ void EncashmentWindow::onPeceiptPrinted(qint64 aJobIndex, bool aErrorHappened)
 	}
 
 	mIdleTimer.start();;
-}
-
-//---------------------------------------------------------------------------
-bool EncashmentWindow::deactivate()
-{
-	safeDelete(mInputBox);
-
-	return true;
 }
 
 //---------------------------------------------------------------------------

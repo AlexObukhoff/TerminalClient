@@ -6,7 +6,7 @@
     <message>
         <location filename="../topup_platru_scene.qml" line="16"/>
         <source>topup_platru_scene#select_phone</source>
-        <translation>Выберете номер телефона</translation>
+        <translation>Выберите номер телефона</translation>
     </message>
     <message>
         <location filename="../topup_platru_scene.qml" line="90"/>

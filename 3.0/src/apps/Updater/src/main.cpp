@@ -22,7 +22,7 @@ int main(int aArgc, char * aArgv[])
 
 	app.run();
 
-	app.getLog()->write(LogLevel::Normal, QString("Exit. resultCode = %1").arg(app.getResultCode()));
+	app.getLog()->write(LogLevel::Normal, QString("Exit with resultCode = %1").arg(app.getResultCode()));
 
 	return app.getResultCode();
 }

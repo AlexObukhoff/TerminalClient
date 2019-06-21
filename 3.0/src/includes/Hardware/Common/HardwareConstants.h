@@ -18,7 +18,9 @@ namespace CHardware
 	const char RequiredResourceNames[] = "required_resource_names";
 	const char PluginPath[] = "plugin_path";
 	const char ConfigData[] = "config_data";
-	const char CanSoftReboot[] = "can_soft_reboot";	const char ProtocolType[] = "protocol_type";
+	const char CanSoftReboot[] = "can_soft_reboot";
+	const char ProtocolType[] = "protocol_type";
+
 	/// Типы вызова функционала драйвера.
 	namespace CallingTypes
 	{
@@ -71,6 +73,13 @@ namespace CHardware
 			const char DTR[] = "dtr";
 			const char WaitResult[] = "wait_result";
 			const char ControlRemoving[] = "control_removing";
+		}
+
+		/// Константы USB-порта.
+		namespace USB
+		{
+			const char VID[] = "vid";
+			const char PID[] = "pid";
 		}
 	}
 

@@ -11,7 +11,6 @@
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QList>
 #include <QtCore/QMap>
-#include <QtCore/QQueue>
 #include <QtWidgets/QToolBar>
 #include "ui_PaymentServiceWindow.h"
 #include <Common/QtHeadersEnd.h>

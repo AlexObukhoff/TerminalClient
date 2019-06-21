@@ -52,48 +52,24 @@ void AsyncSerialPort::initialize()
 	TIOPortDeviceData deviceData;
 	getDeviceProperties(mUuids, mPathProperty, false, &deviceData);
 
-	QVariantMap outDeviceData;
+	QStringList minePortData;
 	QStringList otherPortData;
 
 	for (auto it = deviceData.begin(); it != deviceData.end(); ++it)
 	{
-		QString systemData = it.key() + "\n" + it.value() + "\n";
+		bool mine = !mSystemName.isEmpty() && it->contains(mSystemName);
+		QStringList & target = mine ? minePortData : otherPortData;
+		target << it.key() + "\n" + it.value() + "\n";
 
-		if (!mSystemName.isEmpty() && it->contains(mSystemName))
+		if (mine)
 		{
-			outDeviceData.insert(CDeviceData::Ports::Mine, systemData);
-
 			bool сannotWaitResult = std::find_if(CAsyncSerialPort::CannotWaitResult.begin(), CAsyncSerialPort::CannotWaitResult.end(), [&] (const QString & aLexeme) -> bool
 				{ return it->contains(aLexeme, Qt::CaseInsensitive); }) != CAsyncSerialPort::CannotWaitResult.end();
 			setConfigParameter(CHardware::Port::COM::ControlRemoving, сannotWaitResult);
 		}
-		else
-		{
-			otherPortData << systemData;
-		}
 	}
 
-	outDeviceData.insert(CDeviceData::Ports::Other, otherPortData.join("\n"));
-	setConfigParameter(CHardwareSDK::DeviceData, outDeviceData);
-
-	if (!isAutoDetecting())
-	{
-		QString portData = outDeviceData[CDeviceData::Ports::Mine].toString();
-		QString otherData = outDeviceData[CDeviceData::Ports::Other].toString();
-
-		LogLevel::Enum logLevel = LogLevel::Normal;
-
-		if (!portData.isEmpty())
-		{
-			logLevel = LogLevel::Debug;
-			toLog(LogLevel::Normal, "Port data:\n" + portData);
-		}
-
-		if (!otherData.isEmpty())
-		{
-			toLog(logLevel, "Port data additional:\n" + otherData);
-		}
-	}
+	adjustData(minePortData, otherPortData);
 }
 
 //--------------------------------------------------------------------------------

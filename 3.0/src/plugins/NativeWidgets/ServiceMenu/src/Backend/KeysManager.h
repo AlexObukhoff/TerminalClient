@@ -5,7 +5,6 @@
 // Qt
 #include "Common/QtHeadersBegin.h"
 #include <QtCore/QObject>
-#include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
 #include "Common/QtHeadersEnd.h"
 

@@ -22,7 +22,7 @@ namespace CMifareReader
 	};
 
 	/// Данные моделей.
-	class CData : public CSpecification<quint32, SData>
+	class CData : public CSpecification<quint16, SData>
 	{
 	public:
 		CData()
@@ -95,7 +95,7 @@ namespace CMifareReader
 		}
 
 	private:
-		void add(quint32 aPID, const QString & aModel, int aSAM = 0, bool aCCID = true, bool aVerified = false)
+		void add(quint16 aPID, const QString & aModel, int aSAM = 0, bool aCCID = true, bool aVerified = false)
 		{
 			append(aPID, SData(aModel, aSAM, aCCID, aVerified));
 		}

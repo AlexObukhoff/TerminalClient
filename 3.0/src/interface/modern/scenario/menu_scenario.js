@@ -52,6 +52,8 @@ function disableSignals()
 function onStart()
 {
 	enableSignals();
+
+	Core.hid.enable();
 }
 
 //------------------------------------------------------------------------------
@@ -59,6 +61,8 @@ function onStart()
 function onStop()
 {
 	disableSignals();
+
+	Core.hid.disable();
 
 	// Если останавливаем сценарий принудительно, то обнулим сдачу
 	if (Core.payment.getChangeAmount()) {

@@ -4,7 +4,6 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QSpacerItem>
 #include <Common/QtHeadersEnd.h>
 
 #include <SDK/PaymentProcessor/Core/ReceiptTypes.h>

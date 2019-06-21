@@ -8,7 +8,6 @@
 #include <QtCore/QTimer>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QFuture>
-#include <QtCore/QDateTime>
 #include <QtCore/QSettings>
 #include <QtCore/QItemSelectionModel>
 #include <QtCore/QSortFilterProxyModel>

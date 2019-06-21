@@ -20,17 +20,22 @@
 <context>
     <name>PrintFiscalCommand</name>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="102"/>
+        <location filename="../Services/PrintingCommands.cpp" line="99"/>
+        <source>#dealer_bpa_fee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Services/PrintingCommands.cpp" line="116"/>
         <source>#bank_fee</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="103"/>
+        <location filename="../Services/PrintingCommands.cpp" line="99"/>
         <source>#dealer_fee</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="109"/>
+        <location filename="../Services/PrintingCommands.cpp" line="123"/>
         <source>#processing_fee</source>
         <translation type="unfinished"></translation>
     </message>

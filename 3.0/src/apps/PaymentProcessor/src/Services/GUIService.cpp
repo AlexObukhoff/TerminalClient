@@ -516,7 +516,7 @@ void GUIService::onIntruderActivity()
 	}
 
 #ifndef _DEBUG
-	mEventManager->sendEvent(PPSDK::Event(event, CGUIService::IntruderLogName, message));
+	ILog::getInstance(CGUIService::IntruderLogName)->write(LogLevel::Warning, message);
 #endif
 }
 

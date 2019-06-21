@@ -60,9 +60,6 @@ struct SLogData
 
 class DefaultSeriesType {};
 
-/// Данные устройств.
-typedef QMap<QString, QString> TDeviceData;
-
 //--------------------------------------------------------------------------------
 template <class T>
 class MetaDevice : public T, public SDK::Driver::IDevice::IDetectingIterator, public DeviceLogicManager
@@ -141,9 +138,6 @@ protected:
 	/// Логгирование параметров устройства.
 	void logDeviceData(const SLogData & aData) const;
 
-	/// Получение заданной компоненты параметров устройства.
-	QString getPartDeviceData(const TDeviceData & aData, bool aHideEmpty = true) const;
-
 	/// Из рабочего ли потока происходит вызов.
 	bool isWorkingThread();
 
@@ -170,6 +164,9 @@ protected:
 
 	/// Таймаут ожидания потока при его завершении.
 	unsigned long mExitTimeout;
+
+	/// Ошибка инициализации.
+	bool mInitializationError;
 };
 
 //---------------------------------------------------------------------------

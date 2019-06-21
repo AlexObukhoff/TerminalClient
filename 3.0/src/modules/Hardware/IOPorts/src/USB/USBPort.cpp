@@ -8,7 +8,7 @@
 #include <Common/QtHeadersEnd.h>
 
 // Project
-#include "USBSerialPort.h"
+#include "USBPort.h"
 
 using namespace SDK::Driver;
 

@@ -6,9 +6,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
-#include <QtCore/QUrl>
 #include <QtConcurrent/QtConcurrentRun>
-#include <QtCore/QFuture>
 #include <Common/QtHeadersEnd.h>
 
 // SDK

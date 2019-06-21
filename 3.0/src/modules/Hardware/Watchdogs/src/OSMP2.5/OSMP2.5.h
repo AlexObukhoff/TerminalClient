@@ -37,10 +37,7 @@ protected:
 	virtual void registerKey();
 
 	/// Выполнить команду.
-	bool processCommand(char aCommand, QByteArray * aAnswer = nullptr);
-	bool processCommand(const QByteArray & aCommand, QByteArray * aAnswer = nullptr);
-	bool processCommand(char aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
-	bool processCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
+	virtual TResult execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
 
 	/// Потокол
 	OSMPWDProtocol mProtocol;

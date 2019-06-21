@@ -102,7 +102,7 @@ function toInt(aParam) {
 
 //------------------------------------------------------------------------------
 function toBool(aParam) {
-	return aParam  === "true"
+	return typeof(aParam) === "string" ? aParam === "true" : !!aParam;
 }
 
 //------------------------------------------------------------------------------

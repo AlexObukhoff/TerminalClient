@@ -105,13 +105,15 @@ bool USBDeviceBase<T>::setPDOName(const QString & aPDOName)
 		return false;
 	}
 
-	if (!mDetectingData->data().contains(properties.VID))
+	QMap<quint16, CUSBDevice::SData> & PIDData = mDetectingData->value(properties.VID).data();
+
+	if (!PIDData.contains(properties.PID))
 	{
 		toLog(LogLevel::Normal, QString("%1: Failed to set PDO name due to no such PID %2 for VID %3").arg(mDeviceName).arg(logPID).arg(logVID));
 		return false;
 	}
 
-	CUSBDevice::SData data = mDetectingData->value(properties.VID).value(properties.PID);
+	CUSBDevice::SData data = PIDData[properties.PID];
 	mDeviceName = data.model;
 	mVerified = data.verified;
 

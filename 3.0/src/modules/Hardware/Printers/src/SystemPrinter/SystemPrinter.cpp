@@ -3,7 +3,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QRegExp>
-#include <QtGui/QTextCursor>
 #include <Common/QtHeadersEnd.h>
 
 // Modules

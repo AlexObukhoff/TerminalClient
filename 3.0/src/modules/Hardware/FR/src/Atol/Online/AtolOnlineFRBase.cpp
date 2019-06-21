@@ -487,22 +487,25 @@ bool AtolOnlineFRBase<T>::sale(const SUnitData & aUnitData)
 	}
 
 	int taxGroup = mTaxData[aUnitData.VAT].group;
-	QByteArray sum = getBCD(aUnitData.sum / 10.0, 7, 2, 3);
-	QByteArray name = mCodec->fromUnicode(aUnitData.name);
 	char section = (aUnitData.section == -1) ? ASCII::NUL : char(aUnitData.section);
+	QByteArray sum = getBCD(aUnitData.sum / 10.0, 7, 2, 3);
+	QByteArray payOffSubjectType = getBCD(aUnitData.payOffSubjectType, 1);
+	QByteArray payOffSubjectMethodType = getBCD(CFR::PayOffSubjectMethodType, 1);
 
 	QByteArray commandData;
-	commandData.append(CAtolOnlineFR::SaleFlags);     // флаги
-	commandData.append(sum);                          // сумма
-	commandData.append(getBCD(10, 5, 2));             // количество = 1 штука
-	commandData.append(sum);                          // стоимость
-	commandData.append(uchar(taxGroup));              // налог (тип)
-	commandData.append(getBCD(0, 7, 2, 3));           // налог (сумма) - ФР считает налог сам
-	commandData.append(uchar(section));               // секция
-	commandData.append(QByteArray(3, ASCII::NUL));    // признак предмета расчета, признак способа расчета и знак скидки
-	commandData.append(getBCD(0, 7, 2, 3));           // информация о скидке
-	commandData.append(QByteArray(2, ASCII::NUL));    // зарезервировано
-	commandData.append(name);                         // товар
+	commandData.append(CAtolOnlineFR::SaleFlags);               // флаги
+	commandData.append(sum);                                    // сумма
+	commandData.append(getBCD(10, 5, 2));                       // количество = 1 штука
+	commandData.append(sum);                                    // стоимость
+	commandData.append(uchar(taxGroup));                        // налог (тип)
+	commandData.append(getBCD(0, 7, 2, 3));                     // налог (сумма) - ФР считает налог сам
+	commandData.append(uchar(section));                         // секция
+	commandData.append(payOffSubjectType);                      // признак предмета расчета
+	commandData.append(payOffSubjectMethodType);                // признак способа расчета
+	commandData.append(CAtolOnlineFR::DiscountSign);            // знак скидки
+	commandData.append(getBCD(0, 7, 2, 3));                     // информация о скидке
+	commandData.append(QByteArray(2, ASCII::NUL));              // зарезервировано
+	commandData.append(mCodec->fromUnicode(aUnitData.name));    // товар
 
 	return processCommand(CAtolOnlineFR::Commands::EndSale, commandData);
 }

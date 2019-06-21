@@ -41,22 +41,22 @@ public: // методы
 	/// Закрыть порт.
 	virtual bool close() = 0;
 
-	/// Очистка буферов порта.
+	/// Очистить буферы порта.
 	virtual bool clear() = 0;
 
-	/// Установка параметров порта.
+	/// Установить параметры порта.
 	virtual bool setParameters(const TPortParameters & aParameters) = 0;
 
-	/// Получение параметров порта.
+	/// Получить параметры порта.
 	virtual void getParameters(TPortParameters & aParameters) = 0;
 
-	/// Чтение данных.
+	/// Прочитать данные.
 	virtual bool read(QByteArray & aData, int aTimeout = DefaultReadTimeout, int aMinSize = 1) = 0;
 
-	/// Передача данных.
+	/// Передать данные.
 	virtual bool write(const QByteArray & aData) = 0;
 
-	/// Возвращает тип порта.
+	/// Получить тип порта.
 	virtual EPortTypes::Enum getType() = 0;
 
 	/// Порт существует?

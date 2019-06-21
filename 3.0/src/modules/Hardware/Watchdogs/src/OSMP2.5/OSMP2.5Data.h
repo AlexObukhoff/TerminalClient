@@ -2,11 +2,10 @@
 
 #pragma once
 
-// Modules
-#include "Hardware/Common/Specifications.h"
-
-// Project
-#include "Hardware/Watchdogs/WatchdogStatusCodes.h"
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QByteArray>
+#include <Common/QtHeadersEnd.h>
 
 //----------------------------------------------------------------------------
 namespace COSMP25
@@ -41,6 +40,7 @@ namespace COSMP25
 	/// Временной лаг установки времени перезагрузки PC, [с].
 	const int PCWakingUpLag = 5;
 
+	/// Команды.
 	namespace Commands
 	{
 		const char GetVersion       = '\x00';        /// Версия
@@ -57,24 +57,8 @@ namespace COSMP25
 		const char WriteKey         = '\x11';        /// Запись ключа
 		const char ReadKey          = '\x12';        /// Чтение ключа
 		const char PCWakeUpTime     = '\x15';        /// Установка/получение времени включения PC
+
 		const QByteArray ResetPCWakeUpTime = QByteArray::fromRawData("\x15\x00", 2);    /// Сброс времени включения PC
-
-		class CData : public CSpecification<QByteArray, bool>
-		{
-		public:
-			CData()
-			{
-				setNoAnswer(ResetModem);
-
-				setDefault(true);
-			}
-
-		private:
-			void setNoAnswer(char aCommand)               { append(QByteArray(1, aCommand), false); }
-			void setNoAnswer(const QByteArray & aCommand) { append(aCommand, false); }
-		};
-
-		static CData Data;
 	}
 }
 

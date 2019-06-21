@@ -3,12 +3,10 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtWidgets/QStatusBar>
-#include <QtCore/QDateTime>
 #include <Common/QtHeadersEnd.h>
 
 // Модули
 #include <SDK/PaymentProcessor/Core/ICore.h>
-#include <SDK/PaymentProcessor/Connection/ConnectionTypes.h>
 
 // Проект
 #include "IServiceWindow.h"
@@ -121,6 +119,8 @@ bool MainServiceWindow::initialize()
 //------------------------------------------------------------------------
 void MainServiceWindow::shutdown()
 {
+	//TODO FIX CRASH
+	
 	disconnect(twServiceScreens, SIGNAL(currentChanged(int)), this, SLOT(onCurrentPageChanged(int)));
 
 	IServiceWindow * current = dynamic_cast<IServiceWindow *>(twServiceScreens->widget(mCurrentPageIndex));

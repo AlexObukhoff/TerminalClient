@@ -2,9 +2,12 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
+#include <QtCore/QStringList>
+#include <QtCore/QResource>
+#include <QtCore/QByteArray>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QHostInfo>
-#include <QtCore/QStringList>
+#include <QtNetwork/QSslConfiguration>
 #include <Common/QtHeadersEnd.h>
 
 // Project
@@ -12,11 +15,14 @@
 #include "NetworkTask.h"
 #include "NetworkTaskManager.h"
 
+
 //------------------------------------------------------------------------
-NetworkTaskManager::NetworkTaskManager()
+NetworkTaskManager::NetworkTaskManager(ILog * aLog) : ILogable(aLog)
 {
 	qRegisterMetaType<QNetworkProxy>("QNetworkProxy");
 	qRegisterMetaType<NetworkTask *>("NetworkTask");
+
+	loadCerts();
 
 	moveToThread(this);
 
@@ -114,9 +120,7 @@ void NetworkTaskManager::onAddTask(NetworkTask * aTask)
 
 	aTask->getResponseHeader().clear();
 
-	replaceHostToIP(request);
-
-	QNetworkReply * reply = nullptr;
+	QNetworkReply * reply = 0;
 
 	switch (aTask->getType())
 	{
@@ -323,24 +327,13 @@ void NetworkTaskManager::onTaskError(QNetworkReply::NetworkError aError)
 
 			switch (aError)
 			{
-			case QNetworkReply::HostNotFoundError:
-			case QNetworkReply::TimeoutError:
-			{
-				QHostAddress addr(it.key()->url().host());
-
-				if (!addr.isNull() && addr.toIPv4Address())
-				{
-					mNonRespondingAddresses.insert(addr.toIPv4Address());
-				}
-			}
-			// NO break !
-
 			case QNetworkReply::ConnectionRefusedError:
 			case QNetworkReply::RemoteHostClosedError:
+			case QNetworkReply::HostNotFoundError:
+			case QNetworkReply::TimeoutError:
 			case QNetworkReply::TemporaryNetworkFailureError:
 			case QNetworkReply::ProxyNotFoundError:
 			case QNetworkReply::ProxyTimeoutError:
-
 				emit networkTaskStatus(true);
 				break;
 			}
@@ -353,42 +346,17 @@ void NetworkTaskManager::onTaskError(QNetworkReply::NetworkError aError)
 //------------------------------------------------------------------------
 void NetworkTaskManager::onTaskSslErrors(const QList<QSslError> & aErrors)
 {
-	QNetworkReply * reply = dynamic_cast<QNetworkReply *>(sender());
-	quint32 ip = QHostAddress(reply->url().host()).toIPv4Address();
-
-	QList<QSslError> errorsIgnored;
-	QStringList errorStrings;
+	QString errorString;
 
 	foreach (const QSslError & error, aErrors)
 	{
-		if (ip && error.error() == QSslError::HostNameMismatch)
-		{
-			QString hostName = mHostNameCashe.value(ip, "");
+		if (!errorString.isEmpty())
+			errorString += ", ";
 
-			foreach (QString subject, error.certificate().subjectInfo(QSslCertificate::CommonName))
-			{
-				QRegExp exp(subject, Qt::CaseInsensitive, QRegExp::Wildcard);
-
-				if (exp.exactMatch(hostName))
-				{
-					errorsIgnored << error;
-					continue;
-				}
-			}
-		}
-
-		errorStrings << error.errorString();
+		errorString += error.errorString();
 	}
 
-	if (!errorsIgnored.isEmpty())
-	{
-		reply->ignoreSslErrors(errorsIgnored);
-	}
-
-	if (!errorStrings.isEmpty())
-	{
-		toLog(LogLevel::Warning, QString("One or more SSL errors has occurred: %1.").arg(errorStrings.join(", ")));
-	}
+	toLog(LogLevel::Warning, QString("One or more SSL errors has occurred: %1").arg(errorString));
 
 #if defined(_DEBUG) || defined(DEBUG_INFO)
 	dynamic_cast<QNetworkReply *>(sender())->ignoreSslErrors();
@@ -449,54 +417,6 @@ void NetworkTaskManager::onTaskComplete()
 }
 
 //------------------------------------------------------------------------
-void NetworkTaskManager::replaceHostToIP(QNetworkRequest & aRequest)
-{
-	QUrl url = aRequest.url();
-	QString hostName = url.host();
-	QHostInfo info = QHostInfo::fromName(hostName);
-
-	if (info.addresses().size() < 2)
-	{
-		return;
-	}
-
-	QHostAddress addr;
-
-	foreach (auto a, info.addresses())
-	{
-		if (a.protocol() == QAbstractSocket::IPv4Protocol)
-		{
-			if (!mNonRespondingAddresses.contains(a.toIPv4Address()))
-			{
-				addr = a;
-				break;
-			}
-		}
-	}
-
-	if (addr.isNull())
-	{
-		// Чистим список неответивших и берем первый адрес сервера
-		foreach (auto a, info.addresses())
-		{
-			mNonRespondingAddresses.remove(a.toIPv4Address());
-
-			if (a.protocol() == QAbstractSocket::IPv4Protocol && addr.isNull())
-			{
-				addr = a;
-			}
-		}
-	}
-
-	toLog(LogLevel::Debug, QString("Connect to '%1' via '%2'.").arg(hostName).arg(addr.toString()));
-
-	mHostNameCashe.insert(addr.toIPv4Address(), hostName);
-	url.setHost(addr.toString());
-	aRequest.setUrl(url);
-	aRequest.setRawHeader("Host", hostName.toUtf8());
-}
-
-//------------------------------------------------------------------------
 void NetworkTaskManager::run()
 {
 	mNetwork = QSharedPointer<QNetworkAccessManager>(new QNetworkAccessManager());
@@ -506,6 +426,44 @@ void NetworkTaskManager::run()
 	onClearTasks();
 
 	mNetwork.clear();
+}
+
+//------------------------------------------------------------------------
+QSslCertificate NetworkTaskManager::loadCertResource(const QString & aPath)
+{
+	QResource res(aPath);
+	QByteArray buffer(reinterpret_cast<const char *>(res.data()), res.size());
+
+	QSslCertificate cert(buffer);
+	
+	if (cert.isNull() || !cert.isValid())
+	{
+		toLog(LogLevel::Error, QString("Failed load cert: %1.").arg(aPath));
+	}
+	else
+	{
+		toLog(LogLevel::Normal, QString("Load CA cert: %1.").arg(cert.subjectInfo(QSslCertificate::CommonName)));
+	}
+
+	return cert;
+}
+
+//------------------------------------------------------------------------
+void NetworkTaskManager::loadCerts()
+{
+	Q_INIT_RESOURCE(NetworkTaskManager);
+		
+	auto config = QSslConfiguration::defaultConfiguration();
+	
+	QList<QSslCertificate> caCerts = config.caCertificates();
+	caCerts
+		<< loadCertResource(":/CA/GlobalSignRootCA.pem")
+		<< loadCertResource(":/CA/GlobalSignDomainValidationCA-SHA256-G2.pem")
+		<< loadCertResource(":/CA/ThawteRSACA2018.pem")
+		<< loadCertResource(":/CA/DigiCertGlobalRootCA.pem");
+
+	config.setCaCertificates(caCerts);
+	QSslConfiguration::setDefaultConfiguration(config);
 }
 
 //------------------------------------------------------------------------

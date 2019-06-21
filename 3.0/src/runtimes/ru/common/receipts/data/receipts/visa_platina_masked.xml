@@ -2,8 +2,7 @@
 <body>
 	<string>Кассовый чек N%RECEIPT_NUMBER%</string>
 	<string>-----------------------------------</string>
-	<string if="%DEALER_IS_BANK% == 0">Платежный субагент:</string>
-    <else if="%DEALER_IS_BANK% != 0">Банковский платежный агент:</else>
+    <string>Банковский платежный агент:</string>
 	<string>[b]%DEALER_NAME%[/b]</string>
 	<string>ИНН [b]%DEALER_INN%[/b]</string>
 	<string if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') == 0">[b]НДС не облагается[/b]</string>
@@ -12,51 +11,35 @@
 	<string>Терминал [b]%TERMINAL_NUMBER%[/b]</string>
 	<string>Адрес терминала: [b]%POINT_ADDRESS%[/b]</string>
 	<string>-----------------------------------</string>
-	<string if="%DEALER_IS_BANK% == 0">Оплата:[b] %SERVICE_TYPE% (%OPERATOR_BRAND%)[/b]</string>
-	<string if="%DEALER_IS_BANK% == 0">Поставщик: [b]%OPERATOR_NAME%[/b]</string>
-	<string if="%DEALER_IS_BANK% == 0">Тел. поставщика: [b]%OPERATOR_PHONE%[/b]</string>
-	<string if="%DEALER_IS_BANK% == 0">Общая сумма принятых денежных средств:</string>
-	<string if="%DEALER_IS_BANK% == 0">[b]%AMOUNT_ALL% %CURRENCY%[/b]</string>
-	<string if="%DEALER_IS_BANK% == 0">Комиссия: [b]%FEE% %CURRENCY%[/b]</string>
-	<string if="%DEALER_IS_BANK% == 0">К перечислению поставщику: [b]%AMOUNT% %CURRENCY%[/b]</string>
-	<string if="%DEALER_IS_BANK% == 0">Дата, время приема денежных средств:</string>
-	<string if="%DEALER_IS_BANK% == 0">[b]%DATETIME%[/b]</string>
-	<else if="%DEALER_IS_BANK% != 0">Получатель денежных средств:</else>
-	<else if="%DEALER_IS_BANK% != 0">[b]%OPERATOR_NAME%[/b]</else>
-	<else if="%DEALER_IS_BANK% != 0">Наименование операции:</else>
-	<else if="%DEALER_IS_BANK% != 0">прием от физического лица наличных</else>
-	<else if="%DEALER_IS_BANK% != 0">денежных средств.</else>
-	<else if="%DEALER_IS_BANK% != 0">Назначение перевода:</else>
-	<else if="%DEALER_IS_BANK% != 0">[b]%SERVICE_TYPE% (%OPERATOR_BRAND%)[/b]</else>
-	<else if="%DEALER_IS_BANK% != 0">Принято: [b]%AMOUNT_ALL% %CURRENCY%[/b]</else>
-	<else if="%DEALER_IS_BANK% != 0">Комиссия: [b]%FEE% %CURRENCY%[/b]</else>
-	<else if="%DEALER_IS_BANK% != 0">Зачислено: [b]%AMOUNT% %CURRENCY%[/b]</else>
-	<else if="%DEALER_IS_BANK% != 0">Дата, время приема (выдачи) денежных</else>
-	<else if="%DEALER_IS_BANK% != 0">средств: [b]%DATETIME%[/b]</else>
+	<string>Получатель денежных средств:</string>
+	<string>[b]%OPERATOR_NAME%[/b]</string>
+	<string>Наименование операции:</string>
+	<string>прием от физического лица наличных</string>
+	<string>денежных средств.</string>
+	<string>Назначение перевода:</string>
+	<string>[b]%SERVICE_TYPE% (%OPERATOR_BRAND%)[/b]</string>
+	<string>Принято: [b]%AMOUNT_ALL% %CURRENCY%[/b]</string>
+	<string>Комиссия: [b]%FEE% %CURRENCY%[/b]</string>
+	<string>Зачислено: [b]%AMOUNT% %CURRENCY%[/b]</string>
+	<string>Дата, время приема (выдачи) денежных</string>
+	<string>средств: [b]%DATETIME%[/b]</string>
 	<string>Номер сессии: %INITIAL_SESSION%</string>
 	<string>Номер карты: %101_MASKED%</string>
 	<string>Номер телефона: %100%</string>
 	<string>-----------------------------------</string>
-	<string if="%DEALER_IS_BANK% == 0">Оператор по приему платежей:</string>
-	<string if="%DEALER_IS_BANK% == 0">ООО "КИБЕРПЛАТ"</string>
-	<string if="%DEALER_IS_BANK% == 0">Место нахождения: 121108, г.Москва,</string>
-	<string if="%DEALER_IS_BANK% == 0">ул.Герасима Курина, д.4, корп. 3, пом. I</string>
-	<string if="%DEALER_IS_BANK% == 0">ИНН 7731220815 , тел. +7 (495) 788-56-96</string>
-	<else if="%DEALER_IS_BANK% != 0">Оператор по переводу денежных средств:</else>
-	<else if="%DEALER_IS_BANK% != 0">ООО КБ "ПЛАТИНА"</else>
-	<else if="%DEALER_IS_BANK% != 0">Ген. лицензия ЦБ РФ N2347 от 20.05.1993</else>
-	<else if="%DEALER_IS_BANK% != 0">Юр.Адрес: 123610, г. Москва,</else>
-	<else if="%DEALER_IS_BANK% != 0">Краснопресненская наб., д.12</else>
-	<else if="%DEALER_IS_BANK% != 0">тел.+7(495)967-02-00</else>
-	<else if="%DEALER_IS_BANK% != 0">ИНН 7705012216, БИК 044525931</else>
+	<string>Оператор по переводу денежных средств:</string>
+	<string>ООО КБ "ПЛАТИНА"</string>
+	<string>Ген. лицензия ЦБ РФ N2347 от 20.05.1993</string>
+	<string>Юр.Адрес: 123610, г. Москва,</string>
+	<string>Краснопресненская наб., д.12</string>
+	<string>тел.+7(495)967-02-00</string>
+	<string>ИНН 7705012216, БИК 044525931</string>
 	<string>-----------------------------------</string>
     <string>[b]Сохраняйте чек до зачисления средств[/b]</string>
 	<string>[b]на счет.[/b]</string>
 	<string>[b]Проверка платежа:http://info.cyberplat.ru[/b]</string>
-	<string if="%DEALER_IS_BANK% == 0">По всем вопросам обращайтесь к</string>
-	<string if="%DEALER_IS_BANK% == 0">Платежному субагенту:</string>
-	<else if="%DEALER_IS_BANK% != 0">По всем вопросам обращайтесь к</else>
-	<else if="%DEALER_IS_BANK% != 0">Банковскому платежному агенту:</else>
+	<string>По всем вопросам обращайтесь к</string>
+	<string>Банковскому платежному агенту:</string>
 	<string>[b]ТЕЛЕФОН ПОДДЕРЖКИ: %DEALER_SUPPORT_PHONE%[/b]</string>
 	<string>-----------------------------------</string>
 	<string>%AD_RECEIPT_FOOTER%</string>

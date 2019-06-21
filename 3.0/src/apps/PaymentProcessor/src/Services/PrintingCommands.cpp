@@ -95,18 +95,33 @@ DSDK::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap & aParam
 		}
 	}
 
-	if (!qFuzzyIsNull(fee))
-	{
-		QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
-		unitDataList << (dealerIsBank ?
-			DSDK::SUnitData(fee, dealerVAT, tr("#bank_fee"),   dealerINN, DSDK::EPayOffSubjectTypes::Payment) :
-			DSDK::SUnitData(fee, dealerVAT, tr("#dealer_fee"), dealerINN, DSDK::EPayOffSubjectTypes::AgentFee));
-	}
+	bool combineFeeWithZeroVAT = aParameters.value("COMBINE_FEE_WITH_ZERO_VAT", false).toBool();
+	QString feeName = combineFeeWithZeroVAT ? tr("#dealer_bpa_fee") : tr("#dealer_fee");
 
-	if (!qFuzzyIsNull(processingFee))
+	if (dealerVAT == 0 && combineFeeWithZeroVAT)
 	{
-		QString bankINN = aParameters.value(CPrintConstants::BankInn).toString();
-		unitDataList << DSDK::SUnitData(processingFee, 0, tr("#processing_fee"), bankINN, DSDK::EPayOffSubjectTypes::Payment);
+		fee = aParameters.value("FEE").toDouble();
+		if (!qFuzzyIsNull(fee))
+		{
+			QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
+			unitDataList << DSDK::SUnitData(fee, dealerVAT, feeName, dealerINN, DSDK::EPayOffSubjectTypes::AgentFee);
+		}
+	}
+	else
+	{
+		if (!qFuzzyIsNull(fee))
+		{
+			QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
+			unitDataList << (dealerIsBank ?
+				DSDK::SUnitData(fee, dealerVAT, tr("#bank_fee"), dealerINN, DSDK::EPayOffSubjectTypes::Payment) :
+				DSDK::SUnitData(fee, dealerVAT, feeName, dealerINN, DSDK::EPayOffSubjectTypes::AgentFee));
+		}
+
+		if (!qFuzzyIsNull(processingFee))
+		{
+			QString bankINN = aParameters.value(CPrintConstants::BankInn).toString();
+			unitDataList << DSDK::SUnitData(processingFee, 0, tr("#processing_fee"), bankINN, DSDK::EPayOffSubjectTypes::Payment);
+		}
 	}
 
 	bool EMoney = aParameters.value(PPSDK::CPayment::Parameters::PayTool).toInt() > 0;

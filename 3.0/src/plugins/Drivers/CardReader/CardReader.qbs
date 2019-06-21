@@ -15,7 +15,6 @@ Project {
 		Depends { name: "SysUtils" }
 		
 		Depends { name: "IDTech_SDK" }
-		Depends { name: "libusb" }
 
 		files: [
 			"../../../includes/Common/CoreVersion.rc",

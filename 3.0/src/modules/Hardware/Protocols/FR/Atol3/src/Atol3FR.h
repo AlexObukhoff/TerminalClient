@@ -39,6 +39,9 @@ private:
 	/// Проверка пришедших из порта данных.
 	bool check(const QByteArray & aAnswer);
 
+	/// Заменить экранирующие символы.
+	void replace(QByteArray & aData, int & aIndex, bool aDirection) const;
+
 	/// Транспортный Id.
 	uchar mId;
 };

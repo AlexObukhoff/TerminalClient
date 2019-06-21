@@ -49,10 +49,10 @@ class USBPort : public AsyncSerialPort
 public:
 	USBPort();
 
-	/// Очистка буферов порта.
+	/// Очистить буферы порта.
 	virtual bool clear();
 
-	/// Проверка готовности порта.
+	/// Проверить готовность порта.
 	virtual bool checkReady();
 
 	/// Получить системные свойства устройств.
@@ -62,7 +62,7 @@ protected:
 	/// Открыть порт.
 	virtual bool performOpen();
 
-	/// Чтение данных.
+	/// Прочитать данные.
 	virtual bool processReading(QByteArray & aData, int aTimeout);
 
 	/// Мьютекс для защиты статических пропертей портов.

@@ -14,6 +14,7 @@
 #include <NetworkTaskManager/NetworkTaskManager.h>
 
 #include "Component.h"
+#include "WindowsBITS.h"
 
 class QDomElement;
 
@@ -33,7 +34,8 @@ namespace CUpdaterErrors
 		NetworkError,
 		ParseError,
 		DeployError,
-		UpdateBlocked
+		UpdateBlocked,
+		BitsInProgress,
 	};
 }
 
@@ -43,9 +45,17 @@ class Updater : public QObject
 	Q_OBJECT
 
 public:
+	bool bitsIsError();
 	typedef QList<QSharedPointer<Component>> TComponentList;
 
-	Updater(const QString & aConfigURL, const QString & aUpdateURL, const QString & aVersion, const QString & aAppId, const QString & aConfiguration, const QString & aPointId);
+	explicit Updater(QObject * aParent);
+	explicit Updater(const QString & aConfigURL, const QString & aUpdateURL, const QString & aVersion, const QString & aAppId, const QString & aConfiguration, const QString & aPointId);
+
+	bool bitsLoadState(QStringList * aParameters = nullptr);
+
+	bool bitsIsComplete();
+
+	void bitsCompleteAllJobs(int & aCount, int & aCountComplete, int & aCountError);
 
 	/// Устанавливает прокси в формате хост:порт:имя пользователя:пароль:тип.
 	void setProxy(const QString & aProxy);
@@ -55,6 +65,8 @@ public:
 
 	/// Установить рабочую папку.
 	void setWorkingDir(const QString & aDir);
+
+	QString getWorkingDir() const { return mWorkingDir; }
 
 	/// Добавить папку в скисок исключений. Файлы из этих папок не будут удалены после обновления,
 	/// а также в случае обновления для них не будут созданы бекапы.
@@ -74,6 +86,9 @@ public:
 
 	/// Запуск процедуры валидации установленного ПО.
 	int checkInterity();
+
+	/// Флаг - можно ли использовать BITS
+	void useBITS(bool aUseBITS, int aJobPriority = CBITS::HIGH);
 
 public slots:
 	/// Запуск процедуры обновления.
@@ -156,6 +171,21 @@ private:
 	bool validateConfiguration(const TComponentList & aComponents);
 
 private:
+	CBITS::CopyManager mBitsManager;
+
+	/// Перейти к скачиванию файлов с помощью BITS
+	bool bitsDownload();
+
+	bool bitsInProgress();
+
+	void bitsCleanupOldTasks();
+
+	/// Получить имя задания для bits
+	QString bitsJobName() const;
+
+	void bitsSaveState();
+
+private:
 	QString mConfigURL;
 	QString mUpdateURL;
 	QString mVersion;
@@ -202,6 +232,9 @@ private:
 	QTimer mProgressTimer;
 	int mAllTasksCount;
 	int mProgressPercent;
+
+	bool mUseBITS;
+	int mJobPriority;
 };
 
 //---------------------------------------------------------------------------

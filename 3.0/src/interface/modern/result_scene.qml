@@ -26,14 +26,33 @@ Widgets.SceneBase2 {
 																						global.provider.name : Utils.toPlain(GUI.filter(global.provider, global.provider.fields[0]))) : "")
 
 	Text {
-		anchors { left: parent.left; leftMargin: 40; right: parent.right; rightMargin: 30; top: parent.top; topMargin: 200 }
+		anchors { left: parent.left; leftMargin: 40; right: parent.right; rightMargin: 30; top: parent.top; topMargin: 176 }
+		height: 100
+		verticalAlignment: Text.AlignVCenter
 		visible: !global.needPhone
 		font: Utils.ui.font("font.title")
 		color: global.paymentOK ? Utils.ui.color("color.main.primary") : Utils.ui.color("color.contrast")
-		text: global.paymentOK ?
-						(global.change > 0.0 ? "<span style='text-transform: uppercase'>%1</span>".arg(Utils.locale.tr(QT_TR_NOOP("result_scene#how_to_use_change"))) :
-																	 Utils.locale.tr(QT_TR_NOOP("result_scene#scene_caption"))) :
-						Utils.locale.tr(QT_TR_NOOP("result_scene#scene_caption_error"))
+		wrapMode: Text.WordWrap
+		text: {
+
+			function tr(aText) {
+				return "<span style='text-transform: uppercase'>%1</span>".arg(Utils.locale.tr(aText));
+			}
+
+			if (global.paymentOK) {
+				if (global.change > 0.0) {
+					return tr(QT_TR_NOOP("result_scene#how_to_use_change"));
+				} else {
+					return tr(QT_TR_NOOP("result_scene#scene_caption"));
+				}
+			} else {
+				if (global.change > 0.0) {
+					return tr(QT_TR_NOOP("result_scene#scene_caption_error_with_change"));
+				} else {
+					return tr(QT_TR_NOOP("result_scene#scene_caption_error"));
+				}
+			}
+		}
 	}
 
 	// Плашки всякие
@@ -80,7 +99,7 @@ Widgets.SceneBase2 {
 				icon: global.isReceiptPrinted ? 25 : 27
 				text: {
 					return Utils.locale.tr(global.isReceiptPrinted ? QT_TR_NOOP("result_scene#receipt_printed") : QT_TR_NOOP("result_scene#failed_to_print_receipt"))
-						+ (Core.printer.checkReceiptMail() ? ("<br/>" + Utils.locale.tr(QT_TR_NOOP("result_scene#send_email"))) : "")
+							+ (Core.printer.checkReceiptMail() ? ("<br/>" + Utils.locale.tr(QT_TR_NOOP("result_scene#send_email"))) : "")
 				}
 				width: 814
 			}
@@ -231,7 +250,7 @@ Widgets.SceneBase2 {
 		// На пиновых провайдерах сдача в платеже не сохраняется. Сохраним в отдельном параметре
 		Core.payment.setParameter("CHANGE_AMOUNT", Core.payment.getChangeAmount());
 
-		var result = {signal: Scenario.Payment.Event.Forward, print_change_receipt: global.isReceiptPrinted};
+		var result = {signal: Scenario.Payment.Event.Forward, print_change_receipt: global.isReceiptPrinted || GUI.toBool(Core.graphics.ui["show_get_change"])};
 
 		if (aInfoOnly) {
 			//Обнуляем сдачу

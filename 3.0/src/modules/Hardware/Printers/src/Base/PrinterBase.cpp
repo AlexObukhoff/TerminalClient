@@ -362,11 +362,15 @@ bool PrinterBase<T>::printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt)
 template <class T>
 bool PrinterBase<T>::receiptProcessing()
 {
+	bool needCutting =  getConfigParameter(CHardware::Printer::NeedCutting).toBool();
+	bool needPresenting =
+		!getConfigParameter(CHardware::Printer::Commands::Presentation).toByteArray().isEmpty() &&
+		(getConfigParameter(CHardware::Printer::Settings::Loop) == CHardwareSDK::Values::Use) &&
+		 getConfigParameter(CHardware::Printer::Settings::PresentationLength).toInt();
+
 	bool feeding = feed();
-	bool cutting = !getConfigParameter(CHardware::Printer::NeedCutting).toBool() || cut();
-	bool presenting = getConfigParameter(CHardware::Printer::Commands::Presentation).toByteArray().isEmpty() ||
-	                 (getConfigParameter(CHardware::Printer::Settings::Loop) != CHardwareSDK::Values::Use) ||
-	                 !getConfigParameter(CHardware::Printer::Settings::PresentationLength).toInt() || present();
+	bool cutting = !needCutting || cut();
+	bool presenting = !needPresenting || present();
 
 	return feeding && cutting && presenting;
 }
