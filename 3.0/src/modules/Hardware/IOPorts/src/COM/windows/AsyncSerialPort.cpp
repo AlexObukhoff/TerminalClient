@@ -840,7 +840,10 @@ TWinDeviceProperties AsyncSerialPort::getDeviceProperties(const TUuids & aUuids,
 			QString outKey  = SystemDeviceUtils::getDeviceOutKey(it.value());
 			QString outData = SystemDeviceUtils::getDeviceOutData(deviceProperties[it.key()].data);
 
-			aData->insert(outKey, outData);
+			if (!outData.toLower().contains("mouse"))
+			{
+				aData->insert(outKey, outData);
+			}
 		}
 	}
 

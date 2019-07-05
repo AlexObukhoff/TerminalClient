@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Hardware/Printers/POSPrinter.h"
+#include "Hardware/Printers/PortPOSPrinters.h"
 
 //--------------------------------------------------------------------------------
-class CitizenPPU231 : public POSPrinter
+class CitizenPPU231 : public TSerialPOSPrinter
 {
 	SET_SUBSERIES("CitizenPPU231")
 

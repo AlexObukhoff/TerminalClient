@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Hardware/Printers/PortPOSPrinters.h"
+
 /// Константы POS-принтеров с эжектором.
 namespace CEjectorPOS
 {
@@ -9,9 +11,9 @@ namespace CEjectorPOS
 	const int MinPresentationLength = 2;
 }
 
-#include "Hardware/Printers/POSPrinter.h"
 //--------------------------------------------------------------------------------
-class EjectorPOS : public POSPrinter
+template <class T>
+class EjectorPOS : public POSPrinter<T>
 {
 public:
 	EjectorPOS();
@@ -23,5 +25,9 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 };
+
+//--------------------------------------------------------------------------------
+typedef SerialPOSPrinter<EjectorPOS<TSerialPrinterBase>> TSerialEjectorPOS;
+typedef                  EjectorPOS<TLibUSBPrinterBase>  TLibUSBEjectorPOS;
 
 //--------------------------------------------------------------------------------

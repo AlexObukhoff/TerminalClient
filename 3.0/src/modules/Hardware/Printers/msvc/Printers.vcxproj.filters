@@ -53,9 +53,6 @@
     <Filter Include="POS">
       <UniqueIdentifier>{7cf38655-702c-49b8-ac89-c27a160873cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="POS\Common">
-      <UniqueIdentifier>{a27604d0-ac28-4330-ab05-e29c51f71224}</UniqueIdentifier>
-    </Filter>
     <Filter Include="POS\EjectorPOS">
       <UniqueIdentifier>{7521f91b-6a8a-47d8-aa9f-8afa3060f6a2}</UniqueIdentifier>
     </Filter>
@@ -75,9 +72,6 @@
     <Filter Include="Base\Port">
       <UniqueIdentifier>{0eec7b52-8063-4a30-88da-372d94566e72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Base\Port\Serial">
-      <UniqueIdentifier>{2e544532-b61b-487d-b9fc-32ed72e0d186}</UniqueIdentifier>
-    </Filter>
     <Filter Include="POS\Citizen">
       <UniqueIdentifier>{897999e0-df6b-484a-af86-d2e4602c8f63}</UniqueIdentifier>
     </Filter>
@@ -92,6 +86,9 @@
     </Filter>
     <Filter Include="POS\Custom\CustomVKP">
       <UniqueIdentifier>{6de47b8e-fda3-4c91-a9f8-6dbb5d95e887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="POS\Common">
+      <UniqueIdentifier>{a27604d0-ac28-4330-ab05-e29c51f71224}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -241,9 +238,6 @@
     <ClInclude Include="..\src\Tags\Tags.h">
       <Filter>Tags</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Base\Port\Serial\SerialPrinterBase.h">
-      <Filter>Base\Port\Serial</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\POSPrinters\Epson\EpsonEUT400.h">
       <Filter>POS\Epson</Filter>
     </ClInclude>
@@ -294,6 +288,12 @@
     </ClInclude>
     <ClInclude Include="..\src\POSPrinters\Custom\CustomKZTCodec.h">
       <Filter>POS\Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Printers\PortPrintersBase.h">
+      <Filter>Base\Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Printers\PortPOSPrinters.h">
+      <Filter>POS\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

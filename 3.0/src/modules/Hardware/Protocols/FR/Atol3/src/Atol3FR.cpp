@@ -113,15 +113,15 @@ TResult Atol3FRProtocol::execCommand(char aCommand, const QByteArray & aCommandD
 		return CommandResult::Transport;
 	}
 
-	return waitForAnswer(aAnswer);
+	return waitForAnswer(aAnswer, aTimeout);
 }
 
 //--------------------------------------------------------------------------------
-TResult Atol3FRProtocol::waitForAnswer(QByteArray & aUnpackedAnswer)
+TResult Atol3FRProtocol::waitForAnswer(QByteArray & aUnpackedAnswer, int aTimeout)
 {
 	QByteArray answer;
 
-	if (!read(answer, CAtol3FR::Timeouts::GetResult))
+	if (!read(answer, aTimeout))
 	{
 		return CommandResult::Transport;
 	}
@@ -146,11 +146,11 @@ TResult Atol3FRProtocol::waitForAnswer(QByteArray & aUnpackedAnswer)
 }
 
 //--------------------------------------------------------------------------------
-TResult Atol3FRProtocol::processCommand(uchar aTId, const QByteArray & aCommandData, QByteArray & aUnpackedAnswer, int aTimeout)
+TResult Atol3FRProtocol::processCommand(uchar aTId, const QByteArray & aCommandData, QByteArray & aUnpackedAnswer)
 {
 	QByteArray commandData = CAtol3FR::TaskFlags::NeedResult + QByteArray(1, char(aTId)) + CAtol3FR::Password + aCommandData;
 
-	return execCommand(CAtol3FR::Commands::Add, commandData, aUnpackedAnswer, aTimeout);
+	return execCommand(CAtol3FR::Commands::Add, commandData, aUnpackedAnswer, CAtol3FR::Timeouts::AddRequest);
 }
 
 //--------------------------------------------------------------------------------
@@ -198,9 +198,9 @@ bool Atol3FRProtocol::read(QByteArray & aAnswer, int aTimeout)
 			if (aAnswer.size() > 2)
 			{
 				int start = aAnswer.lastIndexOf(CAtol3FR::Prefix);
-				ushort size = ushort(aAnswer[start + 1] & CAtol3FR::SizeMask) | (ushort(uchar(aAnswer[start + 2])) << 7);
+				int size = getSize(aAnswer, start);
 
-				if (aAnswer.size() >= (size + 5))
+				if (aAnswer.size() >= size)
 				{
 					break;
 				}
@@ -209,21 +209,51 @@ bool Atol3FRProtocol::read(QByteArray & aAnswer, int aTimeout)
 	}
 	while (clockTimer.elapsed() < aTimeout);
 
-	QString log = aAnswer.toHex();
-	QString hexPrefix = QByteArray(1, CAtol3FR::Prefix).toHex();
-	log.replace(hexPrefix, " " + hexPrefix);
-	log = QString("ATOL3: << {%1}").arg(log.simplified());
-
-	int index = aAnswer.lastIndexOf(CAtol3FR::Prefix);
-
-	if (index)
+	if (!aAnswer.contains(CAtol3FR::Prefix))
 	{
-		aAnswer = aAnswer.mid(index);
+		toLog(LogLevel::Normal, QString("ATOL3: << {%1}").arg(aAnswer.toHex().data()));
+	}
+	else
+	{
+		QByteArray answer;
+		int start = 0;
+
+		do
+		{
+			start = aAnswer.indexOf(CAtol3FR::Prefix, start);
+			int size = getSize(aAnswer, start);
+			answer = aAnswer.mid(start, size);
+			
+			toLog(LogLevel::Normal, QString("ATOL3: << {%1}").arg(answer.toHex().data()));
+			start += size;
+		}
+		while (start < aAnswer.size());
+
+		aAnswer = answer;
 	}
 
-	toLog(LogLevel::Normal, QString("ATOL3: << {%1}").arg(log));
-
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+int Atol3FRProtocol::getSize(const QByteArray & aAnswer, int aStart)
+{
+	ushort answerSize = ushort(aAnswer[aStart + 1] & CAtol3FR::SizeMask) | (ushort(uchar(aAnswer[aStart + 2])) << 7);
+	int size = qMin(aAnswer.size(), 5 + int(answerSize));
+
+	for (int i = 0; i < CAtol3FR::ReplaceableDataList.size(); ++i)
+	{
+		for (int j = aStart; j < aStart + size; ++j)
+		{
+			if (aAnswer.mid(j, 2) == CAtol3FR::ReplaceableDataList[i].second)
+			{
+				size++;
+				j++;
+			}
+		}
+	}
+
+	return size;
 }
 
 //--------------------------------------------------------------------------------

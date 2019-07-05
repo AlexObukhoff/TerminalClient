@@ -29,7 +29,8 @@ namespace CCitizenPPU700
 }
 
 //--------------------------------------------------------------------------------
-class CitizenPPU700 : public CitizenBase<EjectorPOS>
+template<class T>
+class CitizenPPU700 : public CitizenBase<EjectorPOS<T>>
 {
 	SET_SUBSERIES("CitizenPPU700")
 
@@ -54,7 +55,28 @@ protected:
 };
 
 //--------------------------------------------------------------------------------
-class CitizenPPU700II : public CitizenPPU700
+typedef SerialPOSPrinter<CitizenPPU700<TSerialPrinterBase>> TSerialCitizenPPU700;
+typedef                  CitizenPPU700<TLibUSBPrinterBase>  TLibUSBCitizenPPU700;
+
+//--------------------------------------------------------------------------------
+class SerialCitizenPPU700 : public TSerialCitizenPPU700
+{
+public:
+	SerialCitizenPPU700()
+	{
+		using namespace SDK::Driver::IOPort::COM;
+
+		mPortParameters.insert(EParameters::BaudRate, POSPrinters::TSerialDevicePortParameter()
+			<< EBaudRate::BR38400
+			<< EBaudRate::BR19200
+			<< EBaudRate::BR4800
+			<< EBaudRate::BR9600);
+	}
+};
+
+//--------------------------------------------------------------------------------
+template<class T>
+class CitizenPPU700II : public CitizenPPU700<T>
 {
 	SET_SUBSERIES("CitizenPPU700II")
 
@@ -65,5 +87,18 @@ public:
 		mOptionMSW = true;
 	}
 };
+
+//--------------------------------------------------------------------------------
+class LibUSBCitizenPPU700II : public CitizenPPU700II<TLibUSBPrinterBase>
+{
+public:
+	LibUSBCitizenPPU700II()
+	{
+		mDetectingData->set(CUSBVendors::Citizen1, mDeviceName, 0x201e);
+	}
+};
+
+//--------------------------------------------------------------------------------
+typedef SerialPOSPrinter<CitizenPPU700II<TSerialPrinterBase>> SerialCitizenPPU700II;
 
 //--------------------------------------------------------------------------------

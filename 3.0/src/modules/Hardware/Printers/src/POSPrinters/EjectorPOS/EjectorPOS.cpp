@@ -12,7 +12,12 @@ using namespace SDK::Driver::IOPort::COM;
 using namespace PrinterStatusCode;
 
 //--------------------------------------------------------------------------------
-EjectorPOS::EjectorPOS()
+template class EjectorPOS<TSerialPrinterBase>;
+template class EjectorPOS<TLibUSBPrinterBase>;
+
+//--------------------------------------------------------------------------------
+template <class T>
+EjectorPOS<T>::EjectorPOS()
 {
 	// данные устройства
 	mDeviceName = "POS Printer with ejector";
@@ -26,7 +31,8 @@ EjectorPOS::EjectorPOS()
 }
 
 //--------------------------------------------------------------------------------
-void EjectorPOS::setDeviceConfiguration(const QVariantMap & aConfiguration)
+template <class T>
+void EjectorPOS<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	POSPrinter::setDeviceConfiguration(aConfiguration);
 
@@ -38,7 +44,8 @@ void EjectorPOS::setDeviceConfiguration(const QVariantMap & aConfiguration)
 }
 
 //--------------------------------------------------------------------------------
-bool EjectorPOS::updateParameters()
+template <class T>
+bool EjectorPOS<T>::updateParameters()
 {
 	if (!POSPrinter::updateParameters())
 	{

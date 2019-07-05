@@ -186,13 +186,10 @@ TParameterList MStarTK2Parameters(const QStringList & aModels)
 template <class T>
 TParameterList AtolParameters(const QStringList & aModels, const QString & aDeviceType, const QString & aProtocol)
 {
-	QVariantMap protocolNames;
-	protocolNames.insert("ATOL", ProtocolNames::FR::ATOL2);
-
 	return defaultParameters<T>(aModels, aDeviceType)
 		<< setProtocol(aProtocol)
 		<< setNullingSumInCash()
-		<< setModifiedValues(CHardwareSDK::ProtocolName, protocolNames);
+		<< setModifiedValues(CHardwareSDK::ProtocolName, "ATOL", ProtocolNames::FR::ATOL2);
 }
 
 //------------------------------------------------------------------------------
@@ -236,9 +233,6 @@ TParameterList PayPPU700Parameters(const QStringList & aModels)
 template <class T>
 TParameterList PaymasterParameters(const QStringList & aModels, const QString & aProtocol)
 {
-	QVariantMap modelNames;
-	modelNames.insert("Sensis Paymaster", "Sensis Kaznachej");
-
 	return AtolLSParameters<T>(aModels, CComponents::FiscalRegistrator, aProtocol)
 		<< setLoopEnabled(PPT::ForFiscalDocuments, false)
 		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, true, PrinterValues::Retract, false, PPT::ForFiscalDocuments)
@@ -246,7 +240,7 @@ TParameterList PaymasterParameters(const QStringList & aModels, const QString & 
 		<< setNotPrinting()
 		<< setPrinterModel(CAtolOnlinePrinters::CModels().getNames(), CAtolOnlinePrinters::Default)
 		<< setRemoteSensor(true)
-		<< setModifiedValues(CHardwareSDK::ModelName, modelNames)
+		<< setModifiedValues(CHardwareSDK::ModelName, "Sensis Paymaster", "Sensis Kaznachej")
 		<< setJamSensorEnabled();
 }
 
@@ -283,6 +277,7 @@ template <class T>
 TParameterList KasbiParameters(const QStringList & aModels)
 {
 	return defaultParameters<T>(aModels, CComponents::FiscalRegistrator)
+		<< setNotPrinting()
 		<< setProtocol(ProtocolNames::FR::Kasbi)
 		<< setPrinterModel(CKasbiPrinters::CModels().getNames(), CKasbiPrinters::Default);
 }

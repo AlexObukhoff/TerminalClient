@@ -11,33 +11,38 @@
 #include "CustomPrinters.h"
 
 //--------------------------------------------------------------------------------
-CustomPrinter::CustomPrinter()
+template class CustomPrinter<TSerialPrinterBase>;
+template class CustomPrinter<TLibUSBPrinterBase>;
+
+//--------------------------------------------------------------------------------
+template <class T>
+CustomPrinter<T>::CustomPrinter()
 {
-	POSPrinters::SParameters parameters(mModelData.getDefault().parameters);
+	mParameters = POSPrinters::CommonParameters;
 
 	// статусы ошибок
-	parameters.errors->data().clear();
+	mParameters.errors.clear();
 
-	parameters.errors->data()[20][3].insert('\x01', PrinterStatusCode::Error::PaperEnd);
-	parameters.errors->data()[20][3].insert('\x04', PrinterStatusCode::Warning::PaperNearEnd);
-	parameters.errors->data()[20][3].insert('\x20', PrinterStatusCode::OK::PaperInPresenter);
-	//parameters.errors->data()[20][3].insert('\x40', PrinterStatusCode::Warning::PaperEndVirtual);
+	mParameters.errors[20][3].insert('\x01', PrinterStatusCode::Error::PaperEnd);
+	mParameters.errors[20][3].insert('\x04', PrinterStatusCode::Warning::PaperNearEnd);
+	mParameters.errors[20][3].insert('\x20', PrinterStatusCode::OK::PaperInPresenter);
+	//mParameters.errors[20][3].insert('\x40', PrinterStatusCode::Warning::PaperEndVirtual);
 
-	parameters.errors->data()[20][4].insert('\x01', PrinterStatusCode::Error::PrintingHead);
-	parameters.errors->data()[20][4].insert('\x02', DeviceStatusCode::Error::CoverIsOpened);
+	mParameters.errors[20][4].insert('\x01', PrinterStatusCode::Error::PrintingHead);
+	mParameters.errors[20][4].insert('\x02', DeviceStatusCode::Error::CoverIsOpened);
 
-	parameters.errors->data()[20][5].insert('\x01', PrinterStatusCode::Error::Temperature);
-	parameters.errors->data()[20][5].insert('\x04', PrinterStatusCode::Error::Port);
-	parameters.errors->data()[20][5].insert('\x08', DeviceStatusCode::Error::PowerSupply);
-	parameters.errors->data()[20][5].insert('\x40', PrinterStatusCode::Error::PaperJam);
+	mParameters.errors[20][5].insert('\x01', PrinterStatusCode::Error::Temperature);
+	mParameters.errors[20][5].insert('\x04', PrinterStatusCode::Error::Port);
+	mParameters.errors[20][5].insert('\x08', DeviceStatusCode::Error::PowerSupply);
+	mParameters.errors[20][5].insert('\x40', PrinterStatusCode::Error::PaperJam);
 
-	parameters.errors->data()[20][6].insert('\x01', PrinterStatusCode::Error::Cutter);
-	parameters.errors->data()[20][6].insert('\x4C', DeviceStatusCode::Error::MemoryStorage);
+	mParameters.errors[20][6].insert('\x01', PrinterStatusCode::Error::Cutter);
+	mParameters.errors[20][6].insert('\x4C', DeviceStatusCode::Error::MemoryStorage);
 
 	// теги
-	parameters.tagEngine->appendSingle(Tags::Type::Italic, "\x1B\x34", "\x01");
-	parameters.tagEngine->appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
-	parameters.tagEngine->appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
+	mParameters.tagEngine.appendSingle(Tags::Type::Italic, "\x1B\x34", "\x01");
+	mParameters.tagEngine.appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
+	mParameters.tagEngine.appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
 
 	// параметры моделей
 	mDeviceName = "Custom Printer";
@@ -46,16 +51,17 @@ CustomPrinter::CustomPrinter()
 
 	// модели
 	mModelData.data().clear();
-	mModelData.add('\x93', false, CCustomPrinter::Models::TG2480,  parameters);
-	mModelData.add('\xA7', false, CCustomPrinter::Models::TG2460H, parameters);
-	mModelData.add('\xAC', false, CCustomPrinter::Models::TL80,    parameters);
-	mModelData.add('\xAD', false, CCustomPrinter::Models::TL60,    parameters);
+	mModelData.add('\x93', false, CCustomPrinter::Models::TG2480);
+	mModelData.add('\xA7', false, CCustomPrinter::Models::TG2460H);
+	mModelData.add('\xAC', false, CCustomPrinter::Models::TL80);
+	mModelData.add('\xAD', false, CCustomPrinter::Models::TL60);
 
 	setConfigParameter(CHardware::Printer::FeedingAmount, 1);
 }
 
 //--------------------------------------------------------------------------------
-QStringList CustomPrinter::getModelList()
+template <class T>
+QStringList CustomPrinter<T>::getModelList()
 {
 	return QStringList()
 		<< CCustomPrinter::Models::TG2480
@@ -65,7 +71,8 @@ QStringList CustomPrinter::getModelList()
 }
 
 //--------------------------------------------------------------------------------
-void CustomPrinter::setDeviceConfiguration(const QVariantMap & aConfiguration)
+template <class T>
+void CustomPrinter<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	POSPrinter::setDeviceConfiguration(aConfiguration);
 
@@ -76,7 +83,8 @@ void CustomPrinter::setDeviceConfiguration(const QVariantMap & aConfiguration)
 }
 
 //--------------------------------------------------------------------------------
-bool CustomPrinter::printImageDefault(const QImage & aImage, const Tags::TTypes & aTags)
+template <class T>
+bool CustomPrinter<T>::printImageDefault(const QImage & aImage, const Tags::TTypes & aTags)
 {
 	int width = aImage.width();
 	int height = aImage.height();
@@ -155,7 +163,8 @@ bool CustomPrinter::printImageDefault(const QImage & aImage, const Tags::TTypes 
 }
 
 //--------------------------------------------------------------------------------
-bool CustomPrinter::printImage(const QImage & aImage, const Tags::TTypes & aTags)
+template <class T>
+bool CustomPrinter<T>::printImage(const QImage & aImage, const Tags::TTypes & aTags)
 {
 	int width = aImage.width();
 

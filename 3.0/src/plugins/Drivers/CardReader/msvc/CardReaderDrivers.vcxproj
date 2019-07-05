@@ -152,6 +152,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\MifareReaderModelDataTypes.h" />
     <ClInclude Include="..\src\PCSCReaderStatusCodes.h" />
     <CustomBuild Include="..\src\PluginLibraryDefinition.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

@@ -5,7 +5,7 @@
 #include "CitizenBase.h"
 
 //--------------------------------------------------------------------------------
-class CitizenCPP8001 : public CitizenBase<POSPrinter>
+class CitizenCPP8001 : public CitizenBase<TSerialPOSPrinter>
 {
 	SET_SUBSERIES("CitizenCPP8001")
 
@@ -19,29 +19,29 @@ public:
 //--------------------------------------------------------------------------------
 CitizenCPP8001::CitizenCPP8001()
 {
-	POSPrinters::SParameters parameters(mModelData.getDefault().parameters);
+	using namespace SDK::Driver::IOPort::COM;
 
 	// параметры порта
-	parameters.portSettings->data().insert(SDK::Driver::IOPort::COM::EParameters::BaudRate, POSPrinters::TSerialDevicePortParameter()
-		<< SDK::Driver::IOPort::COM::EBaudRate::BR38400
-		<< SDK::Driver::IOPort::COM::EBaudRate::BR19200
-		<< SDK::Driver::IOPort::COM::EBaudRate::BR4800
-		<< SDK::Driver::IOPort::COM::EBaudRate::BR9600);
+	mPortParameters.insert(EParameters::BaudRate, POSPrinters::TSerialDevicePortParameter()
+		<< EBaudRate::BR38400
+		<< EBaudRate::BR19200
+		<< EBaudRate::BR4800
+		<< EBaudRate::BR9600);
 
 	// статусы ошибок
-	parameters.errors->data().clear();
+	mParameters.errors.clear();
 
-	parameters.errors->data()[1][1].insert('\x08', DeviceStatusCode::Error::Unknown);
+	mParameters.errors[1][1].insert('\x08', DeviceStatusCode::Error::Unknown);
 
-	parameters.errors->data()[2][1].insert('\x04', DeviceStatusCode::Error::CoverIsOpened);
-	parameters.errors->data()[2][1].insert('\x20', PrinterStatusCode::Error::PaperEnd);
-	parameters.errors->data()[2][1].insert('\x40', DeviceStatusCode::Error::Unknown);
+	mParameters.errors[2][1].insert('\x04', DeviceStatusCode::Error::CoverIsOpened);
+	mParameters.errors[2][1].insert('\x20', PrinterStatusCode::Error::PaperEnd);
+	mParameters.errors[2][1].insert('\x40', DeviceStatusCode::Error::Unknown);
 
-	parameters.errors->data()[3][1].insert('\x08', PrinterStatusCode::Error::Cutter);
-	parameters.errors->data()[3][1].insert('\x60', DeviceStatusCode::Error::Unknown);
+	mParameters.errors[3][1].insert('\x08', PrinterStatusCode::Error::Cutter);
+	mParameters.errors[3][1].insert('\x60', DeviceStatusCode::Error::Unknown);
 
-	parameters.errors->data()[4][1].insert('\x0C', PrinterStatusCode::Warning::PaperNearEnd);
-	parameters.errors->data()[4][1].insert('\x60', PrinterStatusCode::Error::PaperEnd);
+	mParameters.errors[4][1].insert('\x0C', PrinterStatusCode::Warning::PaperNearEnd);
+	mParameters.errors[4][1].insert('\x60', PrinterStatusCode::Error::PaperEnd);
 
 	// параметры моделей
 	mDeviceName = "Citizen CPP-8001";
@@ -49,8 +49,7 @@ CitizenCPP8001::CitizenCPP8001()
 
 	// модели
 	mModelData.data().clear();
-	mModelData.add(mModelID, true, mDeviceName, parameters);
-	mPortParameters = parameters.portSettings->data();
+	mModelData.add(mModelID, true, mDeviceName);
 
 	setConfigParameter(CHardware::Printer::FeedingAmount, 6);
 }

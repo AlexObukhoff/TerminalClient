@@ -5,29 +5,36 @@
 #include "CustomVKP80III.h"
 
 //--------------------------------------------------------------------------------
-CustomVKP80III::CustomVKP80III()
+template class CustomVKP80III<TSerialPrinterBase>;
+template class CustomVKP80III<TLibUSBPrinterBase>;
+
+//--------------------------------------------------------------------------------
+template<class T>
+CustomVKP80III<T>::CustomVKP80III()
 {
 	// параметры моделей
 	mDeviceName = "Custom VKP-80 III";
 	mModelID = '\xFF';
 
 	// модели
-	POSPrinters::SParameters parameters(mModelData.getDefault().parameters);
+	mParameters = POSPrinters::CommonParameters;
 	mModelData.data().clear();
-	mModelData.add(mModelID, true, mDeviceName, parameters);
+	mModelData.add(mModelID, true, mDeviceName);
 
 	setConfigParameter(CHardware::Printer::PresenterEnable, false);
 	setConfigParameter(CHardware::Printer::RetractorEnable, false);
 }
 
 //--------------------------------------------------------------------------------
-bool CustomVKP80III::getModelId(QByteArray & aAnswer) const
+template<class T>
+bool CustomVKP80III<T>::getModelId(QByteArray & aAnswer) const
 {
 	return mIOPort->write(CCustomVKP80III::Command::GetModelId) && getAnswer(aAnswer, CPOSPrinter::Timeouts::Info) && (aAnswer.isEmpty() || (aAnswer.size() == 2));
 }
 
 //--------------------------------------------------------------------------------
-bool CustomVKP80III::updateParameters()
+template<class T>
+bool CustomVKP80III<T>::updateParameters()
 {
 	setConfigParameter(CHardware::Printer::Settings::Loop, CHardwareSDK::Values::Use);
 
@@ -35,7 +42,8 @@ bool CustomVKP80III::updateParameters()
 }
 
 //--------------------------------------------------------------------------------
-char CustomVKP80III::parseModelId(QByteArray & aAnswer)
+template<class T>
+char CustomVKP80III<T>::parseModelId(QByteArray & aAnswer)
 {
 	if (aAnswer != CCustomVKP80III::ModelId)
 	{
@@ -47,7 +55,8 @@ char CustomVKP80III::parseModelId(QByteArray & aAnswer)
 }
 
 //--------------------------------------------------------------------------------
-bool CustomVKP80III::receiptProcessing()
+template<class T>
+bool CustomVKP80III<T>::receiptProcessing()
 {
 	int presentationLength = getConfigParameter(CHardware::Printer::Settings::PresentationLength).toInt();
 	QString ejectorActionParameter = getConfigParameter(CHardware::Printer::Settings::PreviousAndNotTakenReceipts).toString();

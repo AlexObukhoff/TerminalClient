@@ -21,7 +21,7 @@ PrimEjectorFR<T>::PrimEjectorFR()
 	setConfigParameter(CHardware::Printer::RetractorEnable, true);
 
 	mOldBuildNumber = false;
-	mPrinter = PPrinter(new CustomVKP80());
+	mPrinter = PPrinter(new SerialCustomVKP80());
 	mDeviceName = CPrimFR::ModelData[CPrimFR::Models::PRIM_21K_03].name;
 	mLPC22RetractorErrorCount = 0;
 }

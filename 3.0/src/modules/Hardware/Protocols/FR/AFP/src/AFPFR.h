@@ -15,7 +15,7 @@ public:
 
 protected:
 	/// Проверить валидность ответа.
-	bool check(const QByteArray & aRequest, const QByteArray & aAnswer);
+	TResult check(const QByteArray & aRequest, const QByteArray & aAnswer);
 
 	/// Получить пакет данных из порта.
 	bool getAnswer(QByteArray & aAnswer, int aTimeout);

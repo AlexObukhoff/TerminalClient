@@ -3,7 +3,7 @@
 #pragma once
 
 // Modules
-#include "Hardware/Printers/SerialPrinterBase.h"
+#include "Hardware/Printers/PortPrintersBase.h"
 #include "Hardware/FR/ProtoFR.h"
 
 // Project
@@ -52,7 +52,7 @@ protected:
 
 	/// Является ли ошибка необрабатываемой?
 	bool isErrorUnprocessed(char aCommand, char aError);
-	bool isErrorUnprocessed(const QByteArray & aCommand, char aError);
+	virtual bool isErrorUnprocessed(const QByteArray & aCommand, char aError);
 
 	/// Буфер обрабатываемых ошибок.
 	class ErrorBuffer : public QList<char>
@@ -78,11 +78,15 @@ protected:
 	PErrorData mErrorData;
 
 	/// Данные необрабатываемых ошибок.
-	class UnprocessedErrorData : public CSpecification<QByteArray, char>
+	typedef QSet<char> TErrors;
+
+	class UnprocessedErrorData : public CSpecification<QByteArray, TErrors>
 	{
 	public:
-		void add(char aCommand, char aError) { append(QByteArray(1, aCommand), aError); }
-		void add(const QByteArray & aCommand, char aError) { append(aCommand, aError); }
+		void add(char aCommand, char aError) { data()[QByteArray(1, aCommand)].insert(aError); }
+		void add(const QByteArray & aCommand, char aError) { data()[aCommand].insert(aError); }
+		void add(char aCommand, const TErrors & aErrors) { append(QByteArray(1, aCommand), aErrors); }
+		void add(const QByteArray & aCommand, const TErrors & aErrors) { append(aCommand, aErrors); }
 	};
 
 	UnprocessedErrorData mUnprocessedErrorData;

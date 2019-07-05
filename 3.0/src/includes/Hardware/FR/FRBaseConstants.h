@@ -103,11 +103,11 @@ namespace CFR
 	/// Количество миллисекунд в сутках.
 	const int MSecsInDay = SecsInDay * 1000;
 
-	/// Признак способа расчета по умолчанию для платежей (тег 1214) (не интернет-магазинов) - Полный расчет.
-	const SDK::Driver::EPayOffSubjectMethodTypes::Enum PayOffSubjectMethodType = SDK::Driver::EPayOffSubjectMethodTypes::Full;
-
 	/// Дата и время одноразового закрытия смены перед применением НДС 20% в 2019 году.
 	const QDateTime ClosingSessionDTVAT20 = QDateTime(QDate(2018, 12, 31), QTime(23, 57));
+
+	/// Формальная дата окончания ФН.
+	inline QString FSValidityDateOff(const QDate & aDate) { return aDate.addDays(-3).toString(CFR::DateLogFormat); }
 
 	/// Результаты запроса статуса.
 	namespace Result
@@ -347,9 +347,25 @@ namespace CFR
 		{
 			using namespace SDK::Driver::EPayOffSubjectTypes;
 
-			append(Unit,     "ТОВАР");
-			append(Payment,  "ПЛАТЕЖ");
-			append(AgentFee, "АГЕНТСКОЕ ВОЗНАГРАЖДЕНИЕ");
+			append(Unit,                  "ТОВАР");
+			append(ExciseUnit,            "ПОДАКЦИЗНЫЙ ТОВАР");
+			append(Job,                   "РАБОТА");
+			append(Service,               "УСЛУГА");
+			append(GamblingBet,           "СТАВКА АЗАРТНОЙ ИГРЫ");
+			append(GamblingWin,           "ВЫИГРЫШ АЗАРТНОЙ ИГРЫ");
+			append(LotteryTicket,         "ЛОТЕРЕЙНЫЙ БИЛЕТ");
+			append(LotteryWin,            "ВЫИГРЫШ ЛОТЕРЕИ");
+			append(RIARightsProvision,    "ПРЕДОСТАВЛЕНИЕ РИД");
+			append(Payment,               "ПЛАТЕЖ");
+			append(AgentFee,              "АГЕНТСКОЕ ВОЗНАГРАЖДЕНИЕ");
+			append(Composite,             "СОСТАВНОЙ ПРЕДМЕТ РАСЧЕТА");
+			append(Other,                 "ИНОЙ ПРЕДМЕТ РАСЧЕТА");
+			append(PropertyRight,         "ИМУЩЕСТВЕННОЕ ПРАВО");
+			append(NonSalesIncome,        "ВНЕРЕАЛИЗАЦИОННЫЙ ДОХОД");
+			append(InsuranceСontribution, "СТРАХОВЫЕ ВЗНОСЫ");
+			append(TradeTax,              "ТОРГОВЫЙ СБОР");
+			append(ResortTax,             "КУРОРТНЫЙ СБОР");
+			append(Deposit,               "ЗАЛОГ");
 		}
 	};
 

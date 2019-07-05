@@ -22,7 +22,8 @@ namespace CCustomVKP80III
 }
 
 //--------------------------------------------------------------------------------
-class CustomVKP80III : public CustomVKP80
+template<class T>
+class CustomVKP80III : public CustomVKP80<T>
 {
 	SET_SUBSERIES("CustomVKP80III")
 
@@ -42,5 +43,9 @@ protected:
 	/// Распарсить Id модели.
 	virtual char parseModelId(QByteArray & aAnswer);
 };
+
+//--------------------------------------------------------------------------------
+typedef SerialPOSPrinter<CustomVKP80III<TSerialPrinterBase>> SerialCustomVKP80III;
+typedef                  CustomVKP80III<TLibUSBPrinterBase>  LibUSBCustomVKP80III;
 
 //--------------------------------------------------------------------------------

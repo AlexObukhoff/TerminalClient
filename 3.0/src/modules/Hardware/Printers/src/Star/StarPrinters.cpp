@@ -79,7 +79,7 @@ QStringList StarPrinter::getModelList()
 //--------------------------------------------------------------------------------
 void StarPrinter::setLog(ILog * aLog)
 {
-	TSerialPrinterBase::setLog(aLog);
+	SerialPrinterBase::setLog(aLog);
 
 	mMemorySwitchUtils.setLog(aLog);
 }

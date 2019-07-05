@@ -4,7 +4,7 @@
 
 // Modules
 #include "Hardware/Common/TCPDeviceBase.h"
-#include "Hardware/Printers/PortPrinterBase.h"
+#include "Hardware/Printers/PortPrintersBase.h"
 
 // Project
 #include "Hardware/FR/AtolOnlinePrinters.h"
@@ -85,6 +85,12 @@ protected:
 
 	/// Софтварная перезагрузка.
 	bool reboot();
+
+	/// Является ли ошибка необрабатываемой?
+	virtual bool isErrorUnprocessed(const QByteArray & aCommand, char aError);
+
+	/// Получить расширенный код ошибки в регистре 55. При необходимости можно отдавать наружу.
+	bool getExtendedErrorCode(const QByteArray & aCommand);
 
 	/// Версия ПО ФР, начиная с которой унифицирован порядок налоговых ставок.
 	int mFRBuildUnifiedTaxes;

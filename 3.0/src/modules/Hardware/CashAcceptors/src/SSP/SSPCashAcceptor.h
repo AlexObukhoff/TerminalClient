@@ -32,6 +32,9 @@ protected:
 	/// Установка параметров по умолчанию.
 	virtual bool setDefaultParameters();
 
+	/// Запросить и сохранить параметры устройства.
+	virtual void processDeviceData();
+
 	/// Применить таблицу номиналов.
 	virtual bool applyParTable();
 
@@ -52,6 +55,9 @@ protected:
 
 	/// Протокол.
 	SSPProtocol mProtocol;
+
+	/// Удачна ли была последняя транзакция связи с устройством.
+	bool mLastConnectionOK;
 };
 
 //--------------------------------------------------------------------------------

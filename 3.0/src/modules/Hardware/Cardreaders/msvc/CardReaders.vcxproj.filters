@@ -52,7 +52,7 @@
     <ClInclude Include="..\src\Creator\CreatorReaderDataTypes.h">
       <Filter>Creator</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Creator\CreatorReaderModelData.h">
+    <ClInclude Include="..\src\Creator\CreatorReaderDetectingData.h">
       <Filter>Creator</Filter>
     </ClInclude>
     <ClInclude Include="..\src\EMV\EMVAdapter.h">

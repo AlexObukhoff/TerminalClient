@@ -80,6 +80,9 @@ protected:
 	/// Открыть документ.
 	virtual bool openDocument(char aType);
 
+	/// Продажа.
+	virtual bool sale(const SDK::Driver::SUnitData & aUnitData);
+
 	/// Закрыть документ.
 	virtual bool closeDocument(bool aProcessing = true);
 

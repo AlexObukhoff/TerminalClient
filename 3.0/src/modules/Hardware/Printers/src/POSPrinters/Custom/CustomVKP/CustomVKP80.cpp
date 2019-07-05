@@ -5,33 +5,38 @@
 #include "CustomVKP80.h"
 
 //--------------------------------------------------------------------------------
-CustomVKP80::CustomVKP80()
+template class CustomVKP80<TSerialPrinterBase>;
+template class CustomVKP80<TLibUSBPrinterBase>;
+
+//--------------------------------------------------------------------------------
+template<class T>
+CustomVKP80<T>::CustomVKP80()
 {
-	POSPrinters::SParameters parameters(mModelData.getDefault().parameters);
+	mParameters = POSPrinters::CommonParameters;
 
 	// статусы ошибок
-	parameters.errors->data().clear();
+	mParameters.errors.clear();
 
-	parameters.errors->data()[20][3].insert('\x01', PrinterStatusCode::Error::PaperEnd);
-	parameters.errors->data()[20][3].insert('\x04', PrinterStatusCode::Warning::PaperNearEnd);
-	parameters.errors->data()[20][3].insert('\x20', PrinterStatusCode::OK::PaperInPresenter);
-	//parameters.errors->data()[20][3].insert('\x40', PrinterStatusCode::Warning::PaperEndVirtual);
+	mParameters.errors[20][3].insert('\x01', PrinterStatusCode::Error::PaperEnd);
+	mParameters.errors[20][3].insert('\x04', PrinterStatusCode::Warning::PaperNearEnd);
+	mParameters.errors[20][3].insert('\x20', PrinterStatusCode::OK::PaperInPresenter);
+	//mParameters.errors[20][3].insert('\x40', PrinterStatusCode::Warning::PaperEndVirtual);
 
-	parameters.errors->data()[20][4].insert('\x03', DeviceStatusCode::Error::CoverIsOpened);
-	parameters.errors->data()[20][4].insert('\x08', PrinterStatusCode::OK::MotorMotion);
+	mParameters.errors[20][4].insert('\x03', DeviceStatusCode::Error::CoverIsOpened);
+	mParameters.errors[20][4].insert('\x08', PrinterStatusCode::OK::MotorMotion);
 
-	parameters.errors->data()[20][5].insert('\x01', PrinterStatusCode::Error::Temperature);
-	parameters.errors->data()[20][5].insert('\x02', PrinterStatusCode::Error::Port);
-	parameters.errors->data()[20][5].insert('\x08', DeviceStatusCode::Error::PowerSupply);
-	parameters.errors->data()[20][5].insert('\x40', PrinterStatusCode::Error::PaperJam);
+	mParameters.errors[20][5].insert('\x01', PrinterStatusCode::Error::Temperature);
+	mParameters.errors[20][5].insert('\x02', PrinterStatusCode::Error::Port);
+	mParameters.errors[20][5].insert('\x08', DeviceStatusCode::Error::PowerSupply);
+	mParameters.errors[20][5].insert('\x40', PrinterStatusCode::Error::PaperJam);
 
-	parameters.errors->data()[20][6].insert('\x01', PrinterStatusCode::Error::Cutter);
-	parameters.errors->data()[20][6].insert('\x4C', DeviceStatusCode::Error::MemoryStorage);
+	mParameters.errors[20][6].insert('\x01', PrinterStatusCode::Error::Cutter);
+	mParameters.errors[20][6].insert('\x4C', DeviceStatusCode::Error::MemoryStorage);
 
 	// теги
-	parameters.tagEngine->appendSingle(Tags::Type::Italic, "\x1B\x34", "\x01");
-	parameters.tagEngine->appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
-	parameters.tagEngine->appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
+	mParameters.tagEngine.appendSingle(Tags::Type::Italic, "\x1B\x34", "\x01");
+	mParameters.tagEngine.appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
+	mParameters.tagEngine.appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
 
 	// параметры моделей
 	mDeviceName = "Custom VKP-80";
@@ -41,14 +46,15 @@ CustomVKP80::CustomVKP80()
 
 	// модели
 	mModelData.data().clear();
-	mModelData.add('\x5D', true, mDeviceName, parameters, "resolution 200 dpi");
-	mModelData.add('\x5E', true, mDeviceName, parameters, "resolution 300 dpi");
-	mModelData.add('\xB9', true, mDeviceName, parameters, "default");
-	mModelData.add('\x95', true, mDeviceName, parameters, "modification VKP80II-EE");
+	mModelData.add('\x5D', true, mDeviceName, "resolution 200 dpi");
+	mModelData.add('\x5E', true, mDeviceName, "resolution 300 dpi");
+	mModelData.add('\xB9', true, mDeviceName, "default");
+	mModelData.add('\x95', true, mDeviceName, "modification VKP80II-EE");
 }
 
 //--------------------------------------------------------------------------------
-void CustomVKP80::setDeviceConfiguration(const QVariantMap & aConfiguration)
+template<class T>
+void CustomVKP80<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	EjectorPOS::setDeviceConfiguration(aConfiguration);
 
@@ -64,7 +70,8 @@ void CustomVKP80::setDeviceConfiguration(const QVariantMap & aConfiguration)
 }
 
 //--------------------------------------------------------------------------------
-bool CustomVKP80::printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt)
+template<class T>
+bool CustomVKP80<T>::printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt)
 {
 	if (mOverflow)
 	{
@@ -91,7 +98,8 @@ bool CustomVKP80::printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt)
 }
 
 //--------------------------------------------------------------------------------
-bool CustomVKP80::updateParametersOut()
+template<class T>
+bool CustomVKP80<T>::updateParametersOut()
 {
 	return updateParameters();
 }

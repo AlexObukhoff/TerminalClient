@@ -297,7 +297,7 @@ void PrimOnlineFRBase::processDeviceData()
 
 			if (date.isValid())
 			{
-				setDeviceParameter(CDeviceData::FS::ValidityData, date.toString(CFR::DateLogFormat));
+				setDeviceParameter(CDeviceData::FS::ValidityData, CFR::FSValidityDateOff(date));
 			}
 		}
 
@@ -536,8 +536,8 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 			<< "1"
 			<< int2String(section) +
 			   int2String(mTaxData[unitData.VAT].group) +
-			   int2String(CFR::PayOffSubjectMethodType) +    // 1214 (признак способа расчета)
-			   int2String(unitData.payOffSubjectType)        // 1212 (признак предмета расчета)
+			   int2String(unitData.payOffSubjectMethodType) +    // 1214 (признак способа расчета)
+			   int2String(unitData.payOffSubjectType)            // 1212 (признак предмета расчета)
 			<< "";
 
 		int addAFDDataIndex = aAdditionalAFDData.size();

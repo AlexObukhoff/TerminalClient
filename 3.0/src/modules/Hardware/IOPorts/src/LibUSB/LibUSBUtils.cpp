@@ -23,16 +23,96 @@ namespace LibUSBUtils
 //--------------------------------------------------------------------------------
 libusb_context * getContext(ILog * aLog)
 {
-	static SPData<libusb_context> libUSBContext;
+	static SPData<libusb_context *> context;
 
 	LIB_USB_CALL_LOG(aLog, libusb_setlocale, CLibUSBUtils::Locale);
 
-	if (!libUSBContext && !LIB_USB_CALL_LOG(aLog, libusb_init, &libUSBContext))
+	if (!context && !LIB_USB_CALL_LOG(aLog, libusb_init, &context))
 	{
-		libUSBContext = nullptr;
+		context = nullptr;
 	}
 
-	return libUSBContext;
+	return context;
+}
+
+//--------------------------------------------------------------------------------
+void releaseContext(ILog * aLog)
+{
+	libusb_context * context = LibUSBUtils::getContext(aLog);
+
+	if (context)
+	{
+		// если не удалять контекст - повторно он проинициализируется корректно. Если удалять - потом будет падать.
+		//libusb_exit(context);
+		context = nullptr;
+	}
+}
+
+//--------------------------------------------------------------------------------
+libusb_device ** getDeviceList(ssize_t & aSize, bool aForce)
+{
+	static SPData<libusb_device **> deviceList;
+	static SPData<int> size;
+
+	if (deviceList && aForce)
+	{
+		// параметр булевский -> отпустить/держать параметры/контексты девайсов.
+		// если не удалять устройство - повторно оно создастся корректно. Если удалять - потом будет падать.
+		//libusb_free_device_list(deviceList, 1);
+		deviceList = nullptr;
+	}
+
+	if (!deviceList || aForce)
+	{
+		libusb_context * context = getContext();
+
+		if (!context)
+		{
+			return nullptr;
+		}
+
+		size = libusb_get_device_list(context, &deviceList);
+	}
+
+	aSize = size;
+
+	return deviceList;
+}
+
+//--------------------------------------------------------------------------------
+bool getDeviceList(TDeviceList & aList, bool aForce)
+{
+	ssize_t size = 0;
+	libusb_device ** deviceList = getDeviceList(size, aForce);
+
+	if (!deviceList)
+	{
+		return false;
+	}
+
+	aList.clear();
+
+	for (int i = 0; i < size; ++i)
+	{
+		aList << deviceList[i];
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+void releaseDeviceList()
+{
+	ssize_t size = 0;
+	libusb_device ** deviceList = getDeviceList(size);
+
+	if (deviceList)
+	{
+		// параметр булевский -> отпустить/держать параметры/контексты девайсов.
+		// если не удалять устройство - повторно оно создастся корректно. Если удалять - потом будет падать.
+		//libusb_free_device_list(deviceList, 1);
+		deviceList = nullptr;
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -98,120 +178,139 @@ QString getPropertyLog(const CLibUSB::TDeviceDataList & aList, int aIndex)
 }
 
 //--------------------------------------------------------------------------------
-bool getDevicesProperties(CLibUSB::TDeviceProperties & aDeviceProperties)
+bool getDevicesProperties(CLibUSB::TDeviceProperties & aDeviceProperties, bool aForce)
 {
-	libusb_context * libUSBContext = getContext();
+	aDeviceProperties.clear();
+	TDeviceList deviceList;
 
-	if (!libUSBContext)
+	if (!getContext() || !getDeviceList(deviceList, aForce))
 	{
 		return false;
 	}
 
-	libusb_device ** deviceList = nullptr;
-	ssize_t deviceAmount = libusb_get_device_list(libUSBContext, &deviceList);
-
-	for (int i = 0; i < deviceAmount; ++i)
+	for (int i = 0; i < deviceList.size(); ++i)
 	{
 		libusb_device * device = deviceList[i];
-		libusb_device_descriptor deviceDescriptor = {0};
-
-		CLibUSB::SDeviceProperties deviceProperties;
-		QVariantMap & deviceData = deviceProperties.deviceData;
-
-		uint8_t bus = libusb_get_bus_number(device);
-		uint8_t port = libusb_get_port_number(device);
-		uint8_t address = libusb_get_device_address(device);
-
-		deviceData.insert(DeviceUSBData::BusNumber, bus);
-		deviceData.insert(DeviceUSBData::Address, address);
-		deviceData.insert(DeviceUSBData::PortNumber, port);
-		deviceProperties.portData = QString("Port %1 on bus %2 (address %3)")
-			.arg(port)
-			.arg(bus)
-			.arg(address);
-
-		if (LIB_USB_CALL_DEBUG(libusb_get_device_descriptor, device, &deviceDescriptor))
-		{
-			deviceData.insert(DeviceUSBData::Specification, doubleBCD2String(deviceDescriptor.bcdUSB));
-			deviceData.insert(DeviceUSBData::FirmwareVersion, doubleBCD2String(deviceDescriptor.bcdDevice));
-
-			QString deviceCode = QString("%1-%2-%3").arg(deviceDescriptor.bDeviceClass).arg(deviceDescriptor.bDeviceSubClass).arg(deviceDescriptor.bDeviceProtocol);
-			deviceData.insert(DeviceUSBData::Code, deviceCode);
-
-			QString deviceDescription = USB::ClassData.getData(deviceDescriptor.bDeviceClass, deviceDescriptor.bDeviceSubClass, deviceDescriptor.bDeviceProtocol);
-			deviceData.insert(DeviceUSBData::Description, deviceDescription);
-
-			deviceData.insert(DeviceUSBData::EP0PacketSize, deviceDescriptor.bMaxPacketSize0);
-
-			deviceProperties.VID = deviceDescriptor.idVendor;
-			deviceProperties.PID = deviceDescriptor.idProduct;
-
-			deviceData.insert(CHardwareUSB::VID, toHexLog(deviceProperties.VID));
-			deviceData.insert(CHardwareUSB::PID, toHexLog(deviceProperties.PID));
-
-			deviceData.insert(DeviceUSBData::Vendor,  deviceData[CHardwareUSB::VID]);
-			deviceData.insert(DeviceUSBData::Product, deviceData[CHardwareUSB::PID]);
-
-			deviceData.insert(DeviceUSBData::ConfigAmount, deviceDescriptor.bNumConfigurations);
-
-			libusb_device_handle * deviceHandle = nullptr;
-
-			if (LIB_USB_CALL_DEBUG(libusb_open, device, &deviceHandle) && deviceHandle)
-			{
-				addDescriptorData(deviceHandle, deviceDescriptor.iManufacturer, deviceData[DeviceUSBData::Vendor]);
-				addDescriptorData(deviceHandle, deviceDescriptor.iProduct,      deviceData[DeviceUSBData::Product]);
-				addDescriptorData(deviceHandle, deviceDescriptor.iSerialNumber, deviceData[CDeviceData::SerialNumber]);
-
-				libusb_close(deviceHandle);
-			}
-
-			TLibUSBDataList configData = getConfigData(device, deviceDescriptor);
-
-			if (!deviceData.contains(DeviceUSBData::ConfigAmount))
-			{
-				deviceData.insert(DeviceUSBData::ConfigAmount, configData.size());
-			}
-
-			deviceData.insert(DeviceUSBData::ConfigData, QVariant::fromValue<TLibUSBDataList>(configData));
-
-			if (deviceHandle && (deviceDescriptor.bcdUSB >= CLibUSBUtils::USB2_01))
-			{
-				deviceData.insert(DeviceUSBData::BOSData, getBOSData(deviceHandle));
-			}
-
-			for (auto it = deviceData.begin(); it != deviceData.end(); ++it)
-			{
-				if (it->isNull())
-				{
-					deviceData.remove((it++).key());
-				}
-			}
-
-			QVariantMap data(deviceData);
-
-			if (getDataFromMap(data, DeviceUSBData::ConfigData) &&
-				getDataFromMap(data, DeviceUSBData::Config::InterfaceData) &&
-				getDataFromMap(data, DeviceUSBData::Config::Interface::EndpointData))
-			{
-				namespace EndpointData = DeviceUSBData::Config::Interface::Endpoint;
-
-				QByteArray EP = getBufferFromString(data[EndpointData::Address].toString());
-				int maxPacketSize = data[EndpointData::MaxPacketSize].toInt();
-				int pollingInterval = data[EndpointData::PollingInterval].toInt();
-				QString transferTypeData = data[EndpointData::TransferType].toString();
-				libusb_transfer_type transferType = CLibUSBUtils::TransferTypeDescriptions.key(transferTypeData);
-
-				CLibUSB::SEndPoint & deviceEP = (EP[0] & LIBUSB_ENDPOINT_DIR_MASK) ? deviceProperties.deviceToHost : deviceProperties.hostToDevice;
-				deviceEP = CLibUSB::SEndPoint(transferType, EP[0], maxPacketSize, pollingInterval);
-			}
-		}
-
-		aDeviceProperties.insert(device, deviceProperties);
+		aDeviceProperties.insert(device, getDevicesProperties(device));
 	}
 
-	libusb_free_device_list(deviceList, 1);
-
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+CLibUSB::SDeviceProperties getDevicesProperties(libusb_device * aDevice)
+{
+	CLibUSB::SDeviceProperties deviceProperties;
+	QVariantMap & deviceData = deviceProperties.deviceData;
+
+	uint8_t bus = libusb_get_bus_number(aDevice);
+	uint8_t port = libusb_get_port_number(aDevice);
+	uint8_t address = libusb_get_device_address(aDevice);
+
+	deviceData.insert(DeviceUSBData::BusNumber, bus);
+	deviceData.insert(DeviceUSBData::PortNumber, port);
+	deviceData.insert(DeviceUSBData::Address, address);
+	deviceProperties.portData = QString("Port %1 on bus %2 (address %3)").arg(port).arg(bus).arg(address);
+
+	libusb_device_descriptor deviceDescriptor = {0};
+
+	if (LIB_USB_CALL_DEBUG(libusb_get_device_descriptor, aDevice, &deviceDescriptor))
+	{
+		getDeviceDescriptorData(aDevice, deviceDescriptor, deviceProperties);
+	}
+
+	return deviceProperties;
+}
+
+//--------------------------------------------------------------------------------
+void getDeviceDescriptorData(libusb_device * aDevice, const libusb_device_descriptor & aDeviceDescriptor, CLibUSB::SDeviceProperties & aDeviceProperties)
+{
+	QVariantMap & deviceData = aDeviceProperties.deviceData;
+
+	deviceData.insert(DeviceUSBData::Specification, doubleBCD2String(aDeviceDescriptor.bcdUSB));
+	deviceData.insert(DeviceUSBData::FirmwareVersion, doubleBCD2String(aDeviceDescriptor.bcdDevice));
+
+	QString deviceCode = QString("%1-%2-%3").arg(aDeviceDescriptor.bDeviceClass).arg(aDeviceDescriptor.bDeviceSubClass).arg(aDeviceDescriptor.bDeviceProtocol);
+	deviceData.insert(DeviceUSBData::Code, deviceCode);
+
+	QString deviceDescription = USB::ClassData.getData(aDeviceDescriptor.bDeviceClass, aDeviceDescriptor.bDeviceSubClass, aDeviceDescriptor.bDeviceProtocol);
+	deviceData.insert(DeviceUSBData::Description, deviceDescription);
+
+	deviceData.insert(DeviceUSBData::EP0PacketSize, aDeviceDescriptor.bMaxPacketSize0);
+
+	aDeviceProperties.VID = aDeviceDescriptor.idVendor;
+	aDeviceProperties.PID = aDeviceDescriptor.idProduct;
+
+	deviceData.insert(CHardwareUSB::VID, toHexLog(aDeviceProperties.VID));
+	deviceData.insert(CHardwareUSB::PID, toHexLog(aDeviceProperties.PID));
+
+	deviceData.insert(DeviceUSBData::Vendor,  deviceData[CHardwareUSB::VID]);
+	deviceData.insert(DeviceUSBData::Product, deviceData[CHardwareUSB::PID]);
+
+	deviceData.insert(DeviceUSBData::ConfigAmount, aDeviceDescriptor.bNumConfigurations);
+
+	libusb_device_handle * deviceHandle = nullptr;
+
+	if (LIB_USB_CALL_DEBUG(libusb_open, aDevice, &deviceHandle) && deviceHandle)
+	{
+		addDescriptorData(deviceHandle, aDeviceDescriptor.iManufacturer, deviceData[DeviceUSBData::Vendor]);
+		addDescriptorData(deviceHandle, aDeviceDescriptor.iProduct,      deviceData[DeviceUSBData::Product]);
+		addDescriptorData(deviceHandle, aDeviceDescriptor.iSerialNumber, deviceData[CDeviceData::SerialNumber]);
+
+		libusb_close(deviceHandle);
+	}
+
+	TLibUSBDataList configData = getConfigData(aDevice, aDeviceDescriptor);
+
+	if (!deviceData.contains(DeviceUSBData::ConfigAmount))
+	{
+		deviceData.insert(DeviceUSBData::ConfigAmount, configData.size());
+	}
+
+	deviceData.insert(DeviceUSBData::ConfigData, QVariant::fromValue<TLibUSBDataList>(configData));
+
+	if (deviceHandle && (aDeviceDescriptor.bcdUSB >= CLibUSBUtils::USB2_01))
+	{
+		deviceData.insert(DeviceUSBData::BOSData, getBOSData(deviceHandle));
+	}
+
+	for (auto it = deviceData.begin(); it != deviceData.end(); ++it)
+	{
+		if (it->isNull())
+		{
+			deviceData.remove((it++).key());
+		}
+	}
+
+	QVariantMap data(deviceData);
+
+	if (getDataFromMap(data, DeviceUSBData::ConfigData) &&
+		getDataFromMap(data, DeviceUSBData::Config::InterfaceData))
+	{
+		int endpointAmounts = data[DeviceUSBData::Config::Interface::EndpointAmount].toInt();
+
+		for (int i = 0; i < endpointAmounts; ++i)
+		{
+			namespace InterfaceData = DeviceUSBData::Config::Interface;
+
+			if (getDataFromMap(data, InterfaceData::EndpointData, false))
+			{
+				QVariantMap EPData = data[InterfaceData::EndpointData].value<CLibUSB::TDeviceDataList>()[i];
+
+				namespace EndpointData = DeviceUSBData::Config::Interface::Endpoint;
+
+				QByteArray EP = getBufferFromString(EPData[EndpointData::Address].toString());
+				int maxPacketSize = EPData[EndpointData::MaxPacketSize].toInt();
+				int pollingInterval = EPData[EndpointData::PollingInterval].toInt();
+				QString transferTypeData = EPData[EndpointData::TransferType].toString();
+				libusb_transfer_type transferType = CLibUSBUtils::TransferTypeDescriptions.key(transferTypeData);
+
+				CLibUSB::SEndPoint & deviceEP = (EP[0] & LIBUSB_ENDPOINT_DIR_MASK) ? aDeviceProperties.deviceToHost : aDeviceProperties.hostToDevice;
+				deviceEP = CLibUSB::SEndPoint(transferType, EP[0], maxPacketSize, pollingInterval);
+				deviceEP.processIO = (transferType == LIBUSB_TRANSFER_TYPE_BULK) ? &libusb_bulk_transfer : &libusb_interrupt_transfer;
+			}
+		}
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -456,9 +555,9 @@ TLibUSBDataList getEPCompanionData(const libusb_endpoint_descriptor & aEndpoint)
 //--------------------------------------------------------------------------------
 TResult logAnswer(const QString & aFunctionName, int aResult, ILog * aLog)
 {
-	if (LIB_USB_SUCCESS(aResult))
+	if (LIB_USB_SUCCESS(aResult) || (aResult == LIBUSB_ERROR_TIMEOUT))
 	{
-		return aResult;
+		return CommandResult::OK;
 	}
 
 	QString errorName = libusb_error_name(aResult);
@@ -493,7 +592,7 @@ QString doubleBCD2String(T aData)
 }
 
 //--------------------------------------------------------------------------------
-bool getDataFromMap(QVariantMap & aData, const QString & aKey)
+bool getDataFromMap(QVariantMap & aData, const QString & aKey, bool aSetNextData)
 {
 	if (!aData.contains(aKey) || !aData[aKey].isValid() && (aData[aKey].type() != QVariant::UserType))
 	{
@@ -507,7 +606,10 @@ bool getDataFromMap(QVariantMap & aData, const QString & aKey)
 		return false;
 	}
 
-	aData = deviceDataList[0];
+	if (aSetNextData)
+	{
+		aData = deviceDataList[0];
+	}
 
 	return true;
 };

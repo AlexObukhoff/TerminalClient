@@ -87,7 +87,8 @@ namespace CAFPFR
 		const SData TotalPaySum      = SData(12, EAnswerTypes::Double,  "total sum of payments");             /// Нарастающий итог.
 		const SData FFDFR            = SData(14, EAnswerTypes::Int,     "FFD FR");                            /// Код версии ФФД ФР.
 		const SData ModelId          = SData(15, EAnswerTypes::FString, "model Id");                          /// Id модели.
-		const SData FFDFS            = SData(16, EAnswerTypes::Int,     "FFD FS");                            /// Код версии ФФД ФН.
+		const SData FFDFS            = SData(16, TAnswerTypes() << EAnswerTypes::Int << EAnswerTypes::Int, "FFD FS");    /// Код версии ФФД ФН.
+		const SData FirmwareDate     = SData(17, EAnswerTypes::Date, "Firmware date");                        /// Дата сборки прошивки.
 	}
 
 	//------------------------------------------------------------------------------------------------
@@ -184,7 +185,7 @@ namespace CAFPFR
 				add(GetFRParameter,           TAnswerTypes() << Unknown);
 				add(GetFRDateTime,            TAnswerTypes() << Date << Time);
 				add(GetFSStatus,              TAnswerTypes() << Int  << Int  << Int  << Int  << Int  << Date << Time << String << Int << String << Int << Date << Int << Int);
-				add(GetOFDStatus,             TAnswerTypes() << Int  << Int  << Int  << Int  << Date << Time);
+				add(GetOFDStatus,             TAnswerTypes() << Int  << Int  << Int  << Int  << Date << Time, 3 * 1000);
 				add(GetFiscalizationTotal,    TAnswerTypes() << Date << Time << FInt << FInt << FInt << Int  << Int  << FInt   << FInt);
 				add(GetFiscalTLVData,         TAnswerTypes() << String, 5000);
 				add(GetLastFiscalizationData, TAnswerTypes() << Unknown);
@@ -192,7 +193,7 @@ namespace CAFPFR
 
 				add(ZReport,       10 * 1000);
 				add(OpenDocument,   3 * 1000);
-				add(CloseDocument, 10 * 1000);
+				add(CloseDocument, 20 * 1000);
 				add(OpenSession,    3 * 1000);
 			}
 		};

@@ -94,6 +94,11 @@ void PortDeviceBase<T>::setDeviceConfiguration(const QVariantMap & aConfiguratio
 		TVoidMethod forwardingTask = isAutoDetecting() ? TVoidMethod() : std::bind(&DeviceBase::initialize, this);
 		configuration.insert(CHardware::Port::OpeningContext, QVariant::fromValue(forwardingTask));
 
+		if (aConfiguration.contains(CHardwareSDK::SearchingType))
+		{
+			configuration.insert(CHardwareSDK::SearchingType,  aConfiguration[CHardwareSDK::SearchingType]);
+		}
+
 		mIOPort->setDeviceConfiguration(configuration);
 	}
 }
@@ -199,7 +204,7 @@ bool PortDeviceBase<T>::processStatus(TStatusCodes & aStatusCodes)
 	{
 		if (mIOPortStatusCodes.isEmpty())
 		{
-			checkError(IOPortStatusCode::Error::Busy, [&] () -> bool { return mIOPort->open(); }, "device cannot open port after getting status");
+			checkError(IOPortStatusCode::Error::Busy, [&] () -> bool { return mIOPort->open(); }, "device cannot open port before getting status");
 		}
 
 		return false;

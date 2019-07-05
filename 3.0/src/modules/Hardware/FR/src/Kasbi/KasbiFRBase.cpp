@@ -275,7 +275,7 @@ void KasbiFRBase::processDeviceData()
 	if (processCommand(CKasbiFR::Commands::GetFSData, &data) && (data.size() >= 5))
 	{
 		QDate date(int(2000) + data[0], data[1], data[2]);
-		setDeviceParameter(CDeviceData::FS::ValidityData, date.toString(CFR::DateLogFormat));
+		setDeviceParameter(CDeviceData::FS::ValidityData, CFR::FSValidityDateOff(date));
 		setDeviceParameter(CDeviceData::FR::ReregistrationNumber, int(data[4]));
 		setDeviceParameter(CDeviceData::FR::FreeReregistrations, int(data[3]));
 	}
@@ -582,7 +582,7 @@ bool KasbiFRBase::sale(const SUnitData & aUnitData)
 		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectUnitPrice, qRound64(aUnitData.sum * 100.0)) +
 		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectQuantity, 1.0) +
 		mFFEngine.getTLVData(CFR::FiscalFields::VATRate, char(section)) +
-		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectMethodType, CFR::PayOffSubjectMethodType);
+		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectMethodType, aUnitData.payOffSubjectMethodType);
 
 	return processCommand(CKasbiFR::Commands::Sale, mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubject, commandData));
 }

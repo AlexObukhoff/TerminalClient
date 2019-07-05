@@ -510,10 +510,10 @@ void DeviceBase<T>::applyStatusBuffer(TStatusCodes & aStatusCodes)
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool DeviceBase<T>::waitReady(const SWaitingData & aWaitingData)
+bool DeviceBase<T>::waitReady(const SWaitingData & aWaitingData, bool aReady)
 {
 	TStatusCodes statusCodes;
-	auto poll = [&] () -> bool { statusCodes.clear(); return getStatus(std::ref(statusCodes)) && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable); };
+	auto poll = [&] () -> bool { statusCodes.clear(); return aReady == (getStatus(std::ref(statusCodes)) && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable)); };
 
 	return PollingExpector().wait(poll, aWaitingData);
 }

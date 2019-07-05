@@ -162,6 +162,9 @@ protected:
 	/// Драйвера запускаются из под модуля платежей.
 	bool mOperatorPresence;
 
+	/// Драйвера запускаются из под фискального сервера.
+	bool mFiscalServerPresence;
+
 	/// Таймаут ожидания потока при его завершении.
 	unsigned long mExitTimeout;
 

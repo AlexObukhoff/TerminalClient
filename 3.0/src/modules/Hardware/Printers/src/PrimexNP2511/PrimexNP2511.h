@@ -3,7 +3,7 @@
 #pragma once
 
 // Modules
-#include "Hardware/Printers/SerialPrinterBase.h"
+#include "Hardware/Printers/PortPrintersBase.h"
 
 // Project
 #include "PrimexPrinterData.h"

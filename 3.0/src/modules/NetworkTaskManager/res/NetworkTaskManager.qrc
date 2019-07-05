@@ -4,5 +4,6 @@
         <file>GlobalSignDomainValidationCA-SHA256-G2.pem</file>
         <file>ThawteRSACA2018.pem</file>
         <file>DigiCertGlobalRootCA.pem</file>
+        <file>qaznet_trust_network.pem</file>
     </qresource>
 </RCC>

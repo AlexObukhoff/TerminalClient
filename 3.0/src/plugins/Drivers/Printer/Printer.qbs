@@ -13,6 +13,7 @@ Project {
 		Depends { name: "HardwarePrinters" }
 		Depends { name: "SysUtils" }
 		Depends { name: "OPOSSDK" }
+		Depends { name: "HardwareIOPorts" }
 
 		files: [
 			"../../../includes/Common/CoreVersion.rc",

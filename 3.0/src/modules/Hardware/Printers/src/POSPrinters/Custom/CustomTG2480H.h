@@ -5,25 +5,22 @@
 #include "CustomPrinters.h"
 
 //--------------------------------------------------------------------------------
-class CustomTG2480H : public CustomPrinter
+template <class T>
+class CustomTG2480H : public CustomPrinter<T>
 {
 	SET_SUBSERIES("CustomTG2480H")
 
 public:
 	CustomTG2480H()
 	{
-		auto it = std::find_if(mModelData.data().begin(), mModelData.data().end(), [&] (const POSPrinters::SModelData & aData) -> bool
-			{ return aData.name == CCustomPrinter::Models::TG2480; });
-
-		POSPrinters::SParameters parameters = it->parameters;
-		parameters.errors->data()[20][4].insert('\x08', PrinterStatusCode::OK::MotorMotion);
-		parameters.errors->data()[20][5].insert('\x02', PrinterStatusCode::Error::Presenter);
+		mParameters.errors[20][4].insert('\x08', PrinterStatusCode::OK::MotorMotion);
+		mParameters.errors[20][5].insert('\x02', PrinterStatusCode::Error::Presenter);
 
 		mDeviceName = CCustomPrinter::Models::TG2480H;
 		mModelID = '\xA8';
 
 		mModelData.data().clear();
-		mModelData.add(mModelID, true,  CCustomPrinter::Models::TG2480H, parameters);
+		mModelData.add(mModelID, true,  CCustomPrinter::Models::TG2480H);
 	}
 
 protected:
@@ -46,5 +43,18 @@ protected:
 		return true;
 	}
 };
+
+//--------------------------------------------------------------------------------
+class LibUSBCustomTG2480H: public CustomTG2480H<TLibUSBPrinterBase>
+{
+public:
+	LibUSBCustomTG2480H()
+	{
+		mDetectingData->set(CUSBVendors::Custom, mDeviceName, 0x01a8);
+	}
+};
+
+//--------------------------------------------------------------------------------
+typedef SerialPOSPrinter<CustomTG2480H<TSerialPrinterBase>> SerialCustomTG2480H;
 
 //--------------------------------------------------------------------------------

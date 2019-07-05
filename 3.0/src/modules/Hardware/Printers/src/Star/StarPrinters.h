@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Hardware/Printers/SerialPrinterBase.h"
+#include "Hardware/Printers/PortPrintersBase.h"
 #include "StarMemorySwitches.h"
 
 //--------------------------------------------------------------------------------

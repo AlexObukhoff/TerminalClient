@@ -16,7 +16,6 @@ using namespace SDK::Driver::IOPort::COM;
 CitizenPPU231::CitizenPPU231()
 {
 	// данные порта
-	mPortParameters = mModelData.getDefault().parameters.portSettings->data();
 	mModelData.data().clear();
 
 	mPortParameters[EParameters::BaudRate].clear();
@@ -38,7 +37,7 @@ CitizenPPU231::CitizenPPU231()
 //--------------------------------------------------------------------------------
 bool CitizenPPU231::isConnected()
 {
-	return TSerialPrinterBase::isConnected();
+	return SerialPrinterBase::isConnected();
 }
 
 //--------------------------------------------------------------------------------

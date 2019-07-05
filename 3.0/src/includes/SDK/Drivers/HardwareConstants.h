@@ -22,6 +22,7 @@ namespace CAllHardware
 	const char InteractionType[] = "interaction_type";
 	const char WaitUpdatingTimeout[] = "wait_updating_timeout";
 	const char OperatorPresence[] = "operator_presence";
+	const char FiscalServerPresence[] = "fiscal_server_presence";
 	const char OptionalPortSettings[] = "optional_port_settings";
 	const char OptionalPortSettingsEnable[] = "optional_port_settings_enable";
 	const char SerialNumber[] = "serial_number";
@@ -62,6 +63,7 @@ namespace CAllHardware
 		const char FSSerialNumber[] = "fs_serial_number";
 		const char TaxSystems[] = "tax_systems";
 		const char AgentFlags[] = "agent_flags";
+		const char AgentFlagsData[] = "agent_flags_data";
 		const char SectionNames[] = "section_names";
 		const char DealerTaxSystem[] = "dealer_tax_system";
 		const char DealerAgentFlag[] = "dealer_agent_flag";

@@ -190,16 +190,20 @@ BEGIN_REGISTER_PLUGIN
 	//SINGLE_PRINTER_PLUGIN(PrimexNP2511, Primex Printer, singleParameters)   // Не протестирован в 3.0
 	//SINGLE_PRINTER_PLUGIN(SwecoinPrinter, Swecoin Printer, singleParameters) // Не протестирован в 3.0
 
-	SINGLE_PRINTER_PLUGIN(POSPrinter, DefaultPOSPrinterParameters, Default POS Printer)
-	COMMON_PRINTER_PLUGIN(CustomPrinter, CustomParameters)
-	CUSTOM_PRINTER_PLUGIN(CustomTG2480H, CustomParameters, Custom TG2480H)
-	SINGLE_PRINTER_PLUGIN(CitizenCBM1000II, CitizenCBM1000IIParameters, Citizen CBM-1000II)
+	SINGLE_PRINTER_PLUGIN(TSerialPOSPrinter, DefaultPOSPrinterParameters, Default POS Printer)
+	COMMON_PRINTER_PLUGIN(SerialCustomPrinter, CustomParameters)
+	CUSTOM_PRINTER_PLUGIN(SerialCustomTG2480H, CustomParameters, Custom TG2480H)
+	CUSTOM_PRINTER_PLUGIN(LibUSBCustomTG2480H, CustomParameters, Custom TG2480H)
+	SINGLE_PRINTER_PLUGIN(SerialCitizenCBM1000II, CitizenCBM1000IIParameters, Citizen CBM-1000II)
 	SINGLE_PRINTER_PLUGIN(CitizenCPP8001, CitizenCPP8001Parameters, Citizen CPP-8001)
-	SINGLE_PRINTER_PLUGIN(CitizenCTS2000, CitizenCTS2000Parameters, Citizen CTS-2000)
-	SINGLE_PRINTER_PLUGIN(CustomVKP80, CustomVKP80Parameters, Custom VKP-80)
-	SINGLE_PRINTER_PLUGIN(CustomVKP80III, CustomVKP80IIIParameters, Custom VKP-80 III)
-	SINGLE_PRINTER_PLUGIN(CitizenPPU700, CitizenPPU700Parameters, Citizen PPU-700) // TODO: добавить параметры как у Custom VKP-80
-	SINGLE_PRINTER_PLUGIN(CitizenPPU700II, CitizenPPU700IIParameters, Citizen PPU-700II)
+	SINGLE_PRINTER_PLUGIN(SerialCitizenCTS2000, CitizenCTS2000Parameters, Citizen CTS-2000)
+	SINGLE_PRINTER_PLUGIN(SerialCustomVKP80, CustomVKP80Parameters, Custom VKP-80)
+	SINGLE_PRINTER_PLUGIN(LibUSBCustomVKP80, CustomVKP80Parameters, Custom VKP-80)
+	SINGLE_PRINTER_PLUGIN(SerialCustomVKP80III, CustomVKP80IIIParameters, Custom VKP-80 III)
+	//SINGLE_PRINTER_PLUGIN(LibUSBCustomVKP80III, CustomVKP80IIIParameters, Custom VKP-80 III)
+	SINGLE_PRINTER_PLUGIN(SerialCitizenPPU700, CitizenPPU700Parameters, Citizen PPU-700) // TODO: добавить параметры как у Custom VKP-80
+	SINGLE_PRINTER_PLUGIN(SerialCitizenPPU700II, CitizenPPU700IIParameters, Citizen PPU-700II)
+	SINGLE_PRINTER_PLUGIN(LibUSBCitizenPPU700II, CitizenPPU700IIParameters, Citizen PPU-700II)
 	SINGLE_PRINTER_PLUGIN(CitizenPPU231, CitizenPPU231Parameters, Citizen PPU-231)
 	SINGLE_PRINTER_PLUGIN(CitizenCTS310II, singleParameters, Citizen CT-S310II)
 	SINGLE_PRINTER_PLUGIN(EpsonEUT400, EpsonEUT400Parameters, Epson EU-T400)

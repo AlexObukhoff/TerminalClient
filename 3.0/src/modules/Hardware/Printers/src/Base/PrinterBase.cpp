@@ -12,6 +12,7 @@
 
 // Modules
 #include "Hardware/Common/SerialDeviceBase.h"
+#include "Hardware/Common/LibUSBDeviceBase.h"
 #include "Hardware/Common/TCPDeviceBase.h"
 #include "Hardware/Common/OPOSPollingDeviceBase.h"
 #include "Hardware/Common/PortPollingDeviceBase.h"
@@ -27,6 +28,7 @@ using namespace PrinterStatusCode;
 //---------------------------------------------------------------------------
 template class PrinterBase<PollingDeviceBase<ProtoPrinter>>;
 template class PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>;
+template class PrinterBase<LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>;
 template class PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoFR>>>;
 template class PrinterBase<TCPDeviceBase<PortPollingDeviceBase<ProtoFR>>>;
 template class PrinterBase<OPOSPollingDeviceBase<ProtoFR, OPOS::OPOSFiscalPrinter>>;

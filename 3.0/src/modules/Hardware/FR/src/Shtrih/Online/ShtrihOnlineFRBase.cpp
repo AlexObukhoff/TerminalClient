@@ -281,7 +281,7 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 
 		if (date.isValid())
 		{
-			setDeviceParameter(CDeviceData::FS::ValidityData, date.toString(CFR::DateLogFormat));
+			setDeviceParameter(CDeviceData::FS::ValidityData, CFR::FSValidityDateOff(date));
 		}
 
 		// признак фискализированности ККМ
@@ -491,20 +491,19 @@ bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, EPayOffTypes::Enum
 	char taxIndex = char(mTaxData[aUnitData.VAT].group);
 	char section = (aUnitData.section == -1) ? CShtrihFR::SectionNumber : char(aUnitData.section);
 	QByteArray sum = getHexReverted(aUnitData.sum, 5, 2);
-	char payOffSubjectType = char(aUnitData.payOffSubjectType);
 	QString name = aUnitData.name;
 
 	QByteArray commandData;
-	commandData.append(char(aPayOffType));                 // тип операции
-	commandData.append(getHexReverted(1, 6, 6));           // количество
-	commandData.append(sum);                               // цена
-	commandData.append(sum);                               // сумма операций
-	commandData.append(CShtrihOnlineFR::FiscalTaxData);    // налог
-	commandData.append(taxIndex);                          // налоговая ставка
-	commandData.append(section);                           // отдел
-	commandData.append(CFR::PayOffSubjectMethodType);      // признак способа расчета
-	commandData.append(payOffSubjectType);                 // признак предмета расчета
-	commandData.append(mCodec->fromUnicode(name));         // наименование товара
+	commandData.append(char(aPayOffType));                          // тип операции
+	commandData.append(getHexReverted(1, 6, 6));                    // количество
+	commandData.append(sum);                                        // цена
+	commandData.append(sum);                                        // сумма операций
+	commandData.append(CShtrihOnlineFR::FiscalTaxData);             // налог
+	commandData.append(taxIndex);                                   // налоговая ставка
+	commandData.append(section);                                    // отдел
+	commandData.append(char(aUnitData.payOffSubjectMethodType));    // признак способа расчета
+	commandData.append(char(aUnitData.payOffSubjectType));          // признак предмета расчета
+	commandData.append(mCodec->fromUnicode(name));                  // наименование товара
 
 	if (!processCommand(CShtrihOnlineFR::Commands::FS::Sale, commandData))
 	{

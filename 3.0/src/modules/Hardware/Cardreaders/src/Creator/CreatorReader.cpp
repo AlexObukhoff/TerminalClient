@@ -7,7 +7,7 @@
 #include "CreatorReader.h"
 #include "../EMV/EMVAdapter.h"
 #include "CreatorReaderConstants.h"
-#include "CreatorReaderModelData.h"
+#include "CreatorReaderDetectingData.h"
 
 using namespace SDK::Driver;
 
@@ -20,7 +20,7 @@ CreatorReader::CreatorReader()
 	mICCPUType = CCreatorReader::CardTypes::EICCPU::Unknown;
 	mMaxBadAnswers = 1;
 
-	mDetectingData = CUSBDevice::PDetectingData(new CCreatorReader::ModelData());
+	mDetectingData->set(CCreatorReader::DetectingData());
 
 	mStatusCodesSpecification = DeviceStatusCode::PSpecifications(new CardReaderStatusCode::CSpecifications());
 }
@@ -28,17 +28,7 @@ CreatorReader::CreatorReader()
 //--------------------------------------------------------------------------------
 QStringList CreatorReader::getModelList()
 {
-	QStringList models;
-
-	foreach (CUSBDevice::CData modelData, CCreatorReader::ModelData().data())
-	{
-		foreach (CUSBDevice::SData data, modelData.data())
-		{
-			models << data.model;
-		}
-	}
-
-	return models;
+	return QStringList() << CCreatorReader::DetectingData().getModel();
 }
 
 //--------------------------------------------------------------------------------

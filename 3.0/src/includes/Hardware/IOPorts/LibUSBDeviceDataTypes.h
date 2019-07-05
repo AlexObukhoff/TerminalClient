@@ -20,6 +20,8 @@
 
 namespace CLibUSB
 {
+	typedef int (LIBUSB_CALL * TProcessIO) (libusb_device_handle *, unsigned char, unsigned char *, int, int *, unsigned int);
+
 	/// Данные конечной точки.
 	struct SEndPoint
 	{
@@ -27,13 +29,14 @@ namespace CLibUSB
 		char data;
 		int maxPacketSize;
 		int pollingInterval;
+		TProcessIO processIO;
 
-		SEndPoint(): transferType(LIBUSB_TRANSFER_TYPE_CONTROL), data(ASCII::NUL), maxPacketSize(0), pollingInterval(0) {}
+		SEndPoint(): transferType(LIBUSB_TRANSFER_TYPE_CONTROL), data(ASCII::NUL), maxPacketSize(0), pollingInterval(0), processIO(nullptr) {}
 		SEndPoint(libusb_transfer_type aTransferType, char aData, int aMaxPacketSize, int aPollingInterval):
 			transferType(aTransferType), data(aData), maxPacketSize(aMaxPacketSize), pollingInterval(aPollingInterval) {}
 
 		bool getDirection() { return bool(data & LIBUSB_ENDPOINT_DIR_MASK); }
-		bool valid() { return maxPacketSize && ~(data & (LIBUSB_ENDPOINT_DIR_MASK | LIBUSB_ENDPOINT_ADDRESS_MASK)) &&
+		bool valid() { return maxPacketSize && processIO && ~(data & (LIBUSB_ENDPOINT_DIR_MASK | LIBUSB_ENDPOINT_ADDRESS_MASK)) &&
 			((transferType == LIBUSB_TRANSFER_TYPE_BULK) || (transferType == LIBUSB_TRANSFER_TYPE_INTERRUPT)); }
 		char operator()() { return data; }
 	};

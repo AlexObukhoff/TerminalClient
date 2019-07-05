@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Hardware/Common/ProtocolBase.h"
+#include "Hardware/Protocols/CashAcceptor/SSPDataTypes.h"
 
 //--------------------------------------------------------------------------------
 class SSPProtocol : public ProtocolBase
@@ -11,7 +12,7 @@ public:
 	SSPProtocol();
 
 	/// Выполнить команду протокола.
-	TResult processCommand(const QByteArray & aCommandData, QByteArray & aAnswerData, bool aSetSync = false);
+	TResult processCommand(const QByteArray & aCommandData, QByteArray & aAnswerData, const CSSP::Commands::SData & aData);
 
 	/// Установить ID адреса устройства.
 	void setAddress(char aAddressID);
@@ -21,10 +22,10 @@ protected:
 	ushort calcCRC(const QByteArray & aData);
 
 	/// Получить ответ.
-	bool getAnswer(QByteArray & aAnswer);
+	bool getAnswer(QByteArray & aAnswer, int aTimeout);
 
 	/// Проверка пришедших из порта данных.
-	bool check(const QByteArray & aAnswer);
+	TResult check(const QByteArray & aAnswer);
 
 	/// ID адреса устройства.
 	char mAddress;

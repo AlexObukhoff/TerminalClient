@@ -142,7 +142,7 @@ void AFPFR::processDeviceData()
 	if (getFRData(CAFPFR::FRInfo::INN, FRData)) mINN = CFR::INNToString(FRData[0].toByteArray());
 	if (getFRData(CAFPFR::FRInfo::RNM, FRData)) mRNM = CFR::RNMToString(FRData[0].toByteArray());
 	if (getFRData(CAFPFR::FRInfo::FFDFR, FRData)) mFFDFR = EFFD::Enum(FRData[0].toInt());
-	if (getFRData(CAFPFR::FRInfo::FFDFS, FRData)) mFFDFS = EFFD::Enum(FRData[0].toInt());
+	if (getFRData(CAFPFR::FRInfo::FFDFS, FRData)) mFFDFS = EFFD::Enum(FRData[1].toInt());
 
 	if (getFRData(CAFPFR::FRInfo::Firmware, FRData))
 	{
@@ -156,6 +156,11 @@ void AFPFR::processDeviceData()
 		setDeviceParameter(CDeviceData::Firmware, data);
 
 		mOldFirmware = DeviceUtils::isComplexFirmwareOld(data, mModelData.firmware);
+	}
+
+	if (getFRData(CAFPFR::FRInfo::FirmwareDate, FRData))
+	{
+		setDeviceParameter(CDeviceData::Date, FRData[0].toDate().toString(CFR::DateLogFormat), CDeviceData::Firmware);
 	}
 
 	if (getFRData(CAFPFR::FRInfo::TotalPaySum, FRData))
@@ -179,9 +184,11 @@ void AFPFR::processDeviceData()
 		mFSSerialNumber = CFR::FSSerialToString(answerData[7].toByteArray());
 
 		setDeviceParameter(CDeviceData::FS::Version, QString("%1, type %2").arg(answerData[9].toString()).arg(answerData[10].toInt() ? "serial" : "debug"));
-		setDeviceParameter(CDeviceData::FS::ValidityData, answerData[11].toDate().toString(CFR::DateLogFormat));
 		setDeviceParameter(CDeviceData::FR::FreeReregistrations,  answerData[12].toInt());
 		setDeviceParameter(CDeviceData::FR::ReregistrationNumber, answerData[13].toInt());
+
+		QDate date = answerData[11].toDate();
+		setDeviceParameter(CDeviceData::FS::ValidityData, CFR::FSValidityDateOff(date));
 	}
 
 	QVariant addressData;
@@ -384,8 +391,14 @@ TResult AFPFR::processCommand(char aCommand, const CAFPFR::TData & aCommandData,
 
 			int answerSize = answerData.size();
 			CAFPFR::Requests::SData requestData = CAFPFR::Requests::Data[aCommand];
+			CAFPFR::TAnswerTypes answerTypes = requestData.answerTypes;
 			int size = requestData.answerTypes.size();
-			int answerTypeSize = aAnswerTypes.size();
+
+			if (!aAnswerTypes.isEmpty())
+			{
+				answerTypes = aAnswerTypes;
+				size = aAnswerTypes.size();
+			}
 
 			if (answerSize < size)
 			{
@@ -396,12 +409,7 @@ TResult AFPFR::processCommand(char aCommand, const CAFPFR::TData & aCommandData,
 			for (int i = 0; i < size; ++i)
 			{
 				QByteArray part = answerData[i].simplified();
-				int answerType = requestData.answerTypes[i];
-
-				if ((i < answerTypeSize) && (aAnswerTypes[i] != CAFPFR::EAnswerTypes::Unknown))
-				{
-					answerType = aAnswerTypes[i];
-				}
+				int answerType = answerTypes[i];
 
 				switch (answerType)
 				{
@@ -620,30 +628,12 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 		return false;
 	}
 
+	bool result = true;
 	ExitAction exitAction([&] () { processCommand(CAFPFR::Commands::CancelDocument); });
 
 	foreach (auto unitData, aPaymentData.unitDataList)
 	{
-		QVariant section;
-
-		if (unitData.section != -1)
-		{
-			section = unitData.section;
-		}
-
-		CAFPFR::TData commandData = CAFPFR::TData()
-			<< unitData.name                   // название товара
-			<< ""                              // артикул или штриховой код товара/номер ТРК
-			<< 1                               // количество
-			<< unitData.sum                    // цена
-			<< mTaxData[unitData.VAT].group    // номер ставки налога
-			<< ""                              // номер товарной позиции
-			<< section;                        // номер секции
-
-		if (!processCommand(CAFPFR::Commands::Sale, commandData))
-		{
-			return false;
-		}
+		result = result && sale(unitData);
 	}
 
 	CAFPFR::TData data = CAFPFR::TData()
@@ -651,17 +641,55 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 		<< getTotalAmount(aPaymentData)
 		<< "";
 
-	if (!processCommand(CAFPFR::Commands::Total, data) || !closeDocument(true))
+	if (!result || !processCommand(CAFPFR::Commands::Total, data) || !closeDocument(true))
 	{
 		return false;
 	}
 
-	if (processCommand(CAFPFR::Commands::GetFSStatus, &data))
+	if (aFDNumber && processCommand(CAFPFR::Commands::GetFSStatus, &data))
 	{
 		*aFDNumber = data[8].toUInt();
 	}
 
 	return exitAction.reset();
+}
+
+//--------------------------------------------------------------------------------
+bool AFPFR::sale(const SUnitData & aUnitData)
+{
+	QVariant section;
+
+	if (aUnitData.section != -1)
+	{
+		section = aUnitData.section;
+	}
+
+	CAFPFR::TData commandData = CAFPFR::TData()
+		<< aUnitData.name                       // название товара
+		<< ""                                   // артикул или штриховой код товара/номер ТРК
+		<< 1                                    // количество
+		<< aUnitData.sum                        // цена
+		<< mTaxData[aUnitData.VAT].group        // номер ставки налога
+		<< ""                                   // номер товарной позиции
+		<< section                              // номер секции
+		<< ""                                   // код товара
+		<< ""                                   // ИНН поставщика
+		<< aUnitData.payOffSubjectMethodType    // признак способа расчёта (1214)
+		<< aUnitData.payOffSubjectType          // признак предмета расчёта (1212)
+		<< ""                                   // доп. реквизит предмета расчёта
+		<< ""                                   // код страны происхождения товара
+		<< ""                                   // номер таможенной декларации
+		<< 0.00                                 // акциз
+		<< 0                                    // признак агента по предмету расчёта
+		<< ""                                   // единица измерения
+		<< 0.00;                                // сумма НДС за предмет расчёта
+
+	if (!processCommand(CAFPFR::Commands::Sale, commandData))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------

@@ -18,7 +18,7 @@
 #include "PaymentProcessor/PrintConstants.h"
 #include "Hardware/Common/OPOSPollingDeviceBase.h"
 #include "Hardware/Common/WorkingThreadProxy.h"
-#include "Hardware/Printers/SerialPrinterBase.h"
+#include "Hardware/Printers/PortPrintersBase.h"
 #include "Hardware/FR/ProtoFR.h"
 
 // Project
@@ -122,6 +122,8 @@ void FRBase<T>::setInitialData()
 	mFSSerialNumber.clear();
 
 	mFFEngine.setDeviceName(mDeviceName);
+
+	removeDeviceParameter(CHardwareSDK::FR::AgentFlags);
 }
 
 //--------------------------------------------------------------------------------
@@ -202,9 +204,18 @@ void FRBase<T>::finaliseOnlineInitialization()
 		taxSystemData.insert(ETaxSystems::Enum(taxSystem), CFR::TaxSystems[taxSystem]);
 	}
 
+	TAgentFlagsData agentFlagsData;
+
+	for (auto it = CFR::AgentFlags.data().begin(); it != CFR::AgentFlags.data().end(); ++it)
+	{
+		agentFlagsData.insert(EAgentFlags::Enum(it.key()), it.value());
+	}
+
+	setConfigParameter(CHardwareSDK::FR::AgentFlagsData, QVariant().fromValue(agentFlagsData));
+
 	if (!mAgentFlags.isEmpty())
 	{
-		TAgentFlagsData agentFlagsData;
+		agentFlagsData.clear();
 
 		foreach(char agentFlag, mAgentFlags)
 		{
@@ -212,7 +223,7 @@ void FRBase<T>::finaliseOnlineInitialization()
 		}
 
 		setDeviceParameter( CDeviceData::FR::AgentFlags, QStringList(agentFlagsData.values()).join(", "));
-		setConfigParameter(CHardwareSDK::FR::AgentFlags, QVariant().fromValue(agentFlagsData));
+		setConfigParameter(CHardwareSDK::FR::AgentFlags, QVariant().fromValue(agentFlagsData.keys()));
 	}
 
 	TOperationModeData operationModeData;
@@ -414,7 +425,7 @@ bool FRBase<T>::checkAgentFlags(char aData)
 {
 	bool result = mFFEngine.checkAgentFlags(aData, mAgentFlags);
 
-	if (mAgentFlags.size() >= 1)
+	if ((mAgentFlags.size() >= 1) || (mFFDFR >= EFFD::F105))
 	{
 		mOFDFiscalParameters.insert(CFR::FiscalFields::AgentFlagsReg);
 
@@ -438,7 +449,7 @@ bool FRBase<T>::checkOperationModes(char aData)
 {
 	bool result = mFFEngine.checkOperationModes(aData, mOperationModes);
 
-	if (mOperationModes.contains(char(EOperationModes::Internet)) && !mOperatorPresence)
+	if (!mOperatorPresence && !mFiscalServerPresence && mOperationModes.contains(char(EOperationModes::Internet)))
 	{
 		mWrongFiscalizationSettings = true;
 		toLog(LogLevel::Error, mDeviceName + ": There is \"FR for internet\" flag and no operator");
@@ -1545,8 +1556,6 @@ void FRBase<T>::addFiscalFieldsOnPayment(const SPaymentData & aPaymentData)
 
 	addPhone(CFiscalSDK::UserContact, aPaymentData.fiscalParameters.value(CHardwareSDK::FR::UserPhone));
 	 addMail(CFiscalSDK::UserContact, aPaymentData.fiscalParameters.value(CHardwareSDK::FR::UserMail));
-
-	mFFEngine.setConfigParameter(CFiscalSDK::PayOffSubjectMethodType, CFR::PayOffSubjectMethodType);
 
 	QList<int> fiscalFields = mFFData.data().keys();
 	QVariantMap FFConfig;

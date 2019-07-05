@@ -5,6 +5,7 @@
 // Modules
 #include "Hardware/Common/DeviceCodeSpecification.h"
 #include "Hardware/Common/WaitingData.h"
+#include "Hardware/Protocols/CashAcceptor/SSPDataTypes.h"
 
 // Project
 #include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
@@ -15,9 +16,10 @@ namespace CSSP
 	/// Адреса устройств
 	namespace Addresses
 	{
-		const char Validator    = 0x00;    /// Купюроприемник.
-		const char Hopper       = 0x10;    /// Хоппер.
-		const char Printer      = 0x40;    /// Принтер Smart Ticket.
+		const char Validator = 0x00;    /// Купюроприемник, диспенсер (пристегивается к купюрнику).
+		const char Hopper    = 0x10;    /// Хоппер.
+		const char Printer1  = 0x40;    /// Принтер Smart Ticket (печать по шаблонам или "на лету" (?).
+		const char Printer2  = 0x41;    /// Принтер Coupon Printer (печатает на фальцованной бумаге) и Flatbed Printer (обычный термопринтер).
 	}
 
 	namespace Result
@@ -61,8 +63,11 @@ namespace CSSP
 	/// Таймаут после Reset-а, [мс].
 	const double NominalMultiplier = 0.01;
 
+	/// Ожидание отвала после резета, [мс].
+	const SWaitingData NotReadyWaiting = SWaitingData(150, 1000);
+
 	/// Ожидание готовности, [мс].
-	const SWaitingData ReadyWaiting = SWaitingData(150, 3 * 1000);
+	const SWaitingData ReadyWaiting = SWaitingData(150, 5 * 1000);
 
 	/// Виртуальный статус Enabled.
 	const char EnabledStatus[] = "Enabled status";
@@ -84,6 +89,22 @@ namespace CSSP
 		const char Sync               = '\x11';    /// Синхронизация байта последовательности.
 		const char GetVersion         = '\x20';    /// Запрос версии прошивки.
 		const char Stack              = '\x43';    /// Уложить в стекер.
+
+		class CData: public CSpecification<char, SData>
+		{
+		public:
+			CData()
+			{
+				add(GetSetupData, 1000);
+				add(Sync, true);
+			}
+
+		private:
+			void add(char aCommand, int aTimeout)  { append(aCommand, SData(aTimeout, false)); }
+			void add(char aCommand, bool aSetSync) { append(aCommand, SData(DefaultTimeout, aSetSync)); }
+		};
+
+		static CData Data;
 	}
 
 	//--------------------------------------------------------------------------------

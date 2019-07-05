@@ -132,7 +132,7 @@
     <ClInclude Include="..\src\Creator\CreatorReader.h" />
     <ClInclude Include="..\src\Creator\CreatorReaderConstants.h" />
     <ClInclude Include="..\src\Creator\CreatorReaderDataTypes.h" />
-    <ClInclude Include="..\src\Creator\CreatorReaderModelData.h" />
+    <ClInclude Include="..\src\Creator\CreatorReaderDetectingData.h" />
     <ClInclude Include="..\src\EMV\EMVAdapter.h" />
     <ClInclude Include="..\src\EMV\EMVConstants.h" />
     <ClInclude Include="..\src\EMV\TLV.h" />

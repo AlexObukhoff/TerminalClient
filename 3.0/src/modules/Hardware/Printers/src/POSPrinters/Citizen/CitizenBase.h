@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Hardware/Printers/POSPrinter.h"
+#include "Hardware/Printers/PortPOSPrinters.h"
 
 //--------------------------------------------------------------------------------
 template <class T>
@@ -14,11 +14,9 @@ public:
 		mRussianCodePage = '\x07';
 
 		// теги
-		POSPrinters::SModelData modelData = mModelData.getDefault();
-		modelData.parameters.tagEngine->appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
-		modelData.parameters.tagEngine->appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
-
-		mModelData.setDefault(modelData);
+		mParameters = POSPrinters::CommonParameters;
+		mParameters.tagEngine.appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
+		mParameters.tagEngine.appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
 	}
 };
 

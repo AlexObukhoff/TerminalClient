@@ -10,6 +10,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QVector>
+#include <QtCore/qmath.h>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
@@ -20,6 +21,19 @@
 #include "Hardware/IOPorts/LibUSBDeviceDataTypes.h"
 
 #define LIB_USB_CALL(aName, ...) processAnswer(#aName, aName(__VA_ARGS__))
+
+//--------------------------------------------------------------------------------
+namespace CLibUSBPort
+{
+	/// Таймаут отправки 1 байта, [мс].
+	const double ByteTimeout = 0.01;
+
+	/// Таймаут системных операций при отправке данных, [мс].
+	const double SystemTimeout = 1;
+
+	/// Таймаут для отправки данных, [мс]. 
+	inline int writingTimeout(int aSize) { return qCeil(SystemTimeout + aSize * ByteTimeout); }
+}
 
 //--------------------------------------------------------------------------------
 class LibUSBPort : public IOPortBase

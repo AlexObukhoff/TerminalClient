@@ -7,7 +7,7 @@
 
 // Modules
 #include "Hardware/Common/HardwareConstants.h"
-#include "Hardware/Common/CommandResultData.h"
+#include "Hardware/Common/CommandResults.h"
 
 // Project
 #include "Hardware/IOPorts/LibUSBDeviceDataTypes.h"
@@ -104,15 +104,32 @@ namespace LibUSBUtils
 	/// Логгировать ошибку.
 	TResult logAnswer(const QString & aFunctionName, int aResult, ILog * aLog = nullptr);
 
-	/// Получить контекст для библиотеки LibUSB.
+	/// Получить контекст библиотеки LibUSB.
 	libusb_context * getContext(ILog * aLog = nullptr);
+
+	/// Освободить контекст библиотеки LibUSB.
+	void releaseContext(ILog * aLog);
+
+	/// Получить список устройств.
+	typedef QList<libusb_device *> TDeviceList;
+	bool getDeviceList(TDeviceList & aList, bool aForce = false);
+	libusb_device ** getDeviceList(ssize_t & aSize, bool aForce = false);
+
+	/// Освободить список устройств.
+	void releaseDeviceList();
 
 	/// Получить лог для печати параметров устройств.
 	QString getPropertyLog(const QVariantMap & aData);
 	QString getPropertyLog(const CLibUSB::TDeviceDataList & aList, int aIndex = 0);
 
-	/// Получить данные о ресурсах.
-	bool getDevicesProperties(CLibUSB::TDeviceProperties & aDeviceProperties);
+	/// Получить данные о ресурсах устройств.
+	bool getDevicesProperties(CLibUSB::TDeviceProperties & aDeviceProperties, bool aForce = false);
+
+	/// Получить данные о ресурсах устройства.
+	CLibUSB::SDeviceProperties getDevicesProperties(libusb_device * aDevice);
+
+	/// Получить данные устройства по его дескриптору.
+	void getDeviceDescriptorData(libusb_device * aDevice, const libusb_device_descriptor & aDescriptor, CLibUSB::SDeviceProperties & aProperties);
 
 	/// Получить данные BOS (Binary Object Store).
 	QVariantMap getBOSData(libusb_device_handle * aDeviceHandle);
@@ -133,7 +150,7 @@ namespace LibUSBUtils
 	void addDescriptorData(libusb_device_handle * aHandle, uint8_t aDescriptor, QVariant & aData);
 
 	/// Получить набор по ключу из списка набора данных.
-	bool getDataFromMap(QVariantMap & aData, const QString & aKey);
+	bool getDataFromMap(QVariantMap & aData, const QString & aKey, bool aSetNextData = true);
 
 	/// Конвертировать число в строку с точкой посередине xx.yy.
 	template <class T>

@@ -89,19 +89,17 @@ void IOPortBase::adjustData(const QStringList & aMine, const QStringList & aOthe
 
 	if (!isAutoDetecting())
 	{
-		QString portData = outDeviceData[CDeviceData::Ports::Mine].toString();
+		QString portData  = outDeviceData[CDeviceData::Ports::Mine].toString();
 		QString otherData = outDeviceData[CDeviceData::Ports::Other].toString();
-
-		LogLevel::Enum logLevel = LogLevel::Normal;
 
 		if (!portData.isEmpty())
 		{
-			logLevel = LogLevel::Debug;
 			toLog(LogLevel::Normal, "Port data:\n" + portData);
 		}
 
 		if (!otherData.isEmpty())
 		{
+			LogLevel::Enum logLevel = portData.isEmpty() ? LogLevel::Normal : LogLevel::Debug;
 			toLog(logLevel, "Port data additional:\n" + otherData);
 		}
 	}

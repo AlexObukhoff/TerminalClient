@@ -55,7 +55,7 @@ void AV268::initialize()
 {
 	mInitialize = true;
 
-	TSerialPrinterBase::initialize();
+	SerialPrinterBase::initialize();
 }
 
 //--------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ bool AV268::getAnswer(QByteArray & aAnswer, bool aNeedDelay)
 		SleepHelper::msleep(CAV268::Timeouts::Default);
 	}
 
-	if (!TSerialPrinterBase::getAnswer(aAnswer, 100))
+	if (!SerialPrinterBase::getAnswer(aAnswer, 100))
 	{
 		return false;
 	}
@@ -268,7 +268,7 @@ bool AV268::getStatus(TStatusCodes & aStatusCodes)
 //--------------------------------------------------------------------------------
 bool AV268::receiptProcessing()
 {
-	bool result = TSerialPrinterBase::receiptProcessing();
+	bool result = SerialPrinterBase::receiptProcessing();
 	SleepHelper::msleep(CPortPrinter::PrintingStringTimeout * mActualStringCount);
 	waitAvailable();
 

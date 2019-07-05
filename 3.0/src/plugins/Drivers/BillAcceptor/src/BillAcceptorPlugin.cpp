@@ -32,11 +32,8 @@ TParameterList defaultParameters(const QString & aProtocol, const T2 & aModelLis
 template <class T1, class T2>
 TParameterList ID003Parameters(const QString & aProtocol, const T2 & aModelList)
 {
-	QVariantMap modelNames;
-	modelNames.insert("JCM iVISION", "JCM IVISION");
-
 	return defaultParameters<T1, T2>(aProtocol, aModelList)
-		<< setModifiedValues(CHardwareSDK::ModelName, modelNames);
+		<< setModifiedValues(CHardwareSDK::ModelName, "JCM iVISION", "JCM IVISION");
 }
 
 //------------------------------------------------------------------------------

@@ -30,23 +30,7 @@ Project {
 			"../../../includes/Hardware/Dispensers/ProtoDispenser.h",
 			"../../../includes/Hardware/Watchdogs/ProtoWatchdog.h",
 
-			"../../../includes/Hardware/Common/ProtoDevice.h",
-			"../../../includes/Hardware/Common/ProtoDevices.h",
-			"../../../includes/Hardware/Common/DeviceCodeSpecification.h",
-			"../../../includes/Hardware/Common/ProtocolBase.h",
-			"../../../includes/Hardware/Common/CommandResultData.h",
-			"../../../includes/Hardware/Common/StatusCache.h",
-			"../../../includes/Hardware/Common/USBDeviceModelData.h",
-			"../../../includes/Hardware/Common/CommandResults.h",
-			"../../../includes/Hardware/Common/LoggingType.h",
-			"../../../includes/Hardware/Common/DeviceCodeSpecificationBase.h",
-			"../../../includes/Hardware/Common/ASCII.h",
-			"../../../includes/Hardware/Common/BaseStatus.h",
-			"../../../includes/Hardware/Common/BaseStatusDescriptions.h",
-			"../../../includes/Hardware/Common/CodecDescriptions.h",
-			"../../../includes/Hardware/Common/HystoryList.h",
-			"../../../includes/Hardware/Common/HardwareConstants.h",
-			"../../../includes/Hardware/Common/Specifications.h"
+			"../../../includes/Hardware/Common/*.*"
 		]
 	}
 

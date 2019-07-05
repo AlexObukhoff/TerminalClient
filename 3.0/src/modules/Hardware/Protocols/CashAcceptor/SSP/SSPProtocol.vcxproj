@@ -20,6 +20,7 @@
   <ItemGroup>
     <ClInclude Include="src\SSP.h" />
     <ClInclude Include="src\SSPConstants.h" />
+    <ClInclude Include="src\SSPDataTypes.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6FED182E-51F4-4292-AF7C-8C584B1C708D}</ProjectGuid>
