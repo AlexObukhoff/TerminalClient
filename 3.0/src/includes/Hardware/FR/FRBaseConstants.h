@@ -109,6 +109,9 @@ namespace CFR
 	/// Формальная дата окончания ФН.
 	inline QString FSValidityDateOff(const QDate & aDate) { return aDate.addDays(-3).toString(CFR::DateLogFormat); }
 
+	/// Срок годности обычной (на 13 месяцев) ФН в днях.
+	const int SimpleFSValidityDays = 365 + 30;
+
 	/// Результаты запроса статуса.
 	namespace Result
 	{

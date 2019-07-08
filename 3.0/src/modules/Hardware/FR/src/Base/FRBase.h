@@ -231,6 +231,9 @@ protected:
 	/// Получить статус по типу ошибки устройства.
 	static int getErrorStatusCode(FRError::EType::Enum aErrorType);
 
+	/// Является ли срок годности ФН 36 месяцев. По умолчанию (не получилось сделать какую-то проверку) - нет.
+	bool isFS36() const;
+
 	/// Наличие ЭКЛЗ.
 	bool mEKLZ;
 

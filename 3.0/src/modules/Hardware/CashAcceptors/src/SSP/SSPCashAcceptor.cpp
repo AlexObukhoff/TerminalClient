@@ -139,6 +139,14 @@ bool SSPCashAcceptor::processReset()
 		return false;
 	}
 
+	// иначе ITL забудет, по какому протоколу он работает
+	int protocolNumber = 1;
+
+	while (!processCommand(CSSP::Commands::SetProtocolVersion, QByteArray(1, uchar(protocolNumber++)))) {}
+	while ( processCommand(CSSP::Commands::SetProtocolVersion, QByteArray(1, uchar(protocolNumber++)))) {}
+
+	setDeviceParameter(CDeviceData::ProtocolVersion, protocolNumber - 2);
+
 	return true;
 }
 
@@ -147,7 +155,7 @@ bool SSPCashAcceptor::isConnected()
 {
 	QByteArray answer;
 
-	if (!processCommand(CSSP::Commands::GetVersion, &answer))
+	if (!processCommand(CSSP::Commands::GetFirmware, &answer))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to get firmware version");
 		return false;
@@ -182,13 +190,6 @@ bool SSPCashAcceptor::isConnected()
 //--------------------------------------------------------------------------------
 void SSPCashAcceptor::processDeviceData()
 {
-	int protocolNumber = 1;
-
-	while (!processCommand(CSSP::Commands::SetProtocolVersion, QByteArray(1, uchar(protocolNumber++)))) {}
-	while ( processCommand(CSSP::Commands::SetProtocolVersion, QByteArray(1, uchar(protocolNumber++)))) {}
-
-	setDeviceParameter(CDeviceData::ProtocolVersion, protocolNumber - 2);
-
 	QByteArray answer;
 
 	if (processCommand(CSSP::Commands::GetSerial, &answer) && !answer.isEmpty())
@@ -199,6 +200,23 @@ void SSPCashAcceptor::processDeviceData()
 	if (!containsDeviceParameter(CDeviceData::Firmware) && processCommand(CSSP::Commands::GetSetupData, &answer) && (answer.size() >= 5))
 	{
 		setDeviceParameter(CDeviceData::Firmware, answer.mid(1, 4).insert(1, ASCII::Dot));
+	}
+
+	if (processCommand(CSSP::Commands::GetDataset, &answer) && !answer.isEmpty())
+	{
+		setDeviceParameter(CDeviceData::CashAcceptors::BillSet, answer);
+	}
+
+	if (processCommand(CSSP::Commands::GetBuild, &answer) && !answer.isEmpty())
+	{
+		setDeviceParameter(CDeviceData::Build, "0x" + answer.toHex().toUpper());
+		setDeviceParameter(CDeviceData::Type, uint(answer[0]), CDeviceData::Build);
+
+		if (answer.size() >= 3)
+		{
+			ushort build = ushort(answer[1]) | ushort(answer[0] << 8);
+			setDeviceParameter(CDeviceData::Number, build, CDeviceData::Build);
+		}
 	}
 }
 

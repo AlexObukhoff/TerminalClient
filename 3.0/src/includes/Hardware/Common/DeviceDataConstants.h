@@ -38,6 +38,7 @@ namespace CDeviceData
 	const char InternalHardware[] = "device_id_value";
 	const char ControllerBuild[] = "controller_build";
 	const char Count[] = "count";
+	const char Number[] = "number";
 
 	/// Общие значения.
 	namespace Values

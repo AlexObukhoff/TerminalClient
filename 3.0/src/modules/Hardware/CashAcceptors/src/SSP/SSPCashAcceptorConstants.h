@@ -87,8 +87,10 @@ namespace CSSP
 		const char Enable             = '\x0A';    /// Включить на прием денег.
 		const char GetSerial          = '\x0C';    /// Запрос серийного номера.
 		const char Sync               = '\x11';    /// Синхронизация байта последовательности.
-		const char GetVersion         = '\x20';    /// Запрос версии прошивки.
+		const char GetFirmware        = '\x20';    /// Запрос версии прошивки.
+		const char GetDataset         = '\x21';    /// Запрос версии биллсета.
 		const char Stack              = '\x43';    /// Уложить в стекер.
+		const char GetBuild           = '\x4F';    /// Запрос версии билда.
 
 		class CData: public CSpecification<char, SData>
 		{

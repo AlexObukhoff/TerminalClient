@@ -1319,7 +1319,7 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 
 		QString automaticNumber = getDeviceParameter(CDeviceData::FR::AutomaticNumber).toString();
 
-		if (mWrongFiscalizationSettings || (mOperatorPresence && !automaticNumber.isEmpty()))
+		if (!mFiscalServerPresence && (mWrongFiscalizationSettings || (mOperatorPresence && !automaticNumber.isEmpty())))
 		{
 			aStatusCodes.insert(FRStatusCode::Warning::WrongFiscalizationSettings);
 		}
@@ -1603,6 +1603,28 @@ int FRBase<T>::getErrorStatusCode(FRError::EType::Enum aErrorType)
 	}
 
 	return DeviceStatusCode::Error::Unknown;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool FRBase<T>::isFS36() const
+{
+	QString FSValidityDateText = getDeviceParameter(CDeviceData::FS::ValidityData).toString();
+	QDate FSValidityDate = QDate::fromString(FSValidityDateText, CFR::DateLogFormat);
+
+	if (!FSValidityDate.isValid() || FSValidityDate.isNull())
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to check FS validity date");
+		return false;
+	}
+
+	int days = QDate::currentDate().daysTo(FSValidityDate);
+	bool result = days > CFR::SimpleFSValidityDays;
+
+	toLog(LogLevel::Normal, mDeviceName + QString(": --- isFS36: current date = %1, FS validity date = %2, days = %3, result = %4")
+		.arg(QDate::currentDate().toString(CFR::DateLogFormat)).arg(FSValidityDateText).arg(days).arg(result ? "true" : "false"));
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
