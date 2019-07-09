@@ -23,6 +23,8 @@ ShtrihOnlineFRBase<T>::ShtrihOnlineFRBase()
 	mOFDFiscalParameters.remove(CFR::FiscalFields::Cashier);
 	mOFDFiscalParameters.remove(CFR::FiscalFields::TaxSystem);
 	mNeedReceiptProcessingOnCancel = true;
+	mSetCustomFields = ASCII::NUL;
+	mSetCustomFieldsCorrect = false;
 
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, true);
 
@@ -105,6 +107,16 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 	}
 
 	QByteArray data;
+	mSetCustomFieldsCorrect = getFRParameter(CShtrihOnlineFR::FRParameters::SetCustomFields, data) && !data.isEmpty();
+
+	if (!mSetCustomFieldsCorrect)
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Cannot get custom fields data");
+	}
+	else
+	{
+		mSetCustomFields = data[0];
+	}
 
 	if (getFRParameter(CShtrihOnlineFR::FRParameters::AutomaticNumber, data) && !clean(data).isEmpty())
 	{
@@ -493,13 +505,6 @@ bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, EPayOffTypes::Enum
 	QByteArray sum = getHexReverted(aUnitData.sum, 5, 2);
 	QString name = aUnitData.name;
 
-	bool isFS36Result = isFS36();
-	bool noPayOffSubjectType = (mFFDFS <= EFFD::F105) && isFS36Result * mFiscalServerPresence;
-	char payOffSubjectType = char(aUnitData.payOffSubjectType) * !noPayOffSubjectType;
-
-	toLog(LogLevel::Normal, QString("--- sale: mFFDFS = %1, isFS36() = %2, mFiscalServerPresence = %3, noPayOffSubjectType = %4, payOffSubjectType = %5")
-		.arg(int(mFFDFS)).arg(isFS36Result ? "true" : "false").arg(mFiscalServerPresence ? "true" : "false").arg(noPayOffSubjectType ? "true" : "false").arg(int(payOffSubjectType)));
-
 	QByteArray commandData;
 	commandData.append(char(aPayOffType));                          // тип операции (1054)
 	commandData.append(getHexReverted(1, 6, 6));                    // количество (1023)
@@ -509,7 +514,7 @@ bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, EPayOffTypes::Enum
 	commandData.append(taxIndex);                                   // налоговая ставка
 	commandData.append(section);                                    // отдел
 	commandData.append(char(aUnitData.payOffSubjectMethodType));    // признак способа расчета (1214)
-	commandData.append(payOffSubjectType);                          // признак предмета расчета (1212)
+	commandData.append(char(aUnitData.payOffSubjectType));          // признак предмета расчета (1212)
 	commandData.append(mCodec->fromUnicode(name));                  // наименование товара (1030)
 
 	if (!processCommand(CShtrihOnlineFR::Commands::FS::Sale, commandData))
@@ -565,6 +570,42 @@ bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SP
 		{
 			toLog(LogLevel::Error, QString("%1: Failed to set taxation system %2 (%3)").arg(mDeviceName).arg(toHexLog(taxSystem)).arg(CFR::TaxSystems[taxSystem]));
 			return false;
+		}
+	}
+
+	if (mSetCustomFieldsCorrect && isFS36() && (aPaymentData.taxSystem == ETaxSystems::Main))
+	{
+		QStringList noPayLog;
+
+		foreach (const SUnitData & unitData, aPaymentData.unitDataList)
+		{
+			if (CFR::PayOffSubjectTypesNo36.contains(unitData.payOffSubjectType))
+			{
+				noPayLog << QString("%1 (%2, %3)").arg(unitData.name).arg(unitData.sum).arg(CFR::PayOffSubjectTypes[char(unitData.payOffSubjectType)]);
+			}
+		}
+
+		char newSetCustomFields = mSetCustomFields | CShtrihOnlineFR::FRParameters::DontSendPayOffSubjectType;
+
+		if (!noPayLog.isEmpty() && (mSetCustomFields != newSetCustomFields))
+		{
+			QString log = mDeviceName + QString(": Failed to make fiscal document due to cannot sale unit(s): %1, because ").arg(noPayLog.join("; "));
+
+			if (mFFDFS > EFFD::F105)
+			{
+				toLog(LogLevel::Error, log + QString("FFD FS = %1 > 1.05").arg(CFR::FFD[mFFDFS].description));
+				return false;
+			}
+			else if (!mFiscalServerPresence)
+			{
+				toLog(LogLevel::Error, log + "it is not fiscal server");
+				return false;
+			}
+			else if (!setFRParameter(CShtrihOnlineFR::FRParameters::SetCustomFields, newSetCustomFields))
+			{
+				toLog(LogLevel::Error, log + "impossible to set custom fields data");
+				return false;
+			}
 		}
 	}
 

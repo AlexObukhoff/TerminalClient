@@ -91,6 +91,12 @@ protected:
 
 	/// Невозможно включить автообновление прошивки.
 	bool mNotEnableFirmwareUpdating;
+
+	/// Параметр установки определенных фискальных тегов.
+	char mSetCustomFields;
+
+	/// Корректность значения параметра установки определенных фискальных тегов.
+	bool mSetCustomFieldsCorrect;
 };
 
 typedef ShtrihOnlineFRBase<ShtrihTCPFRBase> ShtrihOnlineTCPFR;

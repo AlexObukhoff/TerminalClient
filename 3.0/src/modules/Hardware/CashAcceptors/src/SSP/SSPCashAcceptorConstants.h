@@ -67,7 +67,7 @@ namespace CSSP
 	const SWaitingData NotReadyWaiting = SWaitingData(150, 1000);
 
 	/// Ожидание готовности, [мс].
-	const SWaitingData ReadyWaiting = SWaitingData(150, 5 * 1000);
+	const SWaitingData ReadyWaiting = SWaitingData(150, 15 * 1000);
 
 	/// Виртуальный статус Enabled.
 	const char EnabledStatus[] = "Enabled status";

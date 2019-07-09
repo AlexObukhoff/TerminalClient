@@ -374,6 +374,13 @@ namespace CFR
 
 	static CPayOffSubjectTypes PayOffSubjectTypes;
 
+	typedef QSet<SDK::Driver::EPayOffSubjectTypes::Enum> TPayOffSubjectTypes;
+
+	/// Признаки предмета расчета, работа с которыми невозможна с ФН 36 месяцев и СНО == ОСН.
+	const TPayOffSubjectTypes PayOffSubjectTypesNo36 = TPayOffSubjectTypes()
+		<< SDK::Driver::EPayOffSubjectTypes::Unit
+		<< SDK::Driver::EPayOffSubjectTypes::AgentFee;
+
 	//--------------------------------------------------------------------------------
 	/// Типы систем налогообложения (1062, 1055)
 	class CTaxSystems : public CBitmapDescription<char>

@@ -1502,8 +1502,8 @@ ESessionState::Enum AtolFRBase::getSessionState()
 		return ESessionState::Closed;
 	}
 
-	QString dateDataTime = data.mid(3, 6).toHex().prepend("20");
-	QDateTime currentDT = QDateTime::fromString(dateDataTime, CAtolFR::DateTimeFormat);
+	QString dateTimeData = data.mid(3, 6).toHex().prepend("20");
+	QDateTime currentDT = QDateTime::fromString(dateTimeData, CAtolFR::DateTimeFormat);
 	QDateTime lastSessionDT;
 
 	if (!currentDT.isValid() || !getLastSessionDT(lastSessionDT))
