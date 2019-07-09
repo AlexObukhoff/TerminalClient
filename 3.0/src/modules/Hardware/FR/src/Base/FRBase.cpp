@@ -24,6 +24,7 @@
 // Project
 #include "FRBase.h"
 #include "Hardware/FR/OFDServerData.h"
+#include "Hardware/FR/FSSerialData.h"
 
 using namespace SDK::Driver;
 using namespace FRStatusCode;
@@ -240,6 +241,20 @@ void FRBase<T>::finaliseOnlineInitialization()
 	if (mFFEngine.getConfigParameter(CFiscalSDK::GamblingMode,      0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::GamblingMode].translationPF;
 	if (mFFEngine.getConfigParameter(CFiscalSDK::ExcisableUnitMode, 0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::ExcisableUnitMode].translationPF;
 	if (mFFEngine.getConfigParameter(CFiscalSDK::InAutomateMode,    0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::InAutomateMode].translationPF;
+
+	if (FS::Data.contains(mFSSerialNumber))
+	{
+		FS::SData FSData = FS::Data[mFSSerialNumber];
+
+		setDeviceParameter(CDeviceData::FS::Expiration, QString("%1 months").arg(FSData.expiration));
+		setDeviceParameter(CDeviceData::FS::FFD, FSData.FFD);
+		setDeviceParameter(CDeviceData::FS::Provider, FSData.provider);
+
+		if (!FSData.revision.isEmpty())
+		{
+			setDeviceParameter(CDeviceData::FS::Revision, FSData.revision);
+		}
+	}
 
 	setDeviceParameter(CDeviceData::FS::SerialNumber, mFSSerialNumber);
 	setDeviceParameter(CDeviceData::FR::TaxSystems, QStringList(taxSystemData.values()).join(", "));
@@ -1402,8 +1417,12 @@ void FRBase<T>::checkTaxes2019()
 			set(mDeviceName, CDeviceData::SerialNumber);
 			set(mDeviceName, CDeviceData::FR::Taxes2019Applied);
 
-			toLog(LogLevel::Normal, mDeviceName + ": Closing session with VAT 18%, trying to re-initialize");
-			reInitialize();
+			if (check(mDeviceName, CDeviceData::SerialNumber))
+			{
+				toLog(LogLevel::Normal, mDeviceName + ": Closing session with VAT 18%, trying to re-initialize");
+
+				reInitialize();
+			}
 		}
 	}
 }
@@ -1609,6 +1628,11 @@ int FRBase<T>::getErrorStatusCode(FRError::EType::Enum aErrorType)
 template <class T>
 bool FRBase<T>::isFS36() const
 {
+	if (FS::Data.contains(mFSSerialNumber))
+	{
+		return FS::Data[mFSSerialNumber].expiration == 36;
+	}
+
 	QString FSValidityDateText = getDeviceParameter(CDeviceData::FS::ValidityData).toString();
 	QDate FSValidityDate = QDate::fromString(FSValidityDateText, CFR::DateLogFormat);
 

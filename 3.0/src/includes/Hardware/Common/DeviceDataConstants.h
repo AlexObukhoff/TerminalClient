@@ -245,6 +245,10 @@ namespace CDeviceData
 		const char ValidityData[] = "fs_validity_data";
 		const char DifferenceDT[] = "fs_difference_date_time";
 		const char Version[] = "fs_version";
+		const char Expiration[] = "fs_expiration";
+		const char FFD[] = "fs_ffd";
+		const char Provider[] = "fs_provider";
+		const char Revision[] = "fs_revision";
 	}
 
 	/// Сторожевые таймеры.

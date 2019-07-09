@@ -120,6 +120,7 @@
     <ClCompile Include="..\src\Atol\Online\AtolOnlineFRBase.cpp" />
     <ClCompile Include="..\src\Atol\Online\Paymaster.cpp" />
     <ClCompile Include="..\src\Base\FFEngine.cpp" />
+    <ClCompile Include="..\src\Base\FSSerialData.cpp" />
     <ClCompile Include="..\src\Base\Port\PortFRBase.cpp" />
     <ClCompile Include="..\src\Kasbi\KasbiFRBase.cpp" />
     <ClCompile Include="..\src\MStar\Online\AFPFR.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\AtolOnlinePrinters.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRBaseConstants.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRDataTypes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\KasbiPrinters.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\OFDServerData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRErrorDescription.h" />
@@ -173,6 +175,7 @@
     <ClInclude Include="..\src\Atol\Online\AtolOnlineFRBase.h" />
     <ClInclude Include="..\src\Atol\Online\Paymaster.h" />
     <ClInclude Include="..\src\Base\FFEngine.h" />
+    <ClInclude Include="..\src\Base\FSSerialData.h" />
     <ClInclude Include="..\src\Base\Port\PortFRBase.h" />
     <ClInclude Include="..\src\Kasbi\KasbiFRBase.h" />
     <ClInclude Include="..\src\Kasbi\KasbiFRConstants.h" />
