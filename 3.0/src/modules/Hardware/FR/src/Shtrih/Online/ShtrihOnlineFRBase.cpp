@@ -23,8 +23,6 @@ ShtrihOnlineFRBase<T>::ShtrihOnlineFRBase()
 	mOFDFiscalParameters.remove(CFR::FiscalFields::Cashier);
 	mOFDFiscalParameters.remove(CFR::FiscalFields::TaxSystem);
 	mNeedReceiptProcessingOnCancel = true;
-	mSetCustomFields = ASCII::NUL;
-	mSetCustomFieldsCorrect = false;
 
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, true);
 
@@ -107,16 +105,6 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 	}
 
 	QByteArray data;
-	mSetCustomFieldsCorrect = getFRParameter(CShtrihOnlineFR::FRParameters::SetCustomFields, data) && !data.isEmpty();
-
-	if (!mSetCustomFieldsCorrect)
-	{
-		toLog(LogLevel::Error, mDeviceName + ": Cannot get custom fields data");
-	}
-	else
-	{
-		mSetCustomFields = data[0];
-	}
 
 	if (getFRParameter(CShtrihOnlineFR::FRParameters::AutomaticNumber, data) && !clean(data).isEmpty())
 	{
@@ -573,7 +561,11 @@ bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SP
 		}
 	}
 
-	if (mSetCustomFieldsCorrect && isFS36() && (aPaymentData.taxSystem == ETaxSystems::Main))
+	bool setCustomFieldsOK = false;
+	char setCustomFields = ASCII::NUL;
+	QByteArray data;
+
+	if (isFS36() && (aPaymentData.taxSystem == ETaxSystems::Main) && getFRParameter(CShtrihOnlineFR::FRParameters::SetCustomFields, data) && !data.isEmpty())
 	{
 		QStringList noPayLog;
 
@@ -585,9 +577,10 @@ bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SP
 			}
 		}
 
-		char newSetCustomFields = mSetCustomFields | CShtrihOnlineFR::FRParameters::DontSendPayOffSubjectType;
+		setCustomFields = data[0];
+		char newSetCustomFields = setCustomFields | CShtrihOnlineFR::FRParameters::DontSendPayOffSubjectType;
 
-		if (!noPayLog.isEmpty() && (mSetCustomFields != newSetCustomFields))
+		if (!noPayLog.isEmpty() && (setCustomFields != newSetCustomFields))
 		{
 			QString log = mDeviceName + QString(": Failed to make fiscal document due to cannot sale unit(s): %1, because ").arg(noPayLog.join("; "));
 
@@ -606,6 +599,10 @@ bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SP
 				toLog(LogLevel::Error, log + "impossible to set custom fields data");
 				return false;
 			}
+			else
+			{
+				setCustomFieldsOK = true;
+			}
 		}
 	}
 
@@ -614,11 +611,14 @@ bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SP
 		return false;
 	}
 
-	QByteArray data;
-
 	if (aFDNumber && processCommand(CShtrihOnlineFR::Commands::FS::GetStatus, &data) && (data.size() >= 33))
 	{
 		*aFDNumber = revert(data.mid(29, 4)).toHex().toUInt(0, 16);
+	}
+
+	if (setCustomFieldsOK && !setFRParameter(CShtrihOnlineFR::FRParameters::SetCustomFields, setCustomFields))
+	{
+		mPPTaskList.append([&] () { setFRParameter(CShtrihOnlineFR::FRParameters::SetCustomFields, setCustomFields); });
 	}
 
 	return true;

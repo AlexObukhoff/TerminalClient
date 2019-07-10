@@ -1642,13 +1642,10 @@ bool FRBase<T>::isFS36() const
 		return false;
 	}
 
-	int days = QDate::currentDate().daysTo(FSValidityDate);
-	bool result = days > CFR::SimpleFSValidityDays;
+	int days = QDate::currentDate().daysTo(FSValidityDate) + 3;
+	toLog(LogLevel::Normal, mDeviceName + QString(": %1 days to validity date").arg(days));
 
-	toLog(LogLevel::Normal, mDeviceName + QString(": --- isFS36: current date = %1, FS validity date = %2, days = %3, result = %4")
-		.arg(QDate::currentDate().toString(CFR::DateLogFormat)).arg(FSValidityDateText).arg(days).arg(result ? "true" : "false"));
-
-	return result;
+	return days > CFR::SimpleFSValidityDays;
 }
 
 //--------------------------------------------------------------------------------
