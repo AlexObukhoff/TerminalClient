@@ -244,6 +244,11 @@
         <translation>calibration error</translation>
     </message>
     <message>
+        <location filename="../../../../../includes/Hardware/CashAcceptors/CashAcceptorStatusesDescriptions.h" line="174"/>
+        <source>#rejecting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../../../../includes/Hardware/CashAcceptors/CashAcceptorStatusesDescriptions.h" line="148"/>
         <source>#optical_sensors_are_faulted</source>
         <translation>optical sensors are faulty</translation>

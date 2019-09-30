@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp" />
     <ClCompile Include="..\src\ScannerPlugin.cpp" />
+    <ClCompile Include="..\src\ScannerTemplates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\locale\scanners_de.ts" />

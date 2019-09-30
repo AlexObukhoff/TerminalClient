@@ -21,6 +21,9 @@
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\BillDispenserTemplates.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\locale\bill_dispensers_ru.ts">

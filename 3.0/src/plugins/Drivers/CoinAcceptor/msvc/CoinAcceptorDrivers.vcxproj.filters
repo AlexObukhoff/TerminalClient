@@ -22,5 +22,8 @@
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\CoinAcceptorTemplates.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

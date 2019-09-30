@@ -60,7 +60,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;TESTPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
@@ -70,7 +70,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;SysUtils.lib;IOPorts.lib;libusb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);$(THIRDPARTY_DIR)\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -89,7 +89,7 @@ call "$(ProjectDir)\CompileLocale.bat" "$(OutDir)" "$(TargetName)"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;TESTPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
@@ -98,7 +98,7 @@ call "$(ProjectDir)\CompileLocale.bat" "$(OutDir)" "$(TargetName)"</Command>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;SysUtils.lib;IOPorts.lib;libusb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);$(THIRDPARTY_DIR)\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -116,7 +116,7 @@ call "$(ProjectDir)\CompileLocale.bat" "$(OutDir)" "$(TargetName)"</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(TC_INCLUDE_DIR);$(THIRDPARTY_DIR);.\GeneratedFiles\$(ProjectName)\$(Configuration);.\GeneratedFiles\$(ProjectName);.\;$(TC_DIR);$(THIRDPARTY_DIR)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0502;_WIN32_WINNT=0x0502;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_CORE_LIB;TESTPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
@@ -125,7 +125,7 @@ call "$(ProjectDir)\CompileLocale.bat" "$(OutDir)" "$(TargetName)"</Command>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCored4.lib;QtGuid4.lib;QAxContainerd.lib;OPOSSDKd.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;printersd.lib;SysUtilsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCored4.lib;QtGuid4.lib;QAxContainerd.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;printersd.lib;SysUtilsd.lib;IOPortsd.lib;libusb_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);$(THIRDPARTY_DIR)\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

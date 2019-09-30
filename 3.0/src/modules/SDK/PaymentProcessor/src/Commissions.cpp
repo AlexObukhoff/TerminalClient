@@ -548,6 +548,12 @@ bool Commissions::isValid() const
 }
 
 //----------------------------------------------------------------------------
+bool Commissions::contains(qint64 aProvider, bool aCheckProcessing)
+{
+	return aCheckProcessing ? mProcessingCommissions.contains(aProvider) : mProviderCommissions.contains(aProvider);
+}
+
+//----------------------------------------------------------------------------
 Commissions Commissions::fromSettings(const TPtree & aSettings)
 {
 	Commissions result;
@@ -632,6 +638,15 @@ void Commissions::appendFromSettings(const TPtree & aSettings)
 			}
 		}
 	}
+}
+
+//----------------------------------------------------------------------------
+void Commissions::clear()
+{
+	mIsValid = false;
+
+	mProviderCommissions.clear();
+	mProcessingCommissions.clear();
 }
 
 //----------------------------------------------------------------------------

@@ -137,6 +137,7 @@
     <ClCompile Include="..\src\CashDispenser\VirtualCashDispenser.cpp" />
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp" />
     <ClCompile Include="..\src\VirtualDevicesPlugin.cpp" />
+    <ClCompile Include="..\src\VirtualDevicesTemplates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\src\CashAcceptor\VirtualCashAcceptor.h" />

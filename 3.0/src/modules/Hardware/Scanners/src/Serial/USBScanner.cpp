@@ -1,29 +1,22 @@
 /* @file USB-сканер. */
 
 #include "USBScanner.h"
-#include "HHPModelData.h"
+#include "HHPDetectingData.h"
 
 using namespace SDK::Driver;
 
 //--------------------------------------------------------------------------------
 USBScanner::USBScanner()
 {
-	mDeviceName = CUSBScanner::DefaultName;
+	mDeviceName = CHHP::DefaultName;
 
-	mDetectingData->append(CHHP::VendorID, CHHP::CModelData());
+	mDetectingData->set(CUSBVendors::HHP, CHHP::DetectingData().data());
 }
 
 //--------------------------------------------------------------------------------
 QStringList USBScanner::getModelList()
 {
-	QStringList models;
-
-	foreach (CUSBDevice::SData data, CHHP::CModelData().data())
-	{
-		models << data.model;
-	}
-
-	return models;
+	return CHHP::DetectingData().getModelList(CUSBVendors::HHP);
 }
 
 //--------------------------------------------------------------------------------

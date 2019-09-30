@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\CCTalk\CCTalkCoinAcceptorBase.cpp" />
+    <ClCompile Include="..\src\CoinAcceptorBase.cpp" />
     <ClCompile Include="..\src\NPSTalk\NPSTalkCoinAcceptor.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -133,20 +134,6 @@
     <ClInclude Include="..\src\CoinAcceptorBase.h" />
     <ClInclude Include="..\src\NPSTalk\NPSTalkCoinAcceptor.h" />
     <ClInclude Include="..\src\NPSTalk\NPSTalkCoinAcceptorConstants.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Common\msvc\Common.vcxproj">
-      <Project>{70d02db7-a7cb-4d22-b13e-0c7f4eb7df86}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Protocols\CashAcceptor\CCNet\CCNetProtocol.vcxproj">
-      <Project>{a0c8ec67-25cc-45b6-93ae-d4db1ee30b14}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Protocols\CashAcceptor\ID003\ID003Protocol.vcxproj">
-      <Project>{e56365ed-3c69-4d96-9a02-d449390b6e46}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -31,10 +31,10 @@ namespace CCCTalk
 
 	//--------------------------------------------------------------------------------
 	/// Ошибки.
-	class Error : public ErrorDataBase
+	class ErrorData : public ErrorDataBase
 	{
 	public:
-		Error()
+		ErrorData()
 		{
 			add( 0, DeviceStatusCode::OK::OK);
 			add( 1, BillAcceptorStatusCode::Reject::Unknown,             true);

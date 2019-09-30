@@ -7,6 +7,9 @@
 #include <SDK/Drivers/FR/FiscalPrinterConstants.h>
 #include <SDK/Drivers/FR/FRStatus.h>
 
+// Modules
+#include "Hardware/FR/ProtoFR.h"
+
 // Project
 #include "Hardware/FR/FRBaseConstants.h"
 #include "Hardware/FR/FRErrorDescription.h"
@@ -135,8 +138,18 @@ protected:
 	/// Добавить фискальные теги в платеж.
 	void addFiscalFieldsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
+	/// Проверить включение фискальных тегов в платеж.
+	void checkFFExisting(int aField, bool aAdd, bool aRequired = true);
+
+	/// Добавить данные в фискальный тег из конфига или параметра.
+	typedef std::function<void(QString &)> TFFConfigData;
+	void addConfigFFData(const QString & aField, const QVariant & aData, const TFFConfigData & aFFConfigData = TFFConfigData());
+
 	/// Проверить тип оплаты на платеже.
 	bool checkPayTypeOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
+
+	/// Проверить фискальные теги на платеже.
+	bool checkFiscalFieldsOnPayment();
 
 	/// Проверить параметры налогов.
 	virtual bool checkTaxes();
@@ -231,6 +244,9 @@ protected:
 	/// Получить статус по типу ошибки устройства.
 	static int getErrorStatusCode(FRError::EType::Enum aErrorType);
 
+	/// Является ли срок годности ФН 36 месяцев. По умолчанию (не получилось сделать какую-то проверку) - нет.
+	bool isFS36() const;
+
 	/// Наличие ЭКЛЗ.
 	bool mEKLZ;
 
@@ -285,11 +301,11 @@ protected:
 	/// Регион.
 	ERegion::Enum mRegion;
 
-	/// Реквизиты ОФД для установки в момент печати фискального чека.
-	QSet<int> mOFDFiscalParameters;
+	/// Фискальные теги для установки в момент печати фискального чека.
+	QSet<int> mOFDFiscalFields;
 
-	/// Реквизиты ОФД для установки в момент печати фискального чека на продаже.
-	QSet<int> mOFDFiscalParametersOnSale;
+	/// Фискальные теги для установки в момент печати фискального чека на продаже.
+	QSet<int> mOFDFiscalFieldsOnSale;
 
 	/// Количество неотправленных документов в ОФД.
 	int mOFDNotSentCount;

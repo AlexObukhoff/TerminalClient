@@ -14,78 +14,30 @@
 using namespace SDK::Driver::IOPort::COM;
 using namespace PrinterStatusCode;
 
-POSPrinters::TModelIds POSPrinters::CModelData::mModelIds;
+POSPrinters::TModelIds POSPrinters::ModelData::mModelIds;
 
 //--------------------------------------------------------------------------------
-POSPrinter::POSPrinter() : mModelID(0), mPrintingStringTimeout(0)
+template class POSPrinter<TSerialPrinterBase>;
+template class POSPrinter<TLibUSBPrinterBase>;
+
+//--------------------------------------------------------------------------------
+template <class T>
+POSPrinter<T>::POSPrinter() : mModelID(0), mPrintingStringTimeout(0)
 {
 	// данные устройства
 	mDeviceName = CPOSPrinter::DefaultName;
 	setConfigParameter(CHardware::Printer::FeedingAmount, 4);
 	setConfigParameter(CHardware::Printer::Commands::Cutting, "\x1B\x69");
 
-	setDefaultModelData();
-
-	//TODO: реализовать буферный поиск
-	TSerialDevicePortParameters & portParameters = mModelData.getDefault().parameters.portSettings->data();
-
-	for (auto it = portParameters.begin(); it != portParameters.end(); ++it)
-	{
-		if (mPortParameters.contains(it.key()))
-		{
-			mPortParameters[it.key()] = it.value();
-		}
-	}
+	mModelData.setDefault(POSPrinters::SModelData(CPOSPrinter::DefaultName, false, "Default"));
 
 	mOverflow = false;
 	mRussianCodePage = CPOSPrinter::RussianCodePage;
 }
 
 //--------------------------------------------------------------------------------
-void POSPrinter::setDefaultModelData()
-{
-	using namespace SDK::Driver::IOPort::COM;
-
-	// параметры порта
-	POSPrinters::PSerialDevicePortParameters portParameters(new POSPrinters::CSerialDevicePortParameters());
-	portParameters->data().insert(EParameters::BaudRate, POSPrinters::TSerialDevicePortParameter()
-		<< EBaudRate::BR115200
-		<< EBaudRate::BR19200
-		<< EBaudRate::BR57600
-		<< EBaudRate::BR38400
-		<< EBaudRate::BR9600
-		<< EBaudRate::BR4800);
-	portParameters->data().insert(EParameters::Parity, POSPrinters::TSerialDevicePortParameter()
-		<< EParity::No
-		<< EParity::Even
-		<< EParity::Odd);
-	portParameters->data().insert(EParameters::ByteSize, POSPrinters::TSerialDevicePortParameter()
-		<< 8);
-	portParameters->data().insert(EParameters::RTS, POSPrinters::TSerialDevicePortParameter()
-		<< ERTSControl::Toggle);
-	portParameters->data().insert(EParameters::DTR, POSPrinters::TSerialDevicePortParameter()
-		<< EDTRControl::Handshake);
-
-	// теги по умолчанию
-	Tags::PEngine tagEngine(new Tags::Engine());
-	tagEngine->appendSingle(Tags::Type::Bold, "\x1B\x45", "\x01");
-	tagEngine->appendSingle(Tags::Type::UnderLine, "\x1B\x2D", "\x01");
-	tagEngine->set(Tags::Type::Image);
-	tagEngine->set(Tags::Type::BarCode);
-
-	// статусы TODO: корректировать при добавлении моделей
-	POSPrinters::PAllErrors errors(new POSPrinters::CAllErrors());
-	errors->data()[1][1].insert('\x08', DeviceStatusCode::Error::Unknown);
-	errors->data()[2][1].insert('\x20', PrinterStatusCode::Error::PaperEnd);
-	errors->data()[2][1].insert('\x40', DeviceStatusCode::Error::Unknown);
-	errors->data()[3][1].insert('\x60', DeviceStatusCode::Error::Unknown);
-
-	mModelData.setDefault(POSPrinters::SModelData(CPOSPrinter::DefaultName, false, POSPrinters::SParameters(portParameters, errors, tagEngine), "Default"));
-	mPortParameters = portParameters->data();
-}
-
-//--------------------------------------------------------------------------------
-bool POSPrinter::isConnected()
+template <class T>
+bool POSPrinter<T>::isConnected()
 {
 	if (!mIOPort->write(CPOSPrinter::Command::Initialize))
 	{
@@ -140,7 +92,7 @@ bool POSPrinter::isConnected()
 
 		if (result)
 		{
-			mTagEngine = mModelData.getDefault().parameters.tagEngine;
+			mTagEngine->data() = POSPrinters::CommonParameters.tagEngine.constData();
 		}
 
 		return result;
@@ -157,7 +109,7 @@ bool POSPrinter::isConnected()
 
 		if (onlyDefaultModels)
 		{
-			mTagEngine = mModelData.getDefault().parameters.tagEngine;
+			mTagEngine->data() = POSPrinters::CommonParameters.tagEngine.constData();
 		}
 
 		return onlyDefaultModels;
@@ -176,14 +128,14 @@ bool POSPrinter::isConnected()
 		mModelCompatibility = false;
 		toLog(LogLevel::Error, name + " is detected, but not supported by this pligin");
 
-		mTagEngine = mModelData[mModelID].parameters.tagEngine;
+		mTagEngine->data() = mParameters.tagEngine.data();
 
 		return true;
 	}
 
 	mModelID = modelId;
 	mDeviceName = mModelData[mModelID].name;
-	mTagEngine = mModelData[mModelID].parameters.tagEngine;
+	mTagEngine->data() = mParameters.tagEngine.data();
 
 	processDeviceData();
 
@@ -193,7 +145,8 @@ bool POSPrinter::isConnected()
 }
 
 //--------------------------------------------------------------------------------
-void POSPrinter::processDeviceData()
+template <class T>
+void POSPrinter<T>::processDeviceData()
 {
 	QByteArray answer;
 
@@ -212,19 +165,22 @@ void POSPrinter::processDeviceData()
 }
 
 //--------------------------------------------------------------------------------
-bool POSPrinter::getModelId(QByteArray & aAnswer) const
+template <class T>
+bool POSPrinter<T>::getModelId(QByteArray & aAnswer) const
 {
 	return mIOPort->write(CPOSPrinter::Command::GetModelId) && getAnswer(aAnswer, CPOSPrinter::Timeouts::Info) && (aAnswer.size() <= 1);
 }
 
 //--------------------------------------------------------------------------------
-char POSPrinter::parseModelId(QByteArray & aAnswer)
+template <class T>
+char POSPrinter<T>::parseModelId(QByteArray & aAnswer)
 {
 	return aAnswer[0];
 }
 
 //--------------------------------------------------------------------------------
-void POSPrinter::checkVerifying()
+template <class T>
+void POSPrinter<T>::checkVerifying()
 { 
 	if (!isAutoDetecting() && containsConfigParameter(CHardwareSDK::ModelName))
 	{
@@ -244,7 +200,8 @@ void POSPrinter::checkVerifying()
 }
 
 //--------------------------------------------------------------------------------
-bool POSPrinter::updateParameters()
+template <class T>
+bool POSPrinter<T>::updateParameters()
 {
 	//TODO: устанавливать размеры ячейки сетки для печати, с учетом выбранного режима.
 	QByteArray command = QByteArray(CPOSPrinter::Command::Initialize) +
@@ -273,13 +230,15 @@ bool POSPrinter::updateParameters()
 }
 
 //--------------------------------------------------------------------------------
-bool POSPrinter::isOnlyDefaultModels()
+template <class T>
+bool POSPrinter<T>::isOnlyDefaultModels()
 {
 	return mModelData.data().keys().isEmpty();
 }
 
 //--------------------------------------------------------------------------------
-bool POSPrinter::printLine(const QByteArray & aString)
+template <class T>
+bool POSPrinter<T>::printLine(const QByteArray & aString)
 {
 	QDateTime beginning = QDateTime::currentDateTime();
 
@@ -304,7 +263,8 @@ bool POSPrinter::printLine(const QByteArray & aString)
 }
 
 //--------------------------------------------------------------------------------
-QByteArray POSPrinter::prepareBarcodePrinting()
+template <class T>
+QByteArray POSPrinter<T>::prepareBarcodePrinting()
 {
 	return QByteArray() +
 		CPOSPrinter::Command::Barcode::Height + CPOSPrinter::Barcode::Height +
@@ -314,7 +274,8 @@ QByteArray POSPrinter::prepareBarcodePrinting()
 }
 
 //--------------------------------------------------------------------------------
-bool POSPrinter::printBarcode(const QString & aBarcode)
+template <class T>
+bool POSPrinter<T>::printBarcode(const QString & aBarcode)
 {
 	QByteArray data = mCodec->fromUnicode(aBarcode);
 	QByteArray barcodePrinting = QByteArray() + CPOSPrinter::Command::Barcode::Print +	CPOSPrinter::Barcode::CodeSystem128 +
@@ -324,11 +285,10 @@ bool POSPrinter::printBarcode(const QString & aBarcode)
 }
 
 //--------------------------------------------------------------------------------
-bool POSPrinter::getStatus(TStatusCodes & aStatusCodes)
+template <class T>
+bool POSPrinter<T>::getStatus(TStatusCodes & aStatusCodes)
 {
-	POSPrinters::TAllErrors errorData = mModelData[mModelID].parameters.errors->data();
-
-	for (auto it = errorData.begin(); it != errorData.end(); ++it)
+	for (auto it = mParameters.errors.begin(); it != mParameters.errors.end(); ++it)
 	{
 		SleepHelper::msleep(CPOSPrinter::StatusPause);
 
@@ -374,7 +334,8 @@ bool POSPrinter::getStatus(TStatusCodes & aStatusCodes)
 }
 
 //--------------------------------------------------------------------------------
-bool POSPrinter::readStatusAnswer(QByteArray & aAnswer, int aTimeout, int aBytesCount) const
+template <class T>
+bool POSPrinter<T>::readStatusAnswer(QByteArray & aAnswer, int aTimeout, int aBytesCount) const
 {
 	QVariantMap configuration;
 	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(ELoggingType::Write));
@@ -403,7 +364,8 @@ bool POSPrinter::readStatusAnswer(QByteArray & aAnswer, int aTimeout, int aBytes
 }
 
 //--------------------------------------------------------------------------------
-bool POSPrinter::printImage(const QImage & aImage, const Tags::TTypes & aTags)
+template <class T>
+bool POSPrinter<T>::printImage(const QImage & aImage, const Tags::TTypes & aTags)
 {
 	int widthInBytes = aImage.width() / 8 + ((aImage.width() % 8) ? 1 : 0);
 	bool doubleWidth  = aTags.contains(Tags::Type::DoubleWidth) || aTags.contains(Tags::Type::DoubleWidth);

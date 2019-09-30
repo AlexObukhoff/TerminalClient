@@ -31,11 +31,18 @@ void CCTalkCAProtocol::setAddress(uchar aAddress)
 //--------------------------------------------------------------------------------
 void CCTalkCAProtocol::setType(const QString & aType)
 {
-	if ((mType != aType) && CCCTalk::ProtocolTypes.contains(aType))
+	if (mType != aType)
 	{
-		toLog(LogLevel::Normal, "ccTalk: Set protocol type " + aType);
+		if (!CCCTalk::ProtocolTypes.contains(aType))
+		{
+			toLog(LogLevel::Error, "ccTalk: Wrong protocol type " + aType);
+		}
+		else
+		{
+			toLog(LogLevel::Normal, "ccTalk: Set protocol type " + aType);
 
-		mType = aType;
+			mType = aType;
+		}
 	}
 }
 
@@ -96,7 +103,7 @@ bool CCTalkCAProtocol::check(QByteArray & aAnswer)
 		return false;
 	}
 
-	if (mType == CHardware::CashAcceptor::CCTalkTypes::CRC8)
+	if (mType == CHardware::CashDevice::CCTalkTypes::CRC8)
 	{
 		char deviceAddress = aAnswer[2];
 
@@ -115,7 +122,7 @@ bool CCTalkCAProtocol::check(QByteArray & aAnswer)
 		return false;
 	}
 
-	if (mType == CHardware::CashAcceptor::CCTalkTypes::CRC8)
+	if (mType == CHardware::CashDevice::CCTalkTypes::CRC8)
 	{
 		QByteArray answer = aAnswer.left(aAnswer.size() - 1);
 		uchar dataCRC = calcCRC8(answer);
@@ -127,7 +134,7 @@ bool CCTalkCAProtocol::check(QByteArray & aAnswer)
 			return false;
 		}
 	}
-	else if (mType == CHardware::CashAcceptor::CCTalkTypes::CRC16)
+	else if (mType == CHardware::CashDevice::CCTalkTypes::CRC16)
 	{
 		QByteArray answer = aAnswer.left(2) + aAnswer.mid(3, aAnswer.size() - 4);
 		ushort dataCRC = calcCRC16(answer);
@@ -159,14 +166,14 @@ TResult CCTalkCAProtocol::processCommand(const QByteArray & aCommandData, QByteA
 	QByteArray request = aCommandData;
 	uchar size = uchar(aCommandData.size() - 1);
 
-	if (mType == CHardware::CashAcceptor::CCTalkTypes::CRC8)
+	if (mType == CHardware::CashDevice::CCTalkTypes::CRC8)
 	{
 		request.prepend(CCCTalk::Address::Host);
 		request.prepend(size);
 		request.prepend(mAddress);
 		request.append(calcCRC8(request));
 	}
-	else if (mType == CHardware::CashAcceptor::CCTalkTypes::CRC16)
+	else if (mType == CHardware::CashDevice::CCTalkTypes::CRC16)
 	{
 		request.prepend(size);
 		request.prepend(mAddress);

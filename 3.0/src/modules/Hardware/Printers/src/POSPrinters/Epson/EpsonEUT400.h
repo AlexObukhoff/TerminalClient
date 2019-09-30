@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Hardware/Printers/POSPrinter.h"
+#include "Hardware/Printers/PortPOSPrinters.h"
 
 //--------------------------------------------------------------------------------
-class EpsonEUT400 : public POSPrinter
+class EpsonEUT400 : public TSerialPOSPrinter
 {
 	SET_SUBSERIES("EpsonEUT400")
 

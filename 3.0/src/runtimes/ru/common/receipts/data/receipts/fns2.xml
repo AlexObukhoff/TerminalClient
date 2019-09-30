@@ -38,7 +38,26 @@
 	<string>Дата: %DATETIME%</string>
 	<string>Терминал: %TERMINAL_NUMBER%</string>
 	<string>Сумма налога: %AMOUNT%</string>
-	<string>Индекс документа плательщика: %100%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
+	<string>%OPERATOR_FIELD%</string>
 	<string>Получатель: %ADDINFO%</string>
 	<string>-----------------------------------</string>
 	<string>Оператор по переводу денежных средств:</string>

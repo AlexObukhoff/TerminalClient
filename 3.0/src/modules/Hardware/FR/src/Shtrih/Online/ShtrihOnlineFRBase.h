@@ -4,7 +4,7 @@
 
 // Modules
 #include "Hardware/Common/TCPDeviceBase.h"
-#include "Hardware/Printers/PortPrinterBase.h"
+#include "Hardware/Printers/PortPrintersBase.h"
 
 // Project
 #include "../Base/ShtrihFRBase.h"

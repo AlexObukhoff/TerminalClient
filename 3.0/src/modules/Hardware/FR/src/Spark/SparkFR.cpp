@@ -22,7 +22,6 @@ SparkFR::SparkFR()
 
 	// кодек
 	mCodec = CodecByName[CHardware::Codepages::SPARK];
-	mFFEngine.setCodec(mCodec);
 
 	// данные устройства
 	mDeviceName = CSparkFR::Models::Default;

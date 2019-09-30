@@ -27,6 +27,7 @@ namespace CDeviceData
 	const char Date[] = "date";
 	const char FirmwareUpdatable[] = "firmware_updatable";
 	const char ProjectNumber[] = "project_number";
+	const char ProductCode[] = "product_code";
 	const char Vendor[] = "vendor";
 	const char ProtocolVersion[] = "protocol_version";
 	const char SDCard[] = "sd_card";
@@ -38,6 +39,7 @@ namespace CDeviceData
 	const char InternalHardware[] = "device_id_value";
 	const char ControllerBuild[] = "controller_build";
 	const char Count[] = "count";
+	const char Number[] = "number";
 
 	/// Общие значения.
 	namespace Values
@@ -244,6 +246,10 @@ namespace CDeviceData
 		const char ValidityData[] = "fs_validity_data";
 		const char DifferenceDT[] = "fs_difference_date_time";
 		const char Version[] = "fs_version";
+		const char Expiration[] = "fs_expiration";
+		const char FFD[] = "fs_ffd";
+		const char Provider[] = "fs_provider";
+		const char Revision[] = "fs_revision";
 	}
 
 	/// Сторожевые таймеры.

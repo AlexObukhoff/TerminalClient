@@ -275,7 +275,7 @@ void KasbiFRBase::processDeviceData()
 	if (processCommand(CKasbiFR::Commands::GetFSData, &data) && (data.size() >= 5))
 	{
 		QDate date(int(2000) + data[0], data[1], data[2]);
-		setDeviceParameter(CDeviceData::FS::ValidityData, date.toString(CFR::DateLogFormat));
+		setDeviceParameter(CDeviceData::FS::ValidityData, CFR::FSValidityDateOff(date));
 		setDeviceParameter(CDeviceData::FR::ReregistrationNumber, int(data[4]));
 		setDeviceParameter(CDeviceData::FR::FreeReregistrations, int(data[3]));
 	}
@@ -582,7 +582,7 @@ bool KasbiFRBase::sale(const SUnitData & aUnitData)
 		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectUnitPrice, qRound64(aUnitData.sum * 100.0)) +
 		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectQuantity, 1.0) +
 		mFFEngine.getTLVData(CFR::FiscalFields::VATRate, char(section)) +
-		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectMethodType, CFR::PayOffSubjectMethodType);
+		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectMethodType, aUnitData.payOffSubjectMethodType);
 
 	return processCommand(CKasbiFR::Commands::Sale, mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubject, commandData));
 }
@@ -623,24 +623,38 @@ bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData
 	QString cashierINN  = mFFEngine.getConfigParameter(CFiscalSDK::CashierINN).toString();
 	QString userContact = mFFEngine.getConfigParameter(CFiscalSDK::UserContact).toString();
 
-	if (!cashier.isEmpty())     commandData += mFFEngine.getTLVData(CFR::FiscalFields::Cashier, cashier);
-	if (!cashierINN.isEmpty())  commandData += mFFEngine.getTLVData(CFR::FiscalFields::CashierINN, cashier);
-	if (!userContact.isEmpty()) commandData += mFFEngine.getTLVData(CFR::FiscalFields::UserContact, userContact);
+	if (!cashier.isEmpty())     commandData += mFFEngine.getTLVData(CFR::FiscalFields::Cashier);
+	if (!cashierINN.isEmpty())  commandData += mFFEngine.getTLVData(CFR::FiscalFields::CashierINN);
+	if (!userContact.isEmpty()) commandData += mFFEngine.getTLVData(CFR::FiscalFields::UserContact);
 
 	result = result && processCommand(CKasbiFR::Commands::Total, commandData);
-
-	if (aPaymentData.agentFlag != EAgentFlags::None)
+		if (aPaymentData.agentFlag != EAgentFlags::None)
 	{
-		commandData =
-			mFFEngine.getTLVData(CFR::FiscalFields::AgentFlagsReg, char(aPaymentData.agentFlag)) +
-			mFFEngine.getTLVData(CFR::FiscalFields::AgentPhone) +
-			mFFEngine.getTLVData(CFR::FiscalFields::AgentOperation,  " ") +
-			mFFEngine.getTLVData(CFR::FiscalFields::ProcessingPhone, " ") +
-			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorName) +
-			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorINN) +
-			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorAddress) +
-			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorPhone) +
-			mFFEngine.getTLVData(CFR::FiscalFields::ProviderPhone);
+		commandData = mFFEngine.getTLVData(CFR::FiscalFields::AgentFlagsReg);
+
+		bool isBankAgent    = CFR::isBankAgent(aPaymentData.agentFlag);
+		bool isPaymentAgent = CFR::isPaymentAgent(aPaymentData.agentFlag);
+
+		if (isBankAgent)
+		{
+			commandData +=
+				mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorAddress) +
+				mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorINN) +
+				mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorName) +
+				mFFEngine.getTLVData(CFR::FiscalFields::AgentOperation) +
+				mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorPhone);
+		}
+		else if (isPaymentAgent)
+		{
+			commandData += mFFEngine.getTLVData(CFR::FiscalFields::ProcessingPhone);
+		}
+
+		if (isBankAgent || isPaymentAgent)
+		{
+			commandData +=
+				mFFEngine.getTLVData(CFR::FiscalFields::AgentPhone) +
+				mFFEngine.getTLVData(CFR::FiscalFields::ProviderPhone);
+		}
 
 		result = result && processCommand(CKasbiFR::Commands::SendAgentData, commandData);
 	}

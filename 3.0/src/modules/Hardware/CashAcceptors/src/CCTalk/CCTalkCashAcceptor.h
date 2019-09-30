@@ -4,9 +4,7 @@
 
 // Modules
 #include "Hardware/Acceptors/CCTalkAcceptorBase.h"
-
-// Project
-#include "CCTalkCashAcceptorModelData.h"
+#include "Hardware/CashAcceptors/SerialCashAcceptor.h"
 
 //--------------------------------------------------------------------------------
 typedef CCTalkAcceptorBase<TSerialCashAcceptor> TCCTalkCashAcceptor;
@@ -58,9 +56,6 @@ protected:
 
 	/// Коэффициенты для вычисления номиналов. Зависят от кода валюты.
 	QMap<QByteArray, double> mScalingFactors;
-
-	/// Получить данные моделей.
-	virtual CCCTalk::CModelDataBase * getModelData();
 
 	/// Виртуальный статус движения купюры после эскроу.
 	struct SRouting

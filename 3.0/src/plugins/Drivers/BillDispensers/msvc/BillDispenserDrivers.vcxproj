@@ -70,7 +70,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CashDispensers.lib;PuloonProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CashDevices.lib;CashDispensers.lib;PuloonProtocol.lib;CCTalkProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -96,7 +96,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CashDispensers.lib;PuloonProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CashDevices.lib;CashDispensers.lib;PuloonProtocol.lib;CCTalkProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -121,7 +121,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmaind.lib;QtCored4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;CashDispensersd.lib;PuloonProtocold.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmaind.lib;QtCored4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;CashDevicesd.lib;CashDispensersd.lib;PuloonProtocold.lib;CCTalkProtocold.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BillDispenserPlugin.cpp" />
+    <ClCompile Include="..\src\BillDispenserTemplates.cpp" />
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp" />
   </ItemGroup>
   <ItemGroup>

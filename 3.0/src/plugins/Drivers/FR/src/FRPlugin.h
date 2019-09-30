@@ -4,6 +4,13 @@
 
 #include "Hardware/Plugins/DevicePluginBase.h"
 
+// остальные
+#include "../../../../modules/Hardware/FR/src/OPOSMStarTUPK/OPOSMStarTUPK.h"
+//#include "../../../../modules/Hardware/FR/src/MStar/MStarPrinters.h"
+#include "../../../../modules/Hardware/FR/src/Spark/SparkFR.h"
+#include "../../../../modules/Hardware/FR/src/Kasbi/KasbiFRBase.h"
+#include "../../../../modules/Hardware/FR/src/MStar/Online/AFPFR.cpp"
+
 // ПРИМы
 #include "../../../../modules/Hardware/FR/src/Prim/PrimFRBase.h"
 #include "../../../../modules/Hardware/FR/src/Prim/Presenter/PrimPresenterFR.h"
@@ -29,13 +36,6 @@
 #include "../../../../modules/Hardware/FR/src/Atol/Base/Ejector/PayPPU700.h"
 #include "../../../../modules/Hardware/FR/src/Atol/Online/AtolOnlineFRBase.h"
 #include "../../../../modules/Hardware/FR/src/Atol/Online/Paymaster.h"
-
-// остальные
-//#include "../../../../modules/Hardware/FR/src/MStar/MStarPrinters.h"
-#include "../../../../modules/Hardware/FR/src/OPOSMStarTUPK/OPOSMStarTUPK.h"
-#include "../../../../modules/Hardware/FR/src/Spark/SparkFR.h"
-#include "../../../../modules/Hardware/FR/src/Kasbi/KasbiFRBase.h"
-#include "../../../../modules/Hardware/FR/src/MStar/Online/AFPFR.cpp"
 
 //------------------------------------------------------------------------------
 template <class T>

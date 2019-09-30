@@ -55,11 +55,24 @@ namespace CPrimOnlineFR
 		return EFFD::Unknown;
 	}
 
+	/// Получить версию УПД по версии прошивки.
+	inline int getDTD(const QString & aFirmware, EFFD::Enum aFFDFR)
+	{
+		int result = aFirmware.mid(1, 1).toInt(0, 16);
+
+		if ((aFFDFR >= EFFD::F105) && (result < 6))
+		{
+			result += 16;
+		}
+
+		return result;
+	}
+
 	/// Получить актуальные версии прошивок для разных версий ФФД.
 	inline double getActualFirmware(EFFD::Enum aFFD)
 	{
 		if (aFFD == EFFD::F10)  return  64.0;
-		if (aFFD == EFFD::F105) return 104.5;
+		if (aFFD == EFFD::F105) return 107.3;
 
 		return 0;
 	}

@@ -16,7 +16,8 @@ namespace CCustomVKP80
 }
 
 //--------------------------------------------------------------------------------
-class CustomVKP80 : public EjectorPOS
+template<class T>
+class CustomVKP80 : public EjectorPOS<T>
 {
 	SET_SUBSERIES("CustomVKP80")
 
@@ -33,5 +34,18 @@ protected:
 	/// Напечатать чек.
 	virtual bool printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt);
 };
+
+//--------------------------------------------------------------------------------
+class LibUSBCustomVKP80: public CustomVKP80<TLibUSBPrinterBase>
+{
+public:
+	LibUSBCustomVKP80()
+	{
+		mDetectingData->set(CUSBVendors::Custom, mDeviceName, 0x015d);
+	}
+};
+
+//--------------------------------------------------------------------------------
+typedef SerialPOSPrinter<CustomVKP80<TSerialPrinterBase>> SerialCustomVKP80;
 
 //--------------------------------------------------------------------------------

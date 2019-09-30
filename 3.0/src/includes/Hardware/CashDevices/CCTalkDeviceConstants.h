@@ -9,11 +9,10 @@
 
 // Modules
 #include "Hardware/Common/Specifications.h"
-#include "Hardware/Common/WaitingData.h"
 
 // Project
 #include "Hardware/CashAcceptors/CashAcceptorStatusCodes.h"
-#include "Hardware/Acceptors/CCTalkData.h"
+#include "Hardware/CashDevices/CCTalkData.h"
 
 //--------------------------------------------------------------------------------
 namespace CCCTalk
@@ -21,14 +20,8 @@ namespace CCCTalk
 	/// ACK.
 	const char ACK  = '\x00';
 
-	/// Маска для сортировщика по умолчанию (использовать предустановленные настройки).
-	const char DefaultSorterMask = '\xFF';
-
 	/// Пауза перед идентификацией.
 	const int IdentificationPause = 100;
-
-	/// Количество номиналов.
-	const int NominalCount = 16;
 
 	class CDeviceTypeIds : public CDescription<char>
 	{
@@ -36,7 +29,8 @@ namespace CCCTalk
 		CDeviceTypeIds()
 		{
 			append(Address::CoinAcceptor, "coinacceptor");
-			append(Address::Payout, "");
+			append(Address::Hopper,       "payout");
+			append(Address::Hopper2,      "payout");
 			append(Address::BillAcceptor, "billvalidator");
 			append(Address::CardReader, "");
 		}
@@ -48,25 +42,20 @@ namespace CCCTalk
 	namespace Command
 	{
 		/// Общие.
-		namespace Core
-		{
-			const uchar SimplePoll   = 254;
-			const uchar VendorID     = 246;
-			const uchar DeviceTypeID = 245;
-			const uchar ModelName    = 244;
-			const uchar BuildCode    = 192;
-		}
+		const uchar SimplePoll   = 254;
+		const uchar VendorID     = 246;
+		const uchar DeviceTypeID = 245;
+		const uchar ProductCode  = 244;
+		const uchar BuildCode    = 192;
 
 		/// Общие +.
-		namespace CorePlus
-		{
-			const uchar Serial       = 242;
-			const uchar SoftVersion  = 241;
-			const uchar ProtocolID   =   4;
-			const uchar Reset        =   1;
-		}
+		const uchar Serial       = 242;
+		const uchar SoftVersion  = 241;
+		const uchar ProtocolID   =   4;
+		const uchar Reset        =   1;
 
 		const uchar Status                     = 248;
+		const uchar GetVariables               = 247;
 		const uchar DBVersion                  = 243;
 		const uchar TestCoils                  = 240;
 		const uchar SelfCheck                  = 232;
@@ -78,6 +67,11 @@ namespace CCCTalk
 		const uchar GetCoinID                  = 184;
 		const uchar SetSecurity                = 181;
 		const uchar BaseYear                   = 170;
+		const uchar Dispense                   = 167;
+		const uchar GetHopperStatus            = 166;
+		const uchar SetVariables               = 165;
+		const uchar EnableHopper               = 164;
+		const uchar TestHopper                 = 163;
 		const uchar ModifyInhibitsAndRegesters = 162;
 		const uchar GetBufferedBillStatuses    = 159;
 		const uchar GetBillID                  = 157;
@@ -112,18 +106,19 @@ namespace CCCTalk
 		public:
 			CDescriptions()
 			{
-				append(Core::SimplePoll,           EAnswerType::ACK,   "perform simple poll");
-				append(Core::VendorID,             EAnswerType::ASCII, "get vendor ID");
-				append(Core::DeviceTypeID,         EAnswerType::ASCII, "get device type ID");
-				append(Core::ModelName,            EAnswerType::ASCII, "get model name");
-				append(Core::BuildCode,            EAnswerType::ASCII, "get build code");
+				append(SimplePoll,           EAnswerType::ACK,   "perform simple poll");
+				append(VendorID,             EAnswerType::ASCII, "get vendor ID");
+				append(DeviceTypeID,         EAnswerType::ASCII, "get device type ID");
+				append(ProductCode,          EAnswerType::ASCII, "get product code");
+				append(BuildCode,            EAnswerType::ASCII, "get build code");
 
-				append(CorePlus::Serial,           EAnswerType::Data,  "get serial number", 3);
-				append(CorePlus::SoftVersion,      EAnswerType::ASCII, "get soft version");
-				append(CorePlus::ProtocolID,       EAnswerType::Data,  "get protocol ID", 3);
-				append(CorePlus::Reset,            EAnswerType::ACK,   "perform reset");
+				append(Serial,           EAnswerType::Data,  "get serial number", 3);
+				append(SoftVersion,      EAnswerType::ASCII, "get soft version");
+				append(ProtocolID,       EAnswerType::Data,  "get protocol ID", 3);
+				append(Reset,            EAnswerType::ACK,   "perform reset");
 
 				append(Status,                     EAnswerType::Data,  "get generic status", 1);
+				append(GetVariables,               EAnswerType::Data,  "get variables", 4);
 				append(DBVersion,                  EAnswerType::Data,  "get DB version", 1);
 				append(TestCoils,                  EAnswerType::ACK,   "test coils");
 				append(SelfCheck,                  EAnswerType::Data,  "perform selfcheck", 1);
@@ -135,6 +130,11 @@ namespace CCCTalk
 				append(GetCoinID,                  EAnswerType::Data,  "get coin nominal data", 6);
 				append(SetSecurity,                EAnswerType::ACK,   "set security level");
 				append(BaseYear,                   EAnswerType::Data,  "get a year, which is the base for other dates", 4);
+				append(Dispense,                   EAnswerType::Data,  "dispense hopper coins", 1);
+				append(GetHopperStatus,            EAnswerType::Data,  "get hopper status", 4);
+				append(SetVariables,               EAnswerType::ACK,   "set variables");
+				append(EnableHopper,               EAnswerType::ACK,   "enable/disable hopper");
+				append(TestHopper,                 EAnswerType::Data,  "test hopper", 1);
 				append(ModifyInhibitsAndRegesters, EAnswerType::ACK,   "modify inhibits and override registers for sequence of coins");
 				append(GetBufferedBillStatuses,    EAnswerType::Data,  "get buffered bill statuses", 1);
 				append(GetBillID,                  EAnswerType::Data,  "get bill nominal data", 7);
@@ -186,10 +186,6 @@ namespace CCCTalk
 			append(aError, SErrorData(aStatusCode, aDescription, aIsRejected));
 		}
 	};
-
-	/// Фиктивныe девайс-коды устройства, для функционала, связанного с повтором таких статус-кодов
-	const uchar EscrowDeviceCode  = 200;
-	const uchar StackedDeviceCode = 201;
 
 	//--------------------------------------------------------------------------------
 	/// Неисправности.

@@ -219,6 +219,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../../../../includes/Hardware/CashAcceptors/CashAcceptorStatusesDescriptions.h" line="174"/>
+        <source>#rejecting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../../../../includes/Hardware/CashAcceptors/CashAcceptorStatusesDescriptions.h" line="166"/>
         <source>#currency_is_not_supported</source>
         <translation type="unfinished">валюта қолданыста жоқ</translation>

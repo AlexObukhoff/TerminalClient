@@ -32,11 +32,8 @@ TParameterList defaultParameters(const QString & aProtocol, const T2 & aModelLis
 template <class T1, class T2>
 TParameterList ID003Parameters(const QString & aProtocol, const T2 & aModelList)
 {
-	QVariantMap modelNames;
-	modelNames.insert("JCM iVISION", "JCM IVISION");
-
 	return defaultParameters<T1, T2>(aProtocol, aModelList)
-		<< setModifiedValues(CHardwareSDK::ModelName, modelNames);
+		<< setModifiedValues(CHardwareSDK::ModelName, "JCM iVISION", "JCM IVISION");
 }
 
 //------------------------------------------------------------------------------
@@ -44,26 +41,26 @@ template <class T1, class T2>
 TParameterList CCTalkParameters(const QString & aProtocol, const T2 & aModelList)
 {
 	return defaultParameters<T1, T2>(aProtocol, aModelList)
-		<< setProtocolType(CHardware::CashAcceptor::CCTalkTypes::CRC8, CCCTalk::ProtocolTypes);
+		<< setProtocolType(CHardware::CashDevice::CCTalkTypes::CRC8, CCCTalk::ProtocolTypes);
 }
 
 // Регистрация плагина.
-#define COMMON_CASH_ACCEPTOR_PLUGIN(aClassName, aProtocol, aParameters) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName, QStringList>, ProtocolNames::CashAcceptor::aProtocol, aClassName::getModelList()))
-#define SINGLE_CASH_ACCEPTOR_PLUGIN(aClassName, aProtocol, aModel) COMMON_DRIVER(aClassName, std::bind(&defaultParameters<aClassName, QString>, ProtocolNames::CashAcceptor::aProtocol, aModel))
-#define CCNET_CASH_ACCEPTOR_PLUGIN(aClassName, aModel) SINGLE_CASH_ACCEPTOR_PLUGIN(aClassName, CCNet, CCCNet::Models::aModel)
+#define COMMON_CASH_ACCEPTOR_PLUGIN(aClassName, aProtocol, aParameters) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName, QStringList>, ProtocolNames::aProtocol, aClassName::getModelList()))
+#define SINGLE_CASH_ACCEPTOR_PLUGIN(aClassName, aProtocol, aModel) COMMON_DRIVER(aClassName, std::bind(&defaultParameters<aClassName, QString>, ProtocolNames::aProtocol, aModel))
+#define CCNET_CASH_ACCEPTOR_PLUGIN(aClassName, aModel) SINGLE_CASH_ACCEPTOR_PLUGIN(aClassName, CashDevice::CCNet, CCCNet::Models::aModel)
 
 BEGIN_REGISTER_PLUGIN
-	COMMON_CASH_ACCEPTOR_PLUGIN(CCNetCashAcceptorBase, CCNet, defaultParameters)
+	COMMON_CASH_ACCEPTOR_PLUGIN(CCNetCashAcceptorBase, CashDevice::CCNet, defaultParameters)
 	CCNET_CASH_ACCEPTOR_PLUGIN(CCNetCashcodeGX, CashcodeGX)
 	CCNET_CASH_ACCEPTOR_PLUGIN(CCNetCreator, CreatorC100)
 	CCNET_CASH_ACCEPTOR_PLUGIN(CCNetRecycler, CashcodeG200)
 
-	COMMON_CASH_ACCEPTOR_PLUGIN(EBDSCashAcceptor,   EBDS,   defaultParameters)
-	COMMON_CASH_ACCEPTOR_PLUGIN(ICTCashAcceptor,    ICT,    defaultParameters)
-	COMMON_CASH_ACCEPTOR_PLUGIN(ID003CashAcceptor,  ID003,  ID003Parameters)
-	COMMON_CASH_ACCEPTOR_PLUGIN(V2eCashAcceptor,    V2e,    defaultParameters)
-	COMMON_CASH_ACCEPTOR_PLUGIN(CCTalkCashAcceptor, CCTalk, CCTalkParameters)
-	//COMMON_CASH_ACCEPTOR_PLUGIN(SSPCashAcceptor,   SSP,   defaultParameters)
+	COMMON_CASH_ACCEPTOR_PLUGIN(EBDSCashAcceptor,   CashAcceptor::EBDS,  defaultParameters)
+	COMMON_CASH_ACCEPTOR_PLUGIN(ICTCashAcceptor,    CashAcceptor::ICT,   defaultParameters)
+	COMMON_CASH_ACCEPTOR_PLUGIN(ID003CashAcceptor,  CashAcceptor::ID003, ID003Parameters)
+	COMMON_CASH_ACCEPTOR_PLUGIN(V2eCashAcceptor,    CashAcceptor::V2e,   defaultParameters)
+	COMMON_CASH_ACCEPTOR_PLUGIN(CCTalkCashAcceptor, CashDevice::CCTalk,  CCTalkParameters)
+	//COMMON_CASH_ACCEPTOR_PLUGIN(SSPCashAcceptor,  CashDevice::SSP,     defaultParameters)
 END_REGISTER_PLUGIN
 
 //------------------------------------------------------------------------------

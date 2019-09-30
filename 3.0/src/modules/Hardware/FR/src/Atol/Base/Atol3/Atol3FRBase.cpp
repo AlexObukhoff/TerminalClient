@@ -31,7 +31,7 @@ TResult Atol3FRBase::performCommand(const QByteArray & aCommandData, QByteArray 
 	clockTimer.start();
 
 	mTId = (mTId == uchar(CAtol3FR::LastTId)) ? ASCII::NUL : ++mTId;
-	TResult result = mProtocol.processCommand(mTId, aCommandData, aAnswer, aTimeout);
+	TResult result = mProtocol.processCommand(mTId, aCommandData, aAnswer);
 
 	using namespace CAtol3FR;
 
@@ -39,7 +39,7 @@ TResult Atol3FRBase::performCommand(const QByteArray & aCommandData, QByteArray 
 	{
 		do
 		{
-			result = mProtocol.waitForAnswer(aAnswer);
+			result = mProtocol.waitForAnswer(aAnswer, CAtol3FR::Timeouts::WaitForAnswer);
 		}
 		while ((clockTimer.elapsed() < aTimeout) && ((result == CommandResult::NoAnswer) || (aAnswer[0] == States::InProgress)));
 	}

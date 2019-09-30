@@ -6,7 +6,7 @@
 #include "Hardware/Protocols/CashAcceptor/ID003.h"
 
 // Project
-#include "Hardware/CashAcceptors/PortCashAcceptor.h"
+#include "Hardware/CashAcceptors/SerialCashAcceptor.h"
 
 //--------------------------------------------------------------------------------
 class ID003CashAcceptor : public TSerialCashAcceptor

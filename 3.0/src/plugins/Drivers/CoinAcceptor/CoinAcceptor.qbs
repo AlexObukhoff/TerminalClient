@@ -11,6 +11,7 @@ Project {
 		Depends { name: "HardwareCommon" }
 		Depends { name: "CashAcceptors" }
 		Depends { name: "CoinAcceptors" }
+		Depends { name: "CashDispensers" }
 		
 		files: [
 			"../../../includes/Common/CoreVersion.rc",

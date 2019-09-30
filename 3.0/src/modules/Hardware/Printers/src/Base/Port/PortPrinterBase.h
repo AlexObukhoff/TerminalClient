@@ -5,6 +5,7 @@
 // Modules
 #include "Hardware/Common/PortPollingDeviceBase.h"
 #include "Hardware/Common/SerialDeviceBase.h"
+#include "Hardware/Common/LibUSBDeviceBase.h"
 #include "Hardware/Common/TCPDeviceBase.h"
 #include "Hardware/Common/ProtoDevices.h"
 

@@ -36,6 +36,9 @@
     <ClCompile Include="..\src\Parameters\FRPluginParameters.cpp">
       <Filter>Parameters</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\FRTemplates.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\FRPlugin.h">

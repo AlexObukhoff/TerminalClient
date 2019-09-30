@@ -29,6 +29,7 @@ namespace CommandResult
 
 	typedef QSet<int> TResults;
 	const TResults ProtocolErrors = TResults() << Port << Transport << Protocol << Driver << NoAnswer << Id << CRC;
+	const TResults PresenceErrors = TResults() << OK << Id << CRC << Answer << Device;    // Устройство присутствует.
 }
 
 #define CORRECT(aResult) !CommandResult::ProtocolErrors.contains(aResult)

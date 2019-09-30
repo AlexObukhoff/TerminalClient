@@ -14,12 +14,7 @@ using namespace SDK::Driver;
 MifareReader::MifareReader() : mReady(false)
 {
 	// данные USB-функционала
-	CMifareReader::CData modelData;
-
-	for (auto it = modelData.data().begin(); it != modelData.data().end(); ++it)
-	{
-		mDetectingData->add(CMifareReader::ACS, it.key(), it->model);
-	}
+	mDetectingData->set(CUSBVendors::ACS, CMifareReader::DetectingData().getProductData());
 
 	mPDODetecting = true;
 	mPortUsing = false;
@@ -35,14 +30,7 @@ MifareReader::MifareReader() : mReady(false)
 //--------------------------------------------------------------------------------
 QStringList MifareReader::getModelList()
 {
-	QStringList models;
-
-	foreach (CMifareReader::SData data, CMifareReader::CData().data())
-	{
-		models << data.model;
-	}
-
-	return models;
+	return CMifareReader::DetectingData().getModelList(CUSBVendors::ACS);
 }
 
 //------------------------------------------------------------------------------

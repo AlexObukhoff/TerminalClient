@@ -244,6 +244,9 @@
     <ClCompile Include="..\src\Port\LibUSB\LibUSBDeviceBase.cpp">
       <Filter>Port\LibUSB</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Port\USB\USBDeviceModelData.cpp">
+      <Filter>Port\USB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ASCII.h">
@@ -286,9 +289,6 @@
       <Filter>Port</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Port\USB\USBDeviceBase.h">
-      <Filter>Port\USB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\includes\Hardware\Common\USBDeviceModelData.h">
       <Filter>Port\USB</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Meta\MetaDevice.h">
@@ -363,6 +363,21 @@
     <ClInclude Include="..\src\Port\LibUSB\LibUSBDeviceBase.h">
       <Filter>Port\LibUSB</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\USBDeviceVendors.h">
+      <Filter>Port\USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Port\USB\USBDeviceModelData.h">
+      <Filter>Port\USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\USBDeviceModelDataTypes.h">
+      <Filter>Port\USB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ConfigCleaner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ContainerProxy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\locale\common_ru.ts">
@@ -372,9 +387,6 @@
       <Filter>Translation Files</Filter>
     </None>
     <None Include="..\src\locale\common_kk.ts">
-      <Filter>Translation Files</Filter>
-    </None>
-    <None Include="common_de.ts">
       <Filter>Translation Files</Filter>
     </None>
   </ItemGroup>

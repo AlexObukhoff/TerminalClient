@@ -17,7 +17,7 @@ struct SBaseModelData
 	bool verified;
 	bool updatable;
 
-	SBaseModelData() : verified(false), updatable(false) {}
+	SBaseModelData(const QString & aName = "") : name(aName), verified(false), updatable(false) {}
 	SBaseModelData(const QString & aName, bool aVerified, bool aUpdatable = false) : name(aName), verified(aVerified), updatable(aUpdatable) {}
 };
 

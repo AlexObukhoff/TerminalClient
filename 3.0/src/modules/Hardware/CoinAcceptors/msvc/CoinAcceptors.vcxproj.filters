@@ -26,6 +26,9 @@
     <ClCompile Include="..\src\CCTalk\CCTalkCoinAcceptorBase.cpp">
       <Filter>ccTalk</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\CoinAcceptorBase.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\BillTable.h">

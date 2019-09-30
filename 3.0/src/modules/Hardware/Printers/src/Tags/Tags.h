@@ -110,6 +110,7 @@ namespace Tags
 	};
 
 	typedef QMap<Type::Enum, QByteArray> TPrefixData;
+	typedef QMap<Type::Enum, STagData> TTagData;
 
 	//--------------------------------------------------------------------------------
 	class Engine: public CSpecification<Type::Enum, STagData>

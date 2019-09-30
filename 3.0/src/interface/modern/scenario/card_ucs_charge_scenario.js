@@ -156,7 +156,27 @@ function onAmountUpdated(aPayment) {
 
 //------------------------------------------------------------------------------
 function fillEnterHandler(aParameters) {
-	GUI.show("EditAmountScene", {reset: true, id: Core.payment.getMNPProvider().id});
+	var provider = Core.payment.getMNPProvider();
+
+	var amountAll = Number(Core.payment.getParameter(Scenario.Payment.Parameters.AmountAll));
+	var minAmount = Number(Core.payment.getParameter(Scenario.Payment.Parameters.MinAmount));
+	var maxAmount = Number(Core.payment.getParameter(Scenario.Payment.Parameters.MaxAmount));
+	var maxAmountAll = Number(Core.payment.getParameter(Scenario.Payment.Parameters.MaxAmountAll));
+
+	maxAmount = maxAmount ? maxAmount : Core.payment.calculateLimits(provider.systemLimit)[Scenario.Payment.Parameters.MaxAmount];
+	maxAmountAll = maxAmountAll ? maxAmountAll : provider.systemLimit;
+
+	if ((provider.maxLimit > 0 && maxAmount > provider.maxLimit) ||
+					 (provider.systemLimit > 0 &&
+						(minAmount > provider.systemLimit ||
+						 maxAmount > provider.systemLimit ||
+						 maxAmountAll > provider.systemLimit ||
+						 minAmount > maxAmount))) {
+		GUI.notification({tr: QT_TR_NOOP("cash_charge_scenario#amount_limit_exceeded")}, 5000, Scenario.Payment.Event.Back);
+	}
+	else {
+		GUI.show("EditAmountScene", {reset: true, id: Core.payment.getMNPProvider().id});
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -189,7 +209,7 @@ function chargeEnterHandler(aParameters) {
 	}
 	else if (CHARGE_AMOUNT === 0) { // Проверка на нулевую сумму
 		GUI.notification({tr: QT_TR_NOOP("card_charge_scenario#min_amount_cant_zero_error")}, 5000, Scenario.Payment.Event.Back);
-	}
+	}	
 	else if (!Core.charge.enable(Core.payment.getActivePaymentID(), PAYMENT_METHOD, CHARGE_AMOUNT)) {
 		GUI.notification({tr: QT_TR_NOOP("card_charge_scenario#cannot_enable_cardreader")}, 5000, Scenario.Payment.Event.Abort);
 	}

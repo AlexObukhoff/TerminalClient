@@ -34,38 +34,50 @@ namespace POSPrinters
 
 	struct SParameters
 	{
-		PSerialDevicePortParameters portSettings;
-		PAllErrors errors;
-		Tags::PEngine tagEngine;
+		TAllErrors errors;
+		Tags::Engine tagEngine;
 
-		SParameters() {}
-		SParameters(const PSerialDevicePortParameters & aPortSettings, const PAllErrors & aErrors, const Tags::PEngine & aTagEngine) :
-			portSettings(aPortSettings), errors(aErrors), tagEngine(aTagEngine) {}
+		SParameters()
+		{
+			// теги по умолчанию
+			tagEngine.appendSingle(Tags::Type::Bold, "\x1B\x45", "\x01");
+			tagEngine.appendSingle(Tags::Type::UnderLine, "\x1B\x2D", "\x01");
+			tagEngine.set(Tags::Type::Image);
+			tagEngine.set(Tags::Type::BarCode);
+
+			// статусы TODO: корректировать при добавлении моделей
+			errors[1][1].insert('\x08', DeviceStatusCode::Error::Unknown);
+			errors[2][1].insert('\x20', PrinterStatusCode::Error::PaperEnd);
+			errors[2][1].insert('\x40', DeviceStatusCode::Error::Unknown);
+			errors[3][1].insert('\x60', DeviceStatusCode::Error::Unknown);
+		}
 	};
+
+	/// Параметры по умолчанию.
+	const SParameters CommonParameters;
 
 	struct SModelData
 	{
 		QString name;
 		bool verified;
 		QString description;
-		SParameters parameters;
 
 		SModelData();
-		SModelData(const QString & aName, bool aVerified, const SParameters & aParameters, const QString & aDescription);
+		SModelData(const QString & aName, bool aVerified, const QString & aDescription);
 	};
 
 	typedef QMap<char, SModelData> TModelData;
 	typedef QSet<char> TModelIds;
 
-	class CModelData : public CSpecification<char, SModelData>
+	class ModelData : public CSpecification<char, SModelData>
 	{
 	public:
-		CModelData();
-		void add(char aModelId, bool aVerified, const QString & aName, const SParameters & aParameters, const QString & aDescription = "");
+		ModelData();
+		void add(char aModelId, bool aVerified, const QString & aName, const QString & aDescription = "");
 		const TModelIds & getModelIds();
 
 	private:
-		Q_DISABLE_COPY(CModelData)
+		Q_DISABLE_COPY(ModelData)
 
 		static TModelIds mModelIds;
 		QMutex mMutex;

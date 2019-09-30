@@ -8,7 +8,7 @@
 #include <Common/QtHeadersEnd.h>
 
 // Projects
-#include "Hardware/Printers/POSPrinter.h"
+#include "Hardware/Printers/PortPOSPrinters.h"
 
 //--------------------------------------------------------------------------------
 /// Константы, команды и коды состояний принтеров Custom.
@@ -69,7 +69,8 @@ namespace CCustomPrinter
 }
 
 //--------------------------------------------------------------------------------
-class CustomPrinter : public POSPrinter
+template <class T>
+class CustomPrinter : public POSPrinter<T>
 {
 	SET_SUBSERIES("Custom")
 
@@ -89,5 +90,9 @@ protected:
 	/// Напечатать картинку методом GAM.
 	virtual bool printImage(const QImage & aImage, const Tags::TTypes & aTags);
 };
+
+//--------------------------------------------------------------------------------
+typedef SerialPOSPrinter<CustomPrinter<TSerialPrinterBase>> SerialCustomPrinter;
+typedef                  CustomPrinter<TLibUSBPrinterBase>  LibUSBCustomPrinter;
 
 //--------------------------------------------------------------------------------

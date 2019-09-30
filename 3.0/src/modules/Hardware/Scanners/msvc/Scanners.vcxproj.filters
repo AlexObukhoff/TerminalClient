@@ -84,7 +84,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\Serial\HHPModelData.h">
+    <ClInclude Include="..\src\Serial\HHPDetectingData.h">
       <Filter>Port\USB</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Serial\USBScanner.h">

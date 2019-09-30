@@ -9,6 +9,7 @@
 
 // Modules
 #include "Hardware/Common/DeviceCodeSpecification.h"
+#include "Hardware/Common/WaitingData.h"
 
 // Project
 #include "CashAcceptorBase.h"
@@ -41,6 +42,12 @@ public:
 	/// Активировать/деактивировать приём с учетом отложенного выполнения.
 	virtual bool setEnable(bool aEnabled);
 
+	/// Можно ли обновлять прошивку.
+	virtual bool canUpdateFirmware();
+
+	/// Обновить прошивку.
+	virtual void updateFirmware(const QByteArray & aBuffer);
+
 protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
@@ -60,6 +67,9 @@ protected:
 	/// Получить статусы.
 	typedef QList<QByteArray> TStatusData;
 	virtual bool checkStatuses(TStatusData & aData);
+
+	/// Обновить прошивку.
+	virtual bool performUpdateFirmware(const QByteArray & aBuffer);
 
 	/// Фоновая логика при появлении определенных состояний устройства.
 	virtual void postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection);
@@ -146,8 +156,10 @@ protected:
 
 	/// Возможна ли перепрошивка.
 	bool mUpdatable;
-};
 
-typedef PortCashAcceptor<SerialDeviceBase<PortPollingDeviceBase<ProtoCashAcceptor>>> TSerialCashAcceptor;
+	/// Ждать окончания резета даже если не прошла команда.
+	//TODO: убрать, поправив логику в месте использования
+	bool mForceWaitResetCompleting;
+};
 
 //--------------------------------------------------------------------------------

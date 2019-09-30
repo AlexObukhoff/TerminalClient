@@ -20,6 +20,7 @@ using namespace ProtocolUtils;
 //--------------------------------------------------------------------------------
 FFEngine::FFEngine(ILog * aLog): DeviceLogManager(aLog), mOperatorPresence(false)
 {
+	mCodec = CodecByName[CHardware::Codepages::CP866];
 }
 
 //--------------------------------------------------------------------------------
@@ -128,11 +129,7 @@ void FFEngine::parseTLVData(const CFR::STLV & aTLV, TFiscalPaymentData & aFPData
 	{
 		case ETypes::String:
 		{
-			if (mCodec)
-			{
-				QTextCodec * codec = CodecByName[CHardware::Codepages::CP866];
-				result = codec->toUnicode(aTLV.data);
-			}
+			result = mCodec->toUnicode(aTLV.data);
 
 			break;
 		}
@@ -527,7 +524,7 @@ bool FFEngine::checkFiscalField(int aField, bool & aResult)
 	if (!mFFData.data().contains(aField))
 	{
 		aResult = false;
-		toLog(LogLevel::Error, QString("%1: Failed to set %2 fiscal field due to it is unknown").arg(mDeviceName).arg(aField));
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to set %2 fiscal field due to it is unknown").arg(aField));
 
 		return false;
 	}
@@ -535,31 +532,52 @@ bool FFEngine::checkFiscalField(int aField, bool & aResult)
 	using namespace CFR::FiscalFields;
 
 	SData data = mFFData[aField];
+	QString log = mFFData.getTextLog(aField);
+
+	auto makeResult = [&] (const QString & aAddLog = "")
+	{
+		QString addLog = aAddLog.isEmpty() ? "" : aAddLog + ", but ";
+
+		if (data.required == ERequired::No)
+		{
+			toLog(LogLevel::Debug, mDeviceName + QString(": Don`t set %1 due to %2the field is not required").arg(log).arg(addLog));
+			aResult = true;
+		}
+		else if ((data.required == ERequired::PM) && !mOperatorPresence)
+		{
+			toLog(LogLevel::Debug, mDeviceName + QString(": Don`t set %1 due to %2the operator is not present").arg(log).arg(addLog));
+			aResult = true;
+		}
+		else
+		{
+			toLog(LogLevel::Error, mDeviceName + QString(": Failed to set required %1 due to %2").arg(log).arg(aAddLog));
+			aResult = false;
+		}
+	};
 
 	if (containsConfigParameter(data.textKey))
 	{
+		QVariant value = getConfigParameter(data.textKey);
+
+		if (!value.isValid())
+		{
+			makeResult("the field is not valid");
+
+			return false;
+		}
+		else if (value.toString().simplified().isEmpty())
+		{
+			makeResult("the field is empty");
+
+			return false;
+		}
+
+		aResult = true;
+
 		return true;
 	}
 
-	QString log = mFFData.getTextLog(aField);
-
-	if (data.required == ERequired::No)
-	{
-		aResult = true;
-		toLog(LogLevel::Debug, mDeviceName + QString(": Don`t set %1 due to the field is not required").arg(log));
-
-		return false;
-	}
-	else if ((data.required == ERequired::PM) && !(mOperatorPresence))
-	{
-		aResult = true;
-		toLog(LogLevel::Debug, mDeviceName + QString(": Don`t set %1 due to the operator is not present").arg(log));
-
-		return false;
-	}
-
-	aResult = false;
-	toLog(LogLevel::Error, mDeviceName + QString(": Failed to set %1 due to it is absent").arg(log));
+	makeResult("the field is absent");
 
 	return false;
 }
@@ -1052,12 +1070,6 @@ void FFEngine::setDeviceName(const QString & aDeviceName)
 	QWriteLocker lock(&mConfigurationGuard);
 
 	mDeviceName = aDeviceName;
-}
-
-//--------------------------------------------------------------------------------
-void FFEngine::setCodec(QTextCodec * aCodec)
-{
-	mCodec = aCodec;
 }
 
 //--------------------------------------------------------------------------------

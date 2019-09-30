@@ -20,7 +20,6 @@
 #include "Hardware/CashAcceptors/ProtoCashAcceptor.h"
 #include "Hardware/Watchdogs/ProtoWatchdog.h"
 #include "Hardware/FR/ProtoFR.h"
-#include "Hardware/HID/ProtoOPOSScanner.h"
 #include "Hardware/HID/ProtoHID.h"
 #include "Hardware/CardReaders/ProtoMifareReader.h"
 
@@ -36,7 +35,6 @@ template class DeviceBase<ProtoCashAcceptor>;
 template class DeviceBase<ProtoWatchdog>;
 template class DeviceBase<ProtoModem>;
 template class DeviceBase<ProtoFR>;
-template class DeviceBase<ProtoOPOSScanner>;
 template class DeviceBase<ProtoHID>;
 template class DeviceBase<ProtoMifareReader>;
 template class DeviceBase<ProtoDeviceBase>;
@@ -510,10 +508,10 @@ void DeviceBase<T>::applyStatusBuffer(TStatusCodes & aStatusCodes)
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool DeviceBase<T>::waitReady(const SWaitingData & aWaitingData)
+bool DeviceBase<T>::waitReady(const SWaitingData & aWaitingData, bool aReady)
 {
 	TStatusCodes statusCodes;
-	auto poll = [&] () -> bool { statusCodes.clear(); return getStatus(std::ref(statusCodes)) && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable); };
+	auto poll = [&] () -> bool { statusCodes.clear(); return aReady == (getStatus(std::ref(statusCodes)) && !statusCodes.contains(DeviceStatusCode::Error::NotAvailable)); };
 
 	return PollingExpector().wait(poll, aWaitingData);
 }

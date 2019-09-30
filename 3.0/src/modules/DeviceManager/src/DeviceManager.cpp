@@ -69,7 +69,7 @@ bool DeviceManager::initialize()
 
 			if (!systemNames.isEmpty())
 			{
-				foreach(auto systemName, systemNames)
+				foreach (auto systemName, systemNames)
 				{
 					mRDSystemNames.insert(pluginPath, systemName);
 					mFreeSystemNames.insert(systemName);
@@ -224,7 +224,7 @@ void DeviceManager::releaseDevice(IDevice * aDevice)
 
 	mDevicesLogData.remove(aDevice);
 
-	foreach(auto device, mDeviceDependencyMap.values(aDevice))
+	foreach (auto device, mDeviceDependencyMap.values(aDevice))
 	{
 		// Освобождаем зависимый ресурс.
 		releaseDevice(device);
@@ -425,7 +425,7 @@ TNamedDevice DeviceManager::findDevice(IDevice * aRequired, const QStringList & 
 		}
 	}
 
-	foreach(const QString & driverName, nonMarketDetectedDriverNames)
+	foreach (const QString & driverName, nonMarketDetectedDriverNames)
 	{
 		markDetected(driverName);
 	}
@@ -531,21 +531,30 @@ void DeviceManager::findSimpleDevice(const QString & aDriverName, QStringList & 
 //--------------------------------------------------------------------------------
 void DeviceManager::logRequiedDeviceData()
 {
-	QStringList requiredDriverName = mRDSystemNames.keys().toSet().toList();
+	QStringList interactionTypes = QStringList()
+		<< CInteractionTypes::COM
+		<< CInteractionTypes::USB
+		<< CInteractionTypes::LibUSB;
 
-	foreach(const QString & driverName, requiredDriverName)
+	QStringList driverList = mDriverList.keys();
+
+	foreach (const QString & interactionType, interactionTypes)
 	{
-		QVariantMap config;
-		QString systemName = *mRDSystemNames.values(driverName).begin();
-		config[CHardwareSDK::SystemName] = systemName;
-		IDevice * required = createDevice(driverName, QVariantMap(), true).second;
-
-		if (required)
+		foreach (const QString & driverName, driverList)
 		{
-			ILog * log = ILog::getInstance("autodetect/IOPorts");
-			required->setLog(log);
-			required->initialize();
-			releaseDevice(required);
+			if (driverName.split('.').last() == interactionType)
+			{
+				IDevice * required = createDevice(driverName, QVariantMap(), true).second;
+
+				if (required)
+				{
+					QString logName = QString("autodetect/%1 ports").arg(interactionType);
+					ILog * log = ILog::getInstance(logName);
+					required->setLog(log);
+					required->initialize();
+					releaseDevice(required);
+				};
+			}
 		}
 	}
 }
@@ -587,7 +596,7 @@ QStringList DeviceManager::detect(const QString & /*aDeviceType*/)
 		}
 	}
 
-	foreach(const QString & driverName, nonMarketDetectedDriverNames)
+	foreach (const QString & driverName, nonMarketDetectedDriverNames)
 	{
 		markDetected(driverName);
 	}
@@ -968,7 +977,7 @@ void DeviceManager::stopDetection()
 //--------------------------------------------------------------------------------
 void DeviceManager::saveConfiguration(IDevice * aDevice)
 {
-	foreach(auto device, mDeviceDependencyMap.values(aDevice))
+	foreach (auto device, mDeviceDependencyMap.values(aDevice))
 	{
 		saveConfiguration(device);
 	}
@@ -984,7 +993,7 @@ void DeviceManager::setDeviceConfiguration(IDevice * aDevice, const QVariantMap 
 	QString newSystemName;
 
 	// Приверка свободности системного устройства 
-	foreach(IDevice * systemDevice, mDeviceDependencyMap.values(aDevice))
+	foreach (IDevice * systemDevice, mDeviceDependencyMap.values(aDevice))
 	{
 		// При изменении имени системного устройства меняем его доступность
 		oldSystemName = systemDevice->getDeviceConfiguration()[CHardwareSDK::SystemName].toString();
@@ -1006,7 +1015,7 @@ void DeviceManager::setDeviceConfiguration(IDevice * aDevice, const QVariantMap 
 	}
 
 	// Применяем конфигурацию к системным устройствам
-	foreach(IDevice * systemDevice, mDeviceDependencyMap.values(aDevice))
+	foreach (IDevice * systemDevice, mDeviceDependencyMap.values(aDevice))
 	{
 		// При изменении имени системного устройства меняем его доступность
 		if (oldSystemName != newSystemName)
@@ -1145,14 +1154,14 @@ QString DeviceManager::getSimpleDeviceLogName(IDevice * aDevice, bool aDetecting
 	IPlugin * plugin = dynamic_cast<IPlugin *>(aDevice);
 	QString configPath = plugin->getConfigurationName().section(CPlugin::InstancePathSeparator, 0, 0);
 
-	if (interactionType == CInteractionTypes::USB)
+	if (interactionType.contains(CInteractionTypes::USB))
 	{
 		for (auto it = mDevicesLogData.begin(); it != mDevicesLogData.end(); ++it)
 		{
 			QVariantMap localParameters = it.key()->getDeviceConfiguration();
 			QString localInteractionType = localParameters[CHardwareSDK::InteractionType].toString();
 
-			if ((localInteractionType == CInteractionTypes::USB) && it->contains(aDetecting))
+			if (localInteractionType.contains(CInteractionTypes::USB) && it->contains(aDetecting))
 			{
 				logIndexes << it->value(aDetecting);
 			}
@@ -1189,7 +1198,7 @@ QString DeviceManager::getSimpleDeviceLogName(IDevice * aDevice, bool aDetecting
 		result.prepend("autodetect/");
 	}
 
-	if (interactionType == CInteractionTypes::USB)
+	if (interactionType.contains(CInteractionTypes::USB))
 	{
 		result += QString(" on USB%1").arg(logIndex);
 	}

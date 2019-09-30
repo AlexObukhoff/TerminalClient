@@ -8,31 +8,20 @@
 // STL
 #include <numeric>
 
-// OPOS
-#include <Common/QtHeadersBegin.h>
-#pragma warning(disable: 4100) // warning C4100: 'identifier' : unreferenced formal parameter
-#include <OPOS/QtWrappers/FiscalPrinter.h>
-#include <Common/QtHeadersEnd.h>
-
 // Modules
 #include "PaymentProcessor/PrintConstants.h"
-#include "Hardware/Common/OPOSPollingDeviceBase.h"
+#include "Hardware/Common/ConfigCleaner.h"
 #include "Hardware/Common/WorkingThreadProxy.h"
-#include "Hardware/Printers/SerialPrinterBase.h"
-#include "Hardware/FR/ProtoFR.h"
+#include "Hardware/Protocols/Common/ProtocolUtils.h"
 
 // Project
 #include "FRBase.h"
+#include "Hardware/FR/FRStatusCodes.h"
 #include "Hardware/FR/OFDServerData.h"
+#include "Hardware/FR/FSSerialData.h"
 
 using namespace SDK::Driver;
-using namespace FRStatusCode;
 using namespace ProtocolUtils;
-
-//---------------------------------------------------------------------------
-template class FRBase<PrinterBase<OPOSPollingDeviceBase<ProtoFR, OPOS::OPOSFiscalPrinter>>>;
-template class FRBase<SerialPrinterBase<PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoFR>>>>>;
-template class FRBase<PortPrinterBase<PrinterBase<TCPDeviceBase<PortPollingDeviceBase<ProtoFR>>>>>;
 
 //--------------------------------------------------------------------------------
 template <class T>
@@ -44,17 +33,17 @@ FRBase<T>::FRBase(): mFFEngine(mLog)
 	// ошибки, при которых возможно выполнение определенных команд
 	mUnnecessaryErrors.insert(EFiscalPrinterCommand::Print, getFiscalStatusCodes(EWarningLevel::Error));
 	mUnnecessaryErrors.insert(EFiscalPrinterCommand::ZReport, TStatusCodes()
-		<< Error::ZBufferOverflow
-		<< Error::NeedCloseSession
+		<< FRStatusCode::Error::ZBufferOverflow
+		<< FRStatusCode::Error::NeedCloseSession
 		<< DeviceStatusCode::Error::Initialization);
 	mUnnecessaryErrors.insert(EFiscalPrinterCommand::Encashment, TStatusCodes()
-		<< Error::ZBufferOverflow
-		<< Error::NeedCloseSession);
+		<< FRStatusCode::Error::ZBufferOverflow
+		<< FRStatusCode::Error::NeedCloseSession);
 	mUnnecessaryErrors.insert(EFiscalPrinterCommand::XReport, TStatusCodes()
-		<< Error::ZBufferOverflow
-		<< Error::NeedCloseSession
-		<< Error::EKLZ
-		<< Error::ZBuffer);
+		<< FRStatusCode::Error::ZBufferOverflow
+		<< FRStatusCode::Error::NeedCloseSession
+		<< FRStatusCode::Error::EKLZ
+		<< FRStatusCode::Error::ZBuffer);
 
 	// данные устройства
 	setInitialData();
@@ -62,7 +51,6 @@ FRBase<T>::FRBase(): mFFEngine(mLog)
 	mIsOnline = false;
 	mNextReceiptProcessing = true;
 	mCanProcessZBuffer = false;
-	mFFEngine.setCodec(mCodec);
 
 	mRecoverableErrors.insert(FRStatusCode::Error::Taxes);
 
@@ -70,11 +58,10 @@ FRBase<T>::FRBase(): mFFEngine(mLog)
 	setConfigParameter(CHardwareSDK::FR::WithoutPrinting, CHardwareSDK::Values::Auto);
 	setConfigParameter(CHardware::CanSoftReboot, false);
 
-	mOFDFiscalParameters
+	mOFDFiscalFields
 		<< CFR::FiscalFields::Cashier
 		<< CFR::FiscalFields::CashierINN
-		<< CFR::FiscalFields::UserContact
-		<< CFR::FiscalFields::TaxSystem;
+		<< CFR::FiscalFields::UserContact;
 
 	mPayTypeData.add(EPayTypes::Cash,   1);
 	mPayTypeData.add(EPayTypes::EMoney, 2);
@@ -122,6 +109,8 @@ void FRBase<T>::setInitialData()
 	mFSSerialNumber.clear();
 
 	mFFEngine.setDeviceName(mDeviceName);
+
+	removeDeviceParameter(CHardwareSDK::FR::AgentFlags);
 }
 
 //--------------------------------------------------------------------------------
@@ -202,9 +191,18 @@ void FRBase<T>::finaliseOnlineInitialization()
 		taxSystemData.insert(ETaxSystems::Enum(taxSystem), CFR::TaxSystems[taxSystem]);
 	}
 
+	TAgentFlagsData agentFlagsData;
+
+	for (auto it = CFR::AgentFlags.data().begin(); it != CFR::AgentFlags.data().end(); ++it)
+	{
+		agentFlagsData.insert(EAgentFlags::Enum(it.key()), it.value());
+	}
+
+	setConfigParameter(CHardwareSDK::FR::AgentFlagsData, QVariant().fromValue(agentFlagsData));
+
 	if (!mAgentFlags.isEmpty())
 	{
-		TAgentFlagsData agentFlagsData;
+		agentFlagsData.clear();
 
 		foreach(char agentFlag, mAgentFlags)
 		{
@@ -212,7 +210,7 @@ void FRBase<T>::finaliseOnlineInitialization()
 		}
 
 		setDeviceParameter( CDeviceData::FR::AgentFlags, QStringList(agentFlagsData.values()).join(", "));
-		setConfigParameter(CHardwareSDK::FR::AgentFlags, QVariant().fromValue(agentFlagsData));
+		setConfigParameter(CHardwareSDK::FR::AgentFlags, QVariant().fromValue(agentFlagsData.keys()));
 	}
 
 	TOperationModeData operationModeData;
@@ -229,6 +227,20 @@ void FRBase<T>::finaliseOnlineInitialization()
 	if (mFFEngine.getConfigParameter(CFiscalSDK::GamblingMode,      0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::GamblingMode].translationPF;
 	if (mFFEngine.getConfigParameter(CFiscalSDK::ExcisableUnitMode, 0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::ExcisableUnitMode].translationPF;
 	if (mFFEngine.getConfigParameter(CFiscalSDK::InAutomateMode,    0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::InAutomateMode].translationPF;
+
+	if (FS::Data.contains(mFSSerialNumber))
+	{
+		FS::SData FSData = FS::Data[mFSSerialNumber];
+
+		setDeviceParameter(CDeviceData::FS::Expiration, QString("%1 months").arg(FSData.expiration));
+		setDeviceParameter(CDeviceData::FS::FFD, FSData.FFD);
+		setDeviceParameter(CDeviceData::FS::Provider, FSData.provider);
+
+		if (!FSData.revision.isEmpty())
+		{
+			setDeviceParameter(CDeviceData::FS::Revision, FSData.revision);
+		}
+	}
 
 	setDeviceParameter(CDeviceData::FS::SerialNumber, mFSSerialNumber);
 	setDeviceParameter(CDeviceData::FR::TaxSystems, QStringList(taxSystemData.values()).join(", "));
@@ -412,24 +424,21 @@ bool FRBase<T>::checkTaxSystems(char aData)
 template <class T>
 bool FRBase<T>::checkAgentFlags(char aData)
 {
-	bool result = mFFEngine.checkAgentFlags(aData, mAgentFlags);
+	return mFFEngine.checkAgentFlags(aData, mAgentFlags);
 
-	if (mAgentFlags.size() >= 1)
+	// логика для флага агента для конкретной продажи
+	/*
+	if ((mAgentFlags.size() >= 1) || (mFFDFR >= EFFD::F105))
 	{
-		mOFDFiscalParameters.insert(CFR::FiscalFields::AgentFlagsReg);
-
-		//mOFDFiscalParametersOnSale.insert(FiscalFields::ProviderINN);
-		//mOFDFiscalParametersOnSale.insert(FiscalFields::AgentFlag);
+		mOFDFiscalFieldsOnSale.insert(FiscalFields::ProviderINN);
+		mOFDFiscalFieldsOnSale.insert(FiscalFields::AgentFlag);
 	}
 	else
 	{
-		mOFDFiscalParameters.remove(CFR::FiscalFields::AgentFlagsReg);
-
-		mOFDFiscalParametersOnSale.remove(CFR::FiscalFields::ProviderINN);
-		mOFDFiscalParametersOnSale.remove(CFR::FiscalFields::AgentFlag);
+		mOFDFiscalFieldsOnSale.remove(CFR::FiscalFields::ProviderINN);
+		mOFDFiscalFieldsOnSale.remove(CFR::FiscalFields::AgentFlag);
 	}
-
-	return result;
+	*/
 }
 
 //---------------------------------------------------------------------------
@@ -438,7 +447,7 @@ bool FRBase<T>::checkOperationModes(char aData)
 {
 	bool result = mFFEngine.checkOperationModes(aData, mOperationModes);
 
-	if (mOperationModes.contains(char(EOperationModes::Internet)) && !mOperatorPresence)
+	if (!mOperatorPresence && !mFiscalServerPresence && mOperationModes.contains(char(EOperationModes::Internet)))
 	{
 		mWrongFiscalizationSettings = true;
 		toLog(LogLevel::Error, mDeviceName + ": There is \"FR for internet\" flag and no operator");
@@ -709,45 +718,45 @@ void FRBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 	T::cleanStatusCodes(aStatusCodes);
 
 	// фильтр виртуального конца ФН, если есть ошибка окончания ФН
-	if (aStatusCodes.contains(Error::FSEnd))
+	if (aStatusCodes.contains(FRStatusCode::Error::FSEnd))
 	{
-		aStatusCodes.remove(Warning::FSVirtualEnd);
+		aStatusCodes.remove(FRStatusCode::Warning::FSVirtualEnd);
 	}
 
 	// фильтр ошибки ФН, если есть конкретная ошибка ФН или необходимо подключение к ОФД
-	if (aStatusCodes.contains(Error::FSEnd) || aStatusCodes.contains(Error::NeedOFDConnection))
+	if (aStatusCodes.contains(FRStatusCode::Error::FSEnd) || aStatusCodes.contains(FRStatusCode::Error::NeedOFDConnection))
 	{
-		aStatusCodes.remove(Error::FS);
+		aStatusCodes.remove(FRStatusCode::Error::FS);
 	}
 
 	// фильтр предупреждения ЭКЛЗ скоро кончится, если есть ошибка ЭКЛЗ
-	if (aStatusCodes.contains(Error::EKLZ))
+	if (aStatusCodes.contains(FRStatusCode::Error::EKLZ))
 	{
-		aStatusCodes.remove(Warning::EKLZNearEnd);
+		aStatusCodes.remove(FRStatusCode::Warning::EKLZNearEnd);
 	}
 
 	// фильтр предупреждения Фискальная память скоро кончится, если есть ошибка фискальной памяти
-	if (aStatusCodes.contains(Error::FM))
+	if (aStatusCodes.contains(FRStatusCode::Error::FM))
 	{
-		aStatusCodes.remove(Warning::FiscalMemoryNearEnd);
+		aStatusCodes.remove(FRStatusCode::Warning::FiscalMemoryNearEnd);
 	}
 
 	// фильтр предупреждения Буфер Z-отчетов заполнен и ошибки необходимости Z-отчета, если он уже переполнен
-	if (aStatusCodes.contains(Error::ZBufferOverflow))
+	if (aStatusCodes.contains(FRStatusCode::Error::ZBufferOverflow))
 	{
-		aStatusCodes.remove(Warning::ZBufferFull);
-		aStatusCodes.remove(Error::NeedCloseSession);
+		aStatusCodes.remove(FRStatusCode::Warning::ZBufferFull);
+		aStatusCodes.remove(FRStatusCode::Error::NeedCloseSession);
 	}
 
 	// фильтр предупреждения Буфер Z-отчетов заполнен и ошибки его переполнения, если есть сбой последнего
-	if (aStatusCodes.contains(Error::ZBuffer))
+	if (aStatusCodes.contains(FRStatusCode::Error::ZBuffer))
 	{
-		aStatusCodes.remove(Warning::ZBufferFull);
-		aStatusCodes.remove(Error::ZBufferOverflow);
+		aStatusCodes.remove(FRStatusCode::Warning::ZBufferFull);
+		aStatusCodes.remove(FRStatusCode::Error::ZBufferOverflow);
 	}
 
 	// фильтр ошибки инициализации, если есть ошибка необходимости Z-отчета
-	if (aStatusCodes.contains(Error::NeedCloseSession))
+	if (aStatusCodes.contains(FRStatusCode::Error::NeedCloseSession))
 	{
 		aStatusCodes.remove(DeviceStatusCode::Error::Initialization);
 	}
@@ -783,7 +792,10 @@ bool FRBase<T>::canProcessZBuffer()
 template <class T>
 bool FRBase<T>::printFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * aFDNumber)
 {
-	CFR::ConfigCleaner configCleaner(&mFFEngine);
+	QStringList renewableFiscalFields = mFFData.getTextKeys(CFR::FiscalFields::RenewableFields);
+
+	ConfigCleaner FFEngineConfigCleaner(&mFFEngine, renewableFiscalFields);
+	ConfigCleaner deviceConfigCleaner(this, renewableFiscalFields);
 
 	if (!isFiscal())
 	{
@@ -847,16 +859,21 @@ bool FRBase<T>::processFiscal(const QStringList & aReceipt, const SPaymentData &
 	if (!checkAmountsOnPayment(paymentData) ||
 	    !checkSumInCash(paymentData)        ||
 	    !checkPayTypeOnPayment(paymentData) ||
-		!checkNotPrinting()                 ||
+	    !checkNotPrinting()                 ||
 	    !mFFEngine.checkTaxSystemOnPayment(paymentData) ||
 	    !mFFEngine.checkAgentFlagOnPayment(paymentData) ||
-		!taxesOK)
+	    !taxesOK)
 	{
 		return false;
 	}
 
 	checkUnitNames(paymentData);
 	addFiscalFieldsOnPayment(paymentData);
+
+	if (!checkFiscalFieldsOnPayment())
+	{
+		return false;
+	}
 
 	ESessionState::Enum sessionState = getSessionState();
 
@@ -936,12 +953,12 @@ bool FRBase<T>::setOFDParameters()
 {
 	using namespace CFR::FiscalFields;
 
-	foreach (auto parameter, mOFDFiscalParameters)
+	foreach (auto field, mOFDFiscalFields)
 	{
-		ERequired::Enum required = mFFData[parameter].required;
+		ERequired::Enum required = mFFData[field].required;
 		bool critical = (required == ERequired::Yes) || (mOperatorPresence && (ERequired::PM));
 
-		if (!setTLV(parameter) && critical)
+		if (!setTLV(field) && critical)
 		{
 			return false;
 		}
@@ -954,15 +971,15 @@ bool FRBase<T>::setOFDParameters()
 template <class T>
 bool FRBase<T>::setOFDParametersOnSale(const SUnitData & aUnitData)
 {
-	if (mOFDFiscalParametersOnSale.contains(CFR::FiscalFields::ProviderINN))
+	if (mOFDFiscalFieldsOnSale.contains(CFR::FiscalFields::ProviderINN))
 	{
 		QString providerINN = aUnitData.providerINN.simplified().leftJustified(CFR::INN::Person::Natural);
 		mFFEngine.setConfigParameter(CFiscalSDK::ProviderINN, providerINN);
 	}
 
-	foreach (auto parameter, mOFDFiscalParametersOnSale)
+	foreach (auto field, mOFDFiscalFieldsOnSale)
 	{
-		if (!setTLV(parameter, true))
+		if (!setTLV(field, true))
 		{
 			return false;
 		}
@@ -1308,7 +1325,7 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 
 		QString automaticNumber = getDeviceParameter(CDeviceData::FR::AutomaticNumber).toString();
 
-		if (mWrongFiscalizationSettings || (mOperatorPresence && !automaticNumber.isEmpty()))
+		if (!mFiscalServerPresence && (mWrongFiscalizationSettings || (mOperatorPresence && !automaticNumber.isEmpty())))
 		{
 			aStatusCodes.insert(FRStatusCode::Warning::WrongFiscalizationSettings);
 		}
@@ -1338,9 +1355,12 @@ bool FRBase<T>::processStatus(TStatusCodes & aStatusCodes)
 template <class T>
 void FRBase<T>::postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection)
 {
-	if (mConnected && (mRegion == ERegion::RF))
+	bool needReinitialize = !aOldStatusCollection.isEmpty(EWarningLevel::Error) && aNewStatusCollection.isEmpty(EWarningLevel::Error);
+
+	if (mConnected && (mRegion == ERegion::RF) && !needReinitialize)
 	{
-		checkTaxes2019();
+		//TODO: включить, если будет необходимость в аналогичном функционале.
+		//checkTaxes2019();
 	}
 
 	T::postPollingAction(aNewStatusCollection, aOldStatusCollection);
@@ -1391,8 +1411,12 @@ void FRBase<T>::checkTaxes2019()
 			set(mDeviceName, CDeviceData::SerialNumber);
 			set(mDeviceName, CDeviceData::FR::Taxes2019Applied);
 
-			toLog(LogLevel::Normal, mDeviceName + ": Closing session with VAT 18%, trying to re-initialize");
-			reInitialize();
+			if (check(mDeviceName, CDeviceData::SerialNumber) && check(mDeviceName, CDeviceData::FR::Taxes2019Applied))
+			{
+				toLog(LogLevel::Normal, mDeviceName + ": Closing session with VAT 18%, trying to re-initialize");
+
+				reInitialize();
+			}
 		}
 	}
 }
@@ -1523,30 +1547,79 @@ bool FRBase<T>::checkTaxesOnPayment(const SPaymentData & aPaymentData)
 
 //--------------------------------------------------------------------------------
 template <class T>
+void FRBase<T>::addConfigFFData(const QString & aField, const QVariant & aData, const TFFConfigData & aFFConfigData)
+{
+	QString data = getConfigParameter(aField).toString();
+
+	if (data.isEmpty())
+	{
+		data = aData.toString().simplified();
+	}
+
+	if (!data.isEmpty())
+	{
+		if (aFFConfigData)
+		{
+			aFFConfigData(data);
+		}
+
+		setConfigParameter(aField, data);
+	}
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
 void FRBase<T>::addFiscalFieldsOnPayment(const SPaymentData & aPaymentData)
 {
-	auto addPhone = [&] (const QString & aField, const QVariant & aData) { QString phone = mFFEngine.filterPhone(aData.toString());
-		if (!phone.isEmpty()) mFFEngine.setConfigParameter(aField, phone); };
+	checkFFExisting(CFR::FiscalFields::AgentFlagsReg, aPaymentData.agentFlag != EAgentFlags::None, mAgentFlags.size() > 1);
+	checkFFExisting(CFR::FiscalFields::TaxSystem,     aPaymentData.taxSystem != ETaxSystems::None, mTaxSystems.size() > 1);
+
+	auto addPhone = [&] (const QString & aField, const QVariant & aData) { addConfigFFData(aField, aData, [&] (QString & aData) { aData = mFFEngine.filterPhone(aData); }); };
 
 	auto addMail = [&] (const QString & aField, const QVariant & aData) { QString mail = aData.toString();
 		if (mail.contains(QRegExp("^[^@]+@[^@]+$"))) mFFEngine.setConfigParameter(aField, mail); };
 
 	mFFEngine.setConfigParameter(CFiscalSDK::PayOffType, aPaymentData.payOffType);
 
-	QVariantMap receiptParameters = getConfigParameter(CHardwareSDK::Printer::ReceiptParameters).toMap();
+	QVariantMap templateParameters = getConfigParameter(CHardwareSDK::Printer::TemplateParameters).toMap();
+	QVariantMap receiptParameters  = getConfigParameter(CHardwareSDK::Printer::ReceiptParameters).toMap();
 
-	addPhone(CFiscalSDK::ProviderPhone, getConfigParameter(CHardwareSDK::Printer::TemplateParameters).toMap()[CPrintConstants::OpPhone]);
-	addPhone(CFiscalSDK::AgentPhone,            receiptParameters[CPrintConstants::DealerPhone]);
+	addPhone(CFiscalSDK::ProviderPhone, templateParameters[CPrintConstants::OpPhone]);
+	QString providerPhone = getConfigParameter(CFiscalSDK::ProviderPhone).toString();
+
+	if (providerPhone.isEmpty())
+	{
+		addPhone(CFiscalSDK::ProviderPhone,     receiptParameters[CPrintConstants::DealerSupportPhone]);
+	}
+
+	addPhone(CFiscalSDK::AgentPhone,            receiptParameters[CPrintConstants::DealerSupportPhone]);
+	addPhone(CFiscalSDK::ProcessingPhone,       receiptParameters[CPrintConstants::BankPhone]);
 	addPhone(CFiscalSDK::TransferOperatorPhone, receiptParameters[CPrintConstants::BankPhone]);
 
-	mFFEngine.setConfigParameter(CFiscalSDK::TransferOperatorAddress, receiptParameters[CPrintConstants::BankAddress].toString().simplified());
-	mFFEngine.setConfigParameter(CFiscalSDK::TransferOperatorINN,     receiptParameters[CPrintConstants::BankInn].toString().simplified());
-	mFFEngine.setConfigParameter(CFiscalSDK::TransferOperatorName,    receiptParameters[CPrintConstants::BankName].toString().simplified());
+	addConfigFFData(CFiscalSDK::TransferOperatorAddress, receiptParameters[CPrintConstants::BankAddress]);
+	addConfigFFData(CFiscalSDK::TransferOperatorINN,     receiptParameters[CPrintConstants::BankInn], [] (QString & aData) { aData = aData.leftJustified(CFR::INN::Person::Natural, QChar(ASCII::Space)); });
+	addConfigFFData(CFiscalSDK::TransferOperatorName,    receiptParameters[CPrintConstants::BankName]);
+
+	QString agentOperation = QString::fromUtf8(aPaymentData.back() ? CFR::AgentOperation::Payout : CFR::AgentOperation::Payment);
+	mFFEngine.setConfigParameter(CFiscalSDK::AgentOperation, agentOperation);
+
+	bool isBankAgent    = CFR::isBankAgent(aPaymentData.agentFlag);
+	bool isPaymentAgent = CFR::isPaymentAgent(aPaymentData.agentFlag);
+	bool isBothAgent = isBankAgent || isPaymentAgent;
+
+	checkFFExisting(CFR::FiscalFields::TransferOperatorAddress, isBankAgent);
+	checkFFExisting(CFR::FiscalFields::TransferOperatorINN,     isBankAgent);
+	checkFFExisting(CFR::FiscalFields::TransferOperatorName,    isBankAgent);
+	checkFFExisting(CFR::FiscalFields::AgentOperation,          isBankAgent);
+	checkFFExisting(CFR::FiscalFields::TransferOperatorPhone,   isBankAgent);
+
+	checkFFExisting(CFR::FiscalFields::ProcessingPhone, isPaymentAgent);
+
+	checkFFExisting(CFR::FiscalFields::AgentPhone,    isBothAgent);
+	checkFFExisting(CFR::FiscalFields::ProviderPhone, isBothAgent);
 
 	addPhone(CFiscalSDK::UserContact, aPaymentData.fiscalParameters.value(CHardwareSDK::FR::UserPhone));
 	 addMail(CFiscalSDK::UserContact, aPaymentData.fiscalParameters.value(CHardwareSDK::FR::UserMail));
-
-	mFFEngine.setConfigParameter(CFiscalSDK::PayOffSubjectMethodType, CFR::PayOffSubjectMethodType);
 
 	QList<int> fiscalFields = mFFData.data().keys();
 	QVariantMap FFConfig;
@@ -1558,6 +1631,22 @@ void FRBase<T>::addFiscalFieldsOnPayment(const SPaymentData & aPaymentData)
 	}
 
 	mFFEngine.setConfiguration(FFConfig);
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+void FRBase<T>::checkFFExisting(int aField, bool aAdd, bool aRequired)
+{
+	if (aAdd)
+	{
+		mOFDFiscalFields.insert(aField);
+		mFFData.data()[aField].required = CFR::FiscalFields::ERequired::Yes;
+	}
+	else
+	{
+		mOFDFiscalFields.remove(aField);
+		mFFData.data()[aField].required = CFR::FiscalFields::ERequired::No;
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -1580,6 +1669,32 @@ bool FRBase<T>::checkPayTypeOnPayment(const SPaymentData & aPaymentData)
 
 //--------------------------------------------------------------------------------
 template <class T>
+bool FRBase<T>::checkFiscalFieldsOnPayment()
+{
+	QStringList absentFields;
+
+	foreach (int field, mOFDFiscalFields)
+	{
+		bool OK = false;
+		mFFEngine.checkFiscalField(field, OK);
+
+		if (!OK)
+		{
+			absentFields << mFFData.data().value(field).textKey;
+		}
+	}
+
+	if (!absentFields.isEmpty())
+	{
+		toLog(LogLevel::Debug, mDeviceName + ": Failed to process fiscal document due to wrong fiscal field(s): " + absentFields.join(", "));
+		return false;
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
 int FRBase<T>::getErrorStatusCode(FRError::EType::Enum aErrorType)
 {
 	switch (aErrorType)
@@ -1594,6 +1709,30 @@ int FRBase<T>::getErrorStatusCode(FRError::EType::Enum aErrorType)
 	}
 
 	return DeviceStatusCode::Error::Unknown;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool FRBase<T>::isFS36() const
+{
+	if (FS::Data.contains(mFSSerialNumber))
+	{
+		return FS::Data[mFSSerialNumber].expiration == 36;
+	}
+
+	QString FSValidityDateText = getDeviceParameter(CDeviceData::FS::ValidityData).toString();
+	QDate FSValidityDate = QDate::fromString(FSValidityDateText, CFR::DateLogFormat);
+
+	if (!FSValidityDate.isValid() || FSValidityDate.isNull())
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to check FS validity date");
+		return false;
+	}
+
+	int days = QDate::currentDate().daysTo(FSValidityDate) + 3;
+	toLog(LogLevel::Normal, mDeviceName + QString(": %1 days to validity date").arg(days));
+
+	return days > CFR::SimpleFSValidityDays;
 }
 
 //--------------------------------------------------------------------------------

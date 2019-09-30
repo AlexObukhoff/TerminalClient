@@ -88,6 +88,9 @@ namespace CAtol3FR
 
 		/// На запрос результата.
 		const int GetResult = 500;
+
+		/// На добавление задачи.
+		const int AddRequest = 500;
 	}
 }
 

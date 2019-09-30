@@ -6,6 +6,7 @@
 #include "Hardware/Acceptors/CCTalkAcceptorBase.h"
 
 // Project
+#include "Hardware/CoinAcceptors/CoinAcceptorBase.h"
 #include "CCTalkCoinAcceptorModelData.h"
 
 //--------------------------------------------------------------------------------
@@ -34,9 +35,6 @@ protected:
 
 	/// Загрузка таблицы номиналов из устройства.
 	virtual bool loadParTable();
-
-	/// Получить данные моделей.
-	virtual CCCTalk::CModelDataBase * getModelData();
 };
 
 //--------------------------------------------------------------------------------

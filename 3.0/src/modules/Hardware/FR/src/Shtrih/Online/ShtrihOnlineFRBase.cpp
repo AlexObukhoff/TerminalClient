@@ -20,8 +20,8 @@ ShtrihOnlineFRBase<T>::ShtrihOnlineFRBase()
 	mNotEnableFirmwareUpdating = false;
 	mPrinterStatusEnabled = true;
 	mIsOnline = true;
-	mOFDFiscalParameters.remove(CFR::FiscalFields::Cashier);
-	mOFDFiscalParameters.remove(CFR::FiscalFields::TaxSystem);
+	mOFDFiscalFields.remove(CFR::FiscalFields::Cashier);
+	mOFDFiscalFields.remove(CFR::FiscalFields::TaxSystem);
 	mNeedReceiptProcessingOnCancel = true;
 
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, true);
@@ -281,7 +281,7 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 
 		if (date.isValid())
 		{
-			setDeviceParameter(CDeviceData::FS::ValidityData, date.toString(CFR::DateLogFormat));
+			setDeviceParameter(CDeviceData::FS::ValidityData, CFR::FSValidityDateOff(date));
 		}
 
 		// признак фискализированности ККМ
@@ -310,7 +310,7 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 	if (getFRParameter(RNM, data)) mRNM = CFR::RNMToString(data);
 
 	#define SET_LCONFIG_FISCAL_FIELD(aName) QString aName##Log = mFFData.getTextLog(CFR::FiscalFields::aName); \
-		if (getFRParameter(aName, data)) { mFFEngine.setLConfigParameter(CFiscalSDK::aName, data); \
+		if (getFRParameter(aName, data)) { mFFEngine.setConfigParameter(CFiscalSDK::aName, mCodec->toUnicode(data)); \
 		     QString value = mFFEngine.getConfigParameter(CFiscalSDK::aName, data).toString(); \
 		     toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = \"%2\" to config data").arg(aName##Log).arg(value)); } \
 		else toLog(LogLevel::Error,  mDeviceName + QString(": Failed to add %1 to config data").arg(aName##Log));
@@ -491,20 +491,19 @@ bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, EPayOffTypes::Enum
 	char taxIndex = char(mTaxData[aUnitData.VAT].group);
 	char section = (aUnitData.section == -1) ? CShtrihFR::SectionNumber : char(aUnitData.section);
 	QByteArray sum = getHexReverted(aUnitData.sum, 5, 2);
-	char payOffSubjectType = char(aUnitData.payOffSubjectType);
 	QString name = aUnitData.name;
 
 	QByteArray commandData;
-	commandData.append(char(aPayOffType));                 // тип операции
-	commandData.append(getHexReverted(1, 6, 6));           // количество
-	commandData.append(sum);                               // цена
-	commandData.append(sum);                               // сумма операций
-	commandData.append(CShtrihOnlineFR::FiscalTaxData);    // налог
-	commandData.append(taxIndex);                          // налоговая ставка
-	commandData.append(section);                           // отдел
-	commandData.append(CFR::PayOffSubjectMethodType);      // признак способа расчета
-	commandData.append(payOffSubjectType);                 // признак предмета расчета
-	commandData.append(mCodec->fromUnicode(name));         // наименование товара
+	commandData.append(char(aPayOffType));                          // тип операции (1054)
+	commandData.append(getHexReverted(1, 6, 6));                    // количество (1023)
+	commandData.append(sum);                                        // цена (1079)
+	commandData.append(sum);                                        // сумма операций (1023)
+	commandData.append(CShtrihOnlineFR::FiscalTaxData);             // налог (1102..1107)
+	commandData.append(taxIndex);                                   // налоговая ставка
+	commandData.append(section);                                    // отдел
+	commandData.append(char(aUnitData.payOffSubjectMethodType));    // признак способа расчета (1214)
+	commandData.append(char(aUnitData.payOffSubjectType));          // признак предмета расчета (1212)
+	commandData.append(mCodec->fromUnicode(name));                  // наименование товара (1030)
 
 	if (!processCommand(CShtrihOnlineFR::Commands::FS::Sale, commandData))
 	{
@@ -551,6 +550,9 @@ bool ShtrihOnlineFRBase<T>::closeDocument(double aSum, EPayTypes::Enum aPayType)
 template<class T>
 bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * aFDNumber)
 {
+	// СНО ставится либо параметром системной таблицы, либо параметром команды закрытия чека.
+	mOFDFiscalFields.remove(CFR::FiscalFields::TaxSystem);
+
 	if ((mModelData.date < CShtrihOnlineFR::MinFWDate::V2) || (mModel == CShtrihFR::Models::ID::MStarTK2))
 	{
 		char taxSystem = char(aPaymentData.taxSystem);
@@ -562,16 +564,64 @@ bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SP
 		}
 	}
 
+	bool setCustomFieldsOK = false;
+	char setCustomFields = ASCII::NUL;
+	QByteArray data;
+
+	if (isFS36() && (aPaymentData.taxSystem == ETaxSystems::Main) && getFRParameter(CShtrihOnlineFR::FRParameters::SetCustomFields, data) && !data.isEmpty())
+	{
+		QStringList noPayLog;
+
+		foreach (const SUnitData & unitData, aPaymentData.unitDataList)
+		{
+			if (CFR::PayOffSubjectTypesNo36.contains(unitData.payOffSubjectType))
+			{
+				noPayLog << QString("%1 (%2, %3)").arg(unitData.name).arg(unitData.sum).arg(CFR::PayOffSubjectTypes[char(unitData.payOffSubjectType)]);
+			}
+		}
+
+		setCustomFields = data[0];
+		char newSetCustomFields = setCustomFields | CShtrihOnlineFR::FRParameters::DontSendPayOffSubjectType;
+
+		if (!noPayLog.isEmpty() && (setCustomFields != newSetCustomFields))
+		{
+			QString log = mDeviceName + QString(": Failed to make fiscal document due to cannot sale unit(s): %1, because ").arg(noPayLog.join("; "));
+
+			if (mFFDFS > EFFD::F105)
+			{
+				toLog(LogLevel::Error, log + QString("FFD FS = %1 > 1.05").arg(CFR::FFD[mFFDFS].description));
+				return false;
+			}
+			else if (!mFiscalServerPresence)
+			{
+				toLog(LogLevel::Error, log + "it is not fiscal server");
+				return false;
+			}
+			else if (!setFRParameter(CShtrihOnlineFR::FRParameters::SetCustomFields, newSetCustomFields))
+			{
+				toLog(LogLevel::Error, log + "impossible to set custom fields data");
+				return false;
+			}
+			else
+			{
+				setCustomFieldsOK = true;
+			}
+		}
+	}
+
 	if (!ShtrihFRBase<T>::performFiscal(aReceipt, aPaymentData))
 	{
 		return false;
 	}
 
-	QByteArray data;
-
 	if (aFDNumber && processCommand(CShtrihOnlineFR::Commands::FS::GetStatus, &data) && (data.size() >= 33))
 	{
 		*aFDNumber = revert(data.mid(29, 4)).toHex().toUInt(0, 16);
+	}
+
+	if (setCustomFieldsOK && !setFRParameter(CShtrihOnlineFR::FRParameters::SetCustomFields, setCustomFields))
+	{
+		mPPTaskList.append([&] () { setFRParameter(CShtrihOnlineFR::FRParameters::SetCustomFields, setCustomFields); });
 	}
 
 	return true;

@@ -6,7 +6,7 @@
 #include "Hardware/Protocols/CashAcceptor/SSP.h"
 
 // Project
-#include "Hardware/CashAcceptors/PortCashAcceptor.h"
+#include "Hardware/CashAcceptors/SerialCashAcceptor.h"
 
 //--------------------------------------------------------------------------------
 class SSPCashAcceptor : public TSerialCashAcceptor
@@ -32,6 +32,9 @@ protected:
 	/// Установка параметров по умолчанию.
 	virtual bool setDefaultParameters();
 
+	/// Запросить и сохранить параметры устройства.
+	virtual void processDeviceData();
+
 	/// Применить таблицу номиналов.
 	virtual bool applyParTable();
 
@@ -50,8 +53,20 @@ protected:
 	/// Выполнить команду.
 	virtual TResult execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
 
+	/// Обновить прошивку.
+	virtual bool performUpdateFirmware(const QByteArray & aBuffer);
+
+	/// Изменить скорость работы.
+	bool performBaudRateChanging(bool aUp);
+
 	/// Протокол.
 	SSPProtocol mProtocol;
+
+	/// Удачна ли была последняя транзакция связи с устройством.
+	bool mLastConnectionOK;
+
+	/// Признак включенности на прием денег.
+	bool mEnabled;
 };
 
 //--------------------------------------------------------------------------------

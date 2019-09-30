@@ -2,12 +2,13 @@
 
 #pragma once
 
-#include "Hardware/Printers/SerialPrinterBase.h"
+#include "Hardware/Printers/PortPrintersBase.h"
 #include "Hardware/Printers/POSPrinterData.h"
 #include "POSParameters.h"
 
 //--------------------------------------------------------------------------------
-class POSPrinter : public TSerialPrinterBase
+template <class T>
+class POSPrinter : public T
 {
 	SET_SERIES("POS")
 
@@ -54,11 +55,8 @@ protected:
 	/// В плагине только дефолтные модели.
 	bool isOnlyDefaultModels();
 
-	/// Обработка тега img - печать изображений.
-	void setDefaultModelData();
-
 	/// Данные моделей.
-	POSPrinters::CModelData mModelData;
+	POSPrinters::ModelData mModelData;
 
 	/// ID модели.
 	char mModelID;
@@ -71,6 +69,9 @@ protected:
 
 	/// Таймаут печати строки.
 	int mPrintingStringTimeout;
+
+	/// Параметры.
+	POSPrinters::SParameters mParameters;
 };
 
 //--------------------------------------------------------------------------------

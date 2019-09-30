@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Hardware/Printers/SerialPrinterBase.h"
+#include "Hardware/Printers/PortPrintersBase.h"
 
 //--------------------------------------------------------------------------------
 class AV268 : public TSerialPrinterBase

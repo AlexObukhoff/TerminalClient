@@ -10,15 +10,8 @@ namespace CCreatorReader
 	/// Название кардридера Creator по умолчанию.
 	const char DefaultName[] = "Unknown Creator cardreader";
 
-	/// Данные моделей.
-	class ModelData : public CUSBDevice::CDetectingData
-	{
-	public:
-		ModelData()
-		{
-			add(0x23d8, 0x0285, "Creator CRT-288K", true);
-		}
-	};
+	/// Данные модели.
+	DECLARE_USB_MODEL(DetectingData, Creator, 0x0285, "CRT-288K");
 }
 
 //--------------------------------------------------------------------------------

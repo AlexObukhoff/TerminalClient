@@ -7,21 +7,21 @@ template <class T>
 struct SPData
 {
 public:
-	SPData<T>() : mData(nullptr) {}
+	SPData<T>() : mData(0) {}
 
-	operator T * () 
+	operator T () 
 	{
 		return mData;
 	}
 
-	SPData<T> & operator = (T * aResult)
+	SPData<T> & operator = (T aResult)
 	{
 		mData = aResult;
 
 		return *this;
 	}
 
-	T ** operator & ()
+	T * operator & ()
 	{
 		return &mData;
 	}
@@ -32,7 +32,7 @@ public:
 	}
 
 private:
-	T * mData;
+	T mData;
 };
 
 //--------------------------------------------------------------------------------

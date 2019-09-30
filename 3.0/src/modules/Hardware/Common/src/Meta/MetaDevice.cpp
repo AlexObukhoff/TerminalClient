@@ -44,6 +44,7 @@ MetaDevice<T>::MetaDevice() :
 	mDeviceName(CMetaDevice::DefaultName),
 	mLogDate(QDate::currentDate()),
 	mOperatorPresence(false),
+	mFiscalServerPresence(false),
 	mDetectingPosition(0),
 	mInitialized(ERequestStatus::Fail),
 	mExitTimeout(ULONG_MAX),
@@ -132,6 +133,7 @@ void MetaDevice<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 	}
 
 	mOperatorPresence = aConfiguration.value(CHardwareSDK::OperatorPresence, mOperatorPresence).toBool();
+	mFiscalServerPresence = aConfiguration.value(CHardwareSDK::FiscalServerPresence, mFiscalServerPresence).toBool();
 }
 
 //--------------------------------------------------------------------------------

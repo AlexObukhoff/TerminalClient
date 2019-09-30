@@ -50,7 +50,8 @@ var Payment = {
 		AddFields: "ADD_FIELDS",
 		ReceiptPrinted: "RECEIPT_PRINTED",
 		MNPGatewayIn: "GATEWAY_IN",
-		MNPGatewayOut: "GATEWAY_OUT"
+		MNPGatewayOut: "GATEWAY_OUT",
+		Cheated: "CHEATED"
 	},
 	Error: {
 		ConnectionLost: -1,

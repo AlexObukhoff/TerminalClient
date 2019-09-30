@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Hardware/Acceptors/CCTalkModelData.h"
+#include "Hardware/CashDevices/CCTalkModelData.h"
 #include "Hardware/Acceptors/CCTalkAcceptorConstants.h"
 
 //--------------------------------------------------------------------------------

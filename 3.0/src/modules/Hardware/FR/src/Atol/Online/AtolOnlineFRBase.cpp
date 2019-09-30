@@ -20,7 +20,7 @@ AtolOnlineFRBase<T>::AtolOnlineFRBase()
 	mFRBuildUnifiedTaxes = 3689;
 	setConfigParameter(CHardwareSDK::CanOnline, true);
 
-	mOFDFiscalParametersOnSale
+	mOFDFiscalFieldsOnSale
 		<< CFR::FiscalFields::PayOffSubjectMethodType;
 
 	// регистры
@@ -43,7 +43,9 @@ AtolOnlineFRBase<T>::AtolOnlineFRBase()
 
 	// ошибки
 	mErrorData = PErrorData(new CAtolOnlineFR::Errors::Data());
-	mUnprocessedErrorData.add(CAtolOnlineFR::Commands::FS::GetFiscalTLVData, CAtolOnlineFR::Errors::NoRequiedDataInFS);
+	mUnprocessedErrorData.add(CAtolOnlineFR::Commands::FS::GetFiscalTLVData, TErrors()
+		<< CAtolOnlineFR::Errors::NoRequiedDataInFS
+		<< CAtolOnlineFR::Errors::NeedExtendedErrorCode);
 }
 
 //--------------------------------------------------------------------------------
@@ -77,7 +79,7 @@ bool AtolOnlineFRBase<T>::updateParameters()
 		return false;
 	}
 
-	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { mFFEngine.setLConfigParameter(CFiscalSDK::aName, data); \
+	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { mFFEngine.setConfigParameter(CFiscalSDK::aName, mCodec->toUnicode(data)); \
 		QString value = mFFEngine.getConfigParameter(CFiscalSDK::aName, data).toString(); toLog(LogLevel::Normal, mDeviceName + \
 			QString(": Add %1 = \"%2\" to config data").arg(mFFData.getTextLog(CFR::FiscalFields::aName)).arg(value)); }
 
@@ -175,7 +177,7 @@ void AtolOnlineFRBase<T>::processDeviceData()
 
 		if (date.isValid())
 		{
-			setDeviceParameter(CDeviceData::FS::ValidityData, date.toString(CFR::DateLogFormat));
+			setDeviceParameter(CDeviceData::FS::ValidityData, CFR::FSValidityDateOff(date));
 		}
 
 		if (data.size() > 6)
@@ -424,19 +426,7 @@ bool AtolOnlineFRBase<T>::processAnswer(const QByteArray & aCommand, char aError
 		}
 		case CAtolOnlineFR::Errors::NeedExtendedErrorCode:
 		{
-			QByteArray data;
-
-			if (getRegister(CAtolOnlineFR::Registers::ExtendedErrorData, data))
-			{
-				char command = char(data.left(2).toHex().toInt(0, 16));
-
-				if (command == aCommand[0])
-				{
-					ushort error = data.mid(2, 2).toHex().toUShort(0, 16);
-
-					toLog(LogLevel::Error, mDeviceName + ": Extended error: " + CAtolOnlineFR::Errors::ExtraData[error]);
-				}
-			}
+			getExtendedErrorCode(aCommand);
 
 			break;
 		}
@@ -449,6 +439,34 @@ bool AtolOnlineFRBase<T>::processAnswer(const QByteArray & aCommand, char aError
 	}
 
 	return T::processAnswer(aCommand, aError);
+}
+
+//---------------------------------------------------------------------------
+template<class T>
+bool AtolOnlineFRBase<T>::getExtendedErrorCode(const QByteArray & aCommand)
+{
+	QByteArray data;
+	QString registerName = CAtolOnlineFR::Registers::ExtendedErrorData;
+	char registerNumber = mRegisterData[registerName].number;
+
+	if (!getRegister(registerName, data))
+	{
+		return false;
+	}
+
+	char command = char(data.left(2).toHex().toInt(0, 16));
+
+	if (command != aCommand[0])
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Wrong command = %1 in register %2 (%3), need %4")
+			.arg(toHexLog(command)).arg(toHexLog(registerNumber)).arg(registerName).arg(toHexLog(aCommand[0])));
+		return false;
+	}
+
+	ushort error = data.mid(2, 2).toHex().toUShort(0, 16);
+	toLog(LogLevel::Error, mDeviceName + ": Extended error: " + CAtolOnlineFR::Errors::ExtraData[error]);
+
+	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -490,7 +508,7 @@ bool AtolOnlineFRBase<T>::sale(const SUnitData & aUnitData)
 	char section = (aUnitData.section == -1) ? ASCII::NUL : char(aUnitData.section);
 	QByteArray sum = getBCD(aUnitData.sum / 10.0, 7, 2, 3);
 	QByteArray payOffSubjectType = getBCD(aUnitData.payOffSubjectType, 1);
-	QByteArray payOffSubjectMethodType = getBCD(CFR::PayOffSubjectMethodType, 1);
+	QByteArray payOffSubjectMethodType = getBCD(aUnitData.payOffSubjectMethodType, 1);
 
 	QByteArray commandData;
 	commandData.append(CAtolOnlineFR::SaleFlags);               // флаги
@@ -608,6 +626,23 @@ void AtolOnlineFRBase<T>::setErrorFlags(const QByteArray & aCommand, char aError
 	{
 		mFSError = true;
 	}
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool AtolOnlineFRBase<T>::isErrorUnprocessed(const QByteArray & aCommand, char aError)
+{
+	if (!T::isErrorUnprocessed(aCommand, aError))
+	{
+		return false;
+	}
+
+	if (aError == CAtolOnlineFR::Errors::NeedExtendedErrorCode)
+	{
+		getExtendedErrorCode(aCommand);
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------

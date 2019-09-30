@@ -167,7 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\..\includes\Hardware\HID\HIDBase.h" />
-    <ClInclude Include="..\src\Serial\HHPModelData.h" />
+    <ClInclude Include="..\src\Serial\HHPDetectingData.h" />
     <ClInclude Include="..\src\Serial\SerialScanner.h" />
     <ClInclude Include="..\src\Serial\USBScanner.h" />
   </ItemGroup>

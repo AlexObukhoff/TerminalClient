@@ -2,9 +2,7 @@
 
 #pragma once
 
-#include "Hardware/Common/DeviceBase.h"
 #include "Hardware/Common/VirtualDeviceBase.h"
-#include "Hardware/CashAcceptors/ProtoCashAcceptor.h"
 #include "Hardware/CashAcceptors/CashAcceptorBase.h"
 
 //---------------------------------------------------------------------------------------------

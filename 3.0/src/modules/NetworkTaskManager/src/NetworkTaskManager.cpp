@@ -433,7 +433,7 @@ QSslCertificate NetworkTaskManager::loadCertResource(const QString & aPath)
 	QResource res(aPath);
 	QByteArray buffer(reinterpret_cast<const char *>(res.data()), res.size());
 
-	QSslCertificate cert(buffer);
+	QSslCertificate cert(buffer , res.fileName().split(".").takeLast() == "cer" ? QSsl::Der : QSsl::Pem);
 	
 	if (cert.isNull() || !cert.isValid())
 	{
@@ -441,7 +441,7 @@ QSslCertificate NetworkTaskManager::loadCertResource(const QString & aPath)
 	}
 	else
 	{
-		toLog(LogLevel::Normal, QString("Load CA cert: %1.").arg(cert.subjectInfo(QSslCertificate::CommonName)));
+		toLog(LogLevel::Normal, QString("Load CA cert: %1").arg(cert.subjectInfo(QSslCertificate::CommonName)));
 	}
 
 	return cert;
@@ -459,7 +459,8 @@ void NetworkTaskManager::loadCerts()
 		<< loadCertResource(":/CA/GlobalSignRootCA.pem")
 		<< loadCertResource(":/CA/GlobalSignDomainValidationCA-SHA256-G2.pem")
 		<< loadCertResource(":/CA/ThawteRSACA2018.pem")
-		<< loadCertResource(":/CA/DigiCertGlobalRootCA.pem");
+		<< loadCertResource(":/CA/DigiCertGlobalRootCA.pem")
+		<< loadCertResource(":/CA/qaznet_trust_network.pem");
 
 	config.setCaCertificates(caCerts);
 	QSslConfiguration::setDefaultConfiguration(config);
@@ -468,7 +469,7 @@ void NetworkTaskManager::loadCerts()
 //------------------------------------------------------------------------
 void NetworkTaskManager::setUserAgent(const QString & aUserAgent)
 {
-	mUserAgent = aUserAgent;
+	mUserAgent = aUserAgent; 
 }
 
 //------------------------------------------------------------------------

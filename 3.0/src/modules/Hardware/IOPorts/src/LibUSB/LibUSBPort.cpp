@@ -4,7 +4,6 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QRegExp>
 #include <QtCore/QMetaType>
-#include <QtCore/qmath.h>
 #include <Common/QtHeadersEnd.h>
 
 // Project
@@ -27,6 +26,19 @@ LibUSBPort::LibUSBPort(): mHandle(nullptr), mExist(false), mDevice(nullptr)
 void LibUSBPort::setDevice(libusb_device * aDevice)
 {
 	mDevice = aDevice;
+	mDeviceProperties = getDevicesProperties(false)[aDevice];
+
+	auto getEPLogData = [&] (const CLibUSB::SEndPoint & aEP) -> QString { return QString("max packet size = %1, data = %2, transfer type = %3")
+		.arg(aEP.maxPacketSize).arg(toHexLog(aEP.data)).arg(CLibUSBUtils::TransferTypeDescriptions[uint8_t(aEP.transferType)]); };
+
+	if (!mDeviceProperties.valid())
+	{
+		toLog(LogLevel::Error, QString("Port properties are wrong: VID = %1, PID = %2,\ndeviceToHost = %3,\nhostToDevice = %4")
+			.arg(toHexLog(mDeviceProperties.VID))
+			.arg(toHexLog(mDeviceProperties.PID))
+			.arg(getEPLogData(mDeviceProperties.deviceToHost))
+			.arg(getEPLogData(mDeviceProperties.hostToDevice)));
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -70,31 +82,15 @@ void LibUSBPort::initialize()
 	}
 
 	adjustData(mineData, otherData);
-
-	auto getEPLogData = [&] (const CLibUSB::SEndPoint & aEP) -> QString { return QString("max packet size = %1, data = %2, transfer type = %3")
-		.arg(aEP.maxPacketSize).arg(toHexLog(aEP.data)).arg(CLibUSBUtils::TransferTypeDescriptions[uint8_t(aEP.transferType)]); };
-
-	if (!mDeviceProperties.valid())
-	{
-		toLog(LogLevel::Error, QString("Port properties are wrong: VID = %1, PID = %2,\ndeviceToHost = %3,\nhostToDevice = %4")
-			.arg(toHexLog(mDeviceProperties.VID))
-			.arg(toHexLog(mDeviceProperties.PID))
-			.arg(getEPLogData(mDeviceProperties.deviceToHost))
-			.arg(getEPLogData(mDeviceProperties.hostToDevice)));
-	}
 }
 
 //--------------------------------------------------------------------------------
 bool LibUSBPort::release()
 {
 	bool closingResult = close();
-	libusb_context * libUSBContext = LibUSBUtils::getContext(mLog);
 
-	if (libUSBContext)
-	{
-		libusb_exit(libUSBContext);
-		libUSBContext = nullptr;
-	}
+	LibUSBUtils::releaseDeviceList();
+	LibUSBUtils::releaseContext(mLog);
 
 	bool result = MetaDevice::release();
 
@@ -114,6 +110,8 @@ bool LibUSBPort::open()
 		return false;
 	}
 
+	setConfigParameter(CHardware::Port::JustConnected, false);
+
 	if (!LIB_USB_CALL_LOG(mLog, libusb_open, mDevice, &mHandle))
 	{
 		return false;
@@ -124,7 +122,7 @@ bool LibUSBPort::open()
 
 	auto getData = [&deviceData] (const QString & aKey) -> QString { return deviceData.value(aKey).toString().simplified(); };
 	auto getFullData = [&deviceData, &getData] (const QString & aKey1, const QString & aKey2) -> QString
-		{ QString result = QString("%1 = %2").arg(aKey1).arg(getData(aKey1)); QString option = getData(aKey2);
+		{ QString result = QString("%1 = %2").arg(aKey1.toUpper()).arg(getData(aKey1)); QString option = getData(aKey2);
 			return option.isEmpty() ? result : QString("%1 (%2)").arg(result).arg(option); };
 
 	toLog(LogLevel::Normal, QString("%1 with device %2 and %3 is opened")
@@ -158,11 +156,17 @@ bool LibUSBPort::open()
 bool LibUSBPort::close()
 {
 	bool result = true;
+	bool beenOpened = mHandle;
 
 	if (!mInitializationError && mHandle)
 	{
 		result = LIB_USB_CALL(libusb_release_interface, mHandle, 0);
 		libusb_close(mHandle);
+	}
+
+	if (result && beenOpened)
+	{
+		toLog(LogLevel::Normal, QString("Port %1 is closed.").arg(getDevicesProperties(false)[mDevice].portData));
 	}
 
 	mHandle = nullptr;
@@ -171,9 +175,9 @@ bool LibUSBPort::close()
 }
 
 //--------------------------------------------------------------------------------
-bool LibUSBPort::checkReady()
+bool LibUSBPort::checkExistence()
 {
-	if (mExist)
+	if (isExist())
 	{
 		return true;
 	}
@@ -182,7 +186,28 @@ bool LibUSBPort::checkReady()
 
 	if (!mExist)
 	{
-		toLog(LogLevel::Error, "Port does not exist.");
+		if (mDevice)
+		{
+			toLog(LogLevel::Error, "Port does not exist.");
+		}
+
+		return false;
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+bool LibUSBPort::checkReady()
+{
+	if (!checkExistence())
+	{
+		return false;
+	}
+
+	if (!mHandle && !open())
+	{
+		toLog(LogLevel::Error, "Port does not opened.");
 		return false;
 	}
 
@@ -208,9 +233,7 @@ bool LibUSBPort::read(QByteArray & aData, int aTimeout, int aMinSize)
 		CLibUSB::SEndPoint & EP = mDeviceProperties.deviceToHost;
 		mReadingBuffer.fill(ASCII::NUL, EP.maxPacketSize);
 
-		int result = (EP.transferType == LIBUSB_TRANSFER_TYPE_BULK) ?
-			LIB_USB_CALL(libusb_bulk_transfer,      mHandle, EP.data, (unsigned char *)&mReadingBuffer[0], EP.maxPacketSize, &received, aTimeout) :
-			LIB_USB_CALL(libusb_interrupt_transfer, mHandle, EP.data, (unsigned char *)&mReadingBuffer[0], EP.maxPacketSize, &received, aTimeout);
+		TResult result = LIB_USB_CALL(mDeviceProperties.hostToDevice.processIO, mHandle, EP.data, (unsigned char *)&mReadingBuffer[0], EP.maxPacketSize, &received, aTimeout);
 
 		if (LIB_USB_SUCCESS(result))
 		{
@@ -268,10 +291,9 @@ bool LibUSBPort::performWrite(const QByteArray & aData)
 {
 	int bytesWritten = 0;
 	int actualSize = aData.size();
+	int timeout = CLibUSBPort::writingTimeout(actualSize);
 
-	TResult result = (mDeviceProperties.deviceToHost.transferType == LIBUSB_TRANSFER_TYPE_BULK) ?
-		LIB_USB_CALL(libusb_bulk_transfer,      mHandle, mDeviceProperties.hostToDevice(), (unsigned char *)aData.data(), aData.size(), &bytesWritten, 0) :
-		LIB_USB_CALL(libusb_interrupt_transfer, mHandle, mDeviceProperties.hostToDevice(), (unsigned char *)aData.data(), aData.size(), &bytesWritten, 0);
+	TResult result = LIB_USB_CALL(mDeviceProperties.deviceToHost.processIO, mHandle, mDeviceProperties.hostToDevice(), (unsigned char *)aData.data(), actualSize, &bytesWritten, timeout);
 
 	if (!result)
 	{
@@ -288,41 +310,38 @@ bool LibUSBPort::performWrite(const QByteArray & aData)
 }
 
 //--------------------------------------------------------------------------------
-TResult LibUSBPort::processAnswer(const QString & aFunctionName, int aResult)
+TResult LibUSBPort::handleResult(const QString & aFunctionName, int aResult)
 {
-	return LibUSBUtils::logAnswer(aFunctionName, aResult, mLog);
+	TResult result = LibUSBUtils::logAnswer(aFunctionName, aResult, mLog);
 
-	/*
-	if (CAsyncSerialPort::DisappearingErrors.contains(mLastError))
-	{
-		mSystemNames = getSystemData(true).keys();
-	}
-
-	if (!mSystemNames.contains(mSystemName))
+	if (CLibUSBPort::DisappearingErrors.contains(aResult) && !getDevicesProperties(true).contains(mDevice))
 	{
 		close();
 
 		mExist = false;
 	}
-	*/
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
 bool LibUSBPort::deviceConnected()
 {
 	CLibUSB::TDeviceProperties devicesProperties = getDevicesProperties(true);
-	bool result = (devicesProperties.size() > mDevicesProperties.size()) && !mDevicesProperties.isEmpty();
+	int result = (devicesProperties.size() - mDevicesProperties.size()) * mDevicesProperties.size();
 
 	mDevicesProperties = devicesProperties;
 
-	if (result)
+	if (result > 0)
 	{
-		checkReady();
+		setConfigParameter(CHardware::Port::JustConnected, true);
 
-		setDeviceConfiguration(getDeviceConfiguration());
+		return true;
 	}
 
-	return result;
+	checkExistence();
+
+	return false;
 };
 
 //--------------------------------------------------------------------------------
@@ -338,7 +357,7 @@ CLibUSB::TDeviceProperties LibUSBPort::getDevicesProperties(bool aForce)
 
 	static CLibUSB::TDeviceProperties properties;
 
-	if ((properties.isEmpty() || aForce) && !LibUSBUtils::getDevicesProperties(properties))
+	if ((!properties.isEmpty() && !aForce) || !LibUSBUtils::getDevicesProperties(properties, aForce))
 	{
 		return properties;
 	}
@@ -346,7 +365,7 @@ CLibUSB::TDeviceProperties LibUSBPort::getDevicesProperties(bool aForce)
 	for (auto it = properties.begin(); it != properties.end();)
 	{
 		QString deviceProduct = it->deviceData.value(DeviceUSBData::Product).toString().toLower();
-		bool needErase = !it->valid() || deviceProduct.contains("mouse");
+		bool needErase = !it->VID || !it->PID || deviceProduct.contains("mouse");
 		it = needErase ? properties.erase(it) : it + 1;
 	}
 

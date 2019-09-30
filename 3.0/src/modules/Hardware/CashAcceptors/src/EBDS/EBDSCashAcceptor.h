@@ -6,7 +6,7 @@
 #include "Hardware/Protocols/CashAcceptor/EBDS.h"
 
 // Project
-#include "Hardware/CashAcceptors/PortCashAcceptor.h"
+#include "Hardware/CashAcceptors/SerialCashAcceptor.h"
 
 /*
 софт MEI структурно состоит из 3 программ:

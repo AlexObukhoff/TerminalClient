@@ -6,33 +6,23 @@
 #include <QtCore/qmath.h>
 #include <Common/QtHeadersEnd.h>
 
-// Modules
-#include "Hardware/CoinAcceptors/CCTalkCoinAcceptorBase.h"
-#include "Hardware/CashAcceptors/CCTalkCashAcceptor.h"
-
 // Project
 #include "CCTalkAcceptorBase.h"
+#include "Hardware/Acceptors/CCTalkAcceptorConstants.h"
 
 using namespace SDK::Driver;
 using namespace SDK::Driver::IOPort::COM;
 
-//-------------------------------------------------------------------------------
-template class CCTalkAcceptorBase<TSerialCashAcceptor>;
-template class CCTalkAcceptorBase<CoinAcceptorBase>;
-template class CCTalkAcceptorBase<CCTalkCoinAcceptorBase>;
-
 //---------------------------------------------------------------------------
 template <class T>
-CCTalkAcceptorBase<T>::CCTalkAcceptorBase() : mEventIndex(0), mEnabled(false), mFWVersion(0), mAddress(CCCTalk::Address::Unknown), mErrorData(nullptr)
+CCTalkAcceptorBase<T>::CCTalkAcceptorBase() : mEnabled(false), mCurrency(Currency::NoCurrency)
 {
 	// параметры порта
 	mPortParameters[EParameters::BaudRate].append(EBaudRate::BR9600);
 	mPortParameters[EParameters::Parity].append(EParity::No);
 
 	// данные устройства
-	mDeviceName = CCCTalk::DefaultDeviceName;
 	mMaxBadAnswers = 5;
-	mCurrency = Currency::NoCurrency;
 }
 
 //--------------------------------------------------------------------------------
@@ -102,76 +92,60 @@ bool CCTalkAcceptorBase<T>::applyParTable()
 	return processCommand(CCCTalk::Command::PartialEnable, getParTableData());
 }
 
-//--------------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 template <class T>
-QDate CCTalkAcceptorBase<T>::parseDate(const QByteArray & aData)
+bool CCTalkAcceptorBase<T>::getStatus(TStatusCodes & aStatusCodes)
 {
-	ushort data = qToBigEndian(aData.toHex().toUShort(0, 16));
-
-	return QDate(int((data >> 9) & 0x3F) + mBaseYear,
-	             int((data >> 5) & 0x0F),
-	             int((data >> 0) & 0x1F));
-}
-
-//--------------------------------------------------------------------------------
-template <class T>
-TResult CCTalkAcceptorBase<T>::execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
-{
-	MutexLocker locker(&mExternalMutex);
-
-	char command = aCommand[0];
-	CCCTalk::Command::SData commandData = CCCTalk::Command::Description[command];
-
-	if (mModelData.unsupported.contains(command))
-	{
-		toLog(LogLevel::Warning, mDeviceName + ": does not support command " + commandData.description);
-		return CommandResult::Driver;
-	}
-
-	mProtocol.setLog(mLog);
-	mProtocol.setPort(mIOPort);
-	mProtocol.setAddress(mAddress);
-
-	if (!isAutoDetecting())
-	{
-		QString protocolType = getConfigParameter(CHardware::ProtocolType).toString();
-		mProtocol.setType(protocolType);
-	}
+	TDeviceCodes lastCodes(mCodes);
+	mCodes.clear();
 
 	QByteArray answer;
-	TResult result = mProtocol.processCommand(aCommand + aCommandData, answer);
 
-	if (!result)
+	if (!mErrorData || !getBufferedStatuses(answer))
 	{
-		toLog(LogLevel::Error, mDeviceName + ": Failed to " + commandData.description);
-		return result;
+		return false;
 	}
 
-	bool ack = (answer.size() >= 1) && (answer == QByteArray(answer.size(), CCCTalk::ACK));
-
-	if ((commandData.type == CCCTalk::Command::EAnswerType::ACK) && !ack)
+	if (answer.isEmpty())
 	{
-		toLog(LogLevel::Error, mDeviceName + QString(": Failed to check answer = {%1}, need ack")
-			.arg(commandData.size));
-
-		return CommandResult::Answer;
+		aStatusCodes.insert(DeviceStatusCode::Error::Unknown);
+	}
+	else
+	{
+		parseBufferedStatuses(answer, aStatusCodes);
 	}
 
-	if (((commandData.type == CCCTalk::Command::EAnswerType::Data) ||
-	     (commandData.type == CCCTalk::Command::EAnswerType::Date)) && (commandData.size >= answer.size()))
+	if (!processCommand(CCCTalk::Command::SelfCheck, &answer))
 	{
-		toLog(LogLevel::Error, mDeviceName + QString(": Failed to check answer size = %1, need minimum = %2")
-			.arg(answer.size())
-			.arg(commandData.size));
-		return CommandResult::Answer;
+		return false;
 	}
 
-	if (aAnswer)
+	uchar fault = answer[0];
+	mCodes.insert(fault);
+
+	int statusCode = (fault && (fault == mModelData.fault)) ? BillAcceptorStatusCode::Busy::Unknown : CCCTalk::Fault[fault].statusCode;
+	SStatusCodeSpecification statusCodeSpecification = mStatusCodesSpecification->value(statusCode);
+
+	if (!lastCodes.contains(fault))
 	{
-		*aAnswer = answer.mid(1);
+		QString description = CCCTalk::Fault.getDescription(answer);
+		LogLevel::Enum logLevel = getLogLevel(statusCodeSpecification.warningLevel);
+
+		if (description.isEmpty())
+		{
+			toLog(logLevel, mDeviceName + QString(": Self check status = ") + statusCodeSpecification.description);
+		}
+		else
+		{
+			toLog(logLevel, mDeviceName + QString(": Self check status = %1 -> %2")
+				.arg(description)
+				.arg(statusCodeSpecification.description));
+		}
 	}
 
-	return CommandResult::OK;
+	aStatusCodes.insert(statusCode);
+
+	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -251,219 +225,11 @@ void CCTalkAcceptorBase<T>::parseBufferedStatuses(const QByteArray & aAnswer, TS
 
 //---------------------------------------------------------------------------
 template <class T>
-bool CCTalkAcceptorBase<T>::getStatus(TStatusCodes & aStatusCodes)
+void CCTalkAcceptorBase<T>::finaliseInitialization()
 {
-	TDeviceCodes lastCodes(mCodes);
-	mCodes.clear();
+	CCTalkDeviceBase<T>::finaliseInitialization();
 
-	QByteArray answer;
-
-	if (!mErrorData || !getBufferedStatuses(answer))
-	{
-		return false;
-	}
-
-	if (answer.isEmpty())
-	{
-		aStatusCodes.insert(DeviceStatusCode::Error::Unknown);
-
-		return true;
-	}
-
-	parseBufferedStatuses(answer, aStatusCodes);
-
-	if (!processCommand(CCCTalk::Command::SelfCheck, &answer))
-	{
-		return false;
-	}
-
-	uchar fault = answer[0];
-	mCodes.insert(fault);
-
-	int statusCode = (fault && (fault == mModelData.fault)) ? BillAcceptorStatusCode::Busy::Unknown : CCCTalk::Fault[fault].statusCode;
-	SStatusCodeSpecification statusCodeSpecification = mStatusCodesSpecification->value(statusCode);
-
-	if (!lastCodes.contains(fault))
-	{
-		QString description = CCCTalk::Fault.getDescription(answer);
-		LogLevel::Enum logLevel = getLogLevel(statusCodeSpecification.warningLevel);
-
-		if (description.isEmpty())
-		{
-			toLog(logLevel, mDeviceName + QString(": Self check status = ") + statusCodeSpecification.description);
-		}
-		else
-		{
-			toLog(logLevel, mDeviceName + QString(": Self check status = %1 -> %2")
-				.arg(description)
-				.arg(statusCodeSpecification.description));
-		}
-	}
-
-	aStatusCodes.insert(statusCode);
-
-	if ((mCurrency != Currency::NoCurrency) && (mFWVersion < mModelData.minVersions[mCurrency]))
-	{
-		aStatusCodes.insert(DeviceStatusCode::Warning::Firmware);
-	}
-
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-template <class T>
-bool CCTalkAcceptorBase<T>::isConnected()
-{
-	if (!isAutoDetecting())
-	{
-		return checkConnection();
-	}
-
-	foreach (auto protocolType, CCCTalk::ProtocolTypes)
-	{
-		mProtocol.setType(protocolType);
-		setConfigParameter(CHardware::ProtocolType, protocolType);
-
-		if (checkConnection())
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-//--------------------------------------------------------------------------------
-template <class T>
-bool CCTalkAcceptorBase<T>::checkConnection()
-{
-	SleepHelper::msleep(CCCTalk::IdentificationPause);
-
-	QByteArray answer;
-
-	if (!processCommand(CCCTalk::Command::Core::DeviceTypeID, &answer))
-	{
-		return false;
-	}
-	else
-	{
-		QString answerData = ProtocolUtils::clean(answer).replace(ASCII::Space, "").toLower();
-		QString data = CCCTalk::DeviceTypeIds[mAddress];
-
-		if (!answerData.contains(data))
-		{
-			toLog(LogLevel::Error, mDeviceName + QString(": wrong device type = %1, need like %2").arg(answer.data()).arg(data));
-			return false;
-		}
-	}
-
-	QByteArray vendorID;
-
-	if (!processCommand(CCCTalk::Command::Core::VendorID, &vendorID))
-	{
-		return false;
-	}
-
-	if (CCCTalk::VendorData.data().contains(vendorID))
-	{
-		setDeviceParameter(CDeviceData::Vendor, CCCTalk::VendorData.getName(vendorID));
-	}
-
-	QByteArray model;
-
-	if (!processCommand(CCCTalk::Command::Core::ModelName, &model))
-	{
-		return false;
-	}
-
-	CCCTalk::CModelDataBase * modelData = getModelData();
-
-	if (!modelData)
-	{
-		toLog(LogLevel::Error, mDeviceName + ": No model data");
-		return false;
-	}
-
-	mDeviceName = modelData->getData(vendorID, model, mModelData);
-	mVerified = mModelData.verified;
-	mModelCompatibility = mModels.contains(mDeviceName);
-
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-template<class T>
-void CCTalkAcceptorBase<T>::processDeviceData()
-{
-	QByteArray answer;
-
-	if (processCommand(CCCTalk::Command::Core::BuildCode, &answer))
-	{
-		setDeviceParameter(CDeviceData::Build, answer);
-	}
-
-	if (processCommand(CCCTalk::Command::CorePlus::ProtocolID, &answer))
-	{
-		setDeviceParameter(CDeviceData::ProtocolVersion, QString("%1.%2.%3").arg(uchar(answer[0])).arg(uchar(answer[1])).arg(uchar(answer[2])));
-	}
-
-	if (processCommand(CCCTalk::Command::CorePlus::Serial, &answer))
-	{
-		setDeviceParameter(CDeviceData::SerialNumber, 0x10000 * uchar(answer[2]) + 0x100 * uchar(answer[1]) + uchar(answer[0]));
-	}
-
-	if (processCommand(CCCTalk::Command::DBVersion, &answer))
-	{
-		setDeviceParameter(CDeviceData::CashAcceptors::Database, uchar(answer[0]));
-	}
-
-	removeDeviceParameter(CDeviceData::Firmware);
-
-	if (processCommand(CCCTalk::Command::CorePlus::SoftVersion, &answer))
-	{
-		setDeviceParameter(CDeviceData::Firmware, answer);
-		double FWVersion = parseFWVersion(answer);
-
-		if (FWVersion)
-		{
-			mFWVersion = FWVersion;
-
-			if (answer.simplified().toDouble() != FWVersion)
-			{
-				setDeviceParameter(CDeviceData::Version, mFWVersion, CDeviceData::Firmware);
-			}
-		}
-	}
-
-	if (processCommand(CCCTalk::Command::BaseYear, &answer))
-	{
-		mBaseYear = answer.toInt();
-	}
-
-	if (processCommand(CCCTalk::Command::CreationDate, &answer))
-	{
-		setDeviceParameter(CDeviceData::Date, parseDate(answer).toString("dd.MM.yyyy"), CDeviceData::Firmware);
-	}
-
-	if (processCommand(CCCTalk::Command::SoftLastDate, &answer))
-	{
-		setDeviceParameter(CDeviceData::CashAcceptors::LastUpdate, parseDate(answer).toString("dd.MM.yyyy"), CDeviceData::Firmware);
-	}
-}
-
-//--------------------------------------------------------------------------------
-template <class T>
-double CCTalkAcceptorBase<T>::parseFWVersion(const QByteArray & aAnswer)
-{
-	double result = 0;
-	QRegExp regex("\\d+\\.\\d+");
-
-	if (regex.indexIn(aAnswer) != -1)
-	{
-		result = regex.capturedTexts()[0].toDouble();
-	}
-
-	return result;
+	mOldFirmware = (mCurrency != Currency::NoCurrency) && (mFWVersion < mModelData.minVersions[mCurrency]);
 }
 
 //--------------------------------------------------------------------------------

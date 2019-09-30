@@ -2,6 +2,7 @@
 
 // Qt
 #include <Common/QtHeadersBegin.h>
+#include <QtCore/QRegExp>
 #include <QtCore/qmath.h>
 #include <Common/QtHeadersEnd.h>
 
@@ -13,6 +14,7 @@
 
 using namespace SDK::Driver;
 using namespace SDK::Driver::IOPort::COM;
+using namespace ProtocolUtils;
 
 //---------------------------------------------------------------------------
 SSPCashAcceptor::SSPCashAcceptor()
@@ -25,10 +27,12 @@ SSPCashAcceptor::SSPCashAcceptor()
 	mPortParameters[EParameters::RTS].append(ERTSControl::Disable);
 
 	// данные устройства
-	mDeviceName = "SSP cash acceptor";
+	mDeviceName = CSSP::Models::Default;
 	mEscrowPosition = 1;
-	mResetOnIdentification = true;
 	mResetWaiting = EResetWaiting::Available;
+	mLastConnectionOK = false;
+	mEnabled = false;
+	mParInStacked = true;
 
 	// параметры протокола
 	mProtocol.setAddress(CSSP::Addresses::Validator);
@@ -38,7 +42,7 @@ SSPCashAcceptor::SSPCashAcceptor()
 //--------------------------------------------------------------------------------
 QStringList SSPCashAcceptor::getModelList()
 {
-	CSSP::CModelData modelData;
+	CSSP::Models::CData modelData;
 	QStringList result;
 
 	foreach(auto data, modelData.data())
@@ -61,18 +65,20 @@ bool SSPCashAcceptor::checkStatuses(TStatusData & aData)
 
 	if (answer.isEmpty())
 	{
-		aData << CSSP::EnabledStatus;
+		QByteArray statusCode = mEnabled ? CSSP::EnabledStatus : CSSP::DisabledStatus;
+		aData << statusCode;
 	}
 	else
 	{
 		for (int i = 0; i < answer.size(); ++i)
 		{
-			TStatusCodes statusCodes;
-			mDeviceCodeSpecification->getSpecification(answer[i], statusCodes);
-			int addon = int(statusCodes.contains(BillAcceptorStatusCode::BillOperation::Escrow));
+			aData << answer.mid(i, answer[i]);
+			bool parAvailable = (answer[i] == CSSP::EAStatusCode) || (answer[i] == CSSP::StackingStarted);
 
-			aData << answer.mid(i, 1 + addon);
-			i += addon;
+			if (parAvailable && (++i < answer.size()))
+			{
+				aData.last() += answer[i];
+			}
 		}
 	}
 
@@ -82,6 +88,11 @@ bool SSPCashAcceptor::checkStatuses(TStatusData & aData)
 //---------------------------------------------------------------------------------
 TResult SSPCashAcceptor::execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
 {
+	if (!mLastConnectionOK && (aCommand != QByteArray(1, CSSP::Commands::Sync)) && !processCommand(CSSP::Commands::Sync))
+	{
+		return false;
+	}
+
 	MutexLocker locker(&mExternalMutex);
 
 	mProtocol.setPort(mIOPort);
@@ -89,7 +100,8 @@ TResult SSPCashAcceptor::execCommand(const QByteArray & aCommand, const QByteArr
 
 	QByteArray answer;
 	QByteArray request = aCommand + aCommandData;
-	TResult result = mProtocol.processCommand(request, answer, aCommand.startsWith(CSSP::Commands::Sync));
+	TResult result = mProtocol.processCommand(request, answer, CSSP::Commands::Data[aCommand[0]]);
+	mLastConnectionOK = CommandResult::PresenceErrors.contains(result);
 
 	if (!result)
 	{
@@ -115,7 +127,31 @@ TResult SSPCashAcceptor::execCommand(const QByteArray & aCommand, const QByteArr
 //--------------------------------------------------------------------------------
 bool SSPCashAcceptor::processReset()
 {
-	return processCommand(CSSP::Commands::Reset) && waitReady(CSSP::ReadyWaiting);
+	if (!processCommand(CSSP::Commands::Reset))
+	{
+		return false;
+	}
+
+	waitReady(CSSP::NotReadyWaiting, false);
+
+	TStatusCodes statusCodes;
+	auto poll = [&] () -> bool { statusCodes.clear(); return getStatus(std::ref(statusCodes)); };
+
+	if (!PollingExpector().wait<bool>(poll, [&] () -> bool { return !statusCodes.isEmpty() && !statusCodes.contains(DeviceStatusCode::OK::Initialization); }, CSSP::ReadyWaiting))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to wait not initialization status after reset command");
+		return false;
+	}
+
+	// иначе ITL забудет, по какому протоколу он работает
+	int protocolNumber = 1;
+
+	while (!processCommand(CSSP::Commands::SetProtocolVersion, QByteArray(1, uchar(protocolNumber++)))) {}
+	while ( processCommand(CSSP::Commands::SetProtocolVersion, QByteArray(1, uchar(protocolNumber++)))) {}
+
+	setDeviceParameter(CDeviceData::ProtocolVersion, protocolNumber - 2);
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -123,42 +159,47 @@ bool SSPCashAcceptor::isConnected()
 {
 	QByteArray answer;
 
-	if (!processCommand(CSSP::Commands::Sync))
-	{
-		return false;
-	}
-
-	if (!processReset())
-	{
-		return false;
-	}
-
-	int protocolNumber = CSSP::StartingProtocolNumber;
-
-	while (processCommand(CSSP::Commands::SetProtocolVersion, QByteArray(1, uchar(protocolNumber++))))
-	{
-	}
-
-	setDeviceParameter(CDeviceData::ProtocolVersion, protocolNumber - 2);
-
-	if (!processCommand(CSSP::Commands::GetVersion, &answer))
+	if (!processCommand(CSSP::Commands::GetFirmware, &answer))
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to get firmware version");
 		return false;
 	}
 
-	SBaseModelData modelData = CSSP::ModelData[answer.left(6)];
+	QMap<QString, SBaseModelData>::const_iterator it = CSSP::Models::Data.data().begin();
+	SBaseModelData modelData = SBaseModelData(CSSP::Models::Default);
+
+	while (it != CSSP::Models::Data.data().end())
+	{
+		if (answer.left(6).contains(it.key().toLatin1()))
+		{
+			modelData = it.value();
+		}
+
+		it++;
+	}
+
 	mDeviceName = modelData.name;
 	mUpdatable  = modelData.updatable;
 	mVerified   = modelData.verified;
 
+	if (mUpdatable)
+	{
+		setDeviceParameter(CDeviceData::FirmwareUpdatable, true);
+	}
+
 	if (answer.size() >=  9)
 	{
 		setDeviceParameter(CDeviceData::Firmware, answer.mid(6, 3).insert(1, ASCII::Dot));
+		setDeviceParameter(CDeviceData::CashAcceptors::ModificationNumber, answer.mid(9));
 	}
 
-	setDeviceParameter(CDeviceData::Revision, answer.mid(9, 4));
-	setDeviceParameter(CDeviceData::CashAcceptors::ModificationNumber, answer.mid(13));
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+void SSPCashAcceptor::processDeviceData()
+{
+	QByteArray answer;
 
 	if (processCommand(CSSP::Commands::GetSerial, &answer) && !answer.isEmpty())
 	{
@@ -170,7 +211,22 @@ bool SSPCashAcceptor::isConnected()
 		setDeviceParameter(CDeviceData::Firmware, answer.mid(1, 4).insert(1, ASCII::Dot));
 	}
 
-	return true;
+	if (processCommand(CSSP::Commands::GetDataset, &answer) && !answer.isEmpty())
+	{
+		setDeviceParameter(CDeviceData::CashAcceptors::BillSet, answer);
+	}
+
+	if (processCommand(CSSP::Commands::GetBuild, &answer) && !answer.isEmpty())
+	{
+		setDeviceParameter(CDeviceData::Build, "0x" + answer.toHex().toUpper());
+		setDeviceParameter(CDeviceData::Type, uint(answer[0]), CDeviceData::Build);
+
+		if (answer.size() >= 3)
+		{
+			ushort build = ushort(answer[1]) | ushort(answer[0] << 8);
+			setDeviceParameter(CDeviceData::Number, build, CDeviceData::Build);
+		}
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -187,7 +243,10 @@ bool SSPCashAcceptor::stack()
 		return false;
 	}
 
-	return processCommand(CSSP::Commands::Stack);
+	// стека как такового нет, он происходит по поллу или если нет холда в течение 2 с.
+	processCommand(CSSP::Commands::Poll);
+
+	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -206,7 +265,14 @@ bool SSPCashAcceptor::enableMoneyAcceptingMode(bool aEnabled)
 {
 	char command = aEnabled ? CSSP::Commands::Enable : CSSP::Commands::Disable;
 
-	return processCommand(command);
+	if (!processCommand(command))
+	{
+		return false;
+	}
+
+	mEnabled = aEnabled;
+
+	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -215,6 +281,12 @@ bool SSPCashAcceptor::applyParTable()
 	QList<int> indexes = mEscrowParTable.data().keys();
 	qSort(indexes);
 	int channels = qCeil(indexes.last() / 8.0);
+
+	if ((mDeviceName == CSSP::Models::NV200) || (mDeviceName == CSSP::Models::NV200Spectral))
+	{
+		channels = qMax(channels, CSSP::NV200MinInhibitedChannels);
+	}
+
 	QByteArray commandData(channels, ASCII::NUL);
 
 	for (auto it = mEscrowParTable.data().begin(); it != mEscrowParTable.data().end(); ++it)
@@ -256,18 +328,74 @@ bool SSPCashAcceptor::loadParTable()
 		return false;
 	}
 
-	double multiplier = CSSP::NominalMultiplier * ProtocolUtils::hexToBCD(answer.mid(12 + 2 * channels, 3)).toInt();
+	double multiplier = CSSP::NominalMultiplier * hexToBCD(answer.mid(12 + 2 * channels, 3)).toInt();
 
 	for (int i = 0; i < channels; ++i)
 	{
 		int index = answer[12 + i];
 		QString currency = answer.mid(16 + 2 * channels, 3);
-		double nominal = multiplier * ProtocolUtils::revert(answer.mid(16 + 5 * channels + 4 * i, 4)).toHex().toInt(0, 16);
+		double nominal = multiplier * revert(answer.mid(16 + 5 * channels + 4 * i, 4)).toHex().toInt(0, 16);
 
 		MutexLocker locker(&mResourceMutex);
 
 		mEscrowParTable.data().insert(index, SPar(nominal, currency));
 	}
+
+	return true;
+}
+
+//---------------------------------------------------------------------------
+bool SSPCashAcceptor::performUpdateFirmware(const QByteArray & aBuffer)
+{
+	if (!performBaudRateChanging(true))
+	{
+		return false;
+	}
+
+	if (!performBaudRateChanging(false))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+//---------------------------------------------------------------------------
+bool SSPCashAcceptor::performBaudRateChanging(bool aUp)
+{
+	CSSP::EBaudRate::Enum upBaudRate = (mDeviceName == CSSP::Models::NV200Spectral) ? CSSP::EBaudRate::BR115200 : CSSP::EBaudRate::BR38400;
+	CSSP::EBaudRate::Enum commandBaudrate = aUp ? upBaudRate : CSSP::EBaudRate::BR9600;
+	IOPort::COM::EBaudRate::Enum baudRate = CSSP::BaudRateData[commandBaudrate];
+
+	TPortParameters portParameters;
+	mIOPort->getParameters(portParameters);
+
+	if (portParameters[EParameters::BaudRate] == baudRate)
+	{
+		return true;
+	}
+
+	QByteArray commandData;
+	commandData.append(char(commandBaudrate));
+	commandData.append(CSSP::ContinuousBaudrate);
+
+	if (!processCommand(CSSP::Commands::SetBaudrate, commandData))
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to set %1 baud rate in cash acceptor").arg(baudRate));
+		return false;
+	}
+
+	SleepHelper::msleep(CSSP::ChangingBaudratePause);
+
+	portParameters[EParameters::BaudRate] = baudRate;
+
+	if (!mIOPort->setParameters(portParameters))
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to set %1 baud rate in port").arg(baudRate));
+		return false;
+	}
+
+	toLog(LogLevel::Normal, mDeviceName + QString(": Baud rate has changed to %2.").arg(baudRate));
 
 	return true;
 }

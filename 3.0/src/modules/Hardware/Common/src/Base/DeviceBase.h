@@ -160,7 +160,7 @@ protected:
 	virtual bool environmentChanged();
 
 	/// Подождать готовность.
-	bool waitReady(const SWaitingData & aWaitingData);
+	bool waitReady(const SWaitingData & aWaitingData, bool aReady = true);
 
 	/// Получить уровень тревожности по буферу статус-кодов.
 	virtual SDK::Driver::EWarningLevel::Enum getWarningLevel(const TStatusCollection & aStatusCollection);

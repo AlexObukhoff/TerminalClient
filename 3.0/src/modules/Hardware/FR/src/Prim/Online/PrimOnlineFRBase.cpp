@@ -42,6 +42,7 @@ PrimOnlineFRBase::PrimOnlineFRBase()
 
 	// ошибки
 	mErrorData = PErrorData(new CPrimOnlineFR::Errors::Data());
+	mExtraErrorData = PExtraErrorData(new CPrimOnlineFR::Errors::ExtraData());
 }
 
 //--------------------------------------------------------------------------------
@@ -86,7 +87,7 @@ bool PrimOnlineFRBase::updateParameters()
 		}
 
 		setDeviceParameter(CDeviceData::ControllerBuild, textBuild, CDeviceData::Firmware);
-		int DTDBuild = firmware.mid(1, 1).toInt(0, 16);
+		int DTDBuild = CPrimOnlineFR::getDTD(firmware, mFFDFR);
 
 		if (DTDBuild)
 		{
@@ -297,7 +298,7 @@ void PrimOnlineFRBase::processDeviceData()
 
 			if (date.isValid())
 			{
-				setDeviceParameter(CDeviceData::FS::ValidityData, date.toString(CFR::DateLogFormat));
+				setDeviceParameter(CDeviceData::FS::ValidityData, CFR::FSValidityDateOff(date));
 			}
 		}
 
@@ -531,22 +532,24 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 		SUnitData unitData = aPaymentData.unitDataList.value(i);
 		int section = (unitData.section != -1) ? unitData.section : 1;
 		QStringList data = QStringList()
-			<< unitData.name
-			<< getAmountData(unitData.sum)
-			<< "1"
-			<< int2String(section) +
-			   int2String(mTaxData[unitData.VAT].group) +
-			   int2String(CFR::PayOffSubjectMethodType) +    // 1214 (признак способа расчета)
-			   int2String(unitData.payOffSubjectType)        // 1212 (признак предмета расчета)
+			<< unitData.name                                     // 1059 (товар)
+			<< getAmountData(unitData.sum)                       // 1079 (цена)
+			<< "1"                                               // 1023 (количество)
+			<< int2String(section) +                             // отдел
+			   int2String(mTaxData[unitData.VAT].group) +        // налоговая группа
+			   int2String(unitData.payOffSubjectMethodType) +    // 1214 (признак способа расчета)
+			   int2String(unitData.payOffSubjectType)            // 1212 (признак предмета расчета)
 			<< "";
 
 		int addAFDDataIndex = aAdditionalAFDData.size();
 
-		#define ADD_AFD_TAG(aX, aY, aField, ...) aAdditionalAFDData << addFiscalField(lastX + aX, aY, mAFDFont, CFR::FiscalFields::aField * 100 + i + 1, __VA_ARGS__);
-		#define ADD_AFD_TAG_MULTI(aX, aY, aField, aData) ADD_AFD_TAG(aX, aY, aField, aData); lastX += int(newLine);
+		#define ADD_AFD_TAG(aX, aY, aField, ...) aAdditionalAFDData << addFiscalField(lastX + aX, aY, mAFDFont, CFR::FiscalFields::aField * 100 + i + 1, __VA_ARGS__)
+		#define ADD_AFD_TAG_MULTI(aX, aY, aField, aData) ADD_AFD_TAG(aX, aY, aField, aData); lastX += int(newLine)
 
 		if (mFFDFR > EFFD::F10)
 		{
+			// координаты
+
 			TSum sum = unitData.sum;
 			int amountY = getAmountY(sum);
 			int VATY = getAmountY(sum * unitData.VAT / 100.0);
@@ -561,6 +564,14 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 			ADD_AFD_TAG(2, amountY, PayOffSubjectAmount);              // 1043 (стоимость)
 			ADD_AFD_TAG(3,       1, VATRate);                          // 1199 (НДС, %)
 			ADD_AFD_TAG(3,    VATY, PayOffSubjectTaxAmount);           // 1200 (НДС, сумма)
+
+			if (unitData.payOffSubjectMethodType != EPayOffSubjectMethodTypes::Full)
+			{
+				ADD_AFD_TAG(4, 1, PayOffSubjectMethodType);    // 1214 (признак способа расчета)
+			}
+
+			// не печатается на основании ФФД
+			//ADD_AFD_TAG(5, 1, PayOffSubjectType);    // 1212 (признак предмета расчета)
 		}
 		else
 		{
@@ -574,11 +585,7 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 		}
 	}
 
-	// 1057 (флаг агента)
-	if ((mFFDFR > EFFD::F10) && (aPaymentData.agentFlag != EAgentFlags::None))
-	{
-		aAdditionalAFDData << addFiscalField(lastX + 1, 1, mAFDFont, CFR::FiscalFields::AgentFlagsReg, int2String(uchar(aPaymentData.agentFlag)));
-	}
+	bool agentFlagExists = (mFFDFR > EFFD::F10) && (aPaymentData.agentFlag != EAgentFlags::None);
 
 	// 1055 (СНО)
 	if (aPaymentData.taxSystem != ETaxSystems::None)
@@ -587,7 +594,39 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 
 		while (~aPaymentData.taxSystem & (1 << index++)) {}
 
-		aAdditionalAFDData << addFiscalField(lastX + 1, 25, mAFDFont, CFR::FiscalFields::TaxSystem, int2String(index));
+		int taxSystemY = agentFlagExists ? 25 : 1;
+		aAdditionalAFDData << addFiscalField(lastX + 1, taxSystemY, mAFDFont, CFR::FiscalFields::TaxSystem, int2String(index));
+	}
+
+	#define ADD_PRIM_FF_DATA(aField, aData) aAdditionalAFDData.append(addFiscalField(++lastX, 1, mAFDFont, CFR::FiscalFields::aField, aData))
+	#define ADD_PRIM_FF(aField) ADD_PRIM_FF_DATA(aField, mFFEngine.getConfigParameter(CFiscalSDK::aField).toString())
+
+	// 1057 (флаг агента)
+	if (agentFlagExists)
+	{
+		ADD_PRIM_FF_DATA(AgentFlagsReg, int2String(uchar(aPaymentData.agentFlag)));
+
+		bool isBankAgent = CFR::isBankAgent(aPaymentData.agentFlag);
+		bool isPaymentAgent = CFR::isPaymentAgent(aPaymentData.agentFlag);
+
+		if (isBankAgent)
+		{
+			ADD_PRIM_FF(AgentOperation);
+			ADD_PRIM_FF(TransferOperatorName);
+			ADD_PRIM_FF(TransferOperatorINN);
+			ADD_PRIM_FF(TransferOperatorAddress);
+			ADD_PRIM_FF(TransferOperatorPhone);
+		}
+		else if (isPaymentAgent)
+		{
+			ADD_PRIM_FF(ProcessingPhone);
+		}
+
+		if (isBankAgent || isPaymentAgent)
+		{
+			ADD_PRIM_FF(AgentPhone);
+			ADD_PRIM_FF(ProviderPhone);
+		}
 	}
 
 	QString userContact = mFFEngine.getConfigParameter(CFiscalSDK::UserContact).toString();
@@ -596,7 +635,7 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 	{
 		if (mFFDFR >= EFFD::F105)
 		{
-			aAdditionalAFDData << addFiscalField(lastX + 2, 1, mAFDFont, CFR::FiscalFields::UserContact, userContact);
+			ADD_PRIM_FF(UserContact);
 		}
 		else
 		{

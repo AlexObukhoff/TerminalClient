@@ -82,5 +82,8 @@
     <ClInclude Include="..\src\PCSCReaderStatusCodes.h">
       <Filter>PC/SC Reader</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\MifareReaderModelDataTypes.h">
+      <Filter>PC/SC Reader</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

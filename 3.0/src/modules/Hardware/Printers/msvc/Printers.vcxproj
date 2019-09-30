@@ -134,8 +134,10 @@
     <ClCompile Include="..\src\SystemPrinter\SystemPrinter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Printers\PortPrintersBase.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Printers\POSPrinterData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Printers\PrinterConstants.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Printers\PortPOSPrinters.h" />
     <ClInclude Include="..\src\AV268\AV268.h" />
     <ClInclude Include="..\src\AV268\AV268Constants.h" />
     <ClInclude Include="..\src\Base\Port\PortPrinterBase.h" />
@@ -163,7 +165,6 @@
     <ClInclude Include="..\src\POSPrinters\Epson\EpsonEUT400.h" />
     <ClInclude Include="..\src\PrimexNP2511\PrimexNP2511.h" />
     <ClInclude Include="..\src\PrimexNP2511\PrimexPrinterData.h" />
-    <ClInclude Include="..\src\Base\Port\Serial\SerialPrinterBase.h" />
     <ClInclude Include="..\src\Star\EjectorStarPrinters.h" />
     <ClInclude Include="..\src\Star\ModelData.h" />
     <ClInclude Include="..\src\Star\StarMemorySwitches.h" />

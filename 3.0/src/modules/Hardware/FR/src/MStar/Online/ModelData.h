@@ -22,7 +22,7 @@ namespace CAFPFR
 		public:
 			CData()
 			{
-				add("MSTAR-TK", "Multisoft MStar-TK2", "4.4.2.4", false);
+				add("MSTAR-TK", "Multisoft MStar-TK2", "4.4.4.0", false);
 			}
 
 		private:

@@ -107,9 +107,6 @@ public:
 	/// Установить имя устройства.
 	void setDeviceName(const QString & aDeviceName);
 
-	/// Установить кодек.
-	void setCodec(QTextCodec * aCodec);
-
 protected:
 	/// Данные фискальных реквизитов.
 	CFR::FiscalFields::Data mFFData;

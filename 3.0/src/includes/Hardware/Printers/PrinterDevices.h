@@ -1,4 +1,5 @@
 #include "../../../../modules/Hardware/Printers/src/POSPrinters/Common/POSPrinter.h"
+#include "../../../../includes/Hardware/Printers/PortPOSPrinters.h"
 #include "../../../../modules/Hardware/Printers/src/POSPrinters/Citizen/CitizenPPU700/CitizenPPU700.h"
 #include "../../../../modules/Hardware/Printers/src/POSPrinters/Citizen/CitizenCPP8001.h"
 #include "../../../../modules/Hardware/Printers/src/POSPrinters/Citizen/CitizenCBM1000II.h"

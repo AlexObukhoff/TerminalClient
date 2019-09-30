@@ -70,7 +70,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Acceptors.lib;CashAcceptors.lib;CoinAcceptors.lib;CCTalkProtocol.lib;NPSTalkProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CashDevices.lib;Acceptors.lib;CashAcceptors.lib;CoinAcceptors.lib;CCTalkProtocol.lib;NPSTalkProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -96,7 +96,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;Acceptors.lib;CashAcceptors.lib;CoinAcceptors.lib;CCTalkProtocol.lib;NPSTalkProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;CashDevices.lib;Acceptors.lib;CashAcceptors.lib;CoinAcceptors.lib;CCTalkProtocol.lib;NPSTalkProtocol.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -121,7 +121,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmaind.lib;QtCored4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;Acceptorsd.lib;CashAcceptorsd.lib;CoinAcceptorsd.lib;CCTalkProtocold.lib;NPSTalkProtocold.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmaind.lib;QtCored4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;CashDevicesd.lib;Acceptorsd.lib;CashAcceptorsd.lib;CoinAcceptorsd.lib;CCTalkProtocold.lib;NPSTalkProtocold.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\CoinAcceptorPlugin.cpp" />
+    <ClCompile Include="..\src\CoinAcceptorTemplates.cpp" />
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -27,15 +27,15 @@ void VirtualDispenser::setDeviceConfiguration(const QVariantMap & aConfiguration
 }
 
 //---------------------------------------------------------------------------
-void VirtualDispenser::applyCashList()
+void VirtualDispenser::applyUnitList()
 {
 	moveToThread(&mThread);
 
-	START_IN_WORKING_THREAD(applyCashList)
+	START_IN_WORKING_THREAD(applyUnitList)
 
 	if (!mUnitConfigData.isEmpty())
 	{
-		adjustCashList(true);
+		adjustUnitList(true);
 	}
 
 	moveToThread(qApp->thread());

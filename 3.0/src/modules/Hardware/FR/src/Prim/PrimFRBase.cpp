@@ -48,6 +48,7 @@ PrimFRBase::PrimFRBase() : mMode(EFRMode::Fiscal)
 
 	// ошибки
 	mErrorData = PErrorData(new CPrimFR::Errors::Data());
+	mExtraErrorData = PExtraErrorData(new CPrimFR::Errors::ExtraData());
 
 	// налоги
 	mTaxData.add( 0, 0);

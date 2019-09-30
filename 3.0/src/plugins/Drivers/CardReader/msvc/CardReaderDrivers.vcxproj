@@ -136,6 +136,7 @@
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\MifareReaderModelDataTypes.h" />
     <ClInclude Include="..\src\PCSCReaderStatusCodes.h" />
     <CustomBuild Include="..\src\MifareReaderModelData.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">

@@ -74,7 +74,7 @@ bool Paymaster<T>::updateParameters()
 
 	QByteArray data;
 
-	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { mFFEngine.setLConfigParameter(CFiscalSDK::aName, data); \
+	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { mFFEngine.setConfigParameter(CFiscalSDK::aName, mCodec->toUnicode(data)); \
 		QString value = mFFEngine.getConfigParameter(CFiscalSDK::aName, data).toString(); toLog(LogLevel::Normal, mDeviceName + \
 			QString(": Add %1 = \"%2\" to config data").arg(mFFData.getTextLog(CFR::FiscalFields::aName)).arg(value)); }
 

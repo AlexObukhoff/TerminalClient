@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include "Hardware/Acceptors/CCTalkModelData.h"
-#include "Hardware/Acceptors/CCTalkAcceptorConstants.h"
+#include "Hardware/CashDevices/CCTalkModelData.h"
 
 //--------------------------------------------------------------------------------
 namespace CCCTalk

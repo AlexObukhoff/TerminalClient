@@ -4,20 +4,15 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QtAlgorithms>
 #include <QtCore/qmath.h>
-
-// OPOS
-#pragma warning(disable: 4100) // warning C4100: 'identifier' : unreferenced formal parameter
-#include <OPOS/QtWrappers/FiscalPrinter.h>
 #include <Common/QtHeadersEnd.h>
 
 // Modules
 #include "Hardware/Common/SerialDeviceBase.h"
+#include "Hardware/Common/LibUSBDeviceBase.h"
 #include "Hardware/Common/TCPDeviceBase.h"
-#include "Hardware/Common/OPOSPollingDeviceBase.h"
 #include "Hardware/Common/PortPollingDeviceBase.h"
 #include "Hardware/Common/ProtoDevices.h"
 #include "Hardware/Printers/PrinterStatusesDescriptions.h"
-#include "Hardware/FR/ProtoFR.h"
 
 // Project
 #include "PrinterBase.h"
@@ -27,9 +22,7 @@ using namespace PrinterStatusCode;
 //---------------------------------------------------------------------------
 template class PrinterBase<PollingDeviceBase<ProtoPrinter>>;
 template class PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>;
-template class PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoFR>>>;
-template class PrinterBase<TCPDeviceBase<PortPollingDeviceBase<ProtoFR>>>;
-template class PrinterBase<OPOSPollingDeviceBase<ProtoFR, OPOS::OPOSFiscalPrinter>>;
+template class PrinterBase<LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>;
 
 //---------------------------------------------------------------------------
 template <class T>

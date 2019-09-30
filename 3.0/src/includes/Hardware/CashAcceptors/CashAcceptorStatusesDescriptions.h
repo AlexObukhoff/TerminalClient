@@ -171,6 +171,7 @@ namespace BillAcceptorStatusCode
 			ADD_CA_ERROR(Calibration,        QCoreApplication::translate("ValidatorStatuses", "#calibration_error"));
 
 			/// Выбросы (в большинстве случае - нормальное состояние).
+			ADD_CA_STATUS_DATA(Reject, Rejecting, Rejected, Warning, "Rejecting", QCoreApplication::translate("ValidatorStatuses", "#rejecting"));
 			ADD_CA_REJECT(Insertion);
 			ADD_CA_REJECT(Dielectric);
 			ADD_CA_REJECT(PreviousOperating);

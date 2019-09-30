@@ -61,6 +61,7 @@ namespace CHardware
 		const char OpeningTimeout[] = "opening_timeout";
 		const char OpeningContext[] = "port_opening_context";
 		const char Suspended[] = "suspended";
+		const char JustConnected[] = "just_connected";
 
 		/// Константы COM-порта.
 		namespace COM
@@ -91,6 +92,18 @@ namespace CHardware
 		const char Track3[] = "track3";
 	}
 
+	/// Константы устройства работы с деньгами.
+	namespace CashDevice
+	{
+		/// Типы протокола CCTalk.
+		namespace CCTalkTypes
+		{
+			const char CRC8[] = "CRC8";
+			const char CRC16[] = "CRC16";
+			const char CRC16Encrypted[] = "CRC16 Encrypted";
+		}
+	}
+
 	/// Константы устройства приема денег.
 	namespace CashAcceptor
 	{
@@ -103,14 +116,6 @@ namespace CHardware
 		const char ProcessEnabling[] = "process_enabling";
 		const char ProcessDisabling[] = "process_disabling";
 		const char StackedFilter[] = "stacked_filter";
-
-		/// Типы протокола CCTalk.
-		namespace CCTalkTypes
-		{
-			const char CRC8[] = "CRC8";
-			const char CRC16[] = "CRC16";
-			const char CRC16Encrypted[] = "CRC16 Encrypted";
-		}
 	}
 
 	/// Константы виртуального устройства приема денег.

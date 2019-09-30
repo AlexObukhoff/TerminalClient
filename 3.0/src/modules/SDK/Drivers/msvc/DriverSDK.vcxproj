@@ -106,6 +106,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Constants.cpp" />
+    <ClCompile Include="..\src\Par.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CardReader\CardReaderStatus.h" />
@@ -125,7 +126,6 @@
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\InteractionTypes.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\WarningLevel.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CashAcceptor\CurrencyList.h" />
-    <ClInclude Include="..\..\..\..\Includes\SDK\Drivers\CashAcceptor\Par.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CashAcceptor\CashAcceptorStatus.h" />
     <ClInclude Include="..\..\..\..\Includes\SDK\Drivers\IOPort\COMParameters.h" />
     <ClInclude Include="..\..\..\..\Includes\SDK\Drivers\IOPort\LPTParameters.h" />
@@ -139,6 +139,7 @@
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IPrinter.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IWatchdog.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\Watchdog\WatchdogStatus.h" />
+    <ClInclude Include="..\src\Par.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

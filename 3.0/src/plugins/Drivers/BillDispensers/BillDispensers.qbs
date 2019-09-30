@@ -13,6 +13,8 @@ Project {
 
 		files: [
 			"../../../includes/Common/CoreVersion.rc",
+			"../../../modules/Hardware/CashDevices/src/*.*",
+			"../../../modules/Hardware/CashDevices/src/*/*.*",
 			"src/*.cpp",
 			"src/*.h",
 			"../../../includes/Hardware/Dispensers/DispenserStatusesDescriptions.h"

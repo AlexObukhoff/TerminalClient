@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Hardware/CashAcceptors/PortCashAcceptor.h"
+#include "Hardware/CashAcceptors/SerialCashAcceptor.h"
 
 //--------------------------------------------------------------------------------
 class ICTCashAcceptor : public TSerialCashAcceptor

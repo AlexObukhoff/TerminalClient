@@ -27,6 +27,9 @@
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\BillAcceptorTemplates.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusesDescriptions.h">

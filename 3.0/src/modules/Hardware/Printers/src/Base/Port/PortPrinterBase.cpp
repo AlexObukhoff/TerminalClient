@@ -1,15 +1,11 @@
 /* @file Базовый принтер с портовой реализацией протокола. */
 
-// Modules
-#include "Hardware/FR/ProtoFR.h"
-
 // Project
 #include "PortPrinterBase.h"
 
 //---------------------------------------------------------------------------
 template class PortPrinterBase<PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>>;
-template class PortPrinterBase<PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoFR>>>>;
-template class PortPrinterBase<PrinterBase<TCPDeviceBase<PortPollingDeviceBase<ProtoFR>>>>;
+template class PortPrinterBase<PrinterBase<LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>>;
 
 //---------------------------------------------------------------------------
 template <class T>

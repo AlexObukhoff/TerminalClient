@@ -111,6 +111,9 @@
     <Filter Include="ATOL\Base\ATOL3">
       <UniqueIdentifier>{d48b4d7d-c69c-4865-8de4-18ab61ba580c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Base\FS serial data">
+      <UniqueIdentifier>{c76ebf56-bb2f-4e0e-a0a0-dd771305e71a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Base\FRBase.cpp">
@@ -205,6 +208,12 @@
     </ClCompile>
     <ClCompile Include="..\src\Atol\Base\Atol3\Atol3FRBase.cpp">
       <Filter>ATOL\Base\ATOL3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Base\FSSerialData.cpp">
+      <Filter>Base\FS serial data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Base\FiscalFieldDescriptions.cpp">
+      <Filter>Base\FFEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -391,9 +400,6 @@
     <ClInclude Include="..\src\Shtrih\Online\ShtrihTCPFRBase.h">
       <Filter>Shtrih\Online</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h">
-      <Filter>Base\FFEngine</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Base\FFEngine.h">
       <Filter>Base\FFEngine</Filter>
     </ClInclude>
@@ -444,6 +450,18 @@
     </ClInclude>
     <ClInclude Include="..\src\Atol\Base\Atol3\Atol3FRBaseConstants.h">
       <Filter>ATOL\Base\ATOL3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRDataTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base\FSSerialData.h">
+      <Filter>Base\FS serial data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FFDataTypes.h">
+      <Filter>Base\FFEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base\FiscalFieldDescriptions.h">
+      <Filter>Base\FFEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

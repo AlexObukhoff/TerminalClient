@@ -77,6 +77,38 @@ inline QStringList sortParameters(QStringList (* aGetParameters)())
 }
 
 //------------------------------------------------------------------------------
+inline TParameterList modifyValue(const TParameterList & aParameterList, const QString & aName, const QVariant & aValue, const QString & aOldValue = "")
+{
+	TParameterList parameterList(aParameterList);
+
+	auto it = std::find_if(parameterList.begin(), parameterList.end(), [&aName] (const SPluginParameter & aParameter) { return aParameter.name == aName; });
+
+	if (it != parameterList.end())
+	{
+		it->defaultValue = aValue;
+		QVariantMap & possibleValues = it->possibleValues;
+
+		if (possibleValues.contains(aName))
+		{
+			possibleValues[aName] = aValue;
+		}
+		else if (possibleValues.contains(aOldValue) && (possibleValues[aOldValue] == aOldValue))
+		{
+			possibleValues.remove(aOldValue);
+			possibleValues.insert(aValue.toString(), aValue);
+		}
+	}
+
+	return parameterList;
+}
+
+//------------------------------------------------------------------------------
+inline TParameterList modifyPriority(const TParameterList & aParameterList, SDK::Driver::EDetectingPriority::Enum aPriority)
+{
+	return modifyValue(aParameterList, CHardwareSDK::DetectingPriority, aPriority);
+}
+
+//------------------------------------------------------------------------------
 /// Создать список параметров с именем модели.
 template <class T>
 inline TParameterList createNamedList(const QStringList & aModels, const QString & aDefault)
@@ -131,6 +163,17 @@ struct SNamedList<T1, DSDKIT::ItUSB>
 	TParameterList create(const QStringList & aModels, const QString & aDefault)
 	{
 		return createSimpleNamedList<T1>(aModels, aDefault)
+			<< setMultipleExistence();
+	}
+};
+
+//------------------------------------------------------------------------------
+template <class T1>
+struct SNamedList<T1, DSDKIT::ItLibUSB>
+{
+	TParameterList create(const QStringList & aModels, const QString & aDefault)
+	{
+		return modifyValue(createSimpleNamedList<T1>(aModels, aDefault), CHardwareSDK::InteractionType, CInteractionTypes::USB, CInteractionTypes::LibUSB)
 			<< setMultipleExistence();
 	}
 };
@@ -194,19 +237,14 @@ inline SPluginParameter setNormalPriority()
 	return SPluginParameter(CHardwareSDK::DetectingPriority, SPluginParameter::Text, false, QString(), QString(), SDK::Driver::EDetectingPriority::Normal, possibleValues, true);
 }
 
-inline TParameterList modifyPriority(const TParameterList & aParameterList, SDK::Driver::EDetectingPriority::Enum aPriority)
+//------------------------------------------------------------------------------
+/// Модифицированные имена ключей.
+inline SPluginParameter setModifiedKeys(const QString & aOldParameterName, const QString & aNewParameterName)
 {
-	TParameterList parameterList(aParameterList);
+	QVariantMap modifiedKeys;
+	modifiedKeys.insert(aOldParameterName, aNewParameterName);
 
-	auto it = std::find_if(parameterList.begin(), parameterList.end(), [] (const SPluginParameter & aParameter) { return aParameter.name == CHardwareSDK::DetectingPriority; });
-
-	if (it != parameterList.end())
-	{
-		it->defaultValue = aPriority;
-		it->possibleValues[CHardwareSDK::DetectingPriority] = aPriority;
-	}
-
-	return parameterList;
+	return SPluginParameter(CPlugin::ModifiedKeys, SPluginParameter::Set, false, QString(), QString(), QString(), modifiedKeys, true);
 }
 
 //------------------------------------------------------------------------------
@@ -217,20 +255,20 @@ inline SPluginParameter setModifiedValues(const QString & aParameterValue, const
 }
 
 //------------------------------------------------------------------------------
+/// Модифицированные значения параметров.
+inline SPluginParameter setModifiedValues(const QString & aParameterValue, const QString & aValueFrom, const QString & aValueTo)
+{
+	QVariantMap possibleValues;
+	possibleValues.insert(aValueFrom, aValueTo);
+
+	return SPluginParameter(CPlugin::ModifiedValues, SPluginParameter::Set, false, aParameterValue, QString(), QString(), possibleValues, true);
+}
+
+//------------------------------------------------------------------------------
 /// Множественный тип атвопоиска устройства.
 inline SPluginParameter setMultipleExistence()
 {
 	return SPluginParameter(CHardwareSDK::Existence, false, QString(), QString(), CHardwareSDK::ExistenceTypes::Multiple, QStringList() << CHardwareSDK::ExistenceTypes::Multiple, true);
-}
-
-//------------------------------------------------------------------------------
-/// Модифицированные имена параметров.
-inline SPluginParameter setModifiedKeys(const QString & aOldParameterName, const QString & aNewParameterName)
-{
-	QVariantMap modifiedKeys;
-	modifiedKeys.insert(aOldParameterName, aNewParameterName);
-
-	return SPluginParameter(CPlugin::ModifiedKeys, SPluginParameter::Set, false, QString(), QString(), QString(), modifiedKeys, true);
 }
 
 //------------------------------------------------------------------------------

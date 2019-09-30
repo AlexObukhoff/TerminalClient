@@ -49,6 +49,9 @@
     <ClCompile Include="..\src\CashDispenser\VirtualCashDispenser.cpp">
       <Filter>CashDispenser</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\VirtualDevicesTemplates.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\src\CashAcceptor\VirtualCashAcceptor.h">

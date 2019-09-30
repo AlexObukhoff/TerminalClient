@@ -10,35 +10,64 @@
 #include <Common/QtHeadersEnd.h>
 
 //--------------------------------------------------------------------------------
-// базовый класс для хранения данных в виде пар ключ-значение
+// Базовый класс для хранения данных в виде пар ключ-значение
 template <class T1, class T2>
 class CSpecification
 {
 public:
 	CSpecification(const T2 & aDefault = T2()) : mDefaultValue(aDefault) {}
-	const T2 operator[](const T1 & aKey) const {return value(aKey);}
-	T1 key(const T2 & aValue) {return mBuffer.key(aValue);}
-	virtual T2 value(const T1 & aKey) const {return mBuffer.value(aKey, mDefaultValue);}
-	void append(const T1 & aKey, const T2 & aParameter) {mBuffer.insert(aKey, aParameter);}
-	QMap<T1, T2> & data() {return mBuffer;}
-	void setDefault(const T2 & aDefaultValue) {mDefaultValue = aDefaultValue;}
-	T2 getDefault() {return mDefaultValue;}
+	const T2 operator[](const T1 & aKey) const { return value(aKey); }
+	T1 key(const T2 & aValue) { return mBuffer.key(aValue); }
+	virtual T2 value(const T1 & aKey) const { return mBuffer.value(aKey, mDefaultValue); }
+	void append(const T1 & aKey, const T2 & aParameter) { mBuffer.insert(aKey, aParameter); }
+	QMap<T1, T2> & data() { return mBuffer; }
+	QMap<T1, T2> constData() const { return mBuffer; }
+	void setDefault(const T2 & aDefaultValue) { mDefaultValue = aDefaultValue; }
+	T2 getDefault() { return mDefaultValue; }
 
 protected:
 	QMap<T1, T2> mBuffer;
 	T2 mDefaultValue;
 };
 
-// класс для хранения произвольных описателей данных
+//--------------------------------------------------------------------------------
+// Класс для хранения произвольных описателей данных
 template <class T>
 class CDescription : public CSpecification<T, QString>
 {
 public:
-	void append(const T & aKey, const char * aParameter) {mBuffer.insert(aKey, QString::fromUtf8(aParameter));}
-	void append(const T & aKey, const QString & aParameter) {mBuffer.insert(aKey, aParameter);}
+	void append(const T & aKey, const char * aParameter) { mBuffer.insert(aKey, QString::fromUtf8(aParameter)); }
+	void append(const T & aKey, const QString & aParameter) { mBuffer.insert(aKey, aParameter); }
+	void setDefault(const char * aDefaultValue) { mDefaultValue = QString::fromUtf8(aDefaultValue); }
 };
 
-// класс для хранения произвольных описателей данных в виде битовой маски
+//--------------------------------------------------------------------------------
+// Базовый класс для хранения данных в виде пар ключ-значение со статическим заполнением.
+// При использовании для хранения статических сущностей следить за временем их создания.
+template <class T1, class T2>
+class CStaticSpecification : public CSpecification<T1, T2>
+{
+public:
+	CStaticSpecification()
+	{
+		mBuffer = process(T1(), T2(), true);
+	}
+
+	static QMap<T1, T2> & process(const T1 & aKey, const T2 aValue, bool aControl = false)
+	{
+		static QMap<T1, T2> data;
+
+		if (!aControl)
+		{
+			data.insert(aKey, aValue);
+		}
+
+		return data;
+	}
+};
+
+//--------------------------------------------------------------------------------
+// Класс для хранения произвольных описателей данных в виде битовой маски
 template <class T>
 class CBitmapDescription : public CDescription<T>
 {
@@ -65,10 +94,12 @@ protected:
 	}
 };
 
+//--------------------------------------------------------------------------------
 #define APPEND(aKey) append(aKey, #aKey)
 #define ADD(aKey) add(aKey, #aKey)
 
-// базовый класс для хранения данных в виде пар ключ-значение со статическим заполнением данных
+//--------------------------------------------------------------------------------
+// Базовый класс для хранения данных в виде пар ключ-значение со статическим заполнением данных
 template <class T1, class T2>
 class CSSpecification: public CSpecification<T1, T2>
 {

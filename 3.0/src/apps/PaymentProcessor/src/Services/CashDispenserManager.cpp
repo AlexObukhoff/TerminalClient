@@ -207,7 +207,7 @@ void CashDispenserManager::setCashList(DSDK::IDispenser * aDispenser)
 		unitData << cashUnit.count;
 	}
 
-	aDispenser->setCashList(unitData);
+	aDispenser->setUnitList(unitData);
 }
 
 //---------------------------------------------------------------------------

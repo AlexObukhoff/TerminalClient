@@ -8,6 +8,8 @@ StaticLibrary {
 
 	Depends { name: "Core" }
 
+	Depends { name: "LibUSB" }
+
 	files: [
 		"src/COM/common/*.*",
 		"../../../includes/Hardware/IOPorts/IOPortStatusCodes.h"

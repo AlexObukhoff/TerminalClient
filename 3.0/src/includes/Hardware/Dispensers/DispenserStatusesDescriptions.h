@@ -13,6 +13,9 @@ namespace DispenserStatusCode
 	public:
 		CSpecifications()
 		{
+			ADD_OK_STATUS(SingleMode, "");
+			ADD_OK_STATUS(Locked,     "");
+
 			/// Предупреждения.
 			ADD_WARNING_STATUS(Unit0NearEmpty, QCoreApplication::translate("DispenserStatuses", "#unit_0_near_empty"));
 			ADD_WARNING_STATUS(Unit1NearEmpty, QCoreApplication::translate("DispenserStatuses", "#unit_1_near_empty"));

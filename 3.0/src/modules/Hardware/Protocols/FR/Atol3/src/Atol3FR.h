@@ -12,13 +12,13 @@ public:
 	Atol3FRProtocol();
 
 	/// Выполнить команду протокола.
-	TResult processCommand(uchar aTId, const QByteArray & aCommandData, QByteArray & aUnpackedAnswer, int aTimeout);
+	TResult processCommand(uchar aTId, const QByteArray & aCommandData, QByteArray & aUnpackedAnswer);
 
 	/// Запросить результат предыдущей операции.
 	TResult getResult(uchar aTId, QByteArray & aUnpackedAnswer);
 
 	/// Подождать ответ.
-	TResult waitForAnswer(QByteArray & aUnpackedAnswer);
+	TResult waitForAnswer(QByteArray & aUnpackedAnswer, int aTimeout);
 
 	/// ACK.
 	TResult sendACK(uchar aTId);
@@ -41,6 +41,9 @@ private:
 
 	/// Заменить экранирующие символы.
 	void replace(QByteArray & aData, int & aIndex, bool aDirection) const;
+
+	/// Получить размер пакета из ответа. Предполагагается, что структура пакета соблюдена.
+	int getSize(const QByteArray & aAnswer, int start);
 
 	/// Транспортный Id.
 	uchar mId;

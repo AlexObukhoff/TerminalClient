@@ -10,34 +10,34 @@ EpsonEUT400::EpsonEUT400()
 {
 	using namespace SDK::Driver::IOPort::COM;
 
-	POSPrinters::SParameters parameters(mModelData.getDefault().parameters);
+	mParameters = POSPrinters::CommonParameters;
 
 	// параметры порта
-	parameters.portSettings->data().insert(EParameters::BaudRate, POSPrinters::TSerialDevicePortParameter()
+	mPortParameters.insert(EParameters::BaudRate, POSPrinters::TSerialDevicePortParameter()
 		<< EBaudRate::BR38400
 		<< EBaudRate::BR19200
 		<< EBaudRate::BR4800
 		<< EBaudRate::BR9600);
 
 	// статусы ошибок
-	parameters.errors->data().clear();
+	mParameters.errors.clear();
 
-	parameters.errors->data()[1][1].insert('\x08', DeviceStatusCode::Error::Unknown);
+	mParameters.errors[1][1].insert('\x08', DeviceStatusCode::Error::Unknown);
 
-	parameters.errors->data()[2][1].insert('\x04', DeviceStatusCode::Error::CoverIsOpened);
-	parameters.errors->data()[2][1].insert('\x20', PrinterStatusCode::Error::PaperEnd);
-	parameters.errors->data()[2][1].insert('\x40', DeviceStatusCode::Error::Unknown);
+	mParameters.errors[2][1].insert('\x04', DeviceStatusCode::Error::CoverIsOpened);
+	mParameters.errors[2][1].insert('\x20', PrinterStatusCode::Error::PaperEnd);
+	mParameters.errors[2][1].insert('\x40', DeviceStatusCode::Error::Unknown);
 
-	parameters.errors->data()[3][1].insert('\x04', DeviceStatusCode::Error::MechanismPosition);
-	parameters.errors->data()[3][1].insert('\x08', PrinterStatusCode::Error::Cutter);
-	parameters.errors->data()[3][1].insert('\x60', DeviceStatusCode::Error::Unknown);
+	mParameters.errors[3][1].insert('\x04', DeviceStatusCode::Error::MechanismPosition);
+	mParameters.errors[3][1].insert('\x08', PrinterStatusCode::Error::Cutter);
+	mParameters.errors[3][1].insert('\x60', DeviceStatusCode::Error::Unknown);
 
-	parameters.errors->data()[4][1].insert('\x08', PrinterStatusCode::Warning::PaperNearEnd);
-	parameters.errors->data()[4][1].insert('\x40', PrinterStatusCode::Error::PaperEnd);
+	mParameters.errors[4][1].insert('\x08', PrinterStatusCode::Warning::PaperNearEnd);
+	mParameters.errors[4][1].insert('\x40', PrinterStatusCode::Error::PaperEnd);
 
 	// теги
-	parameters.tagEngine->appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
-	parameters.tagEngine->appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
+	mParameters.tagEngine.appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
+	mParameters.tagEngine.appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
 
 	// параметры моделей
 	mDeviceName = "Epson EU-T400";
@@ -48,8 +48,7 @@ EpsonEUT400::EpsonEUT400()
 
 	// модели
 	mModelData.data().clear();
-	mModelData.add(mModelID, true, mDeviceName, parameters);
-	mPortParameters = parameters.portSettings->data();
+	mModelData.add(mModelID, true, mDeviceName);
 }
 
 //--------------------------------------------------------------------------------

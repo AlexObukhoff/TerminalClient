@@ -12,10 +12,6 @@
 #include "PortCashAcceptor.h"
 #include "Hardware/CashAcceptors/CashAcceptorData.h"
 
-//---------------------------------------------------------------------------
-template class PortCashAcceptor<SerialDeviceBase<PortPollingDeviceBase<ProtoCashAcceptor>>>;
-template class PortCashAcceptor<PortPollingDeviceBase<ProtoCashAcceptor>>;
-
 using namespace SDK::Driver;
 
 //---------------------------------------------------------------------------
@@ -34,6 +30,7 @@ PortCashAcceptor<T>::PortCashAcceptor()
 	mResetWaiting = EResetWaiting::No;
 	mPollingIntervalEnabled  = CCashAcceptorsPollingInterval::Enabled;
 	mPollingIntervalDisabled = CCashAcceptorsPollingInterval::Disabled;
+	mForceWaitResetCompleting = false;
 
 	// описания для кодов статусов
 	setConfigParameter(CHardware::CashAcceptor::DisablingTimeout, 0);
@@ -168,8 +165,7 @@ bool PortCashAcceptor<T>::getStatus(TStatusCodes & aStatusCodes)
 				if (!it->description.isEmpty())
 				{
 					SStatusCodeSpecification statusCodeData = mStatusCodesSpecification->value(it->statusCode);
-					logLevel = (statusCodeData.warningLevel == EWarningLevel::Error) ? LogLevel::Error :
-						((statusCodeData.warningLevel == EWarningLevel::Warning) ? LogLevel::Warning : LogLevel::Normal);
+					logLevel = getLogLevel(statusCodeData.warningLevel);
 
 					QString codeLog;
 
@@ -753,6 +749,56 @@ void PortCashAcceptor<T>::finaliseInitialization()
 	startPolling(!mConnected);
 	mStatusHistory.checkLastUnprocessed();
 	restoreStatuses();
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool PortCashAcceptor<T>::canUpdateFirmware()
+{
+	if (!mUpdatable || !isDeviceReady())
+	{
+		return false;
+	}
+
+	MutexLocker locker(&mResourceMutex);
+
+	if (isEnabled() && !setEnable(false))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to disable for updating the firmware due to incorrect state of cash acceptor");
+		return false;
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+void PortCashAcceptor<T>::updateFirmware(const QByteArray & aBuffer)
+{
+	if (!isWorkingThread())
+	{
+		QMetaObject::invokeMethod(this, "updateFirmware", Qt::QueuedConnection, Q_ARG(const QByteArray &, aBuffer));
+
+		return;
+	}
+
+	bool result = performUpdateFirmware(aBuffer);
+
+	if (result)
+	{
+		mForceWaitResetCompleting = true;
+		reset(false);
+		mForceWaitResetCompleting = false;
+	}
+
+	emit updated(result); 
+}
+
+//---------------------------------------------------------------------------
+template<class T>
+bool PortCashAcceptor<T>::performUpdateFirmware(const QByteArray & /*aBuffer*/)
+{
+	return false;
 }
 
 //---------------------------------------------------------------------------

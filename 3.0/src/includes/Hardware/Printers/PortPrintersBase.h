@@ -1,19 +1,15 @@
-/* @file Р‘Р°Р·РѕРІС‹Р№ РїСЂРёРЅС‚РµСЂ СЃ COM-РїРѕСЂС‚РѕРІРѕР№ СЂРµР°Р»РёР·Р°С†РёРµР№ РїСЂРѕС‚РѕРєРѕР»Р°. */
+/* @file Базовые принтеры с портовыми реализациями протоколов. */
 
 #pragma once
 
-// Modules
-#include "Hardware/FR/ProtoFR.h"
-
-// Project
-#include "Hardware/Printers/PortPrinterBase.h"
+#include "../../../modules/Hardware/Printers/src/Base/Port/PortPrinterBase.h"
 
 //--------------------------------------------------------------------------------
 template <class T>
 class SerialPrinterBase : public PortPrinterBase<T>
 {
 public:
-	/// РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РЅР°СЃС‚СЂРѕРµРє РїРѕСЂС‚Р°, РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј.
+	/// Получение списка настроек порта, необязательных для редактирования пользователем.
 	static QStringList getOptionalPortSettings()
 	{
 		return QStringList()
@@ -25,6 +21,8 @@ public:
 	}
 };
 
+//--------------------------------------------------------------------------------
 typedef SerialPrinterBase<PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>> TSerialPrinterBase;
+typedef   PortPrinterBase<PrinterBase<LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>> TLibUSBPrinterBase;
 
 //--------------------------------------------------------------------------------

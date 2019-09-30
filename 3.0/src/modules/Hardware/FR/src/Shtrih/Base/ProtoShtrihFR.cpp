@@ -23,7 +23,6 @@ ProtoShtrihFR<T>::ProtoShtrihFR()
 {
 	// кодек
 	mCodec = CodecByName[CHardware::Codepages::Win1251];
-	mFFEngine.setCodec(mCodec);
 
 	// параметры семейства ФР
 	mNextReceiptProcessing = false;

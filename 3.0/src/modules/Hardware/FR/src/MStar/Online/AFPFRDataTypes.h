@@ -8,6 +8,9 @@
 #include <QtCore/QString>
 #include <Common/QtHeadersEnd.h>
 
+// Project
+#include "Hardware/FR/FiscalFieldDescriptions.h"
+
 //--------------------------------------------------------------------------------
 namespace CAFPFR
 {
@@ -66,6 +69,13 @@ namespace CAFPFR
 			SData() : number(0), answerType(EAnswerTypes::Unknown), bit(NoBit), index(0) {}
 			SData(int aNumber, EAnswerTypes::Enum aAnswerType, const QString & aName, int aBit = NoBit, int aIndex = 0) :
 				number(aNumber), answerType(aAnswerType), name(aName), bit(aBit), index(aIndex) {}
+
+			SData(int aNumber, int aFiscalField): number(aNumber), answerType(EAnswerTypes::String), bit(NoBit), index(0)
+			{
+				static CFR::FiscalFields::Data FFData;
+
+				name = FFData[aFiscalField].textKey;
+			}
 
 			QString log() const
 			{

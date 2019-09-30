@@ -159,6 +159,12 @@ private:
 	/// Предикат для поиска в списке клиентов.
 	TCustomers::iterator findCustomer(const QVariantMap & aParameters);
 
+	/// Перезаписать настройки комиссии 
+	void setExternalCommissions(const Commissions & aCommissions);
+
+	/// Сбросить настройки комиссий до начальных
+	void resetExternalCommissions();
+
 private:
 	TPtree & mProperties;
 
@@ -171,6 +177,7 @@ private:
 	SPersonalSettings mPersonalSettings;
 
 	Commissions mCommissions;
+	Commissions mExternalCommissions;
 
 	/// Чёрно-белый список клиентов.
 	TCustomers mCustomers;

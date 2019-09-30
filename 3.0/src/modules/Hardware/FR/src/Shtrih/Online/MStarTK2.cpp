@@ -8,7 +8,7 @@
 MStarTK2FR::MStarTK2FR()
 {
 	mDeviceName = CShtrihFR::Models::CData()[CShtrihFR::Models::ID::MStarTK2].name;
-	mOFDFiscalParameters << CFR::FiscalFields::Cashier;
+	mOFDFiscalFields << CFR::FiscalFields::Cashier;
 	mPrinterStatusEnabled = false;
 	mNeedReceiptProcessingOnCancel = false;
 

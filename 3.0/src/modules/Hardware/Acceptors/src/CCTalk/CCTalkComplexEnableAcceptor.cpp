@@ -1,17 +1,11 @@
 /* @file Устройство приема денег на протоколе ccTalk с 2-ступенчатой схемой включения на прием денег. */
 
-// Modules
-#include "Hardware/CoinAcceptors/CCTalkCoinAcceptorBase.h"
-
 // Project
+#include "Hardware/CashDevices/CCTalkModelData.h"
+#include "Hardware/Acceptors/CCTalkAcceptorConstants.h"
 #include "CCTalkComplexEnableAcceptor.h"
-#include "CCTalkAcceptorConstants.h"
-#include "CCTalkModelData.h"
 
 using namespace SDK::Driver;
-
-//-------------------------------------------------------------------------------
-template class CCTalkComplexEnableAcceptor<CCTalkCoinAcceptorBase>;
 
 //---------------------------------------------------------------------------
 template <class T>

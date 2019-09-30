@@ -4,7 +4,6 @@
 #include "Hardware/Dispensers/ProtoDispenser.h"
 #include "Hardware/CashAcceptors/ProtoCashAcceptor.h"
 #include "Hardware/FR/ProtoFR.h"
-#include "Hardware/HID/ProtoOPOSScanner.h"
 #include "Hardware/HID/ProtoHID.h"
 #include "Hardware/CardReaders/ProtoMifareReader.h"
 #include "Hardware/Watchdogs/ProtoWatchdog.h"
@@ -16,7 +15,6 @@ template class PollingDeviceBase<ProtoPrinter>;
 template class PollingDeviceBase<ProtoDispenser>;
 template class PollingDeviceBase<ProtoCashAcceptor>;
 template class PollingDeviceBase<ProtoFR>;
-template class PollingDeviceBase<ProtoOPOSScanner>;
 template class PollingDeviceBase<ProtoHID>;
 template class PollingDeviceBase<ProtoMifareReader>;
 template class PollingDeviceBase<ProtoDeviceBase>;
@@ -24,7 +22,7 @@ template class PollingDeviceBase<ProtoWatchdog>;
 
 //--------------------------------------------------------------------------------
 template <class T>
-PollingDeviceBase<T>::PollingDeviceBase() : mPollingInterval(0), mPollingActive(false)
+PollingDeviceBase<T>::PollingDeviceBase() : mPollingInterval(0), mPollingActive(false), mForceNotWaitFirst(false)
 {
 	mPolling.moveToThread(&mThread);
 	connect(&mPolling, SIGNAL(timeout()), SLOT(onPoll()));
@@ -60,7 +58,9 @@ void PollingDeviceBase<T>::finaliseInitialization()
 		processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::NotAvailable);
 	}
 
-	startPolling(!mConnected);
+	bool notWaitFirst = mForceNotWaitFirst || !mConnected;
+
+	startPolling(notWaitFirst);
 }
 
 //--------------------------------------------------------------------------------

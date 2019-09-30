@@ -816,6 +816,18 @@ DealerSettings::TCustomers::iterator DealerSettings::findCustomer(const QVariant
 }
 
 //---------------------------------------------------------------------------
+void DealerSettings::setExternalCommissions(const Commissions & aCommissions)
+{
+	mExternalCommissions = aCommissions;
+}
+
+//---------------------------------------------------------------------------
+void DealerSettings::resetExternalCommissions()
+{
+	mExternalCommissions.clear();
+}
+
+//---------------------------------------------------------------------------
 bool DealerSettings::isCustomerAllowed(const QVariantMap & aParameters)
 {
 	TCustomers::iterator it = findCustomer(aParameters);
@@ -826,6 +838,11 @@ bool DealerSettings::isCustomerAllowed(const QVariantMap & aParameters)
 //---------------------------------------------------------------------------
 TCommissions DealerSettings::getCommissions(qint64 aProvider, const QVariantMap & aParameters)
 {
+	if (mExternalCommissions.isValid() && mExternalCommissions.contains(aProvider))
+	{
+		return mExternalCommissions.getCommissions(aProvider);
+	}
+	
 	TCustomers::iterator it = findCustomer(aParameters);
 
 	// Игнорирум настройки customer комисии если комиссия процессинга не нулевая.
@@ -835,6 +852,11 @@ TCommissions DealerSettings::getCommissions(qint64 aProvider, const QVariantMap 
 //---------------------------------------------------------------------------
 Commission DealerSettings::getCommission(qint64 aProvider, const QVariantMap & aParameters, double aSum)
 {
+	if (mExternalCommissions.isValid() && mExternalCommissions.contains(aProvider))
+	{
+		return mExternalCommissions.getCommission(aProvider, aSum);
+	}
+
 	TCustomers::iterator it = findCustomer(aParameters);
 
 	// Игнорирум настройки customer комисии если комиссия процессинга не нулевая.
@@ -844,12 +866,22 @@ Commission DealerSettings::getCommission(qint64 aProvider, const QVariantMap & a
 //---------------------------------------------------------------------------
 ProcessingCommission DealerSettings::getProcessingCommission(qint64 aProvider)
 {
+	if (mExternalCommissions.isValid() && mExternalCommissions.contains(aProvider))
+	{
+		return mExternalCommissions.getProcessingCommission(aProvider);
+	}
+
 	return mCommissions.getProcessingCommission(aProvider);
 }
 
 //---------------------------------------------------------------------------
 int DealerSettings::getVAT(qint64 aProvider)
 {
+	if (mExternalCommissions.isValid() && mExternalCommissions.contains(aProvider))
+	{
+		return mExternalCommissions.getVAT(aProvider);
+	}
+
 	return mCommissions.getVAT(aProvider);
 }
 

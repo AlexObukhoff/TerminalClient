@@ -17,30 +17,26 @@ SModelData::SModelData()
 }
 
 //--------------------------------------------------------------------------------
-SModelData::SModelData(const QString & aName, bool aVerified, const SParameters & aParameters, const QString & aDescription) :
-	name(aName), verified(aVerified), description(aDescription)
-{
-	parameters.portSettings = aParameters.portSettings;
-	parameters.errors = aParameters.errors;
-	parameters.tagEngine = aParameters.tagEngine;
-}
-
-//--------------------------------------------------------------------------------
-CModelData::CModelData()
+SModelData::SModelData(const QString & aName, bool aVerified, const QString & aDescription) : name(aName), verified(aVerified), description(aDescription)
 {
 }
 
 //--------------------------------------------------------------------------------
-void CModelData::add(char aModelId, bool aVerified, const QString & aName, const SParameters & aParameters, const QString & aDescription)
+ModelData::ModelData(): mMutex(QMutex::Recursive)
+{
+}
+
+//--------------------------------------------------------------------------------
+void ModelData::add(char aModelId, bool aVerified, const QString & aName, const QString & aDescription)
 {
 	QMutexLocker locker(&mMutex);
 
-	append(aModelId, SModelData(aName, aVerified, aParameters, aDescription));
+	append(aModelId, SModelData(aName, aVerified, aDescription));
 	mModelIds.insert(aModelId);
 }
 
 //--------------------------------------------------------------------------------
-const TModelIds & CModelData::getModelIds()
+const TModelIds & ModelData::getModelIds()
 {
 	QMutexLocker locker(&mMutex);
 

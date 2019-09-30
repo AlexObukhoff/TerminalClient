@@ -28,7 +28,7 @@ LibUSBDeviceBase<T>::LibUSBDeviceBase()
 {
 	mIOPort = &mLibUSBPort;
 
-	mDetectingData = CUSBDevice::PDetectingData(new CUSBDevice::CDetectingData());
+	mDetectingData = CUSBDevice::PDetectingData(new CUSBDevice::DetectingData());
 	mReplaceableStatuses << DeviceStatusCode::Error::PowerSupply;
 }
 
@@ -105,7 +105,7 @@ bool LibUSBDeviceBase<T>::setUsageData(libusb_device * aDevice)
 		return false;
 	}
 
-	QMap<quint16, CUSBDevice::SData> & PIDData = mDetectingData->value(properties.VID).data();
+	QMap<quint16, CUSBDevice::SProductData> & PIDData = mDetectingData->value(properties.VID).data();
 
 	if (!PIDData.contains(properties.PID))
 	{
@@ -113,7 +113,7 @@ bool LibUSBDeviceBase<T>::setUsageData(libusb_device * aDevice)
 		return false;
 	}
 
-	CUSBDevice::SData data = PIDData[properties.PID];
+	CUSBDevice::SProductData data = PIDData[properties.PID];
 	mDeviceName = data.model;
 	mVerified = data.verified;
 
@@ -160,7 +160,7 @@ void LibUSBDeviceBase<T>::initializeUSBPort()
 template <class T>
 bool LibUSBDeviceBase<T>::checkConnectionAbility()
 {
-	return mIOPort->open();
+	return checkError(IOPortStatusCode::Error::Busy, [&] () -> bool { return mIOPort->open(); }, "device cannot open port");
 }
 
 //--------------------------------------------------------------------------------

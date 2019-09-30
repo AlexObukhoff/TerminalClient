@@ -137,6 +137,7 @@
     <ClCompile Include="..\src\Port\Serial\SerialDeviceBase.cpp" />
     <ClCompile Include="..\src\Port\TCP\TCPDeviceBase.cpp" />
     <ClCompile Include="..\src\Port\USB\USBDeviceBase.cpp" />
+    <ClCompile Include="..\src\Port\USB\USBDeviceModelData.cpp" />
     <ClCompile Include="..\src\SafePerformer\SafePerformer.cpp" />
     <ClCompile Include="..\src\Utils\DeviceUtils.cpp" />
     <ClCompile Include="..\src\Utils\ProtocolUtils.cpp" />
@@ -291,6 +292,8 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQCOMPORTWIN_LIB -DCYBERPLAT_DRIVER "-I$(TC_DIR)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\." "-I.\src" "-I$(QTDIR)\include"</Command>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\BaseStatusTypes.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ConfigCleaner.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ContainerProxy.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceCodeSpecification.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceDataConstants.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceLogicManager.h" />
@@ -300,6 +303,8 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ProtoDevices.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\CommandResultData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\StatusCache.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\USBDeviceModelDataTypes.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\USBDeviceVendors.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\WaitingData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Plugins\CommonParameters.h" />
     <CustomBuild Include="..\src\WorkingThreadProxy.h">
@@ -358,7 +363,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQCOMPORTWIN_LIB -DCYBERPLAT_DRIVER "-I$(TC_DIR)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\." "-I.\src" "-I$(QTDIR)\include"</Command>
     </CustomBuild>
-    <ClInclude Include="..\..\..\..\includes\Hardware\Common\USBDeviceModelData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Plugins\DevicePluginBase.h" />
     <ClInclude Include="..\src\Codec\CodecBase.h" />
     <ClInclude Include="..\src\ConfigManager\DeviceConfigManager.h" />
@@ -382,6 +386,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQCOMPORTWIN_LIB -DCYBERPLAT_DRIVER "-I$(TC_DIR)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\." "-I.\src" "-I$(QTDIR)\include"</Command>
     </CustomBuild>
+    <ClInclude Include="..\src\Port\USB\USBDeviceModelData.h" />
     <ClInclude Include="..\src\Utils\DeviceUtils.h" />
     <ClInclude Include="..\src\Utils\ProtocolUtils.h" />
     <ClInclude Include="..\src\Virtual\VirtualDeviceBase.h" />

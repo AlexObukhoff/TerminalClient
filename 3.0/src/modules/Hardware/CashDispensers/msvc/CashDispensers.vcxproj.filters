@@ -33,34 +33,52 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{36924731-a88f-4f5e-9457-119915a53c3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Suzo">
+      <UniqueIdentifier>{03be55c2-4c5a-4a1e-ade2-0f69a1edadba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\PuloonCashDispenser.cpp">
-      <Filter>Puloon</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\DispenserBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Puloon\PuloonCashDispenser.cpp">
+      <Filter>Puloon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Suzo\SuzoHopper.cpp">
+      <Filter>Suzo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\src\PuloonCashDispenser.h">
-      <Filter>Puloon</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\src\DispenserBase.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\PuloonCashDispenserData.h">
-      <Filter>Puloon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ModelData.h">
-      <Filter>Puloon</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\Dispensers\DispenserStatusCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\Dispensers\DispenserData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Puloon\PuloonCashDispenser.h">
+      <Filter>Puloon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Puloon\PuloonCashDispenserData.h">
+      <Filter>Puloon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Puloon\PuloonModelData.h">
+      <Filter>Puloon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Suzo\SuzoHopper.h">
+      <Filter>Suzo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Suzo\SuzoHopperData.h">
+      <Filter>Suzo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Suzo\SuzoHopperModelData.h">
+      <Filter>Suzo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Dispensers\PortDispenser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

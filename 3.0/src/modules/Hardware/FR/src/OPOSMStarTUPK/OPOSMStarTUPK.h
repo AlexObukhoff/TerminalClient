@@ -15,7 +15,6 @@
 #include "Hardware/Common/OPOSPollingDeviceBase.h"
 #include "Hardware/Printers/PrinterBase.h"
 #include "Hardware/FR/FRBase.h"
-#include "Hardware/FR/ProtoFR.h"
 
 // Project
 #include "OPOSMStarTUPKDataTypes.h"

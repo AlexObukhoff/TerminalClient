@@ -39,7 +39,7 @@ public:
 	virtual void dispense(int aUnit, int aItems) = 0;
 
 	/// Установить конфигурацию кассет.
-	virtual void setCashList(const TUnitData & aUnitData) = 0;
+	virtual void setUnitList(const TUnitData & aUnitData) = 0;
 
 	/// Получить кол-во лотков диспенсера.
 	virtual int units() = 0;

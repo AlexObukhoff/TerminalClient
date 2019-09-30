@@ -691,7 +691,9 @@ function finishEnterHandler(aParameters) {
 
 		if (PRINTER_IS_READY && !SKIP_PRINT_RECEIPT) {
 			GUI.waiting({tr: QT_TR_NOOP("payment_scenario#printing_receipt")});
-			if (RECEIPT_STATE == Scenario.Payment.ReceiptState.Default) {
+			if (RECEIPT_STATE == Scenario.Payment.ReceiptState.Default ||
+					(RECEIPT_STATE == Scenario.Payment.ReceiptState.Error &&
+					 GUI.toBool(Core.payment.getParameter(Scenario.Payment.Parameters.Cheated)))) {
 				printReceipt(Scenario.Payment.ReceiptType.Payment, RECEIPT_STATE, USE_AUTO_CHANGEBACK ? true: false);
 			}
 			else {

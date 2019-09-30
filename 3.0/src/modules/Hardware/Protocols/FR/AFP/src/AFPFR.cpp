@@ -31,14 +31,14 @@ char AFPFRProtocol::calcCRC(const QByteArray & aData)
 }
 
 //--------------------------------------------------------------------------------
-bool AFPFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnswer)
+TResult AFPFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnswer)
 {
 	int size = aAnswer.size();
 
 	if (size < CAFPFR::MinAnswerSize)
 	{
 		toLog(LogLevel::Error, QString("AFP: Too few bytes in answer = %1, need min = %2").arg(size).arg(CAFPFR::MinAnswerSize));
-		return false;
+		return CommandResult::Protocol;
 	}
 
 	if (aAnswer[0] != CAFPFR::Prefix)
@@ -46,7 +46,7 @@ bool AFPFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnswe
 		toLog(LogLevel::Error, QString("AFP: Invalid prefix = %1, need = %2")
 			.arg(ProtocolUtils::toHexLog(aAnswer[0]))
 			.arg(ProtocolUtils::toHexLog(CAFPFR::Prefix)));
-		return false;
+		return CommandResult::Protocol;
 	}
 
 	if (aAnswer[1] != char(mId))
@@ -54,7 +54,7 @@ bool AFPFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnswe
 		toLog(LogLevel::Error, QString("AFP: Invalid Id = %1, need = %2")
 			.arg(ProtocolUtils::toHexLog(aAnswer[1]))
 			.arg(ProtocolUtils::toHexLog(mId)));
-		return false;
+		return CommandResult::Id;
 	}
 
 	QString requestCommand = aRequest.mid(6, 2);
@@ -65,7 +65,7 @@ bool AFPFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnswe
 		toLog(LogLevel::Error, QString("AFP: Invalid command in answer = 0x%1, need = 0x%2")
 			.arg(answerCommand.toUpper())
 			.arg(requestCommand.toUpper()));
-		return false;
+		return CommandResult::Id;
 	}
 
 	char postfix = aAnswer[size - 3];
@@ -75,7 +75,7 @@ bool AFPFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnswe
 		toLog(LogLevel::Error, QString("AFP: Invalid postfix = %1, need = %2")
 			.arg(ProtocolUtils::toHexLog(postfix))
 			.arg(ProtocolUtils::toHexLog(CAFPFR::Postfix)));
-		return false;
+		return CommandResult::Protocol;
 	}
 
 	bool OK;
@@ -86,7 +86,7 @@ bool AFPFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnswe
 	if (!OK)
 	{
 		toLog(LogLevel::Error, QString("AFP: Failed to parse answer CRC = 0x%1").arg(answerCRCData.toHex().data()));
-		return false;
+		return CommandResult::Protocol;
 	}
 
 	if (dataCRC != answerCRC)
@@ -94,7 +94,7 @@ bool AFPFRProtocol::check(const QByteArray & aRequest, const QByteArray & aAnswe
 		toLog(LogLevel::Error, QString("AFP: Wrong CRC = %1, need = %2")
 			.arg(ProtocolUtils::toHexLog(answerCRC))
 			.arg(ProtocolUtils::toHexLog(dataCRC)));
-		return false;
+		return CommandResult::CRC;
 	}
 
 	return true;
@@ -134,14 +134,31 @@ TResult AFPFRProtocol::processCommand(const QByteArray & aCommandData, QByteArra
 		return CommandResult::NoAnswer;
 	}
 
-	if (!check(request, aAnswer))
+	TResult result = CommandResult::OK;
+
+	do
 	{
-		return CommandResult::Protocol;
+		result = check(request, aAnswer);
+
+		if (result == CommandResult::OK)
+		{
+			aAnswer = aAnswer.mid(4, aAnswer.size() - 7);
+
+			return CommandResult::OK;
+		}
+		else if (result == CommandResult::Id)
+		{
+			if (!getAnswer(aAnswer, CAFPFR::DelayedAnswerTimeout))
+			{
+				return CommandResult::Port;
+			}
+
+			toLog(LogLevel::Normal, QString("AFP: << {%1}").arg(aAnswer.toHex().data()));
+		}
 	}
+	while (!aAnswer.isEmpty() && (result == CommandResult::Id));
 
-	aAnswer = aAnswer.mid(4, aAnswer.size() - 7);
-
-	return CommandResult::OK;
+	return result;
 }
 
 //--------------------------------------------------------------------------------

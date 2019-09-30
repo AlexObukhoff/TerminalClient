@@ -158,27 +158,6 @@ private:
 	QMap<QString, Item> mItems;
 	QMap<QString, SDK::PaymentProcessor::ITask *> mWorkingTasks;
 	QReadWriteLock mLock;
-
-protected:
-	typedef boost::function<SDK::PaymentProcessor::ITask *(const QString & aName, const QString & aLogName, const QString & aParams)> TTaskCreator;
-
-	/// зарегистрировать тип задачи в фабрике классов
-	template <class C>
-	void registerTaskType(const QString & aType)
-	{
-		auto taskCreator = [](const QString & aName, const QString & aLogName, const QString & aParams) -> SDK::PaymentProcessor::ITask *
-		{
-			return new C(aName, aLogName, aParams);
-		};
-
-		if (!mFactory.contains(aType))
-		{
-			mFactory[aType] = TTaskCreator(taskCreator);
-		}
-	}
-
-protected:
-	QMap<QString, TTaskCreator> mFactory;
 };
 
 //---------------------------------------------------------------------------

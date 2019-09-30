@@ -52,13 +52,13 @@ public:
 	/// Очистить буферы порта.
 	virtual bool clear();
 
-	/// Проверить готовность порта.
-	virtual bool checkReady();
-
 	/// Получить системные свойства устройств.
 	TWinDeviceProperties getDevicesProperties(bool aForce, bool aPDODetecting = false);
 
 protected:
+	/// Проверить готовность порта.
+	virtual bool checkReady();
+
 	/// Открыть порт.
 	virtual bool performOpen();
 

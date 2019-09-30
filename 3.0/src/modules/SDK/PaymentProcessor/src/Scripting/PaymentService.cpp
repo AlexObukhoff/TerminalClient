@@ -541,6 +541,15 @@ QObject * PaymentService::getProvider()
 //------------------------------------------------------------------------------
 QObject * PaymentService::getProvider(qint64 aID)
 {
+	foreach (auto pp, mProviderProviders)
+	{
+		auto ppRef = pp.toStrongRef();
+		if (!ppRef.isNull() && ppRef->getId().contains(aID))
+		{
+			return new Provider(updateSkipCheckFlag(ppRef->getProvider(aID)), this);
+		}
+	}
+
 	return new Provider(updateSkipCheckFlag(mPaymentService->getProvider(aID)), this);
 }
 
@@ -936,6 +945,12 @@ void PaymentService::onStepCompleted(qint64 aPayment, int aStep, bool aError)
 	}
 
 	emit stepCompleted(aPayment, aStep, aError);
+}
+
+//------------------------------------------------------------------------------
+void PaymentService::addProviderProvider(QWeakPointer<IProviderProvider> aProvider)
+{
+	mProviderProviders << aProvider;
 }
 
 //------------------------------------------------------------------------------

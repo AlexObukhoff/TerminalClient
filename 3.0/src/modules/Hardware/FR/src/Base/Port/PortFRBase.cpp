@@ -262,14 +262,14 @@ bool PortFRBase<T>::printXReport(const QStringList & aReceipt)
 template <class T>
 bool PortFRBase<T>::isErrorUnprocessed(char aCommand, char aError)
 {
-	return mUnprocessedErrorData.data().value(QByteArray(1, aCommand)) == aError;
+	return mUnprocessedErrorData.data().value(QByteArray(1, aCommand)).contains(aError);
 }
 
 //--------------------------------------------------------------------------------
 template <class T>
 bool PortFRBase<T>::isErrorUnprocessed(const QByteArray & aCommand, char aError)
 {
-	return mUnprocessedErrorData.data().value(aCommand) == aError;
+	return mUnprocessedErrorData.data().value(aCommand).contains(aError);
 }
 
 //--------------------------------------------------------------------------------

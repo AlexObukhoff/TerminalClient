@@ -18,7 +18,7 @@ template <class T>
 TParameterList EnumParameters()
 {
 	return createNamedList<T>(T::getModelList(), CComponents::CoinAcceptor)
-		<< setProtocol(ProtocolNames::CashAcceptor::CCTalk)
+		<< setProtocol(ProtocolNames::CashDevice::CCTalk)
 
 		// ID валюты. TODO: необходимо получать поддержку валют статически от каждого протокола.
 		<< SPluginParameter(
@@ -31,7 +31,7 @@ TParameterList EnumParameters()
 template <class T>
 TParameterList CCTalkParameters()
 {
-	using namespace CHardware::CashAcceptor;
+	using namespace CHardware::CashDevice;
 
 	return EnumParameters<T>()
 		<< setProtocolType(CCTalkTypes::CRC8, QStringList() << CCTalkTypes::CRC8);

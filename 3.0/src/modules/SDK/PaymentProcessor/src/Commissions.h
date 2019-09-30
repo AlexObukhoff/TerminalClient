@@ -260,11 +260,18 @@ public:
 	/// Если во время загрузки комиссий произошла ошибка, то этот метод вернёт false.
 	bool isValid() const;
 
+	/// Проверить, есть ли настройки для конктрентого оператора
+	/// Флаг позволяет выбрать, надо ли проверять комиссию процессинга
+	bool contains(qint64 aProvider, bool aCheckProcessing = false);
+
 	/// Чтение комиссий из настроек.
 	static Commissions fromSettings(const TPtree & aSettings);
 
 	/// Дополнить комиссии недостающими элементами из настроек
 	void appendFromSettings(const TPtree & aSettings);
+
+	/// Сбросить состояние
+	void clear();
 
 protected:
 	SComplexCommissions loadCommissions(const TPtree & aBranch);

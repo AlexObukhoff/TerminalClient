@@ -114,10 +114,26 @@ namespace EPayOffSubjectTypes
 {
 	enum Enum
 	{
-		None = 0,        /// Отсутствует
-		Unit,            /// Товар
-		Payment = 10,    /// Платеж
-		AgentFee         /// Агентское вознаграждение
+		None = 0,                 /// Отсутствует
+		Unit,                     /// Товар
+		ExciseUnit,               /// Подакцизный товар
+		Job,                      /// Работа
+		Service,                  /// Услуга
+		GamblingBet,              /// Ставка азартной игры
+		GamblingWin,              /// Выигрыш азартной игры
+		LotteryTicket,            /// Лотерейный билет
+		LotteryWin,               /// Выигрыш лотереи
+		RIARightsProvision,       /// Предоставление прав на использование результатов интеллектуальной деятельности (РИД, RIA)
+		Payment,                  /// Платеж
+		AgentFee,                 /// Агентское вознаграждение
+		Composite,                /// Составной
+		Other,                    /// Иной
+		PropertyRight,            /// Имущественное право
+		NonSalesIncome,           /// Внереализационный доход
+		InsuranceСontribution,    /// Страховой взнос
+		TradeTax,                 /// Торговый сбор
+		ResortTax,                /// Курортный сбор
+		Deposit                   /// Залог
 	};
 }
 
@@ -162,16 +178,18 @@ typedef double TSum;
 
 struct SUnitData
 {
-	TSum sum;                                       /// Сумма платежа.
-	TVAT VAT;                                       /// НДС (value added tax).
-	QString name;                                   /// Локализованное название платежа (товар).
-	QString providerINN;                            /// ИНН поставщика товара (оператор/дилер/Платина).
-	EPayOffSubjectTypes::Enum payOffSubjectType;    /// Признак предмета расчета (1212).
-	int section;                                    /// Отдел.
+	TSum sum;                                                   /// Сумма платежа.
+	TVAT VAT;                                                   /// НДС (value added tax).
+	QString name;                                               /// Локализованное название платежа (товар).
+	QString providerINN;                                        /// ИНН поставщика товара (оператор/дилер/Платина).
+	EPayOffSubjectTypes::Enum payOffSubjectType;                /// Признак предмета расчета (1212).
+	EPayOffSubjectMethodTypes::Enum payOffSubjectMethodType;    /// Признак способа расчета (1214).
+	int section;                                                /// Отдел.
 
-	SUnitData() : sum(0), VAT(0), payOffSubjectType(EPayOffSubjectTypes::None), section(-1) {}
-	SUnitData(double aSum, TVAT aVAT, const QString & aName, const QString & aProviderINN, EPayOffSubjectTypes::Enum aPayOffSubjectType, int aSection = -1):
-		sum(aSum), VAT(aVAT), name(aName), providerINN(aProviderINN), payOffSubjectType(aPayOffSubjectType), section(aSection) {}
+	SUnitData() : sum(0), VAT(0), payOffSubjectType(EPayOffSubjectTypes::None), payOffSubjectMethodType(EPayOffSubjectMethodTypes::None), section(-1) {}
+	SUnitData(double aSum, TVAT aVAT, const QString & aName, const QString & aProviderINN, EPayOffSubjectTypes::Enum aPayOffSubjectType, int aSection = -1,
+		EPayOffSubjectMethodTypes::Enum aPayOffSubjectMethodType = EPayOffSubjectMethodTypes::Full):
+			sum(aSum), VAT(aVAT), name(aName), providerINN(aProviderINN), payOffSubjectType(aPayOffSubjectType), payOffSubjectMethodType(aPayOffSubjectMethodType), section(aSection) {}
 };
 
 typedef QList<SUnitData> TUnitDataList;
@@ -207,6 +225,7 @@ typedef QMap<int, QString> TSectionNames;
 
 Q_DECLARE_METATYPE(SDK::Driver::TTaxSystemData);
 Q_DECLARE_METATYPE(SDK::Driver::TAgentFlagsData);
+Q_DECLARE_METATYPE(QList<SDK::Driver::EAgentFlags::Enum>);
 Q_DECLARE_METATYPE(SDK::Driver::TSectionNames);
 Q_DECLARE_METATYPE(SDK::Driver::TFiscalFieldData);
 

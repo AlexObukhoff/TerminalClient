@@ -18,7 +18,7 @@
     <ClCompile Include="src\ccTalk.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\includes\Hardware\Acceptors\CCTalkData.h" />
+    <ClInclude Include="..\..\..\..\..\includes\Hardware\CashDevices\CCTalkData.h" />
     <ClInclude Include="src\ccTalk.h" />
     <ClInclude Include="src\ccTalkConstants.h" />
   </ItemGroup>
