@@ -140,7 +140,7 @@ def main(gpl_path, internal_path):
     print("Files updated: {}".format(updated_counter))
 
     if removed_counter or updated_counter:
-        message = "refs #1 Syncronizing with {branch} commit: {c}".format(branch="release", c=internal_files.git_sha())
+        message = "refs #1 Synchronize with {branch} commit: {c}".format(branch="release", c=internal_files.git_sha())
         print("Sources changed. Please review changes, commit and push.")
         print("Cooment: {}".format(message))
         # commit = gpl_files.git_repo.index.commit(message)
