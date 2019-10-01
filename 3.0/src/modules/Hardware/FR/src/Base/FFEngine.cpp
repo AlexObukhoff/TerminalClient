@@ -534,16 +534,16 @@ bool FFEngine::checkFiscalField(int aField, bool & aResult)
 	SData data = mFFData[aField];
 	QString log = mFFData.getTextLog(aField);
 
-	auto makeResult = [&] (const QString & aAddLog = "")
+	auto makeResult = [&] (const QString & aAddLog)
 	{
 		QString addLog = aAddLog.isEmpty() ? "" : aAddLog + ", but ";
 
-		if (data.required == ERequired::No)
+		if (data.required == CFR::FiscalFields::ERequired::No)
 		{
 			toLog(LogLevel::Debug, mDeviceName + QString(": Don`t set %1 due to %2the field is not required").arg(log).arg(addLog));
 			aResult = true;
 		}
-		else if ((data.required == ERequired::PM) && !mOperatorPresence)
+		else if ((data.required == CFR::FiscalFields::ERequired::PM) && !mOperatorPresence)
 		{
 			toLog(LogLevel::Debug, mDeviceName + QString(": Don`t set %1 due to %2the operator is not present").arg(log).arg(addLog));
 			aResult = true;

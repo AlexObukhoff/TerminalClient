@@ -81,60 +81,60 @@ namespace CFR { namespace FiscalFields
 
 	#define ADD_FISCAL_FIELD(aField, aName, aType, ...) const int aName = [] () -> int { CFR::FiscalFields::Data::process(aField, CFR::FiscalFields::SData(CFR::FiscalFields::ETypes::aType, CFiscalSDK::aName, __VA_ARGS__)); return aField; } ();
 
-	ADD_FISCAL_FIELD(1000, FDName,                 String,    QCoreApplication::translate("FiscalFields", "#fd_name"));                             // 1000 (Наименование фискального документа).
-	ADD_FISCAL_FIELD(1008, UserContact,            String,    QCoreApplication::translate("FiscalFields", "#user_contact"));                        // 1008 (Телефон или электронный адрес покупателя).
-	ADD_FISCAL_FIELD(1009, PayOffAddress,          String);                                                                                         // 1009 (Адрес расчетов).
-	ADD_FISCAL_FIELD(1012, FDDateTime,             UnixTime);                                                                                       // 1012 (Дата и время ФД).
-	ADD_FISCAL_FIELD(1013, SerialFRNumber,         String,    QCoreApplication::translate("FiscalFields", "#serial_fr_number"));                    // 1013 (Заводской номер ФР).
-	ADD_FISCAL_FIELD(1017, OFDINN,                 String,    QCoreApplication::translate("FiscalFields", "#ofd_inn"));                             // 1017 (ИНН ОФД).
-	ADD_FISCAL_FIELD(1018, INN,                    String,    QCoreApplication::translate("FiscalFields", "#inn"));                                 // 1018 (ИНН пользователя).
-	ADD_FISCAL_FIELD(1020, PayOffAmount,           VLN,       QCoreApplication::translate("FiscalFields", "#payoff_amount"), true);                 // 1020 (Сумма расчета в чеке).
-	ADD_FISCAL_FIELD(1021, Cashier,                String,    QCoreApplication::translate("FiscalFields", "#cashier"));                             // 1021 (Кассир).
-	ADD_FISCAL_FIELD(1030, UnitName,               String);                                                                                         // 1030 (Наименование товара).
-	ADD_FISCAL_FIELD(1036, AutomaticNumber,        String,    QCoreApplication::translate("FiscalFields", "#automatic_number"));                    // 1036 (Номер автомата).
-	ADD_FISCAL_FIELD(1037, RNM,                    String,    QCoreApplication::translate("FiscalFields", "#rnm"));                                 // 1037 (Регистрационный номер ККТ).
-	ADD_FISCAL_FIELD(1038, SessionNumber,          UINT32,    QCoreApplication::translate("FiscalFields", "#session_number"));                      // 1038 (Номер смены).
-	ADD_FISCAL_FIELD(1040, FDNumber,               UINT32,    QCoreApplication::translate("FiscalFields", "#fd_number"));                           // 1040 (Номер ФД).
-	ADD_FISCAL_FIELD(1041, SerialFSNumber,         String,    QCoreApplication::translate("FiscalFields", "#serial_fs_number"));                    // 1041 (Заводской номер ФН).
-	ADD_FISCAL_FIELD(1042, DocumentNumber,         UINT32,    QCoreApplication::translate("FiscalFields", "#document_number"));                     // 1042 (Номер чека за смену).
-	ADD_FISCAL_FIELD(1046, OFDName,                String,    QCoreApplication::translate("FiscalFields", "#ofd_name"));                            // 1046 (Наименование ОФД).
-	ADD_FISCAL_FIELD(1048, LegalOwner,             String);                                                                                         // 1048 (Наименование юр. лица владельца).
-	ADD_FISCAL_FIELD(1054, PayOffType,             Byte);                                                                                           // 1054 (Признак расчета).
-	ADD_FISCAL_FIELD(1055, TaxSystem,              Byte,      QCoreApplication::translate("FiscalFields", "#tax_system"), ERequired::Yes);          // 1055 (СНО на платеже).
-	ADD_FISCAL_FIELD(1060, FTSURL,                 String,    QCoreApplication::translate("FiscalFields", "#fts_url"));                             // 1060 (Адрес сайта ФНС).
-	ADD_FISCAL_FIELD(1062, TaxSystemsReg,          Byte,      QCoreApplication::translate("FiscalFields", "#tax_systems_reg"));                     // 1062 (СНО из итогов регистрации).
-	ADD_FISCAL_FIELD(1074, ProcessingPhone,        String,    QCoreApplication::translate("FiscalFields", "#processing_phone"), ERequired::Yes);    // 1074 (Телефон оператора по приему платежей).
-	ADD_FISCAL_FIELD(1077, FDSign,                 ByteArray, QCoreApplication::translate("FiscalFields", "#fd_sign"));                             // 1077 (Фискальный признак документа).
-	ADD_FISCAL_FIELD(1097, OFDNotSentFDQuantity,   UINT32,    QCoreApplication::translate("FiscalFields", "#ofd_not_sent_fd_quantity"));            // 1097 (Количество непереданных ФД).
-	ADD_FISCAL_FIELD(1098, OFDNotSentFDDateTime,   UnixTime,  QCoreApplication::translate("FiscalFields", "#ofd_not_sent_fd_date_time"));           // 1098 (Дата и время первого из непереданных ФД).
-	ADD_FISCAL_FIELD(1101, ReregistrationCause,    Byte,      QCoreApplication::translate("FiscalFields", "#reregistration_cause"));                // 1101 (Код причины перерегистрации).
-	ADD_FISCAL_FIELD(1111, FDForSessionTotal,      UINT32,    QCoreApplication::translate("FiscalFields", "#fd_for_session_total"));                // 1111 (Общее количество ФД за смену).
-	ADD_FISCAL_FIELD(1117, SenderMail,             String,    QCoreApplication::translate("FiscalFields", "#sender_mail"));                         // 1117 (Электронная почта отправителя чека).
-	ADD_FISCAL_FIELD(1118, FiscalsForSessionTotal, UINT32,    QCoreApplication::translate("FiscalFields", "#fiscals_for_session_total"));           // 1118 (Количество кассовых чеков (БСО) за смену).
-	ADD_FISCAL_FIELD(1187, PayOffPlace,            String,    QCoreApplication::translate("FiscalFields", "#payoff_place"));                        // 1187 (Место расчетов).
-	ADD_FISCAL_FIELD(1188, ModelVersion,           String,    QCoreApplication::translate("FiscalFields", "#model_version"));                       // 1188 (Версия модели ККТ).
-	ADD_FISCAL_FIELD(1189, FFDFR,                  Byte,      QCoreApplication::translate("FiscalFields", "#ffd_fr"));                              // 1189 (Версия ФФД ФР).
-	ADD_FISCAL_FIELD(1190, FFDFS,                  Byte,      QCoreApplication::translate("FiscalFields", "#ffd_fs"));                              // 1190 (Версия ФФД ФН).
-	ADD_FISCAL_FIELD(1199, VATRate,                Byte);                                                                                           // 1199 (Ставка НДС).
-	ADD_FISCAL_FIELD(1203, CashierINN,             String,    QCoreApplication::translate("FiscalFields", "#cashier_inn"));                         // 1203 (ИНН кассира).
-	ADD_FISCAL_FIELD(1208, OFDURL,                 String,    QCoreApplication::translate("FiscalFields", "#ofd_url"));                             // 1208 (Адрес сайта для получения чека).
-	ADD_FISCAL_FIELD(1209, FFD,                    Byte);                                                                                           // 1209 (Версия ФФД).
+	ADD_FISCAL_FIELD(1000, FDName,                 String,    QCoreApplication::translate("FiscalFields", "#fd_name"));                                                // 1000 (Наименование фискального документа).
+	ADD_FISCAL_FIELD(1008, UserContact,            String,    QCoreApplication::translate("FiscalFields", "#user_contact"));                                           // 1008 (Телефон или электронный адрес покупателя).
+	ADD_FISCAL_FIELD(1009, PayOffAddress,          String);                                                                                                            // 1009 (Адрес расчетов).
+	ADD_FISCAL_FIELD(1012, FDDateTime,             UnixTime);                                                                                                          // 1012 (Дата и время ФД).
+	ADD_FISCAL_FIELD(1013, SerialFRNumber,         String,    QCoreApplication::translate("FiscalFields", "#serial_fr_number"));                                       // 1013 (Заводской номер ФР).
+	ADD_FISCAL_FIELD(1017, OFDINN,                 String,    QCoreApplication::translate("FiscalFields", "#ofd_inn"));                                                // 1017 (ИНН ОФД).
+	ADD_FISCAL_FIELD(1018, INN,                    String,    QCoreApplication::translate("FiscalFields", "#inn"));                                                    // 1018 (ИНН пользователя).
+	ADD_FISCAL_FIELD(1020, PayOffAmount,           VLN,       QCoreApplication::translate("FiscalFields", "#payoff_amount"), true);                                    // 1020 (Сумма расчета в чеке).
+	ADD_FISCAL_FIELD(1021, Cashier,                String,    QCoreApplication::translate("FiscalFields", "#cashier"));                                                // 1021 (Кассир).
+	ADD_FISCAL_FIELD(1030, UnitName,               String);                                                                                                            // 1030 (Наименование товара).
+	ADD_FISCAL_FIELD(1036, AutomaticNumber,        String,    QCoreApplication::translate("FiscalFields", "#automatic_number"));                                       // 1036 (Номер автомата).
+	ADD_FISCAL_FIELD(1037, RNM,                    String,    QCoreApplication::translate("FiscalFields", "#rnm"));                                                    // 1037 (Регистрационный номер ККТ).
+	ADD_FISCAL_FIELD(1038, SessionNumber,          UINT32,    QCoreApplication::translate("FiscalFields", "#session_number"));                                         // 1038 (Номер смены).
+	ADD_FISCAL_FIELD(1040, FDNumber,               UINT32,    QCoreApplication::translate("FiscalFields", "#fd_number"));                                              // 1040 (Номер ФД).
+	ADD_FISCAL_FIELD(1041, SerialFSNumber,         String,    QCoreApplication::translate("FiscalFields", "#serial_fs_number"));                                       // 1041 (Заводской номер ФН).
+	ADD_FISCAL_FIELD(1042, DocumentNumber,         UINT32,    QCoreApplication::translate("FiscalFields", "#document_number"));                                        // 1042 (Номер чека за смену).
+	ADD_FISCAL_FIELD(1046, OFDName,                String,    QCoreApplication::translate("FiscalFields", "#ofd_name"));                                               // 1046 (Наименование ОФД).
+	ADD_FISCAL_FIELD(1048, LegalOwner,             String);                                                                                                            // 1048 (Наименование юр. лица владельца).
+	ADD_FISCAL_FIELD(1054, PayOffType,             Byte);                                                                                                              // 1054 (Признак расчета).
+	ADD_FISCAL_FIELD(1055, TaxSystem,              Byte,      QCoreApplication::translate("FiscalFields", "#tax_system"), CFR::FiscalFields::ERequired::Yes);          // 1055 (СНО на платеже).
+	ADD_FISCAL_FIELD(1060, FTSURL,                 String,    QCoreApplication::translate("FiscalFields", "#fts_url"));                                                // 1060 (Адрес сайта ФНС).
+	ADD_FISCAL_FIELD(1062, TaxSystemsReg,          Byte,      QCoreApplication::translate("FiscalFields", "#tax_systems_reg"));                                        // 1062 (СНО из итогов регистрации).
+	ADD_FISCAL_FIELD(1074, ProcessingPhone,        String,    QCoreApplication::translate("FiscalFields", "#processing_phone"), CFR::FiscalFields::ERequired::Yes);    // 1074 (Телефон оператора по приему платежей).
+	ADD_FISCAL_FIELD(1077, FDSign,                 ByteArray, QCoreApplication::translate("FiscalFields", "#fd_sign"));                                                // 1077 (Фискальный признак документа).
+	ADD_FISCAL_FIELD(1097, OFDNotSentFDQuantity,   UINT32,    QCoreApplication::translate("FiscalFields", "#ofd_not_sent_fd_quantity"));                               // 1097 (Количество непереданных ФД).
+	ADD_FISCAL_FIELD(1098, OFDNotSentFDDateTime,   UnixTime,  QCoreApplication::translate("FiscalFields", "#ofd_not_sent_fd_date_time"));                              // 1098 (Дата и время первого из непереданных ФД).
+	ADD_FISCAL_FIELD(1101, ReregistrationCause,    Byte,      QCoreApplication::translate("FiscalFields", "#reregistration_cause"));                                   // 1101 (Код причины перерегистрации).
+	ADD_FISCAL_FIELD(1111, FDForSessionTotal,      UINT32,    QCoreApplication::translate("FiscalFields", "#fd_for_session_total"));                                   // 1111 (Общее количество ФД за смену).
+	ADD_FISCAL_FIELD(1117, SenderMail,             String,    QCoreApplication::translate("FiscalFields", "#sender_mail"));                                            // 1117 (Электронная почта отправителя чека).
+	ADD_FISCAL_FIELD(1118, FiscalsForSessionTotal, UINT32,    QCoreApplication::translate("FiscalFields", "#fiscals_for_session_total"));                              // 1118 (Количество кассовых чеков (БСО) за смену).
+	ADD_FISCAL_FIELD(1187, PayOffPlace,            String,    QCoreApplication::translate("FiscalFields", "#payoff_place"));                                           // 1187 (Место расчетов).
+	ADD_FISCAL_FIELD(1188, ModelVersion,           String,    QCoreApplication::translate("FiscalFields", "#model_version"));                                          // 1188 (Версия модели ККТ).
+	ADD_FISCAL_FIELD(1189, FFDFR,                  Byte,      QCoreApplication::translate("FiscalFields", "#ffd_fr"));                                                 // 1189 (Версия ФФД ФР).
+	ADD_FISCAL_FIELD(1190, FFDFS,                  Byte,      QCoreApplication::translate("FiscalFields", "#ffd_fs"));                                                 // 1190 (Версия ФФД ФН).
+	ADD_FISCAL_FIELD(1199, VATRate,                Byte);                                                                                                              // 1199 (Ставка НДС).
+	ADD_FISCAL_FIELD(1203, CashierINN,             String,    QCoreApplication::translate("FiscalFields", "#cashier_inn"));                                            // 1203 (ИНН кассира).
+	ADD_FISCAL_FIELD(1208, OFDURL,                 String,    QCoreApplication::translate("FiscalFields", "#ofd_url"));                                                // 1208 (Адрес сайта для получения чека).
+	ADD_FISCAL_FIELD(1209, FFD,                    Byte);                                                                                                              // 1209 (Версия ФФД).
 
 	// Данные оператора перевода
-	ADD_FISCAL_FIELD(1005, TransferOperatorAddress, String,   QCoreApplication::translate("FiscalFields", "#transfer_operator_address"), ERequired::Yes);    // 1005 (Адрес оператора перевода).
-	ADD_FISCAL_FIELD(1016, TransferOperatorINN,     String,   QCoreApplication::translate("FiscalFields", "#transfer_operator_inn"),     ERequired::Yes);    // 1016 (ИНН оператора перевода).
-	ADD_FISCAL_FIELD(1026, TransferOperatorName,    String,   QCoreApplication::translate("FiscalFields", "#transfer_operator_name"),    ERequired::Yes);    // 1026 (Наименование оператора перевода).
-	ADD_FISCAL_FIELD(1075, TransferOperatorPhone,   String,   QCoreApplication::translate("FiscalFields", "#transfer_operator_phone"),   ERequired::Yes);    // 1075 (Телефон оператора перевода).
+	ADD_FISCAL_FIELD(1005, TransferOperatorAddress, String,   QCoreApplication::translate("FiscalFields", "#transfer_operator_address"), CFR::FiscalFields::ERequired::Yes);    // 1005 (Адрес оператора перевода).
+	ADD_FISCAL_FIELD(1016, TransferOperatorINN,     String,   QCoreApplication::translate("FiscalFields", "#transfer_operator_inn"),     CFR::FiscalFields::ERequired::Yes);    // 1016 (ИНН оператора перевода).
+	ADD_FISCAL_FIELD(1026, TransferOperatorName,    String,   QCoreApplication::translate("FiscalFields", "#transfer_operator_name"),    CFR::FiscalFields::ERequired::Yes);    // 1026 (Наименование оператора перевода).
+	ADD_FISCAL_FIELD(1075, TransferOperatorPhone,   String,   QCoreApplication::translate("FiscalFields", "#transfer_operator_phone"),   CFR::FiscalFields::ERequired::Yes);    // 1075 (Телефон оператора перевода).
 
 	// Данные поставщика
-	ADD_FISCAL_FIELD(1171, ProviderPhone, String, QCoreApplication::translate("FiscalFields", "#provider_phone"), ERequired::Yes);    // 1171 (Телефон поставщика).
-	ADD_FISCAL_FIELD(1226, ProviderINN,   String, QCoreApplication::translate("FiscalFields", "#provider_inn"),   ERequired::Yes);    // 1226 (ИНН поставщика).
+	ADD_FISCAL_FIELD(1171, ProviderPhone, String, QCoreApplication::translate("FiscalFields", "#provider_phone"), CFR::FiscalFields::ERequired::Yes);    // 1171 (Телефон поставщика).
+	ADD_FISCAL_FIELD(1226, ProviderINN,   String, QCoreApplication::translate("FiscalFields", "#provider_inn"),   CFR::FiscalFields::ERequired::Yes);    // 1226 (ИНН поставщика).
 
 	// Данные платежного агента
-	ADD_FISCAL_FIELD(1044, AgentOperation,  String, QCoreApplication::translate("FiscalFields", "#agent_operation"), ERequired::Yes);    // 1044 (Операция платежного агента).
-	ADD_FISCAL_FIELD(1057, AgentFlagsReg,   Byte, ERequired::Yes);                                                                       // 1057 (Признак(и) платежного агента из итогов регистрации и на платеже).
-	ADD_FISCAL_FIELD(1073, AgentPhone,      String, QCoreApplication::translate("FiscalFields", "#agent_phone"), ERequired::Yes);        // 1073 (Телефон платежного агента).
-	ADD_FISCAL_FIELD(1222, AgentFlag,       Byte, ERequired::Yes);                                                                       // 1222 (Признак платежного агента на платеже).
+	ADD_FISCAL_FIELD(1044, AgentOperation,  String, QCoreApplication::translate("FiscalFields", "#agent_operation"), CFR::FiscalFields::ERequired::Yes);    // 1044 (Операция платежного агента).
+	ADD_FISCAL_FIELD(1057, AgentFlagsReg,   Byte, CFR::FiscalFields::ERequired::Yes);                                                                       // 1057 (Признак(и) платежного агента из итогов регистрации и на платеже).
+	ADD_FISCAL_FIELD(1073, AgentPhone,      String, QCoreApplication::translate("FiscalFields", "#agent_phone"), CFR::FiscalFields::ERequired::Yes);        // 1073 (Телефон платежного агента).
+	ADD_FISCAL_FIELD(1222, AgentFlag,       Byte, CFR::FiscalFields::ERequired::Yes);                                                                       // 1222 (Признак платежного агента на платеже).
 
 	// Статусы
 	ADD_FISCAL_FIELD(1050, FSExpiredStatus,    Byte,   QCoreApplication::translate("FiscalFields", "#fs_expired_status"));           // 1050 (Признак исчерпания ресурса ФН).
