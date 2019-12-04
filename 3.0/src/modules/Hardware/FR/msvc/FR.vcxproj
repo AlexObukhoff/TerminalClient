@@ -120,6 +120,7 @@
     <ClCompile Include="..\src\Atol\Online\AtolOnlineFRBase.cpp" />
     <ClCompile Include="..\src\Atol\Online\Paymaster.cpp" />
     <ClCompile Include="..\src\Base\FFEngine.cpp" />
+    <ClCompile Include="..\src\Base\FiscalFieldDescriptions.cpp" />
     <ClCompile Include="..\src\Base\FSSerialData.cpp" />
     <ClCompile Include="..\src\Base\Port\PortFRBase.cpp" />
     <ClCompile Include="..\src\Kasbi\KasbiFRBase.cpp" />
@@ -146,7 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\AtolOnlinePrinters.h" />
-    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FFDataTypes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRBaseConstants.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRDataTypes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\KasbiPrinters.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="..\src\Atol\Online\AtolOnlineFRBase.h" />
     <ClInclude Include="..\src\Atol\Online\Paymaster.h" />
     <ClInclude Include="..\src\Base\FFEngine.h" />
+    <ClInclude Include="..\src\Base\FiscalFieldDescriptions.h" />
     <ClInclude Include="..\src\Base\FSSerialData.h" />
     <ClInclude Include="..\src\Base\Port\PortFRBase.h" />
     <ClInclude Include="..\src\Kasbi\KasbiFRBase.h" />
@@ -228,23 +230,6 @@
     <ClInclude Include="..\src\Shtrih\ShtrihFRDataTypes.h" />
     <ClInclude Include="..\src\Shtrih\Base\ShtrihFRBase.h" />
     <CustomBuild Include="..\src\OPOSMStarTUPK\OPOSMStarTUPK.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Common\msvc\Common.vcxproj">
-      <Project>{70d02db7-a7cb-4d22-b13e-0c7f4eb7df86}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Protocols\FR\Incotex\IncotexProtocol.vcxproj">
-      <Project>{b12702ad-abfb-343a-a199-8e24837244a3}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Protocols\FR\Prim\PrimFR.vcxproj">
-      <Project>{5cef800e-0984-4486-a804-313c92a72132}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Protocols\FR\Shtrih\ShtrihFR.vcxproj">
-      <Project>{7e9fe953-c21a-4362-be27-70b22132279a}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

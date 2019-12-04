@@ -13,6 +13,9 @@
 #include <SDK/Drivers/FR/FiscalPrinterCommand.h>
 #include <SDK/Drivers/IFiscalPrinter.h>
 
+// Project
+#include "PrintConstants.h"
+
 namespace FiscalCommand = SDK::Driver::EFiscalPrinterCommand;
 namespace PPSDK = SDK::PaymentProcessor;
 
@@ -24,6 +27,15 @@ namespace CPrintCommands
 
 	/// Шаблон имени файла фискального чека.
 	const char ReceiptNameTemplate[] = "hhmmsszzz";
+
+	/// Данные фискальных тегов.
+	const QStringList FFDataList = QStringList()
+		<< CPrintConstants::OpPhone
+		<< CPrintConstants::DealerSupportPhone
+		<< CPrintConstants::BankPhone
+		<< CPrintConstants::BankAddress
+		<< CPrintConstants::BankInn
+		<< CPrintConstants::BankName;
 }
 
 //---------------------------------------------------------------------------

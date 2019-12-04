@@ -20,7 +20,7 @@
 #include "Hardware/IOPorts/IOPortBase.h"
 #include "Hardware/IOPorts/LibUSBDeviceDataTypes.h"
 
-#define LIB_USB_CALL(aName, ...) processAnswer(#aName, aName(__VA_ARGS__))
+#define LIB_USB_CALL(aName, ...) handleResult(#aName, aName(__VA_ARGS__))
 
 //--------------------------------------------------------------------------------
 namespace CLibUSBPort
@@ -33,6 +33,11 @@ namespace CLibUSBPort
 
 	/// Таймаут для отправки данных, [мс]. 
 	inline int writingTimeout(int aSize) { return qCeil(SystemTimeout + aSize * ByteTimeout); }
+
+	/// Ошибки пропажи порта.
+	const QVector<int> DisappearingErrors = QVector<int>()
+		<< LIBUSB_ERROR_IO            /// Ошибка ввода/вывода
+		<< LIBUSB_ERROR_NO_DEVICE;    /// Устройство отсутствует (возможно, оно было отсоединено)
 }
 
 //--------------------------------------------------------------------------------
@@ -77,14 +82,17 @@ public:
 	CLibUSB::TDeviceProperties getDevicesProperties(bool aForce);
 
 protected:
+	/// Идентификация.	
+	virtual bool checkExistence();
+
 	/// Проверить готовность порта.
 	virtual bool checkReady();
 
 	/// Передать данные.
 	bool performWrite(const QByteArray & aData);
 
-	/// Обработать ответ.
-	TResult processAnswer(const QString & aFunctionName, int aResult);
+	/// Обработать результат выполнения функции LibUSB.
+	TResult handleResult(const QString & aFunctionName, int aResult);
 
 	/// Список данных соединений.
 	QList<libusb_device *> mDevices;

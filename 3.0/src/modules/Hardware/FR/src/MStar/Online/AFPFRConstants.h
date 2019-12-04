@@ -133,6 +133,18 @@ namespace CAFPFR
 		const SData OFDAddress       = SData(67, EAnswerTypes::String, "OFD address");    /// Адрес ОФД.
 		const SData OFDPort          = SData(68, EAnswerTypes::String, "OFD port");       /// Порт ОФД.
 
+		#define ADD_AFP_FF(aNumber, aField) const SData aField = SData(aNumber, CFR::FiscalFields::aField)
+
+		ADD_AFP_FF(76, SenderMail);                 // 1117 (Электронная почта отправителя чека).
+		ADD_AFP_FF(78, TransferOperatorPhone);      // 1075 (Телефон оператора перевода).
+		ADD_AFP_FF(79, AgentOperation);             // 1044 (Операция платежного агента).
+		ADD_AFP_FF(80, AgentPhone);                 // 1073 (Телефон платежного агента).
+		ADD_AFP_FF(81, ProcessingPhone);            // 1074 (Телефон оператора по приему платежей).
+		ADD_AFP_FF(82, TransferOperatorName);       // 1026 (Наименование оператора перевода).
+		ADD_AFP_FF(83, TransferOperatorAddress);    // 1005 (Адрес оператора перевода).
+		ADD_AFP_FF(84, TransferOperatorINN);        // 1016 (ИНН оператора перевода).
+		ADD_AFP_FF(85, ProviderPhone);              // 1171 (Телефон поставщика).
+
 		/// Имена отделов.
 		inline SData SectionName(int aIndex) { return SData(50, EAnswerTypes::String, QString("section %1 name").arg(aIndex), NoBit, aIndex); }
 	}
@@ -160,7 +172,7 @@ namespace CAFPFR
 		const char GetFSStatus              = '\xB0';    /// Запрос статуса ФН.
 		const char GetOFDStatus             = '\xB2';    /// Запрос параметров обмена с сервером ОФД.
 		const char GetFiscalizationTotal    = '\xB6';    /// Получить итоги регистрации.
-		const char SetUserMail              = '\xB8';    /// Установить электронный адрес покупателя.
+		const char SetUserContact           = '\xB8';    /// Установить телефон/электронный адрес покупателя.
 		const char SetTaxSystem             = '\xBF';    /// Установить СНО.
 		const char SetAgentFlag             = '\xC0';    /// Установить флаг агента.
 		const char GetFiscalTLVData         = '\xC4';    /// Получить данные фискального документа в TLV-формате.

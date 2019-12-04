@@ -7,6 +7,9 @@
 #include <SDK/Drivers/FR/FiscalPrinterConstants.h>
 #include <SDK/Drivers/FR/FRStatus.h>
 
+// Modules
+#include "Hardware/FR/ProtoFR.h"
+
 // Project
 #include "Hardware/FR/FRBaseConstants.h"
 #include "Hardware/FR/FRErrorDescription.h"
@@ -132,17 +135,42 @@ protected:
 	/// Проверить налоги на платеже.
 	bool checkTaxesOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
+	/// Добавить телефон в фискальные теги в конфиг.
+	void addPhone(const QString & aField, const QVariant & aData);
+
+	/// Добавить почту в фискальные теги в конфиг.
+	void addMail(const QString & aField, const QVariant & aData);
+
 	/// Добавить фискальные теги в платеж.
 	void addFiscalFieldsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
+	/// Проверить наличие и необходимость фискальных тегов на платеже.
+	void checkFFExistingOnPayment(int aField, bool aAdd, bool aRequired = true);
+
+	/// Добавить данные в фискальный тег из конфига или параметра.
+	typedef std::function<void(QString &)> TFFConfigData;
+	void addConfigFFData(const QString & aField, const QVariant & aData, const TFFConfigData & aFFConfigData = TFFConfigData());
+
 	/// Проверить тип оплаты на платеже.
 	bool checkPayTypeOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
+
+	/// Проверить фискальные теги на платеже.
+	bool checkFiscalFieldsOnPayment();
 
 	/// Проверить параметры налогов.
 	virtual bool checkTaxes();
 
 	/// Проверить параметры налога.
 	virtual bool checkTax(SDK::Driver::TVAT /*aVAT*/, CFR::Taxes::SData & /*aData*/) { return true; }
+
+	/// Включена непечать?
+	bool isNotPrinting();
+
+	/// Может не печатать?
+	bool canNotPrinting();
+
+	/// Проверить необходимость печати.
+	virtual bool isPrintingNeed(const QStringList & aReceipt);
 
 	/// Локальная печать X-отчета.
 	virtual bool processXReport() = 0;
@@ -288,11 +316,11 @@ protected:
 	/// Регион.
 	ERegion::Enum mRegion;
 
-	/// Реквизиты ОФД для установки в момент печати фискального чека.
-	QSet<int> mOFDFiscalParameters;
+	/// Фискальные теги для установки в момент печати фискального чека.
+	QSet<int> mOFDFiscalFields;
 
-	/// Реквизиты ОФД для установки в момент печати фискального чека на продаже.
-	QSet<int> mOFDFiscalParametersOnSale;
+	/// Фискальные теги для установки в момент печати фискального чека на продаже.
+	QSet<int> mOFDFiscalFieldsOnSale;
 
 	/// Количество неотправленных документов в ОФД.
 	int mOFDNotSentCount;

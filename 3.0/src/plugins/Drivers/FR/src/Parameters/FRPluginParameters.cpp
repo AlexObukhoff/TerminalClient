@@ -48,9 +48,9 @@ SPluginParameter setSessionOpeningTime()
 }
 
 //------------------------------------------------------------------------------
-SPluginParameter setNotPrinting()
+SPluginParameter setNotPrinting(bool aVisible)
 {
-	return SPluginParameter(CHardwareSDK::FR::WithoutPrinting, false, QString(), QString(), CHardwareSDK::Values::Auto, QStringList() << CHardwareSDK::Values::Use << CHardwareSDK::Values::NotUse, true);
+	return SPluginParameter(CHardwareSDK::FR::WithoutPrinting, false, PPT::NotPrinting, QString(), CHardwareSDK::Values::Auto, QStringList() << CHardwareSDK::Values::Use << CHardwareSDK::Values::NotUse, !aVisible);
 }
 
 //------------------------------------------------------------------------------

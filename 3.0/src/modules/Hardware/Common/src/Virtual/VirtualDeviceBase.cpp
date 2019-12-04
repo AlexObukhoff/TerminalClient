@@ -6,9 +6,7 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
-#include "Hardware/CashAcceptors/ProtoCashAcceptor.h"
 #include "Hardware/CashAcceptors/CashAcceptorBase.h"
-#include "Hardware/Dispensers/ProtoDispenser.h"
 #include "Hardware/Dispensers/DispenserBase.h"
 
 // Project

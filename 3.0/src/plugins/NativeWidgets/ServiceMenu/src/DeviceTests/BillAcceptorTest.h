@@ -2,6 +2,11 @@
 
 #pragma once
 
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QTimer>
+#include <Common/QtHeadersEnd.h>
+
 // SDK
 #include <Common/ObjectPointer.h>
 #include <SDK/Drivers/ICashAcceptor.h>
@@ -11,6 +16,12 @@ namespace SDK {
 namespace Driver {
 	class IDevice;
 }}
+
+namespace CBillAcceptorTest
+{
+	/// Таймаут сообщения о номинале купюры в эскроу, [мс].
+	const int EscrowMessageTimeout = 5 * 1000;
+}
 
 //------------------------------------------------------------------------------
 class BillAcceptorTest : public SDK::PaymentProcessor::IDeviceTest
@@ -36,12 +47,24 @@ public:
 	virtual bool hasResult();
 
 private slots:
+	/// Показать номинал.
 	void onEscrow(SDK::Driver::SPar aPar);
+
+	/// Показать статус, если необходимо.
 	void onStatusChanged(SDK::Driver::EWarningLevel::Enum, const QString &, int aParam);
 
+	/// Удалить сообщение.
+	void onEraseMessage();
+
 private:
+	/// Экземпляр класса купюроприемника.
 	ObjectPointer<SDK::Driver::ICashAcceptor> mBillAcceptor;
-	bool mRejected;
+
+	/// Набор разрешенных номиналов.
+	SDK::Driver::TParList mWorkingParList;
+
+	/// Таймер удаления сообщений.
+	QTimer mErasingTimer;
 };
 
 //------------------------------------------------------------------------------

@@ -79,11 +79,18 @@ namespace CAtolOnlineFR
 		const SData SetAutoZReportTiming = SData(22, 1, 2);
 	}
 
-	/// Данные команды начала формирования позиции продажи - выполнить операцию + 2 магических числа
-	const QByteArray StartSailingData = QByteArray::fromRawData("\x00\x01\x00", 3);
+	/// Флаги выполнения фискальных операций.
+	namespace FiscalFlags
+	{
+		/// Не печатать чек - на открытии чека.
+		const char NotPrinting = '\x04';
 
-	/// Флаги выполнения продажи - Выполнить операцию + проверить денежную наличность + налог на конкретную позицию.
-	const char SaleFlags = CAtolFR::FiscalFlags::ExecutionMode | CAtolFR::FiscalFlags::CashChecking | CAtolFR::FiscalFlags::TaxForPosition;
+		/// Данные команды начала формирования позиции продажи - выполнить операцию + 2 магических числа
+		const QByteArray StartSailingData = QByteArray::fromRawData("\x00\x01\x00", 3);
+
+		/// Флаги выполнения продажи - Выполнить операцию + проверить денежную наличность + налог на конкретную позицию.
+		const char Saling = CAtolFR::FiscalFlags::ExecutionMode | CAtolFR::FiscalFlags::CashChecking | CAtolFR::FiscalFlags::TaxForPosition;
+	}
 
 	/// Регистры
 	namespace Registers

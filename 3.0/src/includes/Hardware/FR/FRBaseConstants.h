@@ -427,6 +427,20 @@ namespace CFR
 	static CPayOffTypes PayOffTypes;
 
 	//--------------------------------------------------------------------------------
+	/// Операция платежного агента (1044).
+	namespace AgentOperation
+	{
+		const char Payment[] = "Платеж";
+		const char Payout[] = "Выдача наличных";
+	}
+
+	/// Банковский платежный агент?
+	inline bool isBankAgent(SDK::Driver::EAgentFlags::Enum aAgentFlag) { return (aAgentFlag == SDK::Driver::EAgentFlags::BankAgent) || (aAgentFlag == SDK::Driver::EAgentFlags::BankSubagent); }
+
+	/// Обыкновенный платежный агент?
+	inline bool isPaymentAgent(SDK::Driver::EAgentFlags::Enum aAgentFlag) { return (aAgentFlag == SDK::Driver::EAgentFlags::PaymentAgent) || (aAgentFlag == SDK::Driver::EAgentFlags::PaymentSubagent); }
+
+	//--------------------------------------------------------------------------------
 	/// Ставка НДС (1199).
 	class CVATRates: public CDescription<char>
 	{
@@ -492,34 +506,6 @@ namespace CFR
 	};
 
 	static COperationModeData OperationModeData;
-
-	//---------------------------------------------------------------------------
-	class ConfigCleaner
-	{
-	public:
-		ConfigCleaner(DeviceConfigManager * aConfigManager) : mPerformer(aConfigManager) {}
-
-		~ConfigCleaner()
-		{
-			if (mPerformer)
-			{
-				QStringList fieldNames = QStringList()
-					<< CFiscalSDK::Cashier
-					<< CFiscalSDK::CashierINN
-					<< CFiscalSDK::UserContact
-					<< CFiscalSDK::TaxSystem
-					<< CFiscalSDK::AgentFlag;
-
-				foreach (const QString & fieldName, fieldNames)
-				{
-					mPerformer->removeConfigParameter(fieldName);
-				}
-			}
-		}
-
-	private:
-		DeviceConfigManager * mPerformer;
-	};
 
 	//---------------------------------------------------------------------------
 	class DealerDataManager

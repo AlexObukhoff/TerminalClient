@@ -219,6 +219,11 @@
         <translation>Fehler der Geberkalibrierung</translation>
     </message>
     <message>
+        <location filename="../../../../../includes/Hardware/CashAcceptors/CashAcceptorStatusesDescriptions.h" line="174"/>
+        <source>#rejecting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../../../../includes/Hardware/CashAcceptors/CashAcceptorStatusesDescriptions.h" line="166"/>
         <source>#currency_is_not_supported</source>
         <translation>Währung wird nicht unterstützt</translation>

@@ -20,8 +20,8 @@ ShtrihOnlineFRBase<T>::ShtrihOnlineFRBase()
 	mNotEnableFirmwareUpdating = false;
 	mPrinterStatusEnabled = true;
 	mIsOnline = true;
-	mOFDFiscalParameters.remove(CFR::FiscalFields::Cashier);
-	mOFDFiscalParameters.remove(CFR::FiscalFields::TaxSystem);
+	mOFDFiscalFields.remove(CFR::FiscalFields::Cashier);
+	mOFDFiscalFields.remove(CFR::FiscalFields::TaxSystem);
 	mNeedReceiptProcessingOnCancel = true;
 
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, true);
@@ -310,7 +310,7 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 	if (getFRParameter(RNM, data)) mRNM = CFR::RNMToString(data);
 
 	#define SET_LCONFIG_FISCAL_FIELD(aName) QString aName##Log = mFFData.getTextLog(CFR::FiscalFields::aName); \
-		if (getFRParameter(aName, data)) { mFFEngine.setLConfigParameter(CFiscalSDK::aName, data); \
+		if (getFRParameter(aName, data)) { mFFEngine.setConfigParameter(CFiscalSDK::aName, mCodec->toUnicode(data)); \
 		     QString value = mFFEngine.getConfigParameter(CFiscalSDK::aName, data).toString(); \
 		     toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = \"%2\" to config data").arg(aName##Log).arg(value)); } \
 		else toLog(LogLevel::Error,  mDeviceName + QString(": Failed to add %1 to config data").arg(aName##Log));
@@ -550,6 +550,9 @@ bool ShtrihOnlineFRBase<T>::closeDocument(double aSum, EPayTypes::Enum aPayType)
 template<class T>
 bool ShtrihOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * aFDNumber)
 {
+	// СНО ставится либо параметром системной таблицы, либо параметром команды закрытия чека.
+	mOFDFiscalFields.remove(CFR::FiscalFields::TaxSystem);
+
 	if ((mModelData.date < CShtrihOnlineFR::MinFWDate::V2) || (mModel == CShtrihFR::Models::ID::MStarTK2))
 	{
 		char taxSystem = char(aPaymentData.taxSystem);

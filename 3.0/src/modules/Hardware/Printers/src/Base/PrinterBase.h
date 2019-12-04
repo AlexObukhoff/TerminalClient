@@ -60,7 +60,7 @@ protected:
 	virtual bool processReceipt(const QStringList & aReceipt, bool aProcessing = true);
 
 	/// Проверить необходимость печати.
-	bool isPrintingNeed(const QStringList & aReceipt);
+	virtual bool isPrintingNeed(const QStringList & aReceipt);
 
 	/// Удалить строки, содержащие только ' ', \n, \r и \t.
 	QStringList simplifyReceipt(const QStringList & aReceipt);

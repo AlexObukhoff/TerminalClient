@@ -176,6 +176,9 @@ typedef int TVAT;
 typedef QSet<TVAT> TVATs;
 typedef double TSum;
 
+
+/*   !!!!!!!!!!!!!!  НЕ забываем обновить метод FiscalProtocol::createRequest и parseRequestJsonDoc */
+
 struct SUnitData
 {
 	TSum sum;                                                   /// Сумма платежа.
@@ -186,7 +189,7 @@ struct SUnitData
 	EPayOffSubjectMethodTypes::Enum payOffSubjectMethodType;    /// Признак способа расчета (1214).
 	int section;                                                /// Отдел.
 
-	SUnitData() : sum(0), VAT(0), payOffSubjectType(EPayOffSubjectTypes::None), section(-1) {}
+	SUnitData() : sum(0), VAT(0), payOffSubjectType(EPayOffSubjectTypes::None), payOffSubjectMethodType(EPayOffSubjectMethodTypes::None), section(-1) {}
 	SUnitData(double aSum, TVAT aVAT, const QString & aName, const QString & aProviderINN, EPayOffSubjectTypes::Enum aPayOffSubjectType, int aSection = -1,
 		EPayOffSubjectMethodTypes::Enum aPayOffSubjectMethodType = EPayOffSubjectMethodTypes::Full):
 			sum(aSum), VAT(aVAT), name(aName), providerINN(aProviderINN), payOffSubjectType(aPayOffSubjectType), payOffSubjectMethodType(aPayOffSubjectMethodType), section(aSection) {}
@@ -194,7 +197,8 @@ struct SUnitData
 
 typedef QList<SUnitData> TUnitDataList;
 
-/// Фискальные данные платежа
+
+/// Фискальные данные платежа  !!!!!!!!!!!!!!  НЕ забываем обновить метод FiscalProtocol::createRequest и parseRequestJsonDoc
 struct SPaymentData
 {
 	TUnitDataList unitDataList;       /// Список данных товара

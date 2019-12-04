@@ -219,6 +219,11 @@
         <translation>ошибка калибровки датчиков</translation>
     </message>
     <message>
+        <location filename="../../../../../includes/Hardware/CashAcceptors/CashAcceptorStatusesDescriptions.h" line="174"/>
+        <source>#rejecting</source>
+        <translation>выбрасывается</translation>
+    </message>
+    <message>
         <location filename="../../../../../includes/Hardware/CashAcceptors/CashAcceptorStatusesDescriptions.h" line="166"/>
         <source>#currency_is_not_supported</source>
         <translation>валюта не поддерживается</translation>

@@ -6,7 +6,6 @@
 
 //--------------------------------------------------------------------------------
 template class CustomVKP80<TSerialPrinterBase>;
-template class CustomVKP80<TLibUSBPrinterBase>;
 
 //--------------------------------------------------------------------------------
 template<class T>

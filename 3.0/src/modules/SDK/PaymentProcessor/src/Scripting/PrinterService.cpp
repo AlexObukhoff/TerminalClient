@@ -86,6 +86,8 @@ void PrinterService::printReceipt(const QString & aReceiptType, const QVariantMa
 void PrinterService::saveReceipt(const QVariantMap & aParameters, const QString & aTemplate)
 {
 	mPrinterService->saveReceipt(aParameters, QString(aTemplate).replace(".xml", ""));
+
+	emit receiptSaved();
 }
 
 //------------------------------------------------------------------------------

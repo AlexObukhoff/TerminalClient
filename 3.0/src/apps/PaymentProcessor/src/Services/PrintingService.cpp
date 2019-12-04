@@ -315,12 +315,11 @@ int PrintingService::performPrint(PrintCommand * aCommand, const QVariantMap & a
 			}
 
 			QVariantMap staticParameters;
+			joinMap(staticParameters, mStaticParameters);
 
 			QVariantMap configuration;
 			configuration.insert(CHardwareSDK::Printer::ContinuousMode, mContinuousMode);
 			configuration.insert(CHardwareSDK::Printer::ServiceOperation, mServiceOperation);
-			configuration.insert(CHardwareSDK::Printer::TemplateParameters, aParameters);
-			configuration.insert(CHardwareSDK::Printer::ReceiptParameters, joinMap(staticParameters, mStaticParameters));
 			configuration.insert(CHardwareSDK::Printer::ReceiptTemplate, aReceiptTemplate);
 			printer->setDeviceConfiguration(configuration);
 
@@ -1445,9 +1444,10 @@ void PrintingService::updateHardwareConfiguration()
 		if (device)
 		{
 			QVariantMap dealerSettings;
-			if (mStaticParameters.contains(CPrintConstants::DealerTaxSystem)) dealerSettings.insert(CHardwareSDK::FR::DealerTaxSystem, mStaticParameters[CPrintConstants::DealerTaxSystem]);
-			if (mStaticParameters.contains(CPrintConstants::DealerAgentFlag)) dealerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters[CPrintConstants::DealerAgentFlag]);
-			if (mStaticParameters.contains(CPrintConstants::DealerVAT))       dealerSettings.insert(CHardwareSDK::FR::DealerVAT,       mStaticParameters[CPrintConstants::DealerVAT]);
+			if (mStaticParameters.contains(CPrintConstants::DealerTaxSystem))    dealerSettings.insert(CHardwareSDK::FR::DealerTaxSystem,    mStaticParameters[CPrintConstants::DealerTaxSystem]);
+			if (mStaticParameters.contains(CPrintConstants::DealerAgentFlag))    dealerSettings.insert(CHardwareSDK::FR::DealerAgentFlag,    mStaticParameters[CPrintConstants::DealerAgentFlag]);
+			if (mStaticParameters.contains(CPrintConstants::DealerVAT))          dealerSettings.insert(CHardwareSDK::FR::DealerVAT,          mStaticParameters[CPrintConstants::DealerVAT]);
+			if (mStaticParameters.contains(CPrintConstants::DealerSupportPhone)) dealerSettings.insert(CHardwareSDK::FR::DealerSupportPhone, mStaticParameters[CPrintConstants::DealerSupportPhone]);
 
 			mPrinterDevices.append(device);
 

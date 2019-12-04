@@ -163,7 +163,7 @@ void USBDeviceBase<T>::initializeUSBPort()
 template <class T>
 bool USBDeviceBase<T>::checkConnectionAbility()
 {
-	return !mPortUsing || mIOPort->open();
+	return !mPortUsing || checkError(IOPortStatusCode::Error::Busy, [&] () -> bool { return mIOPort->open(); }, "device cannot open port");
 }
 
 //--------------------------------------------------------------------------------

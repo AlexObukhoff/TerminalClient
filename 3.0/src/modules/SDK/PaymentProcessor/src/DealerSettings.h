@@ -137,6 +137,12 @@ public:
 	/// Удаляет провайдера из списка
 	void disableProvider(qint64 aId);
 
+	/// Перезаписать настройки комиссии 
+	void setExternalCommissions(const Commissions & aCommissions);
+
+	/// Сбросить настройки комиссий до начальных
+	void resetExternalCommissions();
+
 private:
 	typedef QList<SCustomer> TCustomers;
 
@@ -171,6 +177,7 @@ private:
 	SPersonalSettings mPersonalSettings;
 
 	Commissions mCommissions;
+	Commissions mExternalCommissions;
 
 	/// Чёрно-белый список клиентов.
 	TCustomers mCustomers;

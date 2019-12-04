@@ -234,6 +234,7 @@ namespace CShtrihFR
 		const char Cutter                   = '\x71';      /// Ошибка отрезчика.
 		const char BadModeForCommand        = '\x73';      /// Команда не поддерживается в данном режиме.
 		const char RAM                      = '\x74';      /// Ошибка ОЗУ.
+		const char BadModeForField          = '\xC7';      /// Поле не редактируется в данном режиме.
 	}
 
 	namespace PayOffType

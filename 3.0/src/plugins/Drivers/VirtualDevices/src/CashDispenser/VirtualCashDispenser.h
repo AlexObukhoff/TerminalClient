@@ -30,7 +30,7 @@ protected:
 	virtual void filterKeyEvent(int aKey, const Qt::KeyboardModifiers & aModifiers);
 
 	/// Применить конфигурацию кассет.
-	virtual void applyCashList();
+	virtual void applyUnitList();
 
 	/// Проверить статус кассеты.
 	virtual void checkUnitStatus(TStatusCodes & aStatusCodes, int aUnit);

@@ -188,6 +188,45 @@ Commission Commission::fromSettings(const TPtree & aSettings)
 }
 
 //----------------------------------------------------------------------------
+Commission Commission::fromVariant(const QVariant & aCommissions)
+{
+	Commission commission;
+
+	auto val = [&aCommissions](QString aName, QString aDefault) -> QVariant
+	{
+		QVariant v = aCommissions.toMap().value(aName);
+		return v.isNull() ? aDefault : v;
+	};
+
+	commission.mType = val("type", QString()).toString().toLower() == "absolute" ? Absolute : Percent;
+	commission.mValue = val("amount", QString()).toDouble();
+
+	QString minChargeValue = val("min_charge", QString::number(CCommissions::MinChargeValue)).toString().trimmed();
+	commission.mMinCharge = minChargeValue.isEmpty() ? CCommissions::MinChargeValue : minChargeValue.toDouble();
+
+	QString maxChargeValue = val("max_charge", QString::number(CCommissions::MaxChargeValue)).toString().trimmed();
+	commission.mMaxCharge = maxChargeValue.isEmpty() ? CCommissions::MaxChargeValue : maxChargeValue.toDouble();
+
+	QString round = val("round", "bank").toString().toLower();
+	if (round == "high")
+	{
+		commission.mRound = High;
+	}
+	else if (round == "low")
+	{
+		commission.mRound = Low;
+	}
+	else
+	{
+		commission.mRound = Bank;
+	}
+
+	commission.mBase = (val("base", "amount_all").toString().toLower() == "amount") ? Amount : AmountAll;
+
+	return commission;
+}
+
+//----------------------------------------------------------------------------
 CommissionList::CommissionList()
 {
 }
@@ -260,6 +299,21 @@ CommissionList CommissionList::fromSettings(const TPtree & aSettings) throw(std:
 }
 
 //----------------------------------------------------------------------------
+CommissionList CommissionList::fromVariant(const QVariant & aCommissions)
+{
+	CommissionList list;
+	QVariant amount = aCommissions.toMap().value("amount").toMap();	
+	Commission commission(Commission::fromVariant(amount.toMap().value("commission")));
+
+	commission.mAbove = amount.toMap().value("above", CCommissions::DefaultAboveValue).toDouble();
+	commission.mBelow = amount.toMap().value("below", CCommissions::DefaultBelowValue).toDouble();
+	
+	list.mCommissions << commission;
+
+	return list;
+}
+
+//----------------------------------------------------------------------------
 CommissionByTimeList::CommissionByTimeList()
 {
 }
@@ -309,6 +363,16 @@ CommissionByTimeList CommissionByTimeList::fromSettings(const TPtree & aSettings
 	list.mEnd = QTime::fromString(aSettings.get<QString>("<xmlattr>.end"), "hh:mm:ss");
 	list.mCommissions = CommissionList::fromSettings(aSettings);
 
+	return list;
+}
+
+//----------------------------------------------------------------------------
+CommissionByTimeList CommissionByTimeList::fromVariant(const QVariant & aCommissions)
+{
+	Q_UNUSED(aCommissions);
+	
+	//TODO-TODO
+	CommissionByTimeList list;
 	return list;
 }
 
@@ -391,6 +455,28 @@ CommissionByDayList CommissionByDayList::fromSettings(const TPtree & aSettings)
 }
 
 //----------------------------------------------------------------------------
+CommissionByDayList CommissionByDayList::fromVariant(const QVariant & aCommissions)
+{
+	CommissionByDayList list;
+
+	QStringList days = aCommissions.toMap().value("day").toStringList();
+
+	foreach(const QString & day, days)
+	{
+		int temp = day.toInt();
+
+		if ((temp >= Commission::Mon) && (temp <= Commission::Sun))
+		{
+			list.mDays << static_cast<Commission::Day>(temp);
+		}
+	}
+
+	list.mCommissions = CommissionList::fromVariant(aCommissions);
+
+	return list;
+}
+
+//----------------------------------------------------------------------------
 ProcessingCommission::ProcessingCommission()
 	: mValue(0),
 	  mMinValue(0),
@@ -410,6 +496,23 @@ ProcessingCommission ProcessingCommission::fromSettings(const TPtree & aSettings
 		result.mValue = settings->get<double>("<xmlattr>.percent");
 		result.mMinValue = settings->get<double>("<xmlattr>.min_value");
 		result.mType = static_cast<Type>(settings->get<int>("<xmlattr>.type"));
+	}
+
+	return result;
+}
+
+//----------------------------------------------------------------------------
+ProcessingCommission ProcessingCommission::fromVariant(const QVariant & aCommissions)
+{
+	ProcessingCommission result;
+
+	auto settings = aCommissions.toMap().value("cyberaddcomission");
+
+	if (settings.isValid())
+	{
+		result.mValue = settings.toMap().value("percent").toDouble();
+		result.mMinValue = settings.toMap().value("min_value").toDouble();
+		result.mType = static_cast<Type>(settings.toMap().value("type").toInt());
 	}
 
 	return result;
@@ -548,6 +651,12 @@ bool Commissions::isValid() const
 }
 
 //----------------------------------------------------------------------------
+bool Commissions::contains(qint64 aProvider, bool aCheckProcessing)
+{
+	return aCheckProcessing ? mProcessingCommissions.contains(aProvider) : mProviderCommissions.contains(aProvider);
+}
+
+//----------------------------------------------------------------------------
 Commissions Commissions::fromSettings(const TPtree & aSettings)
 {
 	Commissions result;
@@ -577,6 +686,29 @@ Commissions Commissions::fromSettings(const TPtree & aSettings)
 }
 
 //----------------------------------------------------------------------------
+SDK::PaymentProcessor::Commissions Commissions::fromVariant(const QVariantList & aCommissions)
+{
+	Commissions result;
+
+	foreach (QVariant com, aCommissions)
+	{
+		result.mProviderCommissions.insert(com.toMap()["provider"].toInt(), result.loadCommissions(com));
+		
+		ProcessingCommission processingCommission = ProcessingCommission::fromVariant(com);
+
+		if (!processingCommission.isNull())
+		{
+			result.mProcessingCommissions.insert(com.toMap()["provider"].toInt(), processingCommission);
+		}
+	}
+
+	result.mDefaultCommissions = Commissions::SComplexCommissions();
+	result.mIsValid = true;
+
+	return result;
+}
+
+//----------------------------------------------------------------------------
 Commissions::SComplexCommissions Commissions::loadCommissions(const TPtree & aBranch)
 {
 	SComplexCommissions result;
@@ -596,6 +728,21 @@ Commissions::SComplexCommissions Commissions::loadCommissions(const TPtree & aBr
 	}
 
 	result.comissions = CommissionList::fromSettings(aBranch);
+
+	return result;
+}
+
+//----------------------------------------------------------------------------
+Commissions::SComplexCommissions Commissions::loadCommissions(const QVariant & aCommissions)
+{
+	SComplexCommissions result;
+
+	result.vat = aCommissions.toMap().value("vat", 0).toDouble();
+
+	foreach (QVariant com, aCommissions.toMap().value("commissions").toList())
+	{
+		result.commissionsByDay << CommissionByDayList::fromVariant(com);
+	}
 
 	return result;
 }
@@ -632,6 +779,15 @@ void Commissions::appendFromSettings(const TPtree & aSettings)
 			}
 		}
 	}
+}
+
+//----------------------------------------------------------------------------
+void Commissions::clear()
+{
+	mIsValid = false;
+
+	mProviderCommissions.clear();
+	mProcessingCommissions.clear();
 }
 
 //----------------------------------------------------------------------------

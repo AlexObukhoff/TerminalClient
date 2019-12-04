@@ -7,6 +7,13 @@
 //--------------------------------------------------------------------------------
 namespace DispenserStatusCode
 {
+	/// OK.
+	namespace OK
+	{
+		const int SingleMode = 800;    /// Выдача по 1 монете.
+		const int Locked     = 801;    /// Аппарата заблокирован, ждет ввода PIN-кода.
+	}
+
 	/// Предупреждения.
 	namespace Warning
 	{

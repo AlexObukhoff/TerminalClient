@@ -289,6 +289,8 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQCOMPORTWIN_LIB -DCYBERPLAT_DRIVER "-I$(TC_DIR)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\." "-I.\src" "-I$(QTDIR)\include"</Command>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\BaseStatusTypes.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ConfigCleaner.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ContainerProxy.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceCodeSpecification.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceDataConstants.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceLogicManager.h" />

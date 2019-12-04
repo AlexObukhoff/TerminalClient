@@ -9,6 +9,7 @@ TCLib {
 	files: [
 		"../../../includes/SDK/Drivers/*.h",
 		"../../../includes/SDK/Drivers/*/*.h",
+		"src/*.h",
 		"src/*.cpp"
 	]
 }

@@ -27,11 +27,14 @@
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PrintersPlugin.cpp">
+    <ClCompile Include="..\src\PrinterPlugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Parameters\PrinterPluginParameters.cpp">
       <Filter>Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PrinterTemplates.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

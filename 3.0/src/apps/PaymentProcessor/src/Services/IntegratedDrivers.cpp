@@ -100,12 +100,19 @@ void IntegratedDrivers::checkDriverPath(QString & aDriverPath, const QVariantMap
 			auto parameterIt = std::find_if(parameters.begin(), parameters.end(), [&] (const SPluginParameter & aParameter) -> bool
 				{ return aParameter.name == jt.key(); });
 
-			if ((parameterIt != parameters.end()) && !parameterIt->readOnly && !parameterIt->possibleValues.values().contains(jt.value()) &&
-				!parameterIt->possibleValues.keys().contains(CHardwareSDK::Mask))
+			if (parameterIt != parameters.end())
 			{
-				paths.removeAt(i--);
+				SPluginParameter & parameter = *parameterIt;
+				QList<QVariant> & possibleValueValues = parameter.possibleValues.values();
+				QList<QString> & possibleValueKeys = parameter.possibleValues.keys();
+				const QVariant & value = jt.value();
 
-				break;
+				if (!parameter.readOnly && !possibleValueValues.contains(value) && (value != CHardwareSDK::Values::Auto) && !possibleValueKeys.contains(CHardwareSDK::Mask))
+				{
+					paths.removeAt(i--);
+
+					break;
+				}
 			}
 		}
 	}

@@ -40,6 +40,9 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
+	/// Получить дату и время ФР.
+	virtual QDateTime getDateTime();
+
 	/// Напечатать строку.
 	virtual bool printLine(const QByteArray & aString);
 
@@ -114,11 +117,11 @@ protected:
 
 	/// Распарсить данные ответа.
 	template <class T>
-	bool parseAnswerData(const CPrimFR::TData & aAnswer, int aIndex, const QString & aLog, T & aResult);
+	bool parseAnswerData(const CPrimFR::TData & aData, int aIndex, const QString & aLog, T & aResult);
 
 	/// Загрузить данные устройства.
 	template <class T>
-	void loadDeviceData(const CPrimFR::TData & aAnswer, const QString & aName, const QString & aLog, int aIndex, const QString & aExtensibleName = "");
+	void loadDeviceData(const CPrimFR::TData & aData, const QString & aName, const QString & aLog, int aIndex, const QString & aExtensibleName = "");
 
 	/// Проверить ответ.
 	TResult checkAnswer(TResult aResult, const QByteArray & aAnswer, CPrimFR::TData & aAnswerData);

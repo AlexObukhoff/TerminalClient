@@ -18,9 +18,8 @@
 using namespace SDK::Driver;
 
 //-------------------------------------------------------------------------------
-#define INSTANCE_LIB_USB_DEVICE(aClass) template class aClass; aClass::TUsageData aClass::mUsageData; QMutex aClass::mUsageDataGuard(QMutex::Recursive);
-
-INSTANCE_LIB_USB_DEVICE(LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>)
+LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>::TUsageData LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>::mUsageData;
+QMutex LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>::mUsageDataGuard(QMutex::Recursive);
 
 //--------------------------------------------------------------------------------
 template <class T>
@@ -160,7 +159,7 @@ void LibUSBDeviceBase<T>::initializeUSBPort()
 template <class T>
 bool LibUSBDeviceBase<T>::checkConnectionAbility()
 {
-	return mIOPort->open();
+	return checkError(IOPortStatusCode::Error::Busy, [&] () -> bool { return mIOPort->open(); }, "device cannot open port");
 }
 
 //--------------------------------------------------------------------------------

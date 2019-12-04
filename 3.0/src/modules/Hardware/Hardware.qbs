@@ -42,6 +42,8 @@ Project {
 			"CoinAcceptors/src/CCTalk/*.*",
 			"Acceptors/src/*.*",
 			"Acceptors/src/*/*.*",
+			"CashDevices/src/*.*",
+			"CashDevices/src/*/*.*",
 			"../../includes/Hardware/CashAcceptors/BillTable.h",
 			"../../includes/Hardware/CashAcceptors/CashAcceptorBaseConstants.h",
 			"../../includes/Hardware/CashAcceptors/CashAcceptorStatusCodes.h",
@@ -60,6 +62,7 @@ Project {
 
 		files: [
 			"CashDispensers/src/*.*",
+			"CashDispensers/src/*/*.*",
 			"../../includes/Hardware/Dispensers/DispenserData.h",
 			"../../includes/Hardware/Dispensers/DispenserStatusCodes.h"
 		]
@@ -79,6 +82,8 @@ Project {
 			"CoinAcceptors/src/CCTalk/*.*",
 			"Acceptors/src/*.*",
 			"Acceptors/src/*/*.*",
+			"CashDevices/src/*.*",
+			"CashDevices/src/*/*.*",
 			"../../includes/Hardware/CashAcceptors/BillTable.h",
 			"../../includes/Hardware/CashAcceptors/CashAcceptorBaseConstants.h",
 			"../../includes/Hardware/CashAcceptors/CashAcceptorStatusCodes.h",

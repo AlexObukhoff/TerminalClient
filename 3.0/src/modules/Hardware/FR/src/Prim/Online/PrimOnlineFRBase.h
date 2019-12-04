@@ -25,9 +25,6 @@ protected:
 	/// Получить статус;
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
 
-	/// Получить дату и время ФР.
-	virtual QDateTime getDateTime();
-
 	/// Запросить и вывести в лог критичные параметры ФР.
 	void processDeviceData();
 

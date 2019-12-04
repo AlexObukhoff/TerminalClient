@@ -8,9 +8,6 @@
 //--------------------------------------------------------------------------------
 namespace CPuloonLCDM
 {
-	/// Интервал поллинга в режиме простоя.
-	const int IdlingPollingInterval = 2000;
-
 	/// Интервал поллинга в режиме выдачи денег.
 	const int DispensingPollingInterval = 300;
 

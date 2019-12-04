@@ -12,7 +12,7 @@
 
 // Project
 #include "CCTalkModelData.h"
-#include "CCTalkAcceptorConstants.h"
+#include "Hardware/CashDevices/CCTalkDeviceConstants.h"
 
 //--------------------------------------------------------------------------------
 namespace CCCTalk
@@ -40,6 +40,7 @@ CVendorData::CVendorData()
 	add("PMD", "Phoenix Mecano Digital Elektronik GmbH", "Phoenix Mecano");
 	add("SEL", "Starpoint Electrics Ltd", "Starpoint");
 	add("WHM", "WH Munzprufer");
+	add("SUZO INT (NL)", "SUZOHAPP Netherlands", "SUZOHAPP");
 }
 
 //--------------------------------------------------------------------------------

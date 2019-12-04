@@ -6,8 +6,7 @@
 #include <SDK/Drivers/CashAcceptor/CashAcceptorStatus.h>
 
 // Modules
-#include "Hardware/Common/PortPollingDeviceBase.h"
-#include "Hardware/Common/SerialDeviceBase.h"
+#include "Hardware/Common/DeviceBase.h"
 #include "Hardware/CashAcceptors/ProtoCashAcceptor.h"
 #include "Hardware/CashAcceptors/BillTable.h"
 #include "Hardware/CashAcceptors/CashAcceptorBaseConstants.h"
@@ -62,8 +61,11 @@ public:
 	/// Готов ли к работе (инициализировался успешно, ошибок нет).
 	virtual bool isDeviceReady();
 
-	/// Установить новую информацию для таблицы номиналов.
+	/// Установить таблицу номиналов.
 	virtual void setParList(const SDK::Driver::TParList & aParList);
+
+	/// Получить таблицу номиналов.
+	virtual SDK::Driver::TParList getParList();
 
 protected:
 	/// Устанавливает запрещения списка номиналов.

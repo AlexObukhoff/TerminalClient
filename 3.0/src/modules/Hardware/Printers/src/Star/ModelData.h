@@ -5,7 +5,7 @@
 #include "Hardware/Common/Specifications.h"
 
 //--------------------------------------------------------------------------------
-/// Константы PrimFR протокола.
+/// Константы протокола STAR.
 namespace CSTAR
 {
 	struct SModelData

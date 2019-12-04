@@ -134,32 +134,33 @@ namespace BillAcceptorStatusCode
 	/// Выброс. Предупреждение, но если долго висит - ошибка.
 	namespace Reject
 	{
-		const int Insertion         = 750;     /// Купюра неверно вставлена.
-		const int Dielectric        = 751;     /// Выброс по диэлектрическому каналу.
-		const int PreviousOperating = 752;     /// Идет прием предыдущей купюры или монеты.
-		const int Compensation      = 753;     /// Засунуто несколько купюр.
-		const int Transport         = 754;     /// Помеха на конвейере.
-		const int Identification    = 755;     /// Идентификация купюры. TODO: прояснить режекты в CCNet.
-		const int Verification      = 756;     /// Верификация купюры. TODO: прояснить режекты в CCNet.
-		const int InhibitNote       = 757;     /// Запрещенная купюра.
-		const int Operation         = 758;     /// Ошибка операции.
-		const int DataProcessing    = 759;     /// Ошибка обработки данных.
-		const int Length            = 760;     /// Ошибка длины купюры.
-		const int LengthDoubling    = 761;     /// Задваивание по длине до эскроу на аппаратах с 2-мя моторами.
-		const int Width             = 762;     /// Ошибка ширины купюры.
-		const int WidthDoubling     = 763;     /// Задваивание по ширине.
-		const int Unrecognised      = 764;     /// Не распознана. TODO: прояснить режекты в CCNet.
-		const int MagneticSensor    = 765;     /// Магнитный канал.
-		const int CapacitanceSensor = 766;     /// Емкостный канал.
-		const int OpticalSensor     = 767;     /// Оптический канал.
-		const int UVSensor          = 768;     /// Ультрафиолетовый канал.
-		const int DoubleCorrelation = 769;     /// Двойная корреляция.
-		const int Barcode           = 770;     /// Не совпадает штрих-код с номиналом.
-		const int Diverter          = 771;     /// Ошибка направляющих конвейера.
-		const int UserDefined       = 772;     /// Инициирован пользователем.
-		const int Cheated           = 773;     /// Попытка мошенничества.
-		const int EscrowTimeout     = 774;     /// Таймаут ожидания действий после эскроу.
-		const int Unknown           = 775;     /// Причина неизвестна.
+		const int Rejecting         = 750;     /// В процессе выброса.
+		const int Insertion         = 751;     /// Купюра неверно вставлена.
+		const int Dielectric        = 752;     /// Выброс по диэлектрическому каналу.
+		const int PreviousOperating = 753;     /// Идет прием предыдущей купюры или монеты.
+		const int Compensation      = 754;     /// Засунуто несколько купюр.
+		const int Transport         = 755;     /// Помеха на конвейере.
+		const int Identification    = 756;     /// Идентификация купюры. TODO: прояснить режекты в CCNet.
+		const int Verification      = 757;     /// Верификация купюры. TODO: прояснить режекты в CCNet.
+		const int InhibitNote       = 758;     /// Запрещенная купюра.
+		const int Operation         = 759;     /// Ошибка операции.
+		const int DataProcessing    = 760;     /// Ошибка обработки данных.
+		const int Length            = 761;     /// Ошибка длины купюры.
+		const int LengthDoubling    = 762;     /// Задваивание по длине до эскроу на аппаратах с 2-мя моторами.
+		const int Width             = 763;     /// Ошибка ширины купюры.
+		const int WidthDoubling     = 764;     /// Задваивание по ширине.
+		const int Unrecognised      = 765;     /// Не распознана. TODO: прояснить режекты в CCNet.
+		const int MagneticSensor    = 766;     /// Магнитный канал.
+		const int CapacitanceSensor = 767;     /// Емкостный канал.
+		const int OpticalSensor     = 768;     /// Оптический канал.
+		const int UVSensor          = 769;     /// Ультрафиолетовый канал.
+		const int DoubleCorrelation = 770;     /// Двойная корреляция.
+		const int Barcode           = 771;     /// Не совпадает штрих-код с номиналом.
+		const int Diverter          = 772;     /// Ошибка направляющих конвейера.
+		const int UserDefined       = 773;     /// Инициирован пользователем.
+		const int Cheated           = 774;     /// Попытка мошенничества.
+		const int EscrowTimeout     = 775;     /// Таймаут ожидания действий после эскроу.
+		const int Unknown           = 776;     /// Причина неизвестна.
 	}
 }
 

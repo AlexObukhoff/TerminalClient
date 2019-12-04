@@ -99,7 +99,12 @@
     <message>
         <location filename="../DeviceTests/BillAcceptorTest.cpp" line="75"/>
         <source>#bill_is_rejected</source>
-        <translation>Купюра не принята</translation>
+        <translation type="obsolete">Купюра возвращена</translation>
+    </message>
+    <message>
+        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="91"/>
+        <source>#disabled</source>
+        <translation>отключена</translation>
     </message>
 </context>
 <context>

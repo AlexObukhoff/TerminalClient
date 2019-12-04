@@ -9,6 +9,7 @@
 // Project
 #include "CCTalkCashAcceptor.h"
 #include "CCTalkCashAcceptorConstants.h"
+#include "CCTalkCashAcceptorModelData.h"
 
 using namespace SDK::Driver;
 using namespace SDK::Driver::IOPort::COM;
@@ -20,7 +21,8 @@ CCTalkCashAcceptor::CCTalkCashAcceptor()
 
 	mAddress = CCCTalk::Address::BillAcceptor;
 	mParInStacked = true;
-	mErrorData = new CCCTalk::Error();
+	mErrorData = PErrorData(new CCCTalk::ErrorData());
+	mAllModelData = PAllModelData(new CCCTalk::CashAcceptor::CModelData());
 }
 
 //---------------------------------------------------------------------------
@@ -28,7 +30,7 @@ bool CCTalkCashAcceptor::processReset()
 {
 	toLog(LogLevel::Normal, mDeviceName + ": processing command reset");
 
-	if (!processCommand(CCCTalk::Command::CorePlus::Reset))
+	if (!processCommand(CCCTalk::Command::Reset))
 	{
 		return false;
 	}
@@ -321,14 +323,6 @@ void CCTalkCashAcceptor::cleanSpecificStatusCodes(TStatusCodes & aStatusCodes)
 QStringList CCTalkCashAcceptor::getModelList()
 {
 	return CCCTalk::CashAcceptor::CModelData().getModels(false);
-}
-
-//--------------------------------------------------------------------------------
-CCCTalk::CModelDataBase * CCTalkCashAcceptor::getModelData()
-{
-	static CCCTalk::CashAcceptor::CModelData modelData;
-
-	return &modelData;
 }
 
 //--------------------------------------------------------------------------------

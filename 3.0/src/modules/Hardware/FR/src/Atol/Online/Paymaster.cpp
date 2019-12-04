@@ -32,10 +32,9 @@ void Paymaster<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	AtolVKP80BasedFR<T>::setDeviceConfiguration(aConfiguration);
 
-	bool notPrinting = getConfigParameter(CHardwareSDK::FR::WithoutPrinting) == CHardwareSDK::Values::Use;
 	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel, CAtolOnlinePrinters::Default).toString();
 
-	if (aConfiguration.contains(CHardware::FR::PrinterModel) && (printerModel != CAtolOnlinePrinters::Default) && !notPrinting)
+	if (aConfiguration.contains(CHardware::FR::PrinterModel) && (printerModel != CAtolOnlinePrinters::Default) && !isNotPrinting())
 	{
 		mPPTaskList.append([&] () { mNotPrintingError = !setNotPrintDocument(false); });
 	}
@@ -74,7 +73,7 @@ bool Paymaster<T>::updateParameters()
 
 	QByteArray data;
 
-	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { mFFEngine.setLConfigParameter(CFiscalSDK::aName, data); \
+	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { mFFEngine.setConfigParameter(CFiscalSDK::aName, mCodec->toUnicode(data)); \
 		QString value = mFFEngine.getConfigParameter(CFiscalSDK::aName, data).toString(); toLog(LogLevel::Normal, mDeviceName + \
 			QString(": Add %1 = \"%2\" to config data").arg(mFFData.getTextLog(CFR::FiscalFields::aName)).arg(value)); }
 

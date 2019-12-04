@@ -221,9 +221,15 @@ bool Atol3FRProtocol::read(QByteArray & aAnswer, int aTimeout)
 		do
 		{
 			start = aAnswer.indexOf(CAtol3FR::Prefix, start);
+
+			if (start == -1)
+			{
+				break;
+			}
+
 			int size = getSize(aAnswer, start);
 			answer = aAnswer.mid(start, size);
-			
+
 			toLog(LogLevel::Normal, QString("ATOL3: << {%1}").arg(answer.toHex().data()));
 			start += size;
 		}

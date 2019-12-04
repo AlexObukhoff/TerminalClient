@@ -42,10 +42,14 @@ public:
 	/// Распарсить значение TLV-структуры.
 	void parseTLVData(const CFR::STLV & aTLV, SDK::Driver::TFiscalPaymentData & aFPData);
 
+	/// Распарсить значение списка TLV-структур.
+	void parseTLVDataList(const CFR::TTLVList & aTLVs, SDK::Driver::TFiscalPaymentData & aFPData);
+
 	/// Распарсить значение STLV-структуры.
 	void parseSTLVData(const CFR::STLV & aTLV, SDK::Driver::TComplexFiscalPaymentData & aPSData);
 
 	/// Получить массив байтов TLV-структуры для установки тега.
+	QByteArray getTLVData(const QString & aTextKey, const QVariant & aValue, QString * aLog = nullptr);
 	QByteArray getTLVData(int aField, const QVariant & aValue, QString * aLog = nullptr);
 	QByteArray getTLVData(int aField, QString * aLog = nullptr);
 
@@ -106,9 +110,6 @@ public:
 
 	/// Установить имя устройства.
 	void setDeviceName(const QString & aDeviceName);
-
-	/// Установить кодек.
-	void setCodec(QTextCodec * aCodec);
 
 protected:
 	/// Данные фискальных реквизитов.

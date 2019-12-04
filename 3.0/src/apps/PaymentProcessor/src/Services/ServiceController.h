@@ -125,6 +125,9 @@ protected:
 	/// Возвращает интерфейс управления терминалом.
 	virtual SDK::PaymentProcessor::ITerminalService * getTerminalService() const;
 
+	/// Возвращает интерфейс управления планировщиком заданий.
+	virtual SDK::PaymentProcessor::ISchedulerService * getSchedulerService() const;
+
 	/// Возвращает сервис с заданным именем.
 	virtual SDK::PaymentProcessor::IService * getService(const QString & aServiceName) const;
 

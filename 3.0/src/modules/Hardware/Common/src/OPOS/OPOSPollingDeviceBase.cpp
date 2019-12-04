@@ -22,10 +22,6 @@
 
 using namespace SDK::Driver;
 
-//-------------------------------------------------------------------------------
-template class OPOSPollingDeviceBase<ProtoFR, OPOS::OPOSFiscalPrinter>;
-template class OPOSPollingDeviceBase<ProtoOPOSScanner, OPOS::OPOSScanner>;
-
 //--------------------------------------------------------------------------------
 template <class T, class T2>
 OPOSPollingDeviceBase<T, T2>::OPOSPollingDeviceBase():

@@ -21,8 +21,11 @@ public:
 	static const char * StackedSignal; // SIGNAL(stacked(SDK::Driver::TParList aNotes));
 
 public:
-	/// Установить новую информацию для таблицы номиналов.
+	/// Установить таблицу номиналов.
 	virtual void setParList(const TParList & aParList) = 0;
+
+	/// Получить таблицу номиналов.
+	virtual TParList getParList() = 0;
 
 	/// Готов ли к работе (инициализировался успешно, ошибок нет).
 	virtual bool isDeviceReady() = 0;

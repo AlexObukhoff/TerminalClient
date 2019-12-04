@@ -541,6 +541,15 @@ QObject * PaymentService::getProvider()
 //------------------------------------------------------------------------------
 QObject * PaymentService::getProvider(qint64 aID)
 {
+	foreach (auto pp, mProviderProviders)
+	{
+		auto ppRef = pp.toStrongRef();
+		if (!ppRef.isNull() && ppRef->getId().contains(aID))
+		{
+			return new Provider(updateSkipCheckFlag(ppRef->getProvider(aID)), this);
+		}
+	}
+
 	return new Provider(updateSkipCheckFlag(mPaymentService->getProvider(aID)), this);
 }
 
@@ -830,6 +839,18 @@ bool PaymentService::isFinalStep()
 }
 
 //------------------------------------------------------------------------------
+void PaymentService::setExternalCommissions(const QVariantList & aCommissions)
+{
+	mDealerSettings->setExternalCommissions(PPSDK::Commissions::fromVariant(aCommissions));
+}
+
+//------------------------------------------------------------------------------
+void PaymentService::resetExternalCommissions()
+{
+	mDealerSettings->resetExternalCommissions();
+}
+
+//------------------------------------------------------------------------------
 void PaymentService::stepBack()
 {
 	if (currentStep() != "0")
@@ -936,6 +957,12 @@ void PaymentService::onStepCompleted(qint64 aPayment, int aStep, bool aError)
 	}
 
 	emit stepCompleted(aPayment, aStep, aError);
+}
+
+//------------------------------------------------------------------------------
+void PaymentService::addProviderProvider(QWeakPointer<IProviderProvider> aProvider)
+{
+	mProviderProviders << aProvider;
 }
 
 //------------------------------------------------------------------------------

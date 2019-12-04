@@ -65,6 +65,9 @@ protected:
 	/// Печать фискального чека.
 	virtual bool performFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
 
+	/// Получить фискальные теги по номеру документа.
+	virtual bool getFiscalFields(quint32 aFDNumber, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
+
 	/// Собрать данные о сессии перед выполнением Z-отчета.
 	QVariantMap getSessionOutData();
 

@@ -83,7 +83,7 @@ bool AFPFR::updateParameters()
 	setFRParameter(CAFPFR::FRParameters::PrintingOnClose, true);
 	CAFPFR::TData data;
 
-	if (!processCommand(CAFPFR::Commands::GetFiscalizationTotal, 0, &data))
+	if (!processCommand(CAFPFR::Commands::GetFiscalizationTotal, 1, &data))
 	{
 		return false;
 	}
@@ -621,6 +621,45 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 		return false;
 	}
 
+	// фискальные теги, ассоциированные с флагом агента
+	bool isBankAgent    = CFR::isBankAgent(aPaymentData.agentFlag);
+	bool isPaymentAgent = CFR::isPaymentAgent(aPaymentData.agentFlag);
+
+	#define CHECK_AFP_FF(aField) setFRParameter(CAFPFR::FRParameters::aField, mFFEngine.getConfigParameter(CFiscalSDK::aField))
+
+	if (isNotPrinting() && !CHECK_AFP_FF(SenderMail))
+	{
+		return false;
+	}
+
+	if (isBankAgent)
+	{
+		if (!CHECK_AFP_FF(TransferOperatorAddress) ||
+			!CHECK_AFP_FF(TransferOperatorINN)     ||
+			!CHECK_AFP_FF(TransferOperatorName)    ||
+			!CHECK_AFP_FF(AgentOperation)          ||
+			!CHECK_AFP_FF(TransferOperatorPhone))
+		{
+			return false;
+		}
+	}
+	else if (isPaymentAgent)
+	{
+		if (!CHECK_AFP_FF(ProcessingPhone))
+		{
+			return false;
+		}
+	}
+
+	if (isBankAgent || isPaymentAgent)
+	{
+		if (!CHECK_AFP_FF(AgentPhone) ||
+			!CHECK_AFP_FF(ProviderPhone))
+		{
+			return false;
+		}
+	}
+
 	char FDType = CAFPFR::PayOffTypeData[aPaymentData.payOffType];
 
 	if (!processReceipt(aReceipt, false) || !openDocument(FDType))
@@ -634,6 +673,14 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 	foreach (auto unitData, aPaymentData.unitDataList)
 	{
 		result = result && sale(unitData);
+	}
+
+	bool needSetUserContact = isNotPrinting() || mOperationModes.contains(EOperationModes::Internet);
+	QVariant userContact = getConfigParameter(CFiscalSDK::UserContact);
+
+	if (needSetUserContact && !processCommand(CAFPFR::Commands::SetUserContact, userContact))
+	{
+		return false;
 	}
 
 	CAFPFR::TData data = CAFPFR::TData()
@@ -652,6 +699,55 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 	}
 
 	return exitAction.reset();
+}
+
+//--------------------------------------------------------------------------------
+bool AFPFR::getFiscalFields(quint32 aFDNumber, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+{
+	CAFPFR::TData answer;
+
+	if (!processCommand(CAFPFR::Commands::GetFiscalTLVData, QVariant(aFDNumber), &answer))
+	{
+		return false;
+	}
+
+	QString rawData = answer[0].toString();
+	QString log;
+
+	if (!checkBufferString(rawData, &log))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": " + log);
+		return false;
+	}
+
+	QByteArray data = getBufferFromString(rawData);
+	int i = 0;
+
+	while ((i + 4) < data.size())
+	{
+		CFR::STLV TLV;
+
+		auto getInt = [&data, &i] (int aIndex, int aShift) -> int { int result = uchar(data[i + aIndex]); return result << (8 * aShift); };
+		int field = getInt(0, 0) | getInt(1, 1);
+		int size  = getInt(2, 0) | getInt(3, 1);
+
+		if (!size)
+		{
+			toLog(LogLevel::Warning, mDeviceName + ": Mo data for " + mFFData.getTextLog(field));
+		}
+
+		if (!mFFEngine.parseTLV(data.mid(i, size + 4), TLV))
+		{
+			return false;
+		}
+
+		mFFEngine.parseSTLVData(TLV, aPSData);
+		mFFEngine.parseTLVData (TLV, aFPData);
+
+		i += size + 4;
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -684,12 +780,7 @@ bool AFPFR::sale(const SUnitData & aUnitData)
 		<< ""                                   // единица измерения
 		<< 0.00;                                // сумма НДС за предмет расчёта
 
-	if (!processCommand(CAFPFR::Commands::Sale, commandData))
-	{
-		return false;
-	}
-
-	return true;
+	return processCommand(CAFPFR::Commands::Sale, commandData);
 }
 
 //--------------------------------------------------------------------------------

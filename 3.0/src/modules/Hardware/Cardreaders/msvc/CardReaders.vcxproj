@@ -120,12 +120,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\msvc\Common.vcxproj">
-      <Project>{70d02db7-a7cb-4d22-b13e-0c7f4eb7df86}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\CardReaderStatusCodes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\CardReaderStatusesDescriptions.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CardReaders\EMVTagData.h" />

@@ -47,15 +47,15 @@
     <ClCompile Include="..\src\Constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Par.cpp">
+      <Filter>CashAcceptor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\WarningLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CashAcceptor\CurrencyList.h">
-      <Filter>CashAcceptor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Includes\SDK\Drivers\CashAcceptor\Par.h">
       <Filter>CashAcceptor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CashAcceptor\CashAcceptorStatus.h">
@@ -141,6 +141,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\DetectingPriority.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Par.h">
+      <Filter>CashAcceptor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

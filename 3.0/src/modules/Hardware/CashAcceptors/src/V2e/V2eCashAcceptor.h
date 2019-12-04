@@ -6,7 +6,7 @@
 #include "Hardware/Protocols/CashAcceptor/V2e.h"
 
 // Project
-#include "Hardware/CashAcceptors/PortCashAcceptor.h"
+#include "Hardware/CashAcceptors/SerialCashAcceptor.h"
 
 //--------------------------------------------------------------------------------
 class V2eCashAcceptor : public TSerialCashAcceptor

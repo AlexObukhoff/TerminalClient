@@ -3,17 +3,14 @@
 #pragma once
 
 // Modules
-#include "Hardware/Common/PortPollingDeviceBase.h"
-#include "Hardware/Common/SerialDeviceBase.h"
-#include "Hardware/Dispensers/ProtoDispenser.h"
 #include "Hardware/Common/DeviceCodeSpecification.h"
-#include "../../Protocols/CashAcceptor/Puloon/src/Puloon.h"
+#include "Hardware/Protocols/Dispensers/Puloon.h"
 
 // Project
-#include "Hardware/Dispensers/DispenserBase.h"
+#include "Hardware/Dispensers/PortDispenser.h"
 
 //--------------------------------------------------------------------------------
-class PuloonLCDM : public DispenserBase<SerialDeviceBase<PortPollingDeviceBase<ProtoDispenser>>>
+class PuloonLCDM : public PortDispenser
 {
 	SET_SERIES("Puloon")
 
@@ -30,8 +27,8 @@ protected:
 	/// Попытка самоидентификации.
 	virtual bool isConnected();
 
-	/// Инициализация устройства.
-	virtual bool updateParameters();
+	/// Сброс.
+	virtual bool reset();
 
 	/// Выдать.
 	virtual void performDispense(int aUnit, int aItems);
@@ -45,9 +42,6 @@ protected:
 
 	/// Протокол.
 	Puloon mProtocol;
-
-	/// Последние девайс-коды для логгирования смены статуса.
-	QByteArray mLastDeviceStatusCodes;
 };
 
 //--------------------------------------------------------------------------------

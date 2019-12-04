@@ -110,7 +110,7 @@ bool SchedulerService::initialize()
 
 		Item item(taskName, settings, userSettings);
 
-		if (!mFactory.contains(item.type()))
+		if (!mFactory.contains(item.type()) && !mExternalTasks.contains(item.name()))
 		{
 			toLog(LogLevel::Error, QString("[%1]: Unknown task type '%2'.").arg(item.name()).arg(item.type()));
 		}
@@ -416,8 +416,18 @@ void SchedulerService::execute()
 		{
 			SchedulerService::Item & item = mItems[timer->objectName()];
 			timer->deleteLater();
+			
+			SDK::PaymentProcessor::ITask * task;
 
-			SDK::PaymentProcessor::ITask * task = mFactory[item.type()](item.name(), CScheduler::LogName, item.params());
+			// Проверим, что таск может быть пользовательским
+			if (mExternalTasks[item.name()])
+			{
+				task = mExternalTasks[item.name()];
+			}
+			else
+			{
+				task = mFactory[item.type()](item.name(), CScheduler::LogName, item.params());
+			}
 
 			if (task)
 			{
@@ -450,22 +460,25 @@ void SchedulerService::onTaskComplete(const QString & aName, bool aComplete)
 		mWorkingTasks.remove(aName);
 	}
 
-	try
+	if (task && task != mExternalTasks[aName])
 	{
-		QObject * taskObject = dynamic_cast<QObject *>(task);
-		
-		if (taskObject)
+		try
 		{
-			taskObject->deleteLater();
-		}
-		else
-		{
-			delete task;
-		}
+			QObject * taskObject = dynamic_cast<QObject *>(task);
 
-		task = nullptr;
-	}
-	catch(...) {}
+			if (taskObject)
+			{
+				taskObject->deleteLater();
+			}
+			else
+			{
+				delete task;
+			}
+
+			task = nullptr;
+		}
+		catch (...) {}
+	}	
 
 	mItems[aName].complete(aComplete);
 

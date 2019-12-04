@@ -17,9 +17,6 @@
     <ClCompile Include="..\src\CCTalk\CCTalkAcceptorBase.cpp">
       <Filter>ccTalk</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CCTalk\CCTalkModelData.cpp">
-      <Filter>ccTalk</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\CCTalk\CCTalkComplexEnableAcceptor.cpp">
       <Filter>ccTalk</Filter>
     </ClCompile>
@@ -46,19 +43,13 @@
     <ClInclude Include="..\src\CCTalk\CCTalkAcceptorBase.h">
       <Filter>ccTalk</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CCTalk\CCTalkAcceptorConstants.h">
+    <ClInclude Include="..\..\..\..\includes\Hardware\Acceptors\CCTalkAcceptorConstants.h">
       <Filter>ccTalk</Filter>
     </ClInclude>
     <ClInclude Include="..\src\CCTalk\CCTalkCurrencyData.h">
       <Filter>ccTalk</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CCTalk\CCTalkModelData.h">
-      <Filter>ccTalk</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\CCTalk\CCTalkComplexEnableAcceptor.h">
-      <Filter>ccTalk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\includes\Hardware\Acceptors\CCTalkAddresses.h">
       <Filter>ccTalk</Filter>
     </ClInclude>
   </ItemGroup>

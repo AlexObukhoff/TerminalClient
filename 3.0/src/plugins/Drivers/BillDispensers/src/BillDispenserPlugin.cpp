@@ -4,7 +4,7 @@
 #include "Hardware/Plugins/CommonParameters.h"
 
 // Project
-#include "../../../../modules/Hardware/CashDispensers/src/PuloonCashDispenser.h"
+#include "../../../../modules/Hardware/CashDispensers/src/Puloon/PuloonCashDispenser.h"
 
 using namespace SDK::Plugin;
 

@@ -523,6 +523,12 @@ SDK::PaymentProcessor::ITerminalService * ServiceController::getTerminalService(
 }
 
 //---------------------------------------------------------------------------
+SDK::PaymentProcessor::ISchedulerService * ServiceController::getSchedulerService() const
+{
+	return boost::polymorphic_cast<PP::ISchedulerService *>(mRegisteredServices.value(CServices::SchedulerService));
+}
+
+//---------------------------------------------------------------------------
 SDK::PaymentProcessor::IService * ServiceController::getService(const QString & aServiceName) const
 {
 	if (mRegisteredServices.isEmpty())

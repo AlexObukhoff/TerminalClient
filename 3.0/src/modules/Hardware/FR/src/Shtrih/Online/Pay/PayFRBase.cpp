@@ -12,7 +12,7 @@ template class PayFRBase<ShtrihOnlineFRBase<ShtrihSerialFRBase>>;
 template<class T>
 PayFRBase<T>::PayFRBase(): mPrinterModelId(0)
 {
-	mOFDFiscalParameters << CFR::FiscalFields::Cashier;
+	mOFDFiscalFields << CFR::FiscalFields::Cashier;
 }
 
 //--------------------------------------------------------------------------------

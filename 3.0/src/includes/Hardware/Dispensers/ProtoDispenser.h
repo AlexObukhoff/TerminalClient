@@ -30,7 +30,7 @@ signals:
 
 protected slots:
 	/// Применить конфигурацию кассет.
-	virtual void applyCashList() {};
+	virtual void applyUnitList() {};
 
 	/// Выдать.
 	virtual void dispense(int /*aUnit*/, int /*aItems*/) {};

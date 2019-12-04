@@ -116,14 +116,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\DispenserBase.cpp" />
-    <ClCompile Include="..\src\PuloonCashDispenser.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\src\PuloonCashDispenser.h" />
+    <ClCompile Include="..\src\Puloon\PuloonCashDispenser.cpp" />
+    <ClCompile Include="..\src\Suzo\SuzoHopper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\Dispensers\DispenserData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Dispensers\DispenserStatusCodes.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Dispensers\PortDispenser.h" />
+    <ClInclude Include="..\src\Puloon\PuloonCashDispenser.h" />
+    <ClInclude Include="..\src\Puloon\PuloonCashDispenserData.h" />
+    <ClInclude Include="..\src\Puloon\PuloonModelData.h" />
+    <ClInclude Include="..\src\Suzo\SuzoHopper.h" />
+    <ClInclude Include="..\src\Suzo\SuzoHopperData.h" />
+    <ClInclude Include="..\src\Suzo\SuzoHopperModelData.h" />
     <CustomBuild Include="..\src\DispenserBase.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">
       </Message>
@@ -144,8 +149,6 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </Command>
     </CustomBuild>
-    <ClInclude Include="..\src\ModelData.h" />
-    <ClInclude Include="..\src\PuloonCashDispenserData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

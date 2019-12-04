@@ -34,7 +34,6 @@ CCNetCashAcceptorBase::CCNetCashAcceptorBase(): mFirmware(0)
 	mPollingIntervalEnabled = CCCNet::PollingIntervals::Enabled;
 	mPollingIntervalDisabled = CCCNet::PollingIntervals::Disabled;
 	setConfigParameter(CHardware::UpdatingFilenameExtension, "ssf");
-	mForceWaitResetCompleting = false;
 	mResetWaiting = EResetWaiting::Available;
 	mCurrencyCode = Currency::NoCurrency;
 	setConfigParameter(CHardwareSDK::WaitUpdatingTimeout, CCCNet::WaitUpdatingTimeout);
@@ -472,47 +471,6 @@ bool CCNetCashAcceptorBase::loadParTable()
 		MutexLocker locker(&mResourceMutex);
 
 		mEscrowParTable.data().insert(i, SPar(nominal, currency, deviceType));
-	}
-
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-void CCNetCashAcceptorBase::updateFirmware(const QByteArray & aBuffer)
-{
-	if (!isWorkingThread())
-	{
-		QMetaObject::invokeMethod(this, "updateFirmware", Qt::QueuedConnection, Q_ARG(const QByteArray &, aBuffer));
-
-		return;
-	}
-
-	bool result = performUpdateFirmware(aBuffer);
-
-	if (result)
-	{
-		mForceWaitResetCompleting = true;
-		reset(false);
-		mForceWaitResetCompleting = false;
-	}
-
-	emit updated(result); 
-}
-
-//--------------------------------------------------------------------------------
-bool CCNetCashAcceptorBase::canUpdateFirmware()
-{
-	if (!isDeviceReady())
-	{
-		return false;
-	}
-
-	MutexLocker locker(&mResourceMutex);
-
-	if (isEnabled() && !setEnable(false))
-	{
-		toLog(LogLevel::Error, mDeviceName + ": Failed to disable for updating the firmware due to incorrect state of cash acceptor");
-		return false;
 	}
 
 	return true;

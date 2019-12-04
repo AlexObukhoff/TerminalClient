@@ -110,6 +110,8 @@ bool LibUSBPort::open()
 		return false;
 	}
 
+	setConfigParameter(CHardware::Port::JustConnected, false);
+
 	if (!LIB_USB_CALL_LOG(mLog, libusb_open, mDevice, &mHandle))
 	{
 		return false;
@@ -120,7 +122,7 @@ bool LibUSBPort::open()
 
 	auto getData = [&deviceData] (const QString & aKey) -> QString { return deviceData.value(aKey).toString().simplified(); };
 	auto getFullData = [&deviceData, &getData] (const QString & aKey1, const QString & aKey2) -> QString
-		{ QString result = QString("%1 = %2").arg(aKey1).arg(getData(aKey1)); QString option = getData(aKey2);
+		{ QString result = QString("%1 = %2").arg(aKey1.toUpper()).arg(getData(aKey1)); QString option = getData(aKey2);
 			return option.isEmpty() ? result : QString("%1 (%2)").arg(result).arg(option); };
 
 	toLog(LogLevel::Normal, QString("%1 with device %2 and %3 is opened")
@@ -154,11 +156,17 @@ bool LibUSBPort::open()
 bool LibUSBPort::close()
 {
 	bool result = true;
+	bool beenOpened = mHandle;
 
 	if (!mInitializationError && mHandle)
 	{
 		result = LIB_USB_CALL(libusb_release_interface, mHandle, 0);
 		libusb_close(mHandle);
+	}
+
+	if (result && beenOpened)
+	{
+		toLog(LogLevel::Normal, QString("Port %1 is closed.").arg(getDevicesProperties(false)[mDevice].portData));
 	}
 
 	mHandle = nullptr;
@@ -167,9 +175,9 @@ bool LibUSBPort::close()
 }
 
 //--------------------------------------------------------------------------------
-bool LibUSBPort::checkReady()
+bool LibUSBPort::checkExistence()
 {
-	if (mExist)
+	if (isExist())
 	{
 		return true;
 	}
@@ -178,7 +186,28 @@ bool LibUSBPort::checkReady()
 
 	if (!mExist)
 	{
-		toLog(LogLevel::Error, "Port does not exist.");
+		if (mDevice)
+		{
+			toLog(LogLevel::Error, "Port does not exist.");
+		}
+
+		return false;
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+bool LibUSBPort::checkReady()
+{
+	if (!checkExistence())
+	{
+		return false;
+	}
+
+	if (!mHandle && !open())
+	{
+		toLog(LogLevel::Error, "Port does not opened.");
 		return false;
 	}
 
@@ -281,41 +310,38 @@ bool LibUSBPort::performWrite(const QByteArray & aData)
 }
 
 //--------------------------------------------------------------------------------
-TResult LibUSBPort::processAnswer(const QString & aFunctionName, int aResult)
+TResult LibUSBPort::handleResult(const QString & aFunctionName, int aResult)
 {
-	return LibUSBUtils::logAnswer(aFunctionName, aResult, mLog);
+	TResult result = LibUSBUtils::logAnswer(aFunctionName, aResult, mLog);
 
-	/*
-	if (CAsyncSerialPort::DisappearingErrors.contains(mLastError))
-	{
-		mSystemNames = getSystemData(true).keys();
-	}
-
-	if (!mSystemNames.contains(mSystemName))
+	if (CLibUSBPort::DisappearingErrors.contains(aResult) && !getDevicesProperties(true).contains(mDevice))
 	{
 		close();
 
 		mExist = false;
 	}
-	*/
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
 bool LibUSBPort::deviceConnected()
 {
 	CLibUSB::TDeviceProperties devicesProperties = getDevicesProperties(true);
-	bool result = (devicesProperties.size() > mDevicesProperties.size()) && !mDevicesProperties.isEmpty();
+	int result = (devicesProperties.size() - mDevicesProperties.size()) * mDevicesProperties.size();
 
 	mDevicesProperties = devicesProperties;
 
-	if (result)
+	if (result > 0)
 	{
-		checkReady();
+		setConfigParameter(CHardware::Port::JustConnected, true);
 
-		setDeviceConfiguration(getDeviceConfiguration());
+		return true;
 	}
 
-	return result;
+	checkExistence();
+
+	return false;
 };
 
 //--------------------------------------------------------------------------------
@@ -331,7 +357,7 @@ CLibUSB::TDeviceProperties LibUSBPort::getDevicesProperties(bool aForce)
 
 	static CLibUSB::TDeviceProperties properties;
 
-	if ((!properties.isEmpty() && !aForce) || !LibUSBUtils::getDevicesProperties(properties))
+	if ((!properties.isEmpty() && !aForce) || !LibUSBUtils::getDevicesProperties(properties, aForce))
 	{
 		return properties;
 	}

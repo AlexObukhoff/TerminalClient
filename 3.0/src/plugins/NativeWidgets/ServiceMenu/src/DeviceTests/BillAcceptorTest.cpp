@@ -3,6 +3,8 @@
 // Project
 #include "BillAcceptorTest.h"
 
+using namespace SDK::Driver;
+
 //------------------------------------------------------------------------------
 namespace CBillAcceptorTest
 {
@@ -10,9 +12,11 @@ namespace CBillAcceptorTest
 }
 
 //------------------------------------------------------------------------------
-BillAcceptorTest::BillAcceptorTest(SDK::Driver::IDevice * aDevice) : mRejected(false)
+BillAcceptorTest::BillAcceptorTest(IDevice * aDevice)
 {
-	mBillAcceptor = dynamic_cast<SDK::Driver::ICashAcceptor *>(aDevice);
+	mBillAcceptor = dynamic_cast<ICashAcceptor *>(aDevice);
+
+	connect(&mErasingTimer, SIGNAL(timeout()), this, SLOT(onEraseMessage()));
 }
 
 //------------------------------------------------------------------------------
@@ -24,23 +28,42 @@ QList<QPair<QString, QString>> BillAcceptorTest::getTestNames() const
 //------------------------------------------------------------------------------
 bool BillAcceptorTest::run(const QString & aName)
 {
-	if (aName == CBillAcceptorTest::TestEscrow)
+	if ((aName != CBillAcceptorTest::TestEscrow) || !mBillAcceptor->isDeviceReady())
 	{
-		if (mBillAcceptor->isDeviceReady() && mBillAcceptor->setEnable(true))
-		{
-			mBillAcceptor->subscribe(SDK::Driver::ICashAcceptor::EscrowSignal, this, SLOT(onEscrow(SDK::Driver::SPar)));
-			mBillAcceptor->subscribe(SDK::Driver::ICashAcceptor::StatusSignal, this, SLOT(onStatusChanged(SDK::Driver::EWarningLevel::Enum, const QString &, int)));
-			return true;
-		}
+		return false;
 	}
 
-	return false;
+	mBillAcceptor->subscribe(SDK::Driver::ICashAcceptor::EscrowSignal, this, SLOT(onEscrow(SDK::Driver::SPar)));
+	mBillAcceptor->subscribe(SDK::Driver::ICashAcceptor::StatusSignal, this, SLOT(onStatusChanged(SDK::Driver::EWarningLevel::Enum, const QString &, int)));
+
+	mWorkingParList = mBillAcceptor->getParList();
+	TParList testParList(mWorkingParList);
+
+	for (int i = 0; i < testParList.size(); ++i)
+	{
+		testParList[i].enabled = true;
+	}
+
+	if (!isParListEqual(testParList, mWorkingParList))
+	{
+		mBillAcceptor->setParList(testParList);
+	}
+
+	return mBillAcceptor->setEnable(true);
 }
 
 //------------------------------------------------------------------------------
 void BillAcceptorTest::stop()
 {
+	mErasingTimer.stop();
+
 	mBillAcceptor->setEnable(false);
+	TParList testParList = mBillAcceptor->getParList();
+
+	if (!isParListEqual(testParList, mWorkingParList))
+	{
+		mBillAcceptor->setParList(mWorkingParList);
+	}
 
 	mBillAcceptor->unsubscribe(SDK::Driver::ICashAcceptor::EscrowSignal, this);
 }
@@ -58,24 +81,43 @@ bool BillAcceptorTest::hasResult()
 }
 
 //------------------------------------------------------------------------------
-void BillAcceptorTest::onEscrow(SDK::Driver::SPar aPar)
+void BillAcceptorTest::onEscrow(SPar aPar)
 {
-	emit result("", QString("%1 %2").arg(tr("#bill_is_escrowed")).arg(aPar.nominal));
+	QString message = QString("%1 %2").arg(tr("#bill_is_escrowed")).arg(aPar.nominal);
+
+	for (int i = 0; i < mWorkingParList.size(); ++i)
+	{
+		if ((mWorkingParList[i] == aPar) && !mWorkingParList[i].enabled)
+		{
+			message += QString(" (%1)").arg(tr("#disabled"));
+		}
+	}
+
+	mErasingTimer.stop();
+
+	emit result("", message);
+
+	mErasingTimer.start(CBillAcceptorTest::EscrowMessageTimeout);
 
 	// Выбрасываем купюру
-	mRejected = true;
 	mBillAcceptor->reject();
 }
 
 //------------------------------------------------------------------------------
-void BillAcceptorTest::onStatusChanged(SDK::Driver::EWarningLevel::Enum, const QString &, int aParam)
+void BillAcceptorTest::onEraseMessage()
 {
-	if (mRejected && SDK::Driver::ECashAcceptorStatus::Rejected == aParam)
+	emit result("", " ");
+}
+
+//------------------------------------------------------------------------------
+void BillAcceptorTest::onStatusChanged(EWarningLevel::Enum aWarningLevel, const QString & aTranslation, int aStatus)
+{
+	if ((aStatus == ECashAcceptorStatus::Cheated) || (aWarningLevel == EWarningLevel::Error))
 	{
-		emit result("", tr("#bill_is_rejected"));
+		mErasingTimer.stop();
+
+		emit result("", aTranslation);
 	}
-	
-	mRejected = false;
 }
 
 //------------------------------------------------------------------------------

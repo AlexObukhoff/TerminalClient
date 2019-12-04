@@ -75,6 +75,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Atol3FRProtocol", "Hardware
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Atol2FRProtocol", "Hardware\Protocols\FR\Atol2\Atol2FRProtocol.vcxproj", "{8912050F-921E-4480-9597-55D7B8B08831}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CashDevices", "Hardware\CashDevices\msvc\CashDevices.vcxproj", "{0EE1C60B-03A4-4832-B28C-0F70365B5700}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -271,6 +273,12 @@ Global
 		{8912050F-921E-4480-9597-55D7B8B08831}.Release|Win32.Build.0 = Release|Win32
 		{8912050F-921E-4480-9597-55D7B8B08831}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
 		{8912050F-921E-4480-9597-55D7B8B08831}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
+		{0EE1C60B-03A4-4832-B28C-0F70365B5700}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0EE1C60B-03A4-4832-B28C-0F70365B5700}.Debug|Win32.Build.0 = Debug|Win32
+		{0EE1C60B-03A4-4832-B28C-0F70365B5700}.Release|Win32.ActiveCfg = Release|Win32
+		{0EE1C60B-03A4-4832-B28C-0F70365B5700}.Release|Win32.Build.0 = Release|Win32
+		{0EE1C60B-03A4-4832-B28C-0F70365B5700}.ReleaseWithDebugInfo|Win32.ActiveCfg = ReleaseWithDebugInfo|Win32
+		{0EE1C60B-03A4-4832-B28C-0F70365B5700}.ReleaseWithDebugInfo|Win32.Build.0 = ReleaseWithDebugInfo|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -302,6 +310,7 @@ Global
 		{BFDBBDE8-7E2A-44BF-8276-CAAA4D5F5CDE} = {AA61BBE3-7987-4E4B-9B31-EC490F6004C0}
 		{2B969FB3-3709-409D-BA4D-DCCD975B2F18} = {AA61BBE3-7987-4E4B-9B31-EC490F6004C0}
 		{8912050F-921E-4480-9597-55D7B8B08831} = {AA61BBE3-7987-4E4B-9B31-EC490F6004C0}
+		{0EE1C60B-03A4-4832-B28C-0F70365B5700} = {FEE80E00-C155-453F-B1A0-1411BF8A2A54}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		QtVersion = $(DefaultQtVersion)

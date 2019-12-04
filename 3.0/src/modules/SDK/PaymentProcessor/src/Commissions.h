@@ -9,10 +9,14 @@
 #include <QtCore/QTime>
 #include <QtCore/QSet>
 #include <QtCore/QVariantMap>
+#include <QtCore/QWeakPointer>
 #include <Common/QtHeadersEnd.h>
 
 // Common
 #include <Common/PropertyTree.h>
+
+//----------------------------------------------------------------------------
+class QJsonArray;
 
 namespace SDK {
 namespace PaymentProcessor {
@@ -107,6 +111,8 @@ protected:
 	/// Конструирование готового объекта по переданным настройкам.
 	static Commission fromSettings(const TPtree & aSettings);
 
+	static Commission fromVariant(const QVariant & aCommissions);
+
 private:
 	double mValue;
 	double mAbove;
@@ -139,6 +145,8 @@ protected:
 
 	static CommissionList fromSettings(const TPtree & aSettings);
 
+	static CommissionList fromVariant(const QVariant & aCommissions);
+
 private:
 	TCommissions mCommissions;
 };
@@ -160,6 +168,8 @@ protected:
 
 	static CommissionByTimeList fromSettings(const TPtree & aSettings);
 
+	static CommissionByTimeList fromVariant(const QVariant & aCommissions);
+
 private:
 	QTime mBegin;
 	QTime mEnd;
@@ -180,6 +190,8 @@ protected:
 	bool query(double aSum, Commission & aCommission) const;
 
 	static CommissionByDayList fromSettings(const TPtree & aSettings);
+
+	static CommissionByDayList fromVariant(const QVariant & aCommissions);
 
 private:
 	QSet<Commission::Day> mDays;
@@ -209,6 +221,8 @@ public:
 	double getValue(double aAmount, double aAmountAll);
 
 	static ProcessingCommission fromSettings(const TPtree & aSettings);
+
+	static ProcessingCommission fromVariant(const QVariant & aCommissions);
 
 	/// Проверка на пустую комиссию
 	bool isNull() const;
@@ -260,14 +274,25 @@ public:
 	/// Если во время загрузки комиссий произошла ошибка, то этот метод вернёт false.
 	bool isValid() const;
 
+	/// Проверить, есть ли настройки для конктрентого оператора
+	/// Флаг позволяет выбрать, надо ли проверять комиссию процессинга
+	bool contains(qint64 aProvider, bool aCheckProcessing = false);
+
 	/// Чтение комиссий из настроек.
 	static Commissions fromSettings(const TPtree & aSettings);
+
+	/// Чтение комиссий из настроек.
+	static Commissions fromVariant(const QVariantList & aCommissions);
 
 	/// Дополнить комиссии недостающими элементами из настроек
 	void appendFromSettings(const TPtree & aSettings);
 
+	/// Сбросить состояние
+	void clear();
+
 protected:
 	SComplexCommissions loadCommissions(const TPtree & aBranch);
+	SComplexCommissions loadCommissions(const QVariant & aCommissions);
 
 private:
 	bool mIsValid;

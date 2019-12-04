@@ -14,11 +14,6 @@
 
 using namespace SDK::Driver;
 
-//-------------------------------------------------------------------------------
-template class CashAcceptorBase<SerialDeviceBase<PortPollingDeviceBase<ProtoCashAcceptor>>>;
-template class CashAcceptorBase<PortPollingDeviceBase<ProtoCashAcceptor>>;
-template class CashAcceptorBase<DeviceBase<ProtoCashAcceptor>>;
-
 //---------------------------------------------------------------------------
 template <class T>
 CashAcceptorBase<T>::CashAcceptorBase()
@@ -302,6 +297,26 @@ void CashAcceptorBase<T>::setParList(const TParList & aParList)
 	mParList = aParList;
 
 	START_IN_WORKING_THREAD(employParList)
+}
+
+//---------------------------------------------------------------------------
+template <class T>
+TParList CashAcceptorBase<T>::getParList()
+{
+	MutexLocker parListLocker(&mParListMutex);
+	MutexLocker resourceLocker(&mResourceMutex);
+
+	TParList parList = mEscrowParTable.data().values();
+
+	foreach (const SPar & par, mParList)
+	{
+		if (!parList.contains(par))
+		{
+			parList << par;
+		}
+	}
+
+	return parList;
 }
 
 //---------------------------------------------------------------------------

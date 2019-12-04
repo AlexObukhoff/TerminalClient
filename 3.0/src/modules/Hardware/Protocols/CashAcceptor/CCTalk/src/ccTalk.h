@@ -6,7 +6,7 @@
 #include "Hardware/Common/ProtocolBase.h"
 
 // Project
-#include "Hardware/Acceptors/CCTalkData.h"
+#include "Hardware/CashDevices/CCTalkData.h"
 
 //--------------------------------------------------------------------------------
 namespace CCCTalk

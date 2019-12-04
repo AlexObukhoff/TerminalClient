@@ -28,6 +28,7 @@ KasbiFRBase::KasbiFRBase()
 	mFFDFR = EFFD::F105;
 	mNextReceiptProcessing = false;
 	setConfigParameter(CHardwareSDK::CanOnline, true);
+	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, true);
 
 	mFFEngine.addData(CKasbiFR::FiscalFields::Data().data());
 
@@ -49,10 +50,9 @@ void KasbiFRBase::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	TSerialFRBase::setDeviceConfiguration(aConfiguration);
 
-	bool notPrinting = getConfigParameter(CHardwareSDK::FR::WithoutPrinting) == CHardwareSDK::Values::Use;
 	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel, CKasbiPrinters::Default).toString();
 
-	if (aConfiguration.contains(CHardware::FR::PrinterModel) && (printerModel != CKasbiPrinters::Default) && !notPrinting)
+	if (aConfiguration.contains(CHardware::FR::PrinterModel) && (printerModel != CKasbiPrinters::Default) && !isNotPrinting())
 	{
 		mPPTaskList.append([&] () { mNotPrintingError = !setNotPrintDocument(false); });
 	}
@@ -210,20 +210,24 @@ bool KasbiFRBase::checkPrintingParameters(const CFR::TTLVList & aRequiredTLVs)
 		setDeviceParameter(CHardware::Port::COM::BaudRate, baudrate, CHardware::FR::PrinterModel);
 	}
 
-	CFR::TTLVList oldTLVs(TLVs);
+	QVariantMap oldFFData;
+	mFFEngine.parseTLVDataList(TLVs, oldFFData);
 
 	for (auto it = aRequiredTLVs.begin(); it != aRequiredTLVs.end(); ++it)
 	{
 		TLVs.insert(it.key(), it.value());
 	}
 
-	if (oldTLVs != TLVs)
+	QVariantMap FFData;
+	mFFEngine.parseTLVDataList(TLVs, FFData);
+
+	if (oldFFData != FFData)
 	{
 		QByteArray commandData;
 
-		foreach (int field, TLVs.keys())
+		for (auto it = FFData.begin(); it != FFData.end(); ++it)
 		{
-			commandData += mFFEngine.getTLVData(field, TLVs[field]);
+			commandData += mFFEngine.getTLVData(it.key(), it.value());
 		}
 
 		if (!processCommand(CKasbiFR::Commands::SetPrintingParameters, commandData))
@@ -623,24 +627,38 @@ bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData
 	QString cashierINN  = mFFEngine.getConfigParameter(CFiscalSDK::CashierINN).toString();
 	QString userContact = mFFEngine.getConfigParameter(CFiscalSDK::UserContact).toString();
 
-	if (!cashier.isEmpty())     commandData += mFFEngine.getTLVData(CFR::FiscalFields::Cashier, cashier);
-	if (!cashierINN.isEmpty())  commandData += mFFEngine.getTLVData(CFR::FiscalFields::CashierINN, cashier);
-	if (!userContact.isEmpty()) commandData += mFFEngine.getTLVData(CFR::FiscalFields::UserContact, userContact);
+	if (!cashier.isEmpty())     commandData += mFFEngine.getTLVData(CFR::FiscalFields::Cashier);
+	if (!cashierINN.isEmpty())  commandData += mFFEngine.getTLVData(CFR::FiscalFields::CashierINN);
+	if (!userContact.isEmpty()) commandData += mFFEngine.getTLVData(CFR::FiscalFields::UserContact);
 
 	result = result && processCommand(CKasbiFR::Commands::Total, commandData);
-
-	if (aPaymentData.agentFlag != EAgentFlags::None)
+		if (aPaymentData.agentFlag != EAgentFlags::None)
 	{
-		commandData =
-			mFFEngine.getTLVData(CFR::FiscalFields::AgentFlagsReg, char(aPaymentData.agentFlag)) +
-			mFFEngine.getTLVData(CFR::FiscalFields::AgentPhone) +
-			mFFEngine.getTLVData(CFR::FiscalFields::AgentOperation,  " ") +
-			mFFEngine.getTLVData(CFR::FiscalFields::ProcessingPhone, " ") +
-			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorName) +
-			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorINN) +
-			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorAddress) +
-			mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorPhone) +
-			mFFEngine.getTLVData(CFR::FiscalFields::ProviderPhone);
+		commandData = mFFEngine.getTLVData(CFR::FiscalFields::AgentFlagsReg);
+
+		bool isBankAgent    = CFR::isBankAgent(aPaymentData.agentFlag);
+		bool isPaymentAgent = CFR::isPaymentAgent(aPaymentData.agentFlag);
+
+		if (isBankAgent)
+		{
+			commandData +=
+				mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorAddress) +
+				mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorINN) +
+				mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorName) +
+				mFFEngine.getTLVData(CFR::FiscalFields::AgentOperation) +
+				mFFEngine.getTLVData(CFR::FiscalFields::TransferOperatorPhone);
+		}
+		else if (isPaymentAgent)
+		{
+			commandData += mFFEngine.getTLVData(CFR::FiscalFields::ProcessingPhone);
+		}
+
+		if (isBankAgent || isPaymentAgent)
+		{
+			commandData +=
+				mFFEngine.getTLVData(CFR::FiscalFields::AgentPhone) +
+				mFFEngine.getTLVData(CFR::FiscalFields::ProviderPhone);
+		}
 
 		result = result && processCommand(CKasbiFR::Commands::SendAgentData, commandData);
 	}
@@ -690,27 +708,30 @@ bool KasbiFRBase::processXReport()
 //--------------------------------------------------------------------------------
 bool KasbiFRBase::setNotPrintDocument(bool aEnabled, bool /*aZReport*/)
 {
-	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel).toString();
-	char printerModelKey = CKasbiPrinters::Virtual;
-
 	if (!aEnabled)
 	{
-		if (!CKasbiPrinters::Models.data().values().contains(printerModel))
-		{
-			toLog(LogLevel::Error, mDeviceName + ": Unknown printer model " + printerModel);
-			return false;
-		}
+		return true;
+	}
 
-		printerModelKey = CKasbiPrinters::Models.data().key(printerModel);
+	// TODO: ждем функционала по запросу реальной актуальной модели принтера в ПО ФР
+	/*
+	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel).toString();
 
-		// TODO: ждем функционала по запросу реальной актуальной модели принтера в ПО ФР
-		/*
-		if (!printerModelKey)
-		{
-			toLog(LogLevel::Error, mDeviceName + ": Cannot set auto printer model due to it is not allowed");
-			return false;
-		}
-		*/
+	if (!CKasbiPrinters::Models.data().values().contains(printerModel))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Unknown printer model " + printerModel);
+		return false;
+	}
+
+	char printerModelKey = CKasbiPrinters::Models.data().key(printerModel);
+	*/
+
+	char printerModelKey = CKasbiPrinters::Virtual;
+
+	if (!printerModelKey)
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Cannot set auto printer model due to it is not allowed");
+		return false;
 	}
 
 	CFR::TTLVList requiredPrinterModelData;

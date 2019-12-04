@@ -8,6 +8,9 @@
 #include <QtCore/QByteArray>
 #include <Common/QtHeadersEnd.h>
 
+// Common
+#include <Common/ILog.h>
+
 // Modules
 #include "Hardware/Common/ASCII.h"
 
@@ -33,6 +36,9 @@ namespace ProtocolUtils
 
 	/// Получить массив байтов по строке лога.
 	QByteArray getBufferFromString(QString aData);
+
+	/// Проверить массив байтов в текстовом представлении.
+	bool checkBufferString(QString aData, QString * aLog = nullptr);
 
 	/// Получить список из массивов байтов по массиву строк.
 	typedef QList<QByteArray> TBufferList;

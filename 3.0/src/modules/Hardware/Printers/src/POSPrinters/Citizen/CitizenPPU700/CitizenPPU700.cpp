@@ -6,10 +6,7 @@
 
 //--------------------------------------------------------------------------------
 template class SerialPOSPrinter<CitizenPPU700<TSerialPrinterBase>>;
-template class                  CitizenPPU700<TLibUSBPrinterBase>;
-
 template class SerialPOSPrinter<CitizenPPU700II<TSerialPrinterBase>>;
-template class                  CitizenPPU700II<TLibUSBPrinterBase>;
 
 //--------------------------------------------------------------------------------
 template<class T>
@@ -137,9 +134,10 @@ void CitizenPPU700<T>::setDeviceConfiguration(const QVariantMap & aConfiguration
 	int lineSpacing = getConfigParameter(CHardware::Printer::Settings::LineSpacing).toInt();
 
 	int feeding = 4;
-	     if (lineSpacing >= 50) feeding = 1;
-	else if (lineSpacing >= 24) feeding = 2;
-	else if (lineSpacing >=  8) feeding = 3;
+	     if (lineSpacing >= 202) feeding = 0;
+	else if (lineSpacing >= 102) feeding = 1;
+	else if (lineSpacing >=  72) feeding = 2;
+	else if (lineSpacing >=  52) feeding = 3;
 
 	setConfigParameter(CHardware::Printer::FeedingAmount, feeding);
 }

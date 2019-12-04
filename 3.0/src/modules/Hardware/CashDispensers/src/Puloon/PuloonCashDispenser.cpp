@@ -8,7 +8,7 @@
 // Project
 #include "PuloonCashDispenser.h"
 #include "PuloonCashDispenserData.h"
-#include "ModelData.h"
+#include "PuloonModelData.h"
 
 using namespace SDK::Driver;
 using namespace SDK::Driver::IOPort::COM;
@@ -25,9 +25,6 @@ PuloonLCDM::PuloonLCDM()
 
 	// данные устройства
 	mDeviceName = CPuloonLCDM::Models::Data.getDefault().name;
-	mIOMessageLogging = ELoggingType::None;
-	mMaxBadAnswers = 2;
-	mPollingInterval = CPuloonLCDM::IdlingPollingInterval;
 }
 
 //---------------------------------------------------------------------------
@@ -189,9 +186,9 @@ void PuloonLCDM::logStatusChanging(const SDeviceCodeSpecification & aStatusSpeci
 }
 
 //--------------------------------------------------------------------------------
-bool PuloonLCDM::updateParameters()
+bool PuloonLCDM::reset()
 {
-	return DispenserBase::updateParameters() && processCommand(CPuloonLCDM::Commands::Reset);
+	return processCommand(CPuloonLCDM::Commands::Reset);
 }
 
 //--------------------------------------------------------------------------------
@@ -265,10 +262,7 @@ void PuloonLCDM::performDispense(int aUnit, int aItems)
 		{
 			if ((answer.size() > 4) && ((answer[4] == CPuloonLCDM::UpperUnitEmpty) || (answer[4] == CPuloonLCDM::LowerUnitEmpty)))
 			{
-				mUnitData[aUnit] = 0;
-				toLog(LogLevel::Warning, QString("%1: Send emptied unit %2").arg(mDeviceName).arg(aUnit));
-
-				emit unitEmpty(aUnit);
+				emitUnitEmpty(aUnit);
 			}
 
 			dispensedItems += answer.mid(2, 2).toInt();
@@ -276,7 +270,7 @@ void PuloonLCDM::performDispense(int aUnit, int aItems)
 
 			if (rejectedItems)
 			{
-				toLog(LogLevel::Warning, QString("%1: Send rejected %2 notes from %3 unit").arg(mDeviceName).arg(rejectedItems).arg(aUnit));
+				toLog(LogLevel::Warning, mDeviceName + QString(": emit rejected %1 notes from %2 unit").arg(rejectedItems).arg(aUnit));
 
 				emit rejected(aUnit, rejectedItems);
 			}
@@ -288,9 +282,7 @@ void PuloonLCDM::performDispense(int aUnit, int aItems)
 		}
 	}
 
-	toLog(LogLevel::Normal, QString("%1: Send dispensed %2 notes from %3 unit").arg(mDeviceName).arg(dispensedItems).arg(aUnit));
-
-	emit dispensed(aUnit, dispensedItems);
+	emitDispensed(aUnit, dispensedItems);
 }
 
 //--------------------------------------------------------------------------------

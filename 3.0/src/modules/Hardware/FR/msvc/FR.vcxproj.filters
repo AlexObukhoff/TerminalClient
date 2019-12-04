@@ -212,6 +212,9 @@
     <ClCompile Include="..\src\Base\FSSerialData.cpp">
       <Filter>Base\FS serial data</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Base\FiscalFieldDescriptions.cpp">
+      <Filter>Base\FFEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\Protocols\FR\FiscalChequeStates.h">
@@ -397,9 +400,6 @@
     <ClInclude Include="..\src\Shtrih\Online\ShtrihTCPFRBase.h">
       <Filter>Shtrih\Online</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h">
-      <Filter>Base\FFEngine</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Base\FFEngine.h">
       <Filter>Base\FFEngine</Filter>
     </ClInclude>
@@ -456,6 +456,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Base\FSSerialData.h">
       <Filter>Base\FS serial data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FFDataTypes.h">
+      <Filter>Base\FFEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base\FiscalFieldDescriptions.h">
+      <Filter>Base\FFEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

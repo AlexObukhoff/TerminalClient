@@ -372,6 +372,12 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\USBDeviceModelDataTypes.h">
       <Filter>Port\USB</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ConfigCleaner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ContainerProxy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\locale\common_ru.ts">
@@ -381,9 +387,6 @@
       <Filter>Translation Files</Filter>
     </None>
     <None Include="..\src\locale\common_kk.ts">
-      <Filter>Translation Files</Filter>
-    </None>
-    <None Include="common_de.ts">
       <Filter>Translation Files</Filter>
     </None>
   </ItemGroup>

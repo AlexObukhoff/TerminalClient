@@ -7,6 +7,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariantMap>
 #include <QtCore/QStringList>
+#include <QtCore/QWeakPointer>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -216,6 +217,17 @@ private:
 };
 
 //------------------------------------------------------------------------------
+class IProviderProvider
+{
+public:
+	virtual ~IProviderProvider() {}
+
+public:
+	virtual QList<qint64> getId() const = 0;
+	virtual SProvider getProvider(qint64 aProviderId) = 0;
+};
+
+//------------------------------------------------------------------------------
 class PaymentService : public QObject
 {
 	Q_OBJECT
@@ -356,6 +368,12 @@ public slots:
 	/// Признак, что текущий шаг - последний
 	bool isFinalStep();
 
+	///
+	void setExternalCommissions(const QVariantList & aCommissions);
+
+	///
+	void resetExternalCommissions();
+
 public:
 	/// Получение списка полей для интерфейса в многошаговом шлюзе
 	bool loadFieldsForStep(TProviderFields & aFields);
@@ -378,6 +396,9 @@ signals:
 	/// Обновление суммы сдачи
 	void changeUpdated(double aAmount);
 
+public:
+	void addProviderProvider(QWeakPointer<IProviderProvider> aProvider);
+
 private:
 	ICore * mCore;
 	IPaymentService * mPaymentService;
@@ -398,6 +419,8 @@ private:
 
 private:
 	QList<SDK::PaymentProcessor::SBlockByNote> mBlockNotesList;
+	typedef QList<QWeakPointer<IProviderProvider>> TProviderProvider;
+	TProviderProvider mProviderProviders;
 };
 
 //------------------------------------------------------------------------------

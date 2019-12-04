@@ -12,7 +12,6 @@ Project {
 		Depends { name: "HardwareFR" }
 		Depends { name: "OPOSSDK" }
 		Depends { name: "SysUtils" }
-		Depends { name: "HardwareIOPorts" }
 
 		files: [
 			"../../../includes/Common/CoreVersion.rc",

@@ -7,27 +7,27 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
-#include "Hardware/Dispensers/DispenserData.h"
 #include "Hardware/Dispensers/DispenserStatusesDescriptions.h"
-
-#include "Hardware/Dispensers/ProtoDispenser.h"
-#include "Hardware/Common/PortPollingDeviceBase.h"
-#include "Hardware/Common/SerialDeviceBase.h"
+#include "Hardware/CashAcceptors/CashAcceptorStatusesDescriptions.h"
 
 // Project
 #include "DispenserBase.h"
 
 using namespace SDK::Driver;
 
-//-------------------------------------------------------------------------------
-template class DispenserBase<SerialDeviceBase<PortPollingDeviceBase<ProtoDispenser>>>;
-template class DispenserBase<DeviceBase<ProtoDispenser>>;
-
 //---------------------------------------------------------------------------
 template <class T>
-DispenserBase<T>::DispenserBase() : mUnits(0), mNeedGetUnits(false), mCashError(false)
+DispenserBase<T>::DispenserBase() : mUnits(0), mNeedGetUnits(false), mUnitError(false)
 {
+	// описатель статус-кодов
 	mStatusCodesSpecification = DeviceStatusCode::PSpecifications(new DispenserStatusCode::CSpecifications());
+	DeviceStatusCode::PSpecifications billAcceptorStatusCodeSpecification = DeviceStatusCode::PSpecifications(new BillAcceptorStatusCode::CSpecifications());
+	QMap<int, SStatusCodeSpecification> billAcceptorStatusCodeData = billAcceptorStatusCodeSpecification->data();
+
+	for (auto it = billAcceptorStatusCodeData.begin(); it != billAcceptorStatusCodeData.end(); ++it)
+	{
+		mStatusCodesSpecification->data().insert(it.key(), it.value());
+	}
 
 	// восстановимые ошибки
 	mRecoverableErrors.insert(DispenserStatusCode::Error::AllUnitsEmpty);
@@ -37,39 +37,59 @@ DispenserBase<T>::DispenserBase() : mUnits(0), mNeedGetUnits(false), mCashError(
 template <class T>
 bool DispenserBase<T>::updateParameters()
 {
-	adjustCashList(mCashError || mUnitData.isEmpty());
+	processDeviceData();
+	adjustUnitList(mUnitError || mUnitData.isEmpty());
 
-	return mUnits;
+	if (!mUnits)
+	{
+		toLog(LogLevel::Error, mDeviceName + ": No units.");
+		return false;
+	}
+
+	if (!reset())
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to reset.");
+		return false;
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool DispenserBase<T>::reset()
+{
+	return true;
 }
 
 //---------------------------------------------------------------------------
 template <class T>
-void DispenserBase<T>::setCashList(const TUnitData & aUnitData)
+void DispenserBase<T>::setUnitList(const TUnitData & aUnitData)
 {
 	mUnitConfigData = aUnitData;
 
-	applyCashList();
+	applyUnitList();
 }
 
 //---------------------------------------------------------------------------
 template <class T>
-void DispenserBase<T>::applyCashList()
+void DispenserBase<T>::applyUnitList()
 {
-	START_IN_WORKING_THREAD(applyCashList)
+	START_IN_WORKING_THREAD(applyUnitList)
 
 	if (!mUnitConfigData.isEmpty())
 	{
-		adjustCashList(true);
+		adjustUnitList(true);
 	}
 }
 
 //---------------------------------------------------------------------------
 template <class T>
-void DispenserBase<T>::adjustCashList(bool aConfigData)
+void DispenserBase<T>::adjustUnitList(bool aConfigData)
 {
-	mCashError = !mUnits;
+	mUnitError = !mUnits;
 
-	if (!mCashError)
+	if (!mUnitError)
 	{
 		TUnitData & unitData = aConfigData ? mUnitConfigData : mUnitData;
 		mUnitData = unitData.mid(0, mUnits);
@@ -87,12 +107,29 @@ void DispenserBase<T>::adjustCashList(bool aConfigData)
 			if ((mStatusCollection.contains(CDispenser::StatusCodes::Data[i].empty) ||
 			     mStatusCollection.contains(DispenserStatusCode::Error::AllUnitsEmpty)) && unitData[i])
 			{
-				toLog(LogLevel::Warning, QString("%1: Send emptied unit %2 during status filtration").arg(mDeviceName).arg(i));
-
-				emit unitEmpty(i);
+				emitUnitEmpty(i, " during status filtration");
 			}
 		}
 	}
+}
+
+//---------------------------------------------------------------------------
+template <class T>
+void DispenserBase<T>::emitUnitEmpty(int aUnit, const QString & aLog)
+{
+	mUnitData[aUnit] = 0;
+	toLog(LogLevel::Warning, mDeviceName + QString(": emit emptied unit %1%2").arg(aUnit).arg(aLog));
+
+	emit unitEmpty(aUnit);
+}
+
+//---------------------------------------------------------------------------
+template <class T>
+void DispenserBase<T>::emitDispensed(int aUnit, int aItems, const QString & aLog)
+{
+	toLog(LogLevel::Normal, mDeviceName + QString(": emit dispensed %1 items from %2 unit%3").arg(aItems).arg(aUnit).arg(aLog));
+
+	emit dispensed(aUnit, aItems);
 }
 
 //---------------------------------------------------------------------------
@@ -129,7 +166,7 @@ void DispenserBase<T>::checkUnitStatus(TStatusCodes & aStatusCodes, int aUnit)
 		}
 	}
 
-	if ((mUnitData.size() > aUnit) && !mUnitData[aUnit])
+	if ((mInitialized != ERequestStatus::InProcess) && (mUnitData.size() > aUnit) && !mUnitData[aUnit])
 	{
 		aStatusCodes.insert(data.empty);
 		aStatusCodes.remove(data.nearEmpty);
@@ -142,6 +179,9 @@ void DispenserBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 {
 	using namespace DispenserStatusCode::Warning;
 	using namespace DispenserStatusCode::Error;
+
+	aStatusCodes.remove(DispenserStatusCode::OK::SingleMode);
+	aStatusCodes.remove(DispenserStatusCode::OK::Locked);
 
 	for (int i = 0; i < mUnits; ++i)
 	{
@@ -172,7 +212,7 @@ void DispenserBase<T>::postPollingAction(const TStatusCollection & aNewStatusCol
 	if (mNeedGetUnits && mUnits)
 	{
 		mNeedGetUnits = false;
-		toLog(LogLevel::Warning, mDeviceName + ": Send units defined");
+		toLog(LogLevel::Warning, mDeviceName + ": emit units defined");
 
 		emit unitsDefined();
 	}
@@ -203,27 +243,24 @@ int DispenserBase<T>::units()
 template <class T>
 void DispenserBase<T>::dispense(int aUnit, int aItems)
 {
-	bool empty = !mUnitData[aUnit];
-	
-	if ((mUnitData.size() > aUnit) && empty)
+	if (!aItems)
 	{
-		toLog(LogLevel::Warning, QString("%1: Send emptied unit %2, cannot dispense").arg(mDeviceName).arg(aUnit));
+		toLog(LogLevel::Error, mDeviceName + ": Nothing for dispense");
 
-		emit unitEmpty(aUnit);
+		return;
 	}
 
-	if ((mUnitData.size() <= aUnit) || empty)
+	if (mUnitData.size() <= aUnit)
 	{
-		if (empty)
-		{
-			toLog(LogLevel::Error, QString("%1: Send dispensed 0 notes due to %2 unit is empty already").arg(mDeviceName).arg(aUnit)); 
-		}
-		else
-		{
-			toLog(LogLevel::Error, QString("%1: Send dispensed 0 notes due to wrong unit number = %2, need max %3").arg(mDeviceName).arg(aUnit).arg(mUnits - 1));
-		}
+		toLog(LogLevel::Warning, mDeviceName + QString(": emit emptied unit %1 due to no such unit, need max %2").arg(aUnit).arg(mUnits - 1));
 
-		emit dispensed(aUnit, 0);
+		emit unitEmpty(aUnit);
+
+		return;
+	}
+	else if (!mUnitData[aUnit])
+	{
+		emitDispensed(aUnit, 0, " due to unit is empty already");
 
 		return;
 	}

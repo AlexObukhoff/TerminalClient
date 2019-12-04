@@ -19,7 +19,8 @@ CCTalkCoinAcceptorBase::CCTalkCoinAcceptorBase()
 	mModels = getModelList();
 
 	mAddress = CCCTalk::Address::CoinAcceptor;
-	mErrorData = new CCCTalk::Error();
+	mErrorData = PErrorData(new CCCTalk::ErrorData());
+	mAllModelData = PAllModelData(new CCCTalk::CoinAcceptor::CModelData());
 }
 
 //---------------------------------------------------------------------------
@@ -27,7 +28,7 @@ bool CCTalkCoinAcceptorBase::processReset()
 {
 	toLog(LogLevel::Normal, mDeviceName + ": processing command reset");
 
-	if (!processCommand(CCCTalk::Command::CorePlus::Reset))
+	if (!processCommand(CCCTalk::Command::Reset))
 	{
 		return false;
 	}
@@ -172,14 +173,6 @@ bool CCTalkCoinAcceptorBase::getBufferedStatuses(QByteArray & aAnswer)
 QStringList CCTalkCoinAcceptorBase::getModelList()
 {
 	return CCCTalk::CoinAcceptor::CModelData().getModels(false);
-}
-
-//--------------------------------------------------------------------------------
-CCCTalk::CModelDataBase * CCTalkCoinAcceptorBase::getModelData()
-{
-	static CCCTalk::CoinAcceptor::CModelData modelData;
-
-	return &modelData;
 }
 
 //--------------------------------------------------------------------------------

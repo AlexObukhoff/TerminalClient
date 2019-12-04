@@ -27,6 +27,7 @@ namespace CDeviceData
 	const char Date[] = "date";
 	const char FirmwareUpdatable[] = "firmware_updatable";
 	const char ProjectNumber[] = "project_number";
+	const char ProductCode[] = "product_code";
 	const char Vendor[] = "vendor";
 	const char ProtocolVersion[] = "protocol_version";
 	const char SDCard[] = "sd_card";

@@ -98,7 +98,12 @@
     <message>
         <location filename="../DeviceTests/BillAcceptorTest.cpp" line="75"/>
         <source>#bill_is_rejected</source>
-        <translation>Note rejected </translation>
+        <translation type="obsolete">Note rejected </translation>
+    </message>
+    <message>
+        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="91"/>
+        <source>#disabled</source>
+        <translation>disabled</translation>
     </message>
 </context>
 <context>

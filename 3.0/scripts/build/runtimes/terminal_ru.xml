@@ -59,6 +59,9 @@
 	<!-- UCS plugin -->
 	<option target="user/user/plugins/ucs.ini" key="PaymentProcessor.ChargeProvider.UcsChargeProvider.configuration_singleton/ucs_runtime_path" value="C:/UCS/BIN" />
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/ucs.dll" target="plugins/plugins/ucs.dll"/>
+	
+	<!-- PCS plugin -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/payment_customizer_scenario.dll" target="plugins/plugins/payment_customizer_scenario.dll"/>
 
 	<!-- Драйверы, компонент drivers -->
 	<file source="{QBS_RESULT_PATH}/plugins/drivers/fr.dll" target="drivers/plugins/drivers/fr.dll"/>
@@ -89,9 +92,8 @@
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/cyberplat_monitoring_ru.qm" target="locale/plugins/cyberplat_monitoring_ru.qm"/>	
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/platru_ru.qm" target="locale/plugins/platru_ru.qm"/>
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/cyberchange_ru.qm" target="locale/plugins/cyberchange_ru.qm"/>
-	<!-- <file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/uniteller_ru.qm" target="locale/plugins/uniteller_ru.qm"/> -->
-	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/ucs_ru.qm" target="locale/plugins/ucs_ru.qm"/> -->
-	
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/locale/payment_customizer_scenario_ru.qm" target="locale/plugins/payment_customizer_scenario_ru.qm"/>
+
 	<!-- ######################################################################################  -->
 
 	<!-- Шрифты для терминалов Beeline -->

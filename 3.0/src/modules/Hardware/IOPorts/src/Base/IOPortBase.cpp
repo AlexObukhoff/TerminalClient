@@ -99,7 +99,8 @@ void IOPortBase::adjustData(const QStringList & aMine, const QStringList & aOthe
 
 		if (!otherData.isEmpty())
 		{
-			LogLevel::Enum logLevel = portData.isEmpty() ? LogLevel::Normal : LogLevel::Debug;
+			bool justConnected = getConfigParameter(CHardware::Port::JustConnected, false).toBool();
+			LogLevel::Enum logLevel = (portData.isEmpty() && !justConnected) ? LogLevel::Normal : LogLevel::Debug;
 			toLog(logLevel, "Port data additional:\n" + otherData);
 		}
 	}

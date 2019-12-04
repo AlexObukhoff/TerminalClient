@@ -46,6 +46,7 @@ class ICryptService;
 class ISettingsService;
 class IDatabaseService;
 class IRemoteService;
+class ISchedulerService;
 class IService;
 
 //------------------------------------------------------------------------------
@@ -93,6 +94,9 @@ public:
 
 	/// Возвращает интерфейс управления терминалом.
 	virtual ITerminalService * getTerminalService() const = 0;
+
+	/// Возвращает интерфейс управления планировщиком заданий.
+	virtual ISchedulerService * getSchedulerService() const = 0;
 
 	/// Возвращает список сервисов.
 	virtual QSet<IService *> getServices() const = 0;

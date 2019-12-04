@@ -18,7 +18,6 @@
 // Project
 #include "PrintingCommands.h"
 #include "PrintingService.h"
-#include "PrintConstants.h"
 #include "PaymentService.h"
 
 namespace FiscalCommand = SDK::Driver::EFiscalPrinterCommand;
@@ -133,6 +132,11 @@ DSDK::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap & aParam
 
 	result.fiscalParameters[CHardwareSDK::FR::UserPhone] = QString();
 	result.fiscalParameters[CHardwareSDK::FR::UserMail] = QString();
+
+	foreach (auto FFData, CPrintCommands::FFDataList)
+	{
+		result.fiscalParameters[FFData] = aParameters[FFData];
+	}
 
 #if 0
 	//TODO - решить как на верхнем уровне в интерфейсе мы будем давать возможность 

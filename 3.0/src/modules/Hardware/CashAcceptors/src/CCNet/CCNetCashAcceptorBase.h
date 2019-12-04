@@ -6,7 +6,7 @@
 #include "Hardware/Protocols/CashAcceptor/CCNet.h"
 
 // Project
-#include "Hardware/CashAcceptors/PortCashAcceptor.h"
+#include "Hardware/CashAcceptors/SerialCashAcceptor.h"
 #include "CCNetModelData.h"
 #include "CCNetCashAcceptorDataTypes.h"
 
@@ -20,12 +20,6 @@ public:
 
 	/// Возвращает список поддерживаемых устройств.
 	static QStringList getModelList();
-
-	/// Обновить прошивку.
-	virtual void updateFirmware(const QByteArray & aBuffer);
-
-	/// Можно ли обновлять прошивку.
-	virtual bool canUpdateFirmware();
 
 	/// Принять купюру.
 	virtual bool stack();
@@ -103,10 +97,6 @@ protected:
 
 	/// Список поддерживаемых плагином моделей.
 	QStringList mSupportedModels;
-
-	/// Ждать окончания резета даже если не прошла команда.
-	//TODO: убрать, поправив логику в месте использования
-	bool mForceWaitResetCompleting;
 
 	/// Валюта.
 	int mCurrencyCode;

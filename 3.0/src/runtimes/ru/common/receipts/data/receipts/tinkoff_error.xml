@@ -26,6 +26,7 @@
 	<string>Номер сессии: %INITIAL_SESSION%</string>
 	<string>Номер карты: %100_MASKED%</string>
 	<string>Номер договора: %ACC%</string>
+	<string>Номер телефона: %101%</string>
 	<string>-----------------------------------</string>
 	<string>[b]ПЛАТЕЖ НЕ БЫЛ ПРОВЕДЕН.</string>
 	<string>[b]ОБРАТИТЕСЬ В ТЕХ.ПОДДЕРЖКУ.</string>

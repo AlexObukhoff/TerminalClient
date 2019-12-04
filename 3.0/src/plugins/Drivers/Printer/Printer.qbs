@@ -12,7 +12,6 @@ Project {
 		Depends { name: "HardwareCommon" }
 		Depends { name: "HardwarePrinters" }
 		Depends { name: "SysUtils" }
-		Depends { name: "OPOSSDK" }
 		Depends { name: "HardwareIOPorts" }
 
 		files: [

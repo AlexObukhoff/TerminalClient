@@ -18,7 +18,6 @@ POSPrinters::TModelIds POSPrinters::ModelData::mModelIds;
 
 //--------------------------------------------------------------------------------
 template class POSPrinter<TSerialPrinterBase>;
-template class POSPrinter<TLibUSBPrinterBase>;
 
 //--------------------------------------------------------------------------------
 template <class T>

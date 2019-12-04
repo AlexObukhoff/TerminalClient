@@ -67,10 +67,46 @@ namespace CSSP
 	const SWaitingData NotReadyWaiting = SWaitingData(150, 1000);
 
 	/// Ожидание готовности, [мс].
-	const SWaitingData ReadyWaiting = SWaitingData(150, 15 * 1000);
+	const SWaitingData ReadyWaiting = SWaitingData(150, 20 * 1000);
 
 	/// Виртуальный статус Enabled.
 	const char EnabledStatus[] = "Enabled status";
+
+	/// Виртуальный статус Disabled.
+	const char DisabledStatus[] = "Disabled status";
+
+	/// Минимальное количество запрещаемых каналов для NV200.
+	const int NV200MinInhibitedChannels = 16;
+
+	/// Скорости для перепрошивки.
+	namespace EBaudRate
+	{
+		enum Enum
+		{
+			BR9600   = 0,
+			BR38400  = 1,
+			BR115200 = 2
+		};
+	}
+
+	class CBaudRateData : public CSpecification<EBaudRate::Enum, SDK::Driver::IOPort::COM::EBaudRate::Enum>
+	{
+	public:
+		CBaudRateData()
+		{
+			append(EBaudRate::BR9600,   SDK::Driver::IOPort::COM::EBaudRate::BR9600);
+			append(EBaudRate::BR38400,  SDK::Driver::IOPort::COM::EBaudRate::BR38400);
+			append(EBaudRate::BR115200, SDK::Driver::IOPort::COM::EBaudRate::BR115200);
+		}
+	};
+
+	static CBaudRateData BaudRateData;
+
+	/// Изменение скорости останется после резета.
+	const char ContinuousBaudrate = 1;
+
+	/// Пауза после смены скорости порта, [мс].
+	const int ChangingBaudratePause = 300;
 
 	//--------------------------------------------------------------------------------
 	/// Команды.
@@ -90,6 +126,7 @@ namespace CSSP
 		const char GetFirmware        = '\x20';    /// Запрос версии прошивки.
 		const char GetDataset         = '\x21';    /// Запрос версии биллсета.
 		const char Stack              = '\x43';    /// Уложить в стекер.
+		const char SetBaudrate        = '\x4D';    /// Установить скорость порта.
 		const char GetBuild           = '\x4F';    /// Запрос версии билда.
 
 		class CData: public CSpecification<char, SData>
@@ -110,6 +147,12 @@ namespace CSSP
 	}
 
 	//--------------------------------------------------------------------------------
+	/// Escrow или Accepting.
+	const char EAStatusCode = '\xEF';
+
+	/// Escrow или Accepting.
+	const char StackingStarted = '\xEE';
+
 	/// Спецификация статусов.
 	class DeviceCodeSpecification : public CommonDeviceCodeSpecification
 	{
@@ -125,12 +168,12 @@ namespace CSSP
 			addStatus('\xF1', DeviceStatusCode::OK::Initialization, "Reseting after power up");
 			addStatus('\xE8', BillAcceptorStatusCode::Normal::Disabled);
 			addStatus('\xB5', BillAcceptorStatusCode::Normal::Disabled, "all note channels have been inhibited");
-			addStatus('\xEF', BillAcceptorStatusCode::BillOperation::Accepting, "reading note");
-			addStatus('\xEE', BillAcceptorStatusCode::BillOperation::Escrow);
+			addStatus('\xEF', BillAcceptorStatusCode::BillOperation::Escrow, "reading note");
+			addStatus('\xEE', BillAcceptorStatusCode::BillOperation::Stacked);    // только уложена
 			addStatus('\xCC', BillAcceptorStatusCode::BillOperation::Stacking);
-			addStatus('\xEB', BillAcceptorStatusCode::BillOperation::Stacked);
-			addStatus('\xED', BillAcceptorStatusCode::Busy::Returning);
-			addStatus('\xEC', BillAcceptorStatusCode::Busy::Returned);
+			addStatus('\xEB', BillAcceptorStatusCode::Normal::Enabled, "stacking completed");    // как бы финальный Stacked, выдается одновременно с последним Stacked-ом.
+			addStatus('\xED', BillAcceptorStatusCode::Reject::Rejecting);
+			addStatus('\xEC', BillAcceptorStatusCode::Reject::Unknown);
 
 			/// Ошибки.
 			addStatus('\xE6', BillAcceptorStatusCode::Warning::Cheated);
@@ -174,11 +217,25 @@ namespace CSSP
 		{
 			if (aBuffer == EnabledStatus)
 			{
-				aSpecifications.insert(aBuffer.toHex().data(), SDeviceCodeSpecification(BillAcceptorStatusCode::Normal::Enabled, ""));
+				aSpecifications.insert("", SDeviceCodeSpecification(BillAcceptorStatusCode::Normal::Enabled, ""));
+			}
+			else if (aBuffer == DisabledStatus)
+			{
+				aSpecifications.insert("", SDeviceCodeSpecification(BillAcceptorStatusCode::Normal::Disabled, ""));
 			}
 			else
 			{
 				CommonDeviceCodeSpecification::getSpecification(aBuffer, aSpecifications);
+
+				if (!aSpecifications.isEmpty())
+				{
+					int & statusCode = aSpecifications.begin()->statusCode;
+
+					if ((statusCode == BillAcceptorStatusCode::BillOperation::Escrow) && (aBuffer.size() >= 2) && !aBuffer[1])
+					{
+						statusCode = BillAcceptorStatusCode::BillOperation::Accepting;
+					}
+				}
 			}
 		}
 	};
