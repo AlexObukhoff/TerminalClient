@@ -43,7 +43,7 @@ namespace CFR { namespace FiscalFields
 	}
 
 	//---------------------------------------------------------------------------
-	// Обязательность параметра
+	// Обязательность тега.
 	namespace ERequired
 	{
 		enum Enum
@@ -55,26 +55,52 @@ namespace CFR { namespace FiscalFields
 	}
 
 	//---------------------------------------------------------------------------
-	// Структура описателя.
+	// Обобщенный тип (класс) тега.
+	namespace EClassType
+	{
+		enum Enum
+		{
+			Default = 0,
+			Money,
+			INN
+		};
+	}
+
+	//---------------------------------------------------------------------------
+	// Структура описателя тега.
 	struct SData
 	{
-		ETypes::Enum type;
-		QString textKey;
-		QString translationPF;
-		ERequired::Enum required;
-		bool isMoney;
+		ETypes::Enum type;             /// Тип.
+		QString textKey;               /// Текстовый ключ.
+		QString translationPF;         /// Перевод для печатной формы (ПФ).
+		ERequired::Enum required;      /// Обязательность тега.
+		EClassType::Enum classType;    /// Обобщенный тип (класс) тега.
 
-		SData(): type(ETypes::None), required(ERequired::No), isMoney(false) {}
+		SData(): type(ETypes::None), required(ERequired::No), classType(EClassType::Default) {}
+
 		SData(ETypes::Enum aType, const QString & aTextKey, ERequired::Enum aRequired):
-			type(aType), textKey(aTextKey), translationPF(""), required(aRequired), isMoney(false) {}
+			type(aType), textKey(aTextKey), translationPF(""), required(aRequired), classType(EClassType::Default) {}
+
+		SData(ETypes::Enum aType, const QString & aTextKey, EClassType::Enum aClassType):
+			type(aType), textKey(aTextKey), translationPF(""), required(ERequired::No), classType(aClassType) {}
+
 		SData(ETypes::Enum aType, const QString & aTextKey, const QString & aTranslationPF = ""):
-			type(aType), textKey(aTextKey), translationPF(aTranslationPF), required(ERequired::No), isMoney(false) {}
-		SData(ETypes::Enum aType, const QString & aTextKey, const QString & aTranslationPF, bool aIsMoney):
-			type(aType), textKey(aTextKey), translationPF(aTranslationPF), required(ERequired::No), isMoney(aIsMoney) {}
-		SData(ETypes::Enum aType, const QString & aTextKey, const QString & aTranslationPF, ERequired::Enum aRequired):
-			type(aType), textKey(aTextKey), translationPF(aTranslationPF), required(aRequired), isMoney(false) {}
+			type(aType), textKey(aTextKey), translationPF(aTranslationPF), required(ERequired::No), classType(EClassType::Default) {}
+
+		SData(ETypes::Enum aType, const QString & aTextKey, const QString & aTranslationPF, EClassType::Enum aClassType):
+			type(aType), textKey(aTextKey), translationPF(aTranslationPF), required(ERequired::No), classType(aClassType) {}
+
+		SData(ETypes::Enum aType, const QString & aTextKey, const QString & aTranslationPF, ERequired::Enum aRequired, EClassType::Enum aClassType = EClassType::Default):
+			type(aType), textKey(aTextKey), translationPF(aTranslationPF), required(aRequired), classType(aClassType) {}
+
+		bool isString() const { return type == ETypes::String;   }
+		bool isSTLV()   const { return type == ETypes::STLV;     }
+		bool isTime()   const { return type == ETypes::UnixTime; }
+
+		bool isMoney()  const { return classType == EClassType::Money; }
+		bool isINN()    const { return classType == EClassType::INN;   }
 	};
 
-}}    // namespace CFR::FiscalFields
+}} // namespace CFR::FiscalFields
 
 //---------------------------------------------------------------------------

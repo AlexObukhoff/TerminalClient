@@ -15,18 +15,6 @@
 namespace SDK {
 namespace Driver {
 
-/// Состояние сессии.
-namespace ESessionState
-{
-	enum Enum
-	{
-		Error,     /// Ошибка определения.
-		Opened,    /// Открыта.
-		Closed,    /// Закрыта.
-		Expired    /// Истекла.
-	};
-}
-
 /// Состояние документа.
 namespace EDocumentState
 {

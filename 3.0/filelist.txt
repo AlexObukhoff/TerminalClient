@@ -87,6 +87,8 @@
 /src/plugins/NativeScenarios/Migrator3000/
 /src/plugins/NativeWidgets/ServiceMenu/
 /src/plugins/Payments/Cyberplat/
+/src/plugins/ScenarioBackends/UCS/
+/src/plugins/ScenarioBackends/Uniteller/
 /src/plugins/Plugins.sln
 /src/qbs/libTemplate.qbs
 /src/runtimes/common/

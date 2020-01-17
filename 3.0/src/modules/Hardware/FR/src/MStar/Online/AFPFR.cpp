@@ -71,6 +71,21 @@ bool AFPFR::getFRData(const CAFPFR::FRInfo::SData & aInfo, CAFPFR::TData & aData
 }
 
 //--------------------------------------------------------------------------------
+bool AFPFR::getLastFiscalizationData(int aField, QVariant & aData)
+{
+	CAFPFR::TData data;
+
+	if (!processCommand(CAFPFR::Commands::GetLastFiscalizationData, aField, &data))
+	{
+		return false;
+	}
+
+	aData = data[0];
+
+	return aData.isValid();
+}
+
+//--------------------------------------------------------------------------------
 bool AFPFR::updateParameters()
 {
 	processDeviceData();
@@ -81,22 +96,40 @@ bool AFPFR::updateParameters()
 	}
 
 	setFRParameter(CAFPFR::FRParameters::PrintingOnClose, true);
-	CAFPFR::TData data;
 
-	if (!processCommand(CAFPFR::Commands::GetFiscalizationTotal, 0, &data))
+	QVariant data;
+
+	if (!getLastFiscalizationData(CFR::FiscalFields::TaxSystemsReg, data) || !checkTaxSystems(char(data.toInt())))
 	{
 		return false;
 	}
 
-	if (!checkTaxSystems(char(data[4].toInt())) || !checkOperationModes(char(data[5].toInt())))
+	if (!getLastFiscalizationData(CFR::FiscalFields::AgentFlagsReg, data) || !checkAgentFlags(char(data.toInt())))
 	{
 		return false;
 	}
 
-	if (!processCommand(CAFPFR::Commands::GetLastFiscalizationData, CFR::FiscalFields::AgentFlagsReg, &data, CAFPFR::EAnswerTypes::FInt) ||
-	    !checkAgentFlags(char(data[0].toInt())))
+	CFR::FiscalFields::TFields fields = CFR::FiscalFields::TFields()
+		<< CFR::FiscalFields::ModeFields
+		<< CFR::FiscalFields::FTSURL
+		<< CFR::FiscalFields::OFDURL
+		<< CFR::FiscalFields::OFDName
+		<< CFR::FiscalFields::LegalOwner
+		<< CFR::FiscalFields::PayOffAddress
+		<< CFR::FiscalFields::PayOffPlace;
+
+	foreach (auto field, fields)
 	{
-		return false;
+		if (!getLastFiscalizationData(field, data))
+		{
+			return false;
+		}
+
+		QString textKey = mFFData[field].textKey;
+		mFFEngine.setConfigParameter(textKey, mCodec->toUnicode(data.toByteArray()));
+		QString value = mFFEngine.getConfigParameter(textKey, data).toString();
+
+		toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = \"%2\" to config data").arg(mFFData.getTextLog(field)).arg(value));
 	}
 
 	return !mOperatorPresence || loadSectionNames();
@@ -615,7 +648,7 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 	// флаг агента
 	char agentFlag = char(aPaymentData.agentFlag);
 
-	if ((agentFlag != EAgentFlags::None) && (mAgentFlags.size() != 1) && !processCommand(CAFPFR::Commands::SetAgentFlag, agentFlag))
+	if (!processCommand(CAFPFR::Commands::SetAgentFlag, agentFlag))
 	{
 		toLog(LogLevel::Error, mDeviceName + QString(": Failed to set agent flag %1 (%2)").arg(toHexLog(agentFlag)).arg(CFR::AgentFlags[agentFlag]));
 		return false;
@@ -626,6 +659,11 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 	bool isPaymentAgent = CFR::isPaymentAgent(aPaymentData.agentFlag);
 
 	#define CHECK_AFP_FF(aField) setFRParameter(CAFPFR::FRParameters::aField, mFFEngine.getConfigParameter(CFiscalSDK::aField))
+
+	if (isNotPrinting() && !CHECK_AFP_FF(SenderMail))
+	{
+		return false;
+	}
 
 	if (isBankAgent)
 	{
@@ -670,6 +708,14 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 		result = result && sale(unitData);
 	}
 
+	bool needSetUserContact = isNotPrinting() || mOperationModes.contains(EOperationModes::Internet);
+	QVariant userContact = getConfigParameter(CFiscalSDK::UserContact);
+
+	if (needSetUserContact && !processCommand(CAFPFR::Commands::SetUserContact, userContact))
+	{
+		return false;
+	}
+
 	CAFPFR::TData data = CAFPFR::TData()
 		<< (aPaymentData.payType - 1)
 		<< getTotalAmount(aPaymentData)
@@ -686,6 +732,55 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 	}
 
 	return exitAction.reset();
+}
+
+//--------------------------------------------------------------------------------
+bool AFPFR::getFiscalFields(quint32 aFDNumber, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+{
+	CAFPFR::TData answer;
+
+	if (!processCommand(CAFPFR::Commands::GetFiscalTLVData, QVariant(aFDNumber), &answer))
+	{
+		return false;
+	}
+
+	QString rawData = answer[0].toString();
+	QString log;
+
+	if (!checkBufferString(rawData, &log))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": " + log);
+		return false;
+	}
+
+	QByteArray data = getBufferFromString(rawData);
+	int i = 0;
+
+	while ((i + 4) < data.size())
+	{
+		CFR::STLV TLV;
+
+		auto getInt = [&data, &i] (int aIndex, int aShift) -> int { int result = uchar(data[i + aIndex]); return result << (8 * aShift); };
+		int field = getInt(0, 0) | getInt(1, 1);
+		int size  = getInt(2, 0) | getInt(3, 1);
+
+		if (!size)
+		{
+			toLog(LogLevel::Warning, mDeviceName + ": Mo data for " + mFFData.getTextLog(field));
+		}
+
+		if (!mFFEngine.parseTLV(data.mid(i, size + 4), TLV))
+		{
+			return false;
+		}
+
+		mFFEngine.parseSTLVData(TLV, aPSData);
+		mFFEngine.parseTLVData (TLV, aFPData);
+
+		i += size + 4;
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -718,12 +813,7 @@ bool AFPFR::sale(const SUnitData & aUnitData)
 		<< ""                                   // единица измерения
 		<< 0.00;                                // сумма НДС за предмет расчёта
 
-	if (!processCommand(CAFPFR::Commands::Sale, commandData))
-	{
-		return false;
-	}
-
-	return true;
+	return processCommand(CAFPFR::Commands::Sale, commandData);
 }
 
 //--------------------------------------------------------------------------------

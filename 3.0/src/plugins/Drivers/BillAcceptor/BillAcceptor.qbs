@@ -9,7 +9,6 @@ Project {
 		Depends { name: "HardwareProtocols" }
 		Depends { name: "HardwareCommon" }
 		Depends { name: "CashAcceptors" }
-		Depends { name: "CashDispensers" }
 		Depends { name: "DriversSDK" }
 		
 		files: [

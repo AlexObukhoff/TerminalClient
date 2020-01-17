@@ -202,6 +202,14 @@ TParameterList AtolLSParameters(const QStringList & aModels, const QString & aDe
 
 //------------------------------------------------------------------------------
 template <class T>
+TParameterList AtolOnlineParameters(const QStringList & aModels, const QString & aDeviceType, const QString & aProtocol)
+{
+	return AtolLSParameters<T>(aModels, aDeviceType, aProtocol)
+		<< setNotPrinting(true);
+}
+
+//------------------------------------------------------------------------------
+template <class T>
 TParameterList PayParameters(const QStringList & aModels)
 {
 	return AtolLSParameters<T>(aModels, CComponents::FiscalRegistrator, ProtocolNames::FR::ATOL2);
@@ -319,8 +327,8 @@ BEGIN_REGISTER_PLUGIN
 	SINGLE_FR_PLUGIN(PayPPU700,  PayPPU700Parameters, PayPPU-700K)
 	SINGLE_FR_PLUGIN(PayCTS2000, PayParameters,       PayCTS-2000K)
 
-	COMMON_ATOL2_PLUGIN(Atol2OnlineFRBase, FiscalRegistrator, AtolLSParameters)
-	COMMON_ATOL3_PLUGIN(Atol3OnlineFRBase, FiscalRegistrator, AtolLSParameters)
+	COMMON_ATOL2_PLUGIN(Atol2OnlineFRBase, FiscalRegistrator, AtolOnlineParameters)
+	COMMON_ATOL3_PLUGIN(Atol3OnlineFRBase, FiscalRegistrator, AtolOnlineParameters)
 	SINGLE_ATOL_PLUGIN(Paymaster2,  PaymasterParameters, Sensis Kaznachej, ATOL2)
 	SINGLE_ATOL_PLUGIN(Paymaster3,  PaymasterParameters, Sensis Kaznachej, ATOL3)
 

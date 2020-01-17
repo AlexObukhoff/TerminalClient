@@ -47,6 +47,7 @@ namespace Tags
 			Image,
 			HR,
 			Center,
+			Amount,
 			None
 		};
 	}
@@ -69,6 +70,7 @@ namespace Tags
 			append("img",  Type::Image);
 			append("hr",   Type::HR);
 			append("c",    Type::Center);
+			append("a",    Type::Amount);
 			append("none", Type::None);
 
 			setDefault(Type::None);

@@ -368,6 +368,12 @@ public slots:
 	/// Признак, что текущий шаг - последний
 	bool isFinalStep();
 
+	///
+	void setExternalCommissions(const QVariantList & aCommissions);
+
+	///
+	void resetExternalCommissions();
+
 public:
 	/// Получение списка полей для интерфейса в многошаговом шлюзе
 	bool loadFieldsForStep(TProviderFields & aFields);

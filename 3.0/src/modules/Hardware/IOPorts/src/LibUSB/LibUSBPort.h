@@ -75,6 +75,9 @@ public:
 	/// Подключено новое устройство?
 	virtual bool deviceConnected();
 
+	/// Открыт?
+	virtual bool opened();
+
 	/// Порт существует?
 	virtual bool isExist();
 

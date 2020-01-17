@@ -69,7 +69,7 @@
       </DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;Atol2FRProtocol.lib;Atol3FRProtocol.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;AFPFRProtocol.lib;SysUtils.lib;IOPorts.lib;libusb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;Atol2FRProtocol.lib;Atol3FRProtocol.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;AFPFRProtocol.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -94,7 +94,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;Atol2FRProtocol.lib;Atol3FRProtocol.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;AFPFRProtocol.lib;SysUtils.lib;IOPorts.lib;libusb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;Atol2FRProtocol.lib;Atol3FRProtocol.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;AFPFRProtocol.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -118,7 +118,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCored4.lib;QtGuid4.lib;QAxContainerd.lib;OPOSSDKd.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;printersd.lib;frd.lib;PrimFRProtocold.lib;Atol2FRProtocold.lib;Atol3FRProtocold.lib;ShtrihFRProtocold.lib;SparkFRProtocold.lib;KasbiFRProtocold.lib;AFPFRProtocold.lib;SysUtilsd.lib;IOPortsd.lib;libusb_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCored4.lib;QtGuid4.lib;QAxContainerd.lib;OPOSSDKd.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;printersd.lib;frd.lib;PrimFRProtocold.lib;Atol2FRProtocold.lib;Atol3FRProtocold.lib;ShtrihFRProtocold.lib;SparkFRProtocold.lib;KasbiFRProtocold.lib;AFPFRProtocold.lib;SysUtilsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -137,7 +137,7 @@
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h" />
+    <ClInclude Include="..\..\..\..\modules\Hardware\FR\src\Base\FiscalFieldDescriptions.h" />
     <ClInclude Include="..\..\Parameters\PrinterPluginParameters.h" />
     <ClInclude Include="..\src\FRPlugin.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\FR\FRStatusesDescriptions.h" />

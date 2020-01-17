@@ -222,7 +222,7 @@ private:
 	bool setChangeAmount(double aChange, std::shared_ptr<PPSDK::IPayment> aPaymentSource);
 
 	/// Обновляет параметры платежа.
-	void doUpdatePaymentFields(quint64 aID, std::shared_ptr<PPSDK::IPayment> aPayment, const QList<SDK::PaymentProcessor::IPayment::SParameter> & aFields, bool aForce = false);
+	void doUpdatePaymentFields(qint64 aID, std::shared_ptr<PPSDK::IPayment> aPayment, const QList<SDK::PaymentProcessor::IPayment::SParameter> & aFields, bool aForce = false);
 
 signals:
 	/// Сигнал о завершении обработки платёжной команды, добавленной методом registerPaymentCommand.

@@ -24,6 +24,9 @@ namespace CPrimFR
 	/// Минимальный размер пакета для identification.
 	const int MinIdentSize = 109;
 
+	/// Формат представления даты и времени в ответе на запрос статуса ФН-а.
+	const char FRDateTimeFormat[] = "ddMMyyyyhhmm";
+
 	/// Данные типов фискальных документов.
 	class CPayOffTypeData: public CSpecification<SDK::Driver::EPayOffTypes::Enum, QByteArray>
 	{

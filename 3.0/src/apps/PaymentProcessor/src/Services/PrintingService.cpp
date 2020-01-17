@@ -36,6 +36,9 @@
 #include <SDK/Drivers/Components.h>
 #include <SDK/Drivers/HardwareConstants.h>
 
+// Common
+#include "Common/ExitAction.h"
+
 // Project
 #include "System/IApplication.h"
 
@@ -53,6 +56,10 @@
 
 namespace PPSDK = SDK::PaymentProcessor;
 
+//------------------------------------------------------------------------------
+const char * PPSDK::IFiscalRegister::OFDNotSentSignal = SIGNAL(OFDNotSent(bool));
+
+//------------------------------------------------------------------------------
 namespace CPrintingService
 {
 	const QString ReceiptDateTimeFormat = "dd.MM.yyyy hh:mm:ss";
@@ -165,8 +172,9 @@ bool PrintingService::shutdown()
 	if (mFiscalRegister)
 	{
 		SDK::Plugin::IPluginLoader * pluginLoader = PluginService::instance(mApplication)->getPluginLoader();
-		
+
 		pluginLoader->destroyPlugin(dynamic_cast<SDK::Plugin::IPlugin *>(mFiscalRegister));
+		mFiscalRegister = nullptr;
 	}
 
 	return true;
@@ -303,26 +311,39 @@ int PrintingService::performPrint(PrintCommand * aCommand, const QVariantMap & a
 	mPrintingFunction =
 		[this, aReceiptTemplate](int aJobIndex, PrintCommand * aCommand, QVariantMap aParameters) -> bool
 		{
+			QVariantMap staticParameters;
+			joinMap(staticParameters, mStaticParameters);
+			QVariantMap paymentParameters = joinMap(aParameters, staticParameters);
+
 			auto printer = takePrinter(aCommand->getReceiptType(), false);
+			PrintPayment * paymentPrintingCommand = dynamic_cast<PrintPayment *>(aCommand);
+
+			auto makeResult = [&] (bool result, const QString & aLog) -> bool { if (aCommand) delete aCommand;
+				toLog(result ? LogLevel::Normal : LogLevel::Error, aLog); emit receiptPrinted(aJobIndex, !result); return result; };
 
 			if (!printer)
 			{
-				delete aCommand;
+				if (!getFiscalRegister())
+				{
+					return makeResult(false, "Failed to process receipt without printer due to no fiscal register");
+				}
+				else if (!paymentPrintingCommand)
+				{
+					return makeResult(false, "Failed to process receipt without printer due to no printing command");
+				}
 
-				return false;
+				bool result = paymentPrintingCommand->makeFiscalByFR(paymentParameters);
+
+				return makeResult(result, "Send receipt printed without printer");
 			}
-
-			QVariantMap staticParameters;
 
 			QVariantMap configuration;
 			configuration.insert(CHardwareSDK::Printer::ContinuousMode, mContinuousMode);
 			configuration.insert(CHardwareSDK::Printer::ServiceOperation, mServiceOperation);
-			configuration.insert(CHardwareSDK::Printer::TemplateParameters, aParameters);
-			configuration.insert(CHardwareSDK::Printer::ReceiptParameters, joinMap(staticParameters, mStaticParameters));
 			configuration.insert(CHardwareSDK::Printer::ReceiptTemplate, aReceiptTemplate);
 			printer->setDeviceConfiguration(configuration);
 
-			bool result = aCommand->print(printer, joinMap(aParameters, staticParameters));
+			bool result = aCommand->print(printer, paymentParameters);
 
 			if (result)
 			{
@@ -331,11 +352,7 @@ int PrintingService::performPrint(PrintCommand * aCommand, const QVariantMap & a
 
 			giveBackPrinter(printer);
 
-			delete aCommand;
-
-			emit receiptPrinted(aJobIndex, !result);
-
-			return result;
+			return makeResult(result, "Send receipt printed");
 		};
 
 	int taskIndex = mNextReceiptIndex.fetchAndAddOrdered(1);
@@ -382,6 +399,12 @@ int PrintingService::printReport(const QString & aReceiptType, const QVariantMap
 	QVariantMap parameters;
 
 	return performPrint(printCommand, joinMap(joinMap(parameters, mStaticParameters), aParameters));
+}
+
+//---------------------------------------------------------------------------
+bool PrintingService::hasFiscalRegister()
+{
+	return mFiscalRegister && mFiscalRegister->hasCapability(PPSDK::ERequestType::Receipt);
 }
 
 //---------------------------------------------------------------------------
@@ -1192,56 +1215,58 @@ void PrintingService::expandTags(QStringList & aReceipt, const QVariantMap & aPa
 }
 
 //---------------------------------------------------------------------------
+bool PrintingService::loadReceiptTemplate(const QFileInfo & aFileInfo)
+{
+	if (aFileInfo.suffix().compare("xml", Qt::CaseInsensitive))
+	{
+		toLog(LogLevel::Error, QString("Bad receipt template file extension : %1").arg(aFileInfo.fileName()));
+		return false;
+	}
+
+	QDomDocument xmlFile(aFileInfo.fileName());
+	QFile file(aFileInfo.filePath());
+
+	if (!file.open(QIODevice::ReadOnly))
+	{
+		toLog(LogLevel::Error, QString("Failed to open file %1").arg(aFileInfo.filePath()));
+		return false;
+	}
+
+	xmlFile.setContent(&file);
+
+	QDomElement body = xmlFile.documentElement();
+
+	QStringList receiptContents;
+
+	for (QDomNode node = body.firstChild(); !node.isNull(); node = node.nextSibling())
+	{
+		QDomElement row = node.toElement();
+
+		if (row.tagName() == "string" || row.tagName() == "else")
+		{
+			QString prefix = row.attribute("if").isEmpty() ? "" : QString("%1%2").arg(row.attribute("if")).arg(CPrintingService::ConditionTag);
+			receiptContents.append(QString("%1%2").arg(prefix).arg(row.text()));
+		}
+		else if (row.tagName() == "hr")
+		{
+			receiptContents.append("[hr]-[/hr]");
+		}
+	}
+
+	if (receiptContents.isEmpty())
+	{
+		toLog(LogLevel::Error, QString("Bad receipt template '%1': parse xml error").arg(aFileInfo.fileName()));
+		return false;
+	}
+
+	mCachedReceipts.insert(aFileInfo.baseName().toLower(), receiptContents);
+
+	return true;
+}
+
+//---------------------------------------------------------------------------
 void PrintingService::loadReceiptTemplates()
 {
-	auto loadReceiptTemplate = [&](const QFileInfo & aFileInfo)
-	{
-		if (!aFileInfo.suffix().compare("xml", Qt::CaseInsensitive))
-		{
-			QDomDocument xmlFile(aFileInfo.fileName());
-			QFile file(aFileInfo.filePath());
-			if (!file.open(QIODevice::ReadOnly))
-			{
-				toLog(LogLevel::Error, QString("Failed to open file %1").arg(aFileInfo.filePath()));
-				return;
-			}
-
-			xmlFile.setContent(&file);
-
-			QDomElement body = xmlFile.documentElement();
-
-			QStringList receiptContents;
-
-			for (QDomNode node = body.firstChild(); !node.isNull(); node = node.nextSibling())
-			{
-				QDomElement row = node.toElement();
-				
-				if (row.tagName() == "string" || row.tagName() == "else")
-				{
-					QString prefix = row.attribute("if").isEmpty() ? "" : QString("%1%2").arg(row.attribute("if")).arg(CPrintingService::ConditionTag);
-					receiptContents.append(QString("%1%2").arg(prefix).arg(row.text()));
-				}
-				else if (row.tagName() == "hr")
-				{
-					receiptContents.append("[hr]-[/hr]");
-				}
-			}
-
-			if (!receiptContents.isEmpty())
-			{
-				mCachedReceipts.insert(aFileInfo.baseName().toLower(), receiptContents);
-			}
-			else
-			{
-				toLog(LogLevel::Error, QString("Bad receipt template '%1': parse xml error").arg(aFileInfo.fileName()));
-			}
-		}
-		else
-		{
-			toLog(LogLevel::Error, QString("Bad receipt template file extension : %1").arg(aFileInfo.fileName()));
-		}
-	};
-
 	// Загружаем все шаблоны чеков в папке ./receipts
 	QDir receiptDirectory;
 
@@ -1360,6 +1385,26 @@ QString PrintingService::loadReceipt(qint64 aPaymentId)
 }
 
 //---------------------------------------------------------------------------
+void PrintingService::onOFDNotSent(bool aExist)
+{
+	auto service = SettingsService::instance(mApplication);
+	auto adapter = service ? service->getAdapter<PPSDK::TerminalSettings>() : nullptr;
+	bool block   = adapter ? adapter->getCommonSettings().blockOn(PPSDK::SCommonSettings::PrinterError) : true;
+
+	QVariantMap configuration;
+	configuration.insert(CHardwareSDK::Printer::OFDNotSentError, aExist);
+	configuration.insert(CHardwareSDK::Printer::BlockTerminalOnError, block);
+
+	foreach (auto printer, mPrinterDevices)
+	{
+		if (printer)
+		{
+			printer->setDeviceConfiguration(configuration);
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
 void PrintingService::onStatusChanged(DSDK::EWarningLevel::Enum aWarningLevel, const QString & /*aTranslation*/, int /*aStatus*/)
 {
 	emit printerStatus(aWarningLevel == DSDK::EWarningLevel::OK);
@@ -1384,36 +1429,38 @@ void PrintingService::onFRSessionClosed(const QVariantMap & aParameters)
 	QFile file(fileName);
 
 	// Сохраняем отчёт.
-	if (file.open(QIODevice::WriteOnly))
+	if (!file.open(QIODevice::WriteOnly))
 	{
-		using namespace SDK::Driver;
-
-		QXmlStreamWriter stream(&file);
-		stream.setAutoFormatting(true);
-		stream.writeStartDocument();
-
-		stream.writeStartElement(CFRReport::ZReport);
-		stream.writeAttribute(CFRReport::Number, aParameters[CFiscalPrinter::ZReportNumber].toString());
-
-		stream.writeStartElement(CFRReport::FR);
-		stream.writeAttribute(CFRReport::Serial, aParameters[CFiscalPrinter::Serial].toString());
-		stream.writeAttribute(CFRReport::RNM, aParameters[CFiscalPrinter::RNM].toString());
-		stream.writeEndElement(); // CFRReport::FR
-
-		stream.writeTextElement(CFRReport::PaymentCount, aParameters[CFiscalPrinter::PaymentCount].toString());
-		double amount = aParameters[CFiscalPrinter::PaymentAmount].toDouble();
-		stream.writeTextElement(CFRReport::PaymentAmount, QString::number(amount, 'f', 2));
-		amount = aParameters[CFiscalPrinter::NonNullableAmount].toDouble();
-		stream.writeTextElement(CFRReport::NonNullableAmount, QString::number(amount, 'f', 2));
-		stream.writeTextElement(CFRReport::FRDateTime, aParameters[CFiscalPrinter::FRDateTime].toString());
-		stream.writeTextElement(CFRReport::SystemDateTime, aParameters[CFiscalPrinter::SystemDateTime].toString());
-
-		stream.writeEndElement(); // CFRReport::ZReport
-		stream.writeEndDocument();
-		
-		file.flush();
-		file.close();
+		return;
 	}
+
+	using namespace SDK::Driver;
+
+	QXmlStreamWriter stream(&file);
+	stream.setAutoFormatting(true);
+	stream.writeStartDocument();
+
+	stream.writeStartElement(CFRReport::ZReport);
+	stream.writeAttribute(CFRReport::Number, aParameters[CFiscalPrinter::ZReportNumber].toString());
+
+	stream.writeStartElement(CFRReport::FR);
+	stream.writeAttribute(CFRReport::Serial, aParameters[CFiscalPrinter::Serial].toString());
+	stream.writeAttribute(CFRReport::RNM, aParameters[CFiscalPrinter::RNM].toString());
+	stream.writeEndElement(); // CFRReport::FR
+
+	stream.writeTextElement(CFRReport::PaymentCount, aParameters[CFiscalPrinter::PaymentCount].toString());
+	double amount = aParameters[CFiscalPrinter::PaymentAmount].toDouble();
+	stream.writeTextElement(CFRReport::PaymentAmount, QString::number(amount, 'f', 2));
+	amount = aParameters[CFiscalPrinter::NonNullableAmount].toDouble();
+	stream.writeTextElement(CFRReport::NonNullableAmount, QString::number(amount, 'f', 2));
+	stream.writeTextElement(CFRReport::FRDateTime, aParameters[CFiscalPrinter::FRDateTime].toString());
+	stream.writeTextElement(CFRReport::SystemDateTime, aParameters[CFiscalPrinter::SystemDateTime].toString());
+
+	stream.writeEndElement(); // CFRReport::ZReport
+	stream.writeEndDocument();
+
+	file.flush();
+	file.close();
 }
 
 //---------------------------------------------------------------------------
@@ -1440,37 +1487,37 @@ void PrintingService::updateHardwareConfiguration()
 	{
 		DSDK::IPrinter * device = dynamic_cast<DSDK::IPrinter *>(mDeviceService->acquireDevice(printerName));
 
-		if (device)
-		{
-			QVariantMap dealerSettings;
-			if (mStaticParameters.contains(CPrintConstants::DealerTaxSystem)) dealerSettings.insert(CHardwareSDK::FR::DealerTaxSystem, mStaticParameters[CPrintConstants::DealerTaxSystem]);
-			if (mStaticParameters.contains(CPrintConstants::DealerAgentFlag)) dealerSettings.insert(CHardwareSDK::FR::DealerAgentFlag, mStaticParameters[CPrintConstants::DealerAgentFlag]);
-			if (mStaticParameters.contains(CPrintConstants::DealerVAT))       dealerSettings.insert(CHardwareSDK::FR::DealerVAT,       mStaticParameters[CPrintConstants::DealerVAT]);
-
-			mPrinterDevices.append(device);
-
-			// Подписываемся на события принтера.
-			device->subscribe(SDK::Driver::IDevice::StatusSignal, this, SLOT(onStatusChanged(SDK::Driver::EWarningLevel::Enum, const QString &, int)));
-
-			// Подписываемся на события фискальника.
-			if (dynamic_cast<DSDK::IFiscalPrinter *>(device))
-			{
-				device->subscribe(SDK::Driver::IFiscalPrinter::FRSessionClosedSignal, this, SLOT(onFRSessionClosed(const QVariantMap &)));
-
-				if (autoZReportTime.isValid() && !autoZReportTime.isNull())
-				{
-					toLog(LogLevel::Normal, QString("Setup auto z-report time: %1.").arg(autoZReportTime.toString("hh:mm:ss")));
-
-					dealerSettings.insert(CHardwareSDK::FR::ZReportTime, autoZReportTime);
-				}
-			}
-
-			device->setDeviceConfiguration(dealerSettings);
-		}
-		else
+		if (!device)
 		{
 			toLog(LogLevel::Error, QString("Failed to acquire device %1 .").arg(printerName));
+			continue;
 		}
+
+		QVariantMap dealerSettings;
+		if (mStaticParameters.contains(CPrintConstants::DealerTaxSystem))    dealerSettings.insert(CHardwareSDK::FR::DealerTaxSystem,    mStaticParameters[CPrintConstants::DealerTaxSystem]);
+		if (mStaticParameters.contains(CPrintConstants::DealerAgentFlag))    dealerSettings.insert(CHardwareSDK::FR::DealerAgentFlag,    mStaticParameters[CPrintConstants::DealerAgentFlag]);
+		if (mStaticParameters.contains(CPrintConstants::DealerVAT))          dealerSettings.insert(CHardwareSDK::FR::DealerVAT,          mStaticParameters[CPrintConstants::DealerVAT]);
+		if (mStaticParameters.contains(CPrintConstants::DealerSupportPhone)) dealerSettings.insert(CHardwareSDK::FR::DealerSupportPhone, mStaticParameters[CPrintConstants::DealerSupportPhone]);
+
+		mPrinterDevices.append(device);
+
+		// Подписываемся на события принтера.
+		device->subscribe(SDK::Driver::IDevice::StatusSignal, this, SLOT(onStatusChanged(SDK::Driver::EWarningLevel::Enum, const QString &, int)));
+
+		// Подписываемся на события фискальника.
+		if (dynamic_cast<DSDK::IFiscalPrinter *>(device))
+		{
+			device->subscribe(SDK::Driver::IFiscalPrinter::FRSessionClosedSignal, this, SLOT(onFRSessionClosed(const QVariantMap &)));
+
+			if (autoZReportTime.isValid() && !autoZReportTime.isNull())
+			{
+				toLog(LogLevel::Normal, QString("Setup auto z-report time: %1.").arg(autoZReportTime.toString("hh:mm:ss")));
+
+				dealerSettings.insert(CHardwareSDK::FR::ZReportTime, autoZReportTime);
+			}
+		}
+
+		device->setDeviceConfiguration(dealerSettings);
 	}
 
 	mAvailablePrinters = mPrinterDevices.toSet();
@@ -1479,51 +1526,59 @@ void PrintingService::updateHardwareConfiguration()
 //---------------------------------------------------------------------------
 void PrintingService::createFiscalRegister()
 {
-	if (!mFiscalRegister)
+	if (mFiscalRegister)
 	{
-		// Получаем информацию о фискальных регистраторах.
-		PPSDK::ExtensionsSettings * extSettings = SettingsService::instance(mApplication)->getAdapter<PPSDK::ExtensionsSettings>();
-		SDK::Plugin::IPluginLoader * pluginLoader = PluginService::instance(mApplication)->getPluginLoader();
+		return;
+	}
 
-		foreach(auto fr, pluginLoader->getPluginList(QRegExp(PPSDK::CComponents::FiscalRegister)))
+	// Получаем информацию о фискальных регистраторах.
+	PPSDK::ExtensionsSettings * extSettings = SettingsService::instance(mApplication)->getAdapter<PPSDK::ExtensionsSettings>();
+	SDK::Plugin::IPluginLoader * pluginLoader = PluginService::instance(mApplication)->getPluginLoader();
+	QStringList frPlugins = pluginLoader->getPluginList(QRegExp(PPSDK::CComponents::FiscalRegister));
+
+	foreach (auto fr, frPlugins)
+	{
+		auto plugin = pluginLoader->createPlugin(fr);
+
+		if (!plugin)
 		{
-			auto plugin = pluginLoader->createPlugin(fr);
-			if (!plugin)
-			{
-				continue;
-			}
-
-			PPSDK::IFiscalRegister * frPlugin = dynamic_cast<PPSDK::IFiscalRegister *>(plugin);
-
-			if (!frPlugin)
-			{
-				toLog(LogLevel::Error, QString("FR %1 not have IFiscalRegister interface.").arg(fr));
-				pluginLoader->destroyPlugin(plugin);
-				continue;
-			}
-
-			auto parameters = extSettings->getSettings(plugin->getPluginName());
-
-			if (parameters.isEmpty())
-			{
-				toLog(LogLevel::Warning, QString("FR %1 not have extensions settings. Skip it. (check config.xml).").arg(plugin->getPluginName()));
-				pluginLoader->destroyPlugin(plugin);
-				continue;
-			}
-
-			connect(dynamic_cast<QObject *>(frPlugin), SDK::Driver::IFiscalPrinter::FRSessionClosedSignal, this, SLOT(onFRSessionClosed(const QVariantMap &)));
-
-			if (!frPlugin->initialize(parameters))
-			{
-				toLog(LogLevel::Warning, QString("FR %1 error initialize. Skip it.").arg(plugin->getPluginName()));
-				pluginLoader->destroyPlugin(plugin);
-				continue;
-			}
-
-			mFiscalRegister = frPlugin;
-			toLog(LogLevel::Normal, QString("FR %1 loaded successful.").arg(plugin->getPluginName()));
-			break;
+			continue;
 		}
+
+		PPSDK::IFiscalRegister * frPlugin = dynamic_cast<PPSDK::IFiscalRegister *>(plugin);
+
+		if (!frPlugin)
+		{
+			toLog(LogLevel::Error, QString("FR %1 not have IFiscalRegister interface.").arg(fr));
+			pluginLoader->destroyPlugin(plugin);
+			continue;
+		}
+
+		auto parameters = extSettings->getSettings(plugin->getPluginName());
+
+		if (parameters.isEmpty())
+		{
+			toLog(LogLevel::Warning, QString("FR %1 not have extensions settings. Skip it. (check config.xml).").arg(plugin->getPluginName()));
+			pluginLoader->destroyPlugin(plugin);
+			continue;
+		}
+
+		frPlugin->subscribe(PPSDK::IFiscalRegister::OFDNotSentSignal, this, SLOT(onOFDNotSent(bool)));
+
+		if (!frPlugin->initialize(parameters))
+		{
+			frPlugin->unsubscribe(PPSDK::IFiscalRegister::OFDNotSentSignal, this);
+
+			toLog(LogLevel::Warning, QString("FR %1 error initialize. Skip it.").arg(plugin->getPluginName()));
+			pluginLoader->destroyPlugin(plugin);
+			continue;
+		}
+
+		mFiscalRegister = frPlugin;
+
+		toLog(LogLevel::Normal, QString("FR %1 loaded successful.").arg(plugin->getPluginName()));
+
+		break;
 	}
 }
 

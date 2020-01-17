@@ -87,7 +87,7 @@
 <context>
     <name>PrinterStatuses</name>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="32"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="33"/>
         <source>#no_paper</source>
         <translation>нет бумаги</translation>
     </message>
@@ -97,22 +97,22 @@
         <translation>прогнозируемый конец бумаги</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="34"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="35"/>
         <source>#paper_is_jammed</source>
         <translation>бумага замята</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="36"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="37"/>
         <source>#printer_head_overheating</source>
         <translation>перегрев печатающей головки</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="37"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="38"/>
         <source>#printing_head_error</source>
         <translation>ошибка печатающей головки</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="33"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="34"/>
         <source>#no_control_paper</source>
         <translation>нет контрольной ленты</translation>
     </message>
@@ -132,62 +132,68 @@
         <translation>тонер скоро кончится</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="35"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="30"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="50"/>
+        <source>#ofd_not_sent</source>
+        <translation>ошибка взаимодействия с ОФД сервером</translation>
+    </message>
+    <message>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="36"/>
         <source>#paper_error</source>
         <translation>ошибка в тракте бумаги</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="38"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="39"/>
         <source>#cutter_error</source>
         <translation>отрезчик неисправен</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="39"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="40"/>
         <source>#presenter_error</source>
         <translation>ошибка презентера</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="40"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="41"/>
         <source>#port_error</source>
         <translation>ошибка порта</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="41"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="42"/>
         <source>#printer_fr_error</source>
         <translation>ошибка принтера</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="42"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="43"/>
         <source>#printer_fr_collapse</source>
         <translation>нераспознанная ошибка принтера, если ошибка устранена - требуется перезагрузка ПО</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="43"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="44"/>
         <source>#printer_fr_not_available</source>
         <translation>принтер недоступен</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="44"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="45"/>
         <source>#motor_error</source>
         <translation>ошибка мотора</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="45"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="46"/>
         <source>#no_toner</source>
         <translation>тонер закончился</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="46"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="47"/>
         <source>#outlet_full</source>
         <translation>выходной лоток полон</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="47"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="48"/>
         <source>#need_paper_take_out</source>
         <translation>необходимо извлечь бумагу из презентера</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="48"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="49"/>
         <source>#memory_end</source>
         <translation>не хватает памяти</translation>
     </message>

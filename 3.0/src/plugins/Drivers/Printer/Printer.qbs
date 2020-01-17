@@ -6,13 +6,12 @@ Project {
 	DriverTemplate {
 		name: "printers"
 
-		Depends { name: "Qt"; submodules: ["axcontainer", "gui"] }
+		Depends { name: "Qt"; submodules: ["gui"] }
 
 		Depends { name: "DriversSDK" }
 		Depends { name: "HardwareCommon" }
 		Depends { name: "HardwarePrinters" }
 		Depends { name: "SysUtils" }
-		Depends { name: "OPOSSDK" }
 		Depends { name: "HardwareIOPorts" }
 
 		files: [

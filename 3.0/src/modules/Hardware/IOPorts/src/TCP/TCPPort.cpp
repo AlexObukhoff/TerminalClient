@@ -46,6 +46,18 @@ void TCPPort::initialize()
 }
 
 //--------------------------------------------------------------------------------
+bool TCPPort::opened()
+{
+	return PERFORM_IN_THREAD(performOpened);
+}
+
+//--------------------------------------------------------------------------------
+bool TCPPort::performOpened()
+{
+	return mSocket && (mSocket->state() == QAbstractSocket::ConnectedState);
+}
+
+//--------------------------------------------------------------------------------
 bool TCPPort::open()
 {
 	return PERFORM_IN_THREAD(performOpen);

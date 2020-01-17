@@ -220,6 +220,21 @@ bool PrimFRBase::checkControlSettings()
 }
 
 //--------------------------------------------------------------------------------
+QDateTime PrimFRBase::getDateTime()
+{
+	QDateTime result;
+	processCommand(CPrimFR::Commands::GetDateTime, 5, "FR date and time", result);
+
+	if (result.isValid())
+	{
+		QTime currentTime = QTime::currentTime();
+		result = result.addSecs(currentTime.second()).addMSecs(currentTime.msec());
+	}
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------
 bool PrimFRBase::getTaxData(int aGroup, CPrimFR::Taxes::SData & aData)
 {
 	CPrimFR::TData answer;
@@ -523,21 +538,43 @@ TResult PrimFRBase::processCommand(char aCommand, const CPrimFR::TData & aComman
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool PrimFRBase::parseAnswerData(const CPrimFR::TData & aAnswer, int aIndex, const QString & aLog, T & aResult)
+bool PrimFRBase::parseAnswerData(const CPrimFR::TData & aData, int aIndex, const QString & aLog, T & aResult)
 {
-	if (aAnswer.size() <= aIndex)
+	if (aData.size() <= aIndex)
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to parse %2 data due to answer size = %3, need %4 minimum").arg(mDeviceName).arg(aLog).arg(aAnswer.size()).arg(aIndex + 1));
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to parse %1 data due to answer size = %2, need %3 minimum").arg(aLog).arg(aData.size()).arg(aIndex + 1));
 		return false;
 	}
 
 	bool OK;
-	QByteArray data = aAnswer[aIndex];
+	QByteArray data = aData[aIndex];
 	aResult = qToBigEndian(T(data.toLongLong(&OK, 16)));
 
 	if ((data.size() != (sizeof(T) * 2)) || !OK)
 	{
-		toLog(LogLevel::Error, QString("%1: Failed to parse %2 data, answer = %3 (%4)").arg(mDeviceName).arg(aLog).arg(mCodec->toUnicode(data)).arg(data.toHex().data()));
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to parse %1 data, answer = %2 (%3)").arg(aLog).arg(mCodec->toUnicode(data)).arg(data.toHex().data()));
+		return false;
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+template <>
+bool PrimFRBase::parseAnswerData<QDateTime>(const CPrimFR::TData & aData, int aIndex, const QString & /*aLog*/, QDateTime & aResult)
+{
+	if (aData.size() <= ++aIndex)
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to parse date and time data due to answer size = %1, need %2 minimum").arg(aData.size()).arg(aIndex + 1));
+		return false;
+	}
+
+	QByteArray data = aData[aIndex - 1] + aData[aIndex];
+	aResult = QDateTime::fromString(data.insert(4, "20"), CPrimFR::FRDateTimeFormat);
+
+	if (!aResult.isValid())
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to parse date and time data, answer = %1 (%2)").arg(mCodec->toUnicode(data)).arg(data.toHex().data()));
 		return false;
 	}
 
@@ -549,7 +586,7 @@ ESessionState::Enum PrimFRBase::getSessionState()
 {
 	ushort state;
 
-	if (!processCommand(CPrimFR::Commands::GetDateTime, 2, "FR date and time", state))
+	if (!processCommand(CPrimFR::Commands::GetDateTime, 2, "session state", state))
 	{
 		return ESessionState::Error;
 	}
@@ -565,7 +602,7 @@ EDocumentState::Enum PrimFRBase::getDocumentState()
 {
 	ushort state;
 
-	if (!processCommand(CPrimFR::Commands::GetDateTime, 2, "FR date and time", state))
+	if (!processCommand(CPrimFR::Commands::GetDateTime, 2, "document state", state))
 	{
 		return EDocumentState::Error;
 	}
@@ -1309,11 +1346,11 @@ QByteArray PrimFRBase::int2ByteArray(int aValue)
 
 //--------------------------------------------------------------------------------
 template <class T>
-void PrimFRBase::loadDeviceData(const CPrimFR::TData & aAnswer, const QString & aName, const QString & aLog, int aIndex, const QString & aExtensibleName)
+void PrimFRBase::loadDeviceData(const CPrimFR::TData & aData, const QString & aName, const QString & aLog, int aIndex, const QString & aExtensibleName)
 {
 	T answerData;
 
-	if (parseAnswerData(aAnswer, aIndex, aLog, answerData))
+	if (parseAnswerData(aData, aIndex, aLog, answerData))
 	{
 		setDeviceParameter(aName, answerData, aExtensibleName);
 	}

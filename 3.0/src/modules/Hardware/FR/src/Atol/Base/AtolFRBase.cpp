@@ -35,6 +35,7 @@ AtolFRBase::AtolFRBase()
 	mSubmode = CAtolFR::InnerSubmodes::NoSubmode;
 	mLocked = false;
 	mNonNullableAmount = 0;
+	mFDExecutionMode = CAtolFR::FiscalFlags::ExecutionMode;
 
 	// количество строк шапки (по умолчанию 4) - изменено для корректной печати на фискализированных аппаратах (как и было раньше)
 	mDocumentCapStrings = 6;
@@ -802,7 +803,7 @@ bool AtolFRBase::performZReport(bool aPrintDeferredReports)
 bool AtolFRBase::openDocument(EPayOffTypes::Enum aPayOffType)
 {
 	QByteArray commandData;
-	commandData.append(CAtolFR::FiscalFlags::ExecutionMode);
+	commandData.append(mFDExecutionMode);
 	commandData.append(CAtolFR::PayOffTypeData[aPayOffType]);
 
 	if (processCommand(CAtolFR::Commands::OpenDocument, commandData))

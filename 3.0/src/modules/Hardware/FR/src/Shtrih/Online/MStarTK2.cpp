@@ -55,9 +55,17 @@ bool MStarTK2FR::setNotPrintDocument(bool aEnabled, bool aZReport)
 
 	QByteArray data;
 	char value = !aEnabled ? All : (aZReport ? NoZReport : NoFiscal);
-	bool result = getFRParameter(CShtrihOnlineFR::FRParameters::NotPrintDocument, data) && !data.isEmpty() && (data[0] == value);
 
-	return result || setFRParameter(CShtrihOnlineFR::FRParameters::NotPrintDocument, value);
+	if (getFRParameter(CShtrihOnlineFR::FRParameters::NotPrintDocument, data) && !data.isEmpty() && (data[0] == value))
+	{
+		return true;
+	}
+
+	SleepHelper::msleep(CShtrihOnlineFR::NotPrintDocumentPause);
+	bool result = setFRParameter(CShtrihOnlineFR::FRParameters::NotPrintDocument, value);
+	SleepHelper::msleep(CShtrihOnlineFR::NotPrintDocumentPause);
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------

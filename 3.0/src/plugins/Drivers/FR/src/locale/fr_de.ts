@@ -118,6 +118,11 @@
     </message>
     <message>
         <location filename="../Parameters/FRPluginParameterTranslations.h" line="17"/>
+        <source>FRParameters#not_printing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Parameters/FRPluginParameterTranslations.h" line="18"/>
         <source>FRParameters#nulling_sum_in_cash</source>
         <translation type="unfinished"></translation>
     </message>
@@ -161,13 +166,13 @@
     </message>
     <message>
         <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="36"/>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="56"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="57"/>
         <source>#wrong_dealer_tax_system</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="37"/>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="57"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="58"/>
         <source>#wrong_dealer_agent_flag</source>
         <translation type="unfinished"></translation>
     </message>
@@ -192,72 +197,77 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="44"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="42"/>
+        <source>#dealer_support_phone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="45"/>
         <source>#fiscal_add_on_error</source>
         <translation>Fehler der fiskalischen Nachbearbeitung</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="45"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="46"/>
         <source>#EKLZ_error</source>
         <translation>Fehler des elektronischen Kontrollschutzbandes</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="46"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="47"/>
         <source>#fiscal_collapse</source>
         <translation>Fehler der fiskalischen Nachbearbeitung, Druck nicht möglich</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="47"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="48"/>
         <source>#FM_error</source>
         <translation>Fehler des Fiskalspeichers</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="48"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="49"/>
         <source>#z_buffer_error</source>
         <translation>Fehler des Puffers für Z-Berichte</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="49"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="50"/>
         <source>#z_buffer_overflow</source>
         <translation>Druck von Z-Berichten erforderlich</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="50"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="51"/>
         <source>#need_close_session</source>
         <translation>Ausführung des Z-Berichts erforderlich</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="51"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="52"/>
         <source>#fs_end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="52"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="53"/>
         <source>#need_ofd_connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="53"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="54"/>
         <source>#fs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="54"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="55"/>
         <source>#fs_closed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="55"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="56"/>
         <source>#no_money</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="58"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="59"/>
         <source>#cashier_inn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="59"/>
+        <location filename="../../../../../includes/Hardware/FR/FRStatusesDescriptions.h" line="60"/>
         <source>#taxes</source>
         <translation type="unfinished"></translation>
     </message>
@@ -285,322 +295,322 @@
 <context>
     <name>FiscalFields</name>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="161"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="84"/>
         <source>#fd_name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="162"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="85"/>
         <source>#user_contact</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="165"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="88"/>
         <source>#serial_fr_number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="166"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="89"/>
         <source>#ofd_inn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="167"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="90"/>
         <source>#inn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="168"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="91"/>
         <source>#payoff_amount</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="169"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="92"/>
         <source>#cashier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="171"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="94"/>
         <source>#automatic_number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="172"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="95"/>
         <source>#rnm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="173"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="96"/>
         <source>#session_number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="174"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="97"/>
         <source>#fd_number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="175"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="98"/>
         <source>#serial_fs_number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="176"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="99"/>
         <source>#document_number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="177"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="100"/>
         <source>#ofd_name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="180"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="103"/>
         <source>#tax_system</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="181"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="104"/>
         <source>#fts_url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="182"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="105"/>
         <source>#tax_systems_reg</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="183"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="106"/>
         <source>#processing_phone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="184"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="107"/>
         <source>#fd_sign</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="185"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="108"/>
         <source>#ofd_not_sent_fd_quantity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="186"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="109"/>
         <source>#ofd_not_sent_fd_date_time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="187"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="110"/>
         <source>#reregistration_cause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="188"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="111"/>
         <source>#fd_for_session_total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="189"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="112"/>
         <source>#sender_mail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="190"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="113"/>
         <source>#fiscals_for_session_total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="191"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="114"/>
         <source>#payoff_place</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="192"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="115"/>
         <source>#model_version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="193"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="116"/>
         <source>#ffd_fr</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="194"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="117"/>
         <source>#ffd_fs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="196"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="119"/>
         <source>#cashier_inn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="197"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="120"/>
         <source>#ofd_url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="201"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="124"/>
         <source>#transfer_operator_address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="202"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="125"/>
         <source>#transfer_operator_inn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="203"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="126"/>
         <source>#transfer_operator_name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="204"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="127"/>
         <source>#transfer_operator_phone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="207"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="130"/>
         <source>#provider_phone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="208"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="131"/>
         <source>#provider_inn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="211"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="134"/>
         <source>#agent_operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="213"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="136"/>
         <source>#agent_phone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="217"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="140"/>
         <source>#fs_expired_status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="218"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="141"/>
         <source>#fs_need_change_status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="219"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="142"/>
         <source>#fs_memory_end_status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="220"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="143"/>
         <source>#ofd_no_connection_status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="223"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="146"/>
         <source>#automatic_mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="224"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="147"/>
         <source>#autonomous_mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="225"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="148"/>
         <source>#encryption_mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="226"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="149"/>
         <source>#internet_mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="227"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="150"/>
         <source>#service_area_mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="228"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="151"/>
         <source>#fixed_reporting_mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="229"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="152"/>
         <source>#lottery_mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="230"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="153"/>
         <source>#gambling_mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="231"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="154"/>
         <source>#excisable_unit_mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="232"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="155"/>
         <source>#in_automate_mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="244"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="167"/>
         <source>#cash_fiscal_total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="245"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="168"/>
         <source>#card_fiscal_total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="246"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="169"/>
         <source>#prepayment_fiscal_total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="247"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="170"/>
         <source>#postpayment_fiscal_total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="248"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="171"/>
         <source>#counter_offer_fiscal_total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="251"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="174"/>
         <source>#tax_amount_02</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="252"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="175"/>
         <source>#tax_amount_03</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="253"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="176"/>
         <source>#tax_amount_04</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="254"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="177"/>
         <source>#tax_amount_05</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="255"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="178"/>
         <source>#tax_amount_06</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/FR/FiscalFieldDescriptions.h" line="256"/>
+        <location filename="../../../../../modules/Hardware/FR/src/Base/FiscalFieldDescriptions.h" line="179"/>
         <source>#tax_amount_07</source>
         <translation type="unfinished"></translation>
     </message>

@@ -8,7 +8,6 @@
 
 // Modules
 #include "Hardware/Common/SerialDeviceBase.h"
-#include "Hardware/Common/LibUSBDeviceBase.h"
 #include "Hardware/Common/TCPDeviceBase.h"
 #include "Hardware/Common/PortPollingDeviceBase.h"
 #include "Hardware/Common/ProtoDevices.h"
@@ -22,7 +21,6 @@ using namespace PrinterStatusCode;
 //---------------------------------------------------------------------------
 template class PrinterBase<PollingDeviceBase<ProtoPrinter>>;
 template class PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>;
-template class PrinterBase<LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>;
 
 //---------------------------------------------------------------------------
 template <class T>
@@ -75,6 +73,18 @@ void PrinterBase<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 	{
 		mNextDocument = aConfiguration[CHardwareSDK::Printer::ContinuousMode].toBool();
 	}
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+void PrinterBase<T>::finaliseInitialization()
+{
+	if (containsConfigParameter(CHardwareSDK::Printer::LineSize))
+	{
+		setDeviceParameter(CHardwareSDK::Printer::LineSize, getConfigParameter(CHardwareSDK::Printer::LineSize));
+	}
+
+	T::finaliseInitialization();
 }
 
 //--------------------------------------------------------------------------------
@@ -240,13 +250,6 @@ bool PrinterBase<T>::isPrintingNeed(const QStringList & aReceipt)
 	if (receipt.isEmpty())
 	{
 		toLog(LogLevel::Normal, mDeviceName + ": simplified receipt is empty");
-		return false;
-	}
-
-	if (getConfigParameter(CHardwareSDK::FR::CanWithoutPrinting).toBool() &&
-		(getConfigParameter(CHardwareSDK::FR::WithoutPrinting).toString() == CHardwareSDK::Values::Use))
-	{
-		toLog(LogLevel::Normal, mDeviceName + "Receipt has not been printed:\n" + aReceipt.join("\n"));
 		return false;
 	}
 
@@ -622,6 +625,12 @@ void PrinterBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 	if (aStatusCodes.isEmpty())
 	{
 		aStatusCodes.insert(DeviceStatusCode::OK::OK);
+	}
+
+	if (getConfigParameter(CHardwareSDK::Printer::OFDNotSentError, false).toBool())
+	{
+		bool error = getConfigParameter(CHardwareSDK::Printer::BlockTerminalOnError, true).toBool();
+		aStatusCodes.insert(error ? Error::OFDNotSent : Warning::OFDNotSent);
 	}
 
 	T::cleanStatusCodes(aStatusCodes);

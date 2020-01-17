@@ -66,6 +66,9 @@ public:
 	/// Подключено новое устройство?
 	virtual bool deviceConnected();
 
+	/// Открыт?
+	virtual bool opened();
+
 	/// Порт существует?
 	virtual bool isExist();
 
@@ -104,6 +107,9 @@ protected:
 
 	/// Проверить готовность порта.
 	virtual bool performCheckReady();
+
+	/// Открыт?
+	virtual bool performOpened();
 
 	/// Проверить готовность порта.
 	virtual bool checkReady();

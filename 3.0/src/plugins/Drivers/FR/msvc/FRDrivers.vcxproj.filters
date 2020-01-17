@@ -56,7 +56,7 @@
     <ClInclude Include="..\src\Parameters\FRPluginParameterTranslations.h">
       <Filter>Parameters</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\includes\Hardware\FR\FiscalFieldDescriptions.h">
+    <ClInclude Include="..\..\..\..\modules\Hardware\FR\src\Base\FiscalFieldDescriptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

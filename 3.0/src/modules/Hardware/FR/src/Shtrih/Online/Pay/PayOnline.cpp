@@ -26,10 +26,9 @@ void PayOnline<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	PayFRBase<T>::setDeviceConfiguration(aConfiguration);
 
-	bool notPrinting = getConfigParameter(CHardwareSDK::FR::WithoutPrinting) == CHardwareSDK::Values::Use;
 	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel, CPayPrinters::Default).toString();
 
-	if (aConfiguration.contains(CHardware::FR::PrinterModel) && (printerModel != CPayPrinters::Default) && !notPrinting)
+	if (aConfiguration.contains(CHardware::FR::PrinterModel) && (printerModel != CPayPrinters::Default) && !isNotPrinting())
 	{
 		for (auto it = CPayPrinters::Models.data().begin(); it != CPayPrinters::Models.data().end(); ++it)
 		{

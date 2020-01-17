@@ -17,6 +17,7 @@
 #include <QtCore/QSignalMapper>
 #include <QtCore/QWaitCondition>
 #include <QtCore/QAtomicInt>
+#include <QtCore/QFileInfo>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -107,6 +108,9 @@ public:
 	/// Печать отчета.
 	virtual int printReport(const QString & aReceiptType, const QVariantMap & aParameters);
 
+	/// Может ли работать с фискальным сервером?
+	virtual bool hasFiscalRegister();
+
 	#pragma endregion
 
 	bool enableBlankFiscalData() const { return mEnableBlankFiscalData; }
@@ -147,8 +151,11 @@ private:
 	/// Первоначальная загрузка значений тегов.
 	bool loadTags();
 
-	/// Загрузка чеков.
+	/// Загрузка шаблонов чеков.
 	void loadReceiptTemplates();
+
+	/// Загрузка шаблона чека из файла.
+	bool loadReceiptTemplate(const QFileInfo & aFileInfo);
 
 	/// Печать чека, возвращает индекс задания, поставленного в очередь.
 	int performPrint(PrintCommand * aCommand, const QVariantMap & aParameters, QStringList aReceiptTemplate = QStringList());
@@ -194,6 +201,9 @@ private slots:
 
 	/// Обработчик печати с ошибкой
 	void printEmptyReceipt(int aJobIndex, bool aError);
+
+	/// Обработчик сигнала о наличии неотправленных чеков в фисклаьном регистраторе.
+	void onOFDNotSent(bool aExist);
 
 private:
 	typedef QMap<QString, QString> TStaticParameters;

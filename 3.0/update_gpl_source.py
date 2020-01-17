@@ -20,7 +20,7 @@ class PublicFiles(object):
         self.files = set(files)
         self.git_path = git_path
 
-    def is_public(self, file):
+    def is_public(self, file, **kwargs):
         if file in self.files:
             return True
 
@@ -28,14 +28,15 @@ class PublicFiles(object):
 
         for i in range(2, len(ff) + 1):
             path = "/".join(ff[0:i])
-            path = path + "/" if self.is_dir(path) else path
+            path = path + "/" if self.is_dir(path, **kwargs) else path
             if path in self.files:
                 return True
 
         return False
 
-    def is_dir(self, p):
-        return os.path.isdir(self.git_path + p)
+    def is_dir(self, p, **kwargs):
+        git_path = kwargs.get('git_path', self.git_path)
+        return os.path.isdir(git_path + p)
 
 
 class FileList(object):
@@ -113,7 +114,7 @@ def main(gpl_path, internal_path):
     print()
 
     for i in internal_files.get_files():
-        if public_files.is_public(i):
+        if public_files.is_public(i, git_path=internal_files.home_path):
             if gpl_files.file_content_hash(i) != internal_files.file_content_hash(i):
                 print("Updating {}".format(internal_files.original_name(i)))
                 dst = gpl_files.absolute_path(internal_files.original_name(i))

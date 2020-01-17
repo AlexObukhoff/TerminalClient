@@ -5,7 +5,6 @@
 
 //---------------------------------------------------------------------------
 template class PortPrinterBase<PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>>;
-template class PortPrinterBase<PrinterBase<LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>>;
 
 //---------------------------------------------------------------------------
 template <class T>

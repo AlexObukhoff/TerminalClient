@@ -87,7 +87,7 @@
 <context>
     <name>PrinterStatuses</name>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="32"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="33"/>
         <source>#no_paper</source>
         <translation>қағаз жоқ</translation>
     </message>
@@ -97,22 +97,22 @@
         <translation>қағаздың виртуалды соңы </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="34"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="35"/>
         <source>#paper_is_jammed</source>
         <translation>Қағаз қысылып қалды </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="36"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="37"/>
         <source>#printer_head_overheating</source>
         <translation>басып шығарушы қондырма қызып кеткен</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="37"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="38"/>
         <source>#printing_head_error</source>
         <translation>басып шығарушы қондырмада қате туындады</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="33"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="34"/>
         <source>#no_control_paper</source>
         <translation>бақылау таспасы жоқ</translation>
     </message>
@@ -132,62 +132,68 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="35"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="30"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="50"/>
+        <source>#ofd_not_sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="36"/>
         <source>#paper_error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="38"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="39"/>
         <source>#cutter_error</source>
         <translation>кескіште ақаулық бар</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="39"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="40"/>
         <source>#presenter_error</source>
         <translation>презентерде қате туындады</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="40"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="41"/>
         <source>#port_error</source>
         <translation>портта қате туындады</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="41"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="42"/>
         <source>#printer_fr_error</source>
         <translation>принтерде қате туындады</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="42"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="43"/>
         <source>#printer_fr_collapse</source>
         <translation>принтерде анықталмаған қате туындады, қате жойылмаса  - Бағдарламалық қамсыздандыруды (ПО) қайта жүктеу қажет </translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="43"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="44"/>
         <source>#printer_fr_not_available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="44"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="45"/>
         <source>#motor_error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="45"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="46"/>
         <source>#no_toner</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="46"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="47"/>
         <source>#outlet_full</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="47"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="48"/>
         <source>#need_paper_take_out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="48"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="49"/>
         <source>#memory_end</source>
         <translation type="unfinished"></translation>
     </message>

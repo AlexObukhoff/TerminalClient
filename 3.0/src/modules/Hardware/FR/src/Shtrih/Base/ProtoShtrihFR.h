@@ -118,7 +118,7 @@ protected:
 	virtual SDK::Driver::ESessionState::Enum getSessionState();
 
 	/// Установить параметр системной таблицы.
-	bool setFRParameter(const CShtrihFR::FRParameters::SData & aData, const QVariant & aValue, char aSeries = 1);
+	bool setFRParameter(const CShtrihFR::FRParameters::SData & aData, const QVariant & aValue, char aSeries = 1, bool aCleanLogValue = false);
 
 	/// Получить параметр системной таблицы.
 	bool getFRParameter(const CShtrihFR::FRParameters::SData & aData, QByteArray & aValue, char aSeries = 1);

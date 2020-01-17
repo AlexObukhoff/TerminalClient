@@ -327,8 +327,38 @@ bool AtolOnlineFRBase<T>::getStatus(TStatusCodes & aStatusCodes)
 
 //--------------------------------------------------------------------------------
 template<class T>
+bool AtolOnlineFRBase<T>::isTradeWithoutPrinting()
+{
+	return getModelList().contains(mDeviceName) && !canNotPrinting() && isNotPrinting();
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool AtolOnlineFRBase<T>::isPrintingNeed(const QStringList & aReceipt)
+{
+	if (!T::isPrintingNeed(aReceipt))
+	{
+		return false;
+	}
+
+	bool OK = false;
+	mFFEngine.checkFiscalField(CFR::FiscalFields::UserContact, OK);
+
+	if (isTradeWithoutPrinting() && OK)
+	{
+		toLog(LogLevel::Normal, mDeviceName + ": Receipt has not been printed by trade ATOL:\n" + aReceipt.join("\n"));
+		return false;
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
 bool AtolOnlineFRBase<T>::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * aFDNumber)
 {
+	mFDExecutionMode = isTradeWithoutPrinting() ? CAtolOnlineFR::FiscalFlags::NotPrinting : CAtolFR::FiscalFlags::ExecutionMode;
+
 	if (!T::performFiscal(aReceipt, aPaymentData))
 	{
 		return false;
@@ -494,7 +524,12 @@ bool AtolOnlineFRBase<T>::checkTax(TVAT aVAT, CFR::Taxes::SData & aData)
 template<class T>
 bool AtolOnlineFRBase<T>::sale(const SUnitData & aUnitData)
 {
-	if (!processCommand(CAtolOnlineFR::Commands::StartSale, CAtolOnlineFR::StartSailingData))
+	if (isTradeWithoutPrinting() && !setTLV(CFR::FiscalFields::UserContact))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to make fiscal document without printing");
+	}
+
+	if (!processCommand(CAtolOnlineFR::Commands::StartSale, CAtolOnlineFR::FiscalFlags::StartSailingData))
 	{
 		return false;
 	}
@@ -511,7 +546,7 @@ bool AtolOnlineFRBase<T>::sale(const SUnitData & aUnitData)
 	QByteArray payOffSubjectMethodType = getBCD(aUnitData.payOffSubjectMethodType, 1);
 
 	QByteArray commandData;
-	commandData.append(CAtolOnlineFR::SaleFlags);               // флаги
+	commandData.append(CAtolOnlineFR::FiscalFlags::Saling);     // флаги
 	commandData.append(sum);                                    // сумма
 	commandData.append(getBCD(10, 5, 2));                       // количество = 1 штука
 	commandData.append(sum);                                    // стоимость

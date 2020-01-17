@@ -7,6 +7,9 @@
 #include <QtCore/QSet>
 #include <Common/QtHeadersEnd.h>
 
+// Common
+#include "Common/ExitAction.h"
+
 // Project
 #include "Hardware/Common/PollingExpector.h"
 #include "Hardware/Common/BaseStatusDescriptions.h"

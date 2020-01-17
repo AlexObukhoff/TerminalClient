@@ -14,6 +14,7 @@ namespace PluginParameterTranslations
 	static const char * SessionOpeningTime      = QT_TRANSLATE_NOOP("FRParameters", "FRParameters#session_opening_time");
 	static const char * EjectorParameters       = QT_TRANSLATE_NOOP("FRParameters", "FRParameters#ejector_parameters");
 	static const char * PrinterModel            = QT_TRANSLATE_NOOP("FRParameters", "FRParameters#printer_model");
+	static const char * NotPrinting             = QT_TRANSLATE_NOOP("FRParameters", "FRParameters#not_printing");
 	static const char * NullingSumInCash        = QT_TRANSLATE_NOOP("FRParameters", "FRParameters#nulling_sum_in_cash");
 };
 

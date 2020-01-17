@@ -5,7 +5,7 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QMap>
-#include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -15,20 +15,33 @@
 namespace SDK {
 namespace PaymentProcessor {
 
+namespace ERequestType
+{
+	enum Enum
+	{
+		Receipt = 1,
+		XReport = 2,
+		Encashment = 4,
+		ZReport = 8,
+		SessionData
+	};
+}
+
 //------------------------------------------------------------------------------
 class IFiscalRegister
 {
 public:
-	enum
-	{
-		Receipt = 1,
-		Balance = 2,
-		Encashment = 4,
-		ZReport = 8
-	};
+	/// Соединение открыто.
+	static const char * OFDNotSentSignal; // SIGNAL(OFDNotSent(bool));
 
 public:
 	virtual ~IFiscalRegister() {}
+
+	/// Соединяет сигнал данного класса со слотом приёмника.
+	virtual bool subscribe(const char * aSignal, QObject * aReceiver, const char * aSlot) = 0;
+
+	/// Отсоединяет сигнал данного класса от слота приёмника.
+	virtual bool unsubscribe(const char * aSignal, QObject * aReceiver) = 0;
 
 	/// Инициализация регистратора
 	virtual bool initialize(const QMap<QString, QString> & aParameters) = 0;
@@ -37,24 +50,24 @@ public:
 	virtual QStringList getParameterNames() = 0;
 
 	/// Получить список возможностей ФР
-	virtual bool haveCapability(quint32 aCapabilityFlags) = 0;
+	virtual bool hasCapability(quint32 aCapabilityFlags) = 0;
+
+	/// Проверить готовность к выполнению операции.
+	virtual bool isReady(ERequestType::Enum aType) = 0;
 
 	/// Зарегистрировать платёж и вернуть набор параметров
-	virtual QVariantMap createFiscalTicket(qint64 aPaymentId, const QVariantMap & aPaymentParameters, const SDK::Driver::SPaymentData & aPaymentData) = 0;
+	virtual QVariantMap createFiscalTicket(qint64 aPaymentId, const QVariantMap & aPaymentParameters, const SDK::Driver::SPaymentData & aPaymentData, bool aWaitResult) = 0;
 
 	/// Получить строки для чека с фискальной информацией, список параметров может модифицироваться!
-	virtual QStringList getReceipt(qint64 paymentId, const QVariantMap & aPaymentParameters) = 0;
+	virtual QStringList getReceipt(qint64 paymentId, const QVariantMap & aPaymentParameters, const SDK::Driver::SPaymentData & aPaymentData) = 0;
 
-	/// Получить отчёт по балансу ФР
-	virtual QStringList balance() = 0;
-
-	/// Инкассировать и получить текст для печати на чеке
-	virtual QStringList encashment() = 0;
-
-	/// Получить Z отчёт
-	virtual QStringList getZreport() = 0;
+	/// Выполнить сервисную операцию (инкассация, Z-отчет, X-отчет).
+	virtual bool serviceRequest(ERequestType::Enum aType, QStringList & aReceipt, const QVariantMap & aParameters) = 0;
 };
 
 //------------------------------------------------------------------------------
 }} // SDK::PaymentProcessor
 
+namespace PPSDK = SDK::PaymentProcessor;
+
+//------------------------------------------------------------------------------

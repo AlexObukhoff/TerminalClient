@@ -19,7 +19,7 @@ SDK::Plugin::SPluginParameter setAutoCloseSessionAbility();
 SDK::Plugin::SPluginParameter setSessionOpeningTime();
 
 // Печатать/не печатать.
-SDK::Plugin::SPluginParameter setNotPrinting();
+SDK::Plugin::SPluginParameter setNotPrinting(bool aVisible = false);
 
 // Модель подключенного принтера для Казначея.
 SDK::Plugin::SPluginParameter setPrinterModel(const QStringList & aModels, const QString & aDefault);

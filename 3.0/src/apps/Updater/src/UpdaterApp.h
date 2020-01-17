@@ -29,6 +29,8 @@ namespace CUpdaterApp
 	/// Таймаут попыток повторнго запуска по финишу BITS
 	const long BITSCompleteTimeout = 15 * 60;  // 15 минут
 
+	const long BITSErrorRestartTimeout = 3 * 60;  // 3 минуты
+
 	typedef enum 
 	{
 		Download, // закачиваем обновления

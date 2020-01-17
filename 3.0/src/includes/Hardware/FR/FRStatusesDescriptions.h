@@ -39,6 +39,7 @@ namespace FRStatusCode
 			ADD_FR_WARNING(WrongTaxOnPayment,          QCoreApplication::translate("FRStatuses", "#wrong_tax_on_payment"));
 			ADD_FR_WARNING(NeedTimeSynchronization,    QCoreApplication::translate("FRStatuses", "#need_time_synchronization"));
 			ADD_FR_WARNING(FSVirtualEnd,               QCoreApplication::translate("FRStatuses", "#fs_virtual_end"));
+			ADD_FR_WARNING(DealerSupportPhone,         QCoreApplication::translate("FRStatuses", "#dealer_support_phone"));
 
 			/// Ошибки.
 			ADD_FR_ERROR(FR,                   QCoreApplication::translate("FRStatuses", "#fiscal_add_on_error"));

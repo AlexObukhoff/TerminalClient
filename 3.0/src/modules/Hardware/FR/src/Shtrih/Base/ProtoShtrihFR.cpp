@@ -159,7 +159,7 @@ bool ProtoShtrihFR<T>::checkTax(TVAT aVAT, CFR::Taxes::SData & aData)
 	QString description = aData.description;
 	QString FRDescription = mCodec->toUnicode(rawDescription.replace(ASCII::NUL, ""));
 
-	if ((description != FRDescription) && !setFRParameter(CShtrihFR::FRParameters::Taxes::Description, description.leftJustified(57, QChar(ASCII::NUL)), group))
+	if ((description != FRDescription) && !setFRParameter(CShtrihFR::FRParameters::Taxes::Description, description.leftJustified(57, QChar(ASCII::NUL)), group, true))
 	{
 		toLog(LogLevel::Error, mDeviceName + QString(": Failed to set description for tax value %1% (%2 tax group)").arg(aVAT, 5, 'f', 2, ASCII::Zero).arg(aData.group));
 	}
@@ -770,7 +770,7 @@ void ProtoShtrihFR<T>::setFRParameters()
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ProtoShtrihFR<T>::setFRParameter(const CShtrihFR::FRParameters::SData & aData, const QVariant & aValue, char aSeries)
+bool ProtoShtrihFR<T>::setFRParameter(const CShtrihFR::FRParameters::SData & aData, const QVariant & aValue, char aSeries, bool aCleanLogValue)
 {
 	if (mProcessingErrors.contains(CShtrihFR::Errors::RAM))
 	{
@@ -799,9 +799,16 @@ bool ProtoShtrihFR<T>::setFRParameter(const CShtrihFR::FRParameters::SData & aDa
 	else if (aValue.type() == QVariant::String) commandData.append(mCodec->fromUnicode(aValue.toString()));
 	else commandData.append(char(aValue.toInt()));
 
+	QString logValue = aValue.toString();
+
+	if (aCleanLogValue)
+	{
+		logValue = clean(logValue);
+	}
+
 	if (!processCommand(CShtrihFR::Commands::SetFRParameter, commandData))
 	{
-		toLog(LogLevel::Error, mDeviceName + QString(": Failed to set %1 = %2").arg(aData.log(aSeries)).arg(aValue.toString()));
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to set %1 = %2").arg(aData.log(aSeries)).arg(logValue));
 		return false;
 	}
 
@@ -1113,11 +1120,14 @@ bool ProtoShtrihFR<T>::processAnswer(const QByteArray & aCommand, char aError)
 		}
 		//--------------------------------------------------------------------------------
 		case CShtrihFR::Errors::BadModeForCommand :
+		case CShtrihFR::Errors::BadModeForField:
 		{
 			mProcessingErrors.push_back(aError);
 
 			if (getLongStatus())
 			{
+				toLog(LogLevel::Normal, mDeviceName + QString(": mode = %1, submode = %2").arg(int(mMode)).arg(int(mSubmode)));
+
 				switch (mMode)
 				{
 					case CShtrihFR::InnerModes::SessionExpired :

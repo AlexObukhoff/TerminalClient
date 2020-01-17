@@ -49,6 +49,7 @@ CModelData::CModelData()
 	addOnlineTrade(64, 36, Models::Atol52F, true,  6, CAtolFR::OnlineTradeBuild, false);
 	addOnlineTrade(62, 36, Models::Atol55F, true,  6);
 	addOnlineTrade(69, 48, Models::Atol77F, true,  6, CAtolFR::OnlineTradeBuild, false);
+	addOnlineTrade(82, 32, Models::Atol91F, true,  3, CAtolFR::OnlineTradeBuild, false);
 
 	addOnlineTrade(63, 48, Models::FPrint22PTK, true, 6, CAtolFR::OnlineTradeBuild, false);
 

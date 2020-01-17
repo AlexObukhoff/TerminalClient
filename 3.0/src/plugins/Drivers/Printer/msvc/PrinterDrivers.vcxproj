@@ -70,7 +70,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;SysUtils.lib;IOPorts.lib;libusb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;SysUtils.lib;IOPorts.lib;libusb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);$(THIRDPARTY_DIR)\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -98,7 +98,7 @@ call "$(ProjectDir)\CompileLocale.bat" "$(OutDir)" "$(TargetName)"</Command>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;SysUtils.lib;IOPorts.lib;libusb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;SysUtils.lib;IOPorts.lib;libusb_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);$(THIRDPARTY_DIR)\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -125,7 +125,7 @@ call "$(ProjectDir)\CompileLocale.bat" "$(OutDir)" "$(TargetName)"</Command>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCored4.lib;QtGuid4.lib;QAxContainerd.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;printersd.lib;SysUtilsd.lib;IOPortsd.lib;libusb_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCored4.lib;QtGuid4.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;printersd.lib;SysUtilsd.lib;IOPortsd.lib;libusb_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(TC_LIB_DIR);$(THIRDPARTY_DIR)\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -141,7 +141,8 @@ call "$(ProjectDir)\CompileLocale.bat" "$(OutDir)" "$(TargetName)"</Command>
   <ItemGroup>
     <ClCompile Include="..\..\Parameters\PrinterPluginParameters.cpp" />
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp" />
-    <ClCompile Include="..\src\PrintersPlugin.cpp" />
+    <ClCompile Include="..\src\PrinterPlugin.cpp" />
+    <ClCompile Include="..\src\PrinterTemplates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Parameters\PrinterPluginParameters.h" />

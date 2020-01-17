@@ -53,6 +53,12 @@ bool PrinterService::checkPrinter(bool aRealCheck)
 }
 
 //------------------------------------------------------------------------------
+bool PrinterService::checkFiscalRegister()
+{
+	return mPrinterService->hasFiscalRegister();
+}
+
+//------------------------------------------------------------------------------
 void PrinterService::privateCheckPrinter()
 {
 	emit printerChecked(mPrinterService->canPrintReceipt("payment", true));

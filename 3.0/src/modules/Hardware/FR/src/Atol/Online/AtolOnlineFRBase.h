@@ -65,6 +65,12 @@ protected:
 	/// Проверить параметры налога.
 	virtual bool checkTax(SDK::Driver::TVAT aVAT, CFR::Taxes::SData & aData);
 
+	/// Торговый фискальник без печати чека?
+	bool isTradeWithoutPrinting();
+
+	/// Проверить необходимость печати.
+	virtual bool isPrintingNeed(const QStringList & aReceipt);
+
 	/// Продажа.
 	virtual bool sale(const SDK::Driver::SUnitData & aUnitData);
 

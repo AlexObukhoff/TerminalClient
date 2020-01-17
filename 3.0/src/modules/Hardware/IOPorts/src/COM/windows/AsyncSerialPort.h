@@ -159,6 +159,9 @@ public:
 
 	/// Подключено новое устройство?
 	virtual bool deviceConnected();
+
+	/// Открыт?
+	virtual bool opened();
 #pragma endregion
 
 	/// Изменить таймаут выполнения зависоноопасной операции

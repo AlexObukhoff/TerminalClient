@@ -14,6 +14,19 @@ namespace SDK {
 namespace Driver {
 
 //--------------------------------------------------------------------------------
+/// Состояние сессии.
+namespace ESessionState
+{
+	enum Enum
+	{
+		Error,     /// Ошибка определения.
+		Opened,    /// Открыта.
+		Closed,    /// Закрыта.
+		Expired    /// Истекла.
+	};
+}
+
+//--------------------------------------------------------------------------------
 // Структура описателя фискальных тегов.
 struct SFiscalFieldData
 {
@@ -176,6 +189,9 @@ typedef int TVAT;
 typedef QSet<TVAT> TVATs;
 typedef double TSum;
 
+
+/*   !!!!!!!!!!!!!!  НЕ забываем обновить метод FiscalProtocol::createRequest и parseRequestJsonDoc */
+
 struct SUnitData
 {
 	TSum sum;                                                   /// Сумма платежа.
@@ -194,7 +210,8 @@ struct SUnitData
 
 typedef QList<SUnitData> TUnitDataList;
 
-/// Фискальные данные платежа
+
+/// Фискальные данные платежа  !!!!!!!!!!!!!!  НЕ забываем обновить метод FiscalProtocol::createRequest и parseRequestJsonDoc
 struct SPaymentData
 {
 	TUnitDataList unitDataList;       /// Список данных товара

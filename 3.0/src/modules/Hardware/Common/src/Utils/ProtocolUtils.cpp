@@ -96,6 +96,34 @@ bool ProtocolUtils::getBit(const QByteArray & aBuffer, int aShift, bool invert)
 }
 
 //--------------------------------------------------------------------------------
+bool ProtocolUtils::checkBufferString(QString aData, QString * aLog)
+{
+	aData = aData.replace("0x", "").replace(" ", "");
+	auto makeResult = [&aLog] (const QString & aLogData) -> bool { if (aLog) *aLog = "Failed to check buffer string due to " + aLogData; return false; };
+
+	int size = aData.size();
+
+	if (size % 2)
+	{
+		return makeResult("size = " + QString::number(size));
+	}
+
+	for (int i = 0; i < size / 2; ++i)
+	{
+		bool OK;
+		QString data = aData.mid(i * 2, 2);
+		data.toUShort(&OK, 16);
+
+		if (!OK)
+		{
+			return makeResult(QString("data #%1 = %2").arg(i).arg(data));
+		}
+	}
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
 QByteArray ProtocolUtils::getBufferFromString(QString aData)
 {
 	aData = aData.replace("0x", "").replace(" ", "");

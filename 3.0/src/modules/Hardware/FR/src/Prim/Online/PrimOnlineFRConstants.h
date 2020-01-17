@@ -14,9 +14,6 @@ namespace CPrimOnlineFR
 	/// Параметр снятия Z-отчета в буфер.
 	const char ZReportInBuffer[] = "01";
 
-	/// Формат представления даты и времени в ответе на запрос статуса ФН-а.
-	const char FSDateTimeFormat[] = "ddMMyyyyhhmm";
-
 	/// По умолчанию использовать последнюю регистрацию.
 	const char LastRegistration[] = "00";
 

@@ -34,6 +34,17 @@ Data::Data()
 }
 
 //---------------------------------------------------------------------------
+void Data::add(const TData & aData)
+{
+	mBuffer.unite(aData);
+
+	for (auto it = aData.begin(); it != aData.end(); ++it)
+	{
+		mDescriptionData.insert(it.key(), it->textKey);
+	}
+}
+
+//---------------------------------------------------------------------------
 TAllData Data::process(int aField, const SData & aData)
 {
 	static TData data;
@@ -57,15 +68,34 @@ int Data::getKey(const QString & aTextKey) const
 }
 
 //---------------------------------------------------------------------------
+TFields Data::getKeys(const QStringList & aTextKeys) const
+{
+	TFields result;
+
+	foreach (const QString & textKey, aTextKeys)
+	{
+		result << getKey(textKey);
+	}
+
+	return result;
+}
+
+//---------------------------------------------------------------------------
+QStringList Data::getTextKeys() const
+{
+	return mDescriptionData.values();
+}
+
+//---------------------------------------------------------------------------
 QStringList Data::getTextKeys(const TFields & aFields) const
 {
 	QStringList result;
 
 	foreach (int field, aFields)
 	{
-		if (mBuffer.contains(field))
+		if (mDescriptionData.contains(field))
 		{
-			result << mBuffer[field].textKey;
+			result << mDescriptionData[field];
 		}
 	}
 

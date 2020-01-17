@@ -12,7 +12,6 @@
 
 //--------------------------------------------------------------------------------
 template class CustomPrinter<TSerialPrinterBase>;
-template class CustomPrinter<TLibUSBPrinterBase>;
 
 //--------------------------------------------------------------------------------
 template <class T>

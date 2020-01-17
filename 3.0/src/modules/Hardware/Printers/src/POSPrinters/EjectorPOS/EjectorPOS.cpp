@@ -13,7 +13,6 @@ using namespace PrinterStatusCode;
 
 //--------------------------------------------------------------------------------
 template class EjectorPOS<TSerialPrinterBase>;
-template class EjectorPOS<TLibUSBPrinterBase>;
 
 //--------------------------------------------------------------------------------
 template <class T>

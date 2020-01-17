@@ -338,19 +338,20 @@ function checkEnterHandler(aParameters) {
 		for (var i in aProvider.fields) {
 			if (aProvider.fields[i].isRequired) {
 				if (aProvider.fields[i].dependency && Core.userProperties.get("operator_dependency_fields").hasOwnProperty(aProvider.fields[i].id)
-						&& !Core.userProperties.get("operator_dependency_fields")[aProvider.fields[i].id]) { continue; }
+						&& !Core.userProperties.get("operator_dependency_fields")[aProvider.fields[i].id]) { GUI.log("SKIP field %1 by dependency".arg(aProvider.fields[i].id)); continue; }
 
-				if(aProvider.fields[i].type == "html") { continue; }
+				if(aProvider.fields[i].type == "html") { GUI.log("SKIP field %1 by HTML type".arg(aProvider.fields[i].id)); continue; }
 
-				if (!aFields.hasOwnProperty(aProvider.fields[i].id)) { return false; }
+				if (!aFields.hasOwnProperty(aProvider.fields[i].id)) { GUI.log("SKIP field %1 by field not found".arg(aProvider.fields[i].id)); return false; }
 
-				if(!aFields[aProvider.fields[i].id].rawValue) { return false; }
+				if(!aFields[aProvider.fields[i].id].rawValue) { GUI.log("SKIP field %1 by empty value".arg(aProvider.fields[i].id)); return false; }
 
 				if (aProvider.fields[i].type == "number" || aProvider.fields[i].type == "number:float") {
-					if (Number(aFields[aProvider.fields[i].id].rawValue).toString() == "NaN") { return false; }
+					if (Number(aFields[aProvider.fields[i].id].rawValue).toString() == "NaN") { GUI.log("SKIP field %1 by NaN number to string".arg(aProvider.fields[i].id)); return false; }
 				}
 			}
 		}
+
 		return true;
 	}
 
@@ -701,7 +702,8 @@ function finishEnterHandler(aParameters) {
 			}
 		}
 		else {
-			printReceipt(Scenario.Payment.ReceiptType.Payment, RECEIPT_STATE, false, true);
+			// Если есть фисальный регистратор, то печатаем, иначе - только сохраняем копию чека
+			printReceipt(Scenario.Payment.ReceiptType.Payment, RECEIPT_STATE, false, !Core.printer.checkFiscalRegister());
 			GUI.notify(Scenario.Payment.Event.ReceiptPrinted, {receipt_printed: false});
 		}
 	}

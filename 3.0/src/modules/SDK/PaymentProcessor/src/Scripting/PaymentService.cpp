@@ -839,6 +839,18 @@ bool PaymentService::isFinalStep()
 }
 
 //------------------------------------------------------------------------------
+void PaymentService::setExternalCommissions(const QVariantList & aCommissions)
+{
+	mDealerSettings->setExternalCommissions(PPSDK::Commissions::fromVariant(aCommissions));
+}
+
+//------------------------------------------------------------------------------
+void PaymentService::resetExternalCommissions()
+{
+	mDealerSettings->resetExternalCommissions();
+}
+
+//------------------------------------------------------------------------------
 void PaymentService::stepBack()
 {
 	if (currentStep() != "0")

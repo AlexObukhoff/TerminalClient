@@ -13,6 +13,9 @@
 #include <SDK/Drivers/FR/FiscalPrinterCommand.h>
 #include <SDK/Drivers/IFiscalPrinter.h>
 
+// Project
+#include "PrintConstants.h"
+
 namespace FiscalCommand = SDK::Driver::EFiscalPrinterCommand;
 namespace PPSDK = SDK::PaymentProcessor;
 
@@ -24,6 +27,15 @@ namespace CPrintCommands
 
 	/// Шаблон имени файла фискального чека.
 	const char ReceiptNameTemplate[] = "hhmmsszzz";
+
+	/// Данные фискальных тегов.
+	const QStringList FFDataList = QStringList()
+		<< CPrintConstants::OpPhone
+		<< CPrintConstants::DealerSupportPhone
+		<< CPrintConstants::BankPhone
+		<< CPrintConstants::BankAddress
+		<< CPrintConstants::BankInn
+		<< CPrintConstants::BankName;
 }
 
 //---------------------------------------------------------------------------
@@ -55,6 +67,9 @@ public:
 	/// Возвращает тип чека.
 	QString getReceiptType() const { return mReceiptType; }
 
+	/// Получить параметры принтера для печати.
+	QVariantMap getPrintingParameters(SDK::Driver::IPrinter * aPrinter);
+
 protected:
 	QString mReceiptType;
 	QString mReceiptTemplate;
@@ -77,7 +92,7 @@ protected:
 	bool canFiscalPrint(SDK::Driver::IPrinter * aPrinter, bool aRealCheck);
 
 	/// Получить строки с фискальной информацией чека
-	bool getFiscalInfo(QVariantMap & aParameters, QStringList & aReceiptLines);
+	bool getFiscalInfo(QVariantMap & aParameters, QStringList & aReceiptLines, bool aWaitResult);
 
 	FiscalCommand::Enum mFiscalCommand;
 
@@ -101,6 +116,9 @@ public:
 
 	/// Печать.
 	virtual bool print(SDK::Driver::IPrinter * aPrinter, const QVariantMap & aParameters);
+
+	/// Сформировать фискальный чек через фискальный сервер.
+	bool makeFiscalByFR(const QVariantMap & aParameters);
 
 private:
 	/// Добавить данные платежа.

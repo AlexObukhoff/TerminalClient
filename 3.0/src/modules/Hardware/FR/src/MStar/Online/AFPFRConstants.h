@@ -135,6 +135,7 @@ namespace CAFPFR
 
 		#define ADD_AFP_FF(aNumber, aField) const SData aField = SData(aNumber, CFR::FiscalFields::aField)
 
+		ADD_AFP_FF(76, SenderMail);                 // 1117 (Электронная почта отправителя чека).
 		ADD_AFP_FF(78, TransferOperatorPhone);      // 1075 (Телефон оператора перевода).
 		ADD_AFP_FF(79, AgentOperation);             // 1044 (Операция платежного агента).
 		ADD_AFP_FF(80, AgentPhone);                 // 1073 (Телефон платежного агента).
@@ -171,7 +172,7 @@ namespace CAFPFR
 		const char GetFSStatus              = '\xB0';    /// Запрос статуса ФН.
 		const char GetOFDStatus             = '\xB2';    /// Запрос параметров обмена с сервером ОФД.
 		const char GetFiscalizationTotal    = '\xB6';    /// Получить итоги регистрации.
-		const char SetUserMail              = '\xB8';    /// Установить электронный адрес покупателя.
+		const char SetUserContact           = '\xB8';    /// Установить телефон/электронный адрес покупателя.
 		const char SetTaxSystem             = '\xBF';    /// Установить СНО.
 		const char SetAgentFlag             = '\xC0';    /// Установить флаг агента.
 		const char GetFiscalTLVData         = '\xC4';    /// Получить данные фискального документа в TLV-формате.
@@ -199,7 +200,7 @@ namespace CAFPFR
 				add(GetOFDStatus,             TAnswerTypes() << Int  << Int  << Int  << Int  << Date << Time, 3 * 1000);
 				add(GetFiscalizationTotal,    TAnswerTypes() << Date << Time << FInt << FInt << FInt << Int  << Int  << FInt   << FInt);
 				add(GetFiscalTLVData,         TAnswerTypes() << String, 5000);
-				add(GetLastFiscalizationData, TAnswerTypes() << Unknown);
+				add(GetLastFiscalizationData, TAnswerTypes() << Unknown, 2500);
 				//                                               0        1      2       3       4       5       6       7         8       9        10     11      12     13
 
 				add(ZReport,       10 * 1000);

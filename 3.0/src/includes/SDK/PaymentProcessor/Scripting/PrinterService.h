@@ -30,6 +30,9 @@ public slots:
 	/// Проверка принтера на возможность печати чека. Если aRealCheck - true, то результат придёт в сигнале printerChecked.
 	bool checkPrinter(bool aRealCheck);
 
+	/// Проверка возможности использования фискального регистратора
+	bool checkFiscalRegister();
+
 	/// Печать типизированного чека с параметрами aParameters.
 	void printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aTemplate, bool aContinuousMode = false);
 

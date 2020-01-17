@@ -256,19 +256,6 @@ bool PrimOnlineFRBase::getStatus(TStatusCodes & aStatusCodes)
 }
 
 //--------------------------------------------------------------------------------
-QDateTime PrimOnlineFRBase::getDateTime()
-{
-	CPrimFR::TData data;
-
-	if (processCommand(CPrimOnlineFR::Commands::GetFSStatus, &data) && (data.size() > 16))
-	{
-		return QDateTime::fromString(data[10].insert(4, "20"), CPrimOnlineFR::FSDateTimeFormat);
-	}
-
-	return QDateTime();
-}
-
-//--------------------------------------------------------------------------------
 void PrimOnlineFRBase::processDeviceData()
 {
 	CPrimFR::TData data;
@@ -318,7 +305,7 @@ void PrimOnlineFRBase::processDeviceData()
 		if (data.size() > 8)
 		{
 			QString dateTimedata = data[8] + data[7];
-			QDateTime dateTime = QDateTime::fromString(dateTimedata.insert(4, "20"), CPrimOnlineFR::FSDateTimeFormat);
+			QDateTime dateTime = QDateTime::fromString(dateTimedata.insert(4, "20"), CPrimFR::FRDateTimeFormat);
 
 			if (dateTime.isValid())
 			{
@@ -425,12 +412,12 @@ void PrimOnlineFRBase::setFPData(TFiscalPaymentData & aFPData, const CFR::STLV &
 	QString data = mCodec->toUnicode(aTLV.data);
 	CFR::FiscalFields::SData FFData = mFFData[aTLV.field];
 
-	if (FFData.type == CFR::FiscalFields::ETypes::UnixTime)
+	if (FFData.isTime())
 	{
 		QDateTime dateTime = QDateTime::fromString(data.insert(6, "20"), CPrimOnlineFR::FFDateTimeFormat);
 		mFFEngine.setFPData(aFPData, aTLV.field, dateTime);
 	}
-	else if (!FFData.isMoney)
+	else if (!FFData.isMoney())
 	{
 		mFFEngine.setFPData(aFPData, aTLV.field, data);
 	}

@@ -136,6 +136,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\includes\SDK\Plugins\IFactory.h" />
+    <ClInclude Include="..\..\..\..\includes\SDK\Plugins\PluginBase.h" />
     <ClInclude Include="..\src\PluginInitializer.h" />
     <ClInclude Include="..\src\PluginLoader.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Plugins\PluginParameters.h" />

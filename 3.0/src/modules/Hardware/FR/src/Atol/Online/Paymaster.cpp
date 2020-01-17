@@ -32,10 +32,9 @@ void Paymaster<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	AtolVKP80BasedFR<T>::setDeviceConfiguration(aConfiguration);
 
-	bool notPrinting = getConfigParameter(CHardwareSDK::FR::WithoutPrinting) == CHardwareSDK::Values::Use;
 	QString printerModel = getConfigParameter(CHardware::FR::PrinterModel, CAtolOnlinePrinters::Default).toString();
 
-	if (aConfiguration.contains(CHardware::FR::PrinterModel) && (printerModel != CAtolOnlinePrinters::Default) && !notPrinting)
+	if (aConfiguration.contains(CHardware::FR::PrinterModel) && (printerModel != CAtolOnlinePrinters::Default) && !isNotPrinting())
 	{
 		mPPTaskList.append([&] () { mNotPrintingError = !setNotPrintDocument(false); });
 	}

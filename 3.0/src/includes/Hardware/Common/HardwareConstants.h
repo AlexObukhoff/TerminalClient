@@ -194,6 +194,7 @@ namespace CHardware
 			const char BackFeed[] = "back_feed";
 			const char PrintPageNumber[] = "print_page_number";
 			const char LeftMargin[] = "left_margin";
+			const char RightMargin[] = "right_margin";
 		}
 
 		/// Параметры обработки чека после отрезки.

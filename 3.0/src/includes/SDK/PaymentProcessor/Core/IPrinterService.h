@@ -46,6 +46,9 @@ public:
 	/// Печать отчета.
 	virtual int printReport(const QString & aReceiptType, const QVariantMap & aParameters) = 0;
 
+	/// Может ли работать с фискальным сервером?
+	virtual bool hasFiscalRegister() = 0;
+
 signals:
 	/// Срабатывает после печати произвольного чека. Успешность операции передаётся в поле aError.
 	void receiptPrinted(int aJobIndex, bool aErrorHappened);

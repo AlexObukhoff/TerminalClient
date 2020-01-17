@@ -135,11 +135,17 @@ protected:
 	/// Проверить налоги на платеже.
 	bool checkTaxesOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
+	/// Добавить телефон в фискальные теги в конфиг.
+	void addPhone(const QString & aField, const QVariant & aData);
+
+	/// Добавить почту в фискальные теги в конфиг.
+	void addMail(const QString & aField, const QVariant & aData);
+
 	/// Добавить фискальные теги в платеж.
 	void addFiscalFieldsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
-	/// Проверить включение фискальных тегов в платеж.
-	void checkFFExisting(int aField, bool aAdd, bool aRequired = true);
+	/// Проверить наличие и необходимость фискальных тегов на платеже.
+	void checkFFExistingOnPayment(int aField, bool aAdd, bool aRequired = true);
 
 	/// Добавить данные в фискальный тег из конфига или параметра.
 	typedef std::function<void(QString &)> TFFConfigData;
@@ -156,6 +162,15 @@ protected:
 
 	/// Проверить параметры налога.
 	virtual bool checkTax(SDK::Driver::TVAT /*aVAT*/, CFR::Taxes::SData & /*aData*/) { return true; }
+
+	/// Включена непечать?
+	bool isNotPrinting();
+
+	/// Может не печатать?
+	bool canNotPrinting();
+
+	/// Проверить необходимость печати.
+	virtual bool isPrintingNeed(const QStringList & aReceipt);
 
 	/// Локальная печать X-отчета.
 	virtual bool processXReport() = 0;

@@ -6,7 +6,6 @@
 
 //--------------------------------------------------------------------------------
 template class CustomVKP80<TSerialPrinterBase>;
-template class CustomVKP80<TLibUSBPrinterBase>;
 
 //--------------------------------------------------------------------------------
 template<class T>
@@ -37,12 +36,14 @@ CustomVKP80<T>::CustomVKP80()
 	mParameters.tagEngine.appendSingle(Tags::Type::Italic, "\x1B\x34", "\x01");
 	mParameters.tagEngine.appendCommon(Tags::Type::DoubleWidth,  "\x1B\x21", "\x20");
 	mParameters.tagEngine.appendCommon(Tags::Type::DoubleHeight, "\x1B\x21", "\x10");
+	mParameters.tagEngine.appendSingle(Tags::Type::Amount, "", "\xFE");
 
 	// параметры моделей
 	mDeviceName = "Custom VKP-80";
 	mModelID = '\xB9';
 
 	setConfigParameter(CHardware::Printer::FeedingAmount, 0);
+	setConfigParameter(CHardwareSDK::Printer::LineSize, 42);
 
 	// модели
 	mModelData.data().clear();

@@ -68,6 +68,7 @@ namespace CAllHardware
 		const char DealerTaxSystem[] = "dealer_tax_system";
 		const char DealerAgentFlag[] = "dealer_agent_flag";
 		const char DealerVAT[] = "dealer_vat";
+		const char DealerSupportPhone[] = "dealer_support_phone";
 		const char UserPhone[] = "user_phone";
 		const char UserMail[] = "user_mail";
 		const char ZReportTime[] = "z_report_time";
@@ -80,11 +81,12 @@ namespace CAllHardware
 	/// Константы принтера.
 	namespace Printer
 	{
-		const char TemplateParameters[] = "template_parameters";
-		const char ReceiptParameters[] = "receipt_parameters";
+		const char LineSize[] = "line_size";
 		const char ReceiptTemplate[] = "receipt_template";
 		const char ContinuousMode[] = "continuous_mode";
 		const char ServiceOperation[] = "service_operation";
+		const char BlockTerminalOnError[] = "block_terminal_on_error";
+		const char OFDNotSentError[] = "ofd_not_sent_error";
 	}
 
 	/// Константы HID-устройств.

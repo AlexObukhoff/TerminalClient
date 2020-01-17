@@ -6,10 +6,7 @@
 
 //--------------------------------------------------------------------------------
 template class SerialPOSPrinter<CitizenPPU700<TSerialPrinterBase>>;
-template class                  CitizenPPU700<TLibUSBPrinterBase>;
-
 template class SerialPOSPrinter<CitizenPPU700II<TSerialPrinterBase>>;
-template class                  CitizenPPU700II<TLibUSBPrinterBase>;
 
 //--------------------------------------------------------------------------------
 template<class T>

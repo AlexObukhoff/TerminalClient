@@ -25,6 +25,20 @@ PortFRBase<T>::PortFRBase() : mLastError('\x00'), mLastCommandResult(CommandResu
 
 //--------------------------------------------------------------------------------
 template <class T>
+void PortFRBase<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
+{
+	bool opened = mIOPort && mIOPort->opened();
+
+	FRBase<T>::setDeviceConfiguration(aConfiguration);
+
+	if (mOperatorPresence && mIOPort && !opened && mIOPort->opened())
+	{
+		mIOPort->close();
+	}
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
 void PortFRBase<T>::setInitialData()
 {
 	FRBase<T>::setInitialData();
@@ -157,7 +171,21 @@ void PortFRBase<T>::makeReceipt(const QStringList & aReceipt, TReceiptBuffer & a
 template <class T>
 bool PortFRBase<T>::printFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * aFDNumber)
 {
-	bool result = FRBase<T>::printFiscal(aReceipt, aPaymentData, aFDNumber); 
+	bool result = FRBase<T>::printFiscal(aReceipt, aPaymentData, aFDNumber);
+
+	if (mOperatorPresence)
+	{
+		mIOPort->close();
+	}
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool PortFRBase<T>::checkFiscalFields(quint32 aFDNumber, TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
+{
+	bool result = FRBase<T>::checkFiscalFields(aFDNumber, aFPData, aPSData);
 
 	if (mOperatorPresence)
 	{
@@ -256,6 +284,20 @@ bool PortFRBase<T>::printXReport(const QStringList & aReceipt)
 	}
 
 	return result;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+void PortFRBase<T>::postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection)
+{
+	bool opened = mIOPort->opened();
+
+	FRBase<T>::postPollingAction(aNewStatusCollection, aOldStatusCollection);
+
+	if (mOperatorPresence && !opened && mIOPort->opened())
+	{
+		mIOPort->close();
+	}
 }
 
 //--------------------------------------------------------------------------------

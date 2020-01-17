@@ -27,6 +27,7 @@ namespace FRStatusCode
 		const int WrongTaxOnPayment          = 264;  /// Неверная налоговая ставка на платеже.
 		const int NeedTimeSynchronization    = 265;  /// Необходима синхронизация с системным временем.
 		const int FSVirtualEnd               = 266;  /// Срок действия ФН должен был закончиться.
+		const int DealerSupportPhone         = 267;  /// Телефон техподдержки дилера некорректен.
 	}
 
 	/// Ошибки.

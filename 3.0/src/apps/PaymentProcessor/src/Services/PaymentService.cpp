@@ -941,7 +941,7 @@ void PaymentService::hangupProcessing()
 }
 
 //---------------------------------------------------------------------------
-void PaymentService::doUpdatePaymentFields(quint64 aID, std::shared_ptr<PPSDK::IPayment> aPayment, const QList<SDK::PaymentProcessor::IPayment::SParameter> & aFields, bool aForce)
+void PaymentService::doUpdatePaymentFields(qint64 aID, std::shared_ptr<PPSDK::IPayment> aPayment, const QList<SDK::PaymentProcessor::IPayment::SParameter> & aFields, bool aForce)
 {
 	if (!aPayment)
 	{
