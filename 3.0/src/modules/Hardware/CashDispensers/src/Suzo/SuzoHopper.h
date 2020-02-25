@@ -39,11 +39,14 @@ public:
 	static QStringList getModelList();
 
 protected:
+	/// Инициализация устройства.
+	virtual bool updateParameters();
+
+	/// Выполнить команду.
+	virtual TResult execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
+
 	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
-
-	/// Сброс.
-	virtual bool reset();
 
 	/// Установить режим выдачи: 1 / набор.
 	bool setSingleMode(bool aEnable);

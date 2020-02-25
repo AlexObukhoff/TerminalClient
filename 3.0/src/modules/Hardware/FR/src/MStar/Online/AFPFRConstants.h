@@ -200,7 +200,7 @@ namespace CAFPFR
 				add(GetOFDStatus,             TAnswerTypes() << Int  << Int  << Int  << Int  << Date << Time, 3 * 1000);
 				add(GetFiscalizationTotal,    TAnswerTypes() << Date << Time << FInt << FInt << FInt << Int  << Int  << FInt   << FInt);
 				add(GetFiscalTLVData,         TAnswerTypes() << String, 5000);
-				add(GetLastFiscalizationData, TAnswerTypes() << Unknown);
+				add(GetLastFiscalizationData, TAnswerTypes() << Unknown, 2500);
 				//                                               0        1      2       3       4       5       6       7         8       9        10     11      12     13
 
 				add(ZReport,       10 * 1000);

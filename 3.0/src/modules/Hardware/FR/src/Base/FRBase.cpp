@@ -213,20 +213,42 @@ void FRBase<T>::finaliseOnlineInitialization()
 		setConfigParameter(CHardwareSDK::FR::AgentFlags, QVariant().fromValue(agentFlagsData.keys()));
 	}
 
-	TOperationModeData operationModeData;
+	CFR::FiscalFields::TFields operationModeFields = CFR::OperationModeData.data().values();
+	char configOperationModeData = ASCII::NUL;
+	QStringList operationModeDescriptions;
 
-	foreach(char operationMode, mOperationModes)
+	foreach (auto field, CFR::FiscalFields::ModeFields)
 	{
-		int field = CFR::OperationModeData[operationMode];
-		operationModeData.insert(EOperationModes::Enum(operationMode), mFFData[field].translationPF);
+		QString textKey = mFFData[field].textKey;
+
+		if (mFFEngine.getConfigParameter(textKey, 0).toInt())
+		{
+			operationModeDescriptions << mFFData[field].translationPF;
+
+			if (operationModeFields.contains(field))
+			{
+				configOperationModeData |= CFR::OperationModeData.key(field);
+			}
+		}
 	}
 
-	QStringList operationModeDescriptions = operationModeData.values();
+	char operationModeData = ASCII::NUL;
 
-	if (mFFEngine.getConfigParameter(CFiscalSDK::LotteryMode,       0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::LotteryMode].translationPF;
-	if (mFFEngine.getConfigParameter(CFiscalSDK::GamblingMode,      0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::GamblingMode].translationPF;
-	if (mFFEngine.getConfigParameter(CFiscalSDK::ExcisableUnitMode, 0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::ExcisableUnitMode].translationPF;
-	if (mFFEngine.getConfigParameter(CFiscalSDK::InAutomateMode,    0).toInt()) operationModeDescriptions += mFFData[CFR::FiscalFields::InAutomateMode].translationPF;
+	foreach (char operationMode, mOperationModes)
+	{
+		operationModeData |= operationMode;
+
+		int field = CFR::OperationModeData[operationMode];
+		operationModeDescriptions << mFFData[field].translationPF;
+	}
+
+	if (configOperationModeData && (configOperationModeData != operationModeData))
+	{
+		checkOperationModes(configOperationModeData | operationModeData);
+	}
+
+	operationModeDescriptions.removeDuplicates();
+	operationModeDescriptions.sort();
 
 	if (FS::Data.contains(mFSSerialNumber))
 	{
@@ -805,7 +827,7 @@ bool FRBase<T>::isPrintingNeed(const QStringList & aReceipt)
 
 	if (canNotPrinting() && isNotPrinting())
 	{
-		toLog(LogLevel::Normal, mDeviceName + "Receipt has not been printed:\n" + aReceipt.join("\n"));
+		toLog(LogLevel::Normal, mDeviceName + ": Receipt has not been printed:\n" + aReceipt.join("\n"));
 		return false;
 	}
 
@@ -987,7 +1009,7 @@ bool FRBase<T>::setOFDParameters()
 	foreach (auto field, mOFDFiscalFields)
 	{
 		ERequired::Enum required = mFFData[field].required;
-		bool critical = (required == ERequired::Yes) || (mOperatorPresence && (ERequired::PM));
+		bool critical = (required == ERequired::Yes) || (mOperatorPresence && (required == ERequired::PM));
 
 		if (!setTLV(field) && critical)
 		{
@@ -1049,7 +1071,7 @@ bool FRBase<T>::printZReport(bool aPrintDeferredReports)
 template <class T>
 bool FRBase<T>::printXReport(const QStringList & aReceipt)
 {
-	mNextDocument = true;
+	mPrintingMode = EPrintingModes::Continuous;
 
 	return processNonReentrant(std::bind(&FRBase::performXReport, this, std::ref(aReceipt)));
 }
@@ -1093,7 +1115,7 @@ bool FRBase<T>::processEncashment(const QStringList & aReceipt, double aAmount)
 			aAmount = amountInCash;
 		}
 
-		mNextDocument = true;
+		mPrintingMode = EPrintingModes::Continuous;
 
 		return processNonReentrant(std::bind(&FRBase::performEncashment, this, std::ref(aReceipt), aAmount));
 	}
@@ -1702,13 +1724,16 @@ void FRBase<T>::addFiscalFieldsOnPayment(const SPaymentData & aPaymentData)
 
 	if (notPrinting && mOperationModes.contains(EOperationModes::Automatic))
 	{
-		addConfigFFData(CFiscalSDK::UserContact, CFR::FiscalFields::NoData);
-		addConfigFFData(CFiscalSDK::SenderMail,  CFR::FiscalFields::NoData);
+		addConfigFFData(CFiscalSDK::UserContact, CFiscalSDK::Values::NoData);
+		addConfigFFData(CFiscalSDK::SenderMail,  CFiscalSDK::Values::NoData);
 	}
 
 	bool internetMode = mOperationModes.contains(EOperationModes::Internet);
-	checkFFExistingOnPayment(CFR::FiscalFields::UserContact, notPrinting || internetMode);
-	checkFFExistingOnPayment(CFR::FiscalFields::SenderMail,  notPrinting);
+	// TODO: до выяснения причин ошибок в установке на Пэе
+	bool requiredUserContact = getConfigParameter(CFiscalSDK::UserContact).toString() != CFiscalSDK::Values::NoData;
+	bool requiredSenderMail  = getConfigParameter(CFiscalSDK::SenderMail).toString()  != CFiscalSDK::Values::NoData;
+	checkFFExistingOnPayment(CFR::FiscalFields::UserContact, notPrinting || internetMode, requiredUserContact);
+	checkFFExistingOnPayment(CFR::FiscalFields::SenderMail,  notPrinting, requiredSenderMail);
 
 	QList<int> fiscalFields = mFFData.data().keys();
 	QVariantMap FFConfig;
@@ -1828,7 +1853,7 @@ bool FRBase<T>::isFS36() const
 	int days = QDate::currentDate().daysTo(FSValidityDate) + 3;
 	toLog(LogLevel::Normal, mDeviceName + QString(": %1 days to validity date").arg(days));
 
-	return days > CFR::SimpleFSValidityDays;
+	return days > CFR::FS15ValidityDays;
 }
 
 //--------------------------------------------------------------------------------

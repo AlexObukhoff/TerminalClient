@@ -1126,6 +1126,8 @@ bool ProtoShtrihFR<T>::processAnswer(const QByteArray & aCommand, char aError)
 
 			if (getLongStatus())
 			{
+				toLog(LogLevel::Normal, mDeviceName + QString(": mode = %1, submode = %2").arg(int(mMode)).arg(int(mSubmode)));
+
 				switch (mMode)
 				{
 					case CShtrihFR::InnerModes::SessionExpired :

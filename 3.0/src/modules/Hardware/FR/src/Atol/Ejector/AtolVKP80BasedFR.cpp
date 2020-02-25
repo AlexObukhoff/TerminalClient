@@ -131,7 +131,7 @@ template <class T>
 bool AtolVKP80BasedFR<T>::processReceipt(const QStringList & aReceipt, bool aProcessing)
 {
 	//TODO: проверить необходимость реализации печати картинки
-	char ejectorMode = mEjectorSettings.receipt | (char(mNextDocument) * mEjectorSettings.nextMask);
+	char ejectorMode = mEjectorSettings.receipt | (char(mPrintingMode == EPrintingModes::Continuous) * mEjectorSettings.nextMask);
 	setEjectorMode(ejectorMode);
 
 	return AtolEjectorFR<T>::processReceipt(aReceipt, aProcessing);
@@ -141,7 +141,7 @@ bool AtolVKP80BasedFR<T>::processReceipt(const QStringList & aReceipt, bool aPro
 template <class T>
 bool AtolVKP80BasedFR<T>::performFiscal(const QStringList & aReceipt, const SPaymentData & aPaymentData, quint32 * aFDNumber)
 {
-	char ejectorMode = mEjectorSettings.receipt | (char(mNextDocument) * mEjectorSettings.nextMask);
+	char ejectorMode = mEjectorSettings.receipt | (char(mPrintingMode == EPrintingModes::Continuous) * mEjectorSettings.nextMask);
 	setEjectorMode(ejectorMode);
 
 	return AtolEjectorFR<T>::performFiscal(aReceipt, aPaymentData, aFDNumber);

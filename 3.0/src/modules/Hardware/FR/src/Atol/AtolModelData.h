@@ -68,6 +68,7 @@ namespace CAtolFR
 		const char Atol52F[]     = "ATOL-52F";
 		const char Atol55F[]     = "ATOL-55F";
 		const char Atol77F[]     = "ATOL-77F";
+		const char Atol91F[]     = "ATOL-91F";
 
 		const char Paymaster[]   = "Sensis Kaznachej";
 		const char FPrint22PTK[] = "ATOL FPrint-22PTK";

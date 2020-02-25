@@ -68,6 +68,19 @@ int Data::getKey(const QString & aTextKey) const
 }
 
 //---------------------------------------------------------------------------
+TFields Data::getKeys(const QStringList & aTextKeys) const
+{
+	TFields result;
+
+	foreach (const QString & textKey, aTextKeys)
+	{
+		result << getKey(textKey);
+	}
+
+	return result;
+}
+
+//---------------------------------------------------------------------------
 QStringList Data::getTextKeys() const
 {
 	return mDescriptionData.values();

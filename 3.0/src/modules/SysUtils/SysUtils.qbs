@@ -1,11 +1,10 @@
 ﻿import qbs 1.0
 
-StaticLibrary {
+import "../../qbs/libTemplate.qbs" as TCLib
+
+TCLib {
 	name: "SysUtils"
 
-	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core"] }
-	Depends { name: "Core" }
 	Depends { name: "DelayImpHlp" }
 
 	cpp.minimumWindowsVersion: "5.1"

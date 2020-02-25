@@ -378,6 +378,9 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ContainerProxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Common\ExitAction.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\locale\common_ru.ts">

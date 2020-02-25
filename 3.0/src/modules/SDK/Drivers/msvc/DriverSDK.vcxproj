@@ -124,6 +124,7 @@
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IDispenser.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\IMifareReader.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\InteractionTypes.h" />
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\PrintingModes.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\WarningLevel.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CashAcceptor\CurrencyList.h" />
     <ClInclude Include="..\..\..\..\includes\SDK\Drivers\CashAcceptor\CashAcceptorStatus.h" />

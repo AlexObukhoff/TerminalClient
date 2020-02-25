@@ -1,12 +1,15 @@
 import qbs 1.0
 
-StaticLibrary {
+import "../../../qbs/libTemplate.qbs" as TCLib
+
+TCLib {
 	name: "PPSDK"
 
 	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "widgets", "qml"] }
+	Depends { name: "Qt"; submodules: ["core", "widgets"] }
 
 	Depends { name: "Core" }
+	Depends { name: "qt5port" }
 	Depends { name: "boost" }
 
 	files: [

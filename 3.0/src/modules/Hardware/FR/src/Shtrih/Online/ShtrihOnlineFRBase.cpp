@@ -53,7 +53,16 @@ QStringList ShtrihOnlineFRBase<T>::getModelList()
 template<class T>
 bool ShtrihOnlineFRBase<T>::setNotPrintDocument(bool aEnabled, bool /*aZReport*/)
 {
-	return !aEnabled || setFRParameter(CShtrihOnlineFR::FRParameters::NotPrintDocument, true);
+	if (!aEnabled)
+	{
+		return true;
+	}
+
+	SleepHelper::msleep(CShtrihOnlineFR::NotPrintDocumentPause);
+	bool result = setFRParameter(CShtrihOnlineFR::FRParameters::NotPrintDocument, true);
+	SleepHelper::msleep(CShtrihOnlineFR::NotPrintDocumentPause);
+
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -87,6 +96,9 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 
 	// Печатать фискальные теги, вводимые на платеже
 	setFRParameter(CShtrihOnlineFR::FRParameters::PrintCustomFields, true);
+
+	// Отключить строгий ФЛК
+	setFRParameter(CShtrihOnlineFR::FRParameters::StrongFormatChecking, false);
 
 	if (!isFiscal())
 	{

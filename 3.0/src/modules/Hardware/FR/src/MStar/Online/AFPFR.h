@@ -31,6 +31,9 @@ protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
 
+	/// Получить данные тега последней фискализации.
+	bool getLastFiscalizationData(int aField, QVariant & aData);
+
 	/// Запросить и вывести в лог критичные параметры ФР.
 	virtual void processDeviceData();
 

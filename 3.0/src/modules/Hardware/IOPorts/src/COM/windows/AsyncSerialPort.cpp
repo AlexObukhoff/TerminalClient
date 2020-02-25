@@ -234,6 +234,12 @@ void AsyncSerialPort::changePerformingTimeout(const QString & aContext, int aTim
 }
 
 //--------------------------------------------------------------------------------
+bool AsyncSerialPort::opened()
+{
+	return checkHandle();
+}
+
+//--------------------------------------------------------------------------------
 bool AsyncSerialPort::open()
 {
 	if (checkHandle())

@@ -28,9 +28,6 @@ namespace CFR
 //---------------------------------------------------------------------------
 namespace CFR { namespace FiscalFields
 {
-	/// ФФД маркер отсутствия данных.
-	const char NoData[] = "none";
-
 	namespace Types
 	{
 		#define ADD_FISCAL_TYPE(aType, aMinSize, ...) append(ETypes::aType, SData(aMinSize, #aType, __VA_ARGS__))
@@ -74,6 +71,7 @@ namespace CFR { namespace FiscalFields
 		static TAllData process(int aField, const SData & aData = SData());
 
 		int getKey(const QString & aTextKey) const;
+		TFields getKeys(const QStringList & aTextKeys) const;
 		QStringList getTextKeys() const;
 		QStringList getTextKeys(const TFields & aFields) const;
 		QString getTextLog(int aField) const;
@@ -240,6 +238,20 @@ namespace CFR { namespace FiscalFields
 		<< CFR::FiscalFields::SenderMail
 		<< CFR::FiscalFields::TaxSystem
 		<< CFR::FiscalFields::AgentFlag;
+
+	//---------------------------------------------------------------------------
+	// Режимы работы
+	const TFields ModeFields = TFields()
+		<< CFR::FiscalFields::AutomaticMode
+		<< CFR::FiscalFields::AutonomousMode
+		<< CFR::FiscalFields::EncryptionMode
+		<< CFR::FiscalFields::InternetMode
+		<< CFR::FiscalFields::ServiceAreaMode
+		<< CFR::FiscalFields::FixedReportingMode
+		<< CFR::FiscalFields::LotteryMode
+		<< CFR::FiscalFields::GamblingMode
+		<< CFR::FiscalFields::ExcisableUnitMode
+		<< CFR::FiscalFields::InAutomateMode;
 
 }}    // namespace CFR::FiscalFields
 

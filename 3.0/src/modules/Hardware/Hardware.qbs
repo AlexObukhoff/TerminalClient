@@ -119,6 +119,12 @@ Project {
 			"../../includes/Hardware/FR/FRErrorDescription.h",
 			"../../includes/Hardware/FR/FRStatusCodes.h"
 		]
+
+		Group {
+				fileTagsFilter: product.type
+				qbs.install: true
+				qbs.installDir: "lib/hardware"
+		}
 	}
 
 	StaticLibrary {

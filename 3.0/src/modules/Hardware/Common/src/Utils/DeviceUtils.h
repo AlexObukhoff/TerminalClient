@@ -12,20 +12,6 @@
 #include "Hardware/Common/FunctionTypes.h"
 
 //---------------------------------------------------------------------------
-// Класс для выполнения функционала при выходе из области видимости.
-// Если отпадает необъходимость в его вызове - вызвать reset().
-class ExitAction
-{
-public:
-	ExitAction(const TVoidMethod & aAction) : mAction(aAction) {}
-	~ExitAction() { if (mAction) mAction(); }
-
-	bool reset() { mAction = TVoidMethod(); return true; }
-
-private:
-	TVoidMethod mAction;
-};
-
 /// Данные устройств.
 typedef QMap<QString, QString> TDeviceData;
 

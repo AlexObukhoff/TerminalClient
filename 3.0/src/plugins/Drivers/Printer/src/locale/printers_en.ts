@@ -87,7 +87,7 @@
 <context>
     <name>PrinterStatuses</name>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="32"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="33"/>
         <source>#no_paper</source>
         <translation>no paper</translation>
     </message>
@@ -97,22 +97,22 @@
         <translation>no paper virtual</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="34"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="35"/>
         <source>#paper_is_jammed</source>
         <translation>paper jammed</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="36"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="37"/>
         <source>#printer_head_overheating</source>
         <translation>overheat printer head</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="37"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="38"/>
         <source>#printing_head_error</source>
         <translation>printer head error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="33"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="34"/>
         <source>#no_control_paper</source>
         <translation>no control paper</translation>
     </message>
@@ -132,62 +132,68 @@
         <translation>about to run out of toner</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="35"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="30"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="50"/>
+        <source>#ofd_not_sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="36"/>
         <source>#paper_error</source>
         <translation>paper error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="38"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="39"/>
         <source>#cutter_error</source>
         <translation>cutter error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="39"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="40"/>
         <source>#presenter_error</source>
         <translation>presenter error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="40"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="41"/>
         <source>#port_error</source>
         <translation>port error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="41"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="42"/>
         <source>#printer_fr_error</source>
         <translation>printer error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="42"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="43"/>
         <source>#printer_fr_collapse</source>
         <translation>unrecognized printer error, if error persists - software needs to be rebooted</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="43"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="44"/>
         <source>#printer_fr_not_available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="44"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="45"/>
         <source>#motor_error</source>
         <translation>motor error</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="45"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="46"/>
         <source>#no_toner</source>
         <translation>no toner</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="46"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="47"/>
         <source>#outlet_full</source>
         <translation>the outlet is full</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="47"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="48"/>
         <source>#need_paper_take_out</source>
         <translation>remove paper from the presenter</translation>
     </message>
     <message>
-        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="48"/>
+        <location filename="../../../../../includes/Hardware/Printers/PrinterStatusesDescriptions.h" line="49"/>
         <source>#memory_end</source>
         <translation>out of memory</translation>
     </message>

@@ -16,8 +16,14 @@ class PortFRBase : public FRBase<T>
 public:
 	PortFRBase();
 
+	/// Устанавливает конфигурацию устройству.
+	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
+
 	/// Печать фискального чека.
 	virtual bool printFiscal(const QStringList & aReceipt, const SDK::Driver::SPaymentData & aPaymentData, quint32 * aFDNumber = nullptr);
+
+	/// Получить фискальные теги по номеру документа.
+	virtual bool checkFiscalFields(quint32 aFDNumber, SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
 
 	/// Выполнить Z-отчет [и распечатать отложенные Z-отчеты].
 	virtual bool printZReport(bool aPrintDeferredReports);
@@ -31,6 +37,9 @@ protected:
 
 	/// Идентификация.	
 	virtual bool checkExistence();
+
+	/// Фоновая логика при появлении определенных состояний устройства.
+	virtual void postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection);
 
 	/// Получить статус. Возвращает Fail, Error (константы) или правильный ответ.
 	template <class T2>

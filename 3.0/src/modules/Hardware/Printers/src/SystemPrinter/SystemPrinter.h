@@ -27,6 +27,9 @@ namespace CSystemPrinter
 	/// Отступ по умолчанию.
 	const qreal DefaultMargin = 1.0;
 
+	/// Коэффициент масштабирования для изображений.
+	const qreal ImageScalingFactor = 0.5;    //0.475 соответствует попиксельной печати 1:1 для Custom VKP-80
+
 	//----------------------------------------------------------------------------
 	/// Теги.
 	class TagEngine : public Tags::Engine
@@ -37,7 +40,7 @@ namespace CSystemPrinter
 			appendSingle(Tags::Type::Italic,    "", "<i>", "</i>");
 			appendSingle(Tags::Type::Bold,      "", "<b>", "</b>");
 			appendSingle(Tags::Type::UnderLine, "", "<u>", "</u>");
-			appendSingle(Tags::Type::Image,     "", "<img src='data:image/png;base64,", "'/>");
+			appendSingle(Tags::Type::Image,     "", "<div align='center'><img src='data:image/png;base64,", "'/></div>");
 		}
 	};
 }

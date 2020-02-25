@@ -881,9 +881,17 @@ bool FFEngine::checkAgentFlagOnPayment(SPaymentData & aPaymentData)
 }
 
 //--------------------------------------------------------------------------------
+void FFEngine::logRemovedFields(const QStringList & aOldTextKeys, SDK::Driver::TFiscalPaymentData & aFPData) const
+{
+	CFR::FiscalFields::TFields removedFields = mFFData.getKeys((aOldTextKeys.toSet() - aFPData.keys().toSet()).toList());
+
+	toLog(LogLevel::Normal, mDeviceName + QString(": fiscal fields %1 have been removed from the fiscal payment data").arg(mFFData.getLogFromList(removedFields)));
+}
+
+//--------------------------------------------------------------------------------
 void FFEngine::filterAfterPayment(TFiscalPaymentData & aFPData, TComplexFiscalPaymentData & aPSData)
 {
-	CFR::FiscalFields::TFields removedFields;
+	QStringList textKeys = aFPData.keys();
 
 	foreach(int field, CFR::FiscalFields::FiscalTotals)
 	{
@@ -891,12 +899,11 @@ void FFEngine::filterAfterPayment(TFiscalPaymentData & aFPData, TComplexFiscalPa
 
 		if (!aFPData.value(textKey).toInt())
 		{
-			removedFields << field;
 			aFPData.remove(textKey);
 		}
 	}
 
-	toLog(LogLevel::Normal, mDeviceName + QString(": fiscal fields %1 have been removed from the fiscal payment data").arg(mFFData.getLogFromList(removedFields)));
+	logRemovedFields(textKeys, aFPData);
 
 	  setFPData(aFPData, CFR::FiscalFields::FDName);
 	checkFPData(aFPData, CFR::FiscalFields::PayOffType);

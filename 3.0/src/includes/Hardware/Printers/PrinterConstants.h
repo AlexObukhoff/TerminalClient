@@ -29,7 +29,7 @@ namespace CPrinters
 	const int DefaultHRSize = 35;
 
 	/// Белый цвет.
-	const QRgb White = QColor(Qt::white).rgb();
+	const QRgb White = QColor(Qt::transparent).rgb();
 
 	/// Действие с незабранным чеком.
 	namespace ELeftReceiptAction

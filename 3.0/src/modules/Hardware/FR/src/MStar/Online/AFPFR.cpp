@@ -71,6 +71,21 @@ bool AFPFR::getFRData(const CAFPFR::FRInfo::SData & aInfo, CAFPFR::TData & aData
 }
 
 //--------------------------------------------------------------------------------
+bool AFPFR::getLastFiscalizationData(int aField, QVariant & aData)
+{
+	CAFPFR::TData data;
+
+	if (!processCommand(CAFPFR::Commands::GetLastFiscalizationData, aField, &data))
+	{
+		return false;
+	}
+
+	aData = data[0];
+
+	return aData.isValid();
+}
+
+//--------------------------------------------------------------------------------
 bool AFPFR::updateParameters()
 {
 	processDeviceData();
@@ -81,22 +96,40 @@ bool AFPFR::updateParameters()
 	}
 
 	setFRParameter(CAFPFR::FRParameters::PrintingOnClose, true);
-	CAFPFR::TData data;
 
-	if (!processCommand(CAFPFR::Commands::GetFiscalizationTotal, 1, &data))
+	QVariant data;
+
+	if (!getLastFiscalizationData(CFR::FiscalFields::TaxSystemsReg, data) || !checkTaxSystems(char(data.toInt())))
 	{
 		return false;
 	}
 
-	if (!checkTaxSystems(char(data[4].toInt())) || !checkOperationModes(char(data[5].toInt())))
+	if (!getLastFiscalizationData(CFR::FiscalFields::AgentFlagsReg, data) || !checkAgentFlags(char(data.toInt())))
 	{
 		return false;
 	}
 
-	if (!processCommand(CAFPFR::Commands::GetLastFiscalizationData, CFR::FiscalFields::AgentFlagsReg, &data, CAFPFR::EAnswerTypes::FInt) ||
-	    !checkAgentFlags(char(data[0].toInt())))
+	CFR::FiscalFields::TFields fields = CFR::FiscalFields::TFields()
+		<< CFR::FiscalFields::ModeFields
+		<< CFR::FiscalFields::FTSURL
+		<< CFR::FiscalFields::OFDURL
+		<< CFR::FiscalFields::OFDName
+		<< CFR::FiscalFields::LegalOwner
+		<< CFR::FiscalFields::PayOffAddress
+		<< CFR::FiscalFields::PayOffPlace;
+
+	foreach (auto field, fields)
 	{
-		return false;
+		if (!getLastFiscalizationData(field, data))
+		{
+			return false;
+		}
+
+		QString textKey = mFFData[field].textKey;
+		mFFEngine.setConfigParameter(textKey, mCodec->toUnicode(data.toByteArray()));
+		QString value = mFFEngine.getConfigParameter(textKey, data).toString();
+
+		toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = \"%2\" to config data").arg(mFFData.getTextLog(field)).arg(value));
 	}
 
 	return !mOperatorPresence || loadSectionNames();
@@ -615,7 +648,7 @@ bool AFPFR::performFiscal(const QStringList & aReceipt, const SPaymentData & aPa
 	// флаг агента
 	char agentFlag = char(aPaymentData.agentFlag);
 
-	if ((agentFlag != EAgentFlags::None) && (mAgentFlags.size() != 1) && !processCommand(CAFPFR::Commands::SetAgentFlag, agentFlag))
+	if (!processCommand(CAFPFR::Commands::SetAgentFlag, agentFlag))
 	{
 		toLog(LogLevel::Error, mDeviceName + QString(": Failed to set agent flag %1 (%2)").arg(toHexLog(agentFlag)).arg(CFR::AgentFlags[agentFlag]));
 		return false;

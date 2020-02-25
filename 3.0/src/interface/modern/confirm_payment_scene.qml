@@ -55,6 +55,7 @@ Widgets.SceneBase2 {
 		for (var i in global.provider.fields) {
 			if (!global.handlerParameters.fields.hasOwnProperty(global.provider.fields[i].id)) continue;
 			if (!global.provider.fields[i].title || !global.handlerParameters.fields[global.provider.fields[i].id].value) continue;
+			if (global.provider.fields[i]["behavior"] === "hidden") continue;
 
 			table += "<tr><td width='40%'>";
 			table += String(global.provider.fields[i].title).toUpperCase();

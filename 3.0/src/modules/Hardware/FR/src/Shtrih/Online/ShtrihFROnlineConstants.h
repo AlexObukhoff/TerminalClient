@@ -82,6 +82,9 @@ namespace CShtrihOnlineFR
 	/// Максимальный ожидания допечати отчета по кассирам.
 	const int MaxWaitForPrintingCashierReport = 20 * 1000;
 
+	/// Пауза перед и до установки параметра непечати.
+	const int NotPrintDocumentPause = 150;
+
 	/// Маски для парсинга режимо работы.
 	namespace OperationModeMask
 	{
@@ -96,31 +99,32 @@ namespace CShtrihOnlineFR
 	{
 		using namespace CShtrihFR::FRParameters;
 
-		const SData Cashier             = SData( 2,  2);    /// Кассир по умолчанию (сисадмин).
-		const SData NotPrintDocument    = SData( 7, 17);    /// Настройка печати любого документа.
-		const SData PrintEndToEndNumber = SData( 9, 17);    /// Печатать сквозной номер документа.
-		const SData PrintOFDData        = SData(10, 17);    /// Печатать данные ОФД.
-		const SData PrintUserData       = SData(12, 17);    /// Печатать реквизиты [суб]дилера.
-		const SData FFDFR               = SData(17, 17);    /// ФФД ФР.
-		const SData PrintCustomFields   = SData(25, 17);    /// Автопечать тегов, вводимых на платеже.
-		const SData SetCustomFields     = SData(28, 17);    /// Установка тегов, вводимых на платеже.
-		const SData SerialNumber        = SData( 1, 18);    /// Серийный номер.
-		const SData INN                 = SData( 2, 18);    /// ИНН.
-		const SData RNM                 = SData( 3, 18);    /// РНМ.
-		const SData TaxSystem           = SData( 5, 18);    /// СНО.
-		const SData LegalOwner          = SData( 7, 18);    /// Наименование юр. лица владельца.
-		const SData PayOffAddress       = SData( 9, 18);    /// Адрес расчетов.
-		const SData OFDName             = SData(10, 18);    /// Наименование ОФД.
-		const SData OFDURL              = SData(11, 18);    /// Aдрес сайта ОФД.
-		const SData FTSURL              = SData(13, 18);    /// Адрес сайта ФНС.
-		const SData PayOffPlace         = SData(14, 18);    /// Место расчетов.
-		const SData AgentFlag           = SData(16, 18);    /// Признак агента.
-		const SData OperationModes      = SData(21, 18);    /// Режимы работы.
-		const SData OFDAddress          = SData( 1, 19);    /// Aдрес ОФД.
-		const SData OFDPort             = SData( 2, 19);    /// Порт ОФД.
-		const SData AutomaticNumber     = SData( 1, 24);    /// Номер автомата.
-		const SData PrinterModel        = SData( 2, 24);    /// Модель подключенного принтера.
-		const SData QRCode              = SData( 8, 24);    /// Формировать QR-код (средствами ФР, а не принтера).
+		const SData Cashier              = SData( 2,  2);    /// Кассир по умолчанию (сисадмин).
+		const SData NotPrintDocument     = SData( 7, 17);    /// Настройка печати любого документа.
+		const SData PrintEndToEndNumber  = SData( 9, 17);    /// Печатать сквозной номер документа.
+		const SData PrintOFDData         = SData(10, 17);    /// Печатать данные ОФД.
+		const SData PrintUserData        = SData(12, 17);    /// Печатать реквизиты [суб]дилера.
+		const SData FFDFR                = SData(17, 17);    /// ФФД ФР.
+		const SData PrintCustomFields    = SData(25, 17);    /// Автопечать тегов, вводимых на платеже.
+		const SData SetCustomFields      = SData(28, 17);    /// Установка тегов, вводимых на платеже.
+		const SData StrongFormatChecking = SData(35, 17);    /// Строгий/нестрогий форматно-логический контроль.
+		const SData SerialNumber         = SData( 1, 18);    /// Серийный номер.
+		const SData INN                  = SData( 2, 18);    /// ИНН.
+		const SData RNM                  = SData( 3, 18);    /// РНМ.
+		const SData TaxSystem            = SData( 5, 18);    /// СНО.
+		const SData LegalOwner           = SData( 7, 18);    /// Наименование юр. лица владельца.
+		const SData PayOffAddress        = SData( 9, 18);    /// Адрес расчетов.
+		const SData OFDName              = SData(10, 18);    /// Наименование ОФД.
+		const SData OFDURL               = SData(11, 18);    /// Aдрес сайта ОФД.
+		const SData FTSURL               = SData(13, 18);    /// Адрес сайта ФНС.
+		const SData PayOffPlace          = SData(14, 18);    /// Место расчетов.
+		const SData AgentFlag            = SData(16, 18);    /// Признак агента.
+		const SData OperationModes       = SData(21, 18);    /// Режимы работы.
+		const SData OFDAddress           = SData( 1, 19);    /// Aдрес ОФД.
+		const SData OFDPort              = SData( 2, 19);    /// Порт ОФД.
+		const SData AutomaticNumber      = SData( 1, 24);    /// Номер автомата.
+		const SData PrinterModel         = SData( 2, 24);    /// Модель подключенного принтера.
+		const SData QRCode               = SData( 8, 24);    /// Формировать QR-код (средствами ФР, а не принтера).
 
 		/// Параметры автообновления.
 		namespace FirmwareUpdating

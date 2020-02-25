@@ -81,9 +81,12 @@ namespace CAllHardware
 	/// Константы принтера.
 	namespace Printer
 	{
+		const char LineSize[] = "line_size";
 		const char ReceiptTemplate[] = "receipt_template";
-		const char ContinuousMode[] = "continuous_mode";
+		const char PrintingMode[] = "printing_mode";
 		const char ServiceOperation[] = "service_operation";
+		const char BlockTerminalOnError[] = "block_terminal_on_error";
+		const char OFDNotSentError[] = "ofd_not_sent_error";
 	}
 
 	/// Константы HID-устройств.

@@ -266,7 +266,7 @@ void ServiceMenuBackend::printDispenserDiffState()
 			toLog(QString("Diff: %1").arg(afterUnit.amount() - beforeUnit.amount()));
 		}
 
-		QtConcurrent::run(mCore->getPrinterService(), &PPSDK::IPrinterService::printReceipt, QString(""), parameters, QString("dispenser_diff"), false, true);
+		QtConcurrent::run(mCore->getPrinterService(), &PPSDK::IPrinterService::printReceipt, QString(""), parameters, QString("dispenser_diff"), DSDK::EPrintingModes::None, true);
 	}
 	else
 	{

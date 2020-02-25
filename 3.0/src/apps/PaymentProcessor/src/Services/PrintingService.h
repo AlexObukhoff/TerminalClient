@@ -17,6 +17,7 @@
 #include <QtCore/QSignalMapper>
 #include <QtCore/QWaitCondition>
 #include <QtCore/QAtomicInt>
+#include <QtCore/QFileInfo>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -93,7 +94,7 @@ public:
 
 	/// Печать типизированного чека с параметрами aParameters. Возвращает индекс задания, поставленного в очередь.
 	/// Результат придёт в сигнале receiptPrinted.
-	virtual int printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aReceiptTemplate, bool aContinuousMode, bool aServiceOperation = false);
+	virtual int printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aReceiptTemplate, DSDK::EPrintingModes::Enum aPrintingMode, bool aServiceOperation = false);
 
 	/// Сохранение электронной версии типизированного чека с параметрами aParameters.
 	virtual void saveReceipt(const QVariantMap & aParameters, const QString & aReceiptTemplate);
@@ -106,6 +107,9 @@ public:
 
 	/// Печать отчета.
 	virtual int printReport(const QString & aReceiptType, const QVariantMap & aParameters);
+
+	/// Может ли работать с фискальным сервером?
+	virtual bool hasFiscalRegister();
 
 	#pragma endregion
 
@@ -147,8 +151,11 @@ private:
 	/// Первоначальная загрузка значений тегов.
 	bool loadTags();
 
-	/// Загрузка чеков.
+	/// Загрузка шаблонов чеков.
 	void loadReceiptTemplates();
+
+	/// Загрузка шаблона чека из файла.
+	bool loadReceiptTemplate(const QFileInfo & aFileInfo);
 
 	/// Печать чека, возвращает индекс задания, поставленного в очередь.
 	int performPrint(PrintCommand * aCommand, const QVariantMap & aParameters, QStringList aReceiptTemplate = QStringList());
@@ -195,6 +202,9 @@ private slots:
 	/// Обработчик печати с ошибкой
 	void printEmptyReceipt(int aJobIndex, bool aError);
 
+	/// Обработчик сигнала о наличии неотправленных чеков в фисклаьном регистраторе.
+	void onOFDNotSent(bool aExist);
+
 private:
 	typedef QMap<QString, QString> TStaticParameters;
 	typedef QMap<QString, QStringList> TCachedReceipts;
@@ -227,7 +237,7 @@ private:
 	std::function<bool(int, PrintCommand *, QVariantMap)> mPrintingFunction;
 
 	/// Режим непрерывной печати чеков.
-	bool mContinuousMode;
+	DSDK::EPrintingModes::Enum mPrintingMode;
 	bool mServiceOperation;
 	bool mRandomReceiptsID;
 	mutable std::mt19937 mRandomGenerator;

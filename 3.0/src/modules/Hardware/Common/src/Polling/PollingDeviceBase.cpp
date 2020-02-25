@@ -139,9 +139,9 @@ void PollingDeviceBase<T>::postPollingAction(const TStatusCollection & aNewStatu
 	{
 		for (int i = 0; i < mPPTaskList.size(); ++i)
 		{
-				mPPTaskList[i]();
+			mPPTaskList[i]();
 
-				mPPTaskList.removeAt(i--);
+			mPPTaskList.removeAt(i--);
 		}
 	}
 

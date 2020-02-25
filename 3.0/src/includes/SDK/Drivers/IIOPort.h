@@ -82,6 +82,9 @@ public: // методы
 	/// Подключено новое устройство?
 	virtual bool deviceConnected() = 0;
 
+	/// Открыт?
+	virtual bool opened() = 0;
+
 protected:
 	virtual ~IIOPort() {}
 };

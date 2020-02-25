@@ -21,6 +21,7 @@ public:
 
 		mModelData.data().clear();
 		mModelData.add(mModelID, true,  CCustomPrinter::Models::TG2480H);
+		setConfigParameter(CHardwareSDK::Printer::LineSize, 44);
 	}
 
 protected:
@@ -51,6 +52,7 @@ public:
 	LibUSBCustomTG2480H()
 	{
 		mDetectingData->set(CUSBVendors::Custom, mDeviceName, 0x01a8);
+		setConfigParameter(CHardwareSDK::Printer::LineSize, 44);
 	}
 };
 

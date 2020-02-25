@@ -53,13 +53,19 @@ bool PrinterService::checkPrinter(bool aRealCheck)
 }
 
 //------------------------------------------------------------------------------
+bool PrinterService::checkFiscalRegister()
+{
+	return mPrinterService->hasFiscalRegister();
+}
+
+//------------------------------------------------------------------------------
 void PrinterService::privateCheckPrinter()
 {
 	emit printerChecked(mPrinterService->canPrintReceipt("payment", true));
 }
 
 //------------------------------------------------------------------------------
-void PrinterService::printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aTemplate, bool aContinuousMode)
+void PrinterService::printReceiptExt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aTemplate, DSDK::EPrintingModes::Enum aPrintingMode)
 {
 	qint64 paymentID = mPaymentService->getActivePayment();
 		
@@ -70,16 +76,23 @@ void PrinterService::printReceipt(const QString & aReceiptType, const QVariantMa
 
 		// Отправляем на печать с добавлением ID платежа
 		mPrintedJobs.insert(
-			mPrinterService->printReceipt(aReceiptType, aNewParameters, QString(aTemplate).replace(".xml", ""), aContinuousMode),
+			mPrinterService->printReceipt(aReceiptType, aNewParameters, QString(aTemplate).replace(".xml", ""), aPrintingMode),
 			TJobInfo(paymentID, aReceiptType));
 	}
 	else
 	{
 		// Отправляем на печать
 		mPrintedJobs.insert(
-			mPrinterService->printReceipt(aReceiptType, aParameters, QString(aTemplate).replace(".xml", ""), aContinuousMode),
+			mPrinterService->printReceipt(aReceiptType, aParameters, QString(aTemplate).replace(".xml", ""), aPrintingMode),
 			TJobInfo(paymentID, aReceiptType));
 	}
+}
+
+//------------------------------------------------------------------------------
+void PrinterService::printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aTemplate, bool aContinuousMode)
+{
+	DSDK::EPrintingModes::Enum mode = aContinuousMode ? DSDK::EPrintingModes::Continuous : DSDK::EPrintingModes::None;
+	printReceiptExt(aReceiptType, aParameters, aTemplate, mode);
 }
 
 //------------------------------------------------------------------------------

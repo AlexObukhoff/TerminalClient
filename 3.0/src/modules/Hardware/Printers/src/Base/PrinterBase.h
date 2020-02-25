@@ -7,6 +7,9 @@
 #include <QtGui/QImage>
 #include <Common/QtHeadersEnd.h>
 
+// SDK
+#include <SDK/Drivers/PrintingModes.h>
+
 // Modules
 #include "Hardware/Common/DeviceBase.h"
 
@@ -40,6 +43,9 @@ public:
 protected:
 	/// Идентифицирует устройство.
 	virtual bool isConnected();
+
+	/// Завершение инициализации.
+	virtual void finaliseInitialization();
 
 	/// Выполнить нереентерабельную команду.
 	virtual bool processNonReentrant(TBoolMethod aCommand);
@@ -138,8 +144,11 @@ protected:
 	/// Количество фактически напечатанных строк.
 	int mActualStringCount;
 
-	/// Будет ли следующий документ распечатан сразу.
-	bool mNextDocument;
+	/// Режим печати документа.
+	SDK::Driver::EPrintingModes::Enum mPrintingMode;
+
+	/// Отключение очистки диспенсера.
+	bool mClearingDispenserTurnOff;
 };
 
 //--------------------------------------------------------------------------------

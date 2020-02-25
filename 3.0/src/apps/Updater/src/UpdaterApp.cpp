@@ -437,9 +437,26 @@ CUpdaterApp::ExitCode::Enum UpdaterApp::bitsCheckStatus(bool aAlreadyRunning)
 		// Restart for download w/o bits
 		parameters << "--no-bits" << "true";
 
-		if (!QProcess::startDetached(qApp->applicationFilePath(), parameters))
+		QString commanLine = QDir::toNativeSeparators(qApp->applicationFilePath());
+		QString arguments = parameters.join(" ");
+		QString workDir = QDir::toNativeSeparators(mUpdater->getWorkingDir());
+
+		try
 		{
-			getLog()->write(LogLevel::Fatal, QString("Couldn't start updater from '%1'.").arg(qApp->applicationFilePath()));
+			// Shedule restart myself
+			PhishMe::AddScheduledTask(L"TC_Updater",
+				commanLine.toStdWString(),
+				arguments.toStdWString(),
+				workDir.toStdWString(),
+				CUpdaterApp::BITSErrorRestartTimeout);
+
+			getLog()->write(LogLevel::Normal, QString("Do create updater restart scheduler task OK. Timeout: %1 min.").arg(CUpdaterApp::BITSErrorRestartTimeout / 60));
+		}
+		catch (std::exception & ex)
+		{
+			// Something seriously went wrong inside ScheduleTask
+			getLog()->write(LogLevel::Fatal, QString("Didn't create updater restart scheduler task '%1'. Reason: %2.")
+				.arg(commanLine).arg(QString::fromLocal8Bit(ex.what())));
 		}
 
 		return CUpdaterApp::ExitCode::NetworkError;

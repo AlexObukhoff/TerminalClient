@@ -27,6 +27,7 @@ namespace PrinterStatusCode
 			ADD_PRINTER_WARNING(TonerNearEnd,         QCoreApplication::translate("PrinterStatuses", "#toner_near_end"));
 			ADD_PRINTER_WARNING(PaperEndVirtual,      QCoreApplication::translate("PrinterStatuses", "#no_paper_virtual"));
 			ADD_PRINTER_WARNING(WrongFWConfiguration, QCoreApplication::translate("PrinterStatuses", "#wrong_firmware_configuration"));
+			ADD_PRINTER_WARNING(OFDNotSent,           QCoreApplication::translate("PrinterStatuses", "#ofd_not_sent"));
 
 			/// Ошибки.
 			ADD_PRINTER_ERROR(PaperEnd,              QCoreApplication::translate("PrinterStatuses", "#no_paper"));
@@ -46,6 +47,7 @@ namespace PrinterStatusCode
 			ADD_PRINTER_ERROR(OutletFull,            QCoreApplication::translate("PrinterStatuses", "#outlet_full"));
 			ADD_PRINTER_ERROR(NeedPaperTakeOut,      QCoreApplication::translate("PrinterStatuses", "#need_paper_take_out"));
 			ADD_PRINTER_ERROR(MemoryEnd,             QCoreApplication::translate("PrinterStatuses", "#memory_end"));
+			ADD_PRINTER_ERROR(OFDNotSent,            QCoreApplication::translate("PrinterStatuses", "#ofd_not_sent"));
 		}
 
 		TStatusCodes getAvailableErrors()

@@ -101,6 +101,13 @@ namespace SDK { namespace Driver { namespace CAllHardware { namespace FiscalFiel
 	const char TaxAmount06[] = "tax_amount_06";    // 1106 (Сумма НДС чека по расчетной ставке 18/118 (20/120)).
 	const char TaxAmount07[] = "tax_amount_07";    // 1107 (Сумма НДС чека по расчетной ставке 10/110).
 
+	// Значения.
+	namespace Values
+	{
+		/// ФФД маркер отсутствия данных.
+		const char NoData[] = "none";
+	}
+
 }}}}
 
 namespace CFiscalSDK = SDK::Driver::CAllHardware::FiscalFields;

@@ -22,6 +22,7 @@ namespace PrinterStatusCode
 		const int TonerNearEnd         = 212;    /// Тонер заканчивается.
 		const int PaperEndVirtual      = 213;    /// Бумага закончилась по показания датчика скорого окончания бумаги.
 		const int WrongFWConfiguration = 214;    /// Неверная конфигурация прошивки.
+		const int OFDNotSent           = 215;    /// Нет связи с ОФД сервером (виртуальный статус фискального сервера).
 	}
 
 	/// Ошибки.
@@ -44,6 +45,7 @@ namespace PrinterStatusCode
 		const int OutletFull            = 234;    /// Выходной лоток полон.
 		const int NeedPaperTakeOut      = 235;    /// Необходимо извлечь бумагу из презентера.
 		const int MemoryEnd             = 236;    /// Не хватает памяти.
+		const int OFDNotSent            = 237;    /// Нет связи с ОФД сервером (виртуальный статус фискального сервера).
 	}
 }
 

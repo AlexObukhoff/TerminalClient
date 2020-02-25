@@ -17,7 +17,7 @@ using namespace SDK::Driver;
 
 //---------------------------------------------------------------------------
 template <class T>
-DispenserBase<T>::DispenserBase() : mUnits(0), mNeedGetUnits(false), mUnitError(false)
+DispenserBase<T>::DispenserBase() : mUnits(0), mNeedGetUnits(false), mUnitError(false), mResetIsPossible(true)
 {
 	// описатель статус-кодов
 	mStatusCodesSpecification = DeviceStatusCode::PSpecifications(new DispenserStatusCode::CSpecifications());
@@ -46,7 +46,7 @@ bool DispenserBase<T>::updateParameters()
 		return false;
 	}
 
-	if (!reset())
+	if (mResetIsPossible && !reset())
 	{
 		toLog(LogLevel::Error, mDeviceName + ": Failed to reset.");
 		return false;
@@ -89,26 +89,28 @@ void DispenserBase<T>::adjustUnitList(bool aConfigData)
 {
 	mUnitError = !mUnits;
 
-	if (!mUnitError)
+	if (mUnitError)
 	{
-		TUnitData & unitData = aConfigData ? mUnitConfigData : mUnitData;
-		mUnitData = unitData.mid(0, mUnits);
-		int newUnits = mUnitData.size();
+		return;
+	}
 
-		if (newUnits < mUnits)
+	TUnitData & unitData = aConfigData ? mUnitConfigData : mUnitData;
+	mUnitData = unitData.mid(0, mUnits);
+	int newUnits = mUnitData.size();
+
+	if (newUnits < mUnits)
+	{
+		mUnitData << TUnitData(mUnits - newUnits, 0);
+	}
+
+	onPoll();
+
+	for (int i = 0; i < unitData.size(); ++i)
+	{
+		if ((mStatusCollection.contains(CDispenser::StatusCodes::Data[i].empty) ||
+			    mStatusCollection.contains(DispenserStatusCode::Error::AllUnitsEmpty)) && unitData[i])
 		{
-			mUnitData << TUnitData(mUnits - newUnits, 0);
-		}
-
-		onPoll();
-
-		for (int i = 0; i < unitData.size(); ++i)
-		{
-			if ((mStatusCollection.contains(CDispenser::StatusCodes::Data[i].empty) ||
-			     mStatusCollection.contains(DispenserStatusCode::Error::AllUnitsEmpty)) && unitData[i])
-			{
-				emitUnitEmpty(i, " during status filtration");
-			}
+			emitUnitEmpty(i, " during status filtration");
 		}
 	}
 }

@@ -99,6 +99,9 @@ public:
 	/// Добавить/удалить/скорректировать фискальные теги, полученные после платежа.
 	void filterAfterPayment(SDK::Driver::TFiscalPaymentData & aFPData, SDK::Driver::TComplexFiscalPaymentData & aPSData);
 
+	/// Логгировать удаленные фискальные теги.
+	void logRemovedFields(const QStringList & aOldTextKeys, SDK::Driver::TFiscalPaymentData & aFPData) const;
+
 	/// Проверить ИНН.
 	bool checkINN(const QString & aINN, int aType = CFR::INN::Person::Unknown) const;
 
