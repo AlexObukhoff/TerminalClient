@@ -19,7 +19,10 @@ Project {
 
 		Depends { name: "Core" }
 
-		Depends { name: "IDTech_SDK" }
+		Depends { 
+			name: "IDTech_SDK";
+			condition: qbs.targetOS.contains("windows")
+		}
 
 		files: [ 
 			"Cardreaders/src/*/*.*", 

@@ -4,7 +4,7 @@ StaticLibrary {
 	name: "GraphicsEngine"
 
 	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "quick", "script", "quickwidgets"] }
+	Depends { name: "Qt"; submodules: ["core", "script", "quickwidgets", "quick", ] }
 
 	Depends { name: "Core" }
 

@@ -3,9 +3,14 @@ import "../qbs/libTemplate.qbs" as ThirdpartyLib
 
 ThirdpartyLib {
 	name: "OPOSSDK"
-//	condition: cpp.debugInformation == false
+	condition: qbs.targetOS.contains("windows")
 
-	Depends { name: "Qt"; submodules: ["gui", "axcontainer"] }
+	Depends {
+		name: "Qt";
+		submodules: ["axcontainer"];
+		condition: qbs.targetOS.contains("windows");
+	}
+	Depends { name: "Qt"; submodules: ["gui"] }
 
 	files: [
 		"QtWrappers/*.h",
@@ -15,7 +20,11 @@ ThirdpartyLib {
 	cpp.includePaths: product.sourceDirectory + "/.."
 
 	Export {
-		Depends { name: "Qt"; submodules: ["axcontainer"] }
+		Depends {
+			name: "Qt";
+			submodules: ["axcontainer"];
+			condition: qbs.targetOS.contains("windows");
+		}
 	}
 }
 

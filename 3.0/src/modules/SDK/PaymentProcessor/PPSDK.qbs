@@ -9,7 +9,6 @@ TCLib {
 	Depends { name: "Qt"; submodules: ["core", "widgets"] }
 
 	Depends { name: "Core" }
-	Depends { name: "qt5port" }
 	Depends { name: "boost" }
 
 	files: [

@@ -14,7 +14,10 @@ Project {
 		Depends { name: "SettingsManager" }
 		Depends { name: "MessageQueue" }
 		Depends { name: "PPSDK" }
-		Depends { name: "qBreakpad" }
+		Depends {
+			name: "qBreakpad";
+			condition: qbs.targetOS.contains("windows");
+		}
 
 		Depends { name: "WatchServiceTranslations" }
 

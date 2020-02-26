@@ -14,7 +14,10 @@ Project {
 		Depends { name: "HardwareIOPorts" }
 		Depends { name: "SysUtils" }
 		
-		Depends { name: "IDTech_SDK" }
+		Depends {
+			name: "IDTech_SDK";
+			condition: qbs.targetOS.contains("windows");
+		}
 
 		files: [
 			"../../../includes/Common/CoreVersion.rc",

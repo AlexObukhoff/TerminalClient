@@ -7,6 +7,8 @@ Project {
 		name: "tray"
 		consoleApplication: false
 
+		condition: qbs.targetOS.contains("windows");
+
 		Depends { name: "Qt"; submodules: ["widgets"] }
 
 		Depends { name: "QtSingleApplication" }
@@ -14,7 +16,10 @@ Project {
 		Depends { name: "MessageQueue" }
 		Depends { name: "SysUtils" }
 		Depends { name: "DebugUtils" }
-		Depends { name: "qBreakpad" }
+		Depends {
+			name: "qBreakpad";
+			condition: qbs.targetOS.contains("windows");
+		}
 
 		Depends { name: "TrayTranslations" }
 

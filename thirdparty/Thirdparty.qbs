@@ -12,8 +12,6 @@ Project {
 		"SmsMessage/SmsMessage.qbs",
 		"OPOS/OPOS.qbs",
 		"zint/zint.qbs",
-		"qt5port/qt5port.qbs",
-		"qBreakpad/qBreakpad.qbs"
 	]
 
 	Product {

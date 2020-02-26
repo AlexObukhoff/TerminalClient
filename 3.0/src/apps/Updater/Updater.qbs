@@ -15,7 +15,10 @@ Project {
 		Depends { name: "MessageQueue" }
 		Depends { name: "UpdateEngine" }
 		Depends { name: "Packer" }
-		Depends { name: "qBreakpad" }
+		Depends {
+			name: "qBreakpad";
+			condition: qbs.targetOS.contains("windows");
+		}
 		Depends { name: "TaskScheduler" }
 
 		Depends { name: "UpdaterTranslations" }

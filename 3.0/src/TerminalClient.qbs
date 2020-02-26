@@ -9,10 +9,8 @@ Project {
 	references: [
 		"modules/modules.qbs",
 		"apps/apps.qbs",
-		"tools/tools.qbs",
 		"plugins/plugins.qbs",
 		"interface/interface.qbs",
-		"../tests/tests.qbs"
 	]
 
 	CppApplication {

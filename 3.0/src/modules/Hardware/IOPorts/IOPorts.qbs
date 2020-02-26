@@ -8,7 +8,10 @@ StaticLibrary {
 
 	Depends { name: "Core" }
 
-	Depends { name: "LibUSB" }
+	Depends { 
+		name: "LibUSB";
+		condition: qbs.targetOS.contains("windows")
+	}
 
 	files: [
 		"src/COM/common/*.*",

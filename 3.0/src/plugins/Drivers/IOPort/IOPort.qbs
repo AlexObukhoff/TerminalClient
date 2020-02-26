@@ -11,7 +11,12 @@ Project {
 		Depends { name: "HardwareCommon" }
 		Depends { name: "HardwareIOPorts" }
 		Depends { name: "SysUtils" }
-		Depends { name: "LibUSB" }
+		Depends {
+			name: "Qt";
+			submodules: ["LibUSB"];
+			condition: qbs.targetOS.contains("windows");
+		}
+
 
 		Depends { name: "IOPortTranslations" }
 

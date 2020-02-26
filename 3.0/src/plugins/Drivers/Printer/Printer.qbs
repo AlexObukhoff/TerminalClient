@@ -6,7 +6,12 @@ Project {
 	DriverTemplate {
 		name: "printers"
 
-		Depends { name: "Qt"; submodules: ["axcontainer", "gui", "printsupport"] }
+		Depends {
+			name: "Qt";
+			submodules: ["axcontainer"];
+			condition: qbs.targetOS.contains("windows");
+		}
+		Depends { name: "Qt"; submodules: ["gui", "printsupport"] }
 
 		Depends { name: "DriversSDK" }
 		Depends { name: "HardwareCommon" }

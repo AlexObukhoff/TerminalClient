@@ -32,7 +32,10 @@ Project {
 
 		Depends { name: "qntp" }
 		Depends { name: "QZint" }
-		Depends { name: "qBreakpad" }
+		Depends {
+			name: "qBreakpad";
+			condition: qbs.targetOS.contains("windows");
+		}
 
 		Depends { name: "PaymentProcessorTranslations" }
 
