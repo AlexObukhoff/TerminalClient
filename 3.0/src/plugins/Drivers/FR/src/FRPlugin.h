@@ -35,7 +35,12 @@
 #include "../../../../modules/Hardware/FR/src/Atol/Base/Ejector/PayVKP80.h"
 #include "../../../../modules/Hardware/FR/src/Atol/Base/Ejector/PayPPU700.h"
 #include "../../../../modules/Hardware/FR/src/Atol/Online/AtolOnlineFRBase.h"
+#include "../../../../modules/Hardware/FR/src/Atol/Online/ATOL5/Atol5OnlineFRBase.h"
 #include "../../../../modules/Hardware/FR/src/Atol/Online/Paymaster.h"
+
+//------------------------------------------------------------------------------
+template <class T>
+SDK::Plugin::IPlugin * CreatePlugin(SDK::Plugin::IEnvironment * aEnvironment, const QString & aInstancePath);
 
 //------------------------------------------------------------------------------
 template <class T>

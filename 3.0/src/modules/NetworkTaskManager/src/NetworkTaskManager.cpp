@@ -460,6 +460,8 @@ void NetworkTaskManager::loadCerts()
 		<< loadCertResource(":/CA/GlobalSignDomainValidationCA-SHA256-G2.pem")
 		<< loadCertResource(":/CA/ThawteRSACA2018.pem")
 		<< loadCertResource(":/CA/DigiCertGlobalRootCA.pem")
+		<< loadCertResource(":/CA/GlobalSignRootCA-R3.pem")
+		<< loadCertResource(":/CA/GlobalSign-RSA-DV-SSL-CA-2018.pem")
 		<< loadCertResource(":/CA/qaznet_trust_network.pem");
 
 	config.setCaCertificates(caCerts);

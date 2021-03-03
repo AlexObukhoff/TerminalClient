@@ -61,39 +61,26 @@ bool Paymaster<T>::updateParameters()
 {
 	bool result = AtolVKP80BasedFR<T>::updateParameters();
 
-	if (mFRBuild)
-	{
-		mOldFirmware = mFRBuild < CPaymaster::MinFRBuild;
-	}
-
 	if (!result)
 	{
 		return false;
 	}
 
-	QByteArray data;
-
-	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { mFFEngine.setConfigParameter(CFiscalSDK::aName, mCodec->toUnicode(data)); \
-		QString value = mFFEngine.getConfigParameter(CFiscalSDK::aName, data).toString(); toLog(LogLevel::Normal, mDeviceName + \
-			QString(": Add %1 = \"%2\" to config data").arg(mFFData.getTextLog(CFR::FiscalFields::aName)).arg(value)); }
-
-	SET_LCONFIG_FISCAL_FIELD(OFDURL);
+	addConfigParameter<QByteArray>(CFR::FiscalFields::OFDURL);
 
 	QString automaticNumber = getConfigParameter(CFiscalSDK::AutomaticNumber).toString().simplified();
+	QByteArray data;
 
-	if (!automaticNumber.isEmpty())
+	if (!automaticNumber.isEmpty() && getTLV(CFR::FiscalFields::AutomaticNumber, data))
 	{
-		if (getTLV(CFR::FiscalFields::AutomaticNumber, data))
+		setDeviceParameter(CDeviceData::FR::AutomaticNumber, data.simplified().toULongLong());
+
+		if (data != automaticNumber)
 		{
-			setDeviceParameter(CDeviceData::FR::AutomaticNumber, data.simplified().toULongLong());
+			toLog(LogLevel::Warning, QString("%1: The automatic number in FR = %2 is different from AP number = %3").arg(mDeviceName).arg(data.data()).arg(automaticNumber));
 
-			if (data != automaticNumber)
-			{
-				toLog(LogLevel::Warning, QString("%1: The automatic number in FR = %2 is different from AP number = %3").arg(mDeviceName).arg(data.data()).arg(automaticNumber));
-
-				//TODO: если будет возвращаться результат - то заходить сюда только в фискальном режиме
-				//return setTLV(FiscalFields::AutomaticNumber);
-			}
+			//TODO: если будет возвращаться результат - то заходить сюда только в фискальном режиме
+			//return setTLV(FiscalFields::AutomaticNumber);
 		}
 	}
 

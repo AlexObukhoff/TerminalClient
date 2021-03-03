@@ -74,7 +74,7 @@ namespace CSparkFR
 				flags110.add(28, "1x10xx01", "extra options");                                 /// Дополнительные опции (только 110)
 				flags110.add(13, "x0000000", "format and protection of fiscal document");      /// Формат и защита полей фискального чека
 
-				flags110.add( 3, "xxxxxx0x", "сashbox and EKLZ extra options in Z-report");    /// Денежный ящик и доп. инфо ЭКЛЗ на Z-отчете
+				flags110.add( 3, "xxxxxx0x", "cashbox and EKLZ extra options in Z-report");    /// Денежный ящик и доп. инфо ЭКЛЗ на Z-отчете
 				flags110.add( 4, "xx000000", "format of fiscal document");                     /// Формат полей фискального чека
 				flags110.add( 7, "10xxxxxx", "format of fiscal document and Z-report");        /// Формат полей фискального чека и Z-отчета
 				flags110.add( 9, "1xxxxxxx", "inhibition of payment instrument");              /// Запреты средств платежей

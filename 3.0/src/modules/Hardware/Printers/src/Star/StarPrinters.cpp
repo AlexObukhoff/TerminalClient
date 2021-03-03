@@ -224,10 +224,7 @@ bool StarPrinter::isConnected()
 	}
 
 	mDeviceName = CSTAR::Models::Unknown;
-
-	QVariantMap configuration;
-	configuration.insert(CHardware::Port::DeviceModelName, mDeviceName);
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortDeviceName(mDeviceName);
 
 	bool needPaperTakeOut = mStatusCollection.contains(PrinterStatusCode::Error::NeedPaperTakeOut);
 
@@ -283,6 +280,7 @@ bool StarPrinter::isConnected()
 	CSTAR::TMemorySwitches memorySwitches(mMemorySwitches);
 	mMemorySwitchUtils.setConfiguration(mMemorySwitches);
 
+	QVariantMap configuration;
 	configuration.insert(CHardware::AutomaticStatus, CHardwareSDK::Values::Use);
 	configuration.insert(CHardware::Printer::VerticalMountMode, CHardwareSDK::Values::NotUse);
 

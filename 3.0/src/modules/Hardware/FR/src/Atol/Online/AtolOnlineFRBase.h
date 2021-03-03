@@ -3,7 +3,6 @@
 #pragma once
 
 // Modules
-#include "Hardware/Common/TCPDeviceBase.h"
 #include "Hardware/Printers/PortPrintersBase.h"
 
 // Project
@@ -25,6 +24,10 @@ public:
 protected:
 	/// Инициализация устройства.
 	virtual bool updateParameters();
+
+	/// Получает фискальный параметр и добавляет его в движок фискальных тегов.
+	template <class T2>
+	void addConfigParameter(int aField);
 
 	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
@@ -53,9 +56,6 @@ protected:
 	/// Выполнить итерационный запрос фискальных тегов.
 	TResult getFiscalTLVData(QByteArray & aData);
 
-	/// Печать выплаты.
-	virtual bool performEncashment(const QStringList & aReceipt, double aAmount);
-
 	/// Обработка ответа на предыдущей команды. Автоисправление некоторых ошибок.
 	virtual bool processAnswer(const QByteArray & aCommand, char aError);
 
@@ -75,7 +75,7 @@ protected:
 	virtual bool sale(const SDK::Driver::SUnitData & aUnitData);
 
 	/// Установить TLV-параметр.
-	virtual bool setTLV(int aField, bool aForSale = false);
+	virtual bool setTLV(int aField, bool aOnSale = false);
 
 	/// Получить TLV-параметр.
 	bool getTLV(int aField, QByteArray & aData, uchar aBlockNumber = 0);

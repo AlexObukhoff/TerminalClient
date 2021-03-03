@@ -5,6 +5,7 @@
 using namespace SDK::Driver;
 using namespace ProtocolUtils;
 
+template class AtolOnlineFRBase<AtolFRBase>;
 template class AtolOnlineFRBase<Atol2FRBase>;
 template class AtolOnlineFRBase<Atol3FRBase>;
 
@@ -19,9 +20,6 @@ AtolOnlineFRBase<T>::AtolOnlineFRBase()
 	mIsOnline = true;
 	mFRBuildUnifiedTaxes = 3689;
 	setConfigParameter(CHardwareSDK::CanOnline, true);
-
-	mOFDFiscalFieldsOnSale
-		<< CFR::FiscalFields::PayOffSubjectMethodType;
 
 	// регистры
 	      mRegisterData.add(CAtolFR::Registers::SerialNumber,      '\x16', 7);
@@ -79,23 +77,16 @@ bool AtolOnlineFRBase<T>::updateParameters()
 		return false;
 	}
 
-	#define SET_LCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { mFFEngine.setConfigParameter(CFiscalSDK::aName, mCodec->toUnicode(data)); \
-		QString value = mFFEngine.getConfigParameter(CFiscalSDK::aName, data).toString(); toLog(LogLevel::Normal, mDeviceName + \
-			QString(": Add %1 = \"%2\" to config data").arg(mFFData.getTextLog(CFR::FiscalFields::aName)).arg(value)); }
+	addConfigParameter<QByteArray>(CFR::FiscalFields::FTSURL);
+	addConfigParameter<QByteArray>(CFR::FiscalFields::OFDName);
+	addConfigParameter<QByteArray>(CFR::FiscalFields::LegalOwner);
+	addConfigParameter<QByteArray>(CFR::FiscalFields::PayOffAddress);
+	addConfigParameter<QByteArray>(CFR::FiscalFields::PayOffPlace);
 
-	#define SET_BCONFIG_FISCAL_FIELD(aName) if (getTLV(CFR::FiscalFields::aName, data)) { char value = data[0]; mFFEngine.setConfigParameter(CFiscalSDK::aName, value); \
-		toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = %2 to config data").arg(mFFData.getTextLog(CFR::FiscalFields::aName)).arg(uchar(value))); }
-
-	SET_LCONFIG_FISCAL_FIELD(FTSURL);
-	SET_LCONFIG_FISCAL_FIELD(OFDName);
-	SET_LCONFIG_FISCAL_FIELD(LegalOwner);
-	SET_LCONFIG_FISCAL_FIELD(PayOffAddress);
-	SET_LCONFIG_FISCAL_FIELD(PayOffPlace);
-
-	SET_BCONFIG_FISCAL_FIELD(LotteryMode);
-	SET_BCONFIG_FISCAL_FIELD(GamblingMode);
-	SET_BCONFIG_FISCAL_FIELD(ExcisableUnitMode);
-	SET_BCONFIG_FISCAL_FIELD(InAutomateMode);
+	addConfigParameter<char>(CFR::FiscalFields::LotteryMode);
+	addConfigParameter<char>(CFR::FiscalFields::GamblingMode);
+	addConfigParameter<char>(CFR::FiscalFields::ExcisableUnitMode);
+	addConfigParameter<char>(CFR::FiscalFields::InAutomateMode);
 
 	if (!isFiscal())
 	{
@@ -116,6 +107,26 @@ bool AtolOnlineFRBase<T>::updateParameters()
 	}
 
 	return getTLV(CFR::FiscalFields::AgentFlagsReg, data) && !data.isEmpty() && checkAgentFlags(data[0]);
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+template <class T2>
+void AtolOnlineFRBase<T>::addConfigParameter(int aField)
+{
+	QByteArray data;
+
+	if (getTLV(aField, data))
+	{
+		QVariant::Type type = QVariant(T2()).type();
+
+		     if (type == QVariant::ByteArray) mFFEngine.addConfigParameter<QByteArray>(aField, data);
+		else if (type == QVariant::Int)       mFFEngine.addConfigParameter<char>(aField, data[0]);
+	}
+	else
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to add %1 to config data").arg(mFFData.getTextLog(aField)));
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -433,15 +444,6 @@ TResult AtolOnlineFRBase<T>::processDataWaiting(const std::function<TResult()> &
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool AtolOnlineFRBase<T>::performEncashment(const QStringList & aReceipt, double aAmount)
-{
-	openFRSession();
-
-	return T::performEncashment(aReceipt, aAmount);
-}
-
-//--------------------------------------------------------------------------------
-template<class T>
 bool AtolOnlineFRBase<T>::processAnswer(const QByteArray & aCommand, char aError)
 {
 	switch (aError)
@@ -534,7 +536,7 @@ bool AtolOnlineFRBase<T>::sale(const SUnitData & aUnitData)
 		return false;
 	}
 
-	if (!setOFDParametersOnSale(aUnitData))
+	if (!setFiscalFieldsOnSale(aUnitData))
 	{
 		return false;
 	}
@@ -565,7 +567,7 @@ bool AtolOnlineFRBase<T>::sale(const SUnitData & aUnitData)
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool AtolOnlineFRBase<T>::setTLV(int aField, bool /*aForSale*/)
+bool AtolOnlineFRBase<T>::setTLV(int aField, bool /*aOnSale*/)
 {
 	bool result;
 

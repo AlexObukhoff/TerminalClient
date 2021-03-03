@@ -71,6 +71,8 @@ namespace CShtrihFR
 			const int ShtrihM01F        = -35;
 			const int ShtrihM02F        = -36;
 			const int ShtrihMini01F     = -37;
+
+			const int RRElectro04F      = -51;
 		}
 
 		/// Данные моделей.
@@ -133,6 +135,8 @@ namespace CShtrihFR
 				ADD_OLD_SHTRIH_FIELDS(ShtrihM01F,       2 << 3 << NA << NA << NA << 7 << 17 << 18 << 21 << 13 << 30 << 14 << 16 << NA << 39 << 22);
 				ADD_OLD_SHTRIH_FIELDS(ShtrihM02F,       2 << 3 << NA << NA << NA << 7 << 17 << 18 << 21 << 13 << 30 << 14 << 16 << NA << 39 << 22);
 				ADD_OLD_SHTRIH_FIELDS(ShtrihMini01F,    2 << 3 << NA << NA << NA << 7 << 17 << 18 << 21 << 13 << 30 << 14 << 16 << NA << 39 << 22);
+
+				ADD_OLD_SHTRIH_FIELDS(RRElectro04F,     2 << 3 << NA << NA << NA << 7 << 17 << NA << 21 << 13 << 30 << 14 << 16 << NA << 39 << 22);
 
 				//                                      0    1     2     3     4    5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20
 			}

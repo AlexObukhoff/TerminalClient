@@ -26,7 +26,6 @@ SparkFR::SparkFR()
 	// данные устройства
 	mDeviceName = CSparkFR::Models::Default;
 	mDocumentState = CSparkFR::DocumentStates::Closed;
-	mLineFeed = false;
 	mSupportedModels = getModelList();
 	mSessionOpeningDT = CSparkFR::ClosedSession;
 	mZReports = 0;

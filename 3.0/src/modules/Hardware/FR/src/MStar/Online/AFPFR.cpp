@@ -18,7 +18,6 @@ AFPFR::AFPFR()
 	// параметры семейства ФР
 	mDeviceName = CAFPFR::Models::Default;
 	mIsOnline = true;
-	mLineFeed = false;
 	mNextReceiptProcessing = false;
 
 	setConfigParameter(CHardwareSDK::CanOnline, true);
@@ -802,7 +801,7 @@ bool AFPFR::sale(const SUnitData & aUnitData)
 		<< ""                                   // номер товарной позиции
 		<< section                              // номер секции
 		<< ""                                   // код товара
-		<< ""                                   // ИНН поставщика
+		<< aUnitData.providerINN                // ИНН поставщика
 		<< aUnitData.payOffSubjectMethodType    // признак способа расчёта (1214)
 		<< aUnitData.payOffSubjectType          // признак предмета расчёта (1212)
 		<< ""                                   // доп. реквизит предмета расчёта
@@ -986,7 +985,7 @@ bool AFPFR::openSession()
 {
 	QString cashier;
 
-	if (mOperatorPresence && !mFFEngine.checkCashier(cashier))
+	if (mOperatorPresence && !mFFEngine.checkData(CFiscalSDK::Cashier, cashier))
 	{
 		return false;
 	}

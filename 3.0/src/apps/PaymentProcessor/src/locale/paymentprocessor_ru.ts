@@ -20,22 +20,22 @@
 <context>
     <name>PrintFiscalCommand</name>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="99"/>
+        <location filename="../Services/PrintingCommands.cpp" line="112"/>
         <source>#dealer_bpa_fee</source>
         <translation>Комиссия БПА</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="116"/>
+        <location filename="../Services/PrintingCommands.cpp" line="129"/>
         <source>#bank_fee</source>
         <translation>Комиссия БПА</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="99"/>
+        <location filename="../Services/PrintingCommands.cpp" line="112"/>
         <source>#dealer_fee</source>
         <translation>Комиссия субагента</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="123"/>
+        <location filename="../Services/PrintingCommands.cpp" line="136"/>
         <source>#processing_fee</source>
         <translation>Комиссия КБ Платина</translation>
     </message>

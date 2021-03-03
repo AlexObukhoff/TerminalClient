@@ -129,6 +129,10 @@ public slots:
 signals:
 	void userPropertiesUpdated();
 
+public:
+	/// Возвращает объект с пользовательскими настройками
+	QObject * getUserProperties();
+
 protected:
 	/// Возвращает указатель на интерфейс работы с платежами.
 	QObject * getPayment();
@@ -159,9 +163,6 @@ protected:
 
 	/// Возвращает указатель на интерфейс работы с логом.
 	QObject * getLog();
-
-	/// Возвращает объект с пользовательскими настройками
-	QObject * getUserProperties();
 
 private slots:
 	void onPostEvent(int aEvent, QVariant aParameters) const;

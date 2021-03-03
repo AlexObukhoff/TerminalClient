@@ -143,7 +143,7 @@ QString PaymentManager::decryptParameter(const QString & aValue)
 }
 
 //------------------------------------------------------------------------
-bool PaymentManager::printReceipt(qint64 aPaymentId, bool aContinuousMode)
+bool PaymentManager::printReceipt(qint64 aPaymentId, DSDK::EPrintingModes::Enum aPrintingMode)
 {
 	QList<PPSDK::IPayment::SParameter> paymentParams = mPaymentService->getPaymentFields(aPaymentId);
 	qint64 providerId = PPSDK::IPayment::parameterByName(CPayment::Provider, paymentParams).value.toLongLong();
@@ -166,7 +166,7 @@ bool PaymentManager::printReceipt(qint64 aPaymentId, bool aContinuousMode)
 		receiptParameters[parameter] = provider.receiptParameters[parameter];
 	}
 
-	int jonIndex = mPrinterService->printReceipt(PPSDK::CReceiptType::Payment, receiptParameters, receiptTemplate, aContinuousMode, true);
+	int jonIndex = mPrinterService->printReceipt(PPSDK::CReceiptType::Payment, receiptParameters, receiptTemplate, aPrintingMode, true);
 
 	mPaymentPrintJobs.insert(jonIndex, aPaymentId);
 
@@ -267,7 +267,7 @@ bool PaymentManager::printUnprintedReceiptsRegistry(const QSet<qint64> & aPaymen
 			receiptParameters[CPayment::Fee] = amounts[payTool].summDealerFee + amounts[payTool].summProcessingFee;
 			receiptParameters[CPayment::ProcessingFee] = amounts[payTool].summProcessingFee;
 
-			mPaymentsRegistryPrintJob = mPrinterService->printReceipt(PPSDK::CReceiptType::Payment, receiptParameters, CPaymentManager::UnprintedReest, true, true);
+			mPaymentsRegistryPrintJob = mPrinterService->printReceipt(PPSDK::CReceiptType::Payment, receiptParameters, CPaymentManager::UnprintedReest, DSDK::EPrintingModes::Continuous, true);
 			
 			ok = ok || (mPaymentsRegistryPrintJob != 0);
 		}
@@ -371,7 +371,7 @@ bool PaymentManager::printEncashment(int aIndex /*= -1*/)
 	// Если есть устройство диспенсер
 	if (!mCore->getDeviceService()->getConfigurations().filter(QRegExp(DSDK::CComponents::Dispenser)).isEmpty())
 	{
-		mPrinterService->printReceipt(PPSDK::CReceiptType::DispenserEncashment, fields, PPSDK::CReceiptType::DispenserEncashment, false, true);
+		mPrinterService->printReceipt(PPSDK::CReceiptType::DispenserEncashment, fields, PPSDK::CReceiptType::DispenserEncashment, DSDK::EPrintingModes::None, true);
 	}
 
 	return result;
@@ -380,7 +380,7 @@ bool PaymentManager::printEncashment(int aIndex /*= -1*/)
 //------------------------------------------------------------------------
 bool PaymentManager::printTestPage()
 {
-	return (mPrinterService->printReceipt(PPSDK::CReceiptType::Test, QVariantMap(), PPSDK::CReceiptType::Test, false, true) != 0);
+	return (mPrinterService->printReceipt(PPSDK::CReceiptType::Test, QVariantMap(), PPSDK::CReceiptType::Test, DSDK::EPrintingModes::None, true) != 0);
 }
 
 //------------------------------------------------------------------------
@@ -392,7 +392,7 @@ bool PaymentManager::printBalance() const
 	// Если есть устройство диспенсер
 	if (!mCore->getDeviceService()->getConfigurations().filter(QRegExp(DSDK::CComponents::Dispenser)).isEmpty())
 	{
-		mPrinterService->printReceipt(PPSDK::CReceiptType::DispenserBalance, fields, PPSDK::CReceiptType::DispenserBalance, false, true);
+		mPrinterService->printReceipt(PPSDK::CReceiptType::DispenserBalance, fields, PPSDK::CReceiptType::DispenserBalance, DSDK::EPrintingModes::None, true);
 	}
 
 	return result;

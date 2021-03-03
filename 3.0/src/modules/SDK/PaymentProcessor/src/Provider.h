@@ -176,7 +176,7 @@ struct SProvider
 			keyPair = 0;
 			clientCard = 0;
 			feeType = FeeByAmount;
-			skipCheck = payOnline = askForRetry = requirePrinter = rounding = showAddInfo = false;
+			skipCheck = payOnline = askForRetry = requirePrinter = rounding = showAddInfo = showCheckAddInfo = false;
 		}
 
 		int keyPair;
@@ -192,13 +192,16 @@ struct SProvider
 		bool requirePrinter;
 		bool rounding;
 		bool showAddInfo;
+		bool showCheckAddInfo; //ADDINFO, возвращаемое на CHECK
+		bool checkEsia; // Необходима идентификация плательщиа перед оплатой через сервис ЕСИА
 
 		TRequests requests;
 	};
 
 	SProvider()
 		: id(-1),
-		  cid(-1)
+		  cid(-1),
+		  terminalCyberwalletShow(true)
 	{
 	}
 
@@ -210,6 +213,9 @@ struct SProvider
 	qint64 id;
 	qint64 cid;
 	QSet<qint64> ttList;
+
+	/// Разрешена ли оплата этого оператора через платежную книжку
+	bool terminalCyberwalletShow;
 
 	/// Ограничения по суммам.
 	SLimits limits;
@@ -226,6 +232,9 @@ struct SProvider
 	/// Поля данных.
 	TProviderFields fields;
 
+	/// Контекст для полей данных
+  	QVariantMap fieldsContext;
+
 	/// Реакция на внешние данные (сканер штрих-кода, кард ридер и т.п.).
 	QString externalDataHandler;
 
@@ -236,6 +245,9 @@ struct SProvider
 	/// конвертация списка полей из/в json
 	static QString fields2Json(const TProviderFields & aFields);
 	static TProviderFields json2Fields(const QString & aJson);
+
+	/// Хранит ошибку парсера, если не удалось прочитать описание оператора
+	QString parseError;
 };
 
 //------------------------------------------------------------------------------

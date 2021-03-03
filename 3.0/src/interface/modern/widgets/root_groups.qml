@@ -71,8 +71,8 @@ Item {
 				onPressAndHold: RotationAnimation { target: image; property: "rotation"; duration: 400; from: 0; to: 360 }
 				onPressed: Utils.playSound(Scenario.Sound.Click2)
 				onClicked: {
-					rootItem.clicked(id, true)
-					Core.log.debug("#root_groups %1".arg(id))
+					rootItem.clicked(id, true);
+					Core.log.debug("#root_groups %1".arg(Number(id).toFixed(0)));
 				}
 			}
 		}

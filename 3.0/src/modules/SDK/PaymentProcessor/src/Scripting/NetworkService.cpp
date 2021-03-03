@@ -128,47 +128,65 @@ int NetworkService::get(const QString & /*aUrl*/, const QString & /*aData*/)
 //------------------------------------------------------------------------------
 bool NetworkService::post(const QString & aUrl, const QString & aData)
 {
-	if (mTaskManager)
+	return post(aUrl, aData.toUtf8(), false);
+}
+
+//------------------------------------------------------------------------------
+bool NetworkService::post(const QString & aUrl, const QByteArray & aData, bool aBinary)
+{
+	if (!mTaskManager)
 	{
-		if (mCurrentTask)
-		{
-			disconnect(mCurrentTask, SIGNAL(onComplete()), this, SLOT(taskComplete()));
-
-			mTaskManager->removeTask(mCurrentTask);
-			mCurrentTask->deleteLater();
-
-			mCurrentTask = 0;
-		}
-
-		QScopedPointer<NetworkTask> task(new NetworkTask());
-
-		task->setUrl(aUrl);
-		task->setType(NetworkTask::Post);
-		task->setDataStream(new MemoryDataStream());
-		task->getDataStream()->write(aData.toUtf8());
-
-		connect(task.data(), SIGNAL(onComplete()), SLOT(taskComplete()));
-
-		mTaskManager->addTask(mCurrentTask = task.take());
-
-		return true;
+		return false;
 	}
 
-	return false;
+	if (mCurrentTask)
+	{
+		disconnect(mCurrentTask, SIGNAL(onComplete()), this, SLOT(taskComplete()));
+
+		mTaskManager->removeTask(mCurrentTask);
+		mCurrentTask->deleteLater();
+
+		mCurrentTask = 0;
+	}
+
+	QScopedPointer<NetworkTask> task(new NetworkTask());
+
+	if (aBinary)
+	{
+		task->getRequestHeader().insert("Content-Type", "application/octet-stream");
+	}
+
+	task->setUrl(aUrl);
+	task->setType(NetworkTask::Post);
+	task->setDataStream(new MemoryDataStream());
+	task->getDataStream()->write(aData);
+
+	connect(task.data(), SIGNAL(onComplete()), SLOT(taskComplete()));
+
+	mTaskManager->addTask(mCurrentTask = task.take());
+
+	return true;
 }
 
 //------------------------------------------------------------------------------
 void NetworkService::taskComplete()
 {
-	if (mCurrentTask && (mCurrentTask->getError() == NetworkTask::NoError))
+	if (mCurrentTask)
 	{
-		emit complete(false, QString::fromUtf8(mCurrentTask->getDataStream()->takeAll()));
+		if (mCurrentTask->getError() == NetworkTask::NoError)
+		{
+			QByteArray responseData = mCurrentTask->getDataStream()->takeAll();
+
+			emit complete(false, QString::fromUtf8(responseData));
+			emit rawComplete(false, responseData);
+		}
+		else
+		{
+			emit complete(true, QString());
+			emit rawComplete(true, QByteArray::number(mCurrentTask->getError()));
+		}
 
 		mCurrentTask->deleteLater();
-	}
-	else
-	{
-		emit complete(true, QString());
 	}
 
 	mCurrentTask = 0;

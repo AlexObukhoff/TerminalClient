@@ -114,6 +114,7 @@ DSDK::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap & aParam
 	if (dealerVAT == 0 && combineFeeWithZeroVAT)
 	{
 		fee = aParameters.value("FEE").toDouble();
+
 		if (!qFuzzyIsNull(fee))
 		{
 			QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
@@ -200,7 +201,7 @@ bool PrintFiscalCommand::getFiscalInfo(QVariantMap & aParameters, QStringList & 
 {
 	PPSDK::IFiscalRegister * fr = mService->getFiscalRegister();
 
-	if (!fr || !fr->hasCapability(PPSDK::ERequestType::Receipt) || !fr->isReady(PPSDK::ERequestType::Receipt))
+	if (!fr || !fr->hasCapability(PPSDK::ERequestType::Receipt))
 	{
 		return false;
 	}
@@ -215,7 +216,8 @@ bool PrintFiscalCommand::getFiscalInfo(QVariantMap & aParameters, QStringList & 
 	if (!OK)
 	{
 		fiscalPaymentData = getPaymentData(aParameters);
-		auto fiscalParameters = fr->createFiscalTicket(paymentId, aParameters, fiscalPaymentData, aWaitResult);
+		bool waitResult = aWaitResult && fr->isReady(PPSDK::ERequestType::Receipt);
+		auto fiscalParameters = fr->createFiscalTicket(paymentId, aParameters, fiscalPaymentData, waitResult);
 
 		if (!aWaitResult)
 		{
@@ -275,19 +277,32 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 		KKMSerialNumber = configuration[CHardwareSDK::SerialNumber].toString();
 	}
 
-	QVariantMap actualParameters = aParameters;
-	actualParameters.insert(CPrintConstants::KKM::SerialNumber, KKMSerialNumber);
-	actualParameters.insert("ONLINE_KKM", onlineKKM ? 1 : 0);
-
-	QStringList receipt = mService->getReceipt(mReceiptTemplate, actualParameters);
-
 	QVariantMap parameters = QVariantMap(aParameters).unite(getPrintingParameters(aPrinter));
 	QStringList fiscalPart;
 
 	bool hasFiscalInfo = getFiscalInfo(parameters, fiscalPart, true);
 
+	QVariantMap actualParameters = aParameters;
+	actualParameters.insert(CPrintConstants::KKM::SerialNumber, KKMSerialNumber);
+	actualParameters.insert("ONLINE_KKM", onlineKKM ? 1 : 0);
+	actualParameters.insert(CPrintConstants::FiscalData, int(hasFiscalInfo));
+	QStringList receipt = mService->getReceipt(mReceiptTemplate, actualParameters);
+
 	if (hasFiscalInfo)
 	{
+		QString pointAddress = parameters[CPrintConstants::PointAddress].toString();
+
+		if (std::find_if(receipt.begin(), receipt.end(), [&pointAddress] (const QString & line) -> bool { return line.contains(pointAddress); }) != receipt.end())
+		{
+			foreach (const QString & line, fiscalPart)
+			{
+				if (line.contains(pointAddress))
+				{
+					fiscalPart.removeAll(line);
+				}
+			}
+		}
+
 		receipt.append(fiscalPart);
 	}
 

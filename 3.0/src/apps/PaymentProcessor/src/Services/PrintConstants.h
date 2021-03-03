@@ -22,6 +22,7 @@ namespace CPrintConstants
 	const char * const DealerVAT             = "DEALER_NDS";
 	const char * const DealerAgentFlag       = "DEALER_AGENT_FLAG";
 	const char * const DealerTaxSystem       = "DEALER_SNO";
+	const char * const FiscalData            = "FISCAL_DATA";
 	const char * const MtRegistrationAddress = "MT_REGISTRATION_ADDRESS";
 	const char * const PointAddress          = "POINT_ADDRESS";
 	const char * const PointName             = "POINT_NAME";

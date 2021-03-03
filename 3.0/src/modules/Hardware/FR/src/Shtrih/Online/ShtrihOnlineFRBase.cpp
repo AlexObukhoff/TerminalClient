@@ -164,7 +164,7 @@ bool ShtrihOnlineFRBase<T>::setCashier()
 {
 	QString cashier;
 
-	if (!mFFEngine.checkCashier(cashier))
+	if (!mFFEngine.checkData(CFiscalSDK::Cashier, cashier))
 	{
 		return false;
 	}
@@ -321,14 +321,8 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 	if (getFRParameter(INN, data)) mINN = CFR::INNToString(data);
 	if (getFRParameter(RNM, data)) mRNM = CFR::RNMToString(data);
 
-	#define SET_LCONFIG_FISCAL_FIELD(aName) QString aName##Log = mFFData.getTextLog(CFR::FiscalFields::aName); \
-		if (getFRParameter(aName, data)) { mFFEngine.setConfigParameter(CFiscalSDK::aName, mCodec->toUnicode(data)); \
-		     QString value = mFFEngine.getConfigParameter(CFiscalSDK::aName, data).toString(); \
-		     toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = \"%2\" to config data").arg(aName##Log).arg(value)); } \
-		else toLog(LogLevel::Error,  mDeviceName + QString(": Failed to add %1 to config data").arg(aName##Log));
-
-	#define SET_BCONFIG_FISCAL_FIELD(aName) if (value & CShtrihOnlineFR::OperationModeMask::aName) { mFFEngine.setConfigParameter(CFiscalSDK::aName, 1); \
-		toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = 1 to config data").arg(mFFData.getTextLog(CFR::FiscalFields::aName))); }
+	#define SET_LCONFIG_FISCAL_FIELD(aName) addConfigParameter(CFR::FiscalFields::aName, aName);
+	#define SET_BCONFIG_FISCAL_FIELD(aName) if (value & CShtrihOnlineFR::OperationModeMask::aName) mFFEngine.addConfigParameter<char>(CFiscalSDK::aName, 1);
 
 	SET_LCONFIG_FISCAL_FIELD(FTSURL);
 	SET_LCONFIG_FISCAL_FIELD(OFDURL);
@@ -384,6 +378,22 @@ void ShtrihOnlineFRBase<T>::processDeviceData()
 	mCanProcessZBuffer = mModelData.ZBufferSize && containsDeviceParameter(CDeviceData::SDCard);
 
 	checkDateTime();
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+void ShtrihOnlineFRBase<T>::addConfigParameter(int aField, const CShtrihOnlineFR::FRParameters::SData & aParameter)
+{
+	QByteArray data;
+
+	if (getFRParameter(aParameter, data))
+	{
+		mFFEngine.addConfigParameter<QByteArray>(aField, data, mCodec);
+	}
+	else
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to add %1 to config data").arg(mFFData.getTextLog(aField)));
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -523,7 +533,7 @@ bool ShtrihOnlineFRBase<T>::sale(const SUnitData & aUnitData, EPayOffTypes::Enum
 		return false;
 	}
 
-	return setOFDParametersOnSale(aUnitData);
+	return setFiscalFieldsOnSale(aUnitData);
 }
 
 //--------------------------------------------------------------------------------
@@ -768,7 +778,7 @@ bool ShtrihOnlineFRBase<T>::processAnswer(const QByteArray & aCommand, char aErr
 
 //--------------------------------------------------------------------------------
 template<class T>
-bool ShtrihOnlineFRBase<T>::setTLV(int aField, bool aForSale)
+bool ShtrihOnlineFRBase<T>::setTLV(int aField, bool aOnSale)
 {
 	bool result;
 
@@ -779,7 +789,7 @@ bool ShtrihOnlineFRBase<T>::setTLV(int aField, bool aForSale)
 
 	QString fieldLog;
 	QByteArray commandData = mFFEngine.getTLVData(aField, &fieldLog);
-	QByteArray command = aForSale ? CShtrihOnlineFR::Commands::FS::SetOFDParameterLinked : CShtrihOnlineFR::Commands::FS::SetOFDParameter;
+	QByteArray command = aOnSale ? CShtrihOnlineFR::Commands::FS::SetOFDParameterLinked : CShtrihOnlineFR::Commands::FS::SetOFDParameter;
 
 	if (!processCommand(command, commandData))
 	{

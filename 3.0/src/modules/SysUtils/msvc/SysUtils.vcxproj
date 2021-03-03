@@ -120,7 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\includes\SysUtils\ISysUtils.h" />
-    <ClInclude Include="..\src\windows\SystemPrinterStatusCodes.h" />
+    <ClInclude Include="..\..\..\includes\SysUtils\SystemPrinterStatusCodes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

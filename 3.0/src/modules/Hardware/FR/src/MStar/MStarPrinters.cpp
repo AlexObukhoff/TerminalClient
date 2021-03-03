@@ -9,12 +9,12 @@ MStarPrinters::MStarPrinters() : mMode(EFRMode::Fiscal)
 {
 	// данные устройства
 	mDeviceName = "Incotex protocol based FR";
+	mLineFeed = true;
+	mNextReceiptProcessing = false;
+	setConfigParameter(CHardware::Printer::FeedingAmount, 4);
 
 	// протоколы
 	mProtocols.append(PDeviceProtocol(new IncotexFR));
-
-	mNextReceiptProcessing = false;
-	setConfigParameter(CHardware::Printer::FeedingAmount, 4);
 }
 
 //--------------------------------------------------------------------------------

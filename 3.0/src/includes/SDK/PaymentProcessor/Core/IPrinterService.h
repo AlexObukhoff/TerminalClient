@@ -13,6 +13,7 @@
 
 // SDK
 #include <SDK/Drivers/WarningLevel.h>
+#include <SDK/Drivers/PrintingModes.h>
 
 namespace SDK {
 namespace Driver { class IPrinter; }
@@ -32,7 +33,7 @@ public:
 
 	/// Печать типизированного чека с параметрами aParameters. Возвращает индекс задания, поставленного в очередь.
 	/// Результат придёт в сигнале receiptPrinted.
-	virtual int printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aReceiptTemplate, bool aContinuousMode, bool aServiceOperation = false) = 0;
+	virtual int printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aReceiptTemplate, DSDK::EPrintingModes::Enum aPrintingMode, bool aServiceOperation = false) = 0;
 
 	/// Сохранение электронной версии типизированного чека с параметрами aParameters.
 	virtual void saveReceipt(const QVariantMap & aParameters, const QString & aReceiptTemplate) = 0;

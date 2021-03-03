@@ -15,6 +15,7 @@
 #include <SDK/PaymentProcessor/Payment/IPayment.h>
 #include <SDK/PaymentProcessor/Core/IPaymentService.h>
 #include <SDK/Drivers/FR/FiscalDataTypes.h>
+#include <SDK/Drivers/PrintingModes.h>
 
 #include "../GUI/PaymentInfo.h"
 
@@ -54,7 +55,7 @@ public:
 	bool canPrint(const QString & aReceiptType) const;
 
 	/// Ставит задание печати в очередь и возвращает jobIndex
-	bool printReceipt(qint64 aPaymentId, bool aContinuousMode);
+	bool printReceipt(qint64 aPaymentId, DSDK::EPrintingModes::Enum aPrintingMode);
 
 	bool printTestPage();
 	bool printEncashment(int aIndex = -1);

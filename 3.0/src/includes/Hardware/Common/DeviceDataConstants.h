@@ -38,8 +38,13 @@ namespace CDeviceData
 	const char InternalFirmware[] = "device_id_key";
 	const char InternalHardware[] = "device_id_value";
 	const char ControllerBuild[] = "controller_build";
+	const char DriverConfig[] = "driver_config";
+	const char DriverTemplate[] = "driver_template";
+	const char DriverControlUnit[] = "driver_control_unit";
+	const char DriverLoader[] = "driver_loader";
 	const char Count[] = "count";
 	const char Number[] = "number";
+	const char LastNumber[] = "last_number";
 
 	/// Общие значения.
 	namespace Values
@@ -187,6 +192,9 @@ namespace CDeviceData
 		const char PaperSupply[] = "paper_supply";
 		const char Codes[] = "codes";
 		const char PNESensor[] = "pne_sensor";
+		const char CutterResource[] = "cutter_resource";
+		const char EngineResource[] = "engine_resource";
+		const char HeadResource[] = "head_resource";
 	}
 
 	/// Фискальные регистраторы

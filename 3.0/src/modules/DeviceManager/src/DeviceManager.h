@@ -22,6 +22,20 @@
 
 typedef QMultiMap<SDK::Driver::IDevice *, SDK::Driver::IDevice *> TDeviceDependencyMap;
 typedef QPair<QString, SDK::Driver::IDevice *> TNamedDevice;
+typedef QList<TNamedDevice> TFallbackDevices;
+
+struct SSimpleSearchDeviceData
+{
+	QString driverName;
+	QStringList * result;
+	TFallbackDevices * fallbackDevices;
+	QStringList * nonMarketDetectedDriverNames;
+	QVariantMap requiredDeviceData;
+
+	SSimpleSearchDeviceData(): fallbackDevices(nullptr), nonMarketDetectedDriverNames(nullptr) {}
+	SSimpleSearchDeviceData(QStringList * aResult, TFallbackDevices * aFallbackDevices, QStringList * aNonMarketDetectedDriverNames):
+		result(aResult), fallbackDevices(aFallbackDevices), nonMarketDetectedDriverNames(aNonMarketDetectedDriverNames) {}
+};
 
 //--------------------------------------------------------------------------------
 class DeviceManager : public QObject, public ILogable
@@ -89,8 +103,13 @@ private:
 	TNamedDevice findDevice(SDK::Driver::IDevice * aRequired, const QStringList & aDevicesToFind);
 
 	/// Пробует найти устройство aDriverName, не имеющее зависимых устройств
-	typedef QList<TNamedDevice> TFallbackDevices;
-	void findSimpleDevice(const QString & aDriverName, QStringList & aResult, TFallbackDevices & aFallbackDevices, QStringList & aNonMarketDetectedDriverNames);
+	void findSimpleDevice(const SSimpleSearchDeviceData & aDeviceData);
+
+	/// Ищет все подключенные устройства, имеющие зависимые устройства, без сохранения конфигуркции.
+	void findRRDevices(QStringList & aFoundDevices);
+
+	/// Ищет все подключенные устройства, использующие зависимые устройства без сладения ими, без сохранения конфигуркции.
+	void findExternalRRDevices(SSimpleSearchDeviceData & aDeviceData);
 
 	/// Было ли устройство данного типа уже найдено.
 	bool isDetected(const QString & aConfigName);

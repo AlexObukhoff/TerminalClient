@@ -179,7 +179,7 @@ namespace CKasbiFR
 		const char NeedAgentData     = '\x53';    /// Переданы не все необходимые данные для агента.
 		const char WrongVATForAgent  = '\x58';    /// Данная ставка НДС недопустима для агента. Агент не является плательщиком НДС.
 
-		class Data : public FRError::Data
+		class Data : public FRError::Data<char>
 		{
 		public:
 			Data()

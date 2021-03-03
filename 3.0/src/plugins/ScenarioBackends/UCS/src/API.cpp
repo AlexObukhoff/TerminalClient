@@ -429,7 +429,7 @@ void API::printAllEncashments()
 	{
 		parameters["EMV_DATA"] = encashment.receipt.join("[br]");
 
-		int job = printingService->printReceipt("", parameters, "emv_encashment", true);
+		int job = printingService->printReceipt("", parameters, "emv_encashment", DSDK::EPrintingModes::Continuous);
 		
 		if (job)
 		{
@@ -594,6 +594,11 @@ bool API::isPrintLineResponse(BaseResponsePtr aResponse)
 						mAuthResponse->mConfirmation);
 
 					mAuthResponse.clear();
+				}
+				else
+				{
+					mTerminalState = APIState::None;
+					emit error("");
 				}
 			}
 		}
@@ -782,7 +787,7 @@ void API::printReceipt()
 
 	SDK::PaymentProcessor::Scripting::PrinterService * ps = static_cast<SDK::PaymentProcessor::Scripting::PrinterService *>(scriptingCore->property("printer").value<QObject *>());
 
-	ps->printReceipt("", parameters, "emv", true);
+	ps->printReceiptExt("", parameters, "emv", DSDK::EPrintingModes::Glue);
 }
 
 //---------------------------------------------------------------------------

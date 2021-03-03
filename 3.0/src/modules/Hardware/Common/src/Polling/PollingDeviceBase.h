@@ -29,7 +29,7 @@ public:
 	/// Освобождает ресурсы, связанные с устройством, возвращается в состояние до вызова initialize().
 	virtual bool release();
 
-
+protected:
 	/// Завершение инициализации.
 	virtual void finaliseInitialization();
 

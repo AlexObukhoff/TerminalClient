@@ -9,7 +9,10 @@
 #include "../../../../modules/Hardware/Printers/src/POSPrinters/Custom/CustomVKP/CustomVKP80.h"
 #include "../../../../modules/Hardware/Printers/src/POSPrinters/Custom/CustomVKP/CustomVKP80III.h"
 #include "../../../../modules/Hardware/Printers/src/POSPrinters/Custom/CustomPrinters.h"
+#include "../../../../modules/Hardware/Printers/src/POSPrinters/Custom/CustomPrintersIII.h"
 #include "../../../../modules/Hardware/Printers/src/POSPrinters/Custom/CustomTG2480H.h"
+#include "../../../../modules/Hardware/Printers/src/POSPrinters/Custom/CustomTG2480HIII.h"
+#include "../../../../modules/Hardware/Printers/src/POSPrinters/Epson/Sam4sEpsonPrinters.h"
 #include "../../../../modules/Hardware/Printers/src/POSPrinters/Epson/EpsonEUT400.h"
 
 #include "../../../../modules/Hardware/Printers/src/AV268/AV268.h"
@@ -20,3 +23,4 @@
 #include "../../../../modules/Hardware/Printers/src/SwecoinTTP20XXBase/SwecoinTTP20XXBase.h"
 #include "../../../../modules/Hardware/Printers/src/SystemPrinter/SystemPrinter.h"
 #include "../../../../modules/Hardware/Printers/src/SystemPrinter/SystemPrinters.h"
+#include "../../../../modules/Hardware/Printers/src/SystemPrinter/Sam4sPrinters.h"

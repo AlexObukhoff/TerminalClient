@@ -59,6 +59,7 @@ public slots:
 
 	/// Выполнение запроса POST на адрес aUrl с данными aData.
 	bool post(const QString & aUrl, const QString & aData);
+	bool post(const QString & aUrl, const QByteArray & aData, bool aBinary = true);
 
 	/// Получение статуса соединения.
 	bool isConnected();
@@ -81,6 +82,9 @@ private slots:
 signals:
 	/// Срабатывает при завершении запроса aRequest.
 	void complete(bool aError, QString aResult);
+
+	/// Срабатывает при завершении запроса aRequest.
+	void rawComplete(bool aError, QByteArray aResult);
 
 	/// Срабатывает при получении сигнала о состоянии соединения.
 	void connectionStatus();

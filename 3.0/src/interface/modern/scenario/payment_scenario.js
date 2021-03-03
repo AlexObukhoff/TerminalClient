@@ -28,6 +28,9 @@ var isMultistage;
 // Требуется ли автоматически переводить сдачу
 var USE_AUTO_CHANGEBACK = false;
 
+//
+var FORCE_CHANGEBACK = false;
+
 // Пропустим печать только основного чека
 var SKIP_PRINT_RECEIPT = false;
 
@@ -50,8 +53,9 @@ function initialize() {
 	ScenarioEngine.addState("check", {timeout: 120});
 	ScenarioEngine.addState("addinfo", {timeout: 30});
 	ScenarioEngine.addState("pay", {timeout: 30});
+	ScenarioEngine.addState("processCheck", {ignoreUserActivity: true});
 	ScenarioEngine.addState("process", {ignoreUserActivity: true});
-	ScenarioEngine.addState("finish", {timeout: Scenario.StateTimeout.Finish, ignoreUserActivity: true});
+	ScenarioEngine.addState("finish", {timeout: Math.max(Scenario.StateTimeout.Finish, Core.environment.extensions.fiscalServerWaitingTimeout), ignoreUserActivity: true});
 	ScenarioEngine.addState("topup", {timeout: 30});
 	ScenarioEngine.addState("email", {timeout: 30});
 	ScenarioEngine.addState("back", {final: true, result: Scenario.Result.Back});
@@ -86,10 +90,14 @@ function initialize() {
 	ScenarioEngine.addTransition("addinfo", "abort", Scenario.Payment.Event.Abort);
 	ScenarioEngine.addTransition("addinfo", "abort", Scenario.Payment.Event.Timeout);
 
-	ScenarioEngine.addTransition("pay", "process", Scenario.Payment.Event.Forward);
+	ScenarioEngine.addTransition("pay", "processCheck", Scenario.Payment.Event.Forward);
 	ScenarioEngine.addTransition("pay", "fill", Scenario.Payment.Event.Back);
 	ScenarioEngine.addTransition("pay", "abort", Scenario.Payment.Event.Abort);
 	ScenarioEngine.addTransition("pay", "done", Scenario.Payment.Event.Timeout);
+
+	ScenarioEngine.addTransition("processCheck", "process", Scenario.Payment.Event.Forward);
+	ScenarioEngine.addTransition("processCheck", "finish", Scenario.Payment.Event.Abort);
+	ScenarioEngine.addTransition("processCheck", "process", Scenario.Payment.Event.Timeout);
 
 	ScenarioEngine.addTransition("process", "process", Scenario.Payment.Event.Retry);
 	ScenarioEngine.addTransition("process", "finish", Scenario.Payment.Event.Forward);
@@ -126,6 +134,7 @@ function onStart() {
 	isMultistage = false;
 	needChooseService = false;
 	USE_AUTO_CHANGEBACK = false;
+	FORCE_CHANGEBACK = false;
 
 	Core.userProperties.set("operator_id", ScenarioEngine.context.id);
 
@@ -289,7 +298,7 @@ function fillEnterHandler(aParameters) {
 
 				// Сбросим сохраненные в прошлый раз значения в платеже
 				if (aParameters.signal == Scenario.Payment.Event.Back) {
-					Core.payment.setParameter("101", "");
+					Core.payment.setParameter("101", null);
 					var addFields = Core.userProperties.get("payment.add_fields");
 					for (var field in addFields) {
 						Core.payment.setParameter("%1".arg(addFields[field]), "");
@@ -425,6 +434,22 @@ function checkEnterHandler(aParameters) {
 			parameters[id] = Core.userProperties.get("payment.fields")[id];
 		}
 
+		// Скопируем в платеж внешние параметры, созданные до платежа
+		var $ = Core.userProperties.get("external.payment.fields")
+		for (id in $) {
+			Core.payment.setExternalParameter(id.toUpperCase(), $[id]);
+		}
+
+		Core.userProperties.set("external.payment.fields", null);
+
+		//Если ЕСИА, передадим в платеж токен, полученный ранее
+		var token = Core.userProperties.get("TOKEN")
+		if (token)
+		{
+			Core.payment.setExternalParameter('TOKEN', token);
+			Core.userProperties.set("TOKEN", "");
+		}
+
 		Core.payment.setParameters(parameters);
 
 		var provider = Core.payment.getProvider();
@@ -466,7 +491,14 @@ function addinfoEnterHandler(aParameters) {
 	var info = params[Scenario.Payment.Parameters.AddInfo];
 
 	// Сервер может прислать пустой xml <add_fields></add_fields>
-	var fields = JSON.parse(p.xmlFields2Json(params[Scenario.Payment.Parameters.AddFields]));
+	try {
+		var fields = JSON.parse(p.xmlFields2Json(params[Scenario.Payment.Parameters.AddFields]));
+	}
+	catch (e) {
+		Core.log.error('Unable parse ADD_FIELDS: %1\n%2'.arg(e.message).arg(params[Scenario.Payment.Parameters.AddFields]))
+		GUI.notification({tr: QT_TR_NOOP("payment_scenario#cannot_check_payment")}, 5000, Scenario.Payment.Event.Back);
+		return;
+	}
 
 	if (p.showAddInfo && (info || fields.length)) {
 		GUI.show("AddInfoScene",
@@ -498,6 +530,11 @@ function payEnterHandler(aParameters) {
 					Core.payment.resetChange();
 				}
 			}
+			else if (ScenarioEngine.context.resultError == Scenario.Payment.ReceiptState.CardChargeError) {
+
+				GUI.waiting({tr: QT_TR_NOOP("payment_scenario#printing_receipt")});
+				printReceipt("", Scenario.Payment.ReceiptState.CardChargeError, true);
+			}
 
 			if (ScenarioEngine.context.result == Scenario.Result.Abort) {
 				Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Abort);
@@ -511,16 +548,26 @@ function payEnterHandler(aParameters) {
 					Core.userProperties.set("sms.spam.agree", false);
 				}
 
-				// Отправим платеж на обработку
-				Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Forward);
+				/// Запросим ADDINFO
+				if (Core.payment.getProvider().showCheckAddInfo) {
+					GUI.waiting({tr: QT_TR_NOOP("payment_scenario#checking_payment")});
+					Core.payment.processCheck();
+				}
+				else {
+					// Отправим платеж на обработку
+					Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Forward);
+				}
 			}
 		}
 		else {
 			if (Core.payment.getProvider().processorType == "ad") {
 				GUI.notification({tr: QT_TR_NOOP("payment_scenario#submit_ok")}, 5000, Scenario.Payment.Event.Forward);
 			}
+			else if (Core.payment.getProvider().processorType == "esia_auth") {
+				Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Forward);
+			}
 			else {
-				if (ScenarioEngine.context.hasOwnProperty("skip_pay_fields") || Boolean(ScenarioEngine.context.skip_pay_fields)) {
+				if (ScenarioEngine.context.hasOwnProperty("skip_pay_fields") && Boolean(ScenarioEngine.context.skip_pay_fields)) {
 					Core.payment.useChange();
 					Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Forward);
 				}
@@ -537,6 +584,40 @@ function payEnterHandler(aParameters) {
 				}
 			}
 		}
+	}
+}
+
+//------------------------------------------------------------------------------
+function processCheckEnterHandler(aParameters) {
+	var errorCode = Core.payment.getParameter(Scenario.Payment.Parameters.Error);
+	var errorMesage = Core.payment.getParameter(Scenario.Payment.Parameters.ErrorMessage);
+
+	if (errorCode) {
+		FORCE_CHANGEBACK = true;
+		Core.postEvent(EventType.UpdateScenario, {signal: Scenario.Payment.Event.Abort, payment_result: Scenario.Payment.ProcessError.BadPayment});
+		return;
+	}
+
+	var provider = Core.payment.getProvider();
+	var onlineMode = Core.payment.getProvider().payOnline && !processOffline;
+
+	if (onlineMode && provider.showCheckAddInfo && Core.payment.getParameter(Scenario.Payment.Parameters.AddInfo).length) {
+		var addinfo = Core.payment.getParameter(Scenario.Payment.Parameters.AddInfo);
+		GUI.show("AddInfoWithAmountScene", { reset: true, id: provider.id, addInfo: addinfo });
+	}
+	else {
+		Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Forward);
+	}
+}
+
+//------------------------------------------------------------------------------
+function processCheckExitHandler(aParameters) {
+	var provider = Core.payment.getProvider();
+	var onlineMode = Core.payment.getProvider().payOnline && !processOffline;
+
+	// Отменяем платеж и переводим все деньги в сдачу
+	if (onlineMode && provider.showCheckAddInfo && aParameters.signal == Scenario.Payment.Event.Abort) {
+		FORCE_CHANGEBACK = true;
 	}
 }
 
@@ -570,6 +651,9 @@ function processEnterHandler() {
 //------------------------------------------------------------------------------
 function onPaymentStepCompleted(aPayment, aStep, aError) {
 	if (aPayment == Core.payment.getActivePaymentID()) {
+		var addinfoPresent = Core.payment.getParameters().hasOwnProperty(Scenario.Payment.Parameters.AddInfo) &&
+				Core.payment.getParameter(Scenario.Payment.Parameters.AddInfo).length;
+
 		// Смотрим результат проверки номера
 		if (aStep == PaymentStep.DataCheck || aStep == PaymentStep.GetStep) {
 			if (!aError) {
@@ -591,7 +675,7 @@ function onPaymentStepCompleted(aPayment, aStep, aError) {
 							Errors.getDescription(Core.payment.getParameter(Scenario.Payment.Parameters.Error));
 
 				// Если есть addinfo и получили ошибку, то перейдем на экран с addinfo
-				if (Core.payment.getParameter(Scenario.Payment.Parameters.AddInfo)) {
+				if (addinfoPresent) {
 					Core.postEvent(EventType.UpdateScenario, {signal: Scenario.Payment.Event.Forward, canPayProcess: false});
 					return;
 				}
@@ -600,9 +684,34 @@ function onPaymentStepCompleted(aPayment, aStep, aError) {
 													 Scenario.Payment.Event.Abort : Scenario.Payment.Event.Back);
 			}
 		}
-		else if (aStep === PaymentStep.Pay && (ScenarioEngine.getState() === "pay" || ScenarioEngine.getState() === "process")) {
-			// Проводим платёж, пока не превысим лимит попыток проведения.
+		else if (aStep === PaymentStep.AmountDataCheck && ScenarioEngine.getState() === "pay") {
 			if (aError) {
+				// Платёж так и не прошёл, помечаем как финально-ошибочный.
+				var errorCode = Core.payment.getParameter(Scenario.Payment.Parameters.Error);
+				var errorMesage = Core.payment.getParameter(Scenario.Payment.Parameters.ErrorMessage);
+				Core.payment.stop(errorCode, "Stop online processing by error %1 (%2).".arg(errorCode).arg(errorMesage));
+
+				RECEIPT_STATE = Scenario.Payment.ReceiptState.Error;
+				Core.postEvent(EventType.UpdateScenario, {signal: Scenario.Payment.Event.Forward, payment_result: Scenario.Payment.ProcessError.BadPayment});
+
+			}
+			else {
+				Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Forward);
+			}
+		}
+		else if (aStep === PaymentStep.Pay && (ScenarioEngine.getState() === "pay" || ScenarioEngine.getState() === "process")) {
+			if (aError) {
+				if (Core.payment.getProvider().processorType == "esia_auth") {
+					var errorMesage = Core.payment.getParameter(Scenario.Payment.Parameters.ErrorMessage);
+					if (!errorMesage) {
+						errorMesage = QT_TR_NOOP("payment_scenario#cannot_check_payment")
+					}
+
+					GUI.notification({tr: errorMesage}, 10000, Scenario.Payment.Event.Forward);
+					return;
+				}
+
+				// Проводим платёж, пока не превысим лимит попыток проведения.
 				if (processTryCount < Scenario.Payment.ProcessTryCount) {
 					processTryCount++;
 				}
@@ -612,14 +721,15 @@ function onPaymentStepCompleted(aPayment, aStep, aError) {
 					var errorMesage = Core.payment.getParameter(Scenario.Payment.Parameters.ErrorMessage);
 					Core.payment.stop(errorCode, "Stop online processing by error %1 (%2).".arg(errorCode).arg(errorMesage));
 
-					if (GUI.toBool(GUI.ui("use_bad_online_payment_as_change"))) {
+					// Если есть ADDINFO на этапе PAY и получили ошибку - переводим платеж в сдачу
+					if (addinfoPresent) {
+						FORCE_CHANGEBACK = true;
+					}
+					else if (GUI.toBool(GUI.ui("use_bad_online_payment_as_change"))) {
 						if (Number(Core.payment.getParameter("SERVER_ERROR")) == -1) {
 							if (Number(Core.payment.getParameter("STEP") != 2)) {
-								Core.payment.useChangeBack();
+								FORCE_CHANGEBACK = true;
 							}
-						}
-						else if (Number(Core.payment.getParameter("SERVER_ERROR")) > 0) {
-							Core.payment.useChangeBack();
 						}
 					}
 					else {
@@ -649,9 +759,15 @@ function finishEnterHandler(aParameters) {
 	var amountAll = parseFloat(Core.payment.getParameter(Scenario.Payment.Parameters.AmountAll));
 	var zeroAmount = Number(0).toFixed(2);
 
+	var useBadPaymentAsChange = function() {
+		return GUI.toBool(GUI.ui("use_bad_payment_as_change")) ||
+				GUI.toBool(GUI.ui("use_bad_online_payment_as_change"));
+	}
+
 	// Если не хватило денег на оплату, превращаем внесенную сумму в сдачу
-	if (GUI.toBool(GUI.ui("use_bad_payment_as_change")) && (amount ==  zeroAmount || amount < minAmount)) {
+	if ((useBadPaymentAsChange && (amount ==  zeroAmount || amount < minAmount)) || FORCE_CHANGEBACK) {
 		Core.payment.useChangeBack();
+		FORCE_CHANGEBACK = false;
 
 		// Ломаем печать, чтобы не было чеков с нулевой суммой
 		SKIP_PRINT_RECEIPT = true;
@@ -672,7 +788,8 @@ function finishEnterHandler(aParameters) {
 			Core.payment.getParameter("CONTACT")
 			&& changeback_ok()
 			&& disable_show_change()
-			&& Core.payment.getChangeAmount() > 0;
+			&& Core.payment.getChangeAmount() > 0 &&
+			!Core.payment.getProvider().showCheckAddInfo;
 
 	// Скорректируем время ожидания для сцены("пропустим")
 	if (USE_AUTO_CHANGEBACK) {
@@ -702,9 +819,11 @@ function finishEnterHandler(aParameters) {
 			}
 		}
 		else {
-			// Если есть фисальный регистратор, то печатаем, иначе - только сохраняем копию чека
-			printReceipt(Scenario.Payment.ReceiptType.Payment, RECEIPT_STATE, false, !Core.printer.checkFiscalRegister());
-			GUI.notify(Scenario.Payment.Event.ReceiptPrinted, {receipt_printed: false});
+			if (!SKIP_PRINT_RECEIPT) {
+				// Если есть фисальный регистратор, то печатаем, иначе - только сохраняем копию чека
+				printReceipt(Scenario.Payment.ReceiptType.Payment, RECEIPT_STATE, false, !Core.printer.checkFiscalRegister());
+				GUI.notify(Scenario.Payment.Event.ReceiptPrinted, {receipt_printed: false});
+			}
 		}
 	}
 	//TODO Костыль для Самары
@@ -758,7 +877,6 @@ function topupEnterHandler(aParameters) {
 //------------------------------------------------------------------------------
 function updateReceiptParameters(aProvider) {
 	var parameters = Core.payment.getParameters();
-
 	parameters["OPERATOR_BRAND"] = aProvider.name;
 
 	for (var parameter in aProvider.receiptParameters) {
@@ -779,6 +897,14 @@ function updateReceiptParameters(aProvider) {
 	// Обновим "рекламные" параметры чека
 	parameters["AD_RECEIPT_HEADER"] = Core.ad.receiptHeader;
 	parameters["AD_RECEIPT_FOOTER"] = Core.ad.receiptFooter;
+
+	// Скопируем в шаблон чека внешние параметры, созданные в кастомных сценариях
+	var $ = Core.userProperties.get("external.receipt.params")
+	for (id in $) {
+		parameters[id.toUpperCase()] = $[id];
+	}
+
+	Core.userProperties.set("external.receipt.params", null);
 
 	return parameters;
 }

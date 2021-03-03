@@ -680,6 +680,18 @@ bool Payment::performStep(int aStep)
 			break;
 		}
 
+		case PPSDK::EPaymentStep::AmountDataCheck:
+		{
+			if (getSession().isEmpty())
+			{
+				setParameter(SParameter(PPSDK::CPayment::Parameters::Session, getInitialSession(), true));
+			}
+
+			result = check(false);
+
+			break;
+		}
+
 		case PPSDK::EPaymentStep::Pay:
 		{
 			setStatus(PPSDK::EPaymentStatus::ProcessError);

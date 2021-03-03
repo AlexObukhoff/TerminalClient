@@ -113,10 +113,14 @@
   <ItemGroup>
     <ClCompile Include="..\src\Atol\Base\Atol3\Atol3FRBase.cpp" />
     <ClCompile Include="..\src\Atol\Base\AtolSerialFR.cpp" />
+    <ClCompile Include="..\src\Atol\Proto\ProtoAtolFR.cpp" />
     <ClCompile Include="..\src\Atol\Ejector\AtolEjectorFR.cpp" />
     <ClCompile Include="..\src\Atol\AtolModelData.cpp" />
     <ClCompile Include="..\src\Atol\Base\Ejector\PayPPU700.cpp" />
     <ClCompile Include="..\src\Atol\Ejector\AtolVKP80BasedFR.cpp" />
+    <ClCompile Include="..\src\Atol\Online\ATOL5\Atol5DataTypes.cpp" />
+    <ClCompile Include="..\src\Atol\Online\ATOL5\Atol5OnlineFRBase.cpp" />
+    <ClCompile Include="..\src\Atol\Online\ATOL5\Wrapper\AtolDriverWrapper.cpp" />
     <ClCompile Include="..\src\Atol\Online\AtolOnlineFRBase.cpp" />
     <ClCompile Include="..\src\Atol\Online\Paymaster.cpp" />
     <ClCompile Include="..\src\Base\FFEngine.cpp" />
@@ -126,7 +130,7 @@
     <ClCompile Include="..\src\Kasbi\KasbiFRBase.cpp" />
     <ClCompile Include="..\src\MStar\Online\AFPFR.cpp" />
     <ClCompile Include="..\src\Prim\Online\PrimOnlineFRBase.cpp" />
-    <ClCompile Include="..\src\Shtrih\Base\ProtoShtrihFR.cpp" />
+    <ClCompile Include="..\src\Shtrih\Proto\ProtoShtrihFR.cpp" />
     <ClCompile Include="..\src\Shtrih\Base\ShtrihSerialFR.cpp" />
     <ClCompile Include="..\src\Shtrih\ModelData.cpp" />
     <ClCompile Include="..\src\Shtrih\Online\MStarTK2.cpp" />
@@ -165,6 +169,8 @@
     <ClInclude Include="..\src\Atol\Base\AtolFR.h" />
     <ClInclude Include="..\src\Atol\Base\AtolFRBaseConstants.h" />
     <ClInclude Include="..\src\Atol\Base\AtolSerialFR.h" />
+    <ClInclude Include="..\src\Atol\Online\ATOL5\ProtoAtol5FR.h" />
+    <ClInclude Include="..\src\Atol\Proto\ProtoAtolFR.h" />
     <ClInclude Include="..\src\Atol\Ejector\AtolEjectorDataTypes.h" />
     <ClInclude Include="..\src\Atol\Ejector\AtolEjectorFR.h" />
     <ClInclude Include="..\src\Atol\Ejector\AtolEjectorFRConstants.h" />
@@ -172,6 +178,10 @@
     <ClInclude Include="..\src\Atol\AtolFRConstants.h" />
     <ClInclude Include="..\src\Atol\Base\AtolFRBase.h" />
     <ClInclude Include="..\src\Atol\Base\Ejector\PayVKP80.h" />
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Atol5DataTypes.h" />
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Atol5OnlineFRBase.h" />
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Atol5OnlineFRConstants.h" />
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Wrapper\AtolDriverWrapper.h" />
     <ClInclude Include="..\src\Atol\Online\AtolOnlineFRConstants.h" />
     <ClInclude Include="..\src\Atol\Online\AtolOnlineFRBase.h" />
     <ClInclude Include="..\src\Atol\Online\Paymaster.h" />
@@ -198,7 +208,7 @@
     <ClInclude Include="..\src\Prim\PrimFRConstants.h" />
     <ClInclude Include="..\src\Prim\PrimFRDataTypes.h" />
     <ClInclude Include="..\src\Prim\PrimModelData.h" />
-    <ClInclude Include="..\src\Shtrih\Base\ProtoShtrihFR.h" />
+    <ClInclude Include="..\src\Shtrih\Proto\ProtoShtrihFR.h" />
     <ClInclude Include="..\src\Shtrih\Base\ShtrihFRBaseConstants.h" />
     <ClInclude Include="..\src\Shtrih\Base\ShtrihKiosk.h" />
     <ClInclude Include="..\src\Shtrih\Base\ShtrihSerialFR.h" />

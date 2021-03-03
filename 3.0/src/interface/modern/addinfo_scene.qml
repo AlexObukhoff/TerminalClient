@@ -149,7 +149,12 @@ Widgets.SceneBase2 {
 				if (i == "9999") continue;
 
 				ext.push(("%1:%2").arg(i).arg(Editor.values[i].rawValue));
-				ext2.push(i)
+				ext2.push(i);
+
+				// Для ЕСИА необходимо пробросить данные, введенные пользователем, в платеж
+				if (global.provider.checkEsia) {
+					Core.payment.setExternalParameter("%1".arg(i), "%1".arg(Editor.values[i].rawValue));
+				}
 			}
 
 			// "101" обновляем только если есть поле add_fileds

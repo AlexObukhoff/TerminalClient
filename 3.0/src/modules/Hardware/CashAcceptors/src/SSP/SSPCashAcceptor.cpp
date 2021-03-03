@@ -20,7 +20,9 @@ using namespace ProtocolUtils;
 SSPCashAcceptor::SSPCashAcceptor()
 {
 	// параметры порта
+	mPortParameters[EParameters::BaudRate].append(EBaudRate::BR115200);
 	mPortParameters[EParameters::BaudRate].append(EBaudRate::BR9600);
+	mPortParameters[EParameters::BaudRate].append(EBaudRate::BR38400);
 	mPortParameters[EParameters::Parity].append(EParity::No);
 
 	mPortParameters[EParameters::RTS].clear();
@@ -33,6 +35,10 @@ SSPCashAcceptor::SSPCashAcceptor()
 	mLastConnectionOK = false;
 	mEnabled = false;
 	mParInStacked = true;
+	mFirmware = 0;
+	mUpdatable = true;
+
+	setDeviceParameter(CDeviceData::FirmwareUpdatable, mUpdatable);
 
 	// параметры протокола
 	mProtocol.setAddress(CSSP::Addresses::Validator);
@@ -100,7 +106,7 @@ TResult SSPCashAcceptor::execCommand(const QByteArray & aCommand, const QByteArr
 
 	QByteArray answer;
 	QByteArray request = aCommand + aCommandData;
-	TResult result = mProtocol.processCommand(request, answer, CSSP::Commands::Data[aCommand[0]]);
+	TResult result = mProtocol.processCommand(request, answer, CSSP::Commands::Data[aCommand]);
 	mLastConnectionOK = CommandResult::PresenceErrors.contains(result);
 
 	if (!result)
@@ -151,6 +157,9 @@ bool SSPCashAcceptor::processReset()
 
 	setDeviceParameter(CDeviceData::ProtocolVersion, protocolNumber - 2);
 
+	// для анализа выхода из инициализации.
+	poll();
+
 	return true;
 }
 
@@ -165,32 +174,35 @@ bool SSPCashAcceptor::isConnected()
 		return false;
 	}
 
-	QMap<QString, SBaseModelData>::const_iterator it = CSSP::Models::Data.data().begin();
-	SBaseModelData modelData = SBaseModelData(CSSP::Models::Default);
+	QMap<QString, CSSP::Models::SData>::const_iterator it = CSSP::Models::Data.data().begin();
+	mModelData = CSSP::Models::SData(CSSP::Models::Default);
 
 	while (it != CSSP::Models::Data.data().end())
 	{
 		if (answer.left(6).contains(it.key().toLatin1()))
 		{
-			modelData = it.value();
+			mModelData = it.value();
 		}
 
 		it++;
 	}
 
-	mDeviceName = modelData.name;
-	mUpdatable  = modelData.updatable;
-	mVerified   = modelData.verified;
-
-	if (mUpdatable)
-	{
-		setDeviceParameter(CDeviceData::FirmwareUpdatable, true);
-	}
+	mDeviceName = mModelData.name;
+	mVerified   = mModelData.verified;
+	mOldFirmware = false;
+	mFirmware = 0;
 
 	if (answer.size() >=  9)
 	{
+		mFirmware = answer.mid(6, 3).insert(1, ASCII::Dot).toDouble();
+
 		setDeviceParameter(CDeviceData::Firmware, answer.mid(6, 3).insert(1, ASCII::Dot));
 		setDeviceParameter(CDeviceData::CashAcceptors::ModificationNumber, answer.mid(9));
+
+		if (mFirmware)
+		{
+			mOldFirmware = mFirmware < mModelData.lastFirmware;
+		}
 	}
 
 	return true;
@@ -227,6 +239,8 @@ void SSPCashAcceptor::processDeviceData()
 			setDeviceParameter(CDeviceData::Number, build, CDeviceData::Build);
 		}
 	}
+
+	setPortDeviceName(ProtocolNames::CashDevice::SSP);
 }
 
 //--------------------------------------------------------------------------------
@@ -282,7 +296,7 @@ bool SSPCashAcceptor::applyParTable()
 	qSort(indexes);
 	int channels = qCeil(indexes.last() / 8.0);
 
-	if ((mDeviceName == CSSP::Models::NV200) || (mDeviceName == CSSP::Models::NV200Spectral))
+	if ((mDeviceName == CSSP::Models::NV200ST) || (mDeviceName == CSSP::Models::NV200Spectral))
 	{
 		channels = qMax(channels, CSSP::NV200MinInhibitedChannels);
 	}
@@ -347,14 +361,177 @@ bool SSPCashAcceptor::loadParTable()
 //---------------------------------------------------------------------------
 bool SSPCashAcceptor::performUpdateFirmware(const QByteArray & aBuffer)
 {
+	QByteArray Id = aBuffer.left(3);
+
+	if (Id != CSSP::UpdatingFirmware::Id)
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to update firmware due to the firmware buffer starts with wrong Id = %1 (0x%2), need %3.")
+			.arg(Id.data()).arg(Id.toHex().toUpper().data()).arg(CSSP::UpdatingFirmware::Id));
+		return false;
+	}
+
+	TPortParameters portParameters;
+	mIOPort->getParameters(portParameters);
+
 	if (!performBaudRateChanging(true))
 	{
 		return false;
 	}
 
-	if (!performBaudRateChanging(false))
+	QByteArray data;
+
+	if (!processCommand(CSSP::Commands::UpdatingFirmware::GetBlockSize, &data))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to get block size");
+		return false;
+	}
+
+	if (data.size() < 2)
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to get block size due to data size = %1, need 2 min").arg(data.size()));
+		return false;
+	}
+
+	int blockSize = revert(data.left(2)).toHex().toInt(0, 16);
+	QByteArray header = aBuffer.left(CSSP::UpdatingFirmware::HeaderSize);
+
+	if (!processCommand(header))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to write header");
+		return false;
+	}
+
+	setPortLoggingType(ELoggingType::ReadWrite);
+
+	int RAMSize = aBuffer.mid(7, 4).toHex().toInt(0, 16);
+	QByteArray RAMData = aBuffer.mid(CSSP::UpdatingFirmware::HeaderSize, RAMSize);
+
+	if (!writeRAMData(RAMData))
 	{
 		return false;
+	}
+
+	if (!mIOPort->write(QByteArray(1, aBuffer[6])) || !mIOPort->read(data, CSSP::UpdatingFirmware::DefaultTimeout) || data.isEmpty() || (data[0] != CSSP::UpdatingFirmware::ACK))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to write update code");
+		return false;
+	}
+
+	if (!mIOPort->write(header) || !mIOPort->read(data, CSSP::UpdatingFirmware::DefaultTimeout) || data.isEmpty() || (data[0] != CSSP::UpdatingFirmware::ACK))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to write header directly");
+		return false;
+	}
+
+	QByteArray datasetData = aBuffer.mid(CSSP::UpdatingFirmware::HeaderSize + RAMSize);
+
+	if (!writeDatasetData(datasetData, blockSize))
+	{
+		return false;
+	}
+
+	setPortLoggingType(mIOMessageLogging);
+
+	mIOPort->close();
+	SleepHelper::msleep(CSSP::UpdatingFirmware::Pause::EndApplying);
+	mIOPort->open();
+
+	portParameters[EParameters::BaudRate] = IOPort::COM::EBaudRate::BR9600;
+	mIOPort->setParameters(portParameters);
+
+	mLastConnectionOK = false;
+	waitReady(CSSP::UpdatingFirmware::FinalizationWaiting);
+
+	return true;
+}
+
+//---------------------------------------------------------------------------
+char SSPCashAcceptor::getCRC(const QByteArray & aData)
+{
+	char CRC = ASCII::NUL;
+
+	for (int i = 0; i < aData.size(); ++i)
+	{
+		CRC ^= aData[i];
+	}
+
+	return CRC;
+}
+
+//---------------------------------------------------------------------------
+bool SSPCashAcceptor::writeRAMData(const QByteArray & aData)
+{
+	int RAMSize = aData.size();
+	int blocks = qCeil(double(RAMSize) / CSSP::UpdatingFirmware::BlockSize);
+
+	toLog(LogLevel::Normal, mDeviceName + QString(": Writing RAM blocks: total = %1, block size = %2, RAM size = %3").arg(blocks).arg(CSSP::UpdatingFirmware::BlockSize).arg(RAMSize));
+
+	for (int i = 0; i < blocks; ++i)
+	{
+		SleepHelper::msleep(CSSP::UpdatingFirmware::Pause::BlockWriting);
+		QByteArray block = aData.mid(i * CSSP::UpdatingFirmware::BlockSize, CSSP::UpdatingFirmware::BlockSize);
+
+		if (!mIOPort->write(block))
+		{
+			toLog(LogLevel::Error, mDeviceName + QString(": Failed to write %1 RAM block").arg(i));
+			return false;
+		}
+	}
+
+	QByteArray data;
+
+	if (!mIOPort->read(data, CSSP::UpdatingFirmware::DefaultTimeout) || data.isEmpty())
+	{
+		toLog(LogLevel::Error, mDeviceName + ": Failed to process reading CRC for RAM data");
+		return false;
+	}
+
+	char CRC = getCRC(aData);
+
+	if (data[0] != CRC)
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": Failed to check CRC for RAM data = %1, need %2").arg(toHexLog(data.at(0))).arg(toHexLog(CRC)));
+		return false;
+	}
+
+	SleepHelper::msleep(CSSP::UpdatingFirmware::Pause::RAMApplying);
+
+	return true;
+}
+
+//---------------------------------------------------------------------------
+bool SSPCashAcceptor::writeDatasetData(const QByteArray & aData, int aBlockSize)
+{
+	int datasetSize = aData.size();
+	int blocks = qCeil(double(datasetSize) / aBlockSize);
+
+	toLog(LogLevel::Normal, mDeviceName + QString(": Writing dataset blocks: total = %1, block size = %2, dataset size = %3").arg(blocks).arg(aBlockSize).arg(datasetSize));
+
+	for (int i = 0; i < blocks; ++i)
+	{
+		SleepHelper::msleep(CSSP::UpdatingFirmware::Pause::BlockWriting);
+		QByteArray block = aData.mid(i * aBlockSize, aBlockSize);
+
+		if (!mIOPort->write(block))
+		{
+			toLog(LogLevel::Error, mDeviceName + QString(": Failed to write %1 dataset block").arg(i));
+			return false;
+		}
+
+		char CRC = getCRC(block);
+		QByteArray data;
+
+		if (!mIOPort->write(QByteArray(1, CRC)) || !mIOPort->read(data, CSSP::UpdatingFirmware::DefaultTimeout) || data.isEmpty())
+		{
+			toLog(LogLevel::Error, mDeviceName + QString(": Failed to process CRC writing of %1 dataset block").arg(i));
+			return false;
+		}
+
+		if (data[0] != CRC)
+		{
+			toLog(LogLevel::Error, mDeviceName + QString(": Failed to check CRC for dataset block %1 = %2, need %3").arg(i).arg(toHexLog(data.at(0))).arg(toHexLog(CRC)));
+			return false;
+		}
 	}
 
 	return true;
@@ -363,6 +540,20 @@ bool SSPCashAcceptor::performUpdateFirmware(const QByteArray & aBuffer)
 //---------------------------------------------------------------------------
 bool SSPCashAcceptor::performBaudRateChanging(bool aUp)
 {
+	if (mFirmware && mModelData.baudrateFirmware && (mFirmware < mModelData.baudrateFirmware))
+	{
+		toLog(LogLevel::Warning, mDeviceName + QString(": Cannot change baud rate in cash acceptor due to it is need %2 firmware min").arg(mModelData.baudrateFirmware));
+		return true;
+	}
+/*
+	QString portData = mIOPort->getDeviceConfiguration()[CHardwareSDK::DeviceData].toMap()[CDeviceData::Ports::Mine].toString();
+
+	if (portData.contains(CSSP::HeadConnectionId))
+	{
+		toLog(LogLevel::Normal, mDeviceName + ": It is no need to change baud rate due to there is head connection");
+		//return true;
+	}
+*/
 	CSSP::EBaudRate::Enum upBaudRate = (mDeviceName == CSSP::Models::NV200Spectral) ? CSSP::EBaudRate::BR115200 : CSSP::EBaudRate::BR38400;
 	CSSP::EBaudRate::Enum commandBaudrate = aUp ? upBaudRate : CSSP::EBaudRate::BR9600;
 	IOPort::COM::EBaudRate::Enum baudRate = CSSP::BaudRateData[commandBaudrate];
@@ -377,7 +568,7 @@ bool SSPCashAcceptor::performBaudRateChanging(bool aUp)
 
 	QByteArray commandData;
 	commandData.append(char(commandBaudrate));
-	commandData.append(CSSP::ContinuousBaudrate);
+	commandData.append(CSSP::UpdatingFirmware::ContinuousBaudrate);
 
 	if (!processCommand(CSSP::Commands::SetBaudrate, commandData))
 	{
@@ -385,7 +576,7 @@ bool SSPCashAcceptor::performBaudRateChanging(bool aUp)
 		return false;
 	}
 
-	SleepHelper::msleep(CSSP::ChangingBaudratePause);
+	SleepHelper::msleep(CSSP::UpdatingFirmware::Pause::ChangingBaudrate);
 
 	portParameters[EParameters::BaudRate] = baudRate;
 
@@ -397,7 +588,7 @@ bool SSPCashAcceptor::performBaudRateChanging(bool aUp)
 
 	toLog(LogLevel::Normal, mDeviceName + QString(": Baud rate has changed to %2.").arg(baudRate));
 
-	return true;
+	return reset(true);
 }
 
 //--------------------------------------------------------------------------------

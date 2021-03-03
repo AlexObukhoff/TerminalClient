@@ -39,7 +39,7 @@ CitizenPPU700<T>::CitizenPPU700()
 
 	// параметры моделей
 	mDeviceName = "Citizen PPU-700";
-	mModelID = '\x75';
+	setModelID('\x75');
 	setConfigParameter(CHardware::Printer::FeedingAmount, 4);
 
 	// модели
@@ -98,10 +98,7 @@ void CitizenPPU700<T>::processDeviceData()
 template<class T>
 bool CitizenPPU700<T>::getNULStoppedAnswer(QByteArray & aAnswer, int aTimeout) const
 {
-	QVariantMap configuration;
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(ELoggingType::Write));
-	mIOPort->setDeviceConfiguration(configuration);
-
+	setPortLoggingType(ELoggingType::Write);
 	aAnswer.clear();
 
 	QTime timer;

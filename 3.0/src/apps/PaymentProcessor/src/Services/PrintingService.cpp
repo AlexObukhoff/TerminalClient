@@ -74,7 +74,7 @@ PrintingService::PrintingService(IApplication * aApplication) :
 	mApplication(aApplication),
 	mDatabaseUtils(nullptr),
 	mDeviceService(nullptr),
-	mContinuousMode(false),
+	mPrintingMode(DSDK::EPrintingModes::None),
 	mServiceOperation(false),
 	mRandomReceiptsID(false),
 	mNextReceiptIndex(1),
@@ -225,9 +225,9 @@ bool PrintingService::canPrintReceipt(const QString & aReceiptType, bool aRealCh
 }
 
 //---------------------------------------------------------------------------
-int PrintingService::printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aReceiptTemplate, bool aContinuousMode, bool aServiceOperation)
+int PrintingService::printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aReceiptTemplate, DSDK::EPrintingModes::Enum aPrintingMode, bool aServiceOperation)
 {
-	mContinuousMode = aContinuousMode;
+	mPrintingMode = aPrintingMode;
 	mServiceOperation = aServiceOperation;
 
 	QStringList receiptTemplates;
@@ -271,7 +271,7 @@ void PrintingService::printEmptyReceipt(int aJobIndex, bool aError)
 //---------------------------------------------------------------------------
 bool PrintingService::printReceiptDirected(DSDK::IPrinter * aPrinter, const QString & aReceiptTemplate, const QVariantMap & aParameters)
 {
-	mContinuousMode = false;
+	mPrintingMode = DSDK::EPrintingModes::None;
 
 	// Извлекаем шаблон для чека нужного типа.
 	if (!mCachedReceipts.contains(aReceiptTemplate.toLower()))
@@ -284,7 +284,7 @@ bool PrintingService::printReceiptDirected(DSDK::IPrinter * aPrinter, const QStr
 	printCommand->setReceiptTemplate(aReceiptTemplate);
 
 	QVariantMap configuration;
-	configuration.insert(CHardwareSDK::Printer::ContinuousMode, mContinuousMode);
+	configuration.insert(CHardwareSDK::Printer::PrintingMode, mPrintingMode);
 	configuration.insert(CHardwareSDK::Printer::ServiceOperation, mServiceOperation);
 	aPrinter->setDeviceConfiguration(configuration);
 
@@ -338,7 +338,7 @@ int PrintingService::performPrint(PrintCommand * aCommand, const QVariantMap & a
 			}
 
 			QVariantMap configuration;
-			configuration.insert(CHardwareSDK::Printer::ContinuousMode, mContinuousMode);
+			configuration.insert(CHardwareSDK::Printer::PrintingMode, mPrintingMode);
 			configuration.insert(CHardwareSDK::Printer::ServiceOperation, mServiceOperation);
 			configuration.insert(CHardwareSDK::Printer::ReceiptTemplate, aReceiptTemplate);
 			printer->setDeviceConfiguration(configuration);
@@ -1549,7 +1549,7 @@ void PrintingService::createFiscalRegister()
 
 		if (!frPlugin)
 		{
-			toLog(LogLevel::Error, QString("FR %1 not have IFiscalRegister interface.").arg(fr));
+			toLog(LogLevel::Error, QString("FR %1 does not have IFiscalRegister interface.").arg(fr));
 			pluginLoader->destroyPlugin(plugin);
 			continue;
 		}
@@ -1558,7 +1558,7 @@ void PrintingService::createFiscalRegister()
 
 		if (parameters.isEmpty())
 		{
-			toLog(LogLevel::Warning, QString("FR %1 not have extensions settings. Skip it. (check config.xml).").arg(plugin->getPluginName()));
+			toLog(LogLevel::Warning, QString("FR %1 does not have extensions settings. Skip it. (check config.xml).").arg(plugin->getPluginName()));
 			pluginLoader->destroyPlugin(plugin);
 			continue;
 		}
@@ -1569,14 +1569,14 @@ void PrintingService::createFiscalRegister()
 		{
 			frPlugin->unsubscribe(PPSDK::IFiscalRegister::OFDNotSentSignal, this);
 
-			toLog(LogLevel::Warning, QString("FR %1 error initialize. Skip it.").arg(plugin->getPluginName()));
+			toLog(LogLevel::Warning, QString("FR %1 initialization is failed. Skip it.").arg(plugin->getPluginName()));
 			pluginLoader->destroyPlugin(plugin);
 			continue;
 		}
 
 		mFiscalRegister = frPlugin;
 
-		toLog(LogLevel::Normal, QString("FR %1 loaded successful.").arg(plugin->getPluginName()));
+		toLog(LogLevel::Normal, QString("FR %1 is loaded successful.").arg(plugin->getPluginName()));
 
 		break;
 	}

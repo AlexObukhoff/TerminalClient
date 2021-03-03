@@ -24,7 +24,8 @@ namespace FRStatusCode
 			/// Предупреждения.
 			ADD_FR_WARNING(EKLZNearEnd,                QCoreApplication::translate("FRStatuses", "#EKLZ_near_end"));
 			ADD_FR_WARNING(FiscalMemoryNearEnd,        QCoreApplication::translate("FRStatuses", "#FM_near_end"));
-			ADD_FR_WARNING(NotFiscalized,              QCoreApplication::translate("FRStatuses", "#FR_is_not_fiscalized"));
+			ADD_FR_WARNING(FRNotRegistered,            QCoreApplication::translate("FRStatuses", "#FR_is_not_registered"));
+			ADD_FR_WARNING(FSNotFiscalized,            QCoreApplication::translate("FRStatuses", "#FS_is_not_fiscalized"));
 			ADD_FR_WARNING(ZBufferFull,                QCoreApplication::translate("FRStatuses", "#z_buffer_full"));
 			ADD_FR_WARNING(OFDNoConnection,            QCoreApplication::translate("FRStatuses", "#ofd_no_connection"));
 			ADD_FR_WARNING(FSNearEnd,                  QCoreApplication::translate("FRStatuses", "#fs_near_end"));
@@ -52,11 +53,13 @@ namespace FRStatusCode
 			ADD_FR_ERROR(FSEnd,                QCoreApplication::translate("FRStatuses", "#fs_end"));
 			ADD_FR_ERROR(NeedOFDConnection,    QCoreApplication::translate("FRStatuses", "#need_ofd_connection"));
 			ADD_FR_ERROR(FS,                   QCoreApplication::translate("FRStatuses", "#fs"));
+			ADD_FR_ERROR(NoFS,                 QCoreApplication::translate("FRStatuses", "#no_fs"));
 			ADD_FR_ERROR(FSClosed,             QCoreApplication::translate("FRStatuses", "#fs_closed"));
+			ADD_FR_ERROR(FSOverflow,           QCoreApplication::translate("FRStatuses", "#fs_overflow"));
 			ADD_FR_ERROR(NoMoney,              QCoreApplication::translate("FRStatuses", "#no_money"));
 			ADD_FR_ERROR(WrongDealerTaxSystem, QCoreApplication::translate("FRStatuses", "#wrong_dealer_tax_system"));
 			ADD_FR_ERROR(WrongDealerAgentFlag, QCoreApplication::translate("FRStatuses", "#wrong_dealer_agent_flag"));
-			ADD_FR_ERROR(CashierINN,           QCoreApplication::translate("FRStatuses", "#cashier_inn"));
+			ADD_FR_ERROR(Cashier,              QCoreApplication::translate("FRStatuses", "#cashier"));
 			ADD_FR_ERROR(Taxes,                QCoreApplication::translate("FRStatuses", "#taxes"));
 		}
 

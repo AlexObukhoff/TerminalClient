@@ -37,6 +37,7 @@ public:
 
 //--------------------------------------------------------------------------------
 typedef SerialPOSPrinter<POSPrinter<TSerialPrinterBase>> TSerialPOSPrinter;
-typedef                  POSPrinter<TLibUSBPrinterBase>  TLibUSBPOSPrinter;
+typedef POSPrinter<TLibUSBPrinterBase> TLibUSBPOSPrinter;
+typedef POSPrinter<TTCPPrinterBase> TTCPPOSPrinter;
 
 //--------------------------------------------------------------------------------

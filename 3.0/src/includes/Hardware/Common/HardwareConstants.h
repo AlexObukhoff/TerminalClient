@@ -41,6 +41,7 @@ namespace CHardware
 	/// Кодировки.
 	namespace Codepages
 	{
+		const char UTF8[] = "UTF-8";
 		const char CP850[] = "CP858 (Western Europe)";
 		const char CP866[] = "CP866 (Cyrillic Russian)";
 		const char Win1250[] = "Win-1250 (Eastern & Central Europe)";
@@ -66,12 +67,6 @@ namespace CHardware
 		/// Константы COM-порта.
 		namespace COM
 		{
-			const char BaudRate[] = "baud_rate";
-			const char Parity[] = "parity";
-			const char ByteSize[] = "byte_size";
-			const char StopBits[] = "stop_bits";
-			const char RTS[] = "rts";
-			const char DTR[] = "dtr";
 			const char WaitResult[] = "wait_result";
 			const char ControlRemoving[] = "control_removing";
 		}
@@ -116,6 +111,7 @@ namespace CHardware
 		const char ProcessEnabling[] = "process_enabling";
 		const char ProcessDisabling[] = "process_disabling";
 		const char StackedFilter[] = "stacked_filter";
+		const char RejectingTimeout[] = "rejecting_timeout";
 	}
 
 	/// Константы виртуального устройства приема денег.
@@ -144,6 +140,7 @@ namespace CHardware
 		const char FeedingAmount[] = "feeding_amount";
 		const char NeedCutting[] = "need_cutting";
 		const char NeedSeparating[] = "need_separating";
+		const char NeedProcessing[] = "need_processing";
 		const char ByteString[] = "byte_string";
 		const char Receipt[] = "receipt";
 		const char PresenterEnable[] = "presenter_enable";

@@ -23,7 +23,6 @@ KasbiFRBase::KasbiFRBase()
 
 	// данные устройства
 	mDeviceName = CKasbiFR::Models::Default;
-	mLineFeed = false;
 	mIsOnline = true;
 	mFFDFR = EFFD::F105;
 	mNextReceiptProcessing = false;
@@ -207,7 +206,7 @@ bool KasbiFRBase::checkPrintingParameters(const CFR::TTLVList & aRequiredTLVs)
 	if (TLVs.contains(CKasbiFR::FiscalFields::PrinterBaudRate))
 	{
 		uint baudrate = qToBigEndian(TLVs[CKasbiFR::FiscalFields::PrinterBaudRate].toHex().toUInt(0, 16));
-		setDeviceParameter(CHardware::Port::COM::BaudRate, baudrate, CHardware::FR::PrinterModel);
+		setDeviceParameter(COMPortSDK::BaudRate, baudrate, CHardware::FR::PrinterModel);
 	}
 
 	QVariantMap oldFFData;
@@ -587,6 +586,11 @@ bool KasbiFRBase::sale(const SUnitData & aUnitData)
 		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectQuantity, 1.0) +
 		mFFEngine.getTLVData(CFR::FiscalFields::VATRate, char(section)) +
 		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectMethodType, aUnitData.payOffSubjectMethodType);
+
+	if (mOFDFiscalFieldsOnSale.contains(CFR::FiscalFields::ProviderINN))
+	{
+		commandData += mFFEngine.getTLVData(CFR::FiscalFields::ProviderINN, aUnitData.providerINN);
+	}
 
 	return processCommand(CKasbiFR::Commands::Sale, mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubject, commandData));
 }

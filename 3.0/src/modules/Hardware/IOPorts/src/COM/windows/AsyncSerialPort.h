@@ -8,8 +8,6 @@
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QVector>
-#include <QtCore/QSet>
-#include <QtCore/QUuid>
 #include <Common/QtHeadersEnd.h>
 
 // SDK
@@ -17,17 +15,11 @@
 
 // Project
 #include "Hardware/IOPorts/IOPortBase.h"
-#include "Hardware/IOPorts/IOPortGUIDs.h"
-#include "SystemDeviceUtils.h"
+#include "Hardware/Common/SerialDeviceUtils.h"
 
 //--------------------------------------------------------------------------------
-typedef QVector<QUuid> TUuids;
-
 /// Буфер для чтения.
 typedef QVector<char> TReadingBuffer;
-
-/// Данные портов.
-typedef QMap<QString, QString> TIOPortDeviceData;
 
 //--------------------------------------------------------------------------------
 /// Константы для работы с асинхронным COM-портом.
@@ -39,28 +31,20 @@ namespace CAsyncSerialPort
 	/// Коэффициент надежности таймаута фактического времени открытия порта.
 	const double KOpeningTimeout = 1.5;
 
-	/// Id для идентификации COM-портов.
-	namespace Tags
-	{
-		/// Виртуальные COM-порты (через USB).
-		inline QStringList Virtual() { return QStringList()
-			<< "USB"         /// Драйвер cp210x и совместимые.
-			<< "FTDI"        /// Чип FTDI.
-			<< "Virtual";    /// Что-то виртуальное.
-		}
-
-		/// Эмуляторы (программные) COM-порты.
-		inline QStringList Emulator() { return QStringList()
-			<< "COM0COM"
-			<< "Emulator";
-		}
-	}
-
 	/// ACPI-устройства, такие как обычные COM-порты (не устройство расширения или виртуальный порт).
 	const char GeneralRS232[] = "ACPI";
 
 	/// Признаки невозможности ожидания результата GetOverlappedResult.
-	const QStringList CannotWaitResult = QStringList() << "FTDI" << "LPC USB VCom Port" << "ATOL" << "MSTAR" << "CP210" << "STMicroelectronics" << "Honeywell";
+	const QStringList CannotWaitResult = QStringList()
+		<< "FTDI"
+		<< "LPC USB VCom Port"
+		<< "ATOL"
+		<< "MSTAR"
+		<< "CP210"
+		<< "STMicroelectronics"
+		<< "Honeywell"
+		<< "ITL"
+		<< "USB To Serial Port";
 
 	/// Ошибки не логгировать.
 	const QVector<int> NoLogErrors = QVector<int>()
@@ -73,27 +57,6 @@ namespace CAsyncSerialPort
 		<< ERROR_FILE_NOT_FOUND          /// Не удается найти указанный файл
 		<< ERROR_DEVICE_NOT_CONNECTED    /// Устройство не подключено
 		<< ERROR_ACCESS_DENIED;          /// Отказано в доступе
-
-	/// Системные параметры.
-	namespace System
-	{
-		/// GUIDы для автопоиска портов. Класс нужен для использования в static-фунцкии.
-		class Uuids : public TUuids
-		{
-		public:
-			Uuids()
-			{
-				append(GUID_DEVINTERFACE_COMPORT);
-				append(GUID_DEVINTERFACE_SERENUM_BUS_ENUMERATOR);
-				append(GUIDs::USB1);
-				append(GUIDs::USB2);
-				append(GUIDs::USB3);
-			}
-		};
-
-		/// Cвойство для формирования пути для открытия порта.
-		const DWORD PathProperty = SPDRP_FRIENDLYNAME;
-	}
 
 	/// Таймаут единичного чтения из порта, [мс].
 	const int ReadingTimeout = 50;
@@ -251,13 +214,6 @@ protected:
 
 	/// GUID-ы для автопоиска.
 	TUuids mUuids;
-
-	/// Получение системных данных о портах (порт -> виртуальность).
-	typedef QMap<QString, SDK::Driver::EPortTypes::Enum> TData;
-	static TData getSystemData(bool aForce = false);
-
-	/// Получить данные о ресурсах.
-	static TWinDeviceProperties getDeviceProperties(const TUuids & aUuids, DWORD aPropertyName, bool aQuick = false, TIOPortDeviceData * aData = nullptr);
 
 	/// Ждать окончания асинхронного чтения из порта, если результат - WAIT_TIMEOUT.
 	bool mWaitResult;

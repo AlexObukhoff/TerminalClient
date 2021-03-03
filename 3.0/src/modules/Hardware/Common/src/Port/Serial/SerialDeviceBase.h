@@ -55,7 +55,7 @@ public:
 #pragma endregion
 
 protected:
-	/// Идентификация.	
+	/// Идентификация.
 	virtual bool checkExistence();
 
 	/// Получить и обработать статус.

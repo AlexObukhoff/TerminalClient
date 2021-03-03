@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ProtoShtrihFR.h"
+#include "Hardware/FR/ProtoShtrihFR.h"
 #include "ShtrihFRBaseConstants.h"
 
 //--------------------------------------------------------------------------------
@@ -18,7 +18,6 @@ public:
 		// данные устройства
 		mDeviceName = "NeoService";
 		mRegion = ERegion::KZ;
-		mLineFeed = false;
 		mTransportTimeout = 1000;
 
 		// данные порта

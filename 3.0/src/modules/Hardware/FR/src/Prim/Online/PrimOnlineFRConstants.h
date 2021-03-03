@@ -134,7 +134,7 @@ namespace CPrimOnlineFR
 		const char NoRequiedData        = '\x78';    /// Нет запрошенных данных.
 		const char FSOfflineEnd         = '\x84';    /// Исчерпан ресурс хранения документов для ОФД.
 
-		class Data: public FRError::Data
+		class Data: public FRError::Data<char>
 		{
 		public:
 			Data()

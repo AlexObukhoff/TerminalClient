@@ -18,6 +18,7 @@ namespace CPOSPrinter
 	namespace Command
 	{
 		const char GetModelId[]             = "\x1D\x49\x01";       /// Получение идентификатора модели.
+		const char GetModelIdIII[]          = "\x1D\x49\xFF";       /// Получение идентификатора модели серии III.
 		const char GetTypeId[]              = "\x1D\x49\x02";       /// Получение идентификатора типа модели.
 		const char GetROMVersion[]          = "\x1D\x49\x03";       /// Получение версии прошивки.
 		const char Initialize[]             = "\x1B\x40";           /// Инициализация.
@@ -33,6 +34,7 @@ namespace CPOSPrinter
 		const char Cut[]                    = "\x1B\x69";           /// Отрезка.
 		const char PrintImage[]             = "\x1D\x76\x30";       /// Печать картинки.
 		const char AlignLeft[]              = "\x1B\x61\x30";       /// Выравнивание по левому краю.
+		const char SetNarrowFont[]          = "\x1B\xC1\x01";       /// Установить узкий шрифт.
 
 		inline QByteArray GetStatus(char aStatusType)  { return QByteArray("\x10\x04") + aStatusType; }       /// Запрос статуса.
 		inline QByteArray SetCodePage(char aCodePage)  { return QByteArray("\x1B\x74") + aCodePage; }         /// Установка кодовой страницы.
@@ -73,8 +75,8 @@ namespace CPOSPrinter
 	/// Таймауты ожидания ответа на запрос, [мс].
 	namespace Timeouts
 	{
-		const int Status       =  200;    /// Статус.
-		const int Info         = 1000;    /// Информация о модели.
+		const int Status = 200;    /// Статус.
+		const int Info   = 200;    /// Информация о модели.
 	}
 
 	/// Ожидание выхода из анабиоза, [мс].

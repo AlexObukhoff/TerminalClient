@@ -88,4 +88,11 @@ QString TerminalSettings::getCurrentSkinPath() const
 }
 
 //------------------------------------------------------------------------------
+ExtensionsSettings::ExtensionsSettings(ICore * mCore)
+{
+	ISettingsService * settingsService = mCore->getSettingsService();
+	mSettings = static_cast<SDK::PaymentProcessor::ExtensionsSettings *>(settingsService->getAdapter(CAdapterNames::Extensions));
+}
+
+//------------------------------------------------------------------------------
 }}} // Scripting::PaymentProcessor::SDK

@@ -168,6 +168,9 @@ protected:
 	/// Получить уровень тревожности по буферу статус-кодов.
 	virtual SDK::Driver::EWarningLevel::Enum getWarningLevel(const TStatusCollection & aStatusCollection);
 
+	/// Проверить наличие параметров соединения с устройством.
+	bool checkConnectionParameter(const QString & aParameter) const;
+
 	/// Счетчик отсутствия ответа на полловые посылки.
 	int mBadAnswerCounter;
 

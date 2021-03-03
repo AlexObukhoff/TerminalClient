@@ -3,6 +3,7 @@
 import QtQuick 1.1
 import "../scenario/constants.js" as Scenario
 
+
 GridView {
 	id: rootItem
 
@@ -168,9 +169,12 @@ GridView {
 	onCountChanged: {
 		if (model.category === 0) __rootCategory = model.rootElement;
 
-		var gridValue = Core.graphics.ui["use_smart_grid"];
-		if (gridValue) {
-			((gridValue instanceof Array) ? gridValue : new Array(gridValue)).some(function(aId) { return (__useSmartGrid = aId == __rootCategory); });
+		if (!model.rootElementColumns) {
+			// LEGACY
+			var gridValue = Core.graphics.ui["use_smart_grid"];
+			if (gridValue) {
+				((gridValue instanceof Array) ? gridValue : new Array(gridValue)).some(function(aId) { return (__useSmartGrid = Number(aId) === __rootCategory); });
+			}
 		}
 
 		calcLayout();
@@ -178,28 +182,50 @@ GridView {
 
 	// aUseGlobalValue - если true, то использовать сохарненное при инициализации значение
 	function calcLayout(aUseGlobalValue) {
-		var aMaxLength = model.getMaxNameLength();
+		var aMaxLength = rootItem.model.getMaxNameLength();
 
 		var unit = __minCellWidth;
 		var gridCellWidth;
 		var gridHeight;
 
-		// Количество строк считаем только для широких групп
-		// Для обычных берем из настроек профиля
-		if (aMaxLength <= 60 || !__useSmartGrid) {
-			gridCellWidth = unit;
-			rootItem.itemsOnPage = typeof aUseGlobalValue && aUseGlobalValue && rootItem.itemsOnPage ? rootItem.itemsOnPage : 20;
-			gridHeight = rootItem.itemsOnPage / 5 * rootItem.cellHeight;
-		}
-		else if (aMaxLength > 60 && aMaxLength <= 240) {
-			gridCellWidth = unit * 2.5;
-			rootItem.itemsOnPage = 8;
+		if (model.rootElementColumns) {
+			if (model.rootElementColumns === 1)
+			{
+				gridCellWidth = unit * 5;
+				rootItem.itemsOnPage = 4;
+			} else if (model.rootElementColumns === 2) {
+				gridCellWidth = unit * 2.5;
+				rootItem.itemsOnPage = 8;
+			} else if (model.rootElementColumns === 3) {
+				gridCellWidth = unit * 1.66;
+				rootItem.itemsOnPage = 12;
+			} else if (model.rootElementColumns === 4) {
+				gridCellWidth = unit * 1.25;
+				rootItem.itemsOnPage = 16;
+			} else {
+				gridCellWidth = unit;
+				rootItem.itemsOnPage = typeof aUseGlobalValue && aUseGlobalValue && rootItem.itemsOnPage ? rootItem.itemsOnPage : 20;
+				gridHeight = rootItem.itemsOnPage / 5 * rootItem.cellHeight;
+			}
+
 			gridHeight = 4 * rootItem.cellHeight;
-		}
-		else {
-			gridCellWidth = unit * 5;
-			rootItem.itemsOnPage = 4;
-			gridHeight = 4 * rootItem.cellHeight;
+		} else {
+			// LEGACY
+			// Количество строк считаем только для широких групп
+			// Для обычных берем из настроек профиля
+			if (aMaxLength <= 60 || !__useSmartGrid) {
+				gridCellWidth = unit;
+				rootItem.itemsOnPage = typeof aUseGlobalValue && aUseGlobalValue && rootItem.itemsOnPage ? rootItem.itemsOnPage : 20;
+				gridHeight = rootItem.itemsOnPage / 5 * rootItem.cellHeight;
+			} else if (aMaxLength > 60 && aMaxLength <= 240) {
+				gridCellWidth = unit * 2.5;
+				rootItem.itemsOnPage = 8;
+				gridHeight = 4 * rootItem.cellHeight;
+			} else {
+				gridCellWidth = unit * 5;
+				rootItem.itemsOnPage = 4;
+				gridHeight = 4 * rootItem.cellHeight;
+			}
 		}
 
 		rootItem.height = gridHeight;
@@ -239,10 +265,13 @@ GridView {
 	function reset() {
 		__useSmartGrid = false;
 		itemsOnPage = __initItemsOnPage;
-		rootItem.contentX = 0;
-		rootItem.contentY = 0;
-
 		calcLayout(true);
+		rootItem.positionViewAtIndex(0, GridView.Beginning);
+	}
+
+	function resetLayout() {
+		calcLayout(true);
+		rootItem.positionViewAtIndex(0, GridView.Beginning);
 	}
 
 	Component.onCompleted: reset()

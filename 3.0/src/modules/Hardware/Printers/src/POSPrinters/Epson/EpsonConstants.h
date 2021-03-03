@@ -12,8 +12,13 @@
 #include "Hardware/Common/ASCII.h"
 
 //--------------------------------------------------------------------------------
-namespace CEpsonEUT400
+namespace CEpson
 {
+	namespace Models
+	{
+		const char EUT400[] = "EU-T400";
+	}
+
 	namespace Command
 	{
 		const char GetVersion[]    = "\x1D\x49\x41";        /// Получение версии прошивки.
@@ -32,7 +37,7 @@ namespace CEpsonEUT400
 		const QByteArray SetMemorySwitch = QByteArray::fromRawData("\x1D\x28\x45\x0A\x00\x03", 6);    /// Установка memory-switch-а, основная часть
 	}
 
-	/// Работа с мemory-switch (MSW)
+	/// Работа с memory-switch (MSW)
 	namespace MemorySwitch
 	{
 		/// Префикс
@@ -67,9 +72,16 @@ namespace CEpsonEUT400
 
 		/// Пауза после выполнения выхода из user-режима, [мс]
 		const int ExitPause = 5000;
+	}
 
-		/// Таймаут для чтения, [мс]
-		const int TimeoutReading = 500;
+	/// Таймауты, [мс].
+	namespace Timeouts
+	{
+		/// Для чтения memory-switch (MSW).
+		const int MemorySwitch = 500;
+
+		/// Для получения данных устройства.
+		const int DeviceData = 100;
 	}
 
 	class CFontType : public CDescription<QString>
@@ -83,6 +95,7 @@ namespace CEpsonEUT400
 			append("TAIWAN.BIG-5",   "Traditional Chinese (BIG5)");
 			append("KOREA C-5601C",  "Korean (KS C-5601)");
 			append("THAI 3 PASS",    "Thai character");
+			append("STD ENGLISH",    "Standart English");
 		}
 	};
 

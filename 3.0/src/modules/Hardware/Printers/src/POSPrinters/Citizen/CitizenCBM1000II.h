@@ -40,7 +40,7 @@ CitizenCBM1000II<T>::CitizenCBM1000II()
 
 	// параметры моделей
 	mDeviceName = "Citizen CBM-1000II";
-	mModelID = '\x30';
+	setModelID('\x30');
 	setConfigParameter(CHardware::Printer::FeedingAmount, 3);
 
 	// модели

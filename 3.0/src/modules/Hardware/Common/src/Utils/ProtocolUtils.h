@@ -57,6 +57,9 @@ namespace ProtocolUtils
 	template <class T>
 	T revert(const T & aBuffer);
 
+	/// Побайтно преобразовывает число в BCD.
+	QByteArray toBCD(int aData);
+
 	/// Побайтно преобразовывает буфер из hex в BCD и заливает выбранным символом.
 	QString hexToBCD(const QByteArray & aBuffer, char filler = ASCII::Zero);
 

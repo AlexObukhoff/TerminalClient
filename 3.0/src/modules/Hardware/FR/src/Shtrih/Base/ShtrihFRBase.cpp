@@ -21,7 +21,6 @@ template<class T>
 ShtrihFRBase<T>::ShtrihFRBase()
 {
 	// параметры семейства ФР
-	mLineFeed = false;
 	setConfigParameter(CHardware::Printer::FeedingAmount, 6);
 
 	// данные команд

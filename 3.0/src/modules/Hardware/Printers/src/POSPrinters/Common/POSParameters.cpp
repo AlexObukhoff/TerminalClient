@@ -27,20 +27,33 @@ ModelData::ModelData(): mMutex(QMutex::Recursive)
 }
 
 //--------------------------------------------------------------------------------
-void ModelData::add(char aModelId, bool aVerified, const QString & aName, const QString & aDescription)
+void ModelData::add(const QByteArray & aModelId, bool aVerified, const QString & aName, const QString & aDescription)
 {
 	QMutexLocker locker(&mMutex);
 
 	append(aModelId, SModelData(aName, aVerified, aDescription));
-	mModelIds.insert(aModelId);
 }
 
 //--------------------------------------------------------------------------------
-const TModelIds & ModelData::getModelIds()
+void ModelData::add(char aModelId, bool aVerified, const QString & aName, const QString & aDescription)
+{
+	add(QByteArray(1, aModelId), aVerified, aName, aDescription);
+}
+
+//--------------------------------------------------------------------------------
+int ModelData::getIdMaxSize()
 {
 	QMutexLocker locker(&mMutex);
 
-	return mModelIds;
+	int result = 0;
+	auto Ids = data().keys();
+
+	foreach (auto id, Ids)
+	{
+		result = qMax(result, id.size());
+	}
+
+	return result;
 }
 
 } // POSPrinters

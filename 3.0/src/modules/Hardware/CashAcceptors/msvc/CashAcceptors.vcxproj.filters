@@ -185,9 +185,6 @@
     <ClInclude Include="..\src\CCNet\CCNetCashcodeGX.h">
       <Filter>CCNet\CashcodeGX</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\ModelData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\CCNet\CCNetCashAcceptorConstants.h">
       <Filter>CCNet\Base</Filter>
     </ClInclude>
@@ -238,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="..\src\CCTalk\CCTalkCashAcceptorModelData.h">
       <Filter>ccTalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SSP\SSPModelDataTypes.h">
+      <Filter>SSP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

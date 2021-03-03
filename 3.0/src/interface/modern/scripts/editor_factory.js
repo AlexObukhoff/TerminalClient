@@ -219,22 +219,33 @@ function _createEditor(aType)
 	}
 
 	if (component.status == Component.Error) {
-		// Проверим относительный и абсолютный пути
-		component = _createComponent("../../../widgets/%2_editor.qml".arg(aType));
+		// Путь может быть как параметр контекста
+		var provider = Core.payment.getProvider(String(Core.userProperties.get("operator_id")))
+		var contextPath =  Object.keys(provider.fieldsContext).length ? provider.fieldsContext.path: ""
+		component = _createComponent("file:///%1/scene_with_context/operators/%2/widgets/%3_editor.qml"
+																 .arg(Core.environment.terminal.interfacePath)
+																 .arg(contextPath)
+																 .arg(aType));
+
 
 		if (component.status == Component.Error) {
-			component = _createComponent("file:///%1/widgets/%2_editor.qml"
-																	 .arg(Core.environment.terminal.interfacePath)
-																	 .arg(aType));
+			// Проверим относительный и абсолютный пути
+			component = _createComponent("../../../widgets/%2_editor.qml".arg(aType));
 
-			// Стандартный редактор
 			if (component.status == Component.Error) {
-				component = _createComponent("widgets/%2_editor.qml".arg(aType));
+				component = _createComponent("file:///%1/widgets/%2_editor.qml"
+																		 .arg(Core.environment.terminal.interfacePath)
+																		 .arg(aType));
 
-				// Редактор по умолчанию, если не нашли специализированного
+				// Стандартный редактор
 				if (component.status == Component.Error) {
-					Core.log.error("Failed to load %1: %2. Fallback to default editor.".arg(component.url).arg(component.errorString()));
-					component = _createComponent("file:///%1/widgets/text_editor.qml".arg(Core.environment.terminal.interfacePath));
+					component = _createComponent("widgets/%2_editor.qml".arg(aType));
+
+					// Редактор по умолчанию, если не нашли специализированного
+					if (component.status == Component.Error) {
+						Core.log.error("Failed to load %1: %2. Fallback to default editor.".arg(component.url).arg(component.errorString()));
+						component = _createComponent("file:///%1/widgets/text_editor.qml".arg(Core.environment.terminal.interfacePath));
+					}
 				}
 			}
 		}
@@ -282,7 +293,7 @@ function _createComponent(aPath) {
 		Core.log.debug("Status: %1, Path: %2, Error: %3".arg(component.status).arg(aPath).arg(component.errorString() ? component.errorString() : "OK"));
 	}
 	catch(e) {
-		Core.log.debug("Path: %1, Error: %2".arg(aPath).arg(e.message));
+		Core.log.error("Path: %1, Error: %2".arg(aPath).arg(e.message));
 	}
 
 	return component;

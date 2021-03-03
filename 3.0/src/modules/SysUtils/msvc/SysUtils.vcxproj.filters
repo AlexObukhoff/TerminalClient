@@ -25,7 +25,7 @@
     <ClInclude Include="..\..\..\includes\SysUtils\ISysUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\windows\SystemPrinterStatusCodes.h">
+    <ClInclude Include="..\..\..\includes\SysUtils\SystemPrinterStatusCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

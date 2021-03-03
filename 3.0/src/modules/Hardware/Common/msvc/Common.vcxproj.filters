@@ -86,6 +86,9 @@
     <Filter Include="Port\LibUSB">
       <UniqueIdentifier>{ac83c76a-6c06-48a5-8ec6-3dd2c2910ac4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils\Port">
+      <UniqueIdentifier>{e6d51875-c594-44b7-aa23-ace8a71e00dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PollingExpector.cpp">
@@ -247,6 +250,12 @@
     <ClCompile Include="..\src\Port\USB\USBDeviceModelData.cpp">
       <Filter>Port\USB</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Utils\Port\SerialDeviceUtils.cpp">
+      <Filter>Utils\Port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utils\Port\SystemDeviceUtils.cpp">
+      <Filter>Utils\Port</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ASCII.h">
@@ -380,6 +389,21 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Common\ExitAction.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\LimitedQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ModelData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utils\Port\DeviceGUIDs.h">
+      <Filter>Utils\Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utils\Port\SerialDeviceUtils.h">
+      <Filter>Utils\Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utils\Port\SystemDeviceUtils.h">
+      <Filter>Utils\Port</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

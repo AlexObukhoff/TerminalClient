@@ -45,7 +45,7 @@ CustomPrinter<T>::CustomPrinter()
 
 	// параметры моделей
 	mDeviceName = "Custom Printer";
-	mModelID = '\x93';
+	setModelID('\x93');
 	mPrintingStringTimeout = 50;
 
 	// модели
@@ -67,6 +67,18 @@ QStringList CustomPrinter<T>::getModelList()
 		<< CCustomPrinter::Models::TG2460H
 		<< CCustomPrinter::Models::TL80
 		<< CCustomPrinter::Models::TL60;
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+bool CustomPrinter<T>::updateParameters()
+{
+	if (!POSPrinter<T>::updateParameters())
+	{
+		return false;
+	}
+
+	return mIOPort->write(CPOSPrinter::Command::SetNarrowFont);
 }
 
 //--------------------------------------------------------------------------------

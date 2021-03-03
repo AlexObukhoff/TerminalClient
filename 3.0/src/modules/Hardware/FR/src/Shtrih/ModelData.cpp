@@ -51,6 +51,8 @@ CData::CData()
 	addNew(-36, "ШТРИХ-М-02Ф",    "Shtrih-M Shtrih-M-02F",  true, false, 0, 5);
 	addNew(-37, "ШТРИХ-МИНИ-01Ф", "Shtrih-M Mini-01F",      true, false, 0, 5);
 
+	addNew(-51, "РР-04Ф",         "RR-Electro RR-04F",      true, false, 0, 3);
+
 	setDefault(SModelData("", Models::Default, false, false, 0, 6, QDate::currentDate(), 0, 0));
 }
 

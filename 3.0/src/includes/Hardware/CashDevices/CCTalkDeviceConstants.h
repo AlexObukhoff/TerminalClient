@@ -42,43 +42,44 @@ namespace CCCTalk
 	namespace Command
 	{
 		/// Общие.
-		const uchar SimplePoll   = 254;
-		const uchar VendorID     = 246;
-		const uchar DeviceTypeID = 245;
-		const uchar ProductCode  = 244;
-		const uchar BuildCode    = 192;
+		const uchar SimplePoll   = 254;    // FE
+		const uchar VendorID     = 246;    // F6
+		const uchar DeviceTypeID = 245;    // F5
+		const uchar ProductCode  = 244;    // F4
+		const uchar BuildCode    = 192;    // C0
 
 		/// Общие +.
-		const uchar Serial       = 242;
-		const uchar SoftVersion  = 241;
-		const uchar ProtocolID   =   4;
-		const uchar Reset        =   1;
+		const uchar Serial       = 242;    // F2
+		const uchar SoftVersion  = 241;    // F1
+		const uchar ProtocolID   =   4;    // 04
+		const uchar Reset        =   1;    // 01
 
-		const uchar Status                     = 248;
-		const uchar GetVariables               = 247;
-		const uchar DBVersion                  = 243;
-		const uchar TestCoils                  = 240;
-		const uchar SelfCheck                  = 232;
-		const uchar PartialEnable              = 231;
-		const uchar GetBufferedCoinStatuses    = 229;
-		const uchar AllSetEnable               = 228;
-		const uchar CreationDate               = 196;
-		const uchar SoftLastDate               = 195;
-		const uchar GetCoinID                  = 184;
-		const uchar SetSecurity                = 181;
-		const uchar BaseYear                   = 170;
-		const uchar Dispense                   = 167;
-		const uchar GetHopperStatus            = 166;
-		const uchar SetVariables               = 165;
-		const uchar EnableHopper               = 164;
-		const uchar TestHopper                 = 163;
-		const uchar ModifyInhibitsAndRegesters = 162;
-		const uchar GetBufferedBillStatuses    = 159;
-		const uchar GetBillID                  = 157;
-		const uchar GetCountryScalingFactor    = 156;
-		const uchar RouteBill                  = 154;
-		const uchar ModifyBillOperatingMode    = 153;
-		const uchar GetCurrencyRevision        = 145;
+		const uchar Status                     = 248;    // F8
+		const uchar GetVariables               = 247;    // F7
+		const uchar DBVersion                  = 243;    // F3
+		const uchar TestCoils                  = 240;    // F0
+		const uchar SelfCheck                  = 232;    // E8
+		const uchar PartialEnable              = 231;    // E7
+		const uchar GetBufferedCoinStatuses    = 229;    // E5
+		const uchar AllSetEnable               = 228;    // E4
+		const uchar CreationDate               = 196;    // C4
+		const uchar SoftLastDate               = 195;    // C3
+		const uchar SetPayoutCapacity          = 187;    // BB
+		const uchar GetCoinID                  = 184;    // B8
+		const uchar SetSecurity                = 181;    // B7
+		const uchar BaseYear                   = 170;    // AA
+		const uchar Dispense                   = 167;    // A7
+		const uchar GetHopperStatus            = 166;    // A6
+		const uchar SetVariables               = 165;    // A5
+		const uchar EnableHopper               = 164;    // A4
+		const uchar TestHopper                 = 163;    // A3
+		const uchar ModifyInhibitsAndRegesters = 162;    // A2
+		const uchar GetBufferedBillStatuses    = 159;    // 9F
+		const uchar GetBillID                  = 157;    // 9D
+		const uchar GetCountryScalingFactor    = 156;    // 9C
+		const uchar RouteBill                  = 154;    // 9A
+		const uchar ModifyBillOperatingMode    = 153;    // 99
+		const uchar GetCurrencyRevision        = 145;    // 91
 
 		namespace EAnswerType
 		{

@@ -2,6 +2,9 @@
 
 #pragma once
 
+// SDK
+#include <SDK/Plugins/ImportanceLevel.h>
+
 // Qt
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QString>
@@ -37,10 +40,14 @@ struct SPluginParameter
 	};
 
 	/// Конструктор.
-	SPluginParameter() : type(Unknown), required(false), readOnly(false) {}
+	SPluginParameter() : type(Unknown), required(false), readOnly(false), importanceLevel(SDK::Plugin::EImportanceLevel::Normal) {}
 
-	SPluginParameter(const QString & aName, Type aType, bool aRequired, const QString & aTitle, const QString & aDescription, const QVariant & aDefaultValue, const QVariantMap & aPossibleValues = QVariantMap(), bool aReadOnly = false) :
-		type(aType), required(aRequired), readOnly(aReadOnly), name(aName), title(aTitle), description(aDescription), defaultValue(aDefaultValue), possibleValues(aPossibleValues)
+	SPluginParameter(
+		const QString & aName, Type aType, bool aRequired, const QString & aTitle, const QString & aDescription,
+		const QVariant & aDefaultValue, const QVariantMap & aPossibleValues = QVariantMap(), bool aReadOnly = false,
+		SDK::Plugin::EImportanceLevel::Enum aImportanceLevel = SDK::Plugin::EImportanceLevel::Normal) :
+			type(aType), required(aRequired), readOnly(aReadOnly), name(aName), title(aTitle), description(aDescription),
+			defaultValue(aDefaultValue), possibleValues(aPossibleValues), importanceLevel(aImportanceLevel)
 	{
 		if (aType == Type::Bool)
 		{
@@ -53,10 +60,11 @@ struct SPluginParameter
 	/// Специальный конструктор для типа Set.
 	/// !! Если в сервисном меню необходимо останавливаться на позиции с незаполненным по умолччанию значением - надо ставить QVariant(), а не "" !!
 	SPluginParameter(
-		const QString & aName, bool aRequired,
-		const QString & aTitle, const QString & aDescription,
-		const QVariant & aDefaultValue, const QStringList & aPossibleValues, bool aReadOnly = false)
-		: type(Set), name(aName), required(aRequired), title(aTitle), description(aDescription), defaultValue(aDefaultValue), readOnly(aReadOnly)
+		const QString & aName, bool aRequired, const QString & aTitle, const QString & aDescription,
+		const QVariant & aDefaultValue, const QStringList & aPossibleValues, bool aReadOnly = false,
+		SDK::Plugin::EImportanceLevel::Enum aImportanceLevel = SDK::Plugin::EImportanceLevel::Normal) :
+			type(Set), name(aName), required(aRequired), title(aTitle), description(aDescription),
+			defaultValue(aDefaultValue), readOnly(aReadOnly), importanceLevel(aImportanceLevel)
 	{
 		foreach (const QString & value, aPossibleValues)
 		{
@@ -79,6 +87,9 @@ struct SPluginParameter
 
 	/// Возможный набор значений (для типов Set и MultiSet).
 	QVariantMap possibleValues;
+
+	/// Уровень значимости параметра. Имеет значение при разрешении конфликтов (если есть) при создании плагина.
+	SDK::Plugin::EImportanceLevel::Enum importanceLevel;
 };
 
 typedef QVector<SPluginParameter> TParameterList;

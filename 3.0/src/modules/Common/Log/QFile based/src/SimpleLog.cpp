@@ -96,6 +96,12 @@ void SimpleLog::setLevel(LogLevel::Enum aLevel)
 }
 
 //---------------------------------------------------------------------------
+LogLevel::Enum SimpleLog::getLevel()
+{
+	return mMaxLogLevel;
+}
+
+//---------------------------------------------------------------------------
 void SimpleLog::adjustPadding(int aStep)
 {
 	mPadding = qMax(0, mPadding + aStep);

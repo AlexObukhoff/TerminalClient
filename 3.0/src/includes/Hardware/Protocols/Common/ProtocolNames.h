@@ -25,6 +25,7 @@ namespace ProtocolNames
 	{
 		const char ATOL2[]   = "ATOL2";
 		const char ATOL3[]   = "ATOL3";
+		const char ATOL5[]   = "ATOL5";
 		const char Shtrih[]  = "Shtrih";
 		const char PRIM[]    = "PRIM";
 		const char SPARK[]   = "SPARK";

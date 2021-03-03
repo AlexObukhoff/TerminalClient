@@ -94,7 +94,7 @@ public:
 
 	/// Печать типизированного чека с параметрами aParameters. Возвращает индекс задания, поставленного в очередь.
 	/// Результат придёт в сигнале receiptPrinted.
-	virtual int printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aReceiptTemplate, bool aContinuousMode, bool aServiceOperation = false);
+	virtual int printReceipt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aReceiptTemplate, DSDK::EPrintingModes::Enum aPrintingMode, bool aServiceOperation = false);
 
 	/// Сохранение электронной версии типизированного чека с параметрами aParameters.
 	virtual void saveReceipt(const QVariantMap & aParameters, const QString & aReceiptTemplate);
@@ -237,7 +237,7 @@ private:
 	std::function<bool(int, PrintCommand *, QVariantMap)> mPrintingFunction;
 
 	/// Режим непрерывной печати чеков.
-	bool mContinuousMode;
+	DSDK::EPrintingModes::Enum mPrintingMode;
 	bool mServiceOperation;
 	bool mRandomReceiptsID;
 	mutable std::mt19937 mRandomGenerator;

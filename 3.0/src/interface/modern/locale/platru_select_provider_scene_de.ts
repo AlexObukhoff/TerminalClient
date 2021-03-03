@@ -9,12 +9,12 @@
         <translation>Gruppe wählen</translation>
     </message>
     <message>
-        <location filename="../platru_select_provider_scene.qml" line="225"/>
+        <location filename="../platru_select_provider_scene.qml" line="227"/>
         <source>main_menu_scene#invalid_provider</source>
         <translation>Zahlung zugunsten dieses Betreibers ist leider momentan nicht möglich. Versuchen Sie es bitte später.</translation>
     </message>
     <message>
-        <location filename="../platru_select_provider_scene.qml" line="238"/>
+        <location filename="../platru_select_provider_scene.qml" line="240"/>
         <source>platru_select_provider_scene#entry_title</source>
         <translation>Eintragsname</translation>
     </message>

@@ -87,6 +87,8 @@ DeviceService::DeviceService(IApplication * aApplication)
 	mDeviceCreationOrder[DSDK::CComponents::Watchdog] = EDeviceCreationOrder::AtStart;
 	mDeviceCreationOrder[DSDK::CComponents::Health]   = EDeviceCreationOrder::AtStart;
 
+	mIntegratedDrivers.setLog(mLog);
+
 #ifdef TC_USE_TOKEN
 	mDeviceCreationOrder[DSDK::CComponents::Token] = EDeviceCreationOrder::AtStart;
 #endif

@@ -72,6 +72,28 @@ namespace CFR
 		const char Fail[]  = "__FAIL__";     /// Транспортная/протокольная ошибка.
 	}
 
+	/// Состояние сессии.
+	class CSessionState : public CDescription<SDK::Driver::ESessionState::Enum>
+	{
+	public:
+		CSessionState()
+		{
+			using namespace SDK::Driver;
+
+			append(ESessionState::Error,   "error");
+			append(ESessionState::Opened,  "opened");
+			append(ESessionState::Closed,  "closed");
+			append(ESessionState::Expired, "expired");
+
+			setDefault("unknown");
+		}
+	};
+
+	static CSessionState SessionState;
+
+	/// Регэксп для проверки имени кассира: должны быть буквы.
+	const char CashierRegExpData[] = "[^a-zA-Zа-яА-Я]+";
+
 	/// ИНН.
 	namespace INN
 	{
@@ -114,6 +136,21 @@ namespace CFR
 			add(EFFD::F10,     100, "1.0");
 			add(EFFD::F105,    128, "1.05");
 			add(EFFD::F11,     128, "1.1");
+		}
+
+		EFFD::Enum getVersion(const QString & aDescription)
+		{
+			for (auto it = data().begin(); it != data().end(); ++it)
+			{
+				QString description = it->description.remove(ASCII::Dot).leftJustified(3, QChar(ASCII::Zero));
+
+				if (description.contains(aDescription))
+				{
+					return it.key();
+				}
+			}
+
+			return EFFD::Unknown;
 		}
 
 	private:
@@ -182,6 +219,8 @@ namespace CFR
 	inline QString FSSerialToString(const QByteArray & aData, int aBase = 10) { return dataToString(aData, aBase, 16); }    /// Серийный номер ФН (1041)
 	inline QString      RNMToString(const QByteArray & aData, int aBase = 10) { return dataToString(aData, aBase, 16); }    /// РНМ (1037)
 	inline QString      INNToString(const QByteArray & aData, int aBase = 10) { return dataToString(aData, aBase, 10); }    /// ИНН оператора перевода (1016)
+
+	typedef QString (* TFFFormatDataMethod)(const QByteArray & aData, int aBase);
 
 	/// Размеры номеров
 	const int FDSerialNumberSize =  4;    /// Чек в смене (1042)
@@ -318,7 +357,7 @@ namespace CFR
 			append(Other,                 "ИНОЙ ПРЕДМЕТ РАСЧЕТА");
 			append(PropertyRight,         "ИМУЩЕСТВЕННОЕ ПРАВО");
 			append(NonSalesIncome,        "ВНЕРЕАЛИЗАЦИОННЫЙ ДОХОД");
-			append(InsuranceСontribution, "СТРАХОВЫЕ ВЗНОСЫ");
+			append(InsuranceContribution, "СТРАХОВЫЕ ВЗНОСЫ");
 			append(TradeTax,              "ТОРГОВЫЙ СБОР");
 			append(ResortTax,             "КУРОРТНЫЙ СБОР");
 			append(Deposit,               "ЗАЛОГ");

@@ -2,10 +2,14 @@
 
 #pragma once
 
+// Common
+#include <SDK/Drivers/IDevice.h>
+
+// Modules
 #include "DeviceManager/DeviceManager.h"
 
 //------------------------------------------------------------------------------
-class IntegratedDrivers
+class IntegratedDrivers: public ILogable
 {
 public:
 	typedef QSet<QString> TPaths;

@@ -8,6 +8,7 @@ for %%F in (
 	search_scene.qml
 	language_scene.qml
 	addinfo_scene.qml
+	addinfo_with_amount_scene.qml	
 	confirm_payment_scene.qml
 	denom_info_scene.qml
 	edit_payment_scene.qml

@@ -19,7 +19,8 @@ namespace FRError
 			FM,             /// Фискальная память.
 			EKLZ,           /// ЭКЛЗ.
 			FS,             /// ФН.
-			SD              /// Ошибка карты памяти.
+			SD,             /// Ошибка карты памяти.
+			CashAcceptor    /// Ошибка подключаемого купюроприемника.
 		};
 	}
 
@@ -33,7 +34,8 @@ namespace FRError
 		SData(const QString & aDescription, EType::Enum aType = EType::FR, bool aExtraData = false) : description(aDescription), type(aType), extraData(aExtraData) {}
 	};
 
-	class Data : public CSpecification<char, SData>
+	template <class T>
+	class Data : public CSpecification<T, SData>
 	{
 	public:
 		Data()
@@ -41,12 +43,12 @@ namespace FRError
 			setDefault(SData(QString::fromUtf8("Неизвестная"), EType::Unknown));
 		}
 
-		void add(char aKey, const char * aDescription, EType::Enum aType = EType::Unknown)
+		void add(T aKey, const char * aDescription, EType::Enum aType = EType::Unknown)
 		{
 			mBuffer.insert(aKey, SData(QString::fromUtf8(aDescription), aType));
 		}
 
-		void add(char aKey, const char * aDescription, bool aExtraData)
+		void add(T aKey, const char * aDescription, bool aExtraData)
 		{
 			mBuffer.insert(aKey, SData(QString::fromUtf8(aDescription), EType::FR, aExtraData));
 		}

@@ -92,7 +92,7 @@ namespace CFR { namespace FiscalFields
 	ADD_FISCAL_FIELD(1017, OFDINN,                 String,    QCoreApplication::translate("FiscalFields", "#ofd_inn"),       CFR::FiscalFields::EClassType::INN);      // 1017 (ИНН ОФД).
 	ADD_FISCAL_FIELD(1018, INN,                    String,    QCoreApplication::translate("FiscalFields", "#inn"),           CFR::FiscalFields::EClassType::INN);      // 1018 (ИНН пользователя).
 	ADD_FISCAL_FIELD(1020, PayOffAmount,           VLN,       QCoreApplication::translate("FiscalFields", "#payoff_amount"), CFR::FiscalFields::EClassType::Money);    // 1020 (Сумма расчета в чеке).
-	ADD_FISCAL_FIELD(1021, Cashier,                String,    QCoreApplication::translate("FiscalFields", "#cashier"));                                                // 1021 (Кассир).
+	ADD_FISCAL_FIELD(1021, Cashier,                String,    QCoreApplication::translate("FiscalFields", "#cashier"), CFR::FiscalFields::ERequired::PM);              // 1021 (Кассир).
 	ADD_FISCAL_FIELD(1030, UnitName,               String);                                                                                                            // 1030 (Наименование товара).
 	ADD_FISCAL_FIELD(1036, AutomaticNumber,        String,    QCoreApplication::translate("FiscalFields", "#automatic_number"));                                       // 1036 (Номер автомата).
 	ADD_FISCAL_FIELD(1037, RNM,                    String,    QCoreApplication::translate("FiscalFields", "#rnm"));                                                    // 1037 (Регистрационный номер ККТ).
@@ -232,8 +232,6 @@ namespace CFR { namespace FiscalFields
 	//---------------------------------------------------------------------------
 	// Список полей, которые обновляются для каждого фискального чека.
 	const TFields RenewableFields = AgentFlagAssociatedFields + TFields()
-		<< CFR::FiscalFields::Cashier
-		<< CFR::FiscalFields::CashierINN
 		<< CFR::FiscalFields::UserContact
 		<< CFR::FiscalFields::SenderMail
 		<< CFR::FiscalFields::TaxSystem

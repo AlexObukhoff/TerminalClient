@@ -54,7 +54,7 @@ namespace CShtrihFRBase
 		const char FMInDataEntryMode  = '\x06';    /// ФП в режиме вывода данных.
 		const char CannotSetModeTable = '\xC7';    /// Поле не редактируется в данном режиме
 
-		class Data : public FRError::Data
+		class Data : public FRError::Data<char>
 		{
 		public:
 			Data()

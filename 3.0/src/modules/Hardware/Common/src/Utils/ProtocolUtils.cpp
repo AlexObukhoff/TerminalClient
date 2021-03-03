@@ -242,6 +242,27 @@ QString ProtocolUtils::hexToBCD(const QByteArray & aBuffer, char filler)
 }
 
 //--------------------------------------------------------------------------------
+QByteArray ProtocolUtils::toBCD(int aData)
+{
+	QByteArray data = QByteArray::number(aData, 16);
+
+	if (data.size() % 2)
+	{
+		data.prepend(ASCII::Zero);
+	}
+
+	QByteArray result;
+
+	for (int i = 0; i < data.size() / 2; ++i)
+	{
+		QByteArray part = data.mid(2 * i, 2);
+		result.append(uchar(part.toInt(0, 16)));
+	}
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------
 QByteArray ProtocolUtils::getHexReverted(double aValue, int aSize, int aPrecision)
 {
 	qint64 value = qRound64(aValue * pow(10.0, abs(aPrecision)));

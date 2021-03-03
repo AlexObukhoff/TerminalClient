@@ -132,7 +132,7 @@ class Provider : public QObject
 	Q_OBJECT
 
 	Q_PROPERTY(QString id READ getID CONSTANT)
-	Q_PROPERTY(QString gateway READ getCID CONSTANT)
+	Q_PROPERTY(QString gateway READ getCID CONSTANT)	
 	Q_PROPERTY(QString type READ getType CONSTANT)
 	Q_PROPERTY(QString processorType READ getProcessorType CONSTANT)
 	Q_PROPERTY(QString name READ getName CONSTANT)
@@ -141,12 +141,17 @@ class Provider : public QObject
 	Q_PROPERTY(QString maxLimit READ getMaxLimit CONSTANT)
 	Q_PROPERTY(QString systemLimit READ getSystemLimit CONSTANT)
 	Q_PROPERTY(QObjectList fields READ getFields CONSTANT)
+	Q_PROPERTY(QVariantMap fieldsContext READ getFieldsContext CONSTANT)
+	Q_PROPERTY(bool cyberwalletShow READ getCyberwalletShow CONSTANT)
 	Q_PROPERTY(bool skipCheck READ getSkipCheck CONSTANT)
 	Q_PROPERTY(bool payOnline READ getPayOnline CONSTANT)
 	Q_PROPERTY(bool askForRetry READ getAskForRetry CONSTANT)
 	Q_PROPERTY(bool requirePrinter READ getRequirePrinter CONSTANT)
 	Q_PROPERTY(bool showAddInfo READ getShowAddInfo CONSTANT)
+	Q_PROPERTY(bool showCheckAddInfo READ getShowCheckAddInfo CONSTANT)
+	Q_PROPERTY(bool checkEsia READ getCheckEsia CONSTANT)
 	Q_PROPERTY(QString clientCard READ getClientCard CONSTANT)
+	Q_PROPERTY(QString keyPair READ getKeyPair CONSTANT)
 	Q_PROPERTY(QString externalDataHandler READ getExternalDataHandler CONSTANT)
 	Q_PROPERTY(QVariantMap receipts READ getReceipts CONSTANT)
 	Q_PROPERTY(QVariantMap receiptParameters READ getReceiptParameters CONSTANT)
@@ -155,7 +160,10 @@ public:
 	Provider(const SProvider & aProvider, QObject * aParent);
 
 public slots:
-	bool isNull() const { return mProvider.id == -1 || mProvider.fields.isEmpty(); }
+	bool isNull() const 
+	{ 
+		return mProvider.id == -1 || mProvider.fields.isEmpty(); 
+	}
 	
 	/// Проверить согласование проверки номера и лимитов, получаемых с сервера
 	bool isCheckStepSettingsOK();
@@ -166,7 +174,7 @@ public slots:
 
 private:
 	QString getID() const { return QString::number(mProvider.id); }
-	QString getCID() const { return QString::number(mProvider.cid); }
+	QString getCID() const { return QString::number(mProvider.cid); }	
 	QString getType() const { return mProvider.type; }
 	QString getProcessorType() const { return mProvider.processor.type; }
 	QString getName() const { return mProvider.name; }
@@ -175,12 +183,17 @@ private:
 	QString getMaxLimit() const { return mProvider.limits.max; }
 	QString getSystemLimit() const { return mProvider.limits.system; }
 	QObjectList getFields();
+	QVariantMap getFieldsContext() const { return mProvider.fieldsContext; }
+	bool getCyberwalletShow() const { return QVariant(mProvider.terminalCyberwalletShow).toBool(); }
 	bool getSkipCheck() const { return mProvider.processor.skipCheck; }
 	bool getPayOnline() const { return mProvider.processor.payOnline; }
 	bool getAskForRetry() const { return mProvider.processor.askForRetry; }
 	bool getRequirePrinter() const { return mProvider.processor.requirePrinter; }
 	bool getShowAddInfo() const { return mProvider.processor.showAddInfo; }
+	bool getShowCheckAddInfo() const { return mProvider.processor.showCheckAddInfo; }
+	bool getCheckEsia() const { return mProvider.processor.checkEsia; }
 	QString getClientCard() const { return QString::number(mProvider.processor.clientCard); }
+	QString getKeyPair() const { return QString::number(mProvider.processor.keyPair); }
 	QString getExternalDataHandler() const { return mProvider.externalDataHandler; }
 	QVariantMap getReceipts() const { return mProvider.receipts; }
 	QVariantMap getReceiptParameters() const { return mProvider.receiptParameters; }
@@ -314,6 +327,9 @@ public slots:
 
 	/// Проверка введённых данных.
 	void check();
+
+	/// Выполенение проверки платежа в онлайне.
+	void processCheck();
 
 	/// Выполенение шага платежа в онлайне.
 	void processStep(int aStep);

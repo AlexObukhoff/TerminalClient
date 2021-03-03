@@ -143,7 +143,7 @@ namespace EPayOffSubjectTypes
 		Other,                    /// Иной
 		PropertyRight,            /// Имущественное право
 		NonSalesIncome,           /// Внереализационный доход
-		InsuranceСontribution,    /// Страховой взнос
+		InsuranceContribution,    /// Страховой взнос
 		TradeTax,                 /// Торговый сбор
 		ResortTax,                /// Курортный сбор
 		Deposit                   /// Залог

@@ -14,18 +14,18 @@
         <translation>Eintrag hinzufügen</translation>
     </message>
     <message>
-        <location filename="../platru_menu_scene.qml" line="224"/>
-        <location filename="../platru_menu_scene.qml" line="296"/>
+        <location filename="../platru_menu_scene.qml" line="225"/>
+        <location filename="../platru_menu_scene.qml" line="297"/>
         <source>platru_menu_scene#low_balance</source>
         <translation>Die Mittel auf Ihrem Konto reichen für die Bezahlung nicht aus.  Nur Barzahlung möglich.</translation>
     </message>
     <message>
-        <location filename="../platru_menu_scene.qml" line="303"/>
+        <location filename="../platru_menu_scene.qml" line="304"/>
         <source>main_menu_scene#invalid_provider</source>
         <translation>Txt4Txt</translation>
     </message>
     <message>
-        <location filename="../platru_menu_scene.qml" line="218"/>
+        <location filename="../platru_menu_scene.qml" line="219"/>
         <source>search_scene#invalid_provider</source>
         <translation>Zahlung zugunsten dieses Betreibers ist leider momentan nicht möglich. Versuchen Sie es bitte später.</translation>
     </message>

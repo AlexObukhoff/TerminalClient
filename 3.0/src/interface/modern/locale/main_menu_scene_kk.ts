@@ -31,5 +31,9 @@
         <source>main_menu_scene#rest_howto_description</source>
         <translation>«Жабу» батырмасына басыңыз. Төлем жасау үшін кез келген операторды таңдаңыз.</translation>
     </message>
+    <message>
+        <source>main_menu_scene#invalid_esia_provider</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

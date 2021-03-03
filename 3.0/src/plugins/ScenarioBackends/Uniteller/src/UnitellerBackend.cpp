@@ -137,7 +137,7 @@ void UnitellerCore::onPrintReceipt(const QStringList & aLines)
 
 	SDK::PaymentProcessor::Scripting::PrinterService * ps = static_cast<SDK::PaymentProcessor::Scripting::PrinterService *>(scriptingCore->property("printer").value<QObject *>());
 
-	ps->printReceipt("", parameters, "emv", true);
+	ps->printReceipt("", parameters, "emv", DSDK::EPrintingModes::Continuous);
 }
 
 }

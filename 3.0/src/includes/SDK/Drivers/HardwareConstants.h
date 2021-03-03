@@ -18,8 +18,10 @@ namespace CAllHardware
 	const char SystemName[] = "system_name";
 	const char SearchingType[] = "searching_type";
 	const char RequiredResource[] = "required_resource";
+	const char RequiredResourceParameters[] = "required_resource_parameters";
 	const char Existence[] = "existence";
 	const char InteractionType[] = "interaction_type";
+	const char ExcludedParameters[] = "excluded_parameters";
 	const char WaitUpdatingTimeout[] = "wait_updating_timeout";
 	const char OperatorPresence[] = "operator_presence";
 	const char FiscalServerPresence[] = "fiscal_server_presence";
@@ -28,6 +30,9 @@ namespace CAllHardware
 	const char SerialNumber[] = "serial_number";
 	const char CanOnline[] = "can_online";
 	const char LibraryVersion[] = "library_version";
+	const char PluginDirectory[] = "plugin_directory";
+	const char LogDirectory[] = "log_directory";
+	const char DataDirectory[] = "data_directory";
 
 	/// Значения настроек.
 	namespace Values
@@ -83,7 +88,7 @@ namespace CAllHardware
 	{
 		const char LineSize[] = "line_size";
 		const char ReceiptTemplate[] = "receipt_template";
-		const char ContinuousMode[] = "continuous_mode";
+		const char PrintingMode[] = "printing_mode";
 		const char ServiceOperation[] = "service_operation";
 		const char BlockTerminalOnError[] = "block_terminal_on_error";
 		const char OFDNotSentError[] = "ofd_not_sent_error";
@@ -102,6 +107,17 @@ namespace CAllHardware
 	/// Константы порта.
 	namespace Port
 	{
+		/// Константы COM-порта.
+		namespace COM
+		{
+			const char BaudRate[] = "baud_rate";
+			const char Parity[] = "parity";
+			const char ByteSize[] = "byte_size";
+			const char StopBits[] = "stop_bits";
+			const char RTS[] = "rts";
+			const char DTR[] = "dtr";
+		}
+
 		/// Константы TCP-порта.
 		namespace TCP
 		{
@@ -114,5 +130,6 @@ namespace CAllHardware
 }} // SDK::Driver
 
 namespace CHardwareSDK = SDK::Driver::CAllHardware;
+namespace COMPortSDK = CHardwareSDK::Port::COM;
 
 //---------------------------------------------------------------------------

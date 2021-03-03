@@ -9,6 +9,9 @@
 #include <QtCore/QFutureSynchronizer>
 #include <Common/QtHeadersEnd.h>
 
+// SDK
+#include <SDK/Drivers/PrintingModes.h>
+
 namespace SDK {
 namespace PaymentProcessor {
 
@@ -57,6 +60,11 @@ signals:
 
 	/// Срабатывает после проверки принтеров.
 	void printerChecked(bool aReady);
+
+public:
+	/// Печать типизированного чека с параметрами aParameters.
+	/// Перегрузка со слотами не работает. Поэтому, так.
+	void printReceiptExt(const QString & aReceiptType, const QVariantMap & aParameters, const QString & aTemplate, DSDK::EPrintingModes::Enum aPrintingMode = DSDK::EPrintingModes::None);
 
 protected:
 	void privateCheckPrinter();

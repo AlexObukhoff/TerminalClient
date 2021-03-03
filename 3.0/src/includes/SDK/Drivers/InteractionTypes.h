@@ -2,6 +2,11 @@
 
 #pragma once
 
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QStringList>
+#include <Common/QtHeadersEnd.h>
+
 namespace SDK {
 namespace Driver {
 
@@ -16,9 +21,33 @@ namespace CInteractionTypes
 	ADD_IT(OPOS)
 	ADD_IT(System)
 	ADD_IT(External)
+	ADD_IT(ExternalCOM)
+	ADD_IT(ExternalVCOM)
 }
 
-//---------------------------------------------------------------------------
+/// Все типы взаимодействия.
+const QStringList InteractionTypes = QStringList()
+	<< CInteractionTypes::COM
+	<< CInteractionTypes::USB
+	<< CInteractionTypes::LibUSB
+	<< CInteractionTypes::TCP
+	<< CInteractionTypes::OPOS
+	<< CInteractionTypes::System
+	<< CInteractionTypes::External
+	<< CInteractionTypes::ExternalCOM
+	<< CInteractionTypes::ExternalVCOM;
+
+/// Типы взаимодействия, для которых требуется отдельное логгирование средствами ТК.
+const QStringList LoggedInteractionTypes = QStringList()
+	<< CInteractionTypes::COM
+	<< CInteractionTypes::USB
+	<< CInteractionTypes::LibUSB;
+
+/// Типы взаимодействия, для которых требуется отдельное логгирование средствами ТК.
+const QStringList ExternalWithRRTypes = QStringList()
+	<< CInteractionTypes::ExternalCOM
+	<< CInteractionTypes::ExternalVCOM;
+
 }} // SDK::Driver
 
 //---------------------------------------------------------------------------

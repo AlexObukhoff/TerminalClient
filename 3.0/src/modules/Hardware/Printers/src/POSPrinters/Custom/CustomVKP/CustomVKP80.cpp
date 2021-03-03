@@ -40,7 +40,7 @@ CustomVKP80<T>::CustomVKP80()
 
 	// параметры моделей
 	mDeviceName = "Custom VKP-80";
-	mModelID = '\xB9';
+	setModelID('\xB9');
 
 	setConfigParameter(CHardware::Printer::FeedingAmount, 0);
 	setConfigParameter(CHardwareSDK::Printer::LineSize, 42);
@@ -68,6 +68,18 @@ void CustomVKP80<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 
 		mCodec = CodecByName[codecName];
 	}
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+bool CustomVKP80<T>::updateParameters()
+{
+	if (!EjectorPOS<T>::updateParameters())
+	{
+		return false;
+	}
+
+	return mIOPort->write(CPOSPrinter::Command::SetNarrowFont);
 }
 
 //--------------------------------------------------------------------------------

@@ -139,7 +139,7 @@ namespace CAtolOnlineFR
 		const char FSOfflineEnd          = '\xEB';    /// Исчерпан ресурс хранения ФН.
 		const char NeedExtendedErrorCode = '\xEE';    /// Запросить расширенный код ошибки в регистре 55.
 
-		class Data : public FRError::Data
+		class Data : public FRError::Data<char>
 		{
 		public:
 			Data()

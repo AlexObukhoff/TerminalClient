@@ -672,6 +672,12 @@ void PaymentService::check()
 }
 
 //------------------------------------------------------------------------------
+void PaymentService::processCheck()
+{
+	return processStep(EPaymentStep::AmountDataCheck);
+}
+
+//------------------------------------------------------------------------------
 void PaymentService::stepForward()
 {
 	return processStep(EPaymentStep::GetStep);

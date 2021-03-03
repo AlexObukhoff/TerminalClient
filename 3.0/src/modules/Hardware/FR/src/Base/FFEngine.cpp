@@ -18,6 +18,13 @@ using namespace SDK::Driver;
 using namespace ProtocolUtils;
 
 //--------------------------------------------------------------------------------
+// Инстанциирование возможных типов. Добавлять при необходимости.
+template void FFEngine::addConfigParameter(int, const QString &, QTextCodec *);
+template void FFEngine::addConfigParameter(int, const QByteArray &, QTextCodec *);
+template void FFEngine::addConfigParameter(int, const char &, QTextCodec *);
+template void FFEngine::addConfigParameter(int, const int &, QTextCodec *);
+
+//--------------------------------------------------------------------------------
 FFEngine::FFEngine(ILog * aLog): DeviceLogManager(aLog), mOperatorPresence(false)
 {
 	mCodec = CodecByName[CHardware::Codepages::CP866];
@@ -47,6 +54,57 @@ void FFEngine::setConfigParameter(const QString & aName, const QVariant & aValue
 	DeviceConfigManager::setConfigParameter(aName, value);
 
 	mOperatorPresence = getConfigParameter(CHardwareSDK::OperatorPresence, mOperatorPresence).toBool();
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+void FFEngine::addConfigParameter(int aField, const T & aValue, QTextCodec * aCodec)
+{
+	QString textKey = mFFData[aField].textKey;
+	addConfigParameter<T>(textKey, aValue, aCodec);
+}
+
+//--------------------------------------------------------------------------------
+template<class T>
+void FFEngine::addConfigParameter(const QString & aName, const T & /*aValue*/, QTextCodec * /*aCodec*/)
+{
+	toLog(LogLevel::Error, mDeviceName + ": Unknown type for field " + aName);
+}
+
+//--------------------------------------------------------------------------------
+template<>
+void FFEngine::addConfigParameter<int>(const QString & aName, const int & aValue, QTextCodec * /*aCodec*/)
+{
+	setConfigParameter(aName, aValue);
+	toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = \"%2\" to config data").arg(aName).arg(getConfigParameter(aName).toString()));
+}
+
+//--------------------------------------------------------------------------------
+template<>
+void FFEngine::addConfigParameter<QString>(const QString & aName, const QString & aValue, QTextCodec * /*aCodec*/)
+{
+	setConfigParameter(aName, aValue);
+	toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = \"%2\" to config data").arg(aName).arg(getConfigParameter(aName).toString()));
+}
+
+//--------------------------------------------------------------------------------
+template<>
+void FFEngine::addConfigParameter<QByteArray>(const QString & aName, const QByteArray & aValue, QTextCodec * aCodec)
+{
+	if (!aCodec)
+	{
+		aCodec = mCodec;
+	}
+
+	addConfigParameter<QString>(aName, aCodec->toUnicode(aValue));
+}
+
+//--------------------------------------------------------------------------------
+template<>
+void FFEngine::addConfigParameter<char>(const QString & aName, const char & aValue, QTextCodec * /*aCodec*/)
+{
+	setConfigParameter(aName, aValue);
+	toLog(LogLevel::Normal, mDeviceName + QString(": Add %1 = %2 to config data").arg(aName).arg(getConfigParameter(aName).toString()));
 }
 
 //--------------------------------------------------------------------------------
@@ -758,19 +816,19 @@ bool FFEngine::checkDealerAgentFlag(ERequestStatus::Enum aInitialized, bool aCan
 }
 
 //--------------------------------------------------------------------------------
-bool FFEngine::checkCashier(QString & aCashier)
+bool FFEngine::checkData(const QString & aKey, QString & aData)
 {
-	if (!containsConfigParameter(CFiscalSDK::Cashier))
+	if (!containsConfigParameter(aKey))
 	{
-		toLog(LogLevel::Warning, mDeviceName + ": Failed to set cashier due to it is absent");
+		toLog(LogLevel::Warning, mDeviceName + QString(": Failed to set %1 due to it is absent").arg(aKey));
 		return false;
 	}
 
-	aCashier = getConfigParameter(CFiscalSDK::Cashier).toString().simplified();
+	aData = getConfigParameter(aKey).toString().simplified();
 
-	if (aCashier.isEmpty())
+	if (aData.isEmpty())
 	{
-		toLog(LogLevel::Warning, mDeviceName + ": Failed to set cashier due to it is empty");
+		toLog(LogLevel::Warning, mDeviceName + QString(": Failed to set %1 due to it is empty").arg(aKey));
 		return false;
 	}
 

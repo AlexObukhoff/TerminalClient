@@ -90,11 +90,11 @@ Item {
 	// Переход к следующему полю
 	function rightClick() {
 		Editor.save();
+		Core.userProperties.set("operator.fields", Editor.values);
 
 		var next = Editor.getNextField(true);
 
 		if (next < 0) {
-			Core.userProperties.set("operator.fields", Editor.values);
 			rootItem.forward();
 		}
 		else {
@@ -130,7 +130,10 @@ Item {
 			mask: $("mask", ""),
 			dependency: $("dependency", ""),
 			title: $("title", ""),
-			comment: $("comment", "")
+			comment: $("comment", ""),
+			url: $("url", ""),
+			backButton: $("backButton", Utils.locale.tr(QT_TR_NOOP("scene_base2#back"))),
+			forwardButton: $("forwardButton", Utils.locale.tr(QT_TR_NOOP("scene_base2#forward")))
 		}
 	}
 

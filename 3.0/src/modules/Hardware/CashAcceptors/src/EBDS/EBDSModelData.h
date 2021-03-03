@@ -8,7 +8,7 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
-#include "Hardware/CashAcceptors/ModelData.h"
+#include "Hardware/Common/ModelData.h"
 
 //--------------------------------------------------------------------------------
 namespace CEBDS

@@ -40,12 +40,11 @@ template <class T>
 QStringList SerialDeviceBase<T>::getOptionalPortSettings()
 {
 	return QStringList()
-		<< CHardware::Port::COM::BaudRate
-		<< CHardware::Port::COM::Parity
-		<< CHardware::Port::COM::ByteSize
-		<< CHardware::Port::COM::StopBits
-		<< CHardware::Port::COM::RTS
-		<< CHardware::Port::COM::DTR;
+		<< COMPortSDK::Parity
+		<< COMPortSDK::ByteSize
+		<< COMPortSDK::StopBits
+		<< COMPortSDK::RTS
+		<< COMPortSDK::DTR;
 }
 
 //--------------------------------------------------------------------------------
@@ -77,7 +76,7 @@ bool SerialDeviceBase<T>::checkConnectionAbility()
 
 #define MAKE_SERIAL_PORT_PARAMETER(aParameters, aType) TSerialDevicePortParameter aParameters = mPortParameters[EParameters::aType]; \
 	if (aParameters.isEmpty()) { toLog(LogLevel::Error, mDeviceName + QString(": %1 are empty").arg(#aParameters)); return false; } \
-	if (!optionalPortSettingsEnable && optionalPortSettings.contains(CHardware::Port::COM::aType)) aParameters = TSerialDevicePortParameter() << aParameters[0];
+	if (!optionalPortSettingsEnable && optionalPortSettings.contains(COMPortSDK::aType)) aParameters = TSerialDevicePortParameter() << aParameters[0];
 
 //--------------------------------------------------------------------------------
 template <class T>
@@ -133,10 +132,8 @@ bool SerialDeviceBase<T>::checkExistence()
 		return false;
 	}
 
-	QVariantMap configuration;
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(mIOMessageLogging));
-	configuration.insert(CHardware::Port::DeviceModelName, mDeviceName);
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortLoggingType(mIOMessageLogging);
+	setPortDeviceName(mDeviceName);
 
 	TPortParameters portParameters;
 	mIOPort->getParameters(portParameters);
@@ -161,11 +158,11 @@ bool SerialDeviceBase<T>::checkExistence()
 			}
 		};
 
-		check(CHardware::Port::COM::BaudRate, EParameters::BaudRate);
-		check(CHardware::Port::COM::Parity,   EParameters::Parity);
-		check(CHardware::Port::COM::ByteSize, EParameters::ByteSize);
-		check(CHardware::Port::COM::RTS, EParameters::RTS);
-		check(CHardware::Port::COM::DTR, EParameters::DTR);
+		check(COMPortSDK::BaudRate, EParameters::BaudRate);
+		check(COMPortSDK::Parity,   EParameters::Parity);
+		check(COMPortSDK::ByteSize, EParameters::ByteSize);
+		check(COMPortSDK::RTS,      EParameters::RTS);
+		check(COMPortSDK::DTR,      EParameters::DTR);
 	}
 
 	if (mainPortParameters != portParameters)
@@ -236,9 +233,7 @@ bool SerialDeviceBase<T>::checkExistence()
 
 	if (mIOPort)
 	{
-		QVariantMap portConfiguration;
-		portConfiguration.insert(CHardware::Port::DeviceModelName, mDeviceName);
-		mIOPort->setDeviceConfiguration(portConfiguration);
+		setPortDeviceName(mDeviceName);
 	}
 
 	return true;

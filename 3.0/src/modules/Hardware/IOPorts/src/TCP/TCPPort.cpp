@@ -94,7 +94,8 @@ bool TCPPort::performOpen()
 
 	uint portNumber = getConfigParameter(CHardwareSDK::Port::TCP::Number).toUInt();
 	mSocket->connectToHost(IP, portNumber);
-	QString portLogName = QString("TCP socket %1:%2").arg(IP).arg(portNumber);
+	mSystemName = QString("%1:%2").arg(IP).arg(portNumber);
+	QString portLogName = "TCP socket " + mSystemName;
 
 	if (!mSocket->waitForConnected(mOpeningTimeout))
 	{
@@ -123,10 +124,17 @@ bool TCPPort::close()
 {
 	QMutexLocker locker(&mSocketGuard);
 
+	bool beenOpened = mSocket && (mSocket->state() == QAbstractSocket::ConnectedState);
+
 	mLastErrorLog.clear();
 	bool result = PERFORM_IN_THREAD(performClose);
 
 	SleepHelper::msleep(CTCPPort::CloseningPause);
+
+	if (result && beenOpened)
+	{
+		toLog(LogLevel::Normal, QString("TCP socket %1 is closed").arg(mSystemName));
+	}
 
 	return result;
 }
@@ -247,6 +255,10 @@ bool TCPPort::performRead(QByteArray & aData, int aTimeout, int aMinSize)
 	{
 		toLog(LogLevel::Normal, QString("%1: << {%2}").arg(mConnectedDeviceName).arg(aData.toHex().constData()));
 	}
+	else
+	{
+		toLog(LogLevel::Debug, QString("%1 << %2").arg(mSystemName).arg(aData.toHex().constData()));
+	}
 
 	return true;
 }
@@ -276,6 +288,10 @@ bool TCPPort::performWrite(const QByteArray & aData)
 	if (mDeviceIOLoging != ELoggingType::None)
 	{
 		toLog(LogLevel::Normal, QString("%1: >> {%2}").arg(mConnectedDeviceName).arg(aData.toHex().constData()));
+	}
+	else
+	{
+		toLog(LogLevel::Debug, QString("%1 >> %2").arg(mSystemName).arg(aData.toHex().constData()));
 	}
 
 	if ((mSocket->state() != QAbstractSocket::ConnectedState) && !open())

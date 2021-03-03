@@ -80,7 +80,7 @@ namespace CPrimFR
 	const char Copies[] = "01";
 
 	/// Шаг сетки копий
-	const char CopуGrid[] = "0000";
+	const char CopyGrid[] = "0000";
 
 	/// Шаг сетки строк
 	const char LineGrid[] = "00";
@@ -264,7 +264,7 @@ namespace CPrimFR
 		const char IncorrigibleError      = '\x17';    /// Неисправимая ошибка принтера.
 		const char NotReadyForPrint       = '\x18';    /// Принтер не готов к печати.
 
-		class Data: public FRError::Data
+		class Data: public FRError::Data<char>
 		{
 		public:
 			Data()

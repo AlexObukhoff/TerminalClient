@@ -51,9 +51,9 @@ CModelData::CModelData()
 	addOnlineTrade(69, 48, Models::Atol77F, true,  6, CAtolFR::OnlineTradeBuild, false);
 	addOnlineTrade(82, 32, Models::Atol91F, true,  3, CAtolFR::OnlineTradeBuild, false);
 
-	addOnlineTrade(63, 48, Models::FPrint22PTK, true, 6, CAtolFR::OnlineTradeBuild, false);
+	addOnlineTrade(63, 48, Models::FPrint22PTK, true, 6, 7651);
 
-	addOnlineTerminal(76, 67, Models::Paymaster, true, 0, 32);
+	addOnlineTerminal(76, 67, Models::Paymaster, true, 0, 32, 7942);
 	addOnlineTerminal(77, 32, Models::Atol42FC,  true, 0, 32, CAtolFR::OnlineTerminalBuild, false);
 
 	setDefault(SModelData(0, 32, "ATOL device", false, false, false, EFRType::FS, 0, false, true, 0, 0, true));

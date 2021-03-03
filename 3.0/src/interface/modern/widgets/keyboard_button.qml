@@ -51,7 +51,7 @@ Controls.Button {
 	}
 
 	background: BorderImage {
-		border { left: 10; top: 10; right: 10; bottom: 10 }
+		border { left: 15; top: 15; right: 15; bottom: 15 }
 		source: backgroundSource == "" ? (rootItem.disabled ? Utils.ui.image("button.disabled") :
 																													(rootItem.pressed ? Utils.ui.image("button.key.pressed") : Utils.ui.image("button.key.normal"))) :
 																		 Utils.ui.image(backgroundSource + "." + (rootItem.disabled ? "disabled" : (rootItem.pressed ? "pressed" : "normal")))

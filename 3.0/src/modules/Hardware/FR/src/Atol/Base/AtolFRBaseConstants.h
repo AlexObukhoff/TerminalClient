@@ -62,7 +62,7 @@ namespace CAtolFRBase
 		const char I2CInterface = '\xD2';    /// Ошибка обмена с ЭКЛЗ на уровне интерфейса I2C.
 		const char EKLZOverflow = '\xD7';    /// Исчерпан временной ресурс ЭКЛЗ.
 
-		class Data : public FRError::Data
+		class Data : public FRError::Data<char>
 		{
 		public:
 			Data()

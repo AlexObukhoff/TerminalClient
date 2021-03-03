@@ -39,6 +39,7 @@ namespace CGroupModel
 		const char Image[] = "image";
 		const char IsGroup[] = "isGroup";
 		const char JSON[] = "json";
+		const char Columns[] = "columns";
 	}
 }
 
@@ -66,8 +67,8 @@ static QString rmBom(const QString & aFile)
 
 //------------------------------------------------------------------------------
 GroupModel::GroupModel() :
-mRootElement(-1),
-mCurrentCategory(0)
+	mRootElement(-1),
+	mCurrentCategory(0)
 {
 	QHash<int, QByteArray> roles;
 
@@ -79,6 +80,7 @@ mCurrentCategory(0)
 	roles[ImageRole] = CGroupModel::Attributes::Image;
 	roles[IsGroupRole] = CGroupModel::Attributes::IsGroup;
 	roles[JSONRole] = CGroupModel::Attributes::JSON;
+	roles[ColumnsRole] = CGroupModel::Attributes::Columns;
 
 	setRoleNames(roles);
 }
@@ -103,7 +105,7 @@ int GroupModel::getMaxNameLength() const
 {
 	int result = 0;
 
-	// Настройками можно выставить  ширину группы принудительно
+	// Настройками можно выставить ширину группы принудительно
 	if (mGroupsWidth.contains(mRootElement))
 	{
 		// Ширина одной колонки 60 символов, максимальная ширина - 240 символов
@@ -159,18 +161,6 @@ bool GroupModel::loadContent(const QString & aFileName, QDomDocument & aDocument
 			return false;
 		}
 
-		// Загружаем настройки размеров для групп
-		{
-			QSettings ini(rmBom(QString(aFileName).replace(".xml", ".ini")), QSettings::IniFormat);
-			ini.setIniCodec("UTF-8");
-			ini.beginGroup("columns");
-
-			foreach(QString key, ini.allKeys())
-			{
-				mGroupsWidth.insert(key.toLongLong(), ini.value(key).toInt());
-			}
-		}
-
 		return true;
 	};
 
@@ -181,6 +171,19 @@ bool GroupModel::loadContent(const QString & aFileName, QDomDocument & aDocument
 	}
 
 	mSource = aFileName;
+
+	// Загружаем настройки размеров для групп	
+	{
+		// LEGACY
+		QSettings ini(rmBom(QString(mSource).replace(".xml", ".ini")), QSettings::IniFormat);
+		ini.setIniCodec("UTF-8");
+		ini.beginGroup("columns");
+
+		foreach(QString key, ini.allKeys())
+		{
+			mGroupsWidth.insert(key.toLongLong(), ini.value(key).toInt());
+		}
+	}
 
 	// Затем грузим все остальные пользовательские группы и встраиваем их в текущее дерево хитрой функцией
 	QStringList filters;
@@ -509,6 +512,12 @@ QString GroupModel::getCategoryName() const
 }
 
 //------------------------------------------------------------------------------
+quint8 GroupModel::getRootElementColumns() const
+{
+	return mGroups[mRootElement].toElement().attribute("columns").toUInt();
+}
+
+//------------------------------------------------------------------------------
 QVariant GroupModel::data(const QModelIndex & aIndex, int aRole) const
 {
 	if (aIndex.row() >= 0 && aIndex.row() < mNodes.count())
@@ -531,6 +540,8 @@ QVariant GroupModel::data(const QModelIndex & aIndex, int aRole) const
 			return mNodes[aIndex.row()]->isGroup();
 		case JSONRole:
 			return mNodes[aIndex.row()]->getJSON();
+		case ColumnsRole:
+			return mNodes[aIndex.row()]->getColumns();
 		}
 	}
 
@@ -586,10 +597,10 @@ void GroupModel::setStatistic(QMap<qint64, quint32> & aStatistic)
 
 //------------------------------------------------------------------------------
 Item::Item(const QDomNode & aNode) :
-mAttributes(aNode.attributes()),
-mIsGroup(aNode.nodeName().contains(CGroupModel::Group, Qt::CaseInsensitive) == true),
-mElementName(aNode.nodeName().toLower()),
-mOrder(0)
+	mAttributes(aNode.attributes()),
+	mIsGroup(aNode.nodeName().contains(CGroupModel::Group, Qt::CaseInsensitive) == true),
+	mElementName(aNode.nodeName().toLower()),
+	mOrder(0)
 {
 }
 
@@ -648,6 +659,12 @@ bool Item::isGroup() const
 QString Item::getJSON() const
 {
 	return mAttributes.namedItem(CGroupModel::Attributes::JSON).nodeValue();
+}
+
+//------------------------------------------------------------------------------
+quint8 Item::getColumns() const
+{
+	return mAttributes.namedItem(CGroupModel::Attributes::Columns).nodeValue().toUInt();
 }
 
 //------------------------------------------------------------------------------
@@ -719,6 +736,12 @@ QString ItemObject::getJSON() const
 bool ItemObject::isGroup() const
 {
 	return mItem.isGroup();
+}
+
+//------------------------------------------------------------------------------
+quint8 ItemObject::getColumns() const
+{
+	return mItem.getColumns();
 }
 
 //------------------------------------------------------------------------------

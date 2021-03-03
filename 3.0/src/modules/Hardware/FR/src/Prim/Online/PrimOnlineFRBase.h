@@ -56,7 +56,7 @@ protected:
 	virtual int getVerificationCode();
 
 	/// Сформировать необязательное G-поле произвольного фискального документа (ПФД), содержащее фискальный реквизит.
-	CPrimFR::TData addFiscalField(int aX, int aY, int aFont, int aFiscalField = 0, const QString & aData = "");
+	CPrimFR::TData addFiscalField(int aX, int aY, int aFont, int aFiscalField = 0, const QString & aData = "", bool aNoPrint = false);
 
 	/// Получить данные регистрации.
 	bool getRegTLVData(int aField);

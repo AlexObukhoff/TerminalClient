@@ -1,13 +1,12 @@
 import qbs 1.0
 
-StaticLibrary {
+import "../../qbs/libTemplate.qbs" as TCLib
+
+TCLib {
 	name: "NetworkTaskManager"
 
-	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "network"] }
-
-	Depends { name: "Core" }
-
+	Depends { name: "Qt"; submodules: ["network"] }
+	
 	files: [ "src/*.cpp", "src/*.h", "res/*.qrc" ]
 	
 	Export {

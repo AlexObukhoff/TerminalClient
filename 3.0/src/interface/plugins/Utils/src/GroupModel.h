@@ -25,6 +25,7 @@ class GroupModel : public QAbstractListModel
 	Q_PROPERTY(QString categoryName READ getCategoryName NOTIFY categoryNameChanged)
 	Q_PROPERTY(qint64 rootElement READ getRootElement WRITE setRootElement)
 	Q_PROPERTY(QStringList elementFilter READ getElementFilter WRITE setElementFilter)
+	Q_PROPERTY(quint8 rootElementColumns READ getRootElementColumns NOTIFY rootElementColumnsChanged)
 
 	enum EntryRoles {
 		IdRole = Qt::UserRole + 1,
@@ -34,7 +35,8 @@ class GroupModel : public QAbstractListModel
 		TypeRole,
 		ImageRole,
 		IsGroupRole,
-		JSONRole
+		JSONRole,
+		ColumnsRole
 	};
 
 public:
@@ -59,6 +61,7 @@ public slots:
 
 	qint64 getCategory() const;
 	QString getCategoryName() const;
+	quint8 getRootElementColumns() const;
 	qint64 findCategory(qint64 aProviderId) const;
 	bool isProviderInCategory(qint64 aProvider, qint64 aCategory) const;
 
@@ -75,6 +78,7 @@ signals:
 	void rowCountChanged();
 	void categoryChanged();
 	void categoryNameChanged();
+	void rootElementColumnsChanged();
 
 public:
 	typedef QSharedPointer<Item> ItemPtr;
@@ -148,6 +152,7 @@ public:
 	virtual QString getImage() const;
 	virtual QString getJSON() const;
 	virtual bool isGroup() const;
+	virtual quint8 getColumns() const;
 
 	virtual QString getElementName() const;
 	bool is(const QString & aElementName) const;
@@ -175,6 +180,7 @@ class ItemObject : public QObject
 	Q_PROPERTY(QString image READ getImage)
 	Q_PROPERTY(QString json READ getJSON)
 	Q_PROPERTY(bool isGroup READ isGroup)
+	Q_PROPERTY(quint8 columns READ getColumns)
 
 public:
 	ItemObject(const Item & aItem, QObject * aParent);
@@ -187,6 +193,7 @@ public:
 	QString getImage() const;
 	QString getJSON() const;
 	bool isGroup() const;
+	quint8 getColumns() const;
 
 private:
 	const Item & mItem;

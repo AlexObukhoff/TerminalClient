@@ -30,6 +30,14 @@ public:
 	/// Установка параметра.
 	virtual void setConfigParameter(const QString & aName, const QVariant & aValue);
 
+	/// Установка параметра.
+	template<class T>
+	void addConfigParameter(const QString & aName, const T & aValue, QTextCodec * aCodec = nullptr);
+
+	/// Установка параметра.
+	template<class T>
+	void addConfigParameter(int aField, const T & aValue, QTextCodec * aCodec = nullptr);
+
 	/// Распарсить TLV-структуру.
 	bool parseTLV(const QByteArray & aData, CFR::STLV & aTLV);
 
@@ -87,8 +95,8 @@ public:
 	/// Проверить корректность флага агента дилера.
 	bool checkDealerAgentFlag(ERequestStatus::Enum aInitialized, bool aCanLog);
 
-	/// Проверить кассира.
-	bool checkCashier(QString & aCashier);
+	/// Проверить данные.
+	bool checkData(const QString & aKey, QString & aData);
 
 	/// Проверить корректность СНО на платеже.
 	bool checkTaxSystemOnPayment(SDK::Driver::SPaymentData & aPaymentData);

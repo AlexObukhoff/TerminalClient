@@ -14,14 +14,13 @@
 using namespace SDK::Driver::IOPort::COM;
 using namespace PrinterStatusCode;
 
-POSPrinters::TModelIds POSPrinters::ModelData::mModelIds;
-
 //--------------------------------------------------------------------------------
 template class POSPrinter<TSerialPrinterBase>;
+template class POSPrinter<TTCPPrinterBase>;
 
 //--------------------------------------------------------------------------------
 template <class T>
-POSPrinter<T>::POSPrinter() : mModelID(0), mPrintingStringTimeout(0)
+POSPrinter<T>::POSPrinter() : mPrintingStringTimeout(0)
 {
 	// данные устройства
 	mDeviceName = CPOSPrinter::DefaultName;
@@ -32,6 +31,13 @@ POSPrinter<T>::POSPrinter() : mModelID(0), mPrintingStringTimeout(0)
 
 	mOverflow = false;
 	mRussianCodePage = CPOSPrinter::RussianCodePage;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+void POSPrinter<T>::setModelID(char aModelId)
+{
+	mModelID = QByteArray(1, aModelId);
 }
 
 //--------------------------------------------------------------------------------
@@ -97,13 +103,14 @@ bool POSPrinter<T>::isConnected()
 		return result;
 	}
 
-	char modelId = parseModelId(answer);
+	int idMaxSize = mModelData.getIdMaxSize();
+	QByteArray modelId = answer.left(idMaxSize);
 
-	if (!mModelData.getModelIds().contains(modelId))
+	if (!mModelData.data().contains(modelId))
 	{
 		LogLevel::Enum logLevel = onlyDefaultModels ? LogLevel::Warning : LogLevel::Error;
-		toLog(logLevel, QString("Unknown POS printer has detected, it model id = %1 is unknown and the plugin contains %2only default models")
-			.arg(ProtocolUtils::toHexLog(modelId))
+		toLog(logLevel, QString("Unknown POS printer has detected, it model id = 0x%1 is unknown and the plugin contains %2only default models")
+			.arg(modelId.toHex().toUpper().data())
 			.arg(onlyDefaultModels ? "" : "not "));
 
 		if (onlyDefaultModels)
@@ -122,10 +129,10 @@ bool POSPrinter<T>::isConnected()
 		name += QString(" (%1)").arg(description);
 	}
 
-	if (!mModelData.data().keys().contains(modelId))
+	if (!mModelData.data().contains(modelId))
 	{
 		mModelCompatibility = false;
-		toLog(LogLevel::Error, name + " is detected, but not supported by this pligin");
+		toLog(LogLevel::Error, name + " is detected, but not supported by this plugin");
 
 		mTagEngine->data() = mParameters.tagEngine.data();
 
@@ -136,6 +143,7 @@ bool POSPrinter<T>::isConnected()
 	mDeviceName = mModelData[mModelID].name;
 	mTagEngine->data() = mParameters.tagEngine.data();
 
+	setPortDeviceName(mDeviceName);
 	processDeviceData();
 
 	mVerified = mModelData[mModelID].verified;
@@ -165,16 +173,36 @@ void POSPrinter<T>::processDeviceData()
 
 //--------------------------------------------------------------------------------
 template <class T>
-bool POSPrinter<T>::getModelId(QByteArray & aAnswer) const
+bool POSPrinter<T>::getModelId(QByteArray & aAnswer)
 {
-	return mIOPort->write(CPOSPrinter::Command::GetModelId) && getAnswer(aAnswer, CPOSPrinter::Timeouts::Info) && (aAnswer.size() <= 1);
-}
+	if (!mIOPort->write(CPOSPrinter::Command::GetModelId) || !getAnswer(aAnswer, CPOSPrinter::Timeouts::Info) || (aAnswer.size() > 1))
+	{
+		return false;
+	}
+	else if (aAnswer.isEmpty())
+	{
+		return true;
+	}
 
-//--------------------------------------------------------------------------------
-template <class T>
-char POSPrinter<T>::parseModelId(QByteArray & aAnswer)
-{
-	return aAnswer[0];
+	int idMaxSize = mModelData.getIdMaxSize();
+	QByteArray answer;
+
+	if (mIOPort->write(CPOSPrinter::Command::GetModelIdIII) && getAnswer(answer, CPOSPrinter::Timeouts::Info))
+	{
+		if (idMaxSize != 1)
+		{
+			aAnswer = answer;
+
+			return answer.size() == idMaxSize;
+		}
+		else if (!answer.isEmpty())
+		{
+			toLog(LogLevel::Error, mDeviceName + ": Perhaps unknown POS device trying to impersonate this device");
+			return false;
+		}
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -248,7 +276,8 @@ bool POSPrinter<T>::printLine(const QByteArray & aString)
 
 	if (mPrintingStringTimeout)
 	{
-		int count = aString.contains(mTagEngine->value(Tags::Type::DoubleHeight).open) ? 2 : 1;
+		QByteArray DHOpeningTag = mTagEngine->value(Tags::Type::DoubleHeight).open;
+		int count = (!DHOpeningTag.isEmpty() && aString.contains(DHOpeningTag)) ? 2 : 1;
 		int pause = count * mPrintingStringTimeout - int(beginning.msecsTo(QDateTime::currentDateTime()));
 
 		if (pause > 0)
@@ -287,12 +316,14 @@ bool POSPrinter<T>::printBarcode(const QString & aBarcode)
 template <class T>
 bool POSPrinter<T>::getStatus(TStatusCodes & aStatusCodes)
 {
+	QByteArray answer;
+
 	for (auto it = mParameters.errors.begin(); it != mParameters.errors.end(); ++it)
 	{
 		SleepHelper::msleep(CPOSPrinter::StatusPause);
 
 		QList<char> statusCommands = it->keys();
-		QByteArray answer;
+		answer.clear();
 
 		//TODO: попробовать сделать контроль префикса ответа для Custom VKP-80
 		QList<char> bytes = it->keys();
@@ -329,6 +360,12 @@ bool POSPrinter<T>::getStatus(TStatusCodes & aStatusCodes)
 		}
 	}
 
+	if (mStatusCollection.contains(DeviceStatusCode::Error::NotAvailable) && !getModelId(answer))
+	{
+		toLog(LogLevel::Debug, mDeviceName + ": Perhaps unknown POS device trying to impersonate this device");
+		return false;
+	}
+
 	return true;
 }
 
@@ -336,9 +373,7 @@ bool POSPrinter<T>::getStatus(TStatusCodes & aStatusCodes)
 template <class T>
 bool POSPrinter<T>::readStatusAnswer(QByteArray & aAnswer, int aTimeout, int aBytesCount) const
 {
-	QVariantMap configuration;
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(ELoggingType::Write));
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortLoggingType(ELoggingType::Write);
 
 	QTime timer;
 	timer.start();

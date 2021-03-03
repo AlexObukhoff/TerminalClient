@@ -31,6 +31,12 @@ public:
 	virtual void setDeviceConfiguration(const QVariantMap & aConfiguration);
 #pragma endregion
 
+	/// Устанавливает тип логгирования устройства.
+	void setPortLoggingType(ELoggingType::Enum aType) const;
+
+	/// Устанавливает имя подключенного к порту устройства.
+	void setPortDeviceName(const QString & aName) const;
+
 protected:
 	/// Идентификация.
 	virtual bool checkExistence();
@@ -65,7 +71,7 @@ protected:
 	/// Получить спецификацию статуса.
 	virtual SStatusCodeSpecification getStatusCodeSpecification(int aStatusCode) const;
 
-	/// Проверка возможности применения буфера статусов.
+	/// Проверить возможности применения буфера статусов.
 	virtual bool canApplyStatusBuffer();
 
 	/// Получить уровень тревожности по буферу статус-кодов.
@@ -74,7 +80,7 @@ protected:
 	/// Добавить данные порта в данные устройства.
 	void addPortData();
 
-	/// Проверка наличия ошибки связи с устройством.
+	/// Проверить наличие ошибки связи с устройством.
 	bool checkError(int aError, TBoolMethod aChecking, const QString & aErrorLog);
 
 	/// Порт ввода-вывода.

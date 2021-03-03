@@ -2,7 +2,7 @@
 <body>
 	<string>Кассовый чек N%RECEIPT_NUMBER%</string>
 	<string>-----------------------------------</string>
-    <string>Банковский платежный агент:</string>
+    <string if="%DEALER_IS_BANK% == 0">Банковский платежный агент:</string>
 	<string>[b]%DEALER_NAME%[/b]</string>
 	<string>ИНН [b]%DEALER_INN%[/b]</string>
 	<string if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') == 0">[b]НДС не облагается[/b]</string>
@@ -40,8 +40,8 @@
     <string>[b]Сохраняйте чек до зачисления средств[/b]</string>
 	<string>[b]на счет.[/b]</string>
 	<string>[b]Проверка платежа:http://info.cyberplat.ru[/b]</string>	
-	<string>По всем вопросам обращайтесь к</string>
-	<string>Банковскому платежному агенту:</string>
+	<string if="%DEALER_IS_BANK% == 0">По всем вопросам обращайтесь к</string>
+	<string if="%DEALER_IS_BANK% == 0">Банковскому платежному агенту:</string>
 	<string>[b]ТЕЛЕФОН ПОДДЕРЖКИ: %DEALER_SUPPORT_PHONE%[/b]</string>
 	<string>-----------------------------------</string>
 	<string>%AD_RECEIPT_FOOTER%</string>

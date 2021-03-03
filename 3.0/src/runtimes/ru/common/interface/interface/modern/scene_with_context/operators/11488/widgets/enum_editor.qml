@@ -146,7 +146,7 @@ Item {
 		GUI.waiting({tr: QT_TR_NOOP("pay_scene#please_wait")});
 
 		Core.network.requestCompleted.connect(requestCompleted);
-		Core.network.sendRequest("https://service.cyberplat.ru/cgi-bin/rk/rk_info.cgi", {"ACCOUNT": 5, "NUMBER": Core.userProperties.get("operator.fields")["100"].value});
+		Core.network.sendRequest("https://service.cyberplat.ru/cgi-bin/rk/rk_info.cgi/1043", {"ACCOUNT": 5, "NUMBER": Core.userProperties.get("operator.fields")["100"].value});
 
 		try {
 			description.title = aField.title + (aField.isRequired ? "" : Utils.locale.tr(QT_TRANSLATE_NOOP("editor", "editor#not_required")));

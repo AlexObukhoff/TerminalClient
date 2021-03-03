@@ -106,6 +106,19 @@ QString Request::toString() const
 }
 
 //---------------------------------------------------------------------------
+QByteArray Request::toByteArray() const
+{
+	QByteArray result;
+
+	for (auto it = mParameters.begin(); it != mParameters.end(); ++it)
+	{
+		result += it.key().toLatin1() + "=" + it.value().toByteArray()  + "\r\n";
+	}
+
+	return result;
+}
+
+//---------------------------------------------------------------------------
 QString Request::toLogString() const
 {
 	QStringList result;

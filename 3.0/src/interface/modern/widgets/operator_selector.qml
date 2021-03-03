@@ -51,6 +51,7 @@ Item {
 
 	anchors { left: parent.left; leftMargin: 30; right: parent.right; rightMargin: 30 }
 
+
 	// Плашка с названием выбранной группы и кнопкой поиска
 	Row {
 		id: topPanel
@@ -142,6 +143,8 @@ Item {
 				for (var i = 0; i < count / operatorMenu.itemsOnPage; i++) {
 					pageModel.append({"id" : i});
 				}
+
+				operatorMenu.resetLayout();
 			}
 
 			onAnimationComplete: paginator.animationComplete = true

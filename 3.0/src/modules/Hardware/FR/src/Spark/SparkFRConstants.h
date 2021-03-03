@@ -244,7 +244,7 @@ namespace CSparkFR
 		const char NeedPayIOOnly = 93;    /// Нужна только выплата/внесение
 		const char WrongTextModeCommand = 94;    /// Неверная команда режима печати текста
 
-		class Data : public FRError::Data
+		class Data : public FRError::Data<char>
 		{
 		public:
 			Data()

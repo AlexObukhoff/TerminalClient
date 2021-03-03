@@ -9,12 +9,12 @@
         <translation>Select group</translation>
     </message>
     <message>
-        <location filename="../platru_select_provider_scene.qml" line="225"/>
+        <location filename="../platru_select_provider_scene.qml" line="227"/>
         <source>main_menu_scene#invalid_provider</source>
         <translation>Sorry, this provider is temporarily out of service. Try again later.</translation>
     </message>
     <message>
-        <location filename="../platru_select_provider_scene.qml" line="238"/>
+        <location filename="../platru_select_provider_scene.qml" line="240"/>
         <source>platru_select_provider_scene#entry_title</source>
         <translation>Entry name</translation>
     </message>

@@ -136,9 +136,6 @@ protected:
 	/// Протокол.
 	SparkFRProtocol mProtocol;
 
-	/// Список поддерживаемых плагином моделей.
-	QStringList mSupportedModels;
-
 	/// Последняя ошибка.
 	char mDocumentState;
 

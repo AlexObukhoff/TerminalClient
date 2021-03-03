@@ -335,6 +335,7 @@ bool DealerSettings::loadProvidersFromBuffer(const std::string & aBuffer, SProvi
 			double operatorsVersion = value.second.get<double>("<xmlattr>.version", 0);
 			aProvider.id = value.second.get<qint64>("<xmlattr>.id");
 			aProvider.cid = value.second.get<qint64>("<xmlattr>.cid", -1);
+			aProvider.terminalCyberwalletShow = value.second.get<QString>("terminal_cyberwallet_show", "1").trimmed().toInt();
 
 			// Для совместимости с operators.xml version=2.0
 			if (operatorsVersion >= 2.0)
@@ -397,6 +398,8 @@ bool DealerSettings::loadProvidersFromBuffer(const std::string & aBuffer, SProvi
 			aProvider.processor.feeType = processorBranchAttr.get<QString>("fee_type", "amount_all") == "amount" ? SProvider::FeeByAmount : SProvider::FeeByAmountAll;
 			aProvider.processor.rounding = processorBranchAttr.get<bool>("rounding", false);
 			aProvider.processor.showAddInfo = processorBranchAttr.get<bool>("show_add_info", false);
+			aProvider.processor.showCheckAddInfo = processorBranchAttr.get<bool>("show_check_add_info", false);
+			aProvider.processor.checkEsia = processorBranchAttr.get<bool>("check_esia", false);
 
 			auto requests = processorBranch.equal_range("request");
 
@@ -458,8 +461,25 @@ bool DealerSettings::loadProvidersFromBuffer(const std::string & aBuffer, SProvi
 				aProvider.processor.requests[requestIt->second.get<QString>("<xmlattr>.name").toUpper()] = request;
 			}
 
+			// Разбираем контекст для полей ввода
+			auto fieldsAttr = value.second.get_child("fields.<xmlattr>", emptyTree);
+			if (!fieldsAttr.empty())
+			{
+				foreach(QString pair, fieldsAttr.get<QString>("context", "").split("|"))
+				{
+					QStringList pl = pair.split(":");
+					aProvider.fieldsContext.insert(pl.first(), pl.last());
+				}
+			}
+
 			BOOST_FOREACH(const auto & fieldIt, value.second.get_child("fields"))
 			{
+				// Скипаем, если есть контекст у полей ввода
+				if (fieldIt.first != "field")
+				{
+					continue;
+				}
+
 				SProviderField field;
 
 				auto attr = fieldIt.second.get_child("<xmlattr>");
@@ -545,6 +565,7 @@ bool DealerSettings::loadProvidersFromBuffer(const std::string & aBuffer, SProvi
 		}
 		catch (std::runtime_error & error)
 		{
+			aProvider.parseError = QString("%1").arg(error.what());
 			toLog(LogLevel::Error, QString("Failed to load provider (id:%1, cid:%2). Error: %3.").arg(aProvider.id).arg(aProvider.cid).arg(error.what()));
 
 			return false;

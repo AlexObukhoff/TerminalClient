@@ -16,6 +16,7 @@
 // Project
 #include "PrinterBase.h"
 
+using namespace SDK::Driver;
 using namespace PrinterStatusCode;
 
 //---------------------------------------------------------------------------
@@ -38,7 +39,7 @@ PrinterBase<T>::PrinterBase()
 
 	for(auto it = statusCodesData.begin(); it != statusCodesData.end(); ++it)
 	{
-		if (it->warningLevel == SDK::Driver::EWarningLevel::Warning)
+		if (it->warningLevel == EWarningLevel::Warning)
 		{
 			mRecoverableErrors.insert(it.key());
 		}
@@ -50,7 +51,8 @@ PrinterBase<T>::PrinterBase()
 	mLineFeed = true;
 	mPaperInPresenter = QDateTime::currentDateTime();
 	mActualStringCount = 0;
-	mNextDocument = false;
+	mPrintingMode = EPrintingModes::None;
+	mClearingDispenserTurnOff = false;
 
 	// настройки для плагинов
 	setConfigParameter(CHardware::Printer::NeedSeparating, true);
@@ -59,8 +61,8 @@ PrinterBase<T>::PrinterBase()
 	setConfigParameter(CHardware::Printer::FeedingAmount, 0);
 	setConfigParameter(CHardware::Printer::NeedCutting, true);
 
-	mExcessStatusCollection[SDK::Driver::EWarningLevel::OK].insert(PrinterStatusCode::OK::PaperInPresenter);
-	mExcessStatusCollection[SDK::Driver::EWarningLevel::OK].insert(PrinterStatusCode::OK::MotorMotion);
+	mExcessStatusCollection[EWarningLevel::OK].insert(PrinterStatusCode::OK::PaperInPresenter);
+	mExcessStatusCollection[EWarningLevel::OK].insert(PrinterStatusCode::OK::MotorMotion);
 }
 
 //--------------------------------------------------------------------------------
@@ -69,9 +71,14 @@ void PrinterBase<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	T::setDeviceConfiguration(aConfiguration);
 
-	if (aConfiguration.contains(CHardwareSDK::Printer::ContinuousMode))
+	if (aConfiguration.contains(CHardwareSDK::Printer::PrintingMode))
 	{
-		mNextDocument = aConfiguration[CHardwareSDK::Printer::ContinuousMode].toBool();
+		mPrintingMode = EPrintingModes::Enum(aConfiguration[CHardwareSDK::Printer::PrintingMode].toInt());
+
+		if (mPrintingMode == EPrintingModes::Glue)
+		{
+			mClearingDispenserTurnOff = true;
+		}
 	}
 }
 
@@ -84,7 +91,23 @@ void PrinterBase<T>::finaliseInitialization()
 		setDeviceParameter(CHardwareSDK::Printer::LineSize, getConfigParameter(CHardwareSDK::Printer::LineSize));
 	}
 
-	T::finaliseInitialization();
+	if (mOperatorPresence)
+	{
+		if (!mConnected)
+		{
+			processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::NotAvailable);
+		}
+		else
+		{
+			onPoll();
+		}
+
+		releaseExternalResource();
+	}
+	else
+	{
+		T::finaliseInitialization();
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -145,6 +168,8 @@ bool PrinterBase<T>::processNonReentrant(TBoolMethod aCommand)
 template <class T>
 bool PrinterBase<T>::print(const QStringList & aReceipt)
 {
+	ExitAction exitAction([&] () { releaseExternalResource(); });
+
 	if (!isPrintingNeed(aReceipt))
 	{
 		return true;
@@ -272,9 +297,15 @@ bool PrinterBase<T>::processReceipt(const QStringList & aReceipt, bool aProcessi
 	makeLexemeReceipt(receipt, lexemeReceipt);
 
 	bool printing = printReceipt(lexemeReceipt);
+
+	if (mPrintingMode == EPrintingModes::Glue)
+	{
+		return printing;
+	}
+
 	bool processing = (printing && !aProcessing) || receiptProcessing();
 
-	if (printing && aProcessing && mNextDocument)
+	if (printing && aProcessing && (mPrintingMode == EPrintingModes::Continuous))
 	{
 		if (getConfigParameter(CHardware::Printer::PresenterEnable).toBool())
 		{
@@ -569,6 +600,8 @@ bool PrinterBase<T>::isDeviceReady(bool aOnline)
 template <class T>
 bool PrinterBase<T>::isPossible(bool aOnline, QVariant aCommand)
 {
+	ExitAction exitAction([&] () { if (aOnline) releaseExternalResource(); });
+
 	if (mConnected && (mInitialized == ERequestStatus::Fail))
 	{
 		MutexLocker locker(&mResourceMutex);
@@ -592,7 +625,7 @@ bool PrinterBase<T>::isPossible(bool aOnline, QVariant aCommand)
 
 	MutexLocker locker(&mResourceMutex);
 
-	TStatusCodes errorCodes = mStatusCollection.value(SDK::Driver::EWarningLevel::Error);
+	TStatusCodes errorCodes = mStatusCollection.value(EWarningLevel::Error);
 
 	if (aCommand.type() == QVariant::Int)
 	{
@@ -651,6 +684,13 @@ void PrinterBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 template <class T>
 bool PrinterBase<T>::clearDispenser(const QString & aCondition)
 {
+	if (mClearingDispenserTurnOff)
+	{
+		mClearingDispenserTurnOff = mPrintingMode == EPrintingModes::Glue;
+
+		return true;
+	}
+
 	bool presenterEnable = getConfigParameter(CHardware::Printer::PresenterEnable).toBool();
 	bool retractorEnable = getConfigParameter(CHardware::Printer::RetractorEnable).toBool();
 

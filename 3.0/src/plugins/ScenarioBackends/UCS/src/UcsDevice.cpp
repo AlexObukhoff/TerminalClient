@@ -98,7 +98,8 @@ void UcsDevice::initialize()
 {
 	QSharedPointer<Ucs::API> api = Ucs::API::getInstance(mCore, getLog());
 	connect(api.data(), SIGNAL(ready()), this, SLOT(onReady()));
-	
+	connect(api.data(), SIGNAL(error(const QString &)), this, SLOT(onAPIError(const QString &)));
+
 	DeviceStatusCode::CSpecifications specifications;
 	if (api->isReady())
 	{
@@ -115,6 +116,12 @@ void UcsDevice::onReady()
 {
 	DeviceStatusCode::CSpecifications specifications;
 	sendStatus(EWarningLevel::OK, specifications[DeviceStatusCode::OK::OK].translation, EStatus::Actual);
+}
+
+//--------------------------------------------------------------------------------
+void UcsDevice::onAPIError(const QString & aMessage)
+{
+	sendStatus(EWarningLevel::Error, aMessage, EStatus::Actual);
 }
 
 //--------------------------------------------------------------------------------

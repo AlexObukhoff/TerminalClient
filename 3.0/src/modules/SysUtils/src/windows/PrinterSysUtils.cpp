@@ -2,261 +2,200 @@
 
 // windows
 #include <windows.h>
-#include <winspool.h>
 
 // Модули
 #include "Hardware/Common/DeviceDataConstants.h"
 #include "SysUtils/ISysUtils.h"
-#include "SystemPrinterStatusCodes.h"
+
+struct SPrinterData
+{
+	HANDLE printer;
+	QByteArray info;
+	bool allowInfoError;
+
+	PRINTER_INFO_2 * getInfo() { return reinterpret_cast<PRINTER_INFO_2 *>(info.data()); }
+
+	SPrinterData(bool aAllowInfoError = false): printer(0), info(nullptr), allowInfoError(aAllowInfoError) {}
+};
 
 //---------------------------------------------------------------------------
-typedef QList<ulong> TJobsStatus;
+void ISysUtils::makeLog(ILog * aLog, const QString & aFunctionName)
+{
+	if (aLog)
+	{
+		aLog->write(LogLevel::Error, QString("Failed to perform %1 due to %2").arg(aFunctionName).arg(getLastErrorMessage()));
+	}
+}
 
 //---------------------------------------------------------------------------
-bool getPrinterStatusData(const QString & aPrinterName, TJobsStatus & aJobsStatus, ulong & aStatus, ulong & aAttributes)
+bool ISysUtils::makeError(ILog * aLog, const QString & aFunctionName, void * aPrinter)
+{
+	makeLog(aLog, aFunctionName);
+	
+	if (aPrinter)
+	{
+		ClosePrinter(aPrinter);
+	}
+
+	return false;
+}
+
+//---------------------------------------------------------------------------
+bool ISysUtils::getPrinterInfo(ILog * aLog, const QString & aPrinterName, SPrinterData & aPrinterData)
 {
 	DEVMODE devMode = { 0 };
 	PRINTER_DEFAULTS defaults = { 0, &devMode, PRINTER_ACCESS_USE };
 
-	HANDLE printer;
+	if (!OpenPrinter((LPWSTR)aPrinterName.toStdWString().data(), &aPrinterData.printer, &defaults))
+	{
+		return makeError(aLog, "OpenPrinter");
+	}
 
-	if (!OpenPrinter((LPWSTR)aPrinterName.toStdWString().data(), &printer, &defaults))
+	DWORD byteNeeded, byteUsed;
+
+	if (!GetPrinter(aPrinterData.printer, 2, NULL, 0, &byteNeeded) && GetLastError() != ERROR_INSUFFICIENT_BUFFER)
+	{
+		return makeError(aLog, "GetPrinter", aPrinterData.printer);
+	}
+
+	aPrinterData.info.clear();
+	aPrinterData.info.fill(0, byteNeeded);
+	PRINTER_INFO_2 * info = reinterpret_cast<PRINTER_INFO_2 *>(aPrinterData.info.data());
+
+	if (!GetPrinter(aPrinterData.printer, 2, (LPBYTE)info, byteNeeded, &byteUsed) && !aPrinterData.allowInfoError)
+	{
+		return makeError(aLog, "GetPrinter with printer info", aPrinterData.printer);
+	}
+
+	return true;
+}
+
+//---------------------------------------------------------------------------
+bool ISysUtils::getPrinterStatusData(ILog * aLog, const QString & aPrinterName, TJobStatus & aJobStatus, ulong & aStatus, ulong & aAttributes)
+{
+	SPrinterData printerData;
+
+	if (!getPrinterInfo(aLog, aPrinterName, printerData))
 	{
 		return false;
 	}
 
-	DWORD byteNeeded, returned, byteUsed;
-	if (!GetPrinter(printer, 2, NULL, 0, &byteNeeded) && GetLastError() != ERROR_INSUFFICIENT_BUFFER)
+	aStatus = printerData.getInfo()->Status;
+	aAttributes = printerData.getInfo()->Attributes;
+
+	DWORD byteNeeded = 0;
+	DWORD returned = 0;
+	DWORD byteUsed = 0;
+
+	if (!EnumJobs(printerData.printer, 0, printerData.getInfo()->cJobs, 2, NULL, 0, (LPDWORD)&byteNeeded, (LPDWORD)&returned) && GetLastError() != ERROR_INSUFFICIENT_BUFFER)
 	{
-		ClosePrinter(printer);
-
-		return false;
-	}
-
-	QByteArray printerInfoBuffer;
-	printerInfoBuffer.fill(0, byteNeeded);
-	PRINTER_INFO_2 * printerInfo = reinterpret_cast<PRINTER_INFO_2 *>(printerInfoBuffer.data());
-
-	if (!GetPrinter(printer, 2, (LPBYTE)printerInfo, byteNeeded, &byteUsed))
-	{
-		ClosePrinter(printer);
-
-		return false;
-	}
-
-	aStatus = printerInfo->Status;
-	aAttributes = printerInfo->Attributes;
-
-	if (!EnumJobs(printer, 0, printerInfo->cJobs, 2, NULL, 0, (LPDWORD)&byteNeeded, (LPDWORD)&returned) && GetLastError() != ERROR_INSUFFICIENT_BUFFER)
-	{
-		ClosePrinter(printer);
-
-		return false;
+		return makeError(aLog, "EnumJobs", printerData.printer);
 	}
 
 	QByteArray jobsInfoBuffer;
 	jobsInfoBuffer.reserve(byteNeeded);
 	JOB_INFO_2 * jobStorage = reinterpret_cast<JOB_INFO_2 *>(jobsInfoBuffer.data());
 
-	bool enumJobsOK = EnumJobs(printer, 0, printerInfo->cJobs, 2, (LPBYTE)jobStorage, byteNeeded, (LPDWORD)&byteUsed, (LPDWORD)&returned);
+	bool enumJobsOK = EnumJobs(printerData.printer, 0, printerData.getInfo()->cJobs, 2, (LPBYTE)jobStorage, byteNeeded, (LPDWORD)&byteUsed, (LPDWORD)&returned);
 
 	if (enumJobsOK)
 	{
 		for (DWORD i = 0; i < returned; ++i)
 		{
-			aJobsStatus.push_back(jobStorage[i].Status);
+			aJobStatus.push_back(jobStorage[i].Status);
 		}
 	}
 
-	ClosePrinter(printer);
+	ClosePrinter(printerData.printer);
 
 	return enumJobsOK;
 }
 
 //---------------------------------------------------------------------------
-QVariantMap ISysUtils::getPrinterData(const QString & aPrinterName)
+QVariantMap ISysUtils::getPrinterData(ILog * aLog, const QString & aPrinterName)
 {
-	DEVMODE devMode = { 0 };
-	PRINTER_DEFAULTS defaults = { 0, &devMode, PRINTER_ACCESS_USE };
+	SPrinterData printerData;
 
-	HANDLE printer;
+	if (!getPrinterInfo(aLog, aPrinterName, printerData))
+	{
+		return QVariantMap();
+	}
+
 	QVariantMap result;
 
-	if (!OpenPrinter((LPWSTR)aPrinterName.toStdWString().data(), &printer, &defaults))
-	{
-		return result;
-	}
+	result.insert(CDeviceData::Name,               QString::fromUtf16(printerData.getInfo()->pPrinterName));
+	result.insert(CDeviceData::Port,               QString::fromUtf16(printerData.getInfo()->pPortName));
+	result.insert(CDeviceData::Driver,             QString::fromUtf16(printerData.getInfo()->pDriverName));
+	result.insert(CDeviceData::Printers::Location, QString::fromUtf16(printerData.getInfo()->pLocation));
+	result.insert(CDeviceData::Printers::Comment,  QString::fromUtf16(printerData.getInfo()->pComment));
+	result.insert(CDeviceData::Printers::Server,   QString::fromUtf16(printerData.getInfo()->pServerName));
+	result.insert(CDeviceData::Printers::Share,    QString::fromUtf16(printerData.getInfo()->pShareName));
 
-	DWORD byteNeeded, byteUsed;
-
-	if (!GetPrinter(printer, 2, NULL, 0, &byteNeeded) && GetLastError() != ERROR_INSUFFICIENT_BUFFER)
-	{
-		ClosePrinter(printer);
-
-		return result;
-	}
-
-	QByteArray printerInfoBuffer;
-	printerInfoBuffer.fill(0, byteNeeded);
-	PRINTER_INFO_2 * printerInfo = reinterpret_cast<PRINTER_INFO_2 *>(printerInfoBuffer.data());
-
-	if (!GetPrinter(printer, 2, (LPBYTE)printerInfo, byteNeeded, &byteUsed))
-	{
-		ClosePrinter(printer);
-
-		return result;
-	}
-
-	result.insert(CDeviceData::Name,   QString::fromUtf16(printerInfo->pPrinterName));
-	result.insert(CDeviceData::Port,   QString::fromUtf16(printerInfo->pPortName));
-	result.insert(CDeviceData::Driver, QString::fromUtf16(printerInfo->pDriverName));
-	result.insert(CDeviceData::Printers::Location, QString::fromUtf16(printerInfo->pLocation));
-	result.insert(CDeviceData::Printers::Comment,  QString::fromUtf16(printerInfo->pComment));
-	result.insert(CDeviceData::Printers::Server,   QString::fromUtf16(printerInfo->pServerName));
-	result.insert(CDeviceData::Printers::Share,    QString::fromUtf16(printerInfo->pShareName));
-
-	ClosePrinter(printer);
+	ClosePrinter(printerData.printer);
 
 	return result;
 }
 
-//---------------------------------------------------------------------------
-void ISysUtils::getPrinterStatus(const QString & aPrinterName, TStatusCodes & aStatusCodes, TStatusGroupNames & aGroupNames)
-{
-	TJobsStatus jobs;
-	ulong status;
-	ulong attributes;
-	QString errorMessage;
-
-	if (!getPrinterStatusData(aPrinterName, jobs, status, attributes))
-	{
-		aStatusCodes.insert(DeviceStatusCode::Warning::ThirdPartyDriver);
-
-		return;
-	}
-
-	for (int i = 0; i < sizeof(ulong) * 8; ++i)
-	{
-		ulong key = 1 << i;
-
-		if (WindowsPrinterStatuses.data().contains(key) && (status & key))
-		{
-			const SDeviceCodeSpecification & data = WindowsPrinterStatuses[key];
-			aStatusCodes.insert(data.statusCode);
-			aGroupNames["Statuses"].insert(data.description);
-		}
-
-		foreach(auto jobStatus, jobs)
-		{
-			if (WindowsPrinterJobStatuses.data().contains(key) && (jobStatus & key))
-			{
-				const SDeviceCodeSpecification & data = WindowsPrinterJobStatuses[key];
-				aStatusCodes.insert(data.statusCode);
-				aGroupNames["Job statuses"].insert(data.description);
-			}
-		}
-	}
-
-	if (!ISysUtils::setPrintingQueuedMode(aPrinterName, errorMessage))
-	{
-		aStatusCodes.insert(DeviceStatusCode::Warning::ThirdPartyDriver);
-	}
-
-	if (attributes & PRINTER_STATUS_NOT_AVAILABLE ||
-		attributes & PRINTER_ATTRIBUTE_WORK_OFFLINE ||
-		status & PRINTER_STATUS_PAUSED)
-	{
-		aStatusCodes.insert(DeviceStatusCode::Error::NotAvailable);
-		aGroupNames["Attributes"].insert("work_offline");
-	}
-}
-
 //--------------------------------------------------------------------------------
-bool ISysUtils::setPrintingQueuedMode(const QString & aPrinterName, QString & aErrorMessage)
+bool ISysUtils::setPrintingQueuedMode(ILog * aLog, const QString & aPrinterName)
 {
 	bool result = false;
 
-	DEVMODE devMode = { 0 };
-	PRINTER_DEFAULTS defaults = { 0, &devMode, PRINTER_ACCESS_USE };
-	PRINTER_DEFAULTS defaultsAdmin = { 0, &devMode, PRINTER_ACCESS_ADMINISTER };
-
 	bool directPrinting = false;
-	PRINTER_INFO_2 * printerInfo = nullptr;
-	QByteArray printerInfoBuffer;
-	HANDLE printer;
+	SPrinterData printerData(true);
 
-	if (OpenPrinter((LPWSTR)aPrinterName.toStdWString().data(), &printer, &defaults))
+	if (!getPrinterInfo(aLog, aPrinterName, printerData))
 	{
-		DWORD byteNeeded = 0, byteUsed = 0;
-
-		// Get the buffer size needed.
-		if (!GetPrinter(printer, 2, NULL, 0, &byteNeeded) && GetLastError() != ERROR_INSUFFICIENT_BUFFER)
-		{
-			aErrorMessage = QString("GetPrinter %1").arg(getLastErrorMessage());
-			ClosePrinter(printer);
-			return false;
-		}
-
-		printerInfoBuffer.fill(0, byteNeeded);
-		printerInfo = reinterpret_cast<PRINTER_INFO_2 *>(printerInfoBuffer.data());
-
-		/* Get the printer information. */
-		if (GetPrinter(printer, 2, reinterpret_cast<LPBYTE>(printerInfo), byteNeeded, &byteUsed))
-		{
-			directPrinting = (printerInfo->Attributes & PRINTER_ATTRIBUTE_DIRECT);
-
-			if (printerInfo->Status & PRINTER_STATUS_PAUSED)
-			{
-				// запускаем печать, если печать на принтер была приостановлена
-				result = SetPrinter(printer, 0, NULL, PRINTER_CONTROL_RESUME);
-			}
-		}
-
-		ClosePrinter(printer);
-	}
-	else
-	{
-		aErrorMessage = getLastErrorMessage();
-
 		return false;
 	}
+	else if (printerData.getInfo())
+	{
+		directPrinting = (printerData.getInfo()->Attributes & PRINTER_ATTRIBUTE_DIRECT);
+
+		if (printerData.getInfo()->Status & PRINTER_STATUS_PAUSED)
+		{
+			// запускаем печать, если печать на принтер была приостановлена
+			result = SetPrinter(printerData.printer, 0, NULL, PRINTER_CONTROL_RESUME);
+		}
+	}
+
+	ClosePrinter(printerData.printer);
 
 	if (!directPrinting)
 	{
 		return true;
 	}
 
+	DEVMODE devMode = { 0 };
+	PRINTER_DEFAULTS defaultsAdmin = { 0, &devMode, PRINTER_ACCESS_ADMINISTER };
+
 	// Открываем с правами админа
-	if (OpenPrinter((LPWSTR)aPrinterName.toStdWString().data(), &printer, &defaultsAdmin))
+	if (!OpenPrinter((LPWSTR)aPrinterName.toStdWString().data(), &printerData.printer, &defaultsAdmin))
 	{
-		// очищаем очередь заданий
-		result = SetPrinter(printer, 0, NULL, PRINTER_CONTROL_PURGE);
-
-		printerInfo->Attributes &= ~(DWORD)(PRINTER_ATTRIBUTE_DIRECT);
-		printerInfo->Attributes |= PRINTER_ATTRIBUTE_QUEUED;
-
-		// переключаем режим печати на печать через очередь
-		result = SetPrinter(printer, 2, reinterpret_cast<LPBYTE>(printerInfo), 0);
-
-		if (!result)
-		{
-			aErrorMessage = getLastErrorMessage();
-		}
-
-		if (printerInfo->Status & PRINTER_STATUS_PAUSED)
-		{
-			// запускаем печать, если печать на принтер была приостановлена
-			result = SetPrinter(printer, 0, NULL, PRINTER_CONTROL_RESUME);
-		}
-
-		ClosePrinter(printer);
+		return makeError(aLog, "OpenPrinter with admin rules");
 	}
-	else
+
+	// очищаем очередь заданий
+	result = SetPrinter(printerData.printer, 0, NULL, PRINTER_CONTROL_PURGE);
+
+	printerData.getInfo()->Attributes &= ~(DWORD)(PRINTER_ATTRIBUTE_DIRECT);
+	printerData.getInfo()->Attributes |= PRINTER_ATTRIBUTE_QUEUED;
+
+	// переключаем режим печати на печать через очередь
+	result = SetPrinter(printerData.printer, 2, reinterpret_cast<LPBYTE>(printerData.getInfo()), 0);
+
+	if (!result)
 	{
-		aErrorMessage = getLastErrorMessage();
-
-		return false;
+		makeLog(aLog, "SetPrinter");
 	}
+
+	if (printerData.getInfo()->Status & PRINTER_STATUS_PAUSED)
+	{
+		// запускаем печать, если печать на принтер была приостановлена
+		result = SetPrinter(printerData.printer, 0, NULL, PRINTER_CONTROL_RESUME);
+	}
+
+	ClosePrinter(printerData.printer);
 
 	return result;
 }

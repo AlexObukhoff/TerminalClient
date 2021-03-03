@@ -112,6 +112,7 @@ private:
 
 private slots:
 	void onReady();
+	void onAPIError(const QString & aMessage);
 	void onState(int aState, const QString & aDeviceName, bool aLast);
 	void onEjected();
 

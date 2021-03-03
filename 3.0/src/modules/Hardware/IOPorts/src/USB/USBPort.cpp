@@ -138,7 +138,7 @@ TWinDeviceProperties USBPort::getDevicesProperties(bool aForce, bool aPDODetecti
 		return properties;
 	}
 
-	properties = getDeviceProperties(CUSBPort::Uuids(), CUSBPort::PathProperty);
+	properties = SerialDeviceUtils::getDeviceProperties(CUSBPort::Uuids(), CUSBPort::PathProperty);
 	DeviceWinProperties deviceWinProperties;
 
 	for (auto it = properties.begin(); it != properties.end();)

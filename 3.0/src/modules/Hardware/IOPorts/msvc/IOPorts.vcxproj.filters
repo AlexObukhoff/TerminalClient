@@ -84,9 +84,6 @@
     <ClCompile Include="..\src\LibUSB\LibUSBUtils.cpp">
       <Filter>LibUSBPort</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\COM\windows\SystemDeviceUtils.cpp">
-      <Filter>SystemDeviceUtils</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\COM\windows\AsyncSerialPort.h">
@@ -115,9 +112,6 @@
     </ClInclude>
     <ClInclude Include="..\src\LibUSB\LibUSBUtils.h">
       <Filter>LibUSBPort</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\COM\windows\SystemDeviceUtils.h">
-      <Filter>SystemDeviceUtils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\LibUSBDeviceDataTypes.h">
       <Filter>LibUSBPort</Filter>

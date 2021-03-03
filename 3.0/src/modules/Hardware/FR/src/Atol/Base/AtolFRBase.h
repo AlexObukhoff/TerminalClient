@@ -2,17 +2,14 @@
 
 #pragma once
 
-// Modules
-#include "Hardware/FR/PortFRBase.h"
-
-// Project
-#include "../AtolModelData.h"
-#include "../AtolFRConstants.h"
+#include "Hardware/FR/ProtoAtolFR.h"
 
 class AtolSeriesType {};
 
 //--------------------------------------------------------------------------------
-class AtolFRBase : public TSerialFRBase
+typedef ProtoAtolFR<TSerialFRBase> TAtolFRBase;
+
+class AtolFRBase : public TAtolFRBase
 {
 public:
 	typedef AtolSeriesType TSeriesType;
@@ -23,11 +20,11 @@ public:
 	virtual bool isFiscalReady(bool aOnline, SDK::Driver::EFiscalPrinterCommand::Enum aCommand = SDK::Driver::EFiscalPrinterCommand::Sale);
 
 protected:
-	/// Попытка самоидентификации.
-	virtual bool isConnected();
+	/// Получить ключ модели для идентификации.
+	virtual bool processModelKey(CAtolFR::TModelKey & aModeKey);
 
 	/// Получить ключ модели для идентификации.
-	virtual CAtolFR::TModelKey getModelKey(const QByteArray & /*aAnswer*/) { return CAtolFR::TModelKey(); }
+	virtual CAtolFR::TModelKey getModelKey(const QByteArray & /*aAnswer*/);
 
 	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
@@ -41,14 +38,8 @@ protected:
 	/// Получить дату и время ФР.
 	virtual QDateTime getDateTime();
 
-	/// Установить начальные параметры.
-	virtual void setInitialData();
-
 	/// Получить параметры печати.
 	virtual bool getPrintingSettings();
-
-	/// Напечатать [и выдать] чек.
-	virtual bool processReceipt(const QStringList & aReceipt, bool aProcessing = true);
 
 	/// Напечатать строку.
 	virtual bool printLine(const QByteArray & aString);
@@ -87,7 +78,7 @@ protected:
 	virtual TResult execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer = nullptr);
 
 	/// Выполнить команду.
-	virtual TResult performCommand(const QByteArray & /*aCommandData*/, QByteArray & /*aAnswer*/, int /*aTimeout*/) { return CommandResult::NoAnswer; }
+	virtual TResult performCommand(const QByteArray & aCommandData, QByteArray & aAnswer, int aTimeout);
 
 	/// Войти в расширенный режим снятия Z-отчетов.
 	virtual bool enterExtendedMode() { return true; }
@@ -96,7 +87,7 @@ protected:
 	virtual bool openDocument(SDK::Driver::EPayOffTypes::Enum aPayOffType);
 
 	/// Закрыть чек.
-	bool closeDocument(SDK::Driver::EPayTypes::Enum aPayType);
+	virtual bool closeDocument(SDK::Driver::EPayTypes::Enum aPayType);
 
 	/// Продажа.
 	virtual bool sale(const SDK::Driver::SUnitData & aUnitData);
@@ -129,10 +120,10 @@ protected:
 	virtual SDK::Driver::EDocumentState::Enum getDocumentState();
 
 	/// Войти в режим.
-	bool enterInnerMode(char aInnerMode);
+	virtual bool enterInnerMode(char aInnerMode);
 
 	/// Выйти из режима.
-	bool exitInnerMode(bool aForce = false);
+	virtual bool exitInnerMode(bool aForce = false);
 
 	/// Выполнить Z-отчет.
 	virtual bool execZReport(bool aAuto);
@@ -183,29 +174,8 @@ protected:
 	char getError(const QByteArray & aCommand, const QByteArray & aAnswer);
 	char getError(char aCommand, const QByteArray & aAnswer);
 
-	/// Данные устройства.
-	CAtolFR::SModelData mModelData;
-
-	/// Номер сборки прошивки ПО ФР.
-	int mFRBuild;
-
-	/// Текущий режим.
-	char mMode;
-
-	/// Текущий подрежим.
-	char mSubmode;
-
-	/// Заблокирован ли ФР.
-	bool mLocked;
-
-	/// Список поддерживаемых плагином моделей.
-	QStringList mSupportedModels;
-
 	/// Количество рекламных строк.
 	char mDocumentCapStrings;
-
-	/// Необнуляемая сумма;
-	double mNonNullableAmount;
 
 	/// Данные команд.
 	CAtolFR::CommandData mCommandData;

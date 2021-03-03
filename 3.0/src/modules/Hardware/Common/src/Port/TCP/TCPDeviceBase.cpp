@@ -2,6 +2,7 @@
 
 // Modules
 #include "Hardware/Common/PortPollingDeviceBase.h"
+#include "Hardware/Common/ProtoDevices.h"
 #include "Hardware/FR/ProtoFR.h"
 #include "Hardware/IOPorts/TCPPort.h"
 
@@ -11,6 +12,7 @@
 using namespace SDK::Driver;
 
 //-------------------------------------------------------------------------------
+template class TCPDeviceBase<PortPollingDeviceBase<ProtoPrinter>>;
 template class TCPDeviceBase<PortPollingDeviceBase<ProtoFR>>;
 
 //--------------------------------------------------------------------------------

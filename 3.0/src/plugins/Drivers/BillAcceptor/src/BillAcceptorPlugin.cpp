@@ -30,6 +30,19 @@ TParameterList defaultParameters(const QString & aProtocol, const T2 & aModelLis
 
 //------------------------------------------------------------------------------
 template <class T1, class T2>
+TParameterList CCNetParameters(const QString & aProtocol, const T2 & aModelList)
+{
+	return defaultParameters<T1, T2>(aProtocol, aModelList)
+
+		// Таймаут виртуального замятия по режекту.
+		<< SPluginParameter(
+			CHardware::CashAcceptor::RejectingTimeout,
+			false, QT_TRANSLATE_NOOP("BillAcceptorParameters", "BillAcceptorParameters#rejecting_timeout"), QString(), "2",
+			QStringList() << "1" << "2" << "3" << "4" << "5" << "6" << "7" << "8" << "9" << "10");
+}
+
+//------------------------------------------------------------------------------
+template <class T1, class T2>
 TParameterList ID003Parameters(const QString & aProtocol, const T2 & aModelList)
 {
 	return defaultParameters<T1, T2>(aProtocol, aModelList)
@@ -50,7 +63,7 @@ TParameterList CCTalkParameters(const QString & aProtocol, const T2 & aModelList
 #define CCNET_CASH_ACCEPTOR_PLUGIN(aClassName, aModel) SINGLE_CASH_ACCEPTOR_PLUGIN(aClassName, CashDevice::CCNet, CCCNet::Models::aModel)
 
 BEGIN_REGISTER_PLUGIN
-	COMMON_CASH_ACCEPTOR_PLUGIN(CCNetCashAcceptorBase, CashDevice::CCNet, defaultParameters)
+	COMMON_CASH_ACCEPTOR_PLUGIN(CCNetCashAcceptorBase, CashDevice::CCNet, CCNetParameters)
 	CCNET_CASH_ACCEPTOR_PLUGIN(CCNetCashcodeGX, CashcodeGX)
 	CCNET_CASH_ACCEPTOR_PLUGIN(CCNetCreator, CreatorC100)
 	CCNET_CASH_ACCEPTOR_PLUGIN(CCNetRecycler, CashcodeG200)
@@ -60,7 +73,7 @@ BEGIN_REGISTER_PLUGIN
 	COMMON_CASH_ACCEPTOR_PLUGIN(ID003CashAcceptor,  CashAcceptor::ID003, ID003Parameters)
 	COMMON_CASH_ACCEPTOR_PLUGIN(V2eCashAcceptor,    CashAcceptor::V2e,   defaultParameters)
 	COMMON_CASH_ACCEPTOR_PLUGIN(CCTalkCashAcceptor, CashDevice::CCTalk,  CCTalkParameters)
-	//COMMON_CASH_ACCEPTOR_PLUGIN(SSPCashAcceptor,  CashDevice::SSP,     defaultParameters)
+	COMMON_CASH_ACCEPTOR_PLUGIN(SSPCashAcceptor,    CashDevice::SSP,     defaultParameters)
 END_REGISTER_PLUGIN
 
 //------------------------------------------------------------------------------

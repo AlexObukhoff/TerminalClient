@@ -28,6 +28,7 @@ SuzoHopper::SuzoHopper()
 	mAllModelData = PAllModelData(new CCCTalk::Dispenser::CModelData());
 	mUnits = 1;
 	mSingleMode = false;
+	mResetIsPossible = false;
 
 	setConfigParameter(CHardware::ProtocolType, CHardware::CashDevice::CCTalkTypes::CRC8);
 }
@@ -39,12 +40,37 @@ QStringList SuzoHopper::getProtocolTypes()
 }
 
 //--------------------------------------------------------------------------------
-bool SuzoHopper::reset()
+bool SuzoHopper::updateParameters()
 {
-	// нет ни ответа, ни каких-либо действий диспенсера
-	//processCommand(CCCTalk::Command::Reset);
+	if (!CCTalkDeviceBase<PortDispenser>::updateParameters())
+	{
+		return false;
+	}
 
-	return true; 
+	// ответа нет. Неизвестно, работает команда или нет.
+	processCommand(CCCTalk::Command::SetPayoutCapacity, CSuzo::MaxPayoutCapacity);
+
+	return true;
+}
+
+//---------------------------------------------------------------------------
+TResult SuzoHopper::execCommand(const QByteArray & aCommand, const QByteArray & aCommandData, QByteArray * aAnswer)
+{
+	TResult result;
+	int index = 0;
+
+	do
+	{
+		if (index)
+		{
+			SleepHelper::msleep(CSuzo::Pause::CommandIteration);
+		}
+
+		result = CCTalkDeviceBase<PortDispenser>::execCommand(aCommand, aCommandData, aAnswer);
+	}
+	while(!result && (++index < CSuzo::CommandMaxIteration) && (aCommand != QByteArray(1, CCCTalk::Command::SetPayoutCapacity)));
+
+	return result;
 }
 
 //---------------------------------------------------------------------------
@@ -112,8 +138,14 @@ bool SuzoHopper::getStatus(TStatusCodes & aStatusCodes)
 bool SuzoHopper::setEnable(bool aEnabled)
 {
 	char enabled = aEnabled ? CSuzo::Enable : ASCII::NUL;
+	bool result = processCommand(CCCTalk::Command::EnableHopper, QByteArray(1, enabled));
 
-	return processCommand(CCCTalk::Command::EnableHopper, QByteArray(1, enabled));
+	if (!aEnabled)
+	{
+		SleepHelper::msleep(CSuzo::Pause::Disabling);
+	}
+
+	return result;
 }
 
 //---------------------------------------------------------------------------
@@ -141,7 +173,7 @@ void SuzoHopper::performDispense(int aUnit, int aItems)
 		return;
 	}
 
-	if (!setEnable(true) || !setSingleMode(false))
+	if (!setSingleMode(true) || !setEnable(true))
 	{
 		return;
 	}
@@ -175,7 +207,7 @@ void SuzoHopper::performDispense(int aUnit, int aItems)
 
 	while (getDispensingStatus(status) && status.remains)
 	{
-		SleepHelper::msleep(CSuzo::DispensingPause);
+		SleepHelper::msleep(CSuzo::Pause::Dispensing);
 	}
 
 	emitDispensed(0, status.paid);
@@ -185,11 +217,6 @@ void SuzoHopper::performDispense(int aUnit, int aItems)
 		toLog(LogLevel::Error, mDeviceName + QString(": Cannot pay out %1 coins").arg(status.unpaid));
 
 		onPoll();
-
-		if (mStatusCollection[EWarningLevel::Error].isEmpty())
-		{
-			emitUnitEmpty(0);
-		}
 	}
 
 	setEnable(false);

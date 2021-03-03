@@ -35,6 +35,9 @@ protected:
 	/// Запросить и вывести в лог критичные параметры ФР.
 	virtual void processDeviceData();
 
+	/// Получает фискальный параметр и добавляет его в движок фискальных тегов.
+	void addConfigParameter(int aField, const CShtrihOnlineFR::FRParameters::SData & aParameter);
+
 	/// Установить значение налога.
 	virtual bool setTaxValue(SDK::Driver::TVAT aVAT, int aGroup);
 
@@ -42,7 +45,7 @@ protected:
 	virtual bool execZReport(bool aAuto);
 
 	/// Установить TLV-параметр.
-	virtual bool setTLV(int aField, bool aForSale = false);
+	virtual bool setTLV(int aField, bool aOnSale = false);
 
 	/// Проверить название продажи.
 	virtual void checkSalesName(QString & aName);

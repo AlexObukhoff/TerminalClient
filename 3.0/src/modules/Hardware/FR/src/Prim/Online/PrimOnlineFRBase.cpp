@@ -559,6 +559,11 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 
 			// не печатается на основании ФФД
 			//ADD_AFD_TAG(5, 1, PayOffSubjectType);    // 1212 (признак предмета расчета)
+
+			if (mOFDFiscalFieldsOnSale.contains(CFR::FiscalFields::ProviderINN))
+			{
+				ADD_AFD_TAG(4, 2, ProviderINN, unitData.providerINN, true);    // 1226 (ИНН поставщика)
+			}
 		}
 		else
 		{
@@ -683,9 +688,9 @@ int PrimOnlineFRBase::getVerificationCode()
 }
 
 //--------------------------------------------------------------------------------
-CPrimFR::TData PrimOnlineFRBase::addFiscalField(int aX, int aY, int aFont, int aFiscalField, const QString & aData)
+CPrimFR::TData PrimOnlineFRBase::addFiscalField(int aX, int aY, int aFont, int aFiscalField, const QString & aData, bool aNoPrint)
 {
-	return addArbitraryFieldToBuffer(aX, aY, QString("<%1>").arg(aFiscalField) + aData, aFont);
+	return addArbitraryFieldToBuffer(aX, aY, QString("<%1>").arg(aFiscalField) + aData, aFont, aNoPrint);
 }
 
 //--------------------------------------------------------------------------------

@@ -1,8 +1,9 @@
-/* @file Системные принтеры без автопоиска. */
+/* @file Системные принтеры. */
 
 #pragma once
 
 #include "SystemPrinter.h"
+#include "Sam4sModelData.h"
 
 //--------------------------------------------------------------------------------
 class SunphorPOS58IV : public SystemPrinter
@@ -13,10 +14,10 @@ class SunphorPOS58IV : public SystemPrinter
 public:
 	SunphorPOS58IV()
 	{
-		mDeviceName = "Sunphor Printer";
+		mDeviceName = "Sunphor POS58IV";
+		mIdName = "Sunphor";
 		mLineSize = 30;
 		mSideMargin = 4.0;
-		mAutoDetectable = false;
 	}
 };
 
@@ -30,8 +31,8 @@ public:
 	ICTGP83()
 	{
 		mDeviceName = "ICT GP83";
+		mIdName = "ICT";
 		mSideMargin = 3.0;
-		mAutoDetectable = false;
 	}
 };
 

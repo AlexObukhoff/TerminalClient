@@ -85,20 +85,29 @@ var Payment = {
 		Default: "default",
 		LowMoney: "low_money",
 		Error: "error",
-		ValidatorError: "validator_error"
+		ValidatorError: "validator_error",
+		CardChargeError: "card_charge_error"
 	},
 	ReceiptTemplate: {
 		"default": "payment",
 		"low_money": "payment_not_enough_money",
 		"error": "payment_error",
 		"validator_error": "validator_error",
-		"change": "payment_change"
+		"change": "payment_change",
+		"card_charge_error": "card_charge_error",
 	},
 	ReceiptType: {
 		Payment: "payment",
 		NoFiscal: "no_fiscal",
 	},
-	ProcessTryCount: 3
+	ProcessTryCount: 3,
+
+	step: function(aStep) {
+		return ["DataCheck", "AmountDataCheck", "Pay", "Status", "GetStep", "User"][aStep];
+	},
+	ServiceProviders: {
+		"ESIA": 888888
+	}
 };
 
 var StateTimeout = {

@@ -130,7 +130,7 @@ protected:
 	CPrimFR::TData addGFieldToBuffer(int aX, int aY, int aFont = CPrimFR::FiscalFont::Default);
 
 	/// Сформировать необязательное G-поле ПФД
-	CPrimFR::TData addArbitraryFieldToBuffer(int aX, int aY, const QString & aData, int aFont = CPrimFR::FiscalFont::Default);
+	CPrimFR::TData addArbitraryFieldToBuffer(int aX, int aY, const QString & aData, int aFont = CPrimFR::FiscalFont::Default, bool aNoPrint = false);
 
 	/// Обработка ответа предыдущей команды. Автоисправление некоторых ошибок.
 	virtual bool processAnswer(char aError);

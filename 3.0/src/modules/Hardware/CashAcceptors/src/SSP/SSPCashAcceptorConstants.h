@@ -78,6 +78,9 @@ namespace CSSP
 	/// Минимальное количество запрещаемых каналов для NV200.
 	const int NV200MinInhibitedChannels = 16;
 
+	/// Признак подключения USB-кабеля к головной части.
+	const char HeadConnectionId[] = "ITL";
+
 	/// Скорости для перепрошивки.
 	namespace EBaudRate
 	{
@@ -102,11 +105,46 @@ namespace CSSP
 
 	static CBaudRateData BaudRateData;
 
-	/// Изменение скорости останется после резета.
-	const char ContinuousBaudrate = 1;
+	/// Обновление прошивки.
+	namespace UpdatingFirmware
+	{
+		/// Id пакета обновления прошивки.
+		const char Id[] = "ITL";
 
-	/// Пауза после смены скорости порта, [мс].
-	const int ChangingBaudratePause = 300;
+		/// ACK.
+		const char ACK = '\x32';
+
+		/// Изменение скорости останется после резета.
+		const char ContinuousBaudrate = 1;
+
+		/// Размер заголовка.
+		const int HeaderSize = 128;
+
+		/// Размер блока данных.
+		const int BlockSize = 128;
+
+		/// Дефолтный таймаут ответа при перепрошивке, [мс].
+		const int DefaultTimeout = 1000;
+
+		/// Ожидание выхода из анабиоза по завершении перепрошивки, [мс].
+		const SWaitingData FinalizationWaiting = SWaitingData(500, 3 * 1000);
+
+		/// Паузы, [мс].
+		namespace Pause
+		{
+			/// После смены скорости порта.
+			const int ChangingBaudrate = 1000;
+
+			/// Для применения загруженого сегмента RAM.
+			const int RAMApplying = 500;
+
+			/// Перед записью блока данных.
+			const int BlockWriting = 10;
+
+			/// После успешной записи прошивки для её применения.
+			const int EndApplying = 15 * 1000;
+		}
+	}
 
 	//--------------------------------------------------------------------------------
 	/// Команды.
@@ -129,18 +167,25 @@ namespace CSSP
 		const char SetBaudrate        = '\x4D';    /// Установить скорость порта.
 		const char GetBuild           = '\x4F';    /// Запрос версии билда.
 
-		class CData: public CSpecification<char, SData>
+		/// Обновление прошивки.
+		namespace UpdatingFirmware
+		{
+			const char GetBlockSize[]  = "\x0B\x03";
+		}
+
+		class CData: public CSpecification<QByteArray, SData>
 		{
 		public:
 			CData()
 			{
 				add(GetSetupData, 1000);
+				add(SetBaudrate, 1000);
 				add(Sync, true);
 			}
 
 		private:
-			void add(char aCommand, int aTimeout)  { append(aCommand, SData(aTimeout, false)); }
-			void add(char aCommand, bool aSetSync) { append(aCommand, SData(DefaultTimeout, aSetSync)); }
+			void add(char aCommand, int aTimeout)  { append(QByteArray(1, aCommand), SData(aTimeout, false)); }
+			void add(char aCommand, bool aSetSync) { append(QByteArray(1, aCommand), SData(DefaultTimeout, aSetSync)); }
 		};
 
 		static CData Data;
@@ -177,11 +222,9 @@ namespace CSSP
 
 			/// Ошибки.
 			addStatus('\xE6', BillAcceptorStatusCode::Warning::Cheated);
-			addStatus('\xEA', BillAcceptorStatusCode::MechanicFailure::JammedInStacker, "safely jammed");
 			addStatus('\xE9', BillAcceptorStatusCode::MechanicFailure::JammedInValidator, "unsafely jammed");
 			addStatus('\xE7', BillAcceptorStatusCode::MechanicFailure::StackerFull);
 			addStatus('\xE3', BillAcceptorStatusCode::MechanicFailure::StackerOpen);
-			addStatus('\xE3', DeviceStatusCode::OK::OK, "after stacker open");
 
 			/// Режекты.
 			addStatus('\x01', BillAcceptorStatusCode::Reject::Length);

@@ -315,15 +315,6 @@ void PluginService::verifyPlugins()
 			eventService->sendEvent(SDK::PaymentProcessor::Event(SDK::PaymentProcessor::EEventType::Warning, getName(),
 				QString("Unsigned : {%1}").arg(mUnsignedPlugins.join(";"))));
 		}
-
-		QStringList signedKeys = mSignedPlugins.keys();
-		signedKeys.removeDuplicates();
-
-		foreach(QString signerName, signedKeys)
-		{
-			eventService->sendEvent(SDK::PaymentProcessor::Event(SDK::PaymentProcessor::EEventType::Warning, getName(),
-				QString("Signed by %1 : {%2}").arg(signerName).arg(QStringList(mSignedPlugins.values(signerName)).join(";"))));
-		}
 	}
 	catch (SDK::PaymentProcessor::ServiceIsNotImplemented & e)
 	{

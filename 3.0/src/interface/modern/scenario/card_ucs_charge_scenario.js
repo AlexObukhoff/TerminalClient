@@ -285,10 +285,11 @@ function errorHandler() {
 
 //------------------------------------------------------------------------------
 function onError(aError) {
-	ScenarioEngine.resetTimeout();
-	ScenarioEngine.setStateTimeout(15);
+	cardError = Scenario.Payment.ReceiptState.CardChargeError;
 
-	GUI.notification(aError, 15000, Scenario.Payment.Event.Abort);
+	Core.payment.setExternalParameter("CARD_CHARGE_ERROR", aError);
+
+	Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Abort);
 }
 
 //------------------------------------------------------------------------------

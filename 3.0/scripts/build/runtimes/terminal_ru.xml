@@ -63,8 +63,18 @@
 	<!-- PCS plugin -->
 	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/payment_customizer_scenario.dll" target="plugins/plugins/payment_customizer_scenario.dll"/>
 
+	<!-- Плагин процессинга ЕСИА, компонент plugins -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/esia_auth.dll" target="plugins/plugins/esia_auth.dll"/>
+	<file source="{QBS_RESULT_PATH}/locale/esia_auth_ru.qm" target="locale/plugins/esia_auth_ru.qm"/>
+
+	<!-- Плагин для работы со шлюзом СТОЛОТО, компонент plugins -->
+	<file if="{CYBERPLAT_BUILD}" source="{QBS_RESULT_PATH}/plugins/stoloto.dll" target="plugins/plugins/stoloto.dll"/>
+
 	<!-- Драйверы, компонент drivers -->
 	<file source="{QBS_RESULT_PATH}/plugins/drivers/fr.dll" target="drivers/plugins/drivers/fr.dll"/>
+	<file source="{THIRDPARTY_DIR}/atol5/nt-x86-msvc2015/fptr10.dll" target="drivers/plugins/drivers/fptr10.dll"/>
+	<file source="{THIRDPARTY_DIR}/atol5/nt-x86-msvc2015/msvcp140.dll" target="drivers/plugins/drivers/msvcp140.dll"/>
+	<file source="{THIRDPARTY_DIR}/atol5/settings/log_properties_template.txt" target="user/user/plugins/log_properties_template.txt"/>
 
 	<!-- Локализации исполняемых файлов -->
 	<file source="{QBS_RESULT_PATH}/locale/WatchService_ru.qm" target="locale/guard_ru.qm"/>
@@ -104,6 +114,9 @@
 
 	<!-- Интерфейс МТС -->
 	<directory source="src/runtimes/ru/dealers/_interface_mts" target="_interface_mts" recursive="true"/>
+
+	<!-- Интерфейс Планета24 Музей -->
+	<directory source="src/runtimes/ru/dealers/_interface_patriot_planeta24" target="_interface_patriot_planeta24" recursive="true"/>
 
 	<!-- ######################################################################################  -->
 

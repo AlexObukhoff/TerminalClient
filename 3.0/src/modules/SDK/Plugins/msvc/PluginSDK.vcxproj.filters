@@ -91,6 +91,9 @@
     <ClInclude Include="..\..\..\..\includes\SDK\Plugins\PluginBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Plugins\ImportanceLevel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\src\PluginFactory.h">

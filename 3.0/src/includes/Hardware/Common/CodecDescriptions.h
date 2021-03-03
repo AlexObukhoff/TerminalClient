@@ -19,6 +19,7 @@ public:
 		static CustomKZTCodec customKZTCodec;
 		static CodecBase baseCodec;
 
+		APPEND_CODEC(UTF8, UTF-8);
 		APPEND_CODEC(CP850, IBM 850);
 		APPEND_CODEC(CP866, IBM 866);
 		APPEND_CODEC(Win1250, Windows-1250);

@@ -107,6 +107,9 @@ public:
 	/// Устанавливает минимальный уровень, ниже которого логгирование игнорируется.
 	virtual void setLevel(LogLevel::Enum aLevel);
 
+	/// Возвращает минимальный уровень, ниже которого логгирование игнорируется.
+	virtual LogLevel::Enum getLevel();
+
 	/// Устанавливает уровень отступа для древовидных логов.
 	virtual void adjustPadding(int aStep);
 

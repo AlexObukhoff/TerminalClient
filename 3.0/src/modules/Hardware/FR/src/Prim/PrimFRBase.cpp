@@ -32,6 +32,7 @@ PrimFRBase::PrimFRBase() : mMode(EFRMode::Fiscal)
 	mModels = CPrimFR::CommonModels();
 	mModel = CPrimFR::Models::Unknown;
 	mOffline = true;
+	mLineFeed = true;
 
 	setConfigParameter(CHardware::Printer::Commands::Cutting, CPOSPrinter::Command::Cut);
 
@@ -395,9 +396,7 @@ TResult PrimFRBase::processCommand(char aCommand, const CPrimFR::TData & aComman
 	mProtocol.setPort(mIOPort);
 	mProtocol.setLog(mLog);
 
-	QVariantMap configuration;
-	configuration.insert(CHardware::Port::DeviceModelName, "PRIM");
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortDeviceName(ProtocolNames::FR::PRIM);
 
 	QByteArray commandData = QByteArray(1, aCommand).toHex().toUpper();
 	CPrimFR::TData data;
@@ -697,14 +696,9 @@ bool PrimFRBase::printLine(const QByteArray & aString)
 //--------------------------------------------------------------------------------
 bool PrimFRBase::performReceipt(const QStringList & aReceipt, bool aProcessing)
 {
-	QVariantMap configuration;
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(ELoggingType::ReadWrite));
-	mIOPort->setDeviceConfiguration(configuration);
-
+	setPortLoggingType(ELoggingType::ReadWrite);
 	bool result = TSerialFRBase::processReceipt(aReceipt, aProcessing);
-
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(mIOMessageLogging));
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortLoggingType(mIOMessageLogging);
 
 	return result;
 }
@@ -944,8 +938,8 @@ bool PrimFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 		<< CPrimFR::Copies      // количество копий
 		<< CPrimFR::Copies      // количество копий по горизонтали
 		<< CPrimFR::Copies      // количество копий по вертикали
-		<< CPrimFR::CopуGrid    // шаг сетки копий по горизонтали
-		<< CPrimFR::CopуGrid    // шаг сетки копий по вертикали
+		<< CPrimFR::CopyGrid    // шаг сетки копий по горизонтали
+		<< CPrimFR::CopyGrid    // шаг сетки копий по вертикали
 		<< CPrimFR::LineGrid;   // шаг строк
 
 	CPrimFR::TDataList additionalAFDData;
@@ -1228,13 +1222,13 @@ CPrimFR::TData PrimFRBase::addGFieldToBuffer(int aX, int aY, int aFont)
 }
 
 //--------------------------------------------------------------------------------
-CPrimFR::TData PrimFRBase::addArbitraryFieldToBuffer(int aX, int aY, const QString & aData, int aFont)
+CPrimFR::TData PrimFRBase::addArbitraryFieldToBuffer(int aX, int aY, const QString & aData, int aFont, bool aNoPrint)
 {
 	return CPrimFR::TData()
 		<< QString("%1").arg(qToBigEndian(unsigned short(aX)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по X
 		<< QString("%1").arg(qToBigEndian(unsigned short(aY)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по Y
 		<< int2String(aFont).toLatin1()    // шрифт, см. ESC !
-		<< "01"                            // Печать произвольного реквизита
+		<< (aNoPrint ? "02" : "01")        // Печать произвольного реквизита
 		<< "00"                            // N вывода на контрольную ленту
 		<< mCodec->fromUnicode(aData);     // данные
 }
@@ -1292,9 +1286,7 @@ TStatusCodes PrimFRBase::getRTStatus(int aCommand)
 	mRTProtocol.setPort(mIOPort);
 	mRTProtocol.setLog(mLog);
 
-	QVariantMap configuration;
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(ELoggingType::ReadWrite));
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortLoggingType(ELoggingType::ReadWrite);
 
 	char answer;
 	TStatusCodes result;
@@ -1309,8 +1301,7 @@ TStatusCodes PrimFRBase::getRTStatus(int aCommand)
 		mOffline = true;
 	}
 
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(ELoggingType::None));
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortLoggingType(ELoggingType::None);
 
 	return result;
 }

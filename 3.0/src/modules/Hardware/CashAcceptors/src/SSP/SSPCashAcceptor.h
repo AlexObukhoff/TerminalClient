@@ -7,6 +7,7 @@
 
 // Project
 #include "Hardware/CashAcceptors/SerialCashAcceptor.h"
+#include "SSPModelDataTypes.h"
 
 //--------------------------------------------------------------------------------
 class SSPCashAcceptor : public TSerialCashAcceptor
@@ -59,6 +60,15 @@ protected:
 	/// Изменить скорость работы.
 	bool performBaudRateChanging(bool aUp);
 
+	/// Записать сегмент RAM.
+	bool writeRAMData(const QByteArray & aData);
+
+	/// Записать сегмент RAM.
+	bool writeDatasetData(const QByteArray & aData, int aBlockSize);
+
+	/// Получить CRC блока данных.
+	char getCRC(const QByteArray & aData);
+
 	/// Протокол.
 	SSPProtocol mProtocol;
 
@@ -67,6 +77,12 @@ protected:
 
 	/// Признак включенности на прием денег.
 	bool mEnabled;
+
+	/// Номер прошивки.
+	double mFirmware;
+
+	/// Данные модели.
+	CSSP::Models::SData mModelData;
 };
 
 //--------------------------------------------------------------------------------

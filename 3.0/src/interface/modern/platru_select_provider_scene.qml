@@ -220,13 +220,15 @@ Widgets.SceneBase2 {
 		if (aIsGroup) {
 			global.menuLevel = MenuWalker.go(aId, operatorSelector.getCurrentPosition());
 		} else {
-			// Если провайдер невалидный или локальный
-			if (Core.payment.getProvider(aId).isNull() || Core.payment.getProvider(aId).processorType === "dealer") {
+			global.provider = Core.payment.getProvider(aId);
+
+			// Если провайдер невалидный, или локальный, или возвращает addinfo на CHECK, или отключен для оплаты через книжку
+			if (!global.provider.cyberwalletShow || global.provider.isNull() || global.provider.processorType === "dealer" || global.provider.showCheckAddInfo) {
 				GUI.notification(Utils.locale.tr(QT_TR_NOOP("main_menu_scene#invalid_provider")));
 			} else {
 				global.fillMode = true;
 
-				global.provider = Core.payment.getProvider(aId);
+
 				var fields = global.provider.fields;
 
 				if (!global.payMode) {

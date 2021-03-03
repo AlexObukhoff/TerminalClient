@@ -155,6 +155,18 @@
     <ClCompile Include="..\src\POSPrinters\Custom\CustomPrinters.cpp">
       <Filter>POS\Custom</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\Custom\CustomPrintersIII.cpp">
+      <Filter>POS\Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SystemPrinter\Sam4sPrinters.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\Epson\EpsonPrinters.cpp">
+      <Filter>POS\Epson</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\POSPrinters\Epson\Sam4sEpsonPrinters.cpp">
+      <Filter>POS\Epson</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\AV268\AV268.h">
@@ -294,6 +306,27 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\Printers\PortPOSPrinters.h">
       <Filter>POS\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\Custom\CustomPrintersIII.h">
+      <Filter>POS\Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\Custom\CustomTG2480HIII.h">
+      <Filter>POS\Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SystemPrinter\Sam4sModelData.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\Printers\Sam4sModels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SystemPrinter\Sam4sPrinters.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\Epson\EpsonPrinters.h">
+      <Filter>POS\Epson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\POSPrinters\Epson\Sam4sEpsonPrinters.h">
+      <Filter>POS\Epson</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

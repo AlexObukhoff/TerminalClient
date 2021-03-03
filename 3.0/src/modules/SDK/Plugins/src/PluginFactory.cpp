@@ -86,8 +86,8 @@ bool PluginFactory::initialize(IKernel * aKernel, const QString & aDirectory)
 	}
 
 	// Загрузка конфигураций (в одном файле хранятся ВСЕ конфигурации ВСЕХ плагинов данной библиотеки)
-	QFileInfo file(QDir::toNativeSeparators(QDir::cleanPath(mKernel->getDataDirectory() + QDir::separator() +
-		CPluginFactory::ConfigurationDirectory + QDir::separator() + mModuleName + ".ini")));
+	QString configurationDirectory = QDir::toNativeSeparators(QDir::cleanPath(mKernel->getDataDirectory() + QDir::separator() + CPluginFactory::ConfigurationDirectory));
+	QFileInfo file(QDir::toNativeSeparators(configurationDirectory + QDir::separator() + mModuleName + ".ini"));
 
 	if (file.exists())
 	{
@@ -109,6 +109,7 @@ bool PluginFactory::initialize(IKernel * aKernel, const QString & aDirectory)
 			}
 
 			config.endGroup();
+			parameters.insert(CPluginParameters::ConfigurationDirectory, configurationDirectory);
 			mPersistentConfigurations[group] = parameters;
 		}
 	}

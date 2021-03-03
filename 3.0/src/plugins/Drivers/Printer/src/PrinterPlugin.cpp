@@ -19,58 +19,75 @@ IPlugin * CreatePlugin(IEnvironment * aEnvironment, const QString & aInstancePat
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList singleParameters(const QString & aModel)
-{
-	return modifyPriority(createNamedList<T>(aModel), EDetectingPriority::Low);
-}
+template <class T, class T2>
+struct SPrintersParameters {};
 
 //------------------------------------------------------------------------------
 template <class T>
-TParameterList commonParameters(const QStringList & aModels)
+struct SPrintersParameters<T, QString>
 {
-	return modifyPriority(createNamedList<T>(aModels, CComponents::Printer), EDetectingPriority::Low);
-}
+	TParameterList create(const QString & aModel)
+	{
+		return createNamedList<T>(aModel);
+	}
+};
 
 //------------------------------------------------------------------------------
 template <class T>
-TParameterList CitizenCBM1000IIParameters(const QString & aModel)
+struct SPrintersParameters<T, QStringList>
 {
-	return singleParameters<T>(aModel)
+	TParameterList create(const QStringList & aModels)
+	{
+		return createNamedList<T>(aModels, CComponents::Printer);
+	}
+};
+
+//------------------------------------------------------------------------------
+template <class T, class T2>
+TParameterList printerParameters(const T2 & aModels)
+{
+	return modifyPriority(SPrintersParameters<T, T2>().create(aModels), EDetectingPriority::Low);
+};
+
+//------------------------------------------------------------------------------
+template <class T, class T2>
+TParameterList CitizenCBM1000IIParameters(const T2 & aModels)
+{
+	return printerParameters<T, T2>(aModels)
 		<< setLineSpacing(40, 80, 50, 5);
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList CitizenCTS2000Parameters(const QString & aModel)
+template <class T, class T2>
+TParameterList CitizenCTS2000Parameters(const QString & aModels)
 {
-	return singleParameters<T>(aModel)
+	return printerParameters<T, T2>(aModels)
 		<< setLineSpacing(40, 80, 50, 5);
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList CitizenCPP8001Parameters(const QString & aModel)
+template <class T, class T2>
+TParameterList CitizenCPP8001Parameters(const T2 & aModels)
 {
-	return singleParameters<T>(aModel)
+	return printerParameters<T, T2>(aModels)
 		<< setLineSpacing(45, 80, 55, 5);
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList CustomParameters(const QStringList & aModels)
+template <class T, class T2>
+TParameterList CustomParameters(const T2 & aModels)
 {
-	return commonParameters<T>(aModels)
+	return printerParameters<T, T2>(aModels)
 		<< setRemoteSensor(true)
 		<< setLineSpacing(45, 85, 55, 5)
 		<< setJamSensorEnabled();
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList CommonCustomVKP80Parameters(const QString & aModel)
+template <class T, class T2>
+TParameterList CommonCustomVKP80Parameters(const T2 & aModels)
 {
-	return singleParameters<T>(aModel)
+	return printerParameters<T, T2>(aModels)
 		<< setRemoteSensor(true)
 		<< setPresentationLength("", 2)
 		<< setLeftReceiptTimeout()
@@ -79,18 +96,18 @@ TParameterList CommonCustomVKP80Parameters(const QString & aModel)
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList CustomVKP80IIIParameters(const QString & aModel)
+template <class T, class T2>
+TParameterList CustomVKP80IIIParameters(const T2 & aModels)
 {
-	return CommonCustomVKP80Parameters<T>(aModel)
+	return CommonCustomVKP80Parameters<T, T2>(aModels)
 		<< setLeftReceiptAction(PrinterSettings::PreviousAndNotTakenReceipts, true, true, PrinterValues::Retract);
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList CustomVKP80Parameters(const QString & aModel)
+template <class T, class T2>
+TParameterList CustomVKP80Parameters(const T2 & aModels)
 {
-	return CommonCustomVKP80Parameters<T>(aModel)
+	return CommonCustomVKP80Parameters<T, T2>(aModels)
 		<< setLoopEnabled("", false)
 		<< setLeftReceiptAction(PrinterSettings::PreviousReceipt, true, true, Values::Auto)
 		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, true, Values::Auto)
@@ -98,19 +115,27 @@ TParameterList CustomVKP80Parameters(const QString & aModel)
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList CitizenPPU700Parameters(const QString & aModel)
+template <class T, class T2>
+TParameterList CitizenPPU700Parameters(const T2 & aModels)
 {
-	return singleParameters<T>(aModel)
+	return printerParameters<T, T2>(aModels)
 		<< setRemoteSensor(false)
 		<< setLineSpacing(42, 122, 52, 5);
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList EpsonEUT400Parameters(const QString & aModel)
+template <class T, class T2>
+TParameterList Sam4sEpsonParameters(const T2 & aModels)
 {
-	return singleParameters<T>(aModel)
+	return printerParameters<T, T2>(aModels)
+		<< setLineSpacing(45, 75, 50, 5);
+}
+
+//------------------------------------------------------------------------------
+template <class T, class T2>
+TParameterList EpsonEUT400Parameters(const T2 & aModels)
+{
+	return printerParameters<T, T2>(aModels)
 		<< setRemoteSensor(true)
 		<< setLineSpacing(20, 50, 30, 5)
 		<< setLoopEnabled()
@@ -118,28 +143,28 @@ TParameterList EpsonEUT400Parameters(const QString & aModel)
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList CitizenPPU231Parameters(const QString & aModel)
+template <class T, class T2>
+TParameterList CitizenPPU231Parameters(const T2 & aModels)
 {
-	return singleParameters<T>(aModel)
+	return printerParameters<T, T2>(aModels)
 		<< setRemoteSensor(true)
 		<< setLineSpacing(40, 80, 50, 5)
 		<< setFeedingFactor();
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList StarParameters(const QStringList & aModels)
+template <class T, class T2>
+TParameterList StarParameters(const T2 & aModels)
 {
-	return commonParameters<T>(aModels)
+	return printerParameters<T, T2>(aModels)
 		<< setLineSpacing(3, 4, 3, 1);
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList EjectorStarParameters(const QStringList & aModels)
+template <class T, class T2>
+TParameterList EjectorStarParameters(const T2 & aModels)
 {
-	return StarParameters<T>(aModels)
+	return StarParameters<T, T2>(aModels)
 		<< setRemoteSensor(false)
 		<< setLoopEnabled()
 		<< setLeftReceiptAction(PrinterSettings::NotTakenReceipt, true, false, PrinterValues::Retract)
@@ -147,34 +172,34 @@ TParameterList EjectorStarParameters(const QStringList & aModels)
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList SystemPrintersParameters(const QString & aModel)
+template <class T, class T2>
+TParameterList SystemPrintersParameters(const T2 & aModels)
 {
-	return modifyPriority(singleParameters<T>(aModel), EDetectingPriority::Fallback)
+	return printerParameters<T, T2>(aModels)
 		<< setLineSpacing(60, 120, 100, 10)
 		<< setFontSize(6, 18, 12, 1);
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList SystemPrinterParameters(const QString & aModel)
+template <class T, class T2>
+TParameterList SystemPrinterParameters(const T2 & aModels)
 {
-	return SystemPrintersParameters<T>(aModel)
+	return modifyPriority(SystemPrintersParameters<T, T2>(aModels), EDetectingPriority::Fallback)
 		<< setPaginationDisabled()
 		<< setLeftMargin();
 }
 
 //------------------------------------------------------------------------------
-template <class T>
-TParameterList DefaultPOSPrinterParameters(const QString & aModel)
+template <class T, class T2>
+TParameterList DefaultPOSPrinterParameters(const T2 & aModels)
 {
-	return modifyPriority(singleParameters<T>(aModel), EDetectingPriority::Fallback);
+	return modifyPriority(printerParameters<T, T2>(aModels), EDetectingPriority::Fallback);
 }
 
 //------------------------------------------------------------------------------
-#define SINGLE_PRINTER_PLUGIN(aClassName, aParameters, aName) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName>, #aName))
-#define CUSTOM_PRINTER_PLUGIN(aClassName, aParameters, aName) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName>, QStringList() << #aName))
-#define COMMON_PRINTER_PLUGIN(aClassName, aParameters)        COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName>, aClassName::getModelList()))
+#define SINGLE_PRINTER_PLUGIN(aClassName, aParameters, aName) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName, QString>, #aName))
+#define CUSTOM_PRINTER_PLUGIN(aClassName, aParameters, aName) COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName, QStringList>, QStringList() << #aName))
+#define COMMON_PRINTER_PLUGIN(aClassName, aParameters)        COMMON_DRIVER(aClassName, std::bind(&aParameters<aClassName, QStringList>, aClassName::getModelList()))
 
 //------------------------------------------------------------------------------
 BEGIN_REGISTER_PLUGIN
@@ -185,8 +210,11 @@ BEGIN_REGISTER_PLUGIN
 
 	SINGLE_PRINTER_PLUGIN(TSerialPOSPrinter, DefaultPOSPrinterParameters, Default POS Printer)
 	COMMON_PRINTER_PLUGIN(SerialCustomPrinter, CustomParameters)
+	COMMON_PRINTER_PLUGIN(SerialCustomPrinterIII, CustomParameters)
 	CUSTOM_PRINTER_PLUGIN(SerialCustomTG2480H, CustomParameters, Custom TG2480H)
+	CUSTOM_PRINTER_PLUGIN(SerialCustomTG2480HIII, CustomParameters, Custom TG2480HIII)
 	CUSTOM_PRINTER_PLUGIN(LibUSBCustomTG2480H, CustomParameters, Custom TG2480H)
+	//CUSTOM_PRINTER_PLUGIN(LibUSBCustomTG2480HIII, CustomParameters, Custom TG2480HIII)
 	SINGLE_PRINTER_PLUGIN(SerialCitizenCBM1000II, CitizenCBM1000IIParameters, Citizen CBM-1000II)
 	SINGLE_PRINTER_PLUGIN(CitizenCPP8001, CitizenCPP8001Parameters, Citizen CPP-8001)
 	SINGLE_PRINTER_PLUGIN(SerialCitizenCTS2000, CitizenCTS2000Parameters, Citizen CTS-2000)
@@ -198,15 +226,19 @@ BEGIN_REGISTER_PLUGIN
 	SINGLE_PRINTER_PLUGIN(SerialCitizenPPU700II, CitizenPPU700Parameters, Citizen PPU-700II)
 	SINGLE_PRINTER_PLUGIN(LibUSBCitizenPPU700II, CitizenPPU700Parameters, Citizen PPU-700II)
 	SINGLE_PRINTER_PLUGIN(CitizenPPU231, CitizenPPU231Parameters, Citizen PPU-231)
-	SINGLE_PRINTER_PLUGIN(CitizenCTS310II, singleParameters, Citizen CT-S310II)
+	SINGLE_PRINTER_PLUGIN(CitizenCTS310II, printerParameters, Citizen CT-S310II)
+	COMMON_PRINTER_PLUGIN(Sam4sEpsonSerialPrinter, Sam4sEpsonParameters)
+	COMMON_PRINTER_PLUGIN(Sam4sEpsonTCPPrinter, Sam4sEpsonParameters)
 	SINGLE_PRINTER_PLUGIN(EpsonEUT400, EpsonEUT400Parameters, Epson EU-T400)
 
 	COMMON_PRINTER_PLUGIN(StarPrinter, StarParameters)
 	COMMON_PRINTER_PLUGIN(EjectorStarPrinter, EjectorStarParameters)
-	COMMON_PRINTER_PLUGIN(AV268, commonParameters)
+	COMMON_PRINTER_PLUGIN(AV268, printerParameters)
+
 	SINGLE_PRINTER_PLUGIN(SystemPrinter, SystemPrinterParameters, System)
 	SINGLE_PRINTER_PLUGIN(SunphorPOS58IV, SystemPrintersParameters, Sunphor POS58IV)
 	SINGLE_PRINTER_PLUGIN(ICTGP83, SystemPrintersParameters, ICT GP83)
+	COMMON_PRINTER_PLUGIN(Sam4s, SystemPrintersParameters)
 END_REGISTER_PLUGIN
 
 //------------------------------------------------------------------------------

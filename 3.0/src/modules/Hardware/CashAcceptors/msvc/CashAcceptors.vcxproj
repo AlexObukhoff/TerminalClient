@@ -137,7 +137,6 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorStatusesDescriptions.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\BillTable.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CurrencyDescriptions.h" />
-    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\ModelData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorData.h" />
     <ClInclude Include="..\src\CashAcceptorStatusData.h" />
     <ClInclude Include="..\src\CCNet\CCNetCashAcceptorBase.h" />
@@ -169,6 +168,7 @@
     <ClInclude Include="..\src\SSP\SSPCashAcceptor.h" />
     <ClInclude Include="..\src\SSP\SSPCashAcceptorConstants.h" />
     <ClInclude Include="..\src\SSP\SSPModelData.h" />
+    <ClInclude Include="..\src\SSP\SSPModelDataTypes.h" />
     <ClInclude Include="..\src\V2e\V2eModelData.h" />
     <ClInclude Include="..\src\V2e\V2eCashAcceptor.h" />
     <ClInclude Include="..\src\V2e\V2eCashAcceptorConstants.h" />

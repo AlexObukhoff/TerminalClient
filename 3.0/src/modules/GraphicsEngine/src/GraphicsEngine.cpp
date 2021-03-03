@@ -15,6 +15,10 @@
 #include <qjson.h>
 #include <Common/QtHeadersEnd.h>
 
+#include <SDK/PaymentProcessor/Core/ICore.h>
+#include <SDK/PaymentProcessor/Core/IPaymentService.h>
+#include <SDK/PaymentProcessor/Settings/Provider.h>
+
 #ifndef _SIZE_T_DEFINED
 #ifdef  _WIN64
 typedef unsigned __int64    size_t;
@@ -563,6 +567,34 @@ bool GraphicsEngine::showWidget(const QString & aWidget, bool aPopup, const QVar
 					if (contextKey == paramKey)
 					{
 						if (widgetWithContext->info.context[paramKey].toString().split("|").contains(aParameters[paramKey].toString()))
+						{
+							newWidget = widgetWithContext;
+						}
+					}
+				}
+			}
+		}
+
+		
+		auto core = dynamic_cast<SDK::PaymentProcessor::ICore *>(mHost->getInterface<SDK::PaymentProcessor::ICore>(SDK::PaymentProcessor::CInterfaces::ICore));
+		SDK::PaymentProcessor::IPaymentService * ps = core->getPaymentService();
+		QVariantMap context = ps->getProvider(aParameters.value("id").toInt()).fieldsContext;
+
+		
+		foreach(QString paramKey, context.keys())
+		{
+			for (widgetWithContext = firstWidget; widgetWithContext != mWidgets.end(); ++widgetWithContext)
+			{
+				if (widgetWithContext->info.name != aWidget)
+				{
+					continue;
+				}
+
+				foreach(QString contextKey, widgetWithContext->info.context.keys())
+				{
+					if (contextKey == paramKey)
+					{
+						if (widgetWithContext->info.context[paramKey].toString().split("|").contains(context[paramKey].toString()))
 						{
 							newWidget = widgetWithContext;
 						}

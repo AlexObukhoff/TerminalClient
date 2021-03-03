@@ -58,22 +58,22 @@ namespace CSTAR
 		public:
 			CData()
 			{
-				add(TUP542,   "TB5",      4.1, true,  true, false, true,  true);
-				add(TUP592,   "TB5",      4.1, true,  true, true,  true,  true);
+				add(TUP542,   "TB5",      6.0, true,  true, false, true,  true);
+				add(TUP592,   "TB5",      6.0, true,  true, true,  true,  true);
 				add(TUP942,   "TB9",      5.1, true);
 				add(TUP992,   "TB9",      5.1, true,  true, true,  false, false, true);
 				add(TSP613,   "TSP600",   5.1, false, false);
 				add(TSP643,   "TSP600",   5.1);
 				add(TSP651,   "TSP650",   4.0, false, false);
 				add(TSP654,   "TSP650",   4.0);
-				add(TSP654II, "TSP650II", 2.0);
+				add(TSP654II, "TSP650II", 7.0);
 				add(TSP743,   "TSP700",   7.1);
-				add(TSP743II, "TSP700II", 5.0, true, true, false, false, false, true, 5, 3);
+				add(TSP743II, "TSP700II", 7.0, true, true, false, false, false, true, 5, 3);
 				add(TSP847,   "TSP800",   7.3);
-				add(TSP847II, "TSP800II", 2.0);
+				add(TSP847II, "TSP800II", 7.0);
 				add(TSP828L,  "TSP800L",  2.0);
 				add(TSP1043,  "TSP1000",  3.0);
-				add(FVP10,    "FVP10",    1.5);
+				add(FVP10,    "FVP10",    2.1);
 
 				add(Unknown,        "", 0, false, true, false, false, false, false);
 				add(UnknownEjector, "", 0, false, true, true,  false, false, true);

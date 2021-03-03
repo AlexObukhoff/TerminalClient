@@ -6,7 +6,7 @@
 
 //--------------------------------------------------------------------------------
 template <class T>
-class CustomTG2480H : public CustomPrinter<T>
+class CustomTG2480H : public T
 {
 	SET_SUBSERIES("CustomTG2480H")
 
@@ -17,7 +17,7 @@ public:
 		mParameters.errors[20][5].insert('\x02', PrinterStatusCode::Error::Presenter);
 
 		mDeviceName = CCustomPrinter::Models::TG2480H;
-		mModelID = '\xA8';
+		setModelID('\xA8');
 
 		mModelData.data().clear();
 		mModelData.add(mModelID, true,  CCustomPrinter::Models::TG2480H);
@@ -46,7 +46,7 @@ protected:
 };
 
 //--------------------------------------------------------------------------------
-class LibUSBCustomTG2480H: public CustomTG2480H<TLibUSBPrinterBase>
+class LibUSBCustomTG2480H: public CustomTG2480H<CustomPrinter<TLibUSBPrinterBase>>
 {
 public:
 	LibUSBCustomTG2480H()
@@ -57,6 +57,6 @@ public:
 };
 
 //--------------------------------------------------------------------------------
-typedef SerialPOSPrinter<CustomTG2480H<TSerialPrinterBase>> SerialCustomTG2480H;
+typedef SerialPOSPrinter<CustomTG2480H<CustomPrinter<TSerialPrinterBase>>> SerialCustomTG2480H;
 
 //--------------------------------------------------------------------------------

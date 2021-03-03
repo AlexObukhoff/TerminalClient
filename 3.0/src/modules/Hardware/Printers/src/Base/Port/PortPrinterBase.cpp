@@ -5,6 +5,7 @@
 
 //---------------------------------------------------------------------------
 template class PortPrinterBase<PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>>;
+template class PortPrinterBase<PrinterBase<TCPDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>>;
 
 //---------------------------------------------------------------------------
 template <class T>
@@ -22,60 +23,21 @@ void PortPrinterBase<T>::finaliseInitialization()
 {
 	addPortData();
 
-	if (mOperatorPresence)
-	{
-		if (!mConnected)
-		{
-			processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::NotAvailable);
-		}
-		else
-		{
-			onPoll();
-		}
-
-		mIOPort->close();
-	}
-	else
-	{
-		T::finaliseInitialization();
-	}
+	T::finaliseInitialization();
 }
 
-//---------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 template <class T>
-bool PortPrinterBase<T>::isPossible(bool aOnline, QVariant aCommand)
+bool PortPrinterBase<T>::releaseExternalResource()
 {
-	bool result = T::isPossible(aOnline, aCommand);
-
-	if (mOperatorPresence && aOnline)
-	{
-		mIOPort->close();
-	}
-
-	return result;
-}
-
-//---------------------------------------------------------------------------
-template <class T>
-bool PortPrinterBase<T>::print(const QStringList & aReceipt)
-{
-	bool result = T::print(aReceipt);
-
-	if (mOperatorPresence)
-	{
-		mIOPort->close();
-	}
-
-	return result;
+	return !mOperatorPresence || !mIOPort || mIOPort->close();
 }
 
 //--------------------------------------------------------------------------------
 template <class T>
 bool PortPrinterBase<T>::getAnswer(QByteArray & aAnswer, int aTimeout) const
 {
-	QVariantMap configuration;
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(ELoggingType::Write));
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortLoggingType(ELoggingType::Write);
 
 	if (!mIOPort->read(aAnswer, aTimeout))
 	{
@@ -126,16 +88,13 @@ bool PortPrinterBase<T>::printOut(const SPrintingOutData & aPrintingOutData)
 		return false;
 	}
 
-	QVariantMap configuration;
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(ELoggingType::ReadWrite));
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortLoggingType(ELoggingType::ReadWrite);
 	int feeding = getConfigParameter(CHardware::Printer::FeedingAmount).toInt();
 
 	bool result = updateParametersOut() && processReceipt(aPrintingOutData.receipt, aPrintingOutData.receiptProcessing);
 
 	setConfigParameter(CHardware::Printer::FeedingAmount, feeding);
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(aPrintingOutData.IOMessageLogging));
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortLoggingType(aPrintingOutData.IOMessageLogging);
 
 	return result;
 }

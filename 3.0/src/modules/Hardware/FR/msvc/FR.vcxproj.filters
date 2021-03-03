@@ -90,7 +90,7 @@
     <Filter Include="PRIM\Online">
       <UniqueIdentifier>{0dcbc690-009b-411d-a52e-3a262abe412b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shtrih\Base\Proto">
+    <Filter Include="Shtrih\Proto">
       <UniqueIdentifier>{bb605215-3cbf-4aeb-85db-bcdab7988081}</UniqueIdentifier>
     </Filter>
     <Filter Include="Kasbi">
@@ -113,6 +113,15 @@
     </Filter>
     <Filter Include="Base\FS serial data">
       <UniqueIdentifier>{c76ebf56-bb2f-4e0e-a0a0-dd771305e71a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ATOL\Online\ATOL5">
+      <UniqueIdentifier>{2a199ffd-e1c4-4adb-973d-5d94ab4eb68d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ATOL\Online\ATOL5\Wrapper">
+      <UniqueIdentifier>{ac19fd5b-91a9-4683-bf7f-92e394478e05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ATOL\Proto">
+      <UniqueIdentifier>{806d6d68-2d99-4314-b4a7-383a87738625}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -179,8 +188,8 @@
     <ClCompile Include="..\src\Shtrih\Retractor\ShtrihRetractorFRLite.cpp">
       <Filter>Shtrih\Base\Ejector</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Shtrih\Base\ProtoShtrihFR.cpp">
-      <Filter>Shtrih\Base\Proto</Filter>
+    <ClCompile Include="..\src\Shtrih\Proto\ProtoShtrihFR.cpp">
+      <Filter>Shtrih\Proto</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Atol\Online\Paymaster.cpp">
       <Filter>ATOL\Online</Filter>
@@ -214,6 +223,18 @@
     </ClCompile>
     <ClCompile Include="..\src\Base\FiscalFieldDescriptions.cpp">
       <Filter>Base\FFEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Online\ATOL5\Atol5OnlineFRBase.cpp">
+      <Filter>ATOL\Online\ATOL5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Online\ATOL5\Wrapper\AtolDriverWrapper.cpp">
+      <Filter>ATOL\Online\ATOL5\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Online\ATOL5\Atol5DataTypes.cpp">
+      <Filter>ATOL\Online\ATOL5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Proto\ProtoAtolFR.cpp">
+      <Filter>ATOL\Proto</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,8 +391,8 @@
     <ClInclude Include="..\src\Shtrih\Retractor\ShtrihRetractorFRLite.h">
       <Filter>Shtrih\Base\Ejector</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Shtrih\Base\ProtoShtrihFR.h">
-      <Filter>Shtrih\Base\Proto</Filter>
+    <ClInclude Include="..\src\Shtrih\Proto\ProtoShtrihFR.h">
+      <Filter>Shtrih\Proto</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Shtrih\Base\VirtualShtrihFR.h">
       <Filter>Shtrih\Base</Filter>
@@ -462,6 +483,24 @@
     </ClInclude>
     <ClInclude Include="..\src\Base\FiscalFieldDescriptions.h">
       <Filter>Base\FFEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Atol5OnlineFRBase.h">
+      <Filter>ATOL\Online\ATOL5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Wrapper\AtolDriverWrapper.h">
+      <Filter>ATOL\Online\ATOL5\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Atol5OnlineFRConstants.h">
+      <Filter>ATOL\Online\ATOL5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Atol5DataTypes.h">
+      <Filter>ATOL\Online\ATOL5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Proto\ProtoAtolFR.h">
+      <Filter>ATOL\Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Online\ATOL5\ProtoAtol5FR.h">
+      <Filter>ATOL\Online\ATOL5</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -235,8 +235,20 @@ Widgets.SceneBase {
 					}
 				}
 
+				// Проверим, не требуется ли идентификация для этой кнопки. Если требуется, запустим "оплату" специального оператора
+				if (provider.checkEsia) {
+					var esiaProvider = Core.payment.getProvider(Scenario.Payment.ServiceProviders["ESIA"]);
+					if (esiaProvider.isNull()) {
+						GUI.notification(Utils.locale.tr(QT_TR_NOOP("main_menu_scene#invalid_esia_provider")));
+						return;
+					}
+
+					//Оператор, которого оплачиваем через ЕСИА
+					GUI.props("payment.esia.provider", aId);
+				}
+
 				Core.postEvent(EventType.StartScenario, {
-												 name: Scenario.Payment.Name, id: aId, fields: fields,
+												 name: Scenario.Payment.Name, id: provider.checkEsia ? Scenario.Payment.ServiceProviders["ESIA"]: aId, fields: fields,
 												 skip_fill_fields: Object.keys(Core.payment.getProvider(aId).fields).length === hideFieldCount
 											 });
 			}

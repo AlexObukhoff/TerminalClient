@@ -140,6 +140,8 @@
     <ClCompile Include="..\src\Port\USB\USBDeviceModelData.cpp" />
     <ClCompile Include="..\src\SafePerformer\SafePerformer.cpp" />
     <ClCompile Include="..\src\Utils\DeviceUtils.cpp" />
+    <ClCompile Include="..\src\Utils\Port\SerialDeviceUtils.cpp" />
+    <ClCompile Include="..\src\Utils\Port\SystemDeviceUtils.cpp" />
     <ClCompile Include="..\src\Utils\ProtocolUtils.cpp" />
     <ClCompile Include="..\src\Virtual\VirtualDeviceBase.cpp" />
     <ClCompile Include="..\src\WorkingThreadProxy.cpp" />
@@ -300,6 +302,8 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceLogicManager.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\FunctionTypes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\DeviceLogManager.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\LimitedQueue.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\Common\ModelData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ProtocolBase.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ProtoDevices.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\CommandResultData.h" />
@@ -389,6 +393,9 @@
     </CustomBuild>
     <ClInclude Include="..\src\Port\USB\USBDeviceModelData.h" />
     <ClInclude Include="..\src\Utils\DeviceUtils.h" />
+    <ClInclude Include="..\src\Utils\Port\DeviceGUIDs.h" />
+    <ClInclude Include="..\src\Utils\Port\SerialDeviceUtils.h" />
+    <ClInclude Include="..\src\Utils\Port\SystemDeviceUtils.h" />
     <ClInclude Include="..\src\Utils\ProtocolUtils.h" />
     <ClInclude Include="..\src\Virtual\VirtualDeviceBase.h" />
     <CustomBuild Include="..\..\..\..\includes\Hardware\CashAcceptors\ProtoCashAcceptor.h">

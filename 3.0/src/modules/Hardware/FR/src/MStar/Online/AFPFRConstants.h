@@ -63,7 +63,7 @@ namespace CAFPFR
 		public:
 			CFR()
 			{
-				addStatus(1, FRStatusCode::Warning::NotFiscalized);
+				addStatus(1, FRStatusCode::Warning::FSNotFiscalized);
 				addStatus(4, FRStatusCode::Error::FS, "", true);
 				addStatus(5, FRStatusCode::Error::FSClosed);
 			}
@@ -221,7 +221,7 @@ namespace CAFPFR
 		const char UnknownCommand = '\x03';    /// Некорректный формат или параметр команды.
 		const char NeedZReport    = '\x0A';    /// Текущая смена больше 24 часов. Установка даты времени больше чем на 24 часа.
 
-		class Data: public FRError::Data
+		class Data: public FRError::Data<char>
 		{
 		public:
 			Data()

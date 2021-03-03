@@ -676,7 +676,9 @@ void CashAcceptorBase<T>::cleanStatusCodes(TStatusCodes & aStatusCodes)
 		aStatusCodes.remove(BillAcceptorStatusCode::BillOperation::Unknown);
 	}
 
-	if (aStatusCodes.contains(BillAcceptorStatusCode::Busy::Returning) || aStatusCodes.contains(BillAcceptorStatusCode::Busy::Returned))
+	if (aStatusCodes.contains(BillAcceptorStatusCode::Busy::Returning) ||
+	    aStatusCodes.contains(BillAcceptorStatusCode::Busy::Returned)  ||
+	    aStatusCodes.contains(BillAcceptorStatusCode::MechanicFailure::JammedViaRejecting))
 	{
 		foreach (int statusCode, aStatusCodes)
 		{

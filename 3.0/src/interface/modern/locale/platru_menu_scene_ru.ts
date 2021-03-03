@@ -14,18 +14,18 @@
         <translation>Добавить запись</translation>
     </message>
     <message>
-        <location filename="../platru_menu_scene.qml" line="224"/>
-        <location filename="../platru_menu_scene.qml" line="296"/>
+        <location filename="../platru_menu_scene.qml" line="225"/>
+        <location filename="../platru_menu_scene.qml" line="297"/>
         <source>platru_menu_scene#low_balance</source>
         <translation>На вашем счету недостаточно средств для оплаты. Возможна оплата только наличными.</translation>
     </message>
     <message>
-        <location filename="../platru_menu_scene.qml" line="303"/>
+        <location filename="../platru_menu_scene.qml" line="304"/>
         <source>main_menu_scene#invalid_provider</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../platru_menu_scene.qml" line="218"/>
+        <location filename="../platru_menu_scene.qml" line="219"/>
         <source>search_scene#invalid_provider</source>
         <translation>Извините, оплата в пользу данного оператора временно невозможна. Попробуйте позже.</translation>
     </message>

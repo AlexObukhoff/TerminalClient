@@ -1,15 +1,9 @@
 import qbs 1.0
 
-StaticLibrary {
+import "../../qbs/libTemplate.qbs" as TCLib
+
+TCLib {
 	name: "DatabaseProxy"
 
-	Depends { name: 'cpp' }
-	Depends { name: "Qt"; submodules: ["core", "sql"] }
-	Depends { name: "Core" }
-
-	files: [
-		"src/*.h",
-		"src/*.cpp"
-	]
+	Depends { name: "Qt"; submodules: ["sql"] }
 }
-

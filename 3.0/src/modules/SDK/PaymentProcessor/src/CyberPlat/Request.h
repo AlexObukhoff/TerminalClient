@@ -48,6 +48,9 @@ public:
 	/// Возвращает содержание запроса в формате принимающей стороны.
 	virtual QString toString() const;
 
+	/// Возвращает содержание запроса в формате принимающей стороны.
+	virtual QByteArray toByteArray() const;
+
 	/// Возвращает строку с полями запроса для логирования.
 	virtual QString toLogString() const;
 

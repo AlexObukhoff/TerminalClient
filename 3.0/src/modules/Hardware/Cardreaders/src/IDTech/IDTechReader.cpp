@@ -21,7 +21,7 @@ IDTechReader * IDTechReader::mInstance = nullptr;
 int IDTechReader::mInstanceCounter = 0;
 
 //------------------------------------------------------------------------------
-IDTechReader::IDTechReader()
+IDTechReader::IDTechReader(): mId(0)
 {
 	if (!mInstance)
 	{

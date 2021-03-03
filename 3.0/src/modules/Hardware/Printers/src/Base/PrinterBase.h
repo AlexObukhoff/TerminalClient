@@ -7,6 +7,9 @@
 #include <QtGui/QImage>
 #include <Common/QtHeadersEnd.h>
 
+// SDK
+#include <SDK/Drivers/PrintingModes.h>
+
 // Modules
 #include "Hardware/Common/DeviceBase.h"
 
@@ -46,6 +49,9 @@ protected:
 
 	/// Выполнить нереентерабельную команду.
 	virtual bool processNonReentrant(TBoolMethod aCommand);
+
+	/// Отпустить внешний ресурс (порт/драйвер).
+	virtual bool releaseExternalResource() { return true; };
 
 	/// Обработка чека после печати.
 	virtual bool receiptProcessing();
@@ -141,8 +147,11 @@ protected:
 	/// Количество фактически напечатанных строк.
 	int mActualStringCount;
 
-	/// Будет ли следующий документ распечатан сразу.
-	bool mNextDocument;
+	/// Режим печати документа.
+	SDK::Driver::EPrintingModes::Enum mPrintingMode;
+
+	/// Отключение очистки диспенсера.
+	bool mClearingDispenserTurnOff;
 };
 
 //--------------------------------------------------------------------------------

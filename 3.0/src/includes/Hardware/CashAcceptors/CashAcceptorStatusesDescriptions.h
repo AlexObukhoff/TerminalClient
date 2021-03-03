@@ -126,6 +126,7 @@ namespace BillAcceptorStatusCode
 			/// Ошибка, при платеже может быть потеря денег в купюрнике.
 			ADD_CA_MECHANIC_FAILURE(JammedInValidator,  QCoreApplication::translate("ValidatorStatuses", "#jammed_in_validator"));
 			ADD_CA_MECHANIC_FAILURE(JammedInStacker,    QCoreApplication::translate("ValidatorStatuses", "#jammed_in_stacker"));
+			ADD_CA_MECHANIC_FAILURE(JammedViaRejecting, QCoreApplication::translate("ValidatorStatuses", "#jammed_via_rejecting"));
 			ADD_CA_MECHANIC_FAILURE(StickInExitChannel, QCoreApplication::translate("ValidatorStatuses", "#stick_in_exit_channel"));
 			ADD_CA_MECHANIC_FAILURE(JammedCoin,         QCoreApplication::translate("ValidatorStatuses", "#jammed_coin"));
 			ADD_CA_MECHANIC_FAILURE(HeadRemoved,        QCoreApplication::translate("ValidatorStatuses", "#validator_head_removed"));

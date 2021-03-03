@@ -23,15 +23,20 @@ Item {
 			width: parent.width
 			height: 657
 			x: 1
-			color: "transparent"
-			border.color: Utils.ui.color("color.main.secondary")
-			border.width: 7
-			radius: 8
+
+			BorderImage {
+				anchors.fill: parent
+				border { left: 30; top: 30; right: 30; bottom: 30 }
+				horizontalTileMode: BorderImage.Stretch
+				verticalTileMode: BorderImage.Stretch
+				source: Utils.ui.image("webview.angles.overlay")
+				z: 2
+			}
 
 			Loader {
 				id: container
 
-				anchors.centerIn: parent
+				anchors.fill: parent
 			}
 		}
 
@@ -73,16 +78,24 @@ Item {
 	}
 
 	function hide() {
-		Core.graphics.hidePopup();
-		Core.postEvent(Core.EventType.UpdateScenario, {signal: "popup_notify", result: container.item.result()});
+		Core.graphics.hidePopup({qwerty: "12345"});
+		if (global.handler) {
+			global.handler.exec();
+		}
 	}
 
 	QtObject {
 		id: global
+
+		property QtObject handler
 	}
 
 	function resetHandler(aParameters) {
-		container.sourceComponent = aParameters.obj
+		container.sourceComponent = aParameters.item
+
+		if (aParameters.handler) {
+			global.handler = aParameters.handler;
+		}
 	}
 
 	function showHandler() {

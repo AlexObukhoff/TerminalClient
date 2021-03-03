@@ -112,7 +112,7 @@ bool PortCashAcceptor<T>::getStatus(TStatusCodes & aStatusCodes)
 	TDeviceCodeSpecifications deviceCodeSpecifications;
 	QByteArray parData;
 
-	foreach(auto answerData, statusData)
+	foreach (auto answerData, statusData)
 	{
 		QSet<QString> lastData = deviceCodeSpecifications.keys().toSet();
 		mDeviceCodeSpecification->getSpecification(answerData, deviceCodeSpecifications);
@@ -120,7 +120,7 @@ bool PortCashAcceptor<T>::getStatus(TStatusCodes & aStatusCodes)
 
 		mDeviceCodeBuffers << answerData;
 
-		foreach(auto data, newData)
+		foreach (auto data, newData)
 		{
 			// данные о валюте
 			int statusCode = deviceCodeSpecifications[data].statusCode;
@@ -781,6 +781,8 @@ void PortCashAcceptor<T>::updateFirmware(const QByteArray & aBuffer)
 
 		return;
 	}
+
+	toLog(LogLevel::Normal, mDeviceName + ": Starting of firmware updating.");
 
 	bool result = performUpdateFirmware(aBuffer);
 

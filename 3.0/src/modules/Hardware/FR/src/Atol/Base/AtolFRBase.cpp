@@ -30,11 +30,6 @@ AtolFRBase::AtolFRBase()
 	mTagEngine = Tags::PEngine(new CAtolFR::TagEngine());
 
 	// данные устройства
-	mLineFeed = false;
-	mMode = CAtolFR::InnerModes::NoMode;
-	mSubmode = CAtolFR::InnerSubmodes::NoSubmode;
-	mLocked = false;
-	mNonNullableAmount = 0;
 	mFDExecutionMode = CAtolFR::FiscalFlags::ExecutionMode;
 
 	// количество строк шапки (по умолчанию 4) - изменено для корректной печати на фискализированных аппаратах (как и было раньше)
@@ -75,11 +70,10 @@ AtolFRBase::AtolFRBase()
 }
 
 //--------------------------------------------------------------------------------
-void AtolFRBase::setInitialData()
+TResult AtolFRBase::performCommand(const QByteArray & aCommandData, QByteArray & /*aAnswer*/, int aTimeout)
 {
-	TSerialFRBase::setInitialData();
-
-	mFRBuild = 0;
+	toLog(LogLevel::Error, QString("Failed to process protocol command 0x%1, timeout %2 mc").arg(aCommandData.toHex().toUpper().data()).arg(aTimeout));
+	return CommandResult::Driver;
 }
 
 //--------------------------------------------------------------------------------
@@ -195,11 +189,11 @@ void AtolFRBase::finaliseInitialization()
 
 	exitInnerMode();
 
-	TSerialFRBase::finaliseInitialization();
+	TAtolFRBase::finaliseInitialization();
 }
 
 //--------------------------------------------------------------------------------
-bool AtolFRBase::isConnected()
+bool AtolFRBase::processModelKey(CAtolFR::TModelKey & aModeKey)
 {
 	QByteArray answer;
 
@@ -208,22 +202,15 @@ bool AtolFRBase::isConnected()
 		return false;
 	}
 
-	CAtolFR::TModelKey modelKey = getModelKey(answer);
-	CAtolFR::CModelData modelData;
-
-	if (!modelData.data().keys().contains(modelKey))
-	{
-		toLog(LogLevel::Error, "AtolFR: Unknown model");
-	}
-
-	mModelData = modelData[modelKey];
-	mDeviceName = mModelData.name;
-	mVerified = mModelData.verified;
-	mCanProcessZBuffer = mModelData.ZBufferSize;
-	mModelCompatibility = mSupportedModels.contains(mDeviceName);
-	setConfigParameter(CHardware::Printer::NeedCutting, mModelData.cutter);
+	aModeKey = getModelKey(answer);
 
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+CAtolFR::TModelKey AtolFRBase::getModelKey(const QByteArray & /*aAnswer*/)
+{
+	return CAtolFR::TModelKey();
 }
 
 //--------------------------------------------------------------------------------
@@ -507,7 +494,7 @@ bool AtolFRBase::checkTaxes()
 		return false;
 	}
 
-	bool result = TSerialFRBase::checkTaxes();
+	bool result = TAtolFRBase::checkTaxes();
 	enterInnerMode(mode);
 
 	return result;
@@ -528,19 +515,6 @@ bool AtolFRBase::printLine(const QByteArray & aString)
 	}
 
 	return true;
-}
-
-//--------------------------------------------------------------------------------
-bool AtolFRBase::processReceipt(const QStringList & aReceipt, bool aProcessing)
-{
-	bool result = TSerialFRBase::processReceipt(aReceipt, aProcessing);
-
-	if (aProcessing)
-	{
-		SleepHelper::msleep(CAtolFR::Timeouts::EndNotFiscalPrint);
-	}
-
-	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -568,6 +542,11 @@ bool AtolFRBase::getCommonStatus(TStatusCodes & aStatusCodes)
 //--------------------------------------------------------------------------------
 bool AtolFRBase::getStatus(TStatusCodes & aStatusCodes)
 {
+	if (mFRBuild < mModelData.build)
+	{
+		aStatusCodes.insert(DeviceStatusCode::Warning::Firmware);
+	}
+
 	// если находимся в ошибке сбоя буфера Z-отчета - пытаемся исправиться
 	// на случай, если принтер отваливается, но потом опять появляется, не используем последние статусы
 	if (mZBufferError)
@@ -590,13 +569,6 @@ bool AtolFRBase::getStatus(TStatusCodes & aStatusCodes)
 	if (!getCommonStatus(aStatusCodes))
 	{
 		return false;
-	}
-
-	bool buildOK = !mFRBuild || (mFRBuild >= mModelData.build);
-
-	if (!buildOK)
-	{
-		aStatusCodes.insert(DeviceStatusCode::Warning::Firmware);
 	}
 
 	if (mProcessingErrors.contains(CAtolFR::Errors::NeedZReport))
@@ -657,7 +629,7 @@ bool AtolFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 
 		if (result)
 		{
-			result = setOFDParameters() && closeDocument(aPaymentData.payType);
+			result = setFiscalFieldsOnPayment() && closeDocument(aPaymentData.payType);
 		}
 		else if (aPaymentData.back() && (mLastError == CAtolFR::Errors::NoMoneyForPayout))
 		{
@@ -678,19 +650,12 @@ bool AtolFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 //--------------------------------------------------------------------------------
 bool AtolFRBase::isFiscalReady(bool aOnline, EFiscalPrinterCommand::Enum aCommand)
 {
-	if (!TSerialFRBase::isFiscalReady(aOnline, aCommand))
+	if (!TAtolFRBase::isFiscalReady(aOnline, aCommand))
 	{
 		return false;
 	}
 	else if (aCommand == EFiscalPrinterCommand::Encashment)
 	{
-		int sessionInterval = mLastOpenSession.secsTo(QDateTime::currentDateTime()) / 60;
-
-		if (sessionInterval >= 24 * 60)
-		{
-			return false;
-		}
-
 		MutexLocker locker(&mExternalMutex);
 
 		return enterInnerMode(CAtolFR::InnerModes::Register);

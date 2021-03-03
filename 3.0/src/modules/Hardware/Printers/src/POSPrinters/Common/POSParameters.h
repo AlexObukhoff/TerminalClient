@@ -66,20 +66,20 @@ namespace POSPrinters
 		SModelData(const QString & aName, bool aVerified, const QString & aDescription);
 	};
 
-	typedef QMap<char, SModelData> TModelData;
-	typedef QSet<char> TModelIds;
+	typedef QMap<QByteArray, SModelData> TModelData;
+	typedef QSet<QByteArray> TModelIds;
 
-	class ModelData : public CSpecification<char, SModelData>
+	class ModelData : public CSpecification<QByteArray, SModelData>
 	{
 	public:
 		ModelData();
+		void add(const QByteArray & aModelId, bool aVerified, const QString & aName, const QString & aDescription = "");
 		void add(char aModelId, bool aVerified, const QString & aName, const QString & aDescription = "");
-		const TModelIds & getModelIds();
+		int getIdMaxSize();
 
 	private:
 		Q_DISABLE_COPY(ModelData)
 
-		static TModelIds mModelIds;
 		QMutex mMutex;
 	};
 }

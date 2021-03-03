@@ -145,5 +145,8 @@
     <ClInclude Include="..\src\Par.h">
       <Filter>CashAcceptor</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\SDK\Drivers\PrintingModes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

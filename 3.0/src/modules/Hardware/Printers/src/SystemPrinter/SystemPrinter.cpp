@@ -10,6 +10,7 @@
 
 // Modules
 #include "SysUtils/ISysUtils.h"
+#include "SysUtils/SystemPrinterStatusCodes.h"
 
 // Project
 #include "SystemPrinter.h"
@@ -20,7 +21,7 @@ namespace PrinterSettings = CHardware::Printer::Settings;
 SystemPrinter::SystemPrinter()
 {
 	// данные устройства
-	mDeviceName = "System printer";
+	mDeviceName = "System";
 	setConfigParameter(CHardware::Printer::NeedSeparating, false);
 	mLineFeed = false;
 	mSideMargin = 1.0;
@@ -30,9 +31,30 @@ SystemPrinter::SystemPrinter()
 }
 
 //--------------------------------------------------------------------------------
+void SystemPrinter::initialize()
+{
+	mDeviceName = "System printer";
+
+	TSystemPrinter::initialize();
+}
+
+//--------------------------------------------------------------------------------
 bool SystemPrinter::isConnected()
 {
-	return mPrinter.isValid();
+	if (!mPrinter.isValid())
+	{
+		return false;
+	}
+
+	QVariantMap deviceData = ISysUtils::getPrinterData(mLog, mPrinter.printerName());
+	QString idName = deviceData[CDeviceData::Name].toString();
+
+	if (mIdName.isEmpty() || idName.isEmpty())
+	{
+		return true;
+	}
+
+	return idName.contains(mIdName, Qt::CaseInsensitive);
 }
 
 //--------------------------------------------------------------------------------
@@ -44,7 +66,7 @@ bool SystemPrinter::updateParameters()
 	}
 
 	mDeviceName = QString("System printer (%1)").arg(mPrinter.printerName());
-	QVariantMap deviceData = ISysUtils::getPrinterData(mPrinter.printerName());
+	QVariantMap deviceData = ISysUtils::getPrinterData(mLog, mPrinter.printerName());
 
 	for (auto it = deviceData.begin(); it != deviceData.end(); ++it)
 	{
@@ -52,7 +74,6 @@ bool SystemPrinter::updateParameters()
 	}
 
 	QString name = deviceData[CDeviceData::Name].toString();
-	int lineSize = 0;
 
 	// в позициях шрифта Terminal
 	if (name.contains("VKP80 II", Qt::CaseInsensitive))
@@ -71,7 +92,7 @@ bool SystemPrinter::updateParameters()
 
 	QString errorMessage;
 
-	if (!ISysUtils::setPrintingQueuedMode(mPrinter.printerName(), errorMessage))
+	if (!ISysUtils::setPrintingQueuedMode(mLog, mPrinter.printerName()))
 	{
 		toLog(LogLevel::Warning, "Failed to change printing queued mode, " + errorMessage);
 	}
@@ -83,7 +104,6 @@ bool SystemPrinter::updateParameters()
 bool SystemPrinter::printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt)
 {
 	QStringList receipt;
-	int imageIndex = 0;
 
 	foreach (auto lexemeCollection, aLexemeReceipt)
 	{
@@ -145,6 +165,8 @@ bool SystemPrinter::printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt)
 		//textParameters << "font-family: Terminal";
 	}
 
+	//!! align работает начиная с Qt 5.2.1
+
 	if (lineSpacing) textParameters << QString("line-height: %1%").arg(lineSpacing);
 	if (fontSize)    textParameters << QString("font-size: %1px").arg(fontSize);
 
@@ -171,7 +193,7 @@ bool SystemPrinter::getStatus(TStatusCodes & aStatusCodes)
 	}
 
 	TStatusGroupNames groupNames;
-	ISysUtils::getPrinterStatus(mPrinter.printerName(), aStatusCodes, groupNames);
+	getPrinterStatus(mPrinter.printerName(), aStatusCodes, groupNames);
 
 	if (mLastStatusesNames != groupNames)
 	{
@@ -201,6 +223,59 @@ bool SystemPrinter::getStatus(TStatusCodes & aStatusCodes)
 	}
 
 	return true;
+}
+
+//---------------------------------------------------------------------------
+void SystemPrinter::getPrinterStatus(const QString & aPrinterName, TStatusCodes & aStatusCodes, TStatusGroupNames & aGroupNames) const
+{
+	TJobStatus jobs;
+	ulong status;
+	ulong attributes;
+	QString errorMessage;
+
+	if (!ISysUtils::getPrinterStatusData(mLog, aPrinterName, jobs, status, attributes))
+	{
+		aStatusCodes.insert(DeviceStatusCode::Warning::ThirdPartyDriver);
+
+		return;
+	}
+
+	for (int i = 0; i < sizeof(ulong) * 8; ++i)
+	{
+		ulong key = 1 << i;
+
+		if (WindowsPrinterStatuses.data().contains(key) && (status & key))
+		{
+			const SDeviceCodeSpecification & data = WindowsPrinterStatuses[key];
+			aStatusCodes.insert(data.statusCode);
+			aGroupNames["Statuses"].insert(data.description);
+		}
+
+		foreach (auto jobStatus, jobs)
+		{
+			if (WindowsPrinterJobStatuses.data().contains(key) && (jobStatus & key))
+			{
+				const SDeviceCodeSpecification & data = WindowsPrinterJobStatuses[key];
+				aStatusCodes.insert(data.statusCode);
+				aGroupNames["Job statuses"].insert(data.description);
+			}
+		}
+	}
+
+	if (!ISysUtils::setPrintingQueuedMode(mLog, aPrinterName))
+	{
+		aStatusCodes.insert(DeviceStatusCode::Warning::ThirdPartyDriver);
+	}
+
+	auto checkAttribute = [&] (ulong attribute) -> bool { return !mAttributesDisabled.contains(attribute) && (attributes & attribute); };
+
+	if (checkAttribute(PRINTER_STATUS_NOT_AVAILABLE)   ||
+		checkAttribute(PRINTER_ATTRIBUTE_WORK_OFFLINE) ||
+		status & PRINTER_STATUS_PAUSED)
+	{
+		aStatusCodes.insert(DeviceStatusCode::Error::NotAvailable);
+		aGroupNames["Attributes"].insert("work_offline");
+	}
 }
 
 //--------------------------------------------------------------------------------

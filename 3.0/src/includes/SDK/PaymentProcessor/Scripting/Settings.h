@@ -13,6 +13,7 @@
 #include <SDK/PaymentProcessor/Core/ISettingsService.h>
 #include <SDK/PaymentProcessor/Settings/DealerSettings.h>
 #include <SDK/PaymentProcessor/Settings/TerminalSettings.h>
+#include <SDK/PaymentProcessor/Settings/ExtensionsSettings.h>
 #include <SDK/PaymentProcessor/Settings/Directory.h>
 
 namespace SDK {
@@ -162,6 +163,25 @@ private:
 };
 
 //------------------------------------------------------------------------------
+class ExtensionsSettings : public QObject
+{
+	Q_OBJECT
+	Q_PROPERTY(int fiscalServerWaitingTimeout READ getServerWaitingTimeout)		
+
+public:
+	ExtensionsSettings(ICore * mCore);
+
+private:
+	int getServerWaitingTimeout() const
+	{
+		return mSettings->getSettings("FiscalClient").value("server_waiting_timeout").toInt();
+	}	
+
+private:
+	SDK::PaymentProcessor::ExtensionsSettings * mSettings;
+};
+
+//------------------------------------------------------------------------------
 class SCommission : public QObject
 {
 	Q_OBJECT
@@ -204,23 +224,27 @@ class Settings : public QObject
 
 	Q_PROPERTY(QObject * dealer READ getDealerSettings CONSTANT)
 	Q_PROPERTY(QObject * terminal READ getTerminalSettings CONSTANT)
+	Q_PROPERTY(QObject * extensions READ getTerminalExtensionsSettings CONSTANT)
 
 public:
 	Settings(ICore * aCore)
 		: mCore(aCore),
 		  mTerminalSettingsProxy(aCore),
-		  mDealerSettingsProxy(aCore)
+		  mDealerSettingsProxy(aCore),
+		mExtensionsSettingsProxy(aCore)
 	{
 	}
 
 private:
 	QObject * getDealerSettings() { return &mDealerSettingsProxy; }
 	QObject * getTerminalSettings() { return &mTerminalSettingsProxy; }
+	QObject * getTerminalExtensionsSettings() { return &mExtensionsSettingsProxy; }
 
 private:
 	ICore * mCore;
 	TerminalSettings mTerminalSettingsProxy;
 	DealerSettings mDealerSettingsProxy;
+	ExtensionsSettings mExtensionsSettingsProxy;
 };
 
 //------------------------------------------------------------------------------

@@ -6,7 +6,7 @@
 namespace CSSP
 {
 	/// Таймаут для ожидания ответа по умолчанию, [мс].
-	const int DefaultTimeout = 200;
+	const int DefaultTimeout = 300;
 
 	namespace Commands
 	{

@@ -63,8 +63,8 @@ TParameterList TCPParameters()
 	portNumberMask.insert(CHardwareSDK::Mask, "99999;_");
 
 	return TParameterList()
-		<< SPluginParameter(CHardwareSDK::Port::TCP::IP, SPluginParameter::Text, false, PortPT::TCP::Address, QString(), "192.168.137.015", addressMask)
-		<< SPluginParameter(CHardwareSDK::Port::TCP::Number, SPluginParameter::Text, false, PortPT::TCP::Number, QString(), "07778", portNumberMask)
+		<< SPluginParameter(CHardwareSDK::Port::TCP::IP, SPluginParameter::Text, false, PortPT::TCP::Address, QString(), "192.168.000.000", addressMask)
+		<< SPluginParameter(CHardwareSDK::Port::TCP::Number, SPluginParameter::Text, false, PortPT::TCP::Number, QString(), "00000", portNumberMask)
 		<< setModifiedKeys(CHardwareSDK::SystemName, CHardwareSDK::Port::TCP::IP);
 }
 
@@ -75,11 +75,11 @@ TParameterList COMParameters()
 	return TParameterList()
 		<< SPluginParameter(CHardwareSDK::SystemName, false, PortPT::Name, QString(), QVariant(), AsyncSerialPort::enumerateSystemNames())
 
-		<< SPluginParameter(CHardware::Port::COM::BaudRate, false, PortPT::COM::BaudRate, QString(), QVariant(), QStringList() << "4800" << "9600" << "14400" << "19200" << "38400" << "57600" << "115200")
-		<< SPluginParameter(CHardware::Port::COM::Parity,   false, PortPT::COM::Parity,   QString(), "0", QStringList() << "0" << "1" << "2")
-		<< SPluginParameter(CHardware::Port::COM::ByteSize, false, PortPT::COM::ByteSize, QString(), "8", QStringList() << "8" << "7")
-		<< SPluginParameter(CHardware::Port::COM::RTS,      false, PortPT::COM::RTS,      QString(), "1", QStringList() << "0" << "1" << "2" << "3")
-		<< SPluginParameter(CHardware::Port::COM::DTR,      false, PortPT::COM::DTR,      QString(), "0", QStringList() << "0" << "1" << "2");
+		<< SPluginParameter(CHardwareSDK::Port::COM::BaudRate, false, PortPT::COM::BaudRate, QString(), QVariant(), QStringList() << "4800" << "9600" << "14400" << "19200" << "38400" << "57600" << "115200")
+		<< SPluginParameter(CHardwareSDK::Port::COM::Parity,   false, PortPT::COM::Parity,   QString(), "0", QStringList() << "0" << "1" << "2")
+		<< SPluginParameter(CHardwareSDK::Port::COM::ByteSize, false, PortPT::COM::ByteSize, QString(), "8", QStringList() << "8" << "7")
+		<< SPluginParameter(CHardwareSDK::Port::COM::RTS,      false, PortPT::COM::RTS,      QString(), "1", QStringList() << "0" << "1" << "2" << "3")
+		<< SPluginParameter(CHardwareSDK::Port::COM::DTR,      false, PortPT::COM::DTR,      QString(), "0", QStringList() << "0" << "1" << "2");
 }
 
 //------------------------------------------------------------------------------

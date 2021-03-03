@@ -39,7 +39,7 @@ CitizenCTS2000<T>::CitizenCTS2000()
 	// параметры моделей
 	setConfigParameter(CHardware::Printer::FeedingAmount, 5);
 	mDeviceName = "Citizen CT-S2000";
-	mModelID = '\x51';
+	setModelID('\x51');
 
 	// модели
 	mModelData.data().clear();

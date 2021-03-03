@@ -11,7 +11,6 @@
 
 // Modules
 #include "Hardware/Plugins/DevicePluginBase.h"
-#include "Hardware/Protocols/Common/ProtocolNames.h"
 
 // Project
 #include "Hardware/Common/HardwareConstants.h"
@@ -127,7 +126,7 @@ inline TParameterList createSimpleNamedList(const QStringList & aModels, const Q
 
 	return TParameterList()
 		<< SPluginParameter(CHardwareSDK::ModelName, false, CPPT::ModelName, QString(), aDefault, aModels, true)
-		<< SPluginParameter(CHardwareSDK::InteractionType, true, CPPT::InteractionType, QString(), interactionType, QStringList() << interactionType)
+		<< SPluginParameter(CHardwareSDK::InteractionType, true, CPPT::InteractionType, QString(), interactionType, QStringList() << interactionType, false, SDK::Plugin::EImportanceLevel::High)
 		<< setModifiedValues("", modifiedValues)
 		<< setNormalPriority();
 }
@@ -153,6 +152,28 @@ struct SNamedList<T1, DSDKIT::ItCOM>
 		return createSimpleNamedList<T1>(aModels, aDefault)
 			<< SPluginParameter(CHardwareSDK::RequiredResource, SPluginParameter::Text, false, CPPT::RequiredResource, QString(), "Common.Driver.IOPort.System.COM", QVariantMap(), true)
 			<< SPluginParameter(CHardwareSDK::OptionalPortSettings, false, QString(), QString(), optionalPortSettings[0], optionalPortSettings, true);
+	}
+};
+
+//------------------------------------------------------------------------------
+template <class T1>
+struct SNamedList<T1, DSDKIT::ItExternalCOM>
+{
+	TParameterList create(const QStringList & aModels, const QString & aDefault)
+	{
+		return createSimpleNamedList<T1>(aModels, aDefault)
+			<< SPluginParameter(CHardwareSDK::RequiredResource, SPluginParameter::Text, false, CPPT::RequiredResource, QString(), "Common.Driver.IOPort.System.COM", QVariantMap(), true);
+	}
+};
+
+//------------------------------------------------------------------------------
+template <class T1>
+struct SNamedList<T1, DSDKIT::ItExternalVCOM>
+{
+	TParameterList create(const QStringList & aModels, const QString & aDefault)
+	{
+		return createSimpleNamedList<T1>(aModels, aDefault)
+			<< SPluginParameter(CHardwareSDK::RequiredResource, SPluginParameter::Text, false, CPPT::RequiredResource, QString(), "Common.Driver.IOPort.System.COM", QVariantMap(), true);
 	}
 };
 
@@ -235,6 +256,28 @@ inline SPluginParameter setNormalPriority()
 	possibleValues.insert(CHardwareSDK::DetectingPriority, SDK::Driver::EDetectingPriority::Normal);
 
 	return SPluginParameter(CHardwareSDK::DetectingPriority, SPluginParameter::Text, false, QString(), QString(), SDK::Driver::EDetectingPriority::Normal, possibleValues, true);
+}
+
+//------------------------------------------------------------------------------
+/// Исключенные параметры.
+inline SPluginParameter setExcludedParameters(const QStringList & aParameters)
+{
+	return SPluginParameter(CHardwareSDK::ExcludedParameters, false, QString(), QString(), aParameters, aParameters, true);
+}
+
+//------------------------------------------------------------------------------
+/// Исключенные параметры для устройства на COM-порту.
+inline SPluginParameter setSerialPortExcludedParameters()
+{
+	QStringList serialPortParameters = QStringList()
+		<< COMPortSDK::BaudRate
+		<< COMPortSDK::Parity
+		<< COMPortSDK::RTS
+		<< COMPortSDK::DTR
+		<< COMPortSDK::ByteSize
+		<< COMPortSDK::StopBits;
+
+	return setExcludedParameters(serialPortParameters);
 }
 
 //------------------------------------------------------------------------------

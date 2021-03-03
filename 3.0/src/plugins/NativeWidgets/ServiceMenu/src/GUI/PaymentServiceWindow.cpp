@@ -546,7 +546,7 @@ void PaymentTableModel::printReceipt(const QModelIndex & index)
 	
 		if (payment.canPrint())
 		{
-			if (mPaymentManager->printReceipt(payment.getId(), false))
+			if (mPaymentManager->printReceipt(payment.getId(), DSDK::EPrintingModes::None))
 			{
 				mPrintingQueue.insert(payment.getId());
 			}
@@ -571,7 +571,7 @@ void PaymentTableModel::printAllReceipts()
 	{
 		if (paymentInfo.canPrint() && !paymentInfo.getPrinted())
 		{
-			if (mPaymentManager->printReceipt(paymentInfo.getId(), true))
+			if (mPaymentManager->printReceipt(paymentInfo.getId(), DSDK::EPrintingModes::Continuous))
 			{
 				mPrintingQueue.insert(paymentInfo.getId());
 			}
@@ -608,7 +608,7 @@ void PaymentTableModel::printFilteredReceipts(const QSet<qint64> & aPaymentsID)
 	{
 		if (paymentInfo.canPrint() && !paymentInfo.getPrinted() && aPaymentsID.contains(paymentInfo.getId()))
 		{
-			if (mPaymentManager->printReceipt(paymentInfo.getId(), true))
+			if (mPaymentManager->printReceipt(paymentInfo.getId(), DSDK::EPrintingModes::Continuous))
 			{
 				mPrintingQueue.insert(paymentInfo.getId());
 			}

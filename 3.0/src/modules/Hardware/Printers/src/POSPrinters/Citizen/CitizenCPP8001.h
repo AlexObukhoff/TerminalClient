@@ -45,7 +45,7 @@ CitizenCPP8001::CitizenCPP8001()
 
 	// параметры моделей
 	mDeviceName = "Citizen CPP-8001";
-	mModelID = '\x20';
+	setModelID('\x20');
 
 	// модели
 	mModelData.data().clear();

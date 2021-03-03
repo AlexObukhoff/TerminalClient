@@ -11,6 +11,7 @@ Project {
 		Depends { name: "HardwarePrinters" }
 		Depends { name: "HardwareFR" }
 		Depends { name: "OPOSSDK" }
+		Depends { name: "ATOL5" }
 		Depends { name: "SysUtils" }
 
 		files: [
@@ -23,7 +24,7 @@ Project {
 			"../../../includes/Hardware/FR/FRStatusesDescriptions.h"
 		]
 	}
-	
+
 	Product {
 		Depends { name: "MultiLocale" }
 		name: "fr_ru"

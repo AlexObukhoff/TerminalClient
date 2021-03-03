@@ -30,7 +30,6 @@ OPOSMStarTUPK::OPOSMStarTUPK() : mNativeDriver(nullptr)
 {
 	// данные устройства
 	mDeviceName = COPOSMStarTUPK::ModelName;
-	mLineFeed = false;
 	mNextReceiptProcessing = false;
 	mMemoryError = false;
 	mFWVersion = 0;
@@ -309,7 +308,7 @@ bool OPOSMStarTUPK::processReceipt(const QStringList & aReceipt, bool aProcessin
 	}
 
 	bool serviceOperation = getConfigParameter(CHardwareSDK::Printer::ServiceOperation).toBool();
-	bool needCutting = aProcessing && (!mNextDocument || serviceOperation);
+	bool needCutting = aProcessing && ((mPrintingMode == EPrintingModes::None) || serviceOperation);
 	setEnable(COPOSMStarTUPK::Parameters::AutoCutter, needCutting);
 
 	if (!OPOS_SUCCESS(INT_CALL_OPOS(BeginNonFiscal)))

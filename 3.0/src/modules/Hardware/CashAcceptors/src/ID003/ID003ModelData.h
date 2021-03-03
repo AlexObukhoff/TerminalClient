@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Hardware/CashAcceptors/ModelData.h"
+#include "Hardware/Common/ModelData.h"
 
 //--------------------------------------------------------------------------------
 namespace CID003

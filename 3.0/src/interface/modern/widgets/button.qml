@@ -19,6 +19,9 @@ BorderImage {
 	// Цвет текста на кнопке
 	property alias color: buttonText.color
 
+	// Шритфт на кнопке
+	property alias font: buttonText.font
+
 	// id иконки
 	property int icon: -1
 
@@ -31,6 +34,9 @@ BorderImage {
 
 	// Полезный размер ячейки
 	property int cellClip: 50
+
+	// Включить межстрочное расстоние по умолчанию
+	property bool defaultLineHeight: false
 
 	signal clicked
 
@@ -83,9 +89,14 @@ BorderImage {
 			color: Utils.ui.color("color.button")
 			font: Utils.ui.font("font.button")
 			wrapMode: Text.WordWrap
-			text: rootItem.text
-			lineHeightMode: Text.FixedHeight
-			lineHeight: 46
+			text: rootItem.text			
+
+			Component.onCompleted: {
+				if (!rootItem.defaultLineHeight) {
+					lineHeightMode = Text.FixedHeight
+					lineHeight = 46
+				}
+			}
 		}
 
 		Spacer { width: rootItem.icon !== -1 && rootItem.text ? 23 : 0 }

@@ -56,6 +56,9 @@ public:
 	/// Получить состояние документа.
 	virtual SDK::Driver::EDocumentState::Enum checkDocumentState();
 
+	/// Печать X-отчета. Параметром задаётся набор дополнительных строк для печати (например баланс).
+	virtual bool performXReport(const QStringList & aReceipt);
+
 	/// Находится ли в фискальном режиме.
 	virtual bool isFiscal() const;
 
@@ -145,7 +148,10 @@ protected:
 	void addFiscalFieldsOnPayment(const SDK::Driver::SPaymentData & aPaymentData);
 
 	/// Проверить наличие и необходимость фискальных тегов на платеже.
-	void checkFFExistingOnPayment(int aField, bool aAdd, bool aRequired = true);
+	void checkFFExistingOnPayment(int aField, bool aAdd, bool aRequired = true, bool aWholeFD = true);
+
+	/// Проверить наличие и необходимость фискальных тегов на продаже.
+	void checkFFExistingOnSale(int aField, const QVariant & aData);
 
 	/// Добавить данные в фискальный тег из конфига или параметра.
 	typedef std::function<void(QString &)> TFFConfigData;
@@ -184,14 +190,17 @@ protected:
 	/// Получить фискальные теги по номеру документа.
 	virtual bool getFiscalFields(quint32 /*aFDNumber*/, SDK::Driver::TFiscalPaymentData & /*aFPData*/, SDK::Driver::TComplexFiscalPaymentData & /*aPSData*/) { return false; }
 
-	/// Установить реквизиты ОФД.
-	bool setOFDParameters();
+	/// Установить фискальные теги на платеже.
+	bool setFiscalFieldsOnPayment();
 
 	/// Установить реквизиты ОФД на продаже.
-	bool setOFDParametersOnSale(const SDK::Driver::SUnitData & aUnitData);
+	bool setFiscalFieldsOnSale(const SDK::Driver::SUnitData & aUnitData);
+
+	/// Установить фискальный тег на платеже.
+	bool setFiscalFieldOnPayment(int aField, bool aOnSale);
 
 	/// Установить TLV-параметр.
-	virtual bool setTLV(int /*aField*/, bool /*aForSale*/ = false) { return true; }
+	virtual bool setTLV(int /*aField*/, bool /*aOnSale*/ = false) { return true; }
 
 	/// Проверить Z-отчет по таймеру.
 	void checkZReportByTimer();
@@ -205,14 +214,11 @@ protected:
 	/// Печать Z-отчета.
 	virtual bool performZReport(bool aPrintDeferredReports) = 0;
 
-	/// Печать X-отчета. Параметром задаётся набор дополнительных строк для печати (например баланс).
-	virtual bool performXReport(const QStringList & aReceipt);
-
 	/// Печать выплаты.
 	virtual bool performEncashment(const QStringList & aReceipt, double aAmount);
 
-	/// Составной фискальный документ.
-	bool complexFiscalDocument(TBoolMethod aMethod, const QString & aLog);
+	/// Сформировать составной фискальный документ.
+	virtual bool complexFiscalDocument(TBoolMethod aMethod, const QString & aLog);
 
 	/// Печать выплаты.
 	virtual bool processPayout(double /*aAmount*/) { return false; }
@@ -289,7 +295,7 @@ protected:
 	/// Глобальная ошибка принтерной части части ФР, печать невозможна.
 	bool mPrinterCollapse;
 
-	/// Признак фискализированности ККМ.
+	/// Признак фискализированности ФН.
 	bool mFiscalized;
 
 	/// Ошибка буфера Z-отчетов.
@@ -317,10 +323,11 @@ protected:
 	ERegion::Enum mRegion;
 
 	/// Фискальные теги для установки в момент печати фискального чека.
-	QSet<int> mOFDFiscalFields;
+	typedef QSet<int> TFiscalFields;
+	TFiscalFields mOFDFiscalFields;
 
 	/// Фискальные теги для установки в момент печати фискального чека на продаже.
-	QSet<int> mOFDFiscalFieldsOnSale;
+	TFiscalFields mOFDFiscalFieldsOnSale;
 
 	/// Количество неотправленных документов в ОФД.
 	int mOFDNotSentCount;
@@ -376,9 +383,6 @@ protected:
 	/// Ошибка установки непечати.
 	bool mNotPrintingError;
 
-	/// Ошибка ИНН кассира.
-	bool mCashierINNError;
-
 	/// Ошибка налоговых ставок.
 	bool mTaxError;
 
@@ -387,6 +391,9 @@ protected:
 
 	/// Неверная налоговая ставка на платеже.
 	bool mWrongTaxOnPayment;
+
+	/// Список поддерживаемых плагином моделей.
+	QStringList mSupportedModels;
 };
 
 //--------------------------------------------------------------------------------

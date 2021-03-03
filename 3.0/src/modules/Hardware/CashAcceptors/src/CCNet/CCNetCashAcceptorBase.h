@@ -34,6 +34,9 @@ protected:
 	/// Установка параметров по умолчанию.
 	virtual bool setDefaultParameters();
 
+	/// Получить статус.
+	virtual bool getStatus(TStatusCodes & aStatusCodes);
+
 	/// Анализирует коды статусов кастомных устройств и фильтрует несуществующие статусы для нижней логики.
 	virtual void cleanSpecificStatusCodes(TStatusCodes & aStatusCodes);
 
@@ -109,6 +112,9 @@ protected:
 
 	/// Нужно менять скорость при перепрошивке?
 	bool mNeedChangeBaudrate;
+
+	/// Дата и время начала режекта.
+	QDateTime mRejectStartDT;
 };
 
 //--------------------------------------------------------------------------------

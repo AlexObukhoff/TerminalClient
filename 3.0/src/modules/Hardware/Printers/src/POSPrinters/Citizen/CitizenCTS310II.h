@@ -35,7 +35,7 @@ CitizenCTS310II::CitizenCTS310II()
 	// параметры моделей
 	setConfigParameter(CHardware::Printer::FeedingAmount, 3);
 	mDeviceName = "Citizen CT-S310II";
-	mModelID = '\x3D';
+	setModelID('\x3D');
 
 	// модели
 	mModelData.data().clear();

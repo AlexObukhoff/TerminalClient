@@ -394,6 +394,35 @@ bool CCNetCashAcceptorBase::setDefaultParameters()
 }
 
 //---------------------------------------------------------------------------
+bool CCNetCashAcceptorBase::getStatus(TStatusCodes & aStatusCodes)
+{
+	if (!TSerialCashAcceptor::getStatus(aStatusCodes))
+	{
+		return false;
+	}
+
+	int rejectingTimeout = getConfigParameter(CHardware::CashAcceptor::RejectingTimeout).toInt() * 1000 * 60;
+	bool isRejecting = std::find_if(aStatusCodes.begin(), aStatusCodes.end(), [&] (int statusCode) -> bool
+		{ return mStatusCodesSpecification->value(statusCode).status == ECashAcceptorStatus::Rejected; }) != aStatusCodes.end();
+
+	if (!isRejecting)
+	{
+		mRejectStartDT = QDateTime();
+	}
+	else if (!mRejectStartDT.isValid())
+	{
+		mRejectStartDT = QDateTime::currentDateTime();
+	}
+
+	if (rejectingTimeout && mRejectStartDT.isValid() && (mRejectStartDT.msecsTo(QDateTime::currentDateTime()) > rejectingTimeout))
+	{
+		aStatusCodes.insert(BillAcceptorStatusCode::MechanicFailure::JammedViaRejecting);
+	}
+
+	return true;
+}
+
+//---------------------------------------------------------------------------
 bool CCNetCashAcceptorBase::stack()
 {
 	if (!checkConnectionAbility() || (mInitialized != ERequestStatus::Success) || mCheckDisable)

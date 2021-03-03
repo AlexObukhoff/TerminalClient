@@ -20,10 +20,7 @@ protected:
 	virtual bool isConnected();
 
 	/// Получить Id модели.
-	virtual bool getModelId(QByteArray & aAnswer) const;
-
-	/// Распарсить Id модели.
-	virtual char parseModelId(QByteArray & aAnswer);
+	virtual bool getModelId(QByteArray & aAnswer);
 
 	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
@@ -52,14 +49,17 @@ protected:
 	/// Выполнение предварительных операций перед печатью штрих-кода.
 	QByteArray prepareBarcodePrinting();
 
-	/// В плагине только дефолтные модели.
+	/// В плагине только дефолтные модели?
 	bool isOnlyDefaultModels();
+
+	/// Установить ID модели.
+	void setModelID(char aModelId);
 
 	/// Данные моделей.
 	POSPrinters::ModelData mModelData;
 
 	/// ID модели.
-	char mModelID;
+	QByteArray mModelID;
 
 	/// Флаг переполнения буфера.
 	bool mOverflow;

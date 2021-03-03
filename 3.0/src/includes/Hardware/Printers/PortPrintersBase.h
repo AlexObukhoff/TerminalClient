@@ -1,4 +1,4 @@
-/* @file Базовые принтеры с портовыми реализациями протоколов. */
+/* @file Р‘Р°Р·РѕРІС‹Рµ РїСЂРёРЅС‚РµСЂС‹ СЃ РїРѕСЂС‚РѕРІС‹РјРё СЂРµР°Р»РёР·Р°С†РёСЏРјРё РїСЂРѕС‚РѕРєРѕР»РѕРІ. */
 
 #pragma once
 
@@ -9,20 +9,21 @@ template <class T>
 class SerialPrinterBase : public PortPrinterBase<T>
 {
 public:
-	/// Получение списка настроек порта, необязательных для редактирования пользователем.
+	/// РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РЅР°СЃС‚СЂРѕРµРє РїРѕСЂС‚Р°, РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј.
 	static QStringList getOptionalPortSettings()
 	{
 		return QStringList()
-			<< CHardware::Port::COM::Parity
-			<< CHardware::Port::COM::ByteSize
-			<< CHardware::Port::COM::StopBits
-			<< CHardware::Port::COM::RTS
-			<< CHardware::Port::COM::DTR;
+			<< COMPortSDK::Parity
+			<< COMPortSDK::ByteSize
+			<< COMPortSDK::StopBits
+			<< COMPortSDK::RTS
+			<< COMPortSDK::DTR;
 	}
 };
 
 //--------------------------------------------------------------------------------
 typedef SerialPrinterBase<PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>> TSerialPrinterBase;
 typedef   PortPrinterBase<PrinterBase<LibUSBDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>> TLibUSBPrinterBase;
+typedef   PortPrinterBase<PrinterBase<TCPDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>> TTCPPrinterBase;
 
 //--------------------------------------------------------------------------------

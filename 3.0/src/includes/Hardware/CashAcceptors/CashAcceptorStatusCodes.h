@@ -70,25 +70,26 @@ namespace BillAcceptorStatusCode
 	{
 		const int JammedInValidator  = 681;    /// Зажевало купюру в валидаторе.
 		const int JammedInStacker    = 682;    /// Зажевало купюру в стекере.
-		const int StickInExitChannel = 683;    /// Купюра застряла в выходном канале.
-		const int JammedCoin         = 684;    /// Застряла монета.
-		const int StackerFull        = 685;    /// Стекер полон.
-		const int StackerOpen        = 686;    /// Стекер открыт или вытащен.
-		const int HeadRemoved        = 687;    /// Убрана голова валидатора.
-		const int StackerMotor       = 688;    /// Неисправен мотор стекера.
-		const int TransportMotor     = 689;    /// Неисправен мотор конвейера.
-		const int AligningMotor      = 690;    /// Неисправен мотор механизма выравнивания.
-		const int SeparatingMotor    = 691;    /// Неисправен мотор сепаратора (для купюроприемников с несколькими стекерами).
-		const int Stacker            = 692;    /// Кассета неисправна.
-		const int Stacker1           = 693;    /// Кассета1 неисправна.
-		const int Stacker2           = 694;    /// Кассета2 неисправна.
-		const int Stacker3           = 695;    /// Кассета3 неисправна.
-		const int Stacker4           = 696;    /// Кассета4 неисправна.
-		const int ReturnMechanism    = 697;    /// Возвратный механизм поврежден.
-		const int COSMechanism       = 698;    /// Поврежден механизм защиты от ленточного мошенничества.
-		const int DCEChute           = 699;    /// Поврежден желоб одновременной подачи 2-х монет.
-		const int NoStackers         = 700;    /// Все кассеты либо сняты, либо запрещены к приему денег.
-		const int CoinGateStuck      = 701;    /// Заклинило задвижку приема монет.
+		const int JammedViaRejecting = 683;    /// Замятие при выбросе купюры.
+		const int StickInExitChannel = 684;    /// Купюра застряла в выходном канале.
+		const int JammedCoin         = 685;    /// Застряла монета.
+		const int StackerFull        = 686;    /// Стекер полон.
+		const int StackerOpen        = 687;    /// Стекер открыт или вытащен.
+		const int HeadRemoved        = 688;    /// Убрана голова валидатора.
+		const int StackerMotor       = 689;    /// Неисправен мотор стекера.
+		const int TransportMotor     = 690;    /// Неисправен мотор конвейера.
+		const int AligningMotor      = 691;    /// Неисправен мотор механизма выравнивания.
+		const int SeparatingMotor    = 692;    /// Неисправен мотор сепаратора (для купюроприемников с несколькими стекерами).
+		const int Stacker            = 693;    /// Кассета неисправна.
+		const int Stacker1           = 694;    /// Кассета1 неисправна.
+		const int Stacker2           = 695;    /// Кассета2 неисправна.
+		const int Stacker3           = 696;    /// Кассета3 неисправна.
+		const int Stacker4           = 697;    /// Кассета4 неисправна.
+		const int ReturnMechanism    = 698;    /// Возвратный механизм поврежден.
+		const int COSMechanism       = 699;    /// Поврежден механизм защиты от ленточного мошенничества.
+		const int DCEChute           = 700;    /// Поврежден желоб одновременной подачи 2-х монет.
+		const int NoStackers         = 701;    /// Все кассеты либо сняты, либо запрещены к приему денег.
+		const int CoinGateStuck      = 702;    /// Заклинило задвижку приема монет.
 	}
 
 	/// Неисправность датчиков. Ошибка, не ведет к потере денег.

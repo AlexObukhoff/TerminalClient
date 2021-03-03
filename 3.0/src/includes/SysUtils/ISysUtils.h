@@ -13,14 +13,22 @@
 #include <QtGui/QWidget>
 #include <Common/QtHeadersEnd.h>
 
+// Common
+#include <Common/ILog.h>
+
 // Modules
 #include <Common/Exception.h>
 
+//--------------------------------------------------------------------------------
 class Ilog;
 
 typedef QSet<int> TStatusCodes;
 typedef QSet<QString> TStatusNames;
 typedef QMap<QString, TStatusNames> TStatusGroupNames;
+
+typedef QList<ulong> TJobStatus;
+
+struct SPrinterData;
 
 //--------------------------------------------------------------------------------
 class ISysUtils
@@ -50,17 +58,26 @@ public:
 	/// Suspends the execution of the current thread until the time-out interval elapses.
 	static void sleep(int aMs);
 
-	/// Получение параметров системного принтера
-	static QVariantMap getPrinterData(const QString & aPrinterName);
+	/// Получение инфо о принтере
+	static bool getPrinterInfo(ILog * aLog, const QString & aPrinterName, SPrinterData & aPrinterData);
 
-	/// Проверка принтера на ошибочное состояние
-	static void getPrinterStatus(const QString & aPrinterName, TStatusCodes & aStatusCodes, TStatusGroupNames & aGroupNames);
+	/// Получение данных параметров системного принтера
+	static bool getPrinterStatusData(ILog * aLog, const QString & aPrinterName, TJobStatus & aJobStatus, ulong & aStatus, ulong & aAttributes);
+
+	/// Получение параметров системного принтера
+	static QVariantMap getPrinterData(ILog * aLog, const QString & aPrinterName);
 
 	/// Установить режим печати через очередь
-	static bool setPrintingQueuedMode(const QString & aPrinterName, QString & aErrorMessage);
+	static bool setPrintingQueuedMode(ILog * aLog, const QString & aPrinterName);
 
 	/// Получить количество всех системных дескрипторов
 	static bool getAllProcessHandleCount(quint64 & aCountOfHandles);
+
+	/// Напечатать лог последней ошибки
+	static void makeLog(ILog * aLog, const QString & aFunctionName);
+
+	/// Сформировать ошибку для утилитарной логики. Возвращает всегда false
+	static bool makeError(ILog * aLog, const QString & aFunctionName, void * aPrinter = 0);
 
 	struct MemoryInfo
 	{

@@ -9,12 +9,12 @@
         <translation type="unfinished">Топты таңдаңыз</translation>
     </message>
     <message>
-        <location filename="../platru_select_provider_scene.qml" line="225"/>
+        <location filename="../platru_select_provider_scene.qml" line="227"/>
         <source>main_menu_scene#invalid_provider</source>
         <translation type="unfinished">Кешіріңіз, бұл оператор пайдасына төлеу уақытша мүмкін емес. Кейінірек қайталаңыз.</translation>
     </message>
     <message>
-        <location filename="../platru_select_provider_scene.qml" line="238"/>
+        <location filename="../platru_select_provider_scene.qml" line="240"/>
         <source>platru_select_provider_scene#entry_title</source>
         <translation type="unfinished">Жазбаның атауы</translation>
     </message>

@@ -42,7 +42,6 @@ function countdown(aText, aTimeout) {
 
 //------------------------------------------------------------------------------
 function notification(aText, aTimeout, aResult, aHandler) {
-	log(typeof aHandler)
 	popup("InfoPopup", {reset: true,
 					message: aText, timeout: __isValid(aTimeout) ? aTimeout : 10000,
 					cancelable: true, result: __isValid(aResult) ? aResult : "", handler: aHandler});
@@ -108,4 +107,14 @@ function toBool(aParam) {
 //------------------------------------------------------------------------------
 function ui(aParam) {
 	return Core.graphics.ui[aParam]
+}
+
+//------------------------------------------------------------------------------
+function props(aName, aValue) {
+	if (aValue != undefined) {
+		Core.userProperties.set(aName, aValue);
+	}
+	else {
+		return Core.userProperties.get(aName)
+	}
 }

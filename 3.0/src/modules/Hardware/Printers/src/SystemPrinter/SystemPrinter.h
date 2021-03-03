@@ -44,11 +44,16 @@ namespace CSystemPrinter
 	};
 }
 
+typedef PrinterBase<PollingDeviceBase<ProtoPrinter>> TSystemPrinter;
+
 //--------------------------------------------------------------------------------
-class SystemPrinter : public PrinterBase<PollingDeviceBase<ProtoPrinter>>
+class SystemPrinter : public TSystemPrinter
 {
 public:
 	SystemPrinter();
+
+	/// Подключает и инициализует устройство. Обертка для вызова функционала в рабочем потоке.
+	virtual void initialize();
 
 protected:
 	/// Попытка самоидентификации.
@@ -59,6 +64,9 @@ protected:
 
 	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
+
+	/// Проверка принтера на ошибочное состояние
+	void getPrinterStatus(const QString & aPrinterName, TStatusCodes & aStatusCodes, TStatusGroupNames & aGroupNames) const;
 
 	/// Напечатать чек.
 	virtual bool printReceipt(const Tags::TLexemeReceipt & aLexemeReceipt);
@@ -71,6 +79,12 @@ protected:
 
 	/// Боковой отступ.
 	TStatusGroupNames mLastStatusesNames;
+
+	/// Отключенные/некорректно работающие системные атрибуты драйвера принтера.
+	QSet<ulong> mAttributesDisabled;
+
+	/// Идентификационное имя для автопоиска. Получается из .
+	QString mIdName;
 };
 
 //--------------------------------------------------------------------------------

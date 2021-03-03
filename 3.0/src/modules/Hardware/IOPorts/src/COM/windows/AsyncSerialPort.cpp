@@ -41,8 +41,8 @@ AsyncSerialPort::AsyncSerialPort() :
 
 	mType = EPortTypes::COM;
 	mSystemNames = enumerateSystemNames();
-	mUuids = CAsyncSerialPort::System::Uuids();
-	mPathProperty = CAsyncSerialPort::System::PathProperty;
+	mUuids = CSerialDeviceUtils::Uuids();
+	mPathProperty = CSerialDeviceUtils::PathProperty;
 	setOpeningTimeout(CAsyncSerialPort::OpeningTimeout);
 }
 
@@ -50,7 +50,7 @@ AsyncSerialPort::AsyncSerialPort() :
 void AsyncSerialPort::initialize()
 {
 	TIOPortDeviceData deviceData;
-	getDeviceProperties(mUuids, mPathProperty, false, &deviceData);
+	SerialDeviceUtils::getDeviceProperties(mUuids, mPathProperty, false, &deviceData);
 
 	QStringList minePortData;
 	QStringList otherPortData;
@@ -63,9 +63,9 @@ void AsyncSerialPort::initialize()
 
 		if (mine)
 		{
-			bool сannotWaitResult = std::find_if(CAsyncSerialPort::CannotWaitResult.begin(), CAsyncSerialPort::CannotWaitResult.end(), [&] (const QString & aLexeme) -> bool
+			bool cannotWaitResult = std::find_if(CAsyncSerialPort::CannotWaitResult.begin(), CAsyncSerialPort::CannotWaitResult.end(), [&] (const QString & aLexeme) -> bool
 				{ return it->contains(aLexeme, Qt::CaseInsensitive); }) != CAsyncSerialPort::CannotWaitResult.end();
-			setConfigParameter(CHardware::Port::COM::ControlRemoving, сannotWaitResult);
+			setConfigParameter(CHardware::Port::COM::ControlRemoving, cannotWaitResult);
 		}
 	}
 
@@ -88,9 +88,9 @@ void AsyncSerialPort::setDeviceConfiguration(const QVariantMap & aConfiguration)
 {
 	IOPortBase::setDeviceConfiguration(aConfiguration);
 	bool unknownSystemName = !mSystemName.isEmpty() && !mSystemNames.contains(mSystemName);
-	EPortTypes::Enum portType = getSystemData()[mSystemName];
+	EPortTypes::Enum portType = SerialDeviceUtils::getSystemData()[mSystemName];
 
-	bool сannotWaitResult = getConfigParameter(CHardware::Port::COM::ControlRemoving).toBool();
+	bool cannotWaitResult = getConfigParameter(CHardware::Port::COM::ControlRemoving).toBool();
 
 	//TODO: при увеличении номенклатуры виртуальных/эмуляторных портов продумать логику загрузки девайса с отсутствующим портом
 	if ((mType == EPortTypes::COM) && (unknownSystemName || (portType == EPortTypes::VirtualCOM)))
@@ -110,7 +110,7 @@ void AsyncSerialPort::setDeviceConfiguration(const QVariantMap & aConfiguration)
 
 	if (mType == EPortTypes::VirtualCOM)
 	{
-		mWaitResult = !сannotWaitResult && aConfiguration.value(CHardware::Port::COM::WaitResult, mWaitResult).toBool();
+		mWaitResult = !cannotWaitResult && aConfiguration.value(CHardware::Port::COM::WaitResult, mWaitResult).toBool();
 	}
 
 	if (aConfiguration.contains(CHardware::Port::MaxReadingSize))
@@ -122,34 +122,34 @@ void AsyncSerialPort::setDeviceConfiguration(const QVariantMap & aConfiguration)
 	{
 		TPortParameters portParameters;
 
-		if (containsConfigParameter(CHardware::Port::COM::BaudRate))
+		if (containsConfigParameter(COMPortSDK::BaudRate))
 		{
-			portParameters.insert(EParameters::BaudRate, getConfigParameter(CHardware::Port::COM::BaudRate).toInt());
+			portParameters.insert(EParameters::BaudRate, getConfigParameter(COMPortSDK::BaudRate).toInt());
 		}
 
-		if (containsConfigParameter(CHardware::Port::COM::Parity))
+		if (containsConfigParameter(COMPortSDK::Parity))
 		{
-			portParameters.insert(EParameters::Parity, getConfigParameter(CHardware::Port::COM::Parity).toInt());
+			portParameters.insert(EParameters::Parity, getConfigParameter(COMPortSDK::Parity).toInt());
 		}
 
-		if (containsConfigParameter(CHardware::Port::COM::RTS))
+		if (containsConfigParameter(COMPortSDK::RTS))
 		{
-			portParameters.insert(EParameters::RTS, getConfigParameter(CHardware::Port::COM::RTS).toInt());
+			portParameters.insert(EParameters::RTS, getConfigParameter(COMPortSDK::RTS).toInt());
 		}
 
-		if (containsConfigParameter(CHardware::Port::COM::DTR))
+		if (containsConfigParameter(COMPortSDK::DTR))
 		{
-			portParameters.insert(EParameters::DTR, getConfigParameter(CHardware::Port::COM::DTR).toInt());
+			portParameters.insert(EParameters::DTR, getConfigParameter(COMPortSDK::DTR).toInt());
 		}
 
-		if (containsConfigParameter(CHardware::Port::COM::ByteSize))
+		if (containsConfigParameter(COMPortSDK::ByteSize))
 		{
-			portParameters.insert(EParameters::ByteSize, getConfigParameter(CHardware::Port::COM::ByteSize).toInt());
+			portParameters.insert(EParameters::ByteSize, getConfigParameter(COMPortSDK::ByteSize).toInt());
 		}
 
-		if (containsConfigParameter(CHardware::Port::COM::StopBits))
+		if (containsConfigParameter(COMPortSDK::StopBits))
 		{
-			portParameters.insert(EParameters::StopBits, getConfigParameter(CHardware::Port::COM::StopBits).toInt());
+			portParameters.insert(EParameters::StopBits, getConfigParameter(COMPortSDK::StopBits).toInt());
 		}
 
 		setParameters(portParameters);
@@ -204,7 +204,7 @@ void AsyncSerialPort::handleError(const QString & aFunctionName)
 
 	if (CAsyncSerialPort::DisappearingErrors.contains(mLastError))
 	{
-		mSystemNames = getSystemData(true).keys();
+		mSystemNames = SerialDeviceUtils::getSystemData(true).keys();
 	}
 
 	if (!mSystemNames.contains(mSystemName))
@@ -398,7 +398,7 @@ bool AsyncSerialPort::checkExistence()
 
 	if (!mExist && (mType != EPortTypes::COM))
 	{
-		mSystemNames = getSystemData(true).keys();
+		mSystemNames = SerialDeviceUtils::getSystemData(true).keys();
 		mExist = mSystemNames.contains(mSystemName);
 	}
 
@@ -610,6 +610,10 @@ bool AsyncSerialPort::write(const QByteArray & aData)
 					{
 						log += QString(", bytes written = %1, size of data = %2").arg(bytesWritten).arg(dataCount);
 					}
+					else
+					{
+						log += ", no bytes written";
+					}
 
 					toLog(LogLevel::Error, log);
 				}
@@ -659,12 +663,12 @@ bool AsyncSerialPort::setParameters(const TPortParameters & aParameters)
 
 	setConfigParameter(CHardwareSDK::SystemName, mSystemName);
 
-	setConfigParameter(CHardware::Port::COM::BaudRate, int(mDCB.BaudRate));
-	setConfigParameter(CHardware::Port::COM::Parity,   int(mDCB.Parity));
-	setConfigParameter(CHardware::Port::COM::RTS,      int(mDCB.fRtsControl));
-	setConfigParameter(CHardware::Port::COM::DTR,      int(mDCB.fDtrControl));
-	setConfigParameter(CHardware::Port::COM::ByteSize, int(mDCB.ByteSize));
-	setConfigParameter(CHardware::Port::COM::StopBits, int(mDCB.StopBits));
+	setConfigParameter(COMPortSDK::BaudRate, int(mDCB.BaudRate));
+	setConfigParameter(COMPortSDK::Parity,   int(mDCB.Parity));
+	setConfigParameter(COMPortSDK::RTS,      int(mDCB.fRtsControl));
+	setConfigParameter(COMPortSDK::DTR,      int(mDCB.fDtrControl));
+	setConfigParameter(COMPortSDK::ByteSize, int(mDCB.ByteSize));
+	setConfigParameter(COMPortSDK::StopBits, int(mDCB.StopBits));
 
 	if ((newDCB == mDCB) && (mType == EPortTypes::COM))
 	{
@@ -677,12 +681,12 @@ bool AsyncSerialPort::setParameters(const TPortParameters & aParameters)
 //--------------------------------------------------------------------------------
 void AsyncSerialPort::getParameters(TPortParameters & aParameters)
 {
-	aParameters[EParameters::BaudRate] = getConfigParameter(CHardware::Port::COM::BaudRate).toInt();
-	aParameters[EParameters::Parity]   = getConfigParameter(CHardware::Port::COM::Parity).toInt();
-	aParameters[EParameters::RTS]      = getConfigParameter(CHardware::Port::COM::RTS).toInt();
-	aParameters[EParameters::DTR]      = getConfigParameter(CHardware::Port::COM::DTR).toInt();
-	aParameters[EParameters::ByteSize] = getConfigParameter(CHardware::Port::COM::ByteSize).toInt();
-	aParameters[EParameters::StopBits] = getConfigParameter(CHardware::Port::COM::StopBits).toInt();
+	aParameters[EParameters::BaudRate] = getConfigParameter(COMPortSDK::BaudRate).toInt();
+	aParameters[EParameters::Parity]   = getConfigParameter(COMPortSDK::Parity).toInt();
+	aParameters[EParameters::RTS]      = getConfigParameter(COMPortSDK::RTS).toInt();
+	aParameters[EParameters::DTR]      = getConfigParameter(COMPortSDK::DTR).toInt();
+	aParameters[EParameters::ByteSize] = getConfigParameter(COMPortSDK::ByteSize).toInt();
+	aParameters[EParameters::StopBits] = getConfigParameter(COMPortSDK::StopBits).toInt();
 }
 
 //--------------------------------------------------------------------------------
@@ -798,7 +802,7 @@ bool AsyncSerialPort::setParity(EParity::Enum aValue)
 //--------------------------------------------------------------------------------
 bool AsyncSerialPort::deviceConnected()
 {
-	TWinDeviceProperties winProperties = getDeviceProperties(mUuids, mPathProperty, true);
+	TWinDeviceProperties winProperties = SerialDeviceUtils::getDeviceProperties(mUuids, mPathProperty, true);
 	bool result = (winProperties.size() > mWinProperties.size()) && !mWinProperties.isEmpty();
 
 	mWinProperties = winProperties;
@@ -814,102 +818,9 @@ bool AsyncSerialPort::deviceConnected()
 }
 
 //--------------------------------------------------------------------------------
-TWinDeviceProperties AsyncSerialPort::getDeviceProperties(const TUuids & aUuids, DWORD aPropertyName, bool aQuick, TIOPortDeviceData * aData)
-{
-	TWinDeviceProperties deviceProperties;
-	QMap<QString, QStringList> sourceDeviceData;
-
-	foreach(const QUuid & uuid, aUuids)
-	{
-		TWinDeviceProperties uidDeviceProperties;
-
-		if (SystemDeviceUtils::enumerateSystemDevices(uuid, uidDeviceProperties, aPropertyName, aQuick))
-		{
-			for (auto it = uidDeviceProperties.begin(); it != uidDeviceProperties.end(); ++it)
-			{
-				deviceProperties.insert(it.key(), it.value());
-				sourceDeviceData[it.key()] << uuid.toString();
-			}
-		}
-	}
-
-	if (aUuids == CAsyncSerialPort::System::Uuids())
-	{
-		TWinDeviceProperties deviceRegistryProperties = SystemDeviceUtils::enumerateRegistryDevices(aQuick);
-		SystemDeviceUtils::mergeRegistryDeviceProperties(deviceProperties, deviceRegistryProperties, sourceDeviceData);
-	}
-
-	if (aData)
-	{
-		for (auto it = sourceDeviceData.begin(); it != sourceDeviceData.end(); ++it)
-		{
-			QString outKey  = SystemDeviceUtils::getDeviceOutKey(it.value());
-			QString outData = SystemDeviceUtils::getDeviceOutData(deviceProperties[it.key()].data);
-
-			if (!outData.toLower().contains("mouse"))
-			{
-				aData->insert(outKey, outData);
-			}
-		}
-	}
-
-	return deviceProperties;
-}
-
-//--------------------------------------------------------------------------------
-AsyncSerialPort::TData AsyncSerialPort::getSystemData(bool aForce)
-{
-	static TData data;
-
-	if (aForce || data.isEmpty())
-	{
-		TWinDeviceProperties deviceProperties = getDeviceProperties(CAsyncSerialPort::System::Uuids(), CAsyncSerialPort::System::PathProperty);
-
-		auto isMatched = [&] (const TWinProperties & aProperties, const QStringList & aTags) -> bool
-			{ return std::find_if(aProperties.begin(), aProperties.end(), [&] (const QString & aValue) -> bool
-			{ return std::find_if(aTags.begin(), aTags.end(), [&] (const QString & aTag) -> bool
-			{ return aValue.contains(aTag, Qt::CaseInsensitive); }) != aTags.end(); }) != aProperties.end(); };
-
-		data.clear();
-		QRegExp regExp("COM[0-9]+");
-
-		for (auto it = deviceProperties.begin(); it != deviceProperties.end(); ++it)
-		{
-			int index = -1;
-
-			do
-			{
-				index = regExp.indexIn(it.key(), ++index);
-
-				if (index != -1)
-				{
-					EPortTypes::Enum portType = isMatched(it->data, CAsyncSerialPort::Tags::Virtual()) ? EPortTypes::VirtualCOM :
-						(isMatched(it->data, CAsyncSerialPort::Tags::Emulator()) ? EPortTypes::COMEmulator : EPortTypes::Unknown);
-					data.insert(regExp.capturedTexts()[0], portType);
-				}
-			}
-			while (index != -1);
-		}
-
-		/*
-		// раскомментировать, если для автопоиска порта по GUID-у (ам) будут какие-либо проблемы
-		foreach(const QString & port, SystemDeviceUtils::enumerateCOMPorts())
-		{
-			if (!data.contains(port))
-			{
-				data.insert(port, true);
-			}
-		}
-		*/
-	}
-
-	return data;
-}
-
-//--------------------------------------------------------------------------------
 QStringList AsyncSerialPort::enumerateSystemNames()
 {
-	return getSystemData().keys();
+	return SerialDeviceUtils::getSystemData().keys();
 }
 
 //--------------------------------------------------------------------------------

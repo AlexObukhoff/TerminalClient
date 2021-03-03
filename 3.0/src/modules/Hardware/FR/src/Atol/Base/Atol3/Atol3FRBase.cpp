@@ -9,13 +9,15 @@ using namespace ProtocolUtils;
 
 //--------------------------------------------------------------------------------
 Atol3FRBase::Atol3FRBase(): mTId(0)
-{}
+{
+}
 
 //--------------------------------------------------------------------------------
 bool Atol3FRBase::isConnected()
 {
 	mProtocol.setPort(mIOPort);
 	mProtocol.setLog(mLog);
+
 	mProtocol.cancel();
 
 	return AtolFRBase::isConnected();

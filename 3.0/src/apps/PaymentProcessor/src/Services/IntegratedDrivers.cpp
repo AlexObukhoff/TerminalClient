@@ -1,6 +1,7 @@
 /* @file Функционал работы с интегрированными драйверами. */
 
-// Driver SDK
+// SDK
+#include <SDK/Plugins/ImportanceLevel.h>
 #include <SDK/Drivers/HardwareConstants.h>
 
 // Project
@@ -90,12 +91,15 @@ void IntegratedDrivers::checkDriverPath(QString & aDriverPath, const QVariantMap
 	}
 
 	QStringList paths = mData[aDriverPath].paths.toList();
+	QStringList errorLogs;
 
 	for (int i = 0; i < paths.size(); ++i)
 	{
 		TParameterList parameters = mDeviceManager->getDriverParameters(paths[i]);
+		QVariantMap config(aConfig);
+		QStringList logs;
 
-		for (auto jt = aConfig.begin(); jt != aConfig.end(); ++jt)
+		for (QVariantMap::iterator jt = config.begin(); jt != config.end(); ++jt)
 		{
 			auto parameterIt = std::find_if(parameters.begin(), parameters.end(), [&] (const SPluginParameter & aParameter) -> bool
 				{ return aParameter.name == jt.key(); });
@@ -105,21 +109,45 @@ void IntegratedDrivers::checkDriverPath(QString & aDriverPath, const QVariantMap
 				SPluginParameter & parameter = *parameterIt;
 				QList<QVariant> & possibleValueValues = parameter.possibleValues.values();
 				QList<QString> & possibleValueKeys = parameter.possibleValues.keys();
-				const QVariant & value = jt.value();
+				QVariant & value = jt.value();
 
 				if (!parameter.readOnly && !possibleValueValues.contains(value) && (value != CHardwareSDK::Values::Auto) && !possibleValueKeys.contains(CHardwareSDK::Mask))
 				{
-					paths.removeAt(i--);
+					QStringList logData;
 
-					break;
+					foreach (const QVariant & data, possibleValueValues)
+					{
+						logData << data.toString();
+					}
+
+					if (value.toInt() && (parameter.importanceLevel < SDK::Plugin::EImportanceLevel::High))
+					{
+						toLog(LogLevel::Normal, QString("%1, %2: %3 -> %4 {%5}").arg(paths[i]).arg(parameter.name).arg(value.toString()).arg(parameter.defaultValue.toString()).arg(logData.join(", ")));
+						value = parameter.defaultValue;
+					}
+					else
+					{
+						logs << QString("%1: no %2 in {%3}").arg(parameter.name).arg(value.toString()).arg(logData.join(", "));
+					}
 				}
 			}
+		}
+
+		if (!logs.isEmpty())
+		{
+			errorLogs << QString("%1:\n\t%2").arg(paths[i]).arg(logs.join("\n\t"));
+
+			paths.removeAt(i--);
 		}
 	}
 
 	if (!paths.isEmpty())
 	{
 		aDriverPath = paths[0];
+	}
+	else
+	{
+		toLog(LogLevel::Error, "Failed to filter plugin:\n" + errorLogs.join("\n"));
 	}
 }
 

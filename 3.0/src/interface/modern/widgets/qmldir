@@ -7,6 +7,7 @@ OperatorMenu 1.0 operator_menu.qml
 OperatorSelector 1.0 operator_selector.qml
 SceneBase 1.0 scene_base.qml
 SceneBase2 1.0 scene_base2.qml
+SceneBase3 1.0 scene_base3.qml
 Flash 1.0 flash_container.qml
 StatusBar 1.0 status_bar.qml
 Button 1.0 button.qml

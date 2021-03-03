@@ -15,9 +15,10 @@
 #include <Common/ILogable.h>
 #include <Common/SleepHelper.h>
 
-// Modules
+// Project
 #include "Hardware/Common/CommandResults.h"
 #include "Hardware/Protocols/Common/ProtocolUtils.h"
+#include "Hardware/Protocols/Common/ProtocolNames.h"
 
 //--------------------------------------------------------------------------------
 class ProtocolBase : public ILogable

@@ -69,9 +69,9 @@
       </DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;Atol2FRProtocol.lib;Atol3FRProtocol.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;AFPFRProtocol.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;Atol2FRProtocol.lib;Atol3FRProtocol.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;AFPFRProtocol.lib;SysUtils.lib;Atol5Wrapper.lib;fptr10.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories);$(THIRDPARTY_DIR)\atol5\bin;$(THIRDPARTY_DIR)\atol5\nt-x86-msvc2015</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -94,9 +94,9 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;Atol2FRProtocol.lib;Atol3FRProtocol.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;AFPFRProtocol.lib;SysUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCore4.lib;QtGui4.lib;QAxContainer.lib;OPOSSDK.lib;PluginSDK.lib;DriverSDK.lib;Common.lib;printers.lib;fr.lib;PrimFRProtocol.lib;Atol2FRProtocol.lib;Atol3FRProtocol.lib;ShtrihFRProtocol.lib;SparkFRProtocol.lib;KasbiFRProtocol.lib;AFPFRProtocol.lib;SysUtils.lib;Atol5Wrapper.lib;fptr10.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories);$(THIRDPARTY_DIR)\atol5\bin;$(THIRDPARTY_DIR)\atol5\nt-x86-msvc2015</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -118,9 +118,9 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtCored4.lib;QtGuid4.lib;QAxContainerd.lib;OPOSSDKd.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;printersd.lib;frd.lib;PrimFRProtocold.lib;Atol2FRProtocold.lib;Atol3FRProtocold.lib;ShtrihFRProtocold.lib;SparkFRProtocold.lib;KasbiFRProtocold.lib;AFPFRProtocold.lib;SysUtilsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtCored4.lib;QtGuid4.lib;QAxContainerd.lib;OPOSSDKd.lib;PluginSDKd.lib;DriverSDKd.lib;Commond.lib;printersd.lib;frd.lib;PrimFRProtocold.lib;Atol2FRProtocold.lib;Atol3FRProtocold.lib;ShtrihFRProtocold.lib;SparkFRProtocold.lib;KasbiFRProtocold.lib;AFPFRProtocold.lib;SysUtilsd.lib;Atol5Wrapperd.lib;fptr10.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(TC_LIB_DIR)\Hardware;$(THIRDPARTY_DIR)\bin;$(TC_LIB_DIR);%(AdditionalLibraryDirectories);$(THIRDPARTY_DIR)\atol5\bin;$(THIRDPARTY_DIR)\atol5\nt-x86-msvc2015</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
     </Link>

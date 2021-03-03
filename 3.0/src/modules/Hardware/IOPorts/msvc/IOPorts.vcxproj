@@ -116,7 +116,6 @@
   <ItemGroup>
     <ClCompile Include="..\src\COM\windows\AsyncSerialPort.cpp" />
     <ClCompile Include="..\src\Base\IOPortBase.cpp" />
-    <ClCompile Include="..\src\COM\windows\SystemDeviceUtils.cpp" />
     <ClCompile Include="..\src\LibUSB\LibUSBPort.cpp" />
     <ClCompile Include="..\src\LibUSB\LibUSBUtils.cpp" />
     <ClCompile Include="..\src\LibUSB\USBClassCodes.cpp" />
@@ -142,7 +141,6 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\LibUSBDeviceDataTypes.h" />
     <ClInclude Include="..\src\COM\windows\AsyncSerialPort.h" />
     <ClInclude Include="..\src\Base\IOPortBase.h" />
-    <ClInclude Include="..\src\COM\windows\SystemDeviceUtils.h" />
     <ClInclude Include="..\src\LibUSB\LibUSBPort.h" />
     <ClInclude Include="..\src\LibUSB\LibUSBUtils.h" />
     <ClInclude Include="..\src\LibUSB\USBClassCodes.h" />

@@ -733,7 +733,8 @@ template <class T>
 void DeviceBase<T>::postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection)
 {
 	bool powerTurnOn = aOldStatusCollection.contains(DeviceStatusCode::Error::NotAvailable) &&
-	                  !aNewStatusCollection.contains(DeviceStatusCode::Error::NotAvailable);
+	                  !aNewStatusCollection.contains(DeviceStatusCode::Error::NotAvailable) &&
+	                  !aNewStatusCollection.contains(DeviceStatusCode::Error::ThirdPartyDriverFail);
 	bool containsNewErrors = !aNewStatusCollection.isEmpty(EWarningLevel::Error);
 	bool containsOldErrors = !aOldStatusCollection.isEmpty(EWarningLevel::Error);
 
@@ -850,6 +851,27 @@ bool DeviceBase<T>::find()
 	release();
 
 	return false;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool DeviceBase<T>::checkConnectionParameter(const QString & aParameter) const
+{
+	QVariantMap requiredResourceParameters = getConfigParameter(CHardwareSDK::RequiredResourceParameters).toMap();
+
+	if (!requiredResourceParameters.contains(aParameter))
+	{
+		toLog(LogLevel::Error, mDeviceName + ": No " + aParameter);
+		return false;
+	}
+
+	if (requiredResourceParameters[aParameter].toString().isEmpty())
+	{
+		toLog(LogLevel::Error, mDeviceName + QString(": %1 is empty").arg(aParameter));
+		return false;
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------

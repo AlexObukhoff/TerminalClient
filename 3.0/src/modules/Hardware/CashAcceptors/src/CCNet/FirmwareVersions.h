@@ -24,9 +24,9 @@ namespace CCCNet
 		{
 			data()[Models::CashcodeGX ][Currency::RUB][true]  = TFimwareVersionSet() << 1208;
 
-			data()[Models::CashcodeSM ][Currency::RUB][true]  = TFimwareVersionSet() << 1361;
+			data()[Models::CashcodeSM ][Currency::RUB][true]  = TFimwareVersionSet() << 1366;
 
-			data()[Models::CashcodeSM ][Currency::RUB][false] = TFimwareVersionSet() << 1387 << 1434;
+			data()[Models::CashcodeSM ][Currency::RUB][false] = TFimwareVersionSet() << 1393 << 1434;
 			data()[Models::CashcodeMSM][Currency::RUB][false] = TFimwareVersionSet() << 1115;
 			data()[Models::CashcodeMSM][Currency::EUR][false] = TFimwareVersionSet() << 1130 << 1228 << 1329 << 1411 << 1527;
 			data()[Models::CashcodeMVU][Currency::RUB][false] = TFimwareVersionSet() << 1330;
@@ -37,7 +37,7 @@ namespace CCCNet
 			data()[Models::CashcodeMFL][Currency::KZT][false] = TFimwareVersionSet() << 1124;
 			data()[Models::CashcodeMSM][Currency::KZT][false] = TFimwareVersionSet() << 1126;
 
-			data()[Models::CashcodeG200][Currency::RUB][false] = TFimwareVersionSet() << 1523;
+			data()[Models::CashcodeG200][Currency::RUB][false] = TFimwareVersionSet() << 1525;
 		}
 	};
 

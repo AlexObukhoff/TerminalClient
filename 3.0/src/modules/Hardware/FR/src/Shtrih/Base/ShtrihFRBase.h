@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ProtoShtrihFR.h"
+#include "Hardware/FR/ProtoShtrihFR.h"
 
 //--------------------------------------------------------------------------------
 template <class T>
@@ -44,9 +44,6 @@ protected:
 
 	/// После подачи команды Z-отчета ждем окончания формирования Z-отчета.
 	bool waitForChangeZReportMode();
-
-	/// Список поддерживаемых плагином моделей.
-	QStringList mSupportedModels;
 };
 
 //--------------------------------------------------------------------------------

@@ -26,6 +26,46 @@ IPlugin * CreatePlugin(IEnvironment * aEnvironment, const QString & aInstancePat
 }
 
 //------------------------------------------------------------------------------
+template <>
+IPlugin * CreatePlugin<SerialAtol5OnlineFR>(IEnvironment * aEnvironment, const QString & aInstancePath)
+{
+	auto plugin = new FRPluginBase<SerialAtol5OnlineFR>(aEnvironment, aInstancePath);
+
+	QVariantMap configuration;
+	configuration.insert(CHardwareSDK::PluginDirectory, aEnvironment->getPluginDirectory());
+	configuration.insert(CHardwareSDK::LogDirectory, aEnvironment->getKernelLogsDirectory());
+
+	if (plugin->getConfiguration()[CPluginParameters::ConfigurationDirectory].toString().isEmpty())
+	{
+		configuration.insert(CPluginParameters::ConfigurationDirectory, aEnvironment->getKernelDataDirectory());
+	}
+
+	plugin->setDeviceConfiguration(configuration);
+
+	return plugin;
+}
+
+//------------------------------------------------------------------------------
+template <>
+IPlugin * CreatePlugin<VCOMAtol5OnlineFR>(IEnvironment * aEnvironment, const QString & aInstancePath)
+{
+	auto plugin = new FRPluginBase<VCOMAtol5OnlineFR>(aEnvironment, aInstancePath);
+
+	QVariantMap configuration;
+	configuration.insert(CHardwareSDK::PluginDirectory, aEnvironment->getPluginDirectory());
+	configuration.insert(CHardwareSDK::LogDirectory, aEnvironment->getKernelLogsDirectory());
+
+	if (plugin->getConfiguration()[CPluginParameters::ConfigurationDirectory].toString().isEmpty())
+	{
+		configuration.insert(CPluginParameters::ConfigurationDirectory, aEnvironment->getKernelDataDirectory());
+	}
+
+	plugin->setDeviceConfiguration(configuration);
+
+	return plugin;
+}
+
+//------------------------------------------------------------------------------
 template <class T>
 TParameterList defaultParameters(const QStringList & aModels, const QString & aDefaultModelName)
 {
@@ -184,6 +224,15 @@ TParameterList MStarTK2Parameters(const QStringList & aModels)
 
 //------------------------------------------------------------------------------
 template <class T>
+TParameterList Atol5Parameters(const QStringList & aModels)
+{
+	return defaultParameters<T>(aModels, CComponents::FiscalRegistrator)
+		<< setProtocol(ProtocolNames::FR::ATOL5)
+		<< setSerialPortExcludedParameters();
+}
+
+//------------------------------------------------------------------------------
+template <class T>
 TParameterList AtolParameters(const QStringList & aModels, const QString & aDeviceType, const QString & aProtocol)
 {
 	return defaultParameters<T>(aModels, aDeviceType)
@@ -331,6 +380,9 @@ BEGIN_REGISTER_PLUGIN
 	COMMON_ATOL3_PLUGIN(Atol3OnlineFRBase, FiscalRegistrator, AtolOnlineParameters)
 	SINGLE_ATOL_PLUGIN(Paymaster2,  PaymasterParameters, Sensis Kaznachej, ATOL2)
 	SINGLE_ATOL_PLUGIN(Paymaster3,  PaymasterParameters, Sensis Kaznachej, ATOL3)
+
+	COMMON_FR_PLUGIN(VCOMAtol5OnlineFR, Atol5Parameters)
+	//COMMON_FR_PLUGIN(SerialAtol5OnlineFR, Atol5Parameters)
 
 	COMMON_FR_PLUGIN(ShtrihSerialFR, ShtrihParameters)
 	COMMON_FR_PLUGIN(ShtrihRetractorFR, ShtrihRetractorFRParameters)

@@ -47,8 +47,7 @@ Project {
 			"../../includes/Hardware/CashAcceptors/BillTable.h",
 			"../../includes/Hardware/CashAcceptors/CashAcceptorBaseConstants.h",
 			"../../includes/Hardware/CashAcceptors/CashAcceptorStatusCodes.h",
-			"../../includes/Hardware/CashAcceptors/CurrencyDescriptions.h",
-			"../../includes/Hardware/CashAcceptors/ModelData.h"
+			"../../includes/Hardware/CashAcceptors/CurrencyDescriptions.h"
 		]
 	}
 
@@ -87,8 +86,7 @@ Project {
 			"../../includes/Hardware/CashAcceptors/BillTable.h",
 			"../../includes/Hardware/CashAcceptors/CashAcceptorBaseConstants.h",
 			"../../includes/Hardware/CashAcceptors/CashAcceptorStatusCodes.h",
-			"../../includes/Hardware/CashAcceptors/CurrencyDescriptions.h",
-			"../../includes/Hardware/CashAcceptors/ModelData.h"
+			"../../includes/Hardware/CashAcceptors/CurrencyDescriptions.h"
 		]
 	}
 
@@ -104,6 +102,7 @@ Project {
 			"FR/src/Atol/*.*",
 			"FR/src/Atol/*/*.*",
 			"FR/src/Atol/*/*/*.*",
+			"FR/src/Atol/*/*/*/*.*",
 			"FR/src/Base/*.*",
 			"FR/src/Base/Port/*.*",
 			"FR/src/OPOSMStarTUPK/*.*",
@@ -119,6 +118,12 @@ Project {
 			"../../includes/Hardware/FR/FRErrorDescription.h",
 			"../../includes/Hardware/FR/FRStatusCodes.h"
 		]
+
+		Group {
+				fileTagsFilter: product.type
+				qbs.install: true
+				qbs.installDir: "lib/hardware"
+		}
 	}
 
 	StaticLibrary {

@@ -105,6 +105,24 @@ void PortDeviceBase<T>::setDeviceConfiguration(const QVariantMap & aConfiguratio
 
 //--------------------------------------------------------------------------------
 template <class T>
+void PortDeviceBase<T>::setPortLoggingType(ELoggingType::Enum aType) const
+{
+	QVariantMap configuration;
+	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(aType));
+	mIOPort->setDeviceConfiguration(configuration);
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+void PortDeviceBase<T>::setPortDeviceName(const QString & aName) const
+{
+	QVariantMap configuration;
+	configuration.insert(CHardware::Port::DeviceModelName, aName);
+	mIOPort->setDeviceConfiguration(configuration);
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
 TResult PortDeviceBase<T>::processCommand(char aCommand, QByteArray * aAnswer = nullptr)
 {
 	return processCommand(aCommand, QByteArray(), aAnswer);
@@ -179,19 +197,15 @@ bool PortDeviceBase<T>::checkExistence()
 	}
 
 	//TODO: сделать настройку плагинов - расширенное логгирование
-	QVariantMap configuration;
-	configuration.insert(CHardware::Port::IOLogging, QVariant().fromValue(mIOMessageLogging));
-	configuration.insert(CHardware::Port::DeviceModelName, mDeviceName);
-
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortLoggingType(mIOMessageLogging);
+	setPortDeviceName(mDeviceName);
 
 	if (!T::checkExistence())
 	{
 		return false;
 	}
 
-	configuration.insert(CHardware::Port::DeviceModelName, mDeviceName);
-	mIOPort->setDeviceConfiguration(configuration);
+	setPortDeviceName(mDeviceName);
 
 	return true;
 }
