@@ -81,8 +81,9 @@ namespace Tags
 	static QStringList Values(Types.data().keys());
 
 	//--------------------------------------------------------------------------------
-	const QString regExpData   = QString("%1(.*)%1").arg("\\[(/?[a-z]+)\\]");    /// Шаблон произвольного тега.
-	const QString None = QString("[%1]").arg(Types.key(Type::None));          /// Открывающий тег none.
+	const QString regExpData = QString("%1(.*)%1").arg("\\[(/?[a-z]+)\\]");         /// Шаблон произвольного тега.
+	const QString bcData     = QString("[%1]").arg(CTypes().key(Type::BarCode));    /// Шаблон штрих-кода.
+	const QString None       = QString("[%1]").arg(Types.key(Type::None));          /// Открывающий тег none.
 
 	struct SLexeme
 	{

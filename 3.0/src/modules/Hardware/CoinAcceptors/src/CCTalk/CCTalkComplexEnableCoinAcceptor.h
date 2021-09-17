@@ -13,6 +13,10 @@ typedef CCTalkComplexEnableAcceptor<CCTalkCoinAcceptorBase> TCCTalkComplexEnable
 
 class CCTalkComplexEnableCoinAcceptor : public TCCTalkComplexEnableAcceptor
 {
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::VCOMOnly, QStringList()
+		<< AdapterTags::FTDI
+		<< AdapterTags::CP210)
+
 public:
 	CCTalkComplexEnableCoinAcceptor()
 	{

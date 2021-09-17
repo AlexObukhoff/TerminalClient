@@ -20,7 +20,7 @@ QStringList SystemDeviceUtils::enumerateCOMPorts()
 	QRegExp regExp("[^0-9a-zA-Z](COM[0-9]+)[^a-zA-Z]");
 	QStringList result;
 
-	foreach(auto port, data)
+	foreach (auto port, data)
 	{
 		if (regExp.indexIn(" " + port + " ") != -1)
 		{
@@ -365,7 +365,7 @@ QString SystemDeviceUtils::getDeviceOutKey(const QStringList & aKeys)
 	int maxNameSize = getMaxSize(aKeys);
 	QString result;
 
-	foreach(const QString & key, aKeys)
+	foreach (const QString & key, aKeys)
 	{
 		if (maxNameSize == CRegistrySerialPort::UuidSize)
 		{
@@ -411,7 +411,7 @@ QString SystemDeviceUtils::getDeviceOutData(const TWinProperties & aWinPropertyD
 	QString result;
 	int maxNameSize = getMaxSize(outDataKeys);
 
-	foreach(const QString & outKey, outDataKeys)
+	foreach (const QString & outKey, outDataKeys)
 	{
 		result += QString("\n%1 = %2").arg(outKey, maxNameSize).arg(aWinPropertyData[outKey]);
 	}
@@ -424,7 +424,7 @@ int SystemDeviceUtils::getMaxSize(const QStringList & aBuffer)
 {
 	int result = 0;
 
-	foreach(auto element, aBuffer)
+	foreach (auto element, aBuffer)
 	{
 		result = qMax(result, element.size());
 	}
@@ -444,6 +444,30 @@ QString SystemDeviceUtils::getScreenedData(const QString & aData)
 	}
 
 	return result;
+}
+
+//--------------------------------------------------------------------------------
+bool SystemDeviceUtils::containsTag(const QString & aData, const QStringList aTagData)
+{
+	return std::find_if(aTagData.begin(), aTagData.end(), [&aData] (const QString & tag) -> bool { return aData.contains(tag, Qt::CaseInsensitive); }) != aTagData.end();
+}
+
+//--------------------------------------------------------------------------------
+bool SystemDeviceUtils::containsTag(const QString & aData, const QString aTagData)
+{
+	return aData.contains(aTagData, Qt::CaseInsensitive);
+}
+
+//--------------------------------------------------------------------------------
+bool SystemDeviceUtils::containsTag(const TWinProperties & aProperties, const QStringList aTagData)
+{
+	return std::find_if(aProperties.begin(), aProperties.end(), [&aTagData] (const QString & data) -> bool { return containsTag(data, aTagData); }) != aProperties.end();
+}
+
+//--------------------------------------------------------------------------------
+bool SystemDeviceUtils::containsTag(const TWinProperties & aProperties, const QString aTagData)
+{
+	return std::find_if(aProperties.begin(), aProperties.end(), [&aTagData] (const QString & data) -> bool { return containsTag(data, aTagData); }) != aProperties.end();
 }
 
 //--------------------------------------------------------------------------------

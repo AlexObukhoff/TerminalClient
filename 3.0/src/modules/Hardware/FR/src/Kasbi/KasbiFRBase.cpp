@@ -587,6 +587,11 @@ bool KasbiFRBase::sale(const SUnitData & aUnitData)
 		mFFEngine.getTLVData(CFR::FiscalFields::VATRate, char(section)) +
 		mFFEngine.getTLVData(CFR::FiscalFields::PayOffSubjectMethodType, aUnitData.payOffSubjectMethodType);
 
+	if (mOFDFiscalFieldsOnSale.contains(CFR::FiscalFields::ProviderName))
+	{
+		commandData += mFFEngine.getTLVData(CFR::FiscalFields::ProviderName, aUnitData.providerName);
+	}
+
 	if (mOFDFiscalFieldsOnSale.contains(CFR::FiscalFields::ProviderINN))
 	{
 		commandData += mFFEngine.getTLVData(CFR::FiscalFields::ProviderINN, aUnitData.providerINN);
@@ -636,7 +641,8 @@ bool KasbiFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData
 	if (!userContact.isEmpty()) commandData += mFFEngine.getTLVData(CFR::FiscalFields::UserContact);
 
 	result = result && processCommand(CKasbiFR::Commands::Total, commandData);
-		if (aPaymentData.agentFlag != EAgentFlags::None)
+
+	if (aPaymentData.agentFlag != EAgentFlags::None)
 	{
 		commandData = mFFEngine.getTLVData(CFR::FiscalFields::AgentFlagsReg);
 

@@ -7,10 +7,12 @@
 #include "Hardware/CashAcceptors/SerialCashAcceptor.h"
 
 //--------------------------------------------------------------------------------
-typedef CCTalkAcceptorBase<TSerialCashAcceptor> TCCTalkCashAcceptor;
+typedef CCTalkAcceptorBase<SerialCashAcceptor> TCCTalkCashAcceptor;
 
 class CCTalkCashAcceptor : public TCCTalkCashAcceptor
 {
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::Dual, AdapterTags::FTDI)
+
 public:
 	CCTalkCashAcceptor();
 

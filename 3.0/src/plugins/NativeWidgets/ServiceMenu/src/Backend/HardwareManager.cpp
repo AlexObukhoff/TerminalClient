@@ -57,9 +57,10 @@ void HardwareManager::resetConfiguration()
 }
 
 //------------------------------------------------------------------------
-void HardwareManager::detect(const QString & aDeviceType)
+void HardwareManager::detect(bool aQuick, const QString & aDeviceType /*= QString()*/)
 {
-	mDeviceService->detect(aDeviceType);
+	//TODO: 1-й параметр - галка быстрого поиска
+	mDeviceService->detect(aQuick, aDeviceType);
 }
 
 //------------------------------------------------------------------------

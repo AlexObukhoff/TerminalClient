@@ -32,6 +32,8 @@ FocusScope {
 	// Предикат проверки ввода
 	property alias validator: inputValidator.regExp
 
+	property alias validatorObject: input.validator
+
 	// Маска ввода
 	property alias mask: input.inputMask
 

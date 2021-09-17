@@ -14,6 +14,10 @@ typedef CCTalkAcceptorBase<CoinAcceptorBase> TCCTalkCoinAcceptorBase;
 
 class CCTalkCoinAcceptorBase : public TCCTalkCoinAcceptorBase
 {
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::Dual, QStringList()
+		<< AdapterTags::FTDI
+		<< AdapterTags::CP210)
+
 public:
 	CCTalkCoinAcceptorBase();
 

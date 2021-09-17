@@ -7,7 +7,7 @@
 
 //--------------------------------------------------------------------------------
 template <class T>
-class PortPollingDeviceBase : public PortDeviceBase<PollingDeviceBase<T>>
+class PortPollingDeviceBase : public PortDeviceBase<PollingDeviceBase<DeviceBase<T>>>
 {
 public:
 	/// Подключает и инициализует устройство. Обертка для вызова функционала в рабочем потоке.

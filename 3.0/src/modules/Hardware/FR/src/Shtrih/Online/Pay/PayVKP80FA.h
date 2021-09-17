@@ -9,6 +9,7 @@ template<class T>
 class PayVKP80FA : public PayFRBase<T>
 {
 	SET_SUBSERIES("PayVKP80FA")
+	SET_VCOM_DATA(None, ConnectionTypes::COMOnly, None)
 
 public:
 	PayVKP80FA()

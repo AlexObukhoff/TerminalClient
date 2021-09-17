@@ -120,6 +120,9 @@ protected:
 	/// Автопоиск?
 	bool isAutoDetecting() const;
 
+	/// Создание устройства (на этапе установки параметров)?
+	bool isCreating(const QVariantMap & aConfiguration) const;
+
 	/// Получение параметров устройства.
 	SLogData getDeviceData() const;
 

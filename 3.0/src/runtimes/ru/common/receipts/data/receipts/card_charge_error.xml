@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <body>
-  <string>Банковский платежный агент:</string>
+    <string>Банковский платежный агент:</string>
 	<string>[b]%DEALER_NAME%[/b]</string>
 	<string>ИНН [b]%DEALER_INN%[/b]</string>
+	<string if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') == 0">[b]НДС не облагается[/b]</string>
+	<else if="Number('%ONLINE_KKM%') &lt; 1 &amp;&amp; Number('%DEALER_NDS%') > 0">[b]НДС 20%[/b]</else>
 	<string>Место нахождения:[b]%DEALER_BUSINESS_ADDRESS%[/b]</string>
 	<string>Терминал [b]%TERMINAL_NUMBER%[/b]</string>
 	<string>Адрес терминала: [b]%POINT_ADDRESS%[/b]</string>
@@ -11,11 +13,14 @@
 	<string>[b]%OPERATOR_NAME%[/b]</string>
 	<string>Назначение перевода:</string>
 	<string>[b]%SERVICE_TYPE% (%OPERATOR_BRAND%)[/b]</string>
+	<string>Принято: [b]%AMOUNT_ALL% %CURRENCY%[/b]</string>
+	<string>Комиссия: [b]%FEE% %CURRENCY%[/b]</string>
 	<string>Дата, время приема денежных</string>
 	<string>средств: [b]%DATETIME%[/b]</string>
 	<string>Номер сессии: %INITIAL_SESSION%</string>
 	<string>-----------------------------------</string>
-	<string>[b]Платеж отменен[/b]</string>
+	<string>[b]Из-за ошибки оборудования[/b]</string>
+	<string>[b]платеж отменен[/b]</string>
 	<string>-----------------------------------</string>
 	<string>[b]%CARD_CHARGE_ERROR%[/b]</string>
 	<string>-----------------------------------</string>

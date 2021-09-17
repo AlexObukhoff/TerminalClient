@@ -124,9 +124,6 @@
     <CustomBuild Include="..\src\Ucs.h">
       <Filter>Source Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\src\Utils.h">
-      <Filter>Source Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\src\UcsDevice.h">
       <Filter>Source Files\Device</Filter>
     </CustomBuild>

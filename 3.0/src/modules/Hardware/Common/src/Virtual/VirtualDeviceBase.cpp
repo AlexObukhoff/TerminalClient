@@ -6,15 +6,22 @@
 #include <Common/QtHeadersEnd.h>
 
 // Modules
+#include "Hardware/Common/PollingDeviceBase.h"
 #include "Hardware/CashAcceptors/CashAcceptorBase.h"
 #include "Hardware/Dispensers/DispenserBase.h"
+#include "Hardware/Printers/PrinterBase.h"
+
+#include "Hardware/Common/ProtoDevices.h"
+#include "Hardware/Dispensers/ProtoDispenser.h"
+#include "Hardware/CashAcceptors/ProtoCashAcceptor.h"
 
 // Project
 #include "VirtualDeviceBase.h"
 
 //-------------------------------------------------------------------------------
 template class VirtualDeviceBase<CashAcceptorBase<DeviceBase<ProtoCashAcceptor>>>;
-template class VirtualDeviceBase<DispenserBase<DeviceBase<ProtoDispenser>>> ;
+template class VirtualDeviceBase<DispenserBase<DeviceBase<ProtoDispenser>>>;
+template class VirtualDeviceBase<PrinterBase<PollingDeviceBase<DeviceBase<ProtoPrinter>>>>;
 
 //---------------------------------------------------------------------------------
 template<class T>
@@ -36,6 +43,13 @@ void VirtualDeviceBase<T>::initialize()
 
 	// Подписываемся на уведобления о событиях от приложения.
 	qApp->installEventFilter(this);
+}
+
+//---------------------------------------------------------------------------------
+template<class T>
+void VirtualDeviceBase<T>::finaliseInitialization()
+{
+	onPoll();
 }
 
 //---------------------------------------------------------------------------------
@@ -81,6 +95,16 @@ void VirtualDeviceBase<T>::changeStatusCode(int aStatusCode)
 	}
 }
 
+//--------------------------------------------------------------------------------
+template <class T>
+void VirtualDeviceBase<T>::reInitialize()
+{
+	// Меняем поток на рабочий, чтобы запустить инициализацию.
+	moveToThread(&mThread);
+
+	T::reInitialize();
+}
+
 //---------------------------------------------------------------------------------
 template<class T>
 bool VirtualDeviceBase<T>::eventFilter(QObject * /*aWatched*/, QEvent * aEvent)
@@ -94,6 +118,19 @@ bool VirtualDeviceBase<T>::eventFilter(QObject * /*aWatched*/, QEvent * aEvent)
 	}
 
 	return false;
+}
+
+//---------------------------------------------------------------------------------
+template<class T>
+bool VirtualDeviceBase<T>::isKeyModifier(int aKey) const
+{
+	return (aKey == Qt::Key_Shift)    ||
+	       (aKey == Qt::Key_Control)  ||
+	       (aKey == Qt::Key_Meta)     ||
+	       (aKey == Qt::Key_Alt)      ||
+	       (aKey == Qt::Key_CapsLock) ||
+	       (aKey == Qt::Key_NumLock)  ||
+	       (aKey == Qt::Key_ScrollLock);
 }
 
 //---------------------------------------------------------------------------------

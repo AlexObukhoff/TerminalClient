@@ -24,7 +24,7 @@ namespace CCCNet
 		{
 			data()[Models::CashcodeGX ][Currency::RUB][true]  = TFimwareVersionSet() << 1208;
 
-			data()[Models::CashcodeSM ][Currency::RUB][true]  = TFimwareVersionSet() << 1366;
+			data()[Models::CashcodeSM ][Currency::RUB][true]  = TFimwareVersionSet() << 1367;
 
 			data()[Models::CashcodeSM ][Currency::RUB][false] = TFimwareVersionSet() << 1393 << 1434;
 			data()[Models::CashcodeMSM][Currency::RUB][false] = TFimwareVersionSet() << 1115;

@@ -39,5 +39,6 @@ HtmlEditor 1.0 html_editor.qml
 FallbackEditor 1.0 fallback_editor.qml
 MultiEditorWrapper 1.0 multieditor_wrapper.qml
 PayConfirmEditor 1.0 pay_confirm_editor.qml
+ValidatorEditor 1.0 validator_editor.qml
 
 EditorDescription 1.0 editor_description.qml

@@ -62,6 +62,7 @@ namespace CAtolFR
 
 		const char Atol11F[]     = "ATOL-11F";
 		const char Atol15F[]     = "ATOL-15F";
+		const char Atol20F[]     = "ATOL-20F";
 		const char Atol25F[]     = "ATOL-25F";
 		const char Atol30F[]     = "ATOL-30F";
 		const char Atol42FC[]    = "ATOL-42FC";

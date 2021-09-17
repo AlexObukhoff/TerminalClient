@@ -18,7 +18,6 @@
 // SDK
 #include <SDK/PaymentProcessor/Payment/Amount.h>
 #include <SDK/PaymentProcessor/Core/ICore.h>
-#include <SDK/PaymentProcessor/Settings/TerminalSettings.h>
 #include <SDK/PaymentProcessor/Scripting/IBackendScenarioObject.h>
 
 // Modules
@@ -120,7 +119,7 @@ signals:
 	void pinRequired();
 	void onlineRequired();
 	void message(const QString & aMessage);
-	void saleComplete(double aAmount, int aCurrency, const QString & aRRN, const QString & aConfirmationCode);
+	void saleComplete(double aAmount, int aCurrency, const QString & aRRN, const QString & aConfirmationCode, const QStringList & aReceipt);
 	void doComplete(bool aLastLine);
 
 private slots:
@@ -158,7 +157,6 @@ private:
 
 private:
 	SDK::PaymentProcessor::ICore * mCore;
-	SDK::PaymentProcessor::TerminalSettings * mTerminalSettings;
 	QString mTerminalID;
 	QDateTime mLoggedIn;
 	bool mLastLineReceived;

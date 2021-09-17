@@ -31,9 +31,6 @@ namespace CAsyncSerialPort
 	/// Коэффициент надежности таймаута фактического времени открытия порта.
 	const double KOpeningTimeout = 1.5;
 
-	/// ACPI-устройства, такие как обычные COM-порты (не устройство расширения или виртуальный порт).
-	const char GeneralRS232[] = "ACPI";
-
 	/// Признаки невозможности ожидания результата GetOverlappedResult.
 	const QStringList CannotWaitResult = QStringList()
 		<< "FTDI"
@@ -44,7 +41,8 @@ namespace CAsyncSerialPort
 		<< "STMicroelectronics"
 		<< "Honeywell"
 		<< "ITL"
-		<< "USB To Serial Port";
+		<< "USB To Serial Port"
+		<< "COM0COM";
 
 	/// Ошибки не логгировать.
 	const QVector<int> NoLogErrors = QVector<int>()
@@ -129,6 +127,9 @@ public:
 
 	/// Изменить таймаут выполнения зависоноопасной операции
 	void changePerformingTimeout(const QString & aContext, int aTimeout, int aPerformingTime);
+
+	/// Получить системные свойства устройств.
+	TWinDeviceProperties getAsyncDeviceProperties(bool aForce, bool aQuick = false, TIOPortDeviceData * aData = nullptr);
 
 protected:
 	/// Идентификация.	
@@ -220,6 +221,9 @@ protected:
 
 	/// Количество прочитанных байтов.
 	DWORD mReadBytes;
+
+	/// Мьютекс для защиты статических пропертей портов.
+	static QMutex mSystemAsyncPropertyMutex;
 };
 
 //--------------------------------------------------------------------------------

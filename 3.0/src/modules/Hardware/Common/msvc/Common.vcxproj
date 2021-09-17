@@ -71,8 +71,8 @@
     </ClCompile>
     <Lib>
       <OutputFile>$(TargetPath)</OutputFile>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(TC_LIB_DIR)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DebugUtils.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>copy "$(ProjectDir)\..\src\locale\*.ts" "$(TC_LIB_DIR)\Hardware"</Command>
@@ -93,8 +93,7 @@
     </ClCompile>
     <Lib>
       <OutputFile>$(TargetPath)</OutputFile>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(TC_LIB_DIR)</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
       <Command>copy "$(ProjectDir)\..\src\locale\*.ts" "$(TC_LIB_DIR)\Hardware"</Command>
@@ -115,8 +114,8 @@
     </ClCompile>
     <Lib>
       <OutputFile>$(TargetPath)</OutputFile>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(TC_LIB_DIR)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DebugUtilsd.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>copy "$(ProjectDir)\..\src\locale\*.ts" "$(TC_LIB_DIR)\Hardware"</Command>
@@ -125,6 +124,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\Codec\CodecBase.cpp" />
     <ClCompile Include="..\src\ConfigManager\DeviceConfigManager.cpp" />
+    <ClCompile Include="..\src\ExternalPort\ExternalPortDeviceBase.cpp" />
     <ClCompile Include="..\src\Meta\MetaDevice.cpp" />
     <ClCompile Include="..\src\OPOS\OPOSPollingDeviceBase.cpp" />
     <ClCompile Include="..\src\Polling\PollingDeviceBase.cpp" />
@@ -294,6 +294,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQCOMPORTWIN_LIB -DCYBERPLAT_DRIVER "-I$(TC_DIR)\." "-I$(TC_INCLUDE_DIR)\." "-I$(THIRDPARTY_DIR)\." "-I.\src" "-I$(QTDIR)\include"</Command>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\includes\Common\ExitAction.h" />
+    <ClInclude Include="..\..\..\..\includes\Common\PluginConstants.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\BaseStatusTypes.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ConfigCleaner.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ContainerProxy.h" />
@@ -371,6 +372,7 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\Plugins\DevicePluginBase.h" />
     <ClInclude Include="..\src\Codec\CodecBase.h" />
     <ClInclude Include="..\src\ConfigManager\DeviceConfigManager.h" />
+    <ClInclude Include="..\src\ExternalPort\ExternalPortDeviceBase.h" />
     <ClInclude Include="..\src\OPOS\OPOSPollingDeviceBase.h" />
     <ClInclude Include="..\src\PortPolling\PortPollingDeviceBase.h" />
     <ClInclude Include="..\src\Port\LibUSB\LibUSBDeviceBase.h" />

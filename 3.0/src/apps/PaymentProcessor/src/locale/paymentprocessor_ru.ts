@@ -25,7 +25,7 @@
         <translation>Комиссия БПА</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="129"/>
+        <location filename="../Services/PrintingCommands.cpp" line="130"/>
         <source>#bank_fee</source>
         <translation>Комиссия БПА</translation>
     </message>
@@ -35,7 +35,7 @@
         <translation>Комиссия субагента</translation>
     </message>
     <message>
-        <location filename="../Services/PrintingCommands.cpp" line="136"/>
+        <location filename="../Services/PrintingCommands.cpp" line="137"/>
         <source>#processing_fee</source>
         <translation>Комиссия КБ Платина</translation>
     </message>

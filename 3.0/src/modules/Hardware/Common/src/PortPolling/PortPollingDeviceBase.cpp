@@ -28,7 +28,7 @@ void PortPollingDeviceBase<T>::initialize()
 {
 	START_IN_WORKING_THREAD(initialize)
 
-	PortDeviceBase<PollingDeviceBase<T>>::initialize();
+	PortDeviceBase<PollingDeviceBase<DeviceBase<T>>>::initialize();
 
 	startPolling(true);
 }
@@ -41,7 +41,7 @@ void PortPollingDeviceBase<T>::setPollingActive(bool aActive)
 
 	if (!configuration.value(CHardware::Port::Suspended).toBool())
 	{
-		PortDeviceBase<PollingDeviceBase<T>>::setPollingActive(aActive);
+		PortDeviceBase<PollingDeviceBase<DeviceBase<T>>>::setPollingActive(aActive);
 	}
 }
 

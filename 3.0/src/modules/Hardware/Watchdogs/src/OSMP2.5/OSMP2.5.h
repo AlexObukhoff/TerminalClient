@@ -10,6 +10,7 @@
 class OSMP25: public WatchdogBase
 {
 	SET_SERIES("OSMP2,5")
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::VCOMOnly, AdapterTags::FTDI)
 
 public:
 	OSMP25();

@@ -15,6 +15,8 @@
 template<class T>
 class AtolOnlineFRBase : public T
 {
+	SET_VCOM_DATA(Types::Manufacturer, ConnectionTypes::Dual, ManufacturerTags::FR::Atol)
+
 public:
 	AtolOnlineFRBase();
 

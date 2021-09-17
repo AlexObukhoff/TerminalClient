@@ -10,30 +10,21 @@ import "scenario/constants.js" as Scenario
 Widgets.SceneBase2 {
 	id: rootItem
 
-	rightButtonEnabled: editor.acceptable && !global.rightButtonDisabled
+	rightButtonEnabled: false
 	topPanelImage: global.provider ? ("image://ui/logoprovider/" + global.provider.id + "/button.operator.blank/" + global.provider.name) : ""
 	topPanelText: Utils.locale.tr(QT_TR_NOOP("payment_method_selector_scene#select_payment_method"))
 	infoButtonEnabled: true
 
-	Widgets.MultiEditorWrapper {
+	Widgets.EnumEditor {
 		id: editor
 
-		showFirstBackButton: false
+		setupDefaultValue: false
+
 		anchors { left: parent.left; leftMargin: 30; right: parent.right; rightMargin: 30; top: parent.top; topMargin: 191 }
-	}
 
-	Connections {
-		target: editor
-
-		onBackward: {
-			Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Back)
-		}
-
-		onForward: {
-			global.rightButtonDisabled = true;
-
+		onSelected: {
 			Core.postEvent(EventType.StartScenario, {
-											 name: editor.values().method.rawValue + "_charge",
+											 name: aValue + "_charge",
 											 printerIsReady: global.printerIsReady});
 		}
 	}
@@ -41,21 +32,13 @@ Widgets.SceneBase2 {
 	onBack: Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Abort)
 
 	// Переход к предыдущему полю
-	onLeftClick: editor.leftClick()
-
-	// Переход к следующему полю
-	onRightClick: {
-		editor.rightClick();
-	}
+	onLeftClick: Core.postEvent(EventType.UpdateScenario, Scenario.Idle.Event.Back)
 
 	QtObject {
 		id: global
 
 		property variant provider;
 		property bool printerIsReady;
-
-		// Признак, что кнопка Next уже нажата
-		property bool rightButtonDisabled
 	}
 
 	function formatNumber(aNumber) {
@@ -76,14 +59,10 @@ Widgets.SceneBase2 {
 		});
 
 		var e1 = {
-			type: "enum", id: "method", items: methods,
+			type: "enum", id: "method", items: methods, isRequired: true,
 			title: Utils.locale.tr(QT_TR_NOOP("payment_method_selector_scene#type"))
 		};
 
-		editor.setup({fields: [e1]});
-	}
-
-	function showHandler() {
-		global.rightButtonDisabled = false;
+		editor.setup(e1);
 	}
 }

@@ -8,6 +8,7 @@
 class Alarm: public WatchdogBase
 {
 	SET_SERIES("Alarm")
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::VCOMOnly, AdapterTags::FTDI)
 
 public:
 	Alarm();

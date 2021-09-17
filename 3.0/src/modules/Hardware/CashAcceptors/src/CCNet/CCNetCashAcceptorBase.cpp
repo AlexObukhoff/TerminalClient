@@ -396,7 +396,7 @@ bool CCNetCashAcceptorBase::setDefaultParameters()
 //---------------------------------------------------------------------------
 bool CCNetCashAcceptorBase::getStatus(TStatusCodes & aStatusCodes)
 {
-	if (!TSerialCashAcceptor::getStatus(aStatusCodes))
+	if (!SerialCashAcceptor::getStatus(aStatusCodes))
 	{
 		return false;
 	}

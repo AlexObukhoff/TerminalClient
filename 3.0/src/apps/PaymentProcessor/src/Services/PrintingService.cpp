@@ -343,6 +343,13 @@ int PrintingService::performPrint(PrintCommand * aCommand, const QVariantMap & a
 			configuration.insert(CHardwareSDK::Printer::ReceiptTemplate, aReceiptTemplate);
 			printer->setDeviceConfiguration(configuration);
 
+			QString regExpData = QString(".*%%1%.*").arg(CPrintConstants::PointAddress);
+			int index = aReceiptTemplate.indexOf(QRegExp(regExpData));
+			paymentParameters.insert(CPrintConstants::PointAddressExists, index != -1);
+
+			auto amountPrefix = printer->getDeviceConfiguration().value(CHardwareSDK::Printer::AmountPrefix, 0);
+			paymentParameters.insert(CHardwareSDK::Printer::AmountPrefix, amountPrefix);
+
 			bool result = aCommand->print(printer, paymentParameters);
 
 			if (result)

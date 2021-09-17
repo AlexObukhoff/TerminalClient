@@ -35,7 +35,8 @@ namespace CPrintCommands
 		<< CPrintConstants::BankPhone
 		<< CPrintConstants::BankAddress
 		<< CPrintConstants::BankInn
-		<< CPrintConstants::BankName;
+		<< CPrintConstants::BankName
+		<< CPrintConstants::PointAddress;
 }
 
 //---------------------------------------------------------------------------

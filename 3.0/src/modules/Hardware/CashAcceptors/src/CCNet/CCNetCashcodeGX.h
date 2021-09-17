@@ -18,6 +18,7 @@ namespace CCCNetCashcodeGX
 class CCNetCashcodeGX : public CCNetCashAcceptorBase
 {
 	SET_SUBSERIES("CashcodeGX")
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::Dual, AdapterTags::STMicroelectronics)
 
 public:
 	CCNetCashcodeGX();

@@ -9,7 +9,9 @@
 
 // Project
 #include "Hardware/Common/DeviceBase.h"
+#include "Hardware/Common/ExternalPortDeviceBase.h"
 
+//---------------------------------------------------------------------------
 namespace CPollingDeviceBase
 {
 	/// Ожидание останова поллинга, [мс].
@@ -21,7 +23,7 @@ typedef QList<TVoidMethod> TTaskList;
 
 //---------------------------------------------------------------------------
 template <class T>
-class PollingDeviceBase : public DeviceBase<T>
+class PollingDeviceBase : public T
 {
 public:
 	PollingDeviceBase();

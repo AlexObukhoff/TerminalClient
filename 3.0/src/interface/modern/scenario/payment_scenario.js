@@ -592,7 +592,7 @@ function processCheckEnterHandler(aParameters) {
 	var errorCode = Core.payment.getParameter(Scenario.Payment.Parameters.Error);
 	var errorMesage = Core.payment.getParameter(Scenario.Payment.Parameters.ErrorMessage);
 
-	if (errorCode) {
+	if (!Core.environment.terminal.skipCheckWhileNetworkError && errorCode) {
 		FORCE_CHANGEBACK = true;
 		Core.postEvent(EventType.UpdateScenario, {signal: Scenario.Payment.Event.Abort, payment_result: Scenario.Payment.ProcessError.BadPayment});
 		return;
@@ -759,13 +759,14 @@ function finishEnterHandler(aParameters) {
 	var amountAll = parseFloat(Core.payment.getParameter(Scenario.Payment.Parameters.AmountAll));
 	var zeroAmount = Number(0).toFixed(2);
 
-	var useBadPaymentAsChange = function() {
-		return GUI.toBool(GUI.ui("use_bad_payment_as_change")) ||
-				GUI.toBool(GUI.ui("use_bad_online_payment_as_change"));
-	}
+	var lowMoney = aParameters.payment_result ? aParameters.payment_result === Scenario.Payment.ProcessError.LowMoney : false
+	var badPayment = aParameters.payment_result ? aParameters.payment_result === Scenario.Payment.ProcessError.BadPayment : false
+	var useBadPaymentAsChange = GUI.toBool(GUI.ui("use_bad_payment_as_change")) || GUI.toBool(GUI.ui("use_bad_online_payment_as_change"));
 
-	// Если не хватило денег на оплату, превращаем внесенную сумму в сдачу
-	if ((useBadPaymentAsChange && (amount ==  zeroAmount || amount < minAmount)) || FORCE_CHANGEBACK) {
+	// Разрешение на проведение платежей при остутствии связи
+	var skipCheckWhileNetworkError = Core.environment.terminal.skipCheckWhileNetworkError
+
+	if ((useBadPaymentAsChange && badPayment && !skipCheckWhileNetworkError) || (useBadPaymentAsChange && lowMoney) || (amount ==  zeroAmount) || FORCE_CHANGEBACK) {
 		Core.payment.useChangeBack();
 		FORCE_CHANGEBACK = false;
 
@@ -805,7 +806,9 @@ function finishEnterHandler(aParameters) {
 
 		GUI.show("ResultScene", {reset: true, id: ScenarioEngine.context.id, receipt_printed: false,
 							 auto_changeback: USE_AUTO_CHANGEBACK ? USE_AUTO_CHANGEBACK : false,
-							 payment_result: aParameters.hasOwnProperty("payment_result") ? aParameters.payment_result : Scenario.Payment.ProcessError.OK});
+							 payment_result: aParameters.hasOwnProperty("payment_result") ?
+																 //(skipCheckWhileNetworkError && aParameters.payment_result === Scenario.Payment.ProcessError.BadPayment ? Scenario.Payment.ProcessError.OK :
+																 aParameters.payment_result/*)*/ : Scenario.Payment.ProcessError.OK});
 
 		if (PRINTER_IS_READY && !SKIP_PRINT_RECEIPT) {
 			GUI.waiting({tr: QT_TR_NOOP("payment_scenario#printing_receipt")});

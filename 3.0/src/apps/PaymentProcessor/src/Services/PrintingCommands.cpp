@@ -82,34 +82,39 @@ DSDK::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap & aParam
 
 	if (amountList.isNull())
 	{
-		QString operatorINN = aParameters.value(CPrintConstants::OpINN).toString();
+		QString operatorName = aParameters.value(CPrintConstants::OpName).toString();
+		QString operatorINN  = aParameters.value(CPrintConstants::OpINN).toString();
 		QString paymentTitle = QString("%1 (%2)")
 			.arg(aParameters[CPrintConstants::ServiceType].toString())
 			.arg(aParameters[CPrintConstants::OpBrand].toString());
 
-		unitDataList << DSDK::SUnitData(amount, vat, paymentTitle, operatorINN, DSDK::EPayOffSubjectTypes::Payment);
+		unitDataList << DSDK::SUnitData(amount, vat, paymentTitle, operatorName, operatorINN, DSDK::EPayOffSubjectTypes::Payment);
 	}
 	else
 	{
 		QVariantList amounts = amountList.toList();
-		QVariantList amountTitles = aParameters.value("[AMOUNT_TITLE]").toList();
-		QVariantList amountsVAT = aParameters.value("[AMOUNT_VAT]").toList();
-		QVariantList operatorINNs = aParameters.value("[OPERATOR_INN]").toList();
+		QVariantList amountTitles  = aParameters.value("[AMOUNT_TITLE]").toList();
+		QVariantList amountsVAT    = aParameters.value("[AMOUNT_VAT]").toList();
+		QVariantList operatorNames = aParameters.value("[OPERATOR_NAME]").toList();
+		QVariantList operatorINNs  = aParameters.value("[OPERATOR_INN]").toList();
 
 		// amount содержит список сумм для печати реестра нераспечатанных чеков
 		for (int i = 0; i < amounts.size(); i++)
 		{
 			unitDataList << DSDK::SUnitData(
-				amounts.value(i).toDouble(), 
-				amountsVAT.value(i).toInt(), 
-				amountTitles.value(i).toString(), 
-				operatorINNs.value(i).toString(), 
+				amounts.value(i).toDouble(),
+				amountsVAT.value(i).toInt(),
+				amountTitles.value(i).toString(),
+				operatorNames.value(i).toString(),
+				operatorINNs.value(i).toString(),
 				DSDK::EPayOffSubjectTypes::Payment);
 		}
 	}
 
 	bool combineFeeWithZeroVAT = aParameters.value("COMBINE_FEE_WITH_ZERO_VAT", false).toBool();
 	QString feeName = combineFeeWithZeroVAT ? tr("#dealer_bpa_fee") : tr("#dealer_fee");
+	QString dealerName = aParameters.value(CPrintConstants::DealerName).toString();
+	QString dealerINN  = aParameters.value(CPrintConstants::DealerInn).toString();
 
 	if (dealerVAT == 0 && combineFeeWithZeroVAT)
 	{
@@ -117,24 +122,23 @@ DSDK::SPaymentData PrintFiscalCommand::getPaymentData(const QVariantMap & aParam
 
 		if (!qFuzzyIsNull(fee))
 		{
-			QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
-			unitDataList << DSDK::SUnitData(fee, dealerVAT, feeName, dealerINN, DSDK::EPayOffSubjectTypes::AgentFee);
+			unitDataList << DSDK::SUnitData(fee, dealerVAT, feeName, dealerName, dealerINN, DSDK::EPayOffSubjectTypes::AgentFee);
 		}
 	}
 	else
 	{
 		if (!qFuzzyIsNull(fee))
 		{
-			QString dealerINN = aParameters.value(CPrintConstants::DealerInn).toString();
 			unitDataList << (dealerIsBank ?
-				DSDK::SUnitData(fee, dealerVAT, tr("#bank_fee"), dealerINN, DSDK::EPayOffSubjectTypes::Payment) :
-				DSDK::SUnitData(fee, dealerVAT, feeName, dealerINN, DSDK::EPayOffSubjectTypes::AgentFee));
+				DSDK::SUnitData(fee, dealerVAT, tr("#bank_fee"), dealerName, dealerINN, DSDK::EPayOffSubjectTypes::Payment) :
+				DSDK::SUnitData(fee, dealerVAT, feeName,         dealerName, dealerINN, DSDK::EPayOffSubjectTypes::AgentFee));
 		}
 
 		if (!qFuzzyIsNull(processingFee))
 		{
-			QString bankINN = aParameters.value(CPrintConstants::BankInn).toString();
-			unitDataList << DSDK::SUnitData(processingFee, 0, tr("#processing_fee"), bankINN, DSDK::EPayOffSubjectTypes::Payment);
+			QString bankINN  = aParameters.value(CPrintConstants::BankInn).toString();
+			QString bankName = aParameters.value(CPrintConstants::BankName).toString();
+			unitDataList << DSDK::SUnitData(processingFee, 0, tr("#processing_fee"), bankName, bankINN, DSDK::EPayOffSubjectTypes::Payment);
 		}
 	}
 
@@ -290,19 +294,6 @@ bool PrintPayment::print(DSDK::IPrinter * aPrinter, const QVariantMap & aParamet
 
 	if (hasFiscalInfo)
 	{
-		QString pointAddress = parameters[CPrintConstants::PointAddress].toString();
-
-		if (std::find_if(receipt.begin(), receipt.end(), [&pointAddress] (const QString & line) -> bool { return line.contains(pointAddress); }) != receipt.end())
-		{
-			foreach (const QString & line, fiscalPart)
-			{
-				if (line.contains(pointAddress))
-				{
-					fiscalPart.removeAll(line);
-				}
-			}
-		}
-
 		receipt.append(fiscalPart);
 	}
 

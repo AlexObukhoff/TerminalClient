@@ -111,7 +111,7 @@ public:
 	// IDeviceService
 
 	/// Неблокирующий поиск всех устройств.
-	virtual void detect(const QString & aDeviceType);
+	virtual void detect(bool aFast, const QString & aDeviceType);
 
 	/// Прервать поиск устройств.
 	virtual void stopDetection();
@@ -168,9 +168,12 @@ public:
 	virtual void overwriteDeviceStatus(SDK::Driver::IDevice * aDevice, SDK::Driver::EWarningLevel::Enum aLevel, const QString & aDescription, int aStatus);
 
 private:
-	void doDetect(const QString & aDeviceType);
+	void doDetect(bool aFast, const QString & aDeviceType);
 	bool initializeDevice(const QString & aConfigName, SDK::Driver::IDevice * aDevice);
 	void statusChanged(SDK::Driver::IDevice * aDevice, Status & aStatus);
+
+	/// Устанавливает данные для инициализации.
+	void setInitializationData(const TNamedDevice & aNamedDevice);
 
 private slots:
 	void onDeviceDetected(const QString & aConfigName, SDK::Driver::IDevice * aDevice);

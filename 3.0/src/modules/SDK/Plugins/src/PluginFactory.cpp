@@ -109,7 +109,6 @@ bool PluginFactory::initialize(IKernel * aKernel, const QString & aDirectory)
 			}
 
 			config.endGroup();
-			parameters.insert(CPluginParameters::ConfigurationDirectory, configurationDirectory);
 			mPersistentConfigurations[group] = parameters;
 		}
 	}

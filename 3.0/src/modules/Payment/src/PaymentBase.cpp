@@ -47,6 +47,7 @@ PaymentBase::PaymentBase(SDK::PaymentProcessor::IPaymentFactory * aFactory, SDK:
 	mParameters.insert(SParameter(PPSDK::CPayment::Parameters::Step, CPayment::Steps::Init, true));
 	mParameters.insert(SParameter(PPSDK::CPayment::Parameters::InitialSession, createPaymentSession(), true));
 	mParameters.insert(SParameter(PPSDK::CPayment::Parameters::AmountAll, 0, true));
+	mParameters.insert(SParameter(PPSDK::CPayment::Parameters::PayTool, 0, true));
 
 	QStringList states;
 

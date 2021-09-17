@@ -11,9 +11,10 @@
 #include "CCNetCashAcceptorDataTypes.h"
 
 //--------------------------------------------------------------------------------
-class CCNetCashAcceptorBase : public TSerialCashAcceptor
+class CCNetCashAcceptorBase : public SerialCashAcceptor
 {
 	SET_SERIES("CCNet")
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::Dual, AdapterTags::FTDI)
 
 public:
 	CCNetCashAcceptorBase();

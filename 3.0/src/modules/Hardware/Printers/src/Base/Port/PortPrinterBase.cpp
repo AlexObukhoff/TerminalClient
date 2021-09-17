@@ -71,6 +71,14 @@ bool PortPrinterBase<T>::printReceipt(const Tags::TLexemeReceipt & aLexemeReceip
 {
 	mActualStringCount = 0;
 
+	QList<int> commands = mUnnecessaryErrors.keys();
+	bool isSimplePrinter = std::find_if(commands.begin(), commands.end(), [] (int command) -> bool { return command; }) == commands.end();
+
+	if (isSimplePrinter && !updateParameters())
+	{
+		return false;
+	}
+
 	return T::printReceipt(aLexemeReceipt);
 }
 

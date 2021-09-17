@@ -255,7 +255,7 @@ void DeviceBase<T>::initialize()
 		else
 		{
 			mInitialized = ERequestStatus::Fail;
-			processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::NotAvailable);
+			processStatusCode(DeviceStatusCode::Error::NotAvailable);
 		}
 
 		finaliseInitialization();
@@ -264,7 +264,7 @@ void DeviceBase<T>::initialize()
 	{
 		mConnected = false;
 		mInitialized = ERequestStatus::Fail;
-		processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::NotAvailable);
+		processStatusCode(DeviceStatusCode::Error::NotAvailable);
 	}
 
 	QString pluginPath = QString("\n%1 : %2").arg(CHardware::PluginPath).arg(getConfigParameter(CHardware::PluginPath).toString());
@@ -291,7 +291,7 @@ void DeviceBase<T>::finaliseInitialization()
 {
 	if (!mConnected)
 	{
-		processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::NotAvailable);
+		processStatusCode(DeviceStatusCode::Error::NotAvailable);
 	}
 
 	Qt::ConnectionType connectionType = !isWorkingThread() ? Qt::BlockingQueuedConnection : Qt::DirectConnection;
@@ -841,6 +841,13 @@ void DeviceBase<T>::processStatusCodes(const TStatusCodes & aStatusCodes)
 
 //--------------------------------------------------------------------------------
 template <class T>
+void DeviceBase<T>::processStatusCode(int aStatusCode)
+{
+	processStatusCodes(TStatusCodes() << aStatusCode);
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
 bool DeviceBase<T>::find()
 {
 	if (checkExistence())
@@ -851,27 +858,6 @@ bool DeviceBase<T>::find()
 	release();
 
 	return false;
-}
-
-//--------------------------------------------------------------------------------
-template <class T>
-bool DeviceBase<T>::checkConnectionParameter(const QString & aParameter) const
-{
-	QVariantMap requiredResourceParameters = getConfigParameter(CHardwareSDK::RequiredResourceParameters).toMap();
-
-	if (!requiredResourceParameters.contains(aParameter))
-	{
-		toLog(LogLevel::Error, mDeviceName + ": No " + aParameter);
-		return false;
-	}
-
-	if (requiredResourceParameters[aParameter].toString().isEmpty())
-	{
-		toLog(LogLevel::Error, mDeviceName + QString(": %1 is empty").arg(aParameter));
-		return false;
-	}
-
-	return true;
 }
 
 //--------------------------------------------------------------------------------

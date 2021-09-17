@@ -56,14 +56,14 @@ protected:
 	virtual int getVerificationCode();
 
 	/// Сформировать необязательное G-поле произвольного фискального документа (ПФД), содержащее фискальный реквизит.
-	CPrimFR::TData addFiscalField(int aX, int aY, int aFont, int aFiscalField = 0, const QString & aData = "", bool aNoPrint = false);
+	CPrimFR::TData addFiscalField(int aX, int aY, int aFiscalField = 0, const QString & aData = "", bool aNoPrint = false);
 
 	/// Получить данные регистрации.
 	bool getRegTLVData(int aField);
 	bool getRegTLVData(int aField, uchar & aData);
 
-	/// Шрифт для ПФД.
-	int mAFDFont;
+	/// Билд прошивки.
+	double mBuild;
 };
 
 //--------------------------------------------------------------------------------

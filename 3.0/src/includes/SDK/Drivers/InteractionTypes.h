@@ -43,7 +43,7 @@ const QStringList LoggedInteractionTypes = QStringList()
 	<< CInteractionTypes::USB
 	<< CInteractionTypes::LibUSB;
 
-/// Типы взаимодействия, для которых требуется отдельное логгирование средствами ТК.
+/// Типы взаимодействия, для которых требуется выделять порт под внешний драйвер.
 const QStringList ExternalWithRRTypes = QStringList()
 	<< CInteractionTypes::ExternalCOM
 	<< CInteractionTypes::ExternalVCOM;

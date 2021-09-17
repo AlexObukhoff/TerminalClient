@@ -6,6 +6,7 @@
 // Project
 #include "CashAcceptor/VirtualCashAcceptor.h"
 #include "CashDispenser/VirtualCashDispenser.h"
+#include "Printer/VirtualPrinter.h"
 
 using namespace SDK::Plugin;
 using namespace SDK::Driver;
@@ -29,7 +30,7 @@ IPlugin * CreatePlugin(IEnvironment * aEnvironment, const QString & aInstanceNam
 }
 
 //--------------------------------------------------------------------------------------
-TParameterList CAParameters()
+TParameterList cashAcceptorParameters()
 {
 	return modifyPriority(createNamedList<VirtualCashAcceptor>("Virtual cash acceptor"), EDetectingPriority::Fallback)
 		// Количество зачисляемых одновременно купюр.
@@ -63,10 +64,17 @@ TParameterList dispenserParameters()
 		<< SPluginParameter(CHardware::Dispenser::JammedItem, true, VDPPT::JammedItem, QString(), 5, getList(0, 15));
 }
 
+//--------------------------------------------------------------------------------------
+TParameterList printerParameters()
+{
+	return modifyPriority(createNamedList<VirtualPrinter>("Virtual printer"), EDetectingPriority::Fallback);
+}
+
 //------------------------------------------------------------------------------
 BEGIN_REGISTER_PLUGIN
-	COMMON_DRIVER(VirtualCashAcceptor, &CAParameters)
+	COMMON_DRIVER(VirtualCashAcceptor, &cashAcceptorParameters)
 	COMMON_DRIVER(VirtualDispenser, &dispenserParameters)
+	COMMON_DRIVER(VirtualPrinter, &printerParameters)
 END_REGISTER_PLUGIN
 
 //--------------------------------------------------------------------------------------

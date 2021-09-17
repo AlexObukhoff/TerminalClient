@@ -53,6 +53,7 @@ namespace COSMP2Sensor
 class OSMP2: public OSMP
 {
 	SET_SERIES("OSMP2")
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::VCOMOnly, AdapterTags::FTDI)
 
 public:
 	OSMP2();

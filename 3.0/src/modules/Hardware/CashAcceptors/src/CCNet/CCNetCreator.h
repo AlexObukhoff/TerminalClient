@@ -8,6 +8,7 @@
 class CCNetCreator : public CCNetCashAcceptorBase
 {
 	SET_SUBSERIES("Creator")
+	SET_VCOM_DATA(None, ConnectionTypes::COMOnly, None)
 
 public:
 	CCNetCreator();

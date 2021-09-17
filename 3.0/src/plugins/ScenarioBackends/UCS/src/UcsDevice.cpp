@@ -27,13 +27,21 @@ namespace Ucs
 
 //--------------------------------------------------------------------------------
 UcsDevice::UcsDevice() :
-	mCore(nullptr)
+	mCore(nullptr),
+	ILogable(Ucs::LogName),
+	mAcquireAmount(0.0)
 {
 }
 
 //--------------------------------------------------------------------------------
 UcsDevice::~UcsDevice()
 {
+	QSharedPointer<Ucs::API> api = Ucs::API::getInstance(mCore, getLog());
+	
+	disconnect(api.data(), SIGNAL(ready()), this, SLOT(onReady()));
+	disconnect(api.data(), SIGNAL(error(const QString&)), this, SLOT(onAPIError(const QString&)));
+	disconnect(SIGNAL(message(const QString&)));
+	disconnect(SIGNAL(saleComplete(double, int, const QString&, const QString&)));
 }
 
 //--------------------------------------------------------------------------------
@@ -97,8 +105,23 @@ bool UcsDevice::release()
 void UcsDevice::initialize()
 {
 	QSharedPointer<Ucs::API> api = Ucs::API::getInstance(mCore, getLog());
-	connect(api.data(), SIGNAL(ready()), this, SLOT(onReady()));
-	connect(api.data(), SIGNAL(error(const QString &)), this, SLOT(onAPIError(const QString &)));
+	bool isConnected = connect(api.data(), SIGNAL(ready()), this, SLOT(onReady()), Qt::QueuedConnection);
+	Q_ASSERT(isConnected);
+
+	isConnected = connect(api.data(), SIGNAL(error(const QString &)), this, SLOT(onAPIError(const QString &)), Qt::QueuedConnection);
+	Q_ASSERT(isConnected);
+
+	isConnected = connect(api.data(), SIGNAL(message(const QString &)), this, SLOT(onAPIMessage(const QString &)), Qt::QueuedConnection);
+	Q_ASSERT(isConnected);
+
+	isConnected = connect(api.data(), SIGNAL(saleComplete(double, int, const QString &, const QString &, const QStringList &)), this,
+		                SIGNAL(saleComplete(double, int, const QString &, const QString &, const QStringList&)), Qt::QueuedConnection);
+	Q_ASSERT(isConnected);
+
+	if (mConfiguration.value(SDK::Driver::CAllHardware::OperatorPresence).toBool() && !api->isReady())
+		api->setupRuntime(mConfiguration.value(Ucs::ParamRuntimePath).toString());
+
+	QMetaObject::invokeMethod(api.data(), "status", Qt::QueuedConnection);
 
 	DeviceStatusCode::CSpecifications specifications;
 	if (api->isReady())
@@ -108,20 +131,38 @@ void UcsDevice::initialize()
 	else
 	{
 		sendStatus(EWarningLevel::Error, specifications[DeviceStatusCode::Error::ThirdPartyDriverFail].translation, EStatus::Actual);
-	}	
+	}
 }
 
 //--------------------------------------------------------------------------------
 void UcsDevice::onReady()
 {
+	QSharedPointer<Ucs::API> api = Ucs::API::getInstance(mCore, getLog());		
 	DeviceStatusCode::CSpecifications specifications;
 	sendStatus(EWarningLevel::OK, specifications[DeviceStatusCode::OK::OK].translation, EStatus::Actual);
+
+
+	emit initialized();
+	if (!qFuzzyIsNull(mAcquireAmount))
+	{
+		bool isConnected = connect(api.data(), SIGNAL(doComplete(bool)), this, SLOT(onDoComplete(bool)));
+		Q_ASSERT(isConnected);
+
+		QMetaObject::invokeMethod(api.data(), "sale", Qt::QueuedConnection, Q_ARG(double, mAcquireAmount));
+		mAcquireAmount = 0.0;
+
+	}
 }
 
 //--------------------------------------------------------------------------------
 void UcsDevice::onAPIError(const QString & aMessage)
 {
 	sendStatus(EWarningLevel::Error, aMessage, EStatus::Actual);
+}
+
+void UcsDevice::onAPIMessage(const QString & aMessage)
+{
+	emit message(aMessage);
 }
 
 //--------------------------------------------------------------------------------
@@ -159,8 +200,10 @@ void UcsDevice::sendStatus(EWarningLevel::Enum aLevel, const QString & aMessage,
 bool UcsDevice::isDeviceReady() const
 {
 	QSharedPointer<Ucs::API> api = Ucs::API::getInstance(mCore, getLog());
+	if (api->isReady())
+		api->login();
 
-	return api && api->isReady();
+	return api->isReady();
 }
 
 //--------------------------------------------------------------------------------
@@ -211,6 +254,50 @@ bool UcsDevice::containsConfigParameter(const QString & aName) const
 //------------------------------------------------------------------------------
 void UcsDevice::eject()
 {
+}
+
+//------------------------------------------------------------------------------
+bool UcsDevice::sale(SDK::PaymentProcessor::TPaymentAmount aAmount)
+{
+	auto api = Ucs::API::getInstance(mCore, getLog());
+
+	if (api->enable(aAmount))
+	{
+		mAcquireAmount = aAmount;
+		QMetaObject::invokeMethod(api.data(), "login");		
+		return true;
+	}
+
+	return false;
+}
+
+void UcsDevice::onDoComplete(bool aIsSaleComplete)
+{
+	auto api = Ucs::API::getInstance(mCore, getLog());
+	api.data()->disconnect(SIGNAL(doComplete(bool)));
+
+	if (api->isOK())
+	{
+		if (aIsSaleComplete)
+		{
+			toLog(LogLevel::Normal, "UCS device sale complete");
+			disable();
+		}
+		else
+		{
+			api->sale(0);
+			bool isConnected = connect(api.data(), SIGNAL(doComplete(bool)), this, SLOT(onDoComplete(bool))); 
+			Q_ASSERT(isConnected);
+		}
+	}		
+}
+
+//------------------------------------------------------------------------------
+void UcsDevice::disable()
+{
+	auto api = Ucs::API::getInstance(mCore, getLog());
+	api->disable();
+	mAcquireAmount = 0.0;
 }
 
 //------------------------------------------------------------------------------

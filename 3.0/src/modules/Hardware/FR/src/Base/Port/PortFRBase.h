@@ -85,6 +85,6 @@ protected:
 
 typedef PortFRBase<SerialPrinterBase<PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoFR>>>>> TSerialFRBase;
 typedef PortFRBase<PortPrinterBase<PrinterBase<TCPDeviceBase<PortPollingDeviceBase<ProtoFR>>>>> TTCPFRBase;
-typedef FRBase<PrinterBase<PollingDeviceBase<ProtoFR>>> TExternalFRBase;
+typedef FRBase<PrinterBase<PollingDeviceBase<ExternalPortDeviceBase<ProtoFR>>>> TExternalFRBase;
 
 //--------------------------------------------------------------------------------

@@ -24,7 +24,8 @@ namespace EAmountType
 		Bill = 0,
 		Coin,
 		EMoney,
-		BankCard
+		BankCard,
+		AmountOnDemand
 	};
 }
 

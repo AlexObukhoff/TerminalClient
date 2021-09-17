@@ -46,9 +46,6 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
-    <Filter Include="SystemDeviceUtils">
-      <UniqueIdentifier>{bd51fc38-afb3-47db-b267-c922e1a7ef0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LibUSBPort">
       <UniqueIdentifier>{662e85e9-d680-4ec0-b5b0-6b178cc5465e}</UniqueIdentifier>
     </Filter>
@@ -115,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\LibUSBDeviceDataTypes.h">
       <Filter>LibUSBPort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\IOPortTypeData.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

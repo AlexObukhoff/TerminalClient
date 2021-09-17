@@ -20,6 +20,7 @@
 #include <Common/ILog.h>
 
 // Проект
+#include "Md5ValidatorQmlItem.h"
 #include "QMLBackend.h"
 
 //------------------------------------------------------------------------------
@@ -66,6 +67,8 @@ QMLBackend::QMLBackend(SDK::Plugin::IEnvironment * aFactory, const QString & aIn
 		QString("%1.%2").arg(SDK::PaymentProcessor::Scripting::CProxyNames::Core).arg(CQMLBackend::TypesExportNamespace).toLatin1(), 1, 0, "EventType", "EventType enum is readonly.");
 	qmlRegisterUncreatableType<SDK::GUI::MessageBoxParams>(
 		QString("%1.%2").arg(SDK::PaymentProcessor::Scripting::CProxyNames::Core).arg(CQMLBackend::TypesExportNamespace).toLatin1(), 1, 0, "MessageBox", "MessageBoxParams enum is readonly.");
+
+	qmlRegisterType<Md5Validator>("Md5Validator", 1, 0, "Md5Validator");
 
 	connect(&mQMLEngine, SIGNAL(warnings(const QList<QDeclarativeError> &)), this, SLOT(onWarnings(const QList<QDeclarativeError> &)));
 }

@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="../scripts/root_groups.js" line="6"/>
-        <source>root_groups#102</source>
+        <source>root_groups#9258</source>
         <translation>Интернет</translation>
     </message>
     <message>

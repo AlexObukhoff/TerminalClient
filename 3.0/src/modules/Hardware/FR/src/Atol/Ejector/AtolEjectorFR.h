@@ -10,6 +10,8 @@
 template <class T>
 class AtolEjectorFR : public T
 {
+	SET_VCOM_DATA(None, ConnectionTypes::COMOnly, None)
+
 public:
 	AtolEjectorFR();
 

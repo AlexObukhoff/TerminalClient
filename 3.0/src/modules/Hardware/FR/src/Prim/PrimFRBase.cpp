@@ -31,6 +31,7 @@ PrimFRBase::PrimFRBase() : mMode(EFRMode::Fiscal)
 	mDeviceName = CPrimFR::DefaultModelName;
 	mModels = CPrimFR::CommonModels();
 	mModel = CPrimFR::Models::Unknown;
+	mAFDFont = CPrimFR::FiscalFont::Default;
 	mOffline = true;
 	mLineFeed = true;
 
@@ -861,11 +862,23 @@ void PrimFRBase::makeAFDReceipt(QStringList & aReceipt)
 		{
 			for (int k = 0; k < lexemeReceipt[i][j].size(); ++k)
 			{
-				line += lexemeReceipt[i][j][k].data;
+				if (!lexemeReceipt[i][j][k].tags.contains(Tags::Type::BarCode))
+				{
+					line += lexemeReceipt[i][j][k].data;
+				}
+				else
+				{
+					aReceipt << line;
+					aReceipt << Tags::bcData + lexemeReceipt[i][j][k].data;
+					line.clear();
+				}
 			}
 		}
 
-		aReceipt << line;
+		if (!line.isEmpty())
+		{
+			aReceipt << line;
+		}
 	}
 
 	if (!aReceipt.isEmpty())
@@ -927,6 +940,25 @@ bool PrimFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 	makeAFDReceipt(receipt);
 	int receiptSize = receipt.size();
 
+	// Штрих-коды можно печатать только в конце ПФД
+	int bcDataLines = 0;
+
+	for (int i = 0; i < receiptSize; ++i)
+	{
+		if (receipt[i].startsWith(Tags::bcData))
+		{
+			QString bcData = CPrimFR::BarcodeData;
+
+			foreach (auto ch, receipt[i].mid(Tags::bcData.size()))
+			{
+				bcData += QString::number(ch.cell(), 16);
+			}
+
+			receipt[i] = Tags::bcData + bcData;
+			bcDataLines++;
+		}
+	}
+
 	int verificationCode = getVerificationCode();
 	QByteArray FDType = CPrimFR::PayOffTypeData[aPaymentData.payOffType];
 	QByteArray payTypeData = int2ByteArray(mPayTypeData[aPaymentData.payType].value);
@@ -943,7 +975,7 @@ bool PrimFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 		<< CPrimFR::LineGrid;   // шаг строк
 
 	CPrimFR::TDataList additionalAFDData;
-	setFiscalData(commandData, additionalAFDData, aPaymentData, receiptSize);
+	setFiscalData(commandData, additionalAFDData, aPaymentData, receiptSize - bcDataLines);
 
 	for (int i = 0; i < additionalAFDData.size(); ++i)
 	{
@@ -951,11 +983,27 @@ bool PrimFRBase::performFiscal(const QStringList & aReceipt, const SPaymentData 
 	}
 
 	// терминальный чек
+	int fiscalFont = mAFDFont;
+	mAFDFont = mIsOnline ? CPrimFR::FiscalFont::Narrow : CPrimFR::FiscalFont::Default;
+
+	// Штрих-коды можно печатать только в конце ПФД
+	bcDataLines = 0;
+
 	for (int i = 0; i < receiptSize; ++i)
 	{
-		char font = mIsOnline ? CPrimFR::FiscalFont::Narrow : CPrimFR::FiscalFont::Default;
-		commandData << addArbitraryFieldToBuffer(i + 1, 1, receipt[i], font);
+		bool bc = receipt[i].startsWith(Tags::bcData);
+
+		if (bc)
+		{
+			receipt[i] = receipt[i].mid(Tags::bcData.size());
+			bcDataLines++;
+		}
+
+		int x = i + 1 - bcDataLines;
+		commandData << addArbitraryFieldToBuffer(x, 1, receipt[i], false, bc);
 	}
+
+	mAFDFont = fiscalFont;
 
 	// количество полей
 	commandData.insert(32, int2ByteArray(receiptSize + additionalAFDData.size()));
@@ -1213,23 +1261,23 @@ bool PrimFRBase::setMode(EFRMode::Enum aMode)
 }
 
 //--------------------------------------------------------------------------------
-CPrimFR::TData PrimFRBase::addGFieldToBuffer(int aX, int aY, int aFont)
+CPrimFR::TData PrimFRBase::addGFieldToBuffer(int aX, int aY)
 {
 	return CPrimFR::TData()
 		<< QString("%1").arg(qToBigEndian(unsigned short(aX)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по X
 		<< QString("%1").arg(qToBigEndian(unsigned short(aY)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по Y
-		<< int2String(aFont).toLatin1();   // шрифт, см. ESC !
+		<< int2String(mAFDFont).toLatin1();   // шрифт, см. ESC !
 }
 
 //--------------------------------------------------------------------------------
-CPrimFR::TData PrimFRBase::addArbitraryFieldToBuffer(int aX, int aY, const QString & aData, int aFont, bool aNoPrint)
+CPrimFR::TData PrimFRBase::addArbitraryFieldToBuffer(int aX, int aY, const QString & aData, bool aNoPrint, bool aBarCode)
 {
 	return CPrimFR::TData()
 		<< QString("%1").arg(qToBigEndian(unsigned short(aX)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по X
 		<< QString("%1").arg(qToBigEndian(unsigned short(aY)), 4, 16, QLatin1Char(ASCII::Zero)).toLatin1()    // позиция реквизита по Y
-		<< int2String(aFont).toLatin1()    // шрифт, см. ESC !
+		<< int2String(mAFDFont).toLatin1()    // шрифт, см. ESC !
 		<< (aNoPrint ? "02" : "01")        // Печать произвольного реквизита
-		<< "00"                            // N вывода на контрольную ленту
+		<< (aBarCode ? "1D" : "00")        // N вывода на контрольную ленту
 		<< mCodec->fromUnicode(aData);     // данные
 }
 

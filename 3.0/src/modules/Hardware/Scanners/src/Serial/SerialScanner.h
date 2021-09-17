@@ -15,6 +15,8 @@ typedef PortScanner<SerialDeviceBase<PortPollingDeviceBase<ProtoHID>>> TSerialSc
 
 class SerialScanner: public TSerialScanner
 {
+	SET_VCOM_DATA(Types::Manufacturer, ConnectionTypes::Dual, ManufacturerTags::Scanner::AreaImager);
+
 public:
 	SerialScanner();
 

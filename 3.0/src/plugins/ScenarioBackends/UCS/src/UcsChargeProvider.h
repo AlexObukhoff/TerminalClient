@@ -77,7 +77,7 @@ public slots:
 	void onEvent(const SDK::PaymentProcessor::Event &  aEvent);
 
 private slots:
-	void onSaleComplete(double aAmount, int aCurrency, const QString & aRRN, const QString & aConfirmationCode);
+	void onSaleComplete(double aAmount, int aCurrency, const QString & aRRN, const QString & aConfirmationCode, const QStringList &);
 	void onEncashmentComplete();
 
 private:

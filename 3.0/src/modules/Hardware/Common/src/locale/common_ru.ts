@@ -60,7 +60,7 @@
     <message>
         <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="69"/>
         <source>#model_not_compatible</source>
-        <translation>модель соответствует другому плагину</translation>
+        <translation>модель не соответствует данному плагину</translation>
     </message>
     <message>
         <location filename="../../../../../includes/Hardware/Common/BaseStatusDescriptions.h" line="80"/>

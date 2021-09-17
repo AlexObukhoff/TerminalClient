@@ -138,6 +138,7 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\BillTable.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CurrencyDescriptions.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\CashAcceptorData.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\SerialCashAcceptor.h" />
     <ClInclude Include="..\src\CashAcceptorStatusData.h" />
     <ClInclude Include="..\src\CCNet\CCNetCashAcceptorBase.h" />
     <ClInclude Include="..\src\CCNet\CCNetCashAcceptorDataTypes.h" />

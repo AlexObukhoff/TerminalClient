@@ -8,6 +8,7 @@
 #include <QtCore/QVariantMap>
 #include <QtCore/QSet>
 #include <QtCore/QUrl>
+#include <QtCore/QStringList>
 #include <Common/QtHeadersEnd.h>
 
 namespace SDK {
@@ -165,6 +166,7 @@ struct SProvider
 			typedef QList<SResponseField> TResponseField;
 
 			QString url;
+			int payTool;
 			TFields requestFields;
 			TResponseField responseFields;
 		};
@@ -241,6 +243,8 @@ struct SProvider
 	/// Типы чеков и чековые параметры.
 	QVariantMap receipts;
 	QVariantMap receiptParameters;
+
+	QStringList paymentMethods; // Разрешенные способы оплаты
 
 	/// конвертация списка полей из/в json
 	static QString fields2Json(const TProviderFields & aFields);

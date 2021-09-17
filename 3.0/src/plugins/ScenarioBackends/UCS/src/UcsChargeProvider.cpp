@@ -77,8 +77,8 @@ UcsChargeProvider::UcsChargeProvider(SDK::Plugin::IEnvironment * aFactory, const
 
 	mDealerSettings = dynamic_cast<PPSDK::DealerSettings *>(mCore->getSettingsService()->getAdapter(PPSDK::CAdapterNames::DealerAdapter));
 
-	connect(mApi.data(), SIGNAL(saleComplete(double, int, const QString &, const QString &)),
-		SLOT(onSaleComplete(double, int, const QString &, const QString &)));
+	connect(mApi.data(), SIGNAL(saleComplete(double, int, const QString &, const QString &, const QStringList &)),
+		SLOT(onSaleComplete(double, int, const QString &, const QString &, const QStringList &)));
 
 	connect(mApi.data(), SIGNAL(encashmentComplete()), SLOT(onEncashmentComplete()));
 
@@ -157,7 +157,7 @@ bool UcsChargeProvider::enable(PPSDK::TPaymentAmount aMaxAmount)
 bool UcsChargeProvider::disable()
 {
 	// Чистим ресурсы по команде сценария, т.к. нужны дополнительные движения с API
-	// mApi->disable();
+	//mApi->disable();
 	return true;
 }
 
@@ -178,7 +178,7 @@ void UcsChargeProvider::onEncashmentComplete()
 }
 
 //------------------------------------------------------------------------------
-void UcsChargeProvider::onSaleComplete(double aAmount, int aCurrency, const QString & aRRN, const QString & aConfirmationCode)
+void UcsChargeProvider::onSaleComplete(double aAmount, int aCurrency, const QString & aRRN, const QString & aConfirmationCode, const QStringList &)
 {
 	toLog(LogLevel::Normal, QString("Sale complete: %1 RRN:%2 confirmation:%3.").arg(aAmount, 0, 'f', 2).arg(aRRN).arg(aConfirmationCode));
 

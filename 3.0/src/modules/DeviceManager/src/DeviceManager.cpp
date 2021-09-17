@@ -16,6 +16,8 @@
 #include <SDK/Drivers/InteractionTypes.h>
 #include <SDK/Drivers/HardwareConstants.h>
 #include <SDK/Drivers/DetectingPriority.h>
+#include <SDK/Drivers/IIOPort.h>
+#include <SDK/Drivers/IOPort/VCOMData.h>
 
 // Project
 #include "RenamingPluginPaths.h"
@@ -25,7 +27,7 @@ using namespace SDK::Driver;
 using namespace SDK::Plugin;
 
 //--------------------------------------------------------------------------------
-DeviceManager::DeviceManager(IPluginLoader * aPluginLoader) : mPluginLoader(aPluginLoader), mStopFlag(1)
+DeviceManager::DeviceManager(IPluginLoader * aPluginLoader) : mPluginLoader(aPluginLoader), mStopFlag(1), mFastAutoSearching(false)
 {
 	qRegisterMetaType<TNamedDevice>("TNamedDevice");
 }
@@ -327,6 +329,7 @@ TNamedDevice DeviceManager::createDevice(const QString & aDriverPath, const QVar
 		mDeviceDependencyMap.insert(device, requiredDevice.second);
 	}
 
+	config[CHardwareSDK::SearchingType] = aDetecting ? CHardwareSDK::SearchingTypes::AutoDetecting : CHardwareSDK::SearchingTypes::Loading;
 	device->setDeviceConfiguration(config);
 
 	if (!aDetecting)
@@ -346,7 +349,7 @@ QMap<QString, QStringList> DeviceManager::getModelList(const QString & /*aFilter
 }
 
 //--------------------------------------------------------------------------------
-TNamedDevice DeviceManager::findDevice(IDevice * aRequired, const QStringList & aDevicesToFind)
+TNamedDevice DeviceManager::findDevice(IDevice * aRequired, const QStringList & aDevicesToFind, bool aVCOM)
 {
 	QMap<QString, IDevice *> targetDevices;
 	QMap<QString, IDevice::IDetectingIterator *> detectingIterators;
@@ -358,9 +361,59 @@ TNamedDevice DeviceManager::findDevice(IDevice * aRequired, const QStringList & 
 	ILog * log = ILog::getInstance(logFileName);
 	aRequired->setLog(log);
 
+	QVariantMap requiredConfig = aRequired->getDeviceConfiguration();
+	QString tag = requiredConfig[CHardwareSDK::Tag].toString();
+	QString systemName = requiredConfig[CHardwareSDK::SystemName].toString();
+
 	// Создаем все устройства, которые собираемся искать.
 	foreach (const QString & targetDevice, aDevicesToFind)
 	{
+		if (mFastAutoSearching)
+		{
+			SPluginParameter VCOMDataParameter = findParameter(CHardwareSDK::VCOMData, mDriverParameters[targetDevice]);
+
+			bool VCOMDataExists  = VCOMDataParameter.isValid() && !VCOMDataParameter.defaultValue.toMap().isEmpty();
+			QVariantMap VCOMData = VCOMDataParameter.defaultValue.toMap();
+			QStringList VCOMTags = VCOMData[CHardwareSDK::VCOMTags].toStringList();
+			VCOMTags.removeAll("");
+
+			QString reasonLog = " for device " + targetDevice;
+			QString reasonTagLog = reasonLog + QString(", port tag \"%1\"").arg(tag);
+			QString log = QString("Blocking autosearch on virtual port %1 due to ").arg(systemName);
+
+			// пропускаем, если:
+			// либо ищем не  COM-девайсы (VCOM + dual), и либо порт без тега, либо нет данных в девайсе о теге, либо теги девайса не содержат тега порта;
+			// либо ищем не VCOM-девайсы ( COM + dual), и порт с тегом, и данные о теге в девайсе есть: на портах со своими тегами уже искали, на чужих - искать не надо
+			if (aVCOM)
+			{
+				if (tag.isEmpty())
+				{
+					toLog(LogLevel::Normal, log + "no port tag" + reasonLog);
+					continue;
+				}
+				else if (!VCOMDataExists)
+				{
+					toLog(LogLevel::Normal, log + "no device tag data" + reasonTagLog);
+					continue;
+				}
+				else if (VCOMTags.isEmpty())
+				{
+					toLog(LogLevel::Debug, log + "no device tags" + reasonTagLog);
+					continue;
+				}
+				else if (!VCOMTags.contains(tag))
+				{
+					toLog(LogLevel::Debug, log + QString("device tags (%1) not contains").arg(VCOMTags.join(", ")) + reasonTagLog);
+					continue;
+				}
+			}
+			else if (!tag.isEmpty() && VCOMDataExists && !VCOMTags.isEmpty())
+			{
+				toLog(LogLevel::Debug, log + QString("device tags (%1)").arg(VCOMTags.join(", ")) + reasonTagLog);
+				continue;
+			}
+		}
+
 		// Создаем нужный плагин.
 		IPlugin * plugin = mPluginLoader->createPlugin(targetDevice);
 		IDevice * device = dynamic_cast<IDevice *>(plugin);
@@ -390,6 +443,7 @@ TNamedDevice DeviceManager::findDevice(IDevice * aRequired, const QStringList & 
 		}
 
 		config[CHardwareSDK::SearchingType] = CHardwareSDK::SearchingTypes::AutoDetecting;
+		config[CHardwareSDK::FastAutoSearching] = mFastAutoSearching;
 		config[CHardwareSDK::RequiredDevice] = QVariant::fromValue(aRequired);
 		config[CHardwareSDK::RequiredResource] = dynamic_cast<IPlugin *>(aRequired)->getConfigurationName();
 
@@ -454,6 +508,12 @@ TNamedDevice DeviceManager::findDevice(IDevice * aRequired, const QStringList & 
 				configNames.clear();
 
 				break;
+			}
+
+			if (aVCOM)
+			{
+				configNames.removeOne(targetDevice);
+				continue;
 			}
 		}
 	}
@@ -597,11 +657,10 @@ void DeviceManager::logRequiedDeviceData()
 }
 
 //--------------------------------------------------------------------------------
-QStringList DeviceManager::detect(const QString & /*aDeviceType*/)
+QStringList DeviceManager::detect(bool aFast, const QString & /*aDeviceType*/)
 {
 	logRequiedDeviceData();
-
-	QStringList result;
+	mFastAutoSearching = aFast;
 
 	mStopFlag = 0;
 	mDetectedDeviceTypes.clear();
@@ -616,7 +675,14 @@ QStringList DeviceManager::detect(const QString & /*aDeviceType*/)
 
 	QStringSet OPOSDevices = simpleDevices.filter(CInteractionTypes::OPOS, Qt::CaseInsensitive).toSet();
 	QStringSet nonOPOSDevices = simpleDevices.toSet() - OPOSDevices;
+
+	QStringList result;
 	SSimpleSearchDeviceData deviceData(&result, &fallbackDevices, &nonMarkedDetectedDriverNames);
+
+	if (mFastAutoSearching)
+	{
+		findRRDevices(result, true);
+	}
 
 	foreach (const QString & driverName, nonOPOSDevices)
 	{
@@ -643,7 +709,7 @@ QStringList DeviceManager::detect(const QString & /*aDeviceType*/)
 		markDetected(driverName);
 	}
 
-	findRRDevices(result);
+	findRRDevices(result, false);
 
 	mStopFlag = 1;
 
@@ -664,8 +730,30 @@ QStringList DeviceManager::detect(const QString & /*aDeviceType*/)
 }
 
 //------------------------------------------------------------------------------
-void DeviceManager::findRRDevices(QStringList & aFoundDevices)
+void DeviceManager::findRRDevices(QStringList & aFoundDevices, bool aVCOM)
 {
+	auto removeExternal = [] (QStringList & aDevices) { QString regExpData = QString(".+\\.Driver\\.[^\\.]+\\.(?!(%1))").arg(ExternalWithRRTypes.join("|")); 
+		aDevices = aDevices.filter(QRegExp(regExpData)); };
+	QStringList allDevices = mRequiredResources.keys();
+	removeExternal(allDevices);
+
+	QMap<QString, QStringList> xCOMDevices;
+	QStringList allXCOMDevices;
+
+	foreach (const QString & device, allDevices)
+	{
+		SPluginParameter VCOMDataParameter = findParameter(CHardwareSDK::VCOMData, mDriverParameters[device]);
+
+		if (VCOMDataParameter.isValid() && !VCOMDataParameter.defaultValue.toMap().isEmpty())
+		{
+			QVariantMap VCOMData = VCOMDataParameter.defaultValue.toMap();
+			QString connectionType = VCOMData[CHardwareSDK::VCOMConnectionType].toString();
+
+			xCOMDevices[connectionType] << device;
+			allXCOMDevices << device;
+		}
+	}
+
 	QFutureSynchronizer<TNamedDevice> synchronizer;
 	QVector<IDevice *> requiredList;
 
@@ -673,14 +761,44 @@ void DeviceManager::findRRDevices(QStringList & aFoundDevices)
 	foreach (const QString & requiredDevice, mRDSystemNames.keys().toSet())
 	{
 		QStringList devicesToFind = mRequiredResources.keys(requiredDevice);
+		QStringList deviceTags;
+
+		if (mFastAutoSearching)
+		{
+			foreach(const QString & device, devicesToFind)
+			{
+				if ((aVCOM && xCOMDevices[VCOM::ConnectionTypes::COMOnly].contains(device)) ||
+				   (!aVCOM && xCOMDevices[VCOM::ConnectionTypes::VCOMOnly].contains(device)))
+				{
+					devicesToFind.removeAll(device);
+				}
+				else if (aVCOM)
+				{
+					SPluginParameter VCOMDataParameter = findParameter(CHardwareSDK::VCOMData, mDriverParameters[device]);
+
+					if (VCOMDataParameter.isValid() && !VCOMDataParameter.defaultValue.toMap().isEmpty())
+					{
+						QVariantMap VCOMData = VCOMDataParameter.defaultValue.toMap();
+						QStringList tags = VCOMData[CHardwareSDK::VCOMTags].toStringList();
+
+						if (!tags.isEmpty())
+						{
+							deviceTags << tags;
+						}
+					}
+				}
+			}
+		}
+
+		deviceTags.removeDuplicates();
+		deviceTags.removeAll("");
 
 		if (devicesToFind.isEmpty() || requiredDevice.contains(CInteractionTypes::TCP))
-		{ 
+		{
 			continue;
 		}
 
-		QString regExpData = QString(".+\\.Driver\\.[^\\.]+\\.(?!(%1))").arg(ExternalWithRRTypes.join("|"));
-		devicesToFind = devicesToFind.filter(QRegExp(regExpData));
+		removeExternal(devicesToFind);
 		qSort(devicesToFind.begin(), devicesToFind.end(), std::bind(&DeviceManager::deviceSortPredicate, this, std::placeholders::_1, std::placeholders::_2));
 
 		// Для каждого системного имени создаем устройство.
@@ -696,13 +814,60 @@ void DeviceManager::findRRDevices(QStringList & aFoundDevices)
 				continue;
 			}
 
+			config[CHardwareSDK::SearchingType] = CHardwareSDK::SearchingTypes::AutoDetecting;
+			required.second->setDeviceConfiguration(config);
+
+			if (mFastAutoSearching)
+			{
+				required.second->initialize();
+				QVariantMap requiredСonfig = required.second->getDeviceConfiguration();
+
+				QString requiredVCOMType = requiredСonfig[CHardwareSDK::VCOMType].toString();
+				QString requiredTag = requiredСonfig[CHardwareSDK::Tag].toString();
+
+				auto logAndRelease = [&] (const QString aReason, bool aTagLog) { QString tagLog = aTagLog ? QString(", port tag \"%1\"").arg(requiredTag) : "";
+					toLog(LogLevel::Normal, QString("Blocking autosearching on virtual port %1 due to %2").arg(systemName).arg(aReason) + tagLog); releaseDevice(required.second); };
+
+				if (aVCOM)
+				{
+					if (requiredTag.isEmpty())
+					{
+						logAndRelease("no port tag", false);
+						continue;
+					}
+					else if (deviceTags.isEmpty())
+					{
+						logAndRelease("no device tag", true);
+						continue;
+					}
+					else if (!deviceTags.contains(requiredTag))
+					{
+						logAndRelease(QString("device tags (%1) not contains").arg(deviceTags.join(", ")), true);
+						continue;
+					}
+
+					toLog(LogLevel::Normal, QString("Starting autosearching on virtual port %1 with tag %2").arg(systemName).arg(requiredTag));
+				}
+				else
+				{
+					if (!requiredVCOMType.isEmpty() && (requiredVCOMType != VCOM::Types::Adapter))
+					{
+						logAndRelease("type is " + requiredVCOMType, true);
+						continue;
+					}
+
+					toLog(LogLevel::Normal, "Starting autosearching on port " + systemName);
+				}
+			}
+
 			// Запускаем асинхронный поиск.
-			synchronizer.addFuture(QtConcurrent::run(this, &DeviceManager::findDevice, required.second, devicesToFind));
+			synchronizer.addFuture(QtConcurrent::run(this, &DeviceManager::findDevice, required.second, devicesToFind, aVCOM));
 			requiredList.append(required.second);
 		}
 	}
 
 	synchronizer.waitForFinished();
+	toLog(LogLevel::Normal, "Waiting for results is completed");
 
 	// Формируем результат.
 	int i = 0;

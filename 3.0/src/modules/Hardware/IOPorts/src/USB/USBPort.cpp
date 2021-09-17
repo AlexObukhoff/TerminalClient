@@ -143,11 +143,13 @@ TWinDeviceProperties USBPort::getDevicesProperties(bool aForce, bool aPDODetecti
 
 	for (auto it = properties.begin(); it != properties.end();)
 	{
-		auto getProperty = [&] (DWORD aCode) -> QString { return it->data[deviceWinProperties[aCode]]; };
+		TWinProperties & data = it->data;
+		auto checkPropertyTags = [&] (DWORD aCode, const QStringList & aTags) -> bool { return SystemDeviceUtils::containsTag(data[deviceWinProperties[aCode]], aTags); };
+		auto checkPropertyTag  = [&] (DWORD aCode, const QString     & aTag)  -> bool { return SystemDeviceUtils::containsTag(data[deviceWinProperties[aCode]], aTag); };
 
-		bool erase = getProperty(SPDRP_ENUMERATOR_NAME).contains(CUSBPort::DeviceTags::ACPI) ||
-		             getProperty(SPDRP_CLASS).contains(CUSBPort::DeviceTags::Mouse) ||
-		            (getProperty(SPDRP_PHYSICAL_DEVICE_OBJECT_NAME).contains(CUSBPort::DeviceTags::USBPDO) && !aPDODetecting);
+		bool erase = checkPropertyTags(SPDRP_ENUMERATOR_NAME, CSerialDeviceUtils::Tags::COM()) ||
+		             checkPropertyTags(SPDRP_CLASS, CSerialDeviceUtils::Tags::Unimportant())   ||
+		            (checkPropertyTag (SPDRP_PHYSICAL_DEVICE_OBJECT_NAME, CSerialDeviceUtils::Tags::USBPDO) && !aPDODetecting);
 
 		it = erase ? properties.erase(it) : it + 1;
 	}

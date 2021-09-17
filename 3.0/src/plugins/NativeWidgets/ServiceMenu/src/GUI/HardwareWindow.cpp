@@ -222,7 +222,7 @@ void HardwareWindow::detectDevices()
 	removeAllDeviceSlots();
 
 	mBackend->getNetworkManager()->closeConnection();
-	mBackend->getHardwareManager()->detect();
+	mBackend->getHardwareManager()->detect(ui.cbQuickDeviceSearch->checkState() == Qt::Checked);
 }
 
 //------------------------------------------------------------------------

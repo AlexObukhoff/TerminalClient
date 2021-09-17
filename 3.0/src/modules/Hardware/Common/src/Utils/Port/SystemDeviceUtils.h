@@ -92,17 +92,29 @@ namespace SystemDeviceUtils
 	/// Возвращает свойство системного устройства.
 	QString getProperty(const HDEVINFO & hDevInfo, SP_DEVINFO_DATA & aDeviceInfoData, DWORD aProperty);
 
-	/// Получить выходные ключи, по которым были получены данные по устройству.
+	/// Получает выходные ключи, по которым были получены данные по устройству.
 	QString getDeviceOutKey(const QStringList & aKeys);
 
-	/// Получить выходные данные по устройству.
+	/// Получает выходные данные по устройству.
 	QString getDeviceOutData(const TWinProperties & aWinPropertyData);
 
-	/// Получить максимальный размер данных в контейнере.
+	/// Получает максимальный размер данных в контейнере.
 	int getMaxSize(const QStringList & aBuffer);
 
-	/// Получить данные для регэкспа с экранированными символами.
+	/// Получает данные для регэкспа с экранированными символами.
 	QString getScreenedData(const QString & aData);
+
+	/// Данные об устройстве содержат 1 из тегов?
+	bool containsTag(const QString & aData, const QStringList aTagData);
+
+	/// Данные об устройстве содержат 1 из тегов?
+	bool containsTag(const QString & aData, const QString aTagData);
+
+	/// Данные об устройстве содержат набор тегов?
+	bool containsTag(const TWinProperties & aProperties, const QStringList aTagData);
+
+	/// Данные об устройстве содержат набор тегов?
+	bool containsTag(const TWinProperties & aProperties, const QString aTagData);
 }
 
 bool operator!=(const COMMTIMEOUTS & aTimeouts_1, const COMMTIMEOUTS & aTimeouts_2);

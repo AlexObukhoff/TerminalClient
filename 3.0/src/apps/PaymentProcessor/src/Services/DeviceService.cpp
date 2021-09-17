@@ -4,6 +4,7 @@
 #include <Common/QtHeadersBegin.h>
 #include <QtCore/QtConcurrentRun>
 #include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 #include <Common/QtHeadersEnd.h>
 
 // STL
@@ -17,6 +18,9 @@
 #include <SDK/Drivers/Components.h>
 #include <SDK/Drivers/HardwareConstants.h>
 #include <SDK/Drivers/FR/FiscalFields.h>
+
+// Common
+#include <Common/PluginConstants.h>
 
 // Modules
 #include "DeviceManager/DeviceManager.h"
@@ -201,18 +205,18 @@ DeviceService::~DeviceService()
 }
 
 //------------------------------------------------------------------------------
-void DeviceService::detect(const QString & aFilter)
+void DeviceService::detect(bool aFast, const QString & aFilter)
 {
 	mAccessMutex.lock();
 
-	mDetectionResult.setFuture(QtConcurrent::run(this, &DeviceService::doDetect, aFilter));
+	mDetectionResult.setFuture(QtConcurrent::run(this, &DeviceService::doDetect, aFast, aFilter));
 }
 
 //------------------------------------------------------------------------------
-void DeviceService::doDetect(const QString & aFilter)
+void DeviceService::doDetect(bool aFast, const QString & aFilter)
 {
-	LOG(mLog, LogLevel::Normal, "Starting device detection...");
-	mDeviceManager->detect(aFilter);
+	LOG(mLog, LogLevel::Normal, QString("Starting %1device detection...").arg(aFast ? "fast " : ""));
+	mDeviceManager->detect(aFast, aFilter);
 }
 
 //------------------------------------------------------------------------------
@@ -285,20 +289,34 @@ DSDK::IDevice * DeviceService::acquireDevice(const QString & aInstancePath)
 		{
 			mAcquiredDevices.insert(instancePath, device);
 
-			QMap<int, PPSDK::SKeySettings> keys = SettingsService::instance(mApplication)->getAdapter<PPSDK::TerminalSettings>()->getKeys();
-
-			if (keys.contains(0))
-			{
-				QVariantMap configuration;
-				configuration.insert(CFiscalSDK::AutomaticNumber, keys.value(0).ap);
-				device->setDeviceConfiguration(configuration);
-			}
-
+			setInitializationData(TNamedDevice(instancePath, device));
 			initializeDevice(instancePath, device);
 		}
 
 		return device;
 	}
+}
+
+//------------------------------------------------------------------------------
+void DeviceService::setInitializationData(const TNamedDevice & aNamedDevice)
+{
+	QString dataDirectory = PluginService::instance(mApplication)->getDataDirectory();
+	QString configurationDirectory = QDir::toNativeSeparators(QDir::cleanPath(dataDirectory + QDir::separator() + "plugins"));
+
+	QVariantMap configuration;
+	configuration.insert(CPluginParameters::ConfigurationDirectory, configurationDirectory);
+
+	if (aNamedDevice.first.contains(DSDK::CComponents::FiscalRegistrator))
+	{
+		QMap<int, PPSDK::SKeySettings> keys = SettingsService::instance(mApplication)->getAdapter<PPSDK::TerminalSettings>()->getKeys();
+
+		if (keys.contains(0))
+		{
+			configuration.insert(CFiscalSDK::AutomaticNumber, keys.value(0).ap);
+		}
+	}
+
+	aNamedDevice.second->setDeviceConfiguration(configuration);
 }
 
 //------------------------------------------------------------------------------
@@ -360,15 +378,7 @@ QString DeviceService::createDevice(const QString & aDriverPath, const QVariantM
 	{
 		mAcquiredDevices.insert(result.first, result.second);
 
-		QMap<int, PPSDK::SKeySettings> keys = SettingsService::instance(mApplication)->getAdapter<PPSDK::TerminalSettings>()->getKeys();
-
-		if (keys.contains(0))
-		{
-			QVariantMap configuration;
-			configuration.insert(CFiscalSDK::AutomaticNumber, keys.value(0).ap);
-			result.second->setDeviceConfiguration(configuration);
-		}
-
+		setInitializationData(result);
 		initializeDevice(result.first, result.second);
 	}
 	else

@@ -72,7 +72,7 @@ struct SPluginParameter
 		}
 	}
 
-	bool isValid()
+	bool isValid() const
 	{
 		return type && !name.isEmpty();
 	}

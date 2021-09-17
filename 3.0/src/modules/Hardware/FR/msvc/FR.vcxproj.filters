@@ -123,6 +123,9 @@
     <Filter Include="ATOL\Proto">
       <UniqueIdentifier>{806d6d68-2d99-4314-b4a7-383a87738625}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ATOL\Online\ATOL5\Proto">
+      <UniqueIdentifier>{1c7eab2b-33ed-4da9-9470-ffb200857e75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Base\FRBase.cpp">
@@ -235,6 +238,15 @@
     </ClCompile>
     <ClCompile Include="..\src\Atol\Proto\ProtoAtolFR.cpp">
       <Filter>ATOL\Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Online\ATOL5\Proto\SerialProtoAtol5FR.cpp">
+      <Filter>ATOL\Online\ATOL5\Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atol\Online\ATOL5\Proto\VCOMProtoAtol5FR.cpp">
+      <Filter>ATOL\Online\ATOL5\Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shtrih\Base\VirtualShtrihFR.cpp">
+      <Filter>Shtrih\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -499,8 +511,14 @@
     <ClInclude Include="..\src\Atol\Proto\ProtoAtolFR.h">
       <Filter>ATOL\Proto</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Atol\Online\ATOL5\ProtoAtol5FR.h">
-      <Filter>ATOL\Online\ATOL5</Filter>
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Proto\ProtoAtol5FR.h">
+      <Filter>ATOL\Online\ATOL5\Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Proto\SerialProtoAtol5FR.h">
+      <Filter>ATOL\Online\ATOL5\Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Proto\VCOMProtoAtol5FR.h">
+      <Filter>ATOL\Online\ATOL5\Proto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

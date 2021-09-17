@@ -2,7 +2,13 @@
 
 #pragma once
 
+// Qt
+#include <Common/QtHeadersBegin.h>
+#include <QtCore/QDebug>
+#include <Common/QtHeadersEnd.h>
+
 // Modules
+#include "..\..\..\..\DebugUtils\src\QStackWalker.h"
 #include "Hardware/Protocols/Common/ProtocolUtils.h"
 
 // Project
@@ -34,6 +40,20 @@ QVariantMap DeviceConfigManager::getConfiguration() const
 void DeviceConfigManager::setConfigParameter(const QString & aName, const QVariant & aValue)
 {
 	QWriteLocker lock(&mConfigurationGuard);
+
+	/*
+	QString key = "configuration_directory";
+
+	if (aName == key)
+	{
+		qDebug() << QString("--- setConfigParameter: mConfiguration[%1] = %2").arg(key).arg(aValue.toString());
+
+		QStackWalker walker;
+		QStringList stack = walker.getCallstack(nullptr).mid(2);
+
+		qDebug() << "--- Stack:\n\n" + stack.join("\n") + "\n";
+	}
+	*/
 
 	mConfiguration.insert(aName, aValue);
 }

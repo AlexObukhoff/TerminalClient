@@ -7,12 +7,13 @@ Project {
 		name: "virtual_devices"
 
 		Depends { name: "Qt"; submodules: ["gui" ] }
-		
-		Depends { name: "DriversSDK" }
-		Depends { name: "HardwareCommon" }
-		Depends { name: "CashAcceptors" }
-		Depends { name: "CashDispensers" }	
-		
+
+		Depends { name: "DriversSDK"       }
+		Depends { name: "HardwareCommon"   }
+		Depends { name: "CashAcceptors"    }
+		Depends { name: "CashDispensers"   }
+		Depends { name: "HardwarePrinters" }
+
 		files: [
 			"../../../includes/Common/CoreVersion.rc",
 			"src/*.cpp",

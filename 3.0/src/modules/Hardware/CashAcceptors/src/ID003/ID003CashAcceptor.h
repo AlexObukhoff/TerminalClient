@@ -9,7 +9,7 @@
 #include "Hardware/CashAcceptors/SerialCashAcceptor.h"
 
 //--------------------------------------------------------------------------------
-class ID003CashAcceptor : public TSerialCashAcceptor
+class ID003CashAcceptor : public SerialCashAcceptor
 {
 	SET_SERIES("ID003")
 

@@ -3,8 +3,7 @@
 var groups_name = [
 	// Ru, Kz
 	QT_TRANSLATE_NOOP("root_groups", "root_groups#101"),  // Мобильная связь
-	QT_TRANSLATE_NOOP("root_groups", "root_groups#102"),  // Интернет
-	QT_TRANSLATE_NOOP("root_groups", "root_groups#103"),  // ТВ
+	QT_TRANSLATE_NOOP("root_groups", "root_groups#9258"),  // Интернет и ТВ
 	QT_TRANSLATE_NOOP("root_groups", "root_groups#104"),  // ЖКХ
 	QT_TRANSLATE_NOOP("root_groups", "root_groups#105"),  // Банковские услуги
 	QT_TRANSLATE_NOOP("root_groups", "root_groups#106"),  // Домашний телефон

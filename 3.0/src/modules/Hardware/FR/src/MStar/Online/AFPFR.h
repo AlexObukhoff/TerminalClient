@@ -14,6 +14,7 @@
 class AFPFR : public TSerialFRBase
 {
 	SET_SERIES("AFP")
+	SET_VCOM_DATA(Types::Manufacturer, ConnectionTypes::Dual, ManufacturerTags::FR::MStar)
 
 public:
 	AFPFR();

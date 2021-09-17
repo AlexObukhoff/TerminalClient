@@ -138,6 +138,7 @@
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\DeviceWinProperties.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\IOPortGUIDs.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\IOPortStatusCodes.h" />
+    <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\IOPortTypeData.h" />
     <ClInclude Include="..\..\..\..\includes\Hardware\IOPorts\LibUSBDeviceDataTypes.h" />
     <ClInclude Include="..\src\COM\windows\AsyncSerialPort.h" />
     <ClInclude Include="..\src\Base\IOPortBase.h" />

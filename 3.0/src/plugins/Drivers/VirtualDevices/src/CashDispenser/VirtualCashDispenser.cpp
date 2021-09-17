@@ -109,7 +109,7 @@ void VirtualDispenser::checkUnitStatus(TStatusCodes & aStatusCodes, int aUnit)
 //--------------------------------------------------------------------------------
 void VirtualDispenser::filterKeyEvent(int aKey, const Qt::KeyboardModifiers & aModifiers)
 {
-	if (aModifiers & Qt::AltModifier)
+	if (!(aModifiers ^ Qt::AltModifier) && !isKeyModifier(aKey))
 	{
 		switch (aKey)
 		{
@@ -123,7 +123,7 @@ void VirtualDispenser::filterKeyEvent(int aKey, const Qt::KeyboardModifiers & aM
 			case Qt::Key_F9: { changeStatusCode(DeviceStatusCode::Error::NotAvailable); break; }
 		}
 	}
-	else if (aModifiers & Qt::ShiftModifier)
+	else if (!(aModifiers ^ Qt::ShiftModifier) && !isKeyModifier(aKey))
 	{
 		switch (aKey)
 		{

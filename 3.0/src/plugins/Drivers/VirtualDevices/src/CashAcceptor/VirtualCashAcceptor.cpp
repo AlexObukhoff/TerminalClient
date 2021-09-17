@@ -137,7 +137,7 @@ bool VirtualCashAcceptor::reject()
 //--------------------------------------------------------------------------------
 void VirtualCashAcceptor::filterKeyEvent(int aKey, const Qt::KeyboardModifiers & aModifiers)
 {
-	if (aModifiers & Qt::ControlModifier)
+	if (!(aModifiers ^ Qt::ControlModifier) && !isKeyModifier(aKey))
 	{
 		switch (aKey)
 		{
@@ -164,7 +164,7 @@ void VirtualCashAcceptor::filterKeyEvent(int aKey, const Qt::KeyboardModifiers &
 			case '*':         { blinkStatusCode(BillAcceptorStatusCode::Warning::Cheated);                    break; }    // мошенство
 		}
 	}
-	else if (aModifiers & Qt::AltModifier)
+	else if (!(aModifiers ^ Qt::AltModifier) && !isKeyModifier(aKey))
 	{
 		switch (aKey)
 		{

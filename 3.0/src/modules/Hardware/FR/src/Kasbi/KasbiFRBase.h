@@ -16,6 +16,7 @@ class KasbiSeriesType {};
 class KasbiFRBase : public TSerialFRBase
 {
 	SET_SERIES("KasbiOnline")
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::Dual, AdapterTags::STMicroelectronics)
 
 public:
 	KasbiFRBase();

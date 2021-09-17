@@ -9,6 +9,7 @@ template <class T>
 class Sam4sEpsonPrinter : public EpsonPrinter<T>
 {
 	SET_SUBSERIES("Sam4sEpson")
+	SET_VCOM_DATA(None, ConnectionTypes::Dual, None)
 
 public:
 	Sam4sEpsonPrinter();

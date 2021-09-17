@@ -11,14 +11,6 @@ namespace CUSBPort
 	/// Пауза при открытии, [мс].
 	const int OpeningPause = 500;
 
-	/// Идентификационные теги устройств на USB-порту.
-	namespace DeviceTags
-	{
-		const char ACPI[] = "ACPI";      /// ACPI-устрйоство.
-		const char Mouse[] = "Mouse";     /// Mouse.
-		const char USBPDO[] = "USBPDO";    /// Physical Device Object (PDO).
-	}
-
 	/// Размер буфера для чтения по умолчанию.
 	const int DefaultMaxReadSize = 1024;
 

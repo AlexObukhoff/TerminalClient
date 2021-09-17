@@ -10,6 +10,9 @@
 // Common
 #include "Common/ExitAction.h"
 
+// Modules
+#include "Hardware/IOPorts/IOPortTypeData.h"
+
 // Project
 #include "Hardware/Common/PollingExpector.h"
 #include "Hardware/Common/BaseStatusDescriptions.h"
@@ -103,6 +106,7 @@ protected:
 
 	/// Посылка статусов, если необходимо, в зависимости от типа устройства.
 	void processStatusCodes(const TStatusCodes & aStatusCodes);
+	void processStatusCode(int aStatusCode);
 
 	/// Фоновая логика при появлении определенных состояний устройства.
 	virtual void postPollingAction(const TStatusCollection & aNewStatusCollection, const TStatusCollection & aOldStatusCollection);
@@ -167,9 +171,6 @@ protected:
 
 	/// Получить уровень тревожности по буферу статус-кодов.
 	virtual SDK::Driver::EWarningLevel::Enum getWarningLevel(const TStatusCollection & aStatusCollection);
-
-	/// Проверить наличие параметров соединения с устройством.
-	bool checkConnectionParameter(const QString & aParameter) const;
 
 	/// Счетчик отсутствия ответа на полловые посылки.
 	int mBadAnswerCounter;

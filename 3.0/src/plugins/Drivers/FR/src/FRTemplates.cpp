@@ -24,7 +24,7 @@ template class PortPrinterBase<PrinterBase<TCPDeviceBase<PortPollingDeviceBase<P
 
 template class FRBase<PrinterBase<ProtoAtol5FR<CInteractionTypes::ItExternalCOM>>>;
 template class FRBase<PrinterBase<ProtoAtol5FR<CInteractionTypes::ItExternalVCOM>>>;
-template class FRBase<PrinterBase<PollingDeviceBase<ProtoFR>>>;
+template class FRBase<PrinterBase<PollingDeviceBase<DeviceBase<ProtoFR>>>>;
 template class FRBase<PrinterBase<OPOSPollingDeviceBase<ProtoFR, OPOS::OPOSFiscalPrinter>>>;
 template class FRBase<PortPrinterBase<PrinterBase<TCPDeviceBase<PortPollingDeviceBase<ProtoFR>>>>>;
 template class FRBase<SerialPrinterBase<PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoFR>>>>>;

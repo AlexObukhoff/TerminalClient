@@ -36,7 +36,7 @@
 	<option target="interface/interface/modern/interface.ini" key="ui/icon_set" value="modern" />
 	<option target="interface/interface/modern/interface.ini" key="ui/layouts" value="ru,en" />
 	<!-- Настройка ГосУслуг -->	
-	<option target="interface/interface/modern/interface.ini" key="ui/use_smart_grid" value="9144,9176,9196,9200,9209,9210,9211" />
+	<option target="interface/interface/modern/interface.ini" key="ui/use_smart_grid" value="9144,9176,9196,9200,9209,9210,9211,9258" />
 	<!-- Настройка автоматического перевода остатка на ПК -->	
 	<option target="interface/interface/modern/interface.ini" key="ui/use_platru_changeback" value="true" />
 	

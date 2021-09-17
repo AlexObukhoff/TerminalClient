@@ -60,6 +60,7 @@ class TerminalSettings : public QObject
 	Q_PROPERTY(QString enabledCoins READ geEnabledCoins CONSTANT)
 	Q_PROPERTY(QString disabledNotes READ getDisabledNotes CONSTANT)
 	Q_PROPERTY(QString disabledCoins READ getDisabledCoins CONSTANT)
+	Q_PROPERTY(bool skipCheckWhileNetworkError READ getSkipCheckWhileNetworkError CONSTANT)
 
 public:
 	TerminalSettings(ICore * aCore);
@@ -97,6 +98,9 @@ private:
 
 	QString getInterfacePath() const { return mTerminalSettings->getAppEnvironment().interfacePath; }
 	QString getCurrentSkinPath() const;
+	bool getSkipCheckWhileNetworkError() const { 
+		return mTerminalSettings->getCommonSettings().skipCheckWhileNetworkError; 
+	}
 
 private:
 	SDK::PaymentProcessor::TerminalSettings * mTerminalSettings;

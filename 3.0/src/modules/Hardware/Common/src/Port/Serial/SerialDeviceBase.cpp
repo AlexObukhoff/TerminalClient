@@ -74,8 +74,9 @@ bool SerialDeviceBase<T>::checkConnectionAbility()
 	       checkError(IOPortStatusCode::Error::Busy,          [&] () -> bool { return mIOPort->open(); }, "device cannot open port");
 }
 
-#define MAKE_SERIAL_PORT_PARAMETER(aParameters, aType) TSerialDevicePortParameter aParameters = mPortParameters[EParameters::aType]; \
+#define MAKE_SERIAL_PORT_PARAMETER(aParameters, aType, aAllowFast) TSerialDevicePortParameter aParameters = mPortParameters[EParameters::aType]; \
 	if (aParameters.isEmpty()) { toLog(LogLevel::Error, mDeviceName + QString(": %1 are empty").arg(#aParameters)); return false; } \
+	if (aAllowFast && fastAutoSearching) aParameters = TSerialDevicePortParameter() << aParameters.first(); \
 	if (!optionalPortSettingsEnable && optionalPortSettings.contains(COMPortSDK::aType)) aParameters = TSerialDevicePortParameter() << aParameters[0];
 
 //--------------------------------------------------------------------------------
@@ -84,12 +85,13 @@ bool SerialDeviceBase<T>::makeSearchingList()
 {
 	QStringList optionalPortSettings = getConfigParameter(CHardwareSDK::OptionalPortSettings).toStringList();
 	bool optionalPortSettingsEnable  = getConfigParameter(CHardwareSDK::OptionalPortSettingsEnable).toBool();
+	bool fastAutoSearching = getConfigParameter(CHardwareSDK::FastAutoSearching).toBool();
 
-	MAKE_SERIAL_PORT_PARAMETER(baudRates, BaudRate);
-	MAKE_SERIAL_PORT_PARAMETER(parities, Parity);
-	MAKE_SERIAL_PORT_PARAMETER(byteSizes, ByteSize);
-	MAKE_SERIAL_PORT_PARAMETER(RTSs, RTS);
-	MAKE_SERIAL_PORT_PARAMETER(DTRs, DTR);
+	MAKE_SERIAL_PORT_PARAMETER(baudRates, BaudRate, false);
+	MAKE_SERIAL_PORT_PARAMETER(parities,  Parity, true);
+	MAKE_SERIAL_PORT_PARAMETER(byteSizes, ByteSize, true);
+	MAKE_SERIAL_PORT_PARAMETER(RTSs, RTS, true);
+	MAKE_SERIAL_PORT_PARAMETER(DTRs, DTR, true);
 
 	foreach (int baudrate, baudRates)
 	{

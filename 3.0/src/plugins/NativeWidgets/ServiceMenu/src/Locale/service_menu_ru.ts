@@ -39,17 +39,17 @@
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="78"/>
+        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="76"/>
         <source>#terminal_number</source>
         <translation>Аппарат №</translation>
     </message>
     <message>
-        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="79"/>
+        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="77"/>
         <source>#software_version</source>
         <translation>Версия </translation>
     </message>
     <message>
-        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="155"/>
+        <location filename="../AutoEncashment/AutoEncashmentWindow.cpp" line="153"/>
         <source>#printer_failed</source>
         <translation>Невозможно распечатать чек.</translation>
     </message>
@@ -85,27 +85,26 @@
 <context>
     <name>BillAcceptorTest</name>
     <message>
-        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="9"/>
+        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="11"/>
         <source>#test_escrow</source>
         <translation>Тест принятия купюр</translation>
     </message>
     <message>
-        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="21"/>
+        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="25"/>
         <source>#insert_bill</source>
         <translation>Вставьте купюру...</translation>
     </message>
     <message>
-        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="63"/>
+        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="86"/>
         <source>#bill_is_escrowed</source>
         <translation>Принята купюра</translation>
     </message>
     <message>
-        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="75"/>
         <source>#bill_is_rejected</source>
         <translation type="obsolete">Купюра возвращена</translation>
     </message>
     <message>
-        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="91"/>
+        <location filename="../DeviceTests/BillAcceptorTest.cpp" line="92"/>
         <source>#disabled</source>
         <translation>отключена</translation>
     </message>
@@ -161,7 +160,7 @@
     <name>DiagnosticsServiceWindow</name>
     <message>
         <location filename="../GUI/UI/DiagnosticsServiceWindow.ui" line="165"/>
-        <location filename="../GUI/DiagnosticsServiceWindow.cpp" line="122"/>
+        <location filename="../GUI/DiagnosticsServiceWindow.cpp" line="121"/>
         <source>#title_turn_off</source>
         <translation>Свернуть</translation>
     </message>
@@ -252,22 +251,22 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../GUI/DiagnosticsServiceWindow.cpp" line="122"/>
+        <location filename="../GUI/DiagnosticsServiceWindow.cpp" line="121"/>
         <source>#title_turn_on</source>
         <translation>Развернуть</translation>
     </message>
     <message>
-        <location filename="../GUI/DiagnosticsServiceWindow.cpp" line="178"/>
+        <location filename="../GUI/DiagnosticsServiceWindow.cpp" line="177"/>
         <source>#connection_checking_status</source>
         <translation>Проверка...</translation>
     </message>
     <message>
-        <location filename="../GUI/DiagnosticsServiceWindow.cpp" line="187"/>
+        <location filename="../GUI/DiagnosticsServiceWindow.cpp" line="186"/>
         <source>#connection_test_ok</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../GUI/DiagnosticsServiceWindow.cpp" line="188"/>
+        <location filename="../GUI/DiagnosticsServiceWindow.cpp" line="187"/>
         <source>#connection_test_failed</source>
         <translation>Отсутствует</translation>
     </message>
@@ -318,27 +317,27 @@
 <context>
     <name>DialupWizardPage</name>
     <message>
-        <location filename="../FirstSetup/DialupWizardPage.cpp" line="109"/>
+        <location filename="../FirstSetup/DialupWizardPage.cpp" line="108"/>
         <source>#failed_create_connection</source>
         <translation>Не удалось создать соединение</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/DialupWizardPage.cpp" line="122"/>
+        <location filename="../FirstSetup/DialupWizardPage.cpp" line="121"/>
         <source>#testing_connection</source>
         <translation>Проверка соединения...</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/DialupWizardPage.cpp" line="142"/>
+        <location filename="../FirstSetup/DialupWizardPage.cpp" line="141"/>
         <source>#failed_remove_connection</source>
         <translation>Не удалось удалить соединение.</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/DialupWizardPage.cpp" line="150"/>
+        <location filename="../FirstSetup/DialupWizardPage.cpp" line="149"/>
         <source>#connection_test_ok</source>
         <translation>Соединение в порядке.</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/DialupWizardPage.cpp" line="150"/>
+        <location filename="../FirstSetup/DialupWizardPage.cpp" line="149"/>
         <source>#connection_test_failed</source>
         <translation>Не удалось установить соединение.</translation>
     </message>
@@ -362,7 +361,7 @@
         <translation type="obsolete">Сохранить изменения</translation>
     </message>
     <message>
-        <location filename="../GUI/DispenserServiceWindow.cpp" line="55"/>
+        <location filename="../GUI/DispenserServiceWindow.cpp" line="49"/>
         <source>#pts</source>
         <translation>шт.</translation>
     </message>
@@ -374,18 +373,18 @@
 <context>
     <name>DispenserTest</name>
     <message>
-        <location filename="../DeviceTests/DispenserTest.cpp" line="18"/>
-        <location filename="../DeviceTests/DispenserTest.cpp" line="32"/>
+        <location filename="../DeviceTests/DispenserTest.cpp" line="17"/>
+        <location filename="../DeviceTests/DispenserTest.cpp" line="31"/>
         <source>#dispense</source>
         <translation>Выдача</translation>
     </message>
     <message>
-        <location filename="../DeviceTests/DispenserTest.cpp" line="81"/>
+        <location filename="../DeviceTests/DispenserTest.cpp" line="80"/>
         <source>#dispensed</source>
         <translation>Выдано</translation>
     </message>
     <message>
-        <location filename="../DeviceTests/DispenserTest.cpp" line="89"/>
+        <location filename="../DeviceTests/DispenserTest.cpp" line="88"/>
         <source>#rejected</source>
         <translation>Отбраковано</translation>
     </message>
@@ -403,7 +402,7 @@
         <translation>Нажмите на кнопку для печати дубликата чека инкассации</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentHistoryWindow.cpp" line="53"/>
+        <location filename="../GUI/EncashmentHistoryWindow.cpp" line="52"/>
         <source>#total</source>
         <translation>Всего</translation>
     </message>
@@ -487,17 +486,17 @@
         <translation type="obsolete">Во время инкассации произошла ошибка.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentServiceWindow.cpp" line="166"/>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="172"/>
         <source>#balance_printed</source>
         <translation>Баланс распечатан.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentServiceWindow.cpp" line="221"/>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="227"/>
         <source>#check_update_payload_settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentServiceWindow.cpp" line="162"/>
+        <location filename="../GUI/EncashmentServiceWindow.cpp" line="168"/>
         <source>#balance_print_failed</source>
         <translation>Невозможно распечатать баланс.</translation>
     </message>
@@ -513,68 +512,69 @@
 <context>
     <name>EncashmentWindow</name>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="62"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="77"/>
         <source>#question_encash</source>
         <translation>Произвести инкассацию?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="62"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="77"/>
         <source>#question_encash_without_receipt</source>
         <translation>Печать чека невозможна. Произвести инкассацию?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="74"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="89"/>
         <source>#enter_stacker_id</source>
         <translation>Введите номер кассеты:</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="155"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="170"/>
         <source>#print_full_zreport</source>
         <translation>Печатать отложенные Z-отчеты?</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="155"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="170"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="191"/>
         <source>#full_zreport_print_failed</source>
         <translation>Невозможно распечатать отложенные Z-отчеты. Будет распечатан Z-отчет.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="148"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="163"/>
         <source>#zreport_failed</source>
         <translation>Невозможно распечатать Z-отчёт.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="151"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="166"/>
         <source>#zreport_printed</source>
         <translation>Z-отчёт распечатан.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="109"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="124"/>
         <source>#encashment_complete</source>
         <translation>Инкассация произведена.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="117"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="132"/>
         <source>#encashment_complete_and_printed</source>
         <translation>Инкассация произведена и распечатана.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="113"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="128"/>
         <source>#encashment_print_failed</source>
         <translation>Инкассацция произведена без печати.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="118"/>
-        <location filename="../GUI/EncashmentWindow.cpp" line="168"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="133"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="183"/>
         <source>#printing</source>
         <translation>Подождите, идет печать...</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="129"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="144"/>
         <source>#encashment_error_try_later</source>
         <translation>Во время инкассации произошла ошибка. Повторите операцию через минуту.</translation>
     </message>
     <message>
-        <location filename="../GUI/EncashmentWindow.cpp" line="133"/>
+        <location filename="../GUI/EncashmentWindow.cpp" line="148"/>
         <source>#encashment_error</source>
         <translation>Во время инкассации произошла ошибка.</translation>
     </message>
@@ -619,7 +619,7 @@
 <context>
     <name>Hardware::CommonParameters</name>
     <message>
-        <location filename="../GUI/DeviceSlot.cpp" line="259"/>
+        <location filename="../GUI/DeviceSlot.cpp" line="252"/>
         <source>#unknown_model</source>
         <translation>Модель не выбрана</translation>
     </message>
@@ -645,68 +645,68 @@
 <context>
     <name>Hardware::Types</name>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="26"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="24"/>
         <source>BillAcceptor</source>
         <translation>Купюроприёмник</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="27"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="25"/>
         <source>Dispenser</source>
         <translation>Диспенсер</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="28"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="26"/>
         <source>CoinAcceptor</source>
         <translation>Монетоприемник</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="29"/>
-        <location filename="../GUI/HardwareWindow.cpp" line="36"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="27"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="34"/>
         <source>Printer</source>
         <translation>Принтер</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="30"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="28"/>
         <source>FiscalRegistrator</source>
         <translation>Фискальный регистратор</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="31"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="29"/>
         <source>DocumentPrinter</source>
         <translation>Принтер документов</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="32"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="30"/>
         <source>Modem</source>
         <translation>Модем</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="33"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="31"/>
         <source>Watchdog</source>
         <translation>Сторожевой таймер</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="34"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="32"/>
         <source>Scanner</source>
         <translation>Сканер</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="35"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="33"/>
         <source>Virtual</source>
         <translation>Виртуальный</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="37"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="35"/>
         <source>System Printer</source>
         <translation>Системный принтер</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="38"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="36"/>
         <source>CardReader</source>
         <translation>Картридер</translation>
     </message>
     <message>
-        <location filename="../GUI/HardwareWindow.cpp" line="39"/>
+        <location filename="../GUI/HardwareWindow.cpp" line="37"/>
         <source>Camera</source>
         <translation>Камера</translation>
     </message>
@@ -755,22 +755,22 @@
 <context>
     <name>HardwareWizardPage</name>
     <message>
-        <location filename="../FirstSetup/HardwareWizardPage.cpp" line="104"/>
+        <location filename="../FirstSetup/HardwareWizardPage.cpp" line="103"/>
         <source>#detecting_devices</source>
         <translation>Идет поиск устройств...</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/HardwareWizardPage.cpp" line="109"/>
+        <location filename="../FirstSetup/HardwareWizardPage.cpp" line="108"/>
         <source>#stop_search</source>
         <translation>Остановить</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/HardwareWizardPage.cpp" line="191"/>
+        <location filename="../FirstSetup/HardwareWizardPage.cpp" line="190"/>
         <source>#applying_configuration</source>
         <translation>Применение конфигурации оборудования...</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/HardwareWizardPage.cpp" line="213"/>
+        <location filename="../FirstSetup/HardwareWizardPage.cpp" line="212"/>
         <source>#waiting_stop_search</source>
         <translation>Завершение поиска...</translation>
     </message>
@@ -1059,48 +1059,48 @@
 <context>
     <name>KeysManager</name>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="137"/>
+        <location filename="../Backend/KeysManager.cpp" line="143"/>
         <source>#ok</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="138"/>
+        <location filename="../Backend/KeysManager.cpp" line="144"/>
         <source>#network_error</source>
         <translation>Во время обмена с сервером произошла сетевая ошибка</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="139"/>
+        <location filename="../Backend/KeysManager.cpp" line="145"/>
         <source>#wrong_login_or_password</source>
         <translation> Неправильный логин или пароль для генерации карточки ключа</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="140"/>
+        <location filename="../Backend/KeysManager.cpp" line="146"/>
         <source>#wrong_server_answer</source>
         <translation>Сервер вернул неполную информацию</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="141"/>
+        <location filename="../Backend/KeysManager.cpp" line="147"/>
         <source>#wrong_local_time</source>
         <translation>Некорректное локальное время.
 Пожалуйста, синхронизируйте системное время аппарата.</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="142"/>
+        <location filename="../Backend/KeysManager.cpp" line="148"/>
         <source>#unknown_server_error</source>
         <translation>Неизвестная ошибка скрипта генерации карточки ключа</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="143"/>
+        <location filename="../Backend/KeysManager.cpp" line="149"/>
         <source>#key_pair_create_error</source>
         <translation>Ошибка при создании пары ключей из карточки</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="144"/>
+        <location filename="../Backend/KeysManager.cpp" line="150"/>
         <source>#key_export_error</source>
         <translation>Невозможно экспортировать ключ из хранилища</translation>
     </message>
     <message>
-        <location filename="../Backend/KeysManager.cpp" line="147"/>
+        <location filename="../Backend/KeysManager.cpp" line="153"/>
         <source>#unknown_error</source>
         <translation>Неизвестная ошибка</translation>
     </message>
@@ -1114,38 +1114,38 @@
 ВНИМАНИЕ: после завершения установки необходимо заверить созданные ключи в кабинете дилера в разделе &quot;API ключи&quot;.</translation>
     </message>
     <message>
-        <location filename="../GUI/KeysServiceWindow.cpp" line="75"/>
+        <location filename="../GUI/KeysServiceWindow.cpp" line="73"/>
         <source>#question_generate_keys_warning</source>
         <translation>Внимание! По окончании данной операции все ранее принятые платежи примут статус &quot;Недостоверный платёж&quot;. Продолжить?</translation>
     </message>
     <message>
-        <location filename="../GUI/KeysServiceWindow.cpp" line="78"/>
+        <location filename="../GUI/KeysServiceWindow.cpp" line="76"/>
         <source>#creating_keys</source>
         <translation>Создание ключей...</translation>
     </message>
     <message>
-        <location filename="../GUI/KeysServiceWindow.cpp" line="90"/>
+        <location filename="../GUI/KeysServiceWindow.cpp" line="88"/>
         <source>#sd</source>
         <translation>SD:</translation>
     </message>
     <message>
-        <location filename="../GUI/KeysServiceWindow.cpp" line="91"/>
+        <location filename="../GUI/KeysServiceWindow.cpp" line="89"/>
         <source>#ap</source>
         <translation>AP:</translation>
     </message>
     <message>
-        <location filename="../GUI/KeysServiceWindow.cpp" line="92"/>
+        <location filename="../GUI/KeysServiceWindow.cpp" line="90"/>
         <source>#op</source>
         <translation>OP:</translation>
     </message>
     <message>
-        <location filename="../GUI/KeysServiceWindow.cpp" line="94"/>
+        <location filename="../GUI/KeysServiceWindow.cpp" line="92"/>
         <source>#question_save_and_register_keys</source>
         <translation>Сохранить и зарегистрировать ключи?
 Для сохранения ключей ПО будет перезапущено.</translation>
     </message>
     <message>
-        <location filename="../GUI/KeysServiceWindow.cpp" line="102"/>
+        <location filename="../GUI/KeysServiceWindow.cpp" line="100"/>
         <source>#question_need_new_config</source>
         <translation>Ключи  обновлены. Обновить файл конфигурации?</translation>
     </message>
@@ -1306,82 +1306,82 @@
         <translation>Выйти из меню</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="95"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="93"/>
         <source>#terminal_number</source>
         <translation>Аппарат №</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="96"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="94"/>
         <source>#software_version</source>
         <translation>Версия </translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="184"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="182"/>
         <source>#title_diagnostic</source>
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="185"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="183"/>
         <source>#title_logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="208"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="206"/>
         <source>#title_setup</source>
         <translation>Настройка</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="198"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="196"/>
         <source>#title_payments</source>
         <translation>Платежи</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="191"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="189"/>
         <source>#title_encashment</source>
         <translation>Инкассация</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="374"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="372"/>
         <source>#question_reboot_software</source>
         <translation>Вы уверены, что хотите перегрузить ПО?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="383"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="381"/>
         <source>#question_reboot_terminal</source>
         <translation>Вы уверены, что хотите перезагрузить аппарат?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="393"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="391"/>
         <source>#question_unblock_terminal</source>
         <translation>Вы уверены, что хотите разблокировать аппарат?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="393"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="391"/>
         <source>#question_block_terminal</source>
         <translation>Вы уверены, что хотите заблокировать аппарат?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="402"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="400"/>
         <source>#question_stop_terminal</source>
         <translation>Вы уверены, что хотите остановить программное обеспечение?</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="355"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="353"/>
         <source>#error_auth_failed</source>
         <translation>Неверный пароль</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="99"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="97"/>
         <source>#title_unlock</source>
         <translation>Разблокировать</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="99"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="97"/>
         <source>#title_lock</source>
         <translation>Заблокировать</translation>
     </message>
     <message>
-        <location filename="../GUI/MainServiceWindow.cpp" line="449"/>
+        <location filename="../GUI/MainServiceWindow.cpp" line="447"/>
         <source>#question_leave_service_menu</source>
         <translation>Вы уверены, что хотите выйти из сервисного меню?</translation>
     </message>
@@ -1389,39 +1389,39 @@
 <context>
     <name>NetworkManager</name>
     <message>
-        <location filename="../Backend/NetworkManager.cpp" line="107"/>
+        <location filename="../Backend/NetworkManager.cpp" line="102"/>
         <source>#get_modems_error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Backend/NetworkManager.cpp" line="122"/>
+        <location filename="../Backend/NetworkManager.cpp" line="117"/>
         <source>#get_interface_error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Backend/NetworkManager.cpp" line="137"/>
+        <location filename="../Backend/NetworkManager.cpp" line="132"/>
         <source>#get_remote_connections_error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Backend/NetworkManager.cpp" line="152"/>
+        <location filename="../Backend/NetworkManager.cpp" line="147"/>
         <source>#get_local_connections_error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Backend/NetworkManager.cpp" line="185"/>
-        <location filename="../Backend/NetworkManager.cpp" line="209"/>
+        <location filename="../Backend/NetworkManager.cpp" line="180"/>
+        <location filename="../Backend/NetworkManager.cpp" line="204"/>
         <source>#phone_entry_call_failed</source>
         <translation>Не удалось сохранить соединение.</translation>
     </message>
     <message>
-        <location filename="../Backend/NetworkManager.cpp" line="185"/>
+        <location filename="../Backend/NetworkManager.cpp" line="180"/>
         <source>#phone_entry_already_exist
 </source>
         <translation>Соединение уже существует.</translation>
     </message>
     <message>
-        <location filename="../Backend/NetworkManager.cpp" line="209"/>
+        <location filename="../Backend/NetworkManager.cpp" line="204"/>
         <source>#phone_entry_not_exist
 </source>
         <translation>Соединение не найдено</translation>
@@ -1440,18 +1440,18 @@
         <translation>Соединение по локальной сети</translation>
     </message>
     <message>
-        <location filename="../GUI/NetworkServiceWindow.cpp" line="175"/>
-        <location filename="../GUI/NetworkServiceWindow.cpp" line="219"/>
+        <location filename="../GUI/NetworkServiceWindow.cpp" line="174"/>
+        <location filename="../GUI/NetworkServiceWindow.cpp" line="218"/>
         <source>#testing_connection</source>
         <translation>Проверка соединения...</translation>
     </message>
     <message>
-        <location filename="../GUI/NetworkServiceWindow.cpp" line="229"/>
+        <location filename="../GUI/NetworkServiceWindow.cpp" line="228"/>
         <source>#connection_test_ok</source>
         <translation>Соединение в порядке.</translation>
     </message>
     <message>
-        <location filename="../GUI/NetworkServiceWindow.cpp" line="229"/>
+        <location filename="../GUI/NetworkServiceWindow.cpp" line="228"/>
         <source>#connection_test_failed</source>
         <translation>Не удалось установить соединение.</translation>
     </message>
@@ -1472,7 +1472,7 @@
 <context>
     <name>PaymentManager</name>
     <message>
-        <location filename="../Backend/PaymentManager.cpp" line="471"/>
+        <location filename="../Backend/PaymentManager.cpp" line="473"/>
         <source>#lost_change</source>
         <translation>Сдача</translation>
     </message>
@@ -1598,27 +1598,27 @@
         <translation>Напечатать чеки</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="124"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="120"/>
         <source>#day</source>
         <translation>День</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="125"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="121"/>
         <source>#week</source>
         <translation>Неделя</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="126"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="122"/>
         <source>#month</source>
         <translation>Месяц</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="127"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="123"/>
         <source>#three_month</source>
         <translation>Три месяца</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="227"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="230"/>
         <source>#updating_payment_data</source>
         <translation>Обновление информации о платежах</translation>
     </message>
@@ -1626,140 +1626,140 @@
 <context>
     <name>PaymentTableModel</name>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="469"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="472"/>
         <source>#yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="469"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="472"/>
         <source>#no</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="367"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="370"/>
         <source>#id</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="368"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="371"/>
         <source>#provider_fields</source>
         <translation>Введенные данные</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="369"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="372"/>
         <source>#amount_field</source>
         <translation>Зачислено</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="370"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="373"/>
         <source>#amount_all_field</source>
         <translation>Внесено</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="378"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="381"/>
         <source>#fiscal_receipt_printed_field</source>
         <translation>Фискальный чек распечатан</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="378"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="381"/>
         <source>#receipt_printed_field</source>
         <translation>Чек распечатан</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="372"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="375"/>
         <source>#create_date_field</source>
         <translation>Дата создания</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="371"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="374"/>
         <source>#provider</source>
         <translation>Провайдер</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="373"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="376"/>
         <source>#last_update_field</source>
         <translation>Дата обработки</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="374"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="377"/>
         <source>#initial_session</source>
         <translation>Начальная сессия </translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="375"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="378"/>
         <source>#session</source>
         <translation>Сессия</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="376"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="379"/>
         <source>#trans_id</source>
         <translation>Транзакция</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="377"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="380"/>
         <source>#status_field</source>
         <translation>Статус</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="560"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="563"/>
         <source>#select_payment_to_print</source>
         <translation>Выберите платёж для печати</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="728"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="731"/>
         <source>#nothing_to_process</source>
         <translation>Отсутствуют не проведённые платежи</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="745"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="748"/>
         <source>#updating_payment_data</source>
         <translation>Обновление информации о платежах</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="551"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="554"/>
         <source>printing_receipt</source>
         <translation>Печать чека</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="555"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="558"/>
         <source>#printed_before</source>
         <translation>Чек был напечатан ранее</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="580"/>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="617"/>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="660"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="583"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="620"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="663"/>
         <source>#printing %1 receipts</source>
         <translation>Печать %1 чеков</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="584"/>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="621"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="587"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="624"/>
         <source>#nothing_to_print</source>
         <translation>Отсутствуют не напечатанные чеки</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="630"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="633"/>
         <source>#error_occurred_printing</source>
         <translation>Ошибка печати</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="692"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="695"/>
         <source>#process</source>
         <translation>Платеж поставлен на проведение</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="696"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="699"/>
         <source>#bad_status</source>
         <translation>Платеж не может быть проведен с текущим статусом</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="701"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="704"/>
         <source>#select_payment_to_process</source>
         <translation>Выберите платёж для проведения</translation>
     </message>
     <message>
-        <location filename="../GUI/PaymentServiceWindow.cpp" line="724"/>
+        <location filename="../GUI/PaymentServiceWindow.cpp" line="727"/>
         <source>#process %1 payments</source>
         <translation>Поставлено %1 платежей на проведение</translation>
     </message>
@@ -1863,22 +1863,22 @@
         <translation>Готово</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/SaveSettingsWizardPage.cpp" line="56"/>
+        <location filename="../FirstSetup/SaveSettingsWizardPage.cpp" line="54"/>
         <source>#saving_configs</source>
         <translation>Сохранение настроек...</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/SaveSettingsWizardPage.cpp" line="61"/>
+        <location filename="../FirstSetup/SaveSettingsWizardPage.cpp" line="59"/>
         <source>#when_saving_configs</source>
         <translation>Во время сохранения настроек произошла следующая ошибка:</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/SaveSettingsWizardPage.cpp" line="61"/>
+        <location filename="../FirstSetup/SaveSettingsWizardPage.cpp" line="59"/>
         <source>#save_configuration_error</source>
         <translation>Во время сохранения конфигурации произошла ошибка.</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/SaveSettingsWizardPage.cpp" line="65"/>
+        <location filename="../FirstSetup/SaveSettingsWizardPage.cpp" line="63"/>
         <source>#saved_successfully</source>
         <translation>Поздравляем, аппарат настроен!
 Теперь нажмите кнопку &quot;Готово&quot; и ПО загрузит необходимые для работы файлы
@@ -1951,12 +1951,12 @@
 ВНИМАНИЕ: после завершения установки необходимо заверить созданные ключи в кабинете дилера в разделе &quot;API ключи&quot;.</translation>
     </message>
     <message>
-        <location filename="../GUI/TokenServiceWindow.cpp" line="76"/>
+        <location filename="../GUI/TokenServiceWindow.cpp" line="74"/>
         <source>#question_format_token_warning</source>
         <translation>Вы действительно хотите отформатировать token?</translation>
     </message>
     <message>
-        <location filename="../GUI/TokenServiceWindow.cpp" line="79"/>
+        <location filename="../GUI/TokenServiceWindow.cpp" line="77"/>
         <source>#format_token</source>
         <translation>Форматирование...</translation>
     </message>
@@ -1993,27 +1993,27 @@
         <translation>Форматировать</translation>
     </message>
     <message>
-        <location filename="../GUI/TokenWindow.cpp" line="76"/>
+        <location filename="../GUI/TokenWindow.cpp" line="73"/>
         <source>#error_format_token</source>
         <translation>Неизвестная ошибка во время форматирования токена.</translation>
     </message>
     <message>
-        <location filename="../GUI/TokenWindow.cpp" line="83"/>
+        <location filename="../GUI/TokenWindow.cpp" line="80"/>
         <source>#empty</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../GUI/TokenWindow.cpp" line="89"/>
+        <location filename="../GUI/TokenWindow.cpp" line="86"/>
         <source>#ok</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../GUI/TokenWindow.cpp" line="94"/>
+        <location filename="../GUI/TokenWindow.cpp" line="91"/>
         <source>#not_initialised</source>
         <translation>Нет доступа, необходимо форматирование</translation>
     </message>
     <message>
-        <location filename="../GUI/TokenWindow.cpp" line="99"/>
+        <location filename="../GUI/TokenWindow.cpp" line="96"/>
         <source>#none</source>
         <translation>Отсутствует</translation>
     </message>
@@ -2085,17 +2085,17 @@
 <context>
     <name>UnmanagedWizardPage</name>
     <message>
-        <location filename="../FirstSetup/UnmanagedWizardPage.cpp" line="140"/>
+        <location filename="../FirstSetup/UnmanagedWizardPage.cpp" line="138"/>
         <source>#testing_connection</source>
         <translation>Проверка соединения...</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/UnmanagedWizardPage.cpp" line="149"/>
+        <location filename="../FirstSetup/UnmanagedWizardPage.cpp" line="147"/>
         <source>#connection_test_ok</source>
         <translation>Соединение в порядке.</translation>
     </message>
     <message>
-        <location filename="../FirstSetup/UnmanagedWizardPage.cpp" line="149"/>
+        <location filename="../FirstSetup/UnmanagedWizardPage.cpp" line="147"/>
         <source>#connection_test_failed</source>
         <translation>Не удалось установить соединение.</translation>
     </message>
@@ -2302,22 +2302,27 @@
 <context>
     <name>frmHardwareWindow</name>
     <message>
-        <location filename="../GUI/UI/HardwareWindow.ui" line="110"/>
+        <location filename="../GUI/UI/HardwareWindow.ui" line="82"/>
         <source>#detect</source>
         <translation>Поиск оборудования</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/HardwareWindow.ui" line="117"/>
+        <location filename="../GUI/UI/HardwareWindow.ui" line="89"/>
         <source>#add_slot</source>
         <translation>Добавить устройство</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/HardwareWindow.ui" line="299"/>
+        <location filename="../GUI/UI/HardwareWindow.ui" line="100"/>
+        <source>#use_quick_device_detect</source>
+        <translation>Использовать быстрый автопоиск</translation>
+    </message>
+    <message>
+        <location filename="../GUI/UI/HardwareWindow.ui" line="293"/>
         <source>#ok</source>
         <translation>ОK</translation>
     </message>
     <message>
-        <location filename="../GUI/UI/HardwareWindow.ui" line="312"/>
+        <location filename="../GUI/UI/HardwareWindow.ui" line="306"/>
         <source>#cancel</source>
         <translation>Отмена</translation>
     </message>

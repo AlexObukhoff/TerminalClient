@@ -105,7 +105,7 @@ bool ShtrihOnlineFRBase<T>::updateParameters()
 		return true;
 	}
 
-	if (mOperatorPresence && !setCashier())
+	if (mOperatorPresence && getConfigParameter(CHardwareSDK::FR::RewriteCashier, true).toBool() && !setCashier())
 	{
 		QByteArray data;
 

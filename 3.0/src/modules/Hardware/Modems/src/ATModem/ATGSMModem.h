@@ -28,6 +28,11 @@ namespace ENetworkAccessability
 //--------------------------------------------------------------------------------
 class ATGSMModem : public ATModemBase
 {
+	SET_VCOM_DATA(Types::Manufacturer, ConnectionTypes::Dual, QStringList()
+		<< ManufacturerTags::Modem::Huawei
+		<< ManufacturerTags::Modem::Siemens
+		<< ManufacturerTags::Modem::SimTech)
+
 public:
 	ATGSMModem();
 

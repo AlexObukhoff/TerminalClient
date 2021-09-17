@@ -127,10 +127,10 @@ protected:
 	TResult checkAnswer(TResult aResult, const QByteArray & aAnswer, CPrimFR::TData & aAnswerData);
 
 	/// Добавить обязательное G-поле ПФД в данные команды.
-	CPrimFR::TData addGFieldToBuffer(int aX, int aY, int aFont = CPrimFR::FiscalFont::Default);
+	CPrimFR::TData addGFieldToBuffer(int aX, int aY);
 
 	/// Сформировать необязательное G-поле ПФД
-	CPrimFR::TData addArbitraryFieldToBuffer(int aX, int aY, const QString & aData, int aFont = CPrimFR::FiscalFont::Default, bool aNoPrint = false);
+	CPrimFR::TData addArbitraryFieldToBuffer(int aX, int aY, const QString & aData, bool aNoPrint = false, bool aBarCode = false);
 
 	/// Обработка ответа предыдущей команды. Автоисправление некоторых ошибок.
 	virtual bool processAnswer(char aError);
@@ -187,6 +187,9 @@ protected:
 
 	/// Таймауты.
 	CPrimFR::CommandTimouts mCommandTimouts;
+
+	/// Шрифт для ПФД.
+	int mAFDFont;
 };
 
 //--------------------------------------------------------------------------------

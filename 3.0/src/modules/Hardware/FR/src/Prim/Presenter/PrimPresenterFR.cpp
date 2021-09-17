@@ -26,6 +26,7 @@ PrimPresenterFR<T>::PrimPresenterFR()
 {
 	// данные устройства
 	setConfigParameter(CHardware::Printer::PresenterEnable, true);
+	setConfigParameter(CHardware::Printer::BCMaxSize, 17);
 	mPrinter = PPrinter(new EpsonEUT400());
 	mDeviceName = CPrimFR::ModelData[CPrimFR::Models::PRIM_21K_02].name;
 	mModels = CPrimFR::PresenterModels();

@@ -24,6 +24,10 @@ Atol5OnlineFRBase<T>::Atol5OnlineFRBase(): mThreadProxy(&mThread), mTriedToConne
 	// параметры устройства
 	setConfigParameter(CHardwareSDK::FR::CanWithoutPrinting, true);
 
+	// эти теги ставим логином оператора на платеже, если касса не в автомате
+	mOFDFiscalFields.remove(CFR::FiscalFields::Cashier);
+	mOFDFiscalFields.remove(CFR::FiscalFields::CashierINN);
+
 	// налоги
 	mTaxData.add(20, 1);
 	mTaxData.add(10, 2);
@@ -50,7 +54,7 @@ void Atol5OnlineFRBase<T>::initialize()
 	{
 		if (!checkConnectionAbility())
 		{
-			processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::ThirdPartyDriverFail);
+			processStatusCode(DeviceStatusCode::Error::ThirdPartyDriverFail);
 		}
 
 		releaseExternalResource();
@@ -140,17 +144,6 @@ bool Atol5OnlineFRBase<T>::setFRParameters()
 
 	checkOperationModes(operationModes);
 
-	if (mOperationModes.contains(EOperationModes::Automatic))
-	{
-		mOFDFiscalFields.remove(CFR::FiscalFields::Cashier);
-		mOFDFiscalFields.remove(CFR::FiscalFields::CashierINN);
-	}
-	else
-	{
-		mOFDFiscalFields.insert(CFR::FiscalFields::Cashier);
-		mOFDFiscalFields.insert(CFR::FiscalFields::CashierINN);
-	}
-
 	auto addConfigParameter = [&] (int aField) { mFFEngine.addConfigParameter<QString>(aField, mDriver.getDriverParameter<QString>(aField), nullptr); };
 
 	addConfigParameter(CFR::FiscalFields::FTSURL);
@@ -167,8 +160,10 @@ bool Atol5OnlineFRBase<T>::setFRParameters()
 	mFFEngine.addConfigParameter<QString>(CFiscalSDK::INN, mINN);
 	mFFEngine.addConfigParameter<QString>(CFiscalSDK::RNM, mRNM);
 
-	if (!getFiscalizationData(CFR::FiscalFields::SerialFRNumber, mSerial, CFR::serialToString) ||
-		!getFiscalizationData(CFR::FiscalFields::SerialFSNumber, mFSSerialNumber, CFR::FSSerialToString))
+	auto checkData = [&] (int aFiscalField, QString & aData) -> bool { return !aData.isEmpty() || getFiscalizationData(aFiscalField, aData, CFR::FSSerialToString); };
+
+	if (!checkData(CFR::FiscalFields::SerialFSNumber, mFSSerialNumber) ||
+		!checkData(CFR::FiscalFields::SerialFRNumber, mSerial))
 	{
 		return false;
 	}
@@ -441,7 +436,7 @@ bool Atol5OnlineFRBase<T>::checkConnectionAbility()
 	}
 
 	//TODO: проверять имя порта по списку имеющихся виртуальных USB-портов
-	CAtol5OnlineFR::TConnectionParameters changed = QList<bool>()
+	CAtol5OnlineFR::TConnectionParameters changed = CAtol5OnlineFR::TConnectionParameters()
 		<< mDriver.checkSetting<bool>(LIBFPTR_SETTING_AUTO_RECONNECT, true)
 		<< mDriver.checkSetting<int>(LIBFPTR_SETTING_MODEL, LIBFPTR_MODEL_ATOL_AUTO);
 
@@ -499,8 +494,7 @@ bool Atol5OnlineFRBase<T>::checkExistence()
 
 	if (checkConnectionAbility())
 	{
-		QString portName = getConfigParameter(CHardwareSDK::RequiredResourceParameters).toMap().value(CHardwareSDK::SystemName).toString();
-		toLog(LogLevel::Normal, "Port " + portName);
+		logConnectionParameters();
 		bool result = ProtoAtolFR<FRBase<PrinterBase<ProtoAtol5FR<T>>>>::checkExistence();
 	}
 
@@ -921,6 +915,8 @@ bool Atol5OnlineFRBase<T>::operatorLogin()
 		return mDriver.logLastError("login the operator");
 	}
 
+	toLog(LogLevel::Normal, "Operator has logged in successfully.");
+
 	return true;
 }
 
@@ -1013,6 +1009,11 @@ bool Atol5OnlineFRBase<T>::execFiscal(const QStringList & aReceipt, const SPayme
 template <class T>
 bool Atol5OnlineFRBase<T>::openDocument(EPayOffTypes::Enum aPayOffType)
 {
+	if (!mOperationModes.contains(EOperationModes::Automatic))
+	{
+		operatorLogin();
+	}
+
 	mDriver.setDriverParameter<int>(LIBFPTR_PARAM_RECEIPT_TYPE, CAtol5OnlineFR::PayOffTypeData[aPayOffType]);
 
 	if (!setFiscalFieldsOnPayment())
@@ -1049,12 +1050,12 @@ bool Atol5OnlineFRBase<T>::sale(const SDK::Driver::SUnitData & aUnitData)
 	mDriver.setDriverParameter<TSum>(LIBFPTR_PARAM_PRICE, aUnitData.sum);
 	mDriver.setDriverParameter<double>(LIBFPTR_PARAM_QUANTITY, 1);
 	mDriver.setDriverParameter<TVAT>(LIBFPTR_PARAM_TAX_TYPE, CAtol5OnlineFR::TaxData[aUnitData.VAT]);
-/*
+
 	if (!setFiscalFieldsOnSale(aUnitData))
 	{
 		return false;
 	}
-*/
+
 	if (aUnitData.section != -1)
 	{
 		mDriver.setDriverParameter<int>(LIBFPTR_PARAM_DEPARTMENT, aUnitData.section);

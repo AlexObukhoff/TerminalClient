@@ -44,7 +44,7 @@ namespace CSystemPrinter
 	};
 }
 
-typedef PrinterBase<PollingDeviceBase<ProtoPrinter>> TSystemPrinter;
+typedef PrinterBase<PollingDeviceBase<DeviceBase<ProtoPrinter>>> TSystemPrinter;
 
 //--------------------------------------------------------------------------------
 class SystemPrinter : public TSystemPrinter

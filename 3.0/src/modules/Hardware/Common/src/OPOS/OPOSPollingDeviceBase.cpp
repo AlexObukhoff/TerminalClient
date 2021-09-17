@@ -46,11 +46,11 @@ void OPOSPollingDeviceBase<T, T2>::initialize()
 	initializeResources();
 	mProfileName = getConfigParameter(CHardware::OPOSName).toString();
 
-	PollingDeviceBase<T>::initialize();
+	PollingDeviceBase<DeviceBase<T>>::initialize();
 
 	if (!checkConnectionAbility())
 	{
-		processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::ThirdPartyDriverFail);
+		processStatusCode(DeviceStatusCode::Error::ThirdPartyDriverFail);
 	}
 }
 
@@ -129,7 +129,7 @@ bool OPOSPollingDeviceBase<T, T2>::checkExistence()
 
 	initializeResources();
 
-	bool result = checkConnectionAbility() && PollingDeviceBase<T>::checkExistence();
+	bool result = checkConnectionAbility() && PollingDeviceBase<DeviceBase<T>>::checkExistence();
 	mTriedToConnect = true;
 	mStartCondition.wakeAll();
 

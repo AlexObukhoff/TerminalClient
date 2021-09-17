@@ -196,16 +196,31 @@ struct SUnitData
 {
 	TSum sum;                                                   /// Сумма платежа.
 	TVAT VAT;                                                   /// НДС (value added tax).
-	QString name;                                               /// Локализованное название платежа (товар).
-	QString providerINN;                                        /// ИНН поставщика товара (оператор/дилер/Платина).
+	QString name;                                               /// Локализованное название платежа (1030, Билайн).
+	QString providerName;                                       /// Наименование поставщика товара (1225, ПАО Вымпелком).
+	QString providerINN;                                        /// ИНН поставщика товара (1226, оператор/дилер/Платина).
 	EPayOffSubjectTypes::Enum payOffSubjectType;                /// Признак предмета расчета (1212).
 	EPayOffSubjectMethodTypes::Enum payOffSubjectMethodType;    /// Признак способа расчета (1214).
 	int section;                                                /// Отдел.
 
 	SUnitData() : sum(0), VAT(0), payOffSubjectType(EPayOffSubjectTypes::None), payOffSubjectMethodType(EPayOffSubjectMethodTypes::None), section(-1) {}
-	SUnitData(double aSum, TVAT aVAT, const QString & aName, const QString & aProviderINN, EPayOffSubjectTypes::Enum aPayOffSubjectType, int aSection = -1,
+	SUnitData(
+		double aSum,
+		TVAT aVAT,
+		const QString & aName,
+		const QString & aProviderName,
+		const QString & aProviderINN,
+		EPayOffSubjectTypes::Enum aPayOffSubjectType,
+		int aSection = -1,
 		EPayOffSubjectMethodTypes::Enum aPayOffSubjectMethodType = EPayOffSubjectMethodTypes::Full):
-			sum(aSum), VAT(aVAT), name(aName), providerINN(aProviderINN), payOffSubjectType(aPayOffSubjectType), payOffSubjectMethodType(aPayOffSubjectMethodType), section(aSection) {}
+			sum(aSum),
+			VAT(aVAT),
+			name(aName),
+			providerName(aProviderName),
+			providerINN(aProviderINN),
+			payOffSubjectType(aPayOffSubjectType),
+			payOffSubjectMethodType(aPayOffSubjectMethodType),
+			section(aSection) {}
 };
 
 typedef QList<SUnitData> TUnitDataList;

@@ -89,6 +89,9 @@
     <Filter Include="Utils\Port">
       <UniqueIdentifier>{e6d51875-c594-44b7-aa23-ace8a71e00dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ExternalPort">
+      <UniqueIdentifier>{409a412f-a511-4d28-bd67-05b05161a6dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_PollingExpector.cpp">
@@ -256,6 +259,9 @@
     <ClCompile Include="..\src\Utils\Port\SystemDeviceUtils.cpp">
       <Filter>Utils\Port</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ExternalPort\ExternalPortDeviceBase.cpp">
+      <Filter>ExternalPort</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\includes\Hardware\Common\ASCII.h">
@@ -404,6 +410,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Utils\Port\SystemDeviceUtils.h">
       <Filter>Utils\Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ExternalPort\ExternalPortDeviceBase.h">
+      <Filter>ExternalPort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Common\PluginConstants.h">
+      <Filter>Plugins</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

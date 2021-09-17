@@ -119,6 +119,11 @@ Project {
 			"../../includes/Hardware/FR/FRStatusCodes.h"
 		]
 
+		Export {
+			Depends { name: 'cpp' }
+			cpp.staticLibraries: ["Setupapi", "Advapi32" ]
+		}
+
 		Group {
 				fileTagsFilter: product.type
 				qbs.install: true

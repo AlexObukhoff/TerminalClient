@@ -20,6 +20,9 @@
 #include <SDK/Drivers/IPrinter.h>
 #include <SDK/Drivers/IWatchdog.h>
 
+// Common
+#include <Common/PluginConstants.h>
+
 // Project
 #include "MetaDevice.h"
 
@@ -121,6 +124,13 @@ template <class T>
 bool MetaDevice<T>::isAutoDetecting() const
 {
 	return getConfigParameter(CHardwareSDK::SearchingType).toString() == CHardwareSDK::SearchingTypes::AutoDetecting;
+}
+
+//--------------------------------------------------------------------------------
+template <class T>
+bool MetaDevice<T>::isCreating(const QVariantMap & aConfiguration) const
+{
+	return aConfiguration.contains(CHardware::PluginPath) || aConfiguration.contains(CPluginParameters::PPVersion) || aConfiguration.contains(CHardwareSDK::PluginDirectory);
 }
 
 //--------------------------------------------------------------------------------

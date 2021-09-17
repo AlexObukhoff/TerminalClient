@@ -25,6 +25,7 @@ typedef ShtrihRetractorFRLite<ShtrihOnlineFRBase<ShtrihSerialFRBase>> TMStarTK2F
 class MStarTK2FR : public TMStarTK2FR
 {
 	SET_SUBSERIES("MStarTK2")
+	SET_VCOM_DATA(Types::Manufacturer, ConnectionTypes::Dual, ManufacturerTags::FR::MStar)
 
 public:
 	MStarTK2FR();

@@ -72,7 +72,7 @@ struct SOPOSResult
 
 //--------------------------------------------------------------------------------
 template <class T, class T2>
-class OPOSPollingDeviceBase : public PollingDeviceBase<T>
+class OPOSPollingDeviceBase : public PollingDeviceBase<DeviceBase<T>>
 {
 	SET_INTERACTION_TYPE(OPOS)
 

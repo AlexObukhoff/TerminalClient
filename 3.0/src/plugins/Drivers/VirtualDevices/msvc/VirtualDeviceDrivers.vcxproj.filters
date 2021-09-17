@@ -35,6 +35,9 @@
       <Extensions>ts</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Printer">
+      <UniqueIdentifier>{55bc7f9d-d0df-459c-825d-5ee40a1b5a90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\PluginLibraryDefinition.cpp">
@@ -51,6 +54,9 @@
     </ClCompile>
     <ClCompile Include="..\src\VirtualDevicesTemplates.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Printer\VirtualPrinter.cpp">
+      <Filter>Printer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,5 +77,10 @@
     <None Include="..\src\locale\virtual_devices_de.ts">
       <Filter>Translation Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Printer\VirtualPrinter.h">
+      <Filter>Printer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

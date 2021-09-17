@@ -6,7 +6,7 @@
 #include "Hardware/HID/ProtoHID.h"
 
 //--------------------------------------------------------------------------------
-typedef PollingDeviceBase<ProtoHID> TPollingHID;
+typedef PollingDeviceBase<DeviceBase<ProtoHID>> TPollingHID;
 
 class ACR120 : public TPollingHID
 {

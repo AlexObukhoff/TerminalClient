@@ -16,8 +16,10 @@ namespace CIDTechReader
 	const char DLLSDKName[] = "libIDTechSDK.dll.1.0.16";
 }
 
-//------------------------------------------------------------------------------
-class IDTechReader: public PollingDeviceBase<ProtoHID>
+//--------------------------------------------------------------------------------
+typedef PollingDeviceBase<DeviceBase<ProtoHID>> TPollingHID;
+
+class IDTechReader: public TPollingHID
 {
 	SET_INTERACTION_TYPE(External)
 	SET_SERIES("IDTech")

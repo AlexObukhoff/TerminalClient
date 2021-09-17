@@ -18,7 +18,7 @@
 */
 
 //--------------------------------------------------------------------------------
-class EBDSCashAcceptor : public TSerialCashAcceptor
+class EBDSCashAcceptor : public SerialCashAcceptor
 {
 	SET_SERIES("EBDS")
 

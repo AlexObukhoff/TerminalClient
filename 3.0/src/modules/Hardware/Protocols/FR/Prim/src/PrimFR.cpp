@@ -14,7 +14,7 @@
 using namespace ProtocolUtils;
 
 //--------------------------------------------------------------------------------
-PrimFRProtocol::PrimFRProtocol() : mDifferential(ASCII::Space), mLastCommandResult(0)
+PrimFRProtocol::PrimFRProtocol() : mDifferential(CPrimFR::DiffBeginning), mLastCommandResult(0)
 {
 }
 
@@ -89,7 +89,7 @@ TResult PrimFRProtocol::processCommand(const QByteArray & aCommandData, QByteArr
 	request.append(CPrimFR::Prefix);
 	request.append(CPrimFR::Password);
 
-	mDifferential = (mDifferential == uchar(ASCII::Full)) ? ASCII::Space : ++mDifferential;
+	mDifferential = (mDifferential == uchar(CPrimFR::DiffEnding)) ? CPrimFR::DiffBeginning : ++mDifferential;
 
 	request.append(mDifferential);
 	request.append(aCommandData);

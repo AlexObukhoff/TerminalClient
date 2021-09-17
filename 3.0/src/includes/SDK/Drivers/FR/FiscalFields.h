@@ -51,6 +51,7 @@ namespace SDK { namespace Driver { namespace CAllHardware { namespace FiscalFiel
 
 	// Данные поставщика
 	const char ProviderPhone[]   = "provider_phone";     // 1171 (Телефон поставщика).
+	const char ProviderName[]    = "provider_name";      // 1225 (Наименование поставщика).
 	const char ProviderINN[]     = "provider_inn";       // 1226 (ИНН поставщика).
 
 	// Данные платежного агента

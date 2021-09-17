@@ -9,6 +9,7 @@
 class StarPrinter : public TSerialPrinterBase
 {
 	SET_SERIES("STAR")
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::Dual, AdapterTags::FTDI);
 
 public:
 	StarPrinter();

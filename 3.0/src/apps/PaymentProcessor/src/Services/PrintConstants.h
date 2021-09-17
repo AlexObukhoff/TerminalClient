@@ -58,6 +58,8 @@ namespace CPrintConstants
 		const char * const TaxAmount04 = "TAX_AMOUNT_04";    // сумма расчета по чеку с НДС по ставке 0% (1104)
 		const char * const TaxAmount05 = "TAX_AMOUNT_05";    // сумма расчета по чеку без НДС (1105)
 	}
+
+	const char PointAddressExists[] = "point_address_exists";
 }
 
 //---------------------------------------------------------------------------

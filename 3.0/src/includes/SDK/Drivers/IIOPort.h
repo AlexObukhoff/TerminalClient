@@ -91,4 +91,6 @@ protected:
 
 }} // namespace SDK::Driver
 
+Q_DECLARE_METATYPE(SDK::Driver::EPortTypes::Enum);
+
 //--------------------------------------------------------------------------------

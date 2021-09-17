@@ -20,7 +20,7 @@ using namespace SDK::Driver;
 using namespace PrinterStatusCode;
 
 //---------------------------------------------------------------------------
-template class PrinterBase<PollingDeviceBase<ProtoPrinter>>;
+template class PrinterBase<PollingDeviceBase<DeviceBase<ProtoPrinter>>>;
 template class PrinterBase<SerialDeviceBase<PortPollingDeviceBase<ProtoPrinter>>>;
 
 //---------------------------------------------------------------------------
@@ -60,6 +60,7 @@ PrinterBase<T>::PrinterBase()
 	setConfigParameter(CHardware::Printer::RetractorEnable, false);
 	setConfigParameter(CHardware::Printer::FeedingAmount, 0);
 	setConfigParameter(CHardware::Printer::NeedCutting, true);
+	setConfigParameter(CHardware::Printer::BCMaxSize, 0);
 
 	mExcessStatusCollection[EWarningLevel::OK].insert(PrinterStatusCode::OK::PaperInPresenter);
 	mExcessStatusCollection[EWarningLevel::OK].insert(PrinterStatusCode::OK::MotorMotion);
@@ -95,7 +96,7 @@ void PrinterBase<T>::finaliseInitialization()
 	{
 		if (!mConnected)
 		{
-			processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::NotAvailable);
+			processStatusCode(DeviceStatusCode::Error::NotAvailable);
 		}
 		else
 		{
@@ -108,6 +109,9 @@ void PrinterBase<T>::finaliseInitialization()
 	{
 		T::finaliseInitialization();
 	}
+
+	bool amountPrefix = !mTagEngine->value(Tags::Type::Amount).open.isEmpty();
+	setConfigParameter(CHardwareSDK::Printer::AmountPrefix, amountPrefix);
 }
 
 //--------------------------------------------------------------------------------
@@ -134,7 +138,7 @@ bool PrinterBase<T>::processNonReentrant(TBoolMethod aCommand)
 		{
 			if (mOperatorPresence)
 			{
-				processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::NotAvailable);
+				processStatusCode(DeviceStatusCode::Error::NotAvailable);
 			}
 
 			startPolling(true);
@@ -197,10 +201,22 @@ void PrinterBase<T>::makeLexemeReceipt(const QStringList & aReceipt, Tags::TLexe
 		separate(receipt);
 	}
 
+	int bcMaxSize = getConfigParameter(CHardware::Printer::BCMaxSize, 0).toInt();
+
 	foreach(auto line, receipt)
 	{
 		Tags::TLexemesBuffer tagLexemes;
 		mTagEngine->splitForLexemes(line, tagLexemes);
+
+		foreach (const Tags::SLexeme & lexeme, tagLexemes)
+		{
+			int size = lexeme.data.size();
+
+			if (bcMaxSize && (size > bcMaxSize) && lexeme.tags.contains(Tags::Type::BarCode))
+			{
+				toLog(LogLevel::Error, mDeviceName + QString(": Barcode size = %1 > %2 (max)").arg(size).arg(bcMaxSize));
+			}
+		}
 
 		if (!tagLexemes.isEmpty())
 		{

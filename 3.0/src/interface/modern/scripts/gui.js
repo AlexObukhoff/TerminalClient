@@ -29,8 +29,11 @@ function popup(aWidget, aParameters) {
 }
 
 //------------------------------------------------------------------------------
-function waiting(aText) {
-	popup("InfoPopup", {reset: true, message: aText, waiting: true});
+function waiting(aText, aTimeout, aResult) {
+	popup("InfoPopup", {
+					reset: true, message: aText, waiting: true,
+					timeout: __isValid(aTimeout) ? aTimeout : null,
+					result: __isValid(aResult) ? aResult : null});
 }
 
 //------------------------------------------------------------------------------
@@ -75,13 +78,13 @@ function log() {
 	for (var i = 0; i < arguments.length; i++) {
 		msg.push(JSON.stringify(arguments[i], function(key, val) {
 			if (val != null && typeof val == "object") {
-					 if (seen.indexOf(val) >= 0) {
-							 return;
-					 }
-					 seen.push(val);
-			 }
-			 return val;
-	 }));
+				if (seen.indexOf(val) >= 0) {
+					return;
+				}
+				seen.push(val);
+			}
+			return val;
+		}));
 	}
 
 	Core.log.debug(msg.join(" "));

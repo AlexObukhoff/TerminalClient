@@ -17,7 +17,7 @@ TWinDeviceProperties SerialDeviceUtils::getDeviceProperties(const TUuids & aUuid
 	TWinDeviceProperties deviceProperties;
 	QMap<QString, QStringList> sourceDeviceData;
 
-	foreach(const QUuid & uuid, aUuids)
+	foreach (const QUuid & uuid, aUuids)
 	{
 		TWinDeviceProperties uidDeviceProperties;
 
@@ -44,7 +44,7 @@ TWinDeviceProperties SerialDeviceUtils::getDeviceProperties(const TUuids & aUuid
 			QString outKey  = SystemDeviceUtils::getDeviceOutKey(it.value());
 			QString outData = SystemDeviceUtils::getDeviceOutData(deviceProperties[it.key()].data);
 
-			if (!outData.toLower().contains("mouse"))
+			if (!SystemDeviceUtils::containsTag(outData, CSerialDeviceUtils::Tags::Unimportant()))
 			{
 				aData->insert(outKey, outData);
 			}
@@ -63,13 +63,9 @@ SerialDeviceUtils::TData SerialDeviceUtils::getSystemData(bool aForce)
 	{
 		TWinDeviceProperties deviceProperties = getDeviceProperties(CSerialDeviceUtils::Uuids(), CSerialDeviceUtils::PathProperty);
 
-		auto isMatched = [&] (const TWinProperties & aProperties, const QStringList & aTags) -> bool
-		{ return std::find_if(aProperties.begin(), aProperties.end(), [&] (const QString & aValue) -> bool
-		{ return std::find_if(aTags.begin(), aTags.end(), [&] (const QString & aTag) -> bool
-		{ return aValue.contains(aTag, Qt::CaseInsensitive); }) != aTags.end(); }) != aProperties.end(); };
-
 		data.clear();
 		QRegExp regExp("COM[0-9]+");
+		DeviceWinProperties deviceWinProperties;
 
 		for (auto it = deviceProperties.begin(); it != deviceProperties.end(); ++it)
 		{
@@ -81,9 +77,17 @@ SerialDeviceUtils::TData SerialDeviceUtils::getSystemData(bool aForce)
 
 				if (index != -1)
 				{
-					EPortTypes::Enum portType = isMatched(it->data, CSerialDeviceUtils::Tags::Virtual()) ? EPortTypes::VirtualCOM :
-						(isMatched(it->data, CSerialDeviceUtils::Tags::Emulator()) ? EPortTypes::COMEmulator : EPortTypes::Unknown);
-					data.insert(regExp.capturedTexts()[0], portType);
+					TWinProperties & propertyData = it->data;
+					EPortTypes::Enum portType = EPortTypes::Unknown;
+
+					     if (SystemDeviceUtils::containsTag(propertyData[deviceWinProperties[SPDRP_ENUMERATOR_NAME]], CSerialDeviceUtils::Tags::COM())) portType = EPortTypes::COM;
+					else if (SystemDeviceUtils::containsTag(propertyData, CSerialDeviceUtils::Tags::Virtual() + CSerialDeviceUtils::AllVCOMTags())) portType = EPortTypes::VirtualCOM;
+					else if (SystemDeviceUtils::containsTag(propertyData, CSerialDeviceUtils::Tags::Emulator())) portType = EPortTypes::COMEmulator;
+
+					if (!SystemDeviceUtils::containsTag(propertyData, CSerialDeviceUtils::Tags::Unimportant()))
+					{
+						data.insert(regExp.capturedTexts()[0], portType);
+					}
 				}
 			}
 			while (index != -1);

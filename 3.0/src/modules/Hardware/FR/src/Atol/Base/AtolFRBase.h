@@ -11,6 +11,8 @@ typedef ProtoAtolFR<TSerialFRBase> TAtolFRBase;
 
 class AtolFRBase : public TAtolFRBase
 {
+	SET_VCOM_DATA(Types::Manufacturer, ConnectionTypes::Dual, ManufacturerTags::FR::Atol)
+
 public:
 	typedef AtolSeriesType TSeriesType;
 

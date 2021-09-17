@@ -12,6 +12,7 @@
 #include <SDK/PaymentProcessor/Core/IPaymentService.h>
 #include <SDK/PaymentProcessor/Payment/Parameters.h>
 #include <SDK/PaymentProcessor/Settings/TerminalSettings.h>
+#include <SDK/PaymentProcessor/Settings/DealerSettings.h>
 
 // Driver SDK
 #include <SDK/Drivers/WarningLevel.h>
@@ -148,8 +149,16 @@ QStringList CashAcceptorManager::getPaymentMethods()
 {
 	PPSDK::IPaymentService * ps = mApplication->getCore()->getPaymentService();
 	qint64 id = ps->getActivePayment();
-	QString procType = ps->getPaymentField(id, PPSDK::CPayment::Parameters::Type).value.toString();
+	qint64 providerId = ps->getPaymentField(id, PPSDK::CPayment::Parameters::Provider).value.toInt();
+	PPSDK::SProvider provider = SettingsService::instance(mApplication)->getAdapter<PPSDK::DealerSettings>()->getProvider(providerId);
 
+	// Разрешенные способы оплаты в описании оператора имеют более высокий приоритет по сравнению с системными настройками
+	if (!provider.isNull() && !provider.paymentMethods.isEmpty())
+	{
+		return provider.paymentMethods;
+	}
+	
+	QString procType = ps->getPaymentField(id, PPSDK::CPayment::Parameters::Type).value.toString();
 	PPSDK::TerminalSettings * settings = SettingsService::instance(mApplication)->getAdapter<PPSDK::TerminalSettings>();
 	QVariantMap chargeAccess = settings->getChargeProviderAccess();
 	

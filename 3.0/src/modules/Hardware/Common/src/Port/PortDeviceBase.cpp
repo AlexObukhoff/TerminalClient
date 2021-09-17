@@ -16,14 +16,14 @@
 using namespace SDK::Driver;
 
 //-------------------------------------------------------------------------------
-template class PortDeviceBase<PollingDeviceBase<ProtoPrinter>>;
-template class PortDeviceBase<PollingDeviceBase<ProtoDispenser>>;
-template class PortDeviceBase<PollingDeviceBase<ProtoCashAcceptor>>;
-template class PortDeviceBase<PollingDeviceBase<ProtoWatchdog>>;
+template class PortDeviceBase<PollingDeviceBase<DeviceBase<ProtoPrinter>>>;
+template class PortDeviceBase<PollingDeviceBase<DeviceBase<ProtoDispenser>>>;
+template class PortDeviceBase<PollingDeviceBase<DeviceBase<ProtoCashAcceptor>>>;
+template class PortDeviceBase<PollingDeviceBase<DeviceBase<ProtoWatchdog>>>;
 template class PortDeviceBase<DeviceBase<ProtoModem>>;
-template class PortDeviceBase<PollingDeviceBase<ProtoFR>>;
-template class PortDeviceBase<PollingDeviceBase<ProtoMifareReader>>;
-template class PortDeviceBase<PollingDeviceBase<ProtoHID>>;
+template class PortDeviceBase<PollingDeviceBase<DeviceBase<ProtoFR>>>;
+template class PortDeviceBase<PollingDeviceBase<DeviceBase<ProtoMifareReader>>>;
+template class PortDeviceBase<PollingDeviceBase<DeviceBase<ProtoHID>>>;
 
 //--------------------------------------------------------------------------------
 template <class T>
@@ -36,16 +36,7 @@ PortDeviceBase<T>::PortDeviceBase() : mIOPort(nullptr), mIOMessageLogging(ELoggi
 template <class T>
 void PortDeviceBase<T>::addPortData()
 {
-	EPortTypes::Enum portType = mIOPort->getType();
-	QString port;
-
-	if (portType == EPortTypes::COM) port = "COM";
-	if (portType == EPortTypes::USB) port = "USB";
-	if (portType == EPortTypes::TCP) port = "TCP";
-	if (portType == EPortTypes::VirtualCOM)  port = "Virtual COM";
-	if (portType == EPortTypes::COMEmulator) port = "COM Emulator";
-
-	setDeviceParameter(CDeviceData::Port, port);
+	setDeviceParameter(CDeviceData::Port, PortTypeData[mIOPort->getType()]);
 }
 
 //--------------------------------------------------------------------------------

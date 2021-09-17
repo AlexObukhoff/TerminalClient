@@ -6,7 +6,7 @@
 
 //------------------------------------------------------------------------------
 template class DeviceBase<ProtoOPOSScanner>;
-template class PollingDeviceBase<ProtoOPOSScanner>;
+template class PollingDeviceBase<DeviceBase<ProtoOPOSScanner>>;
 template class OPOSPollingDeviceBase<ProtoOPOSScanner, OPOS::OPOSScanner>;
 
 //------------------------------------------------------------------------------

@@ -11,7 +11,9 @@
 // Project
 #include "Hardware/FR/ProtoAtolFR.h"
 #include "Wrapper/AtolDriverWrapper.h"
-#include "ProtoAtol5FR.h"
+#include "Proto/ProtoAtol5FR.h"
+#include "Proto/SerialProtoAtol5FR.h"
+#include "Proto/VCOMProtoAtol5FR.h"
 
 //TODO: отвязать наследование от TSerialFRBase-а
 

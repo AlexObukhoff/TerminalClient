@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -23,15 +23,15 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -138,9 +138,21 @@
     <ClCompile Include="..\src\PluginFactoryDefinition.cpp" />
     <ClCompile Include="..\src\QMLBackend.cpp" />
     <ClCompile Include="..\src\QMLGraphicsItem.cpp" />
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_Md5ValidatorQmlItem.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Debug\moc_QMLBackend.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\ReleaseWithDebugInfo\moc_Md5ValidatorQmlItem.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_Md5ValidatorQmlItem.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\$(ProjectName)\Release\moc_QMLBackend.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -167,6 +179,20 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\..\..\includes\SDK\GUI\IGraphicsItem.h" />
+    <CustomBuild Include="..\src\Md5ValidatorQmlItem.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">Moc%27ing Md5ValidatorQmlItem.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseWithDebugInfo|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DTESTPLUGIN_LIB -DQT_NETWORK_LIB -D_WINDLL "-I$(THIRDPARTY_DIR)\boost" "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I."</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing Md5ValidatorQmlItem.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DTESTPLUGIN_LIB -DQT_NETWORK_LIB -D_WINDLL "-I$(THIRDPARTY_DIR)\boost" "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I."</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing Md5ValidatorQmlItem.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ProjectName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DWINVER=0x0502 -D_WIN32_WINNT=0x0502 -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DTESTPLUGIN_LIB -DQT_NETWORK_LIB -D_WINDLL "-I$(THIRDPARTY_DIR)\boost" "-I$(QTDIR)\include" "-I$(TC_INCLUDE_DIR)\." "-I$(ProjectDir)\..\thirdparty\include" "-I.\GeneratedFiles\$(ProjectName)\$(Configuration)\." "-I.\GeneratedFiles\$(ProjectName)\." "-I."</Command>
+    </CustomBuild>
     <ClInclude Include="..\src\QMLGraphicsItem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

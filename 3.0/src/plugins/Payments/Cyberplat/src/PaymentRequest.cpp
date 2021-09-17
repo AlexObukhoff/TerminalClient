@@ -44,6 +44,7 @@ PaymentRequest::PaymentRequest(Payment * aPayment, const QString & aName) :
 	addParameter("NUMBER", QString());
 	addParameter("ACCOUNT", QString());
 
+	addParameter("PAY_TOOL", aPayment->getParameter(PPSDK::CPayment::Parameters::PayTool).value);
 	addParameter("CRC", aPayment->getParameter(PPSDK::CPayment::Parameters::CRC).value);
 }
 

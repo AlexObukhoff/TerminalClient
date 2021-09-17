@@ -43,7 +43,7 @@ public:
 
 public:
 	/// Начать поиск устройств
-	void detect(const QString & aDeviceType = QString());
+	void detect(bool aQuick, const QString & aDeviceType = QString());
 	
 	/// Прервать поиск устройств.
 	void stopDetection();

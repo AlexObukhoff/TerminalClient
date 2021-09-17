@@ -63,3 +63,5 @@ protected:
 	/// Тип IC карты.
 	CCreatorReader::CardTypes::EICCPU::Enum mICCPUType;
 };
+
+//------------------------------------------------------------------------------

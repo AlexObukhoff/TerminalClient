@@ -10,13 +10,8 @@
     </message>
     <message>
         <location filename="../scripts/root_groups.js" line="6"/>
-        <source>root_groups#102</source>
-        <translation>Интернет</translation>
-    </message>
-    <message>
-        <location filename="../scripts/root_groups.js" line="7"/>
-        <source>root_groups#103</source>
-        <translation>ТВ</translation>
+        <source>root_groups#9258</source>
+        <translation>Интернет и ТВ</translation>
     </message>
     <message>
         <location filename="../scripts/root_groups.js" line="8"/>

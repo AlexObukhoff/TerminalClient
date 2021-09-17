@@ -27,8 +27,14 @@ public:
 	virtual bool release();
 
 protected:
+	/// Завершение инициализации.
+	virtual void finaliseInitialization();
+
 	/// Получить статус.
 	virtual bool getStatus(TStatusCodes & aStatusCodes);
+
+	/// Переинициализация в рамках фоновой логики пост-поллинга.
+	virtual void reInitialize();
 
 	/// Фильтр событий, для отслеживаения нажатия кнопок.
 	virtual bool eventFilter(QObject * aWatched, QEvent * aEvent);
@@ -41,6 +47,9 @@ protected:
 
 	/// Инвертировать статус-код.
 	void changeStatusCode(int aStatusCode);
+
+	/// Клавиша - модификатор?
+	bool isKeyModifier(int aKey) const;
 
 	/// Текущие статус-коды.
 	TStatusCodes mStatusCodes;

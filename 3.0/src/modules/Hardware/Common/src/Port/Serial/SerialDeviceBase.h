@@ -4,6 +4,7 @@
 
 // SDK
 #include <SDK/Drivers/IOPort/COMParameters.h>
+#include <SDK/Drivers/IOPort/VCOMData.h>
 
 // Project
 #include "Hardware/Common/PortDeviceBase.h"
@@ -26,11 +27,17 @@ struct SSerialPortParameters
 		baudRate(aBaudRate), parity(aParity), RTS(aRTS), DTR(aDTR), byteSize(aByteSize) {}
 };
 
+#define SET_VCOM_DATA(aType, aConnectionType, aTags) public: \
+	static QString getVCOMType() { return SDK::Driver::VCOM::aType; } \
+	static QString getVCOMConnectionType() { return SDK::Driver::VCOM::aConnectionType; } \
+	static QStringList getVCOMTags() { using namespace SDK::Driver::VCOM; return QStringList() << aTags; }
+
 //--------------------------------------------------------------------------------
 template <class T>
 class SerialDeviceBase : public T
 {
 	SET_INTERACTION_TYPE(COM)
+	SET_VCOM_DATA(None, ConnectionTypes::Dual, None)
 
 public:
 	SerialDeviceBase();

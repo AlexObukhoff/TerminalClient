@@ -149,9 +149,27 @@ struct SNamedList<T1, DSDKIT::ItCOM>
 	{
 		QStringList optionalPortSettings = sortParameters(&T1::getOptionalPortSettings);
 
-		return createSimpleNamedList<T1>(aModels, aDefault)
+		TParameterList result = createSimpleNamedList<T1>(aModels, aDefault)
 			<< SPluginParameter(CHardwareSDK::RequiredResource, SPluginParameter::Text, false, CPPT::RequiredResource, QString(), "Common.Driver.IOPort.System.COM", QVariantMap(), true)
 			<< SPluginParameter(CHardwareSDK::OptionalPortSettings, false, QString(), QString(), optionalPortSettings[0], optionalPortSettings, true);
+
+		QString VCOMType = T1::getVCOMType();
+		QStringList VCOMTags = T1::getVCOMTags();
+		QString VCOMConnectionType = T1::getVCOMConnectionType();
+
+		if (!VCOMConnectionType.isEmpty())
+		{
+			using namespace SDK::Driver::VCOM;
+
+			QVariantMap VCOMData;
+			VCOMData.insert(CHardwareSDK::VCOMType, VCOMType);
+			VCOMData.insert(CHardwareSDK::VCOMTags, VCOMTags);
+			VCOMData.insert(CHardwareSDK::VCOMConnectionType, VCOMConnectionType);
+
+			result << SPluginParameter(CHardwareSDK::VCOMData, false, QString(), QString(), VCOMData, QStringList(), true);
+		}
+
+		return result;
 	}
 };
 
@@ -267,7 +285,7 @@ inline SPluginParameter setExcludedParameters(const QStringList & aParameters)
 
 //------------------------------------------------------------------------------
 /// Исключенные параметры для устройства на COM-порту.
-inline SPluginParameter setSerialPortExcludedParameters()
+inline SPluginParameter setSerialPortExcludedParameters(const QString & aIncludedParameter = "")
 {
 	QStringList serialPortParameters = QStringList()
 		<< COMPortSDK::BaudRate
@@ -276,6 +294,8 @@ inline SPluginParameter setSerialPortExcludedParameters()
 		<< COMPortSDK::DTR
 		<< COMPortSDK::ByteSize
 		<< COMPortSDK::StopBits;
+
+	serialPortParameters.removeAll(aIncludedParameter);
 
 	return setExcludedParameters(serialPortParameters);
 }

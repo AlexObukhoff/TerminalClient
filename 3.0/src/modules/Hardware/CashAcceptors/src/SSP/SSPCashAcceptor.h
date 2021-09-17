@@ -10,9 +10,10 @@
 #include "SSPModelDataTypes.h"
 
 //--------------------------------------------------------------------------------
-class SSPCashAcceptor : public TSerialCashAcceptor
+class SSPCashAcceptor : public SerialCashAcceptor
 {
 	SET_SERIES("SSP")
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::Dual, AdapterTags::FTDI)
 
 public:
 	SSPCashAcceptor();

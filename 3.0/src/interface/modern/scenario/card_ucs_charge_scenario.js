@@ -289,13 +289,12 @@ function onError(aError) {
 
 	Core.payment.setExternalParameter("CARD_CHARGE_ERROR", aError);
 
-	Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Abort);
+	GUI.notification(aError, 5000, Scenario.Payment.Event.Abort)
 }
 
 //------------------------------------------------------------------------------
 function onMessage(aMessage) {
-	GUI.waiting(aMessage, 60000, Scenario.Payment.Event.Abort);
-	Core.postEvent(EventType.UpdateScenario, Scenario.Payment.Event.Retry)
+	GUI.waiting(aMessage, 0, Scenario.Payment.Event.Abort);
 }
 
 //------------------------------------------------------------------------------

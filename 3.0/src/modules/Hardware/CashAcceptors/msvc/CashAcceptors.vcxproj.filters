@@ -239,6 +239,9 @@
     <ClInclude Include="..\src\SSP\SSPModelDataTypes.h">
       <Filter>SSP</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\includes\Hardware\CashAcceptors\SerialCashAcceptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\src\PortCashAcceptor.h">

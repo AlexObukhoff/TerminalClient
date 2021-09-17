@@ -12,7 +12,7 @@ namespace CCoinAcceptor
 }
 
 //--------------------------------------------------------------------------------
-class CoinAcceptorBase : public TSerialCashAcceptor
+class CoinAcceptorBase : public SerialCashAcceptor
 {
 	SET_DEVICE_TYPE(CoinAcceptor)
 

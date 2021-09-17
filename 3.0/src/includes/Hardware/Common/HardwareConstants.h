@@ -151,6 +151,7 @@ namespace CHardware
 		const char BlackMark[] = "black_mark";
 		const char PowerOnReaction[] = "power-on_reaction";
 		const char OutCall[] = "out_call";
+		const char BCMaxSize[] = "bar_code_max_size";
 
 		/// Команды.
 		namespace Commands

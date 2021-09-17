@@ -15,6 +15,7 @@ template<class T>
 class ShtrihOnlineFRBase : public ShtrihFRBase<T>
 {
 	SET_SERIES("ShtrihOnline")
+	SET_VCOM_DATA(Types::Adapter, ConnectionTypes::Dual, AdapterTags::FTDI)
 
 public:
 	ShtrihOnlineFRBase();

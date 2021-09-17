@@ -19,14 +19,15 @@
 //--------------------------------------------------------------------------------
 namespace CCCTalk
 {
+	/// Параметры производителей.
 	struct SVendorData
 	{
-		QString vendor;
-		QString shortVendor;
-		bool complexEnabling;
+		QString vendor;          /// Полное название.
+		QString shortVendor;     /// Короткое название.
+		bool complexEnabling;    /// 2-х ступенчатая схема включения на приём денег.
 
 		SVendorData() : complexEnabling(false) {}
-		SVendorData(const QString & aVendor, const QString & aShortVendor, bool aComplexEnabling = false) :
+		SVendorData(const QString & aVendor, const QString & aShortVendor, bool aComplexEnabling) :
 			vendor(aVendor), shortVendor(aShortVendor), complexEnabling(aComplexEnabling) {}
 	};
 

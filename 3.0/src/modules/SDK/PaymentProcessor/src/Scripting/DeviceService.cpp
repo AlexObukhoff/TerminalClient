@@ -21,7 +21,8 @@ DeviceService::DeviceService(ICore * aCore)
 //------------------------------------------------------------------------------
 void DeviceService::detect()
 {
-	mDeviceService->detect();
+	//TODO: 1-й параметр - галка быстрого поиска
+	mDeviceService->detect(false);
 }
 
 //------------------------------------------------------------------------------

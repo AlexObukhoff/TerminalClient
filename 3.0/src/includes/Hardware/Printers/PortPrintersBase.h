@@ -8,6 +8,8 @@
 template <class T>
 class SerialPrinterBase : public PortPrinterBase<T>
 {
+	SET_VCOM_DATA(None, ConnectionTypes::COMOnly, None)
+
 public:
 	/// Получение списка настроек порта, необязательных для редактирования пользователем.
 	static QStringList getOptionalPortSettings()

@@ -244,7 +244,7 @@ bool ICTCashAcceptor::isStatusesReplaceable(TStatusCodes & aStatusCodes)
 		}
 	}
 
-	return TSerialCashAcceptor::isStatusesReplaceable(aStatusCodes);
+	return SerialCashAcceptor::isStatusesReplaceable(aStatusCodes);
 }
 
 //--------------------------------------------------------------------------------
@@ -262,7 +262,7 @@ void ICTCashAcceptor::postPollingAction(const TStatusCollection & aNewStatusColl
 		PollingExpector().wait<bool>(poll, isPowerUp, CICTBase::PowerUpWaiting);
 	}
 
-	TSerialCashAcceptor::postPollingAction(aNewStatusCollection, aOldStatusCollection);
+	SerialCashAcceptor::postPollingAction(aNewStatusCollection, aOldStatusCollection);
 }
 
 

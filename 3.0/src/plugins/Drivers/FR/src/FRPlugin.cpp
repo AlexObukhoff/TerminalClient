@@ -232,6 +232,15 @@ TParameterList Atol5Parameters(const QStringList & aModels)
 }
 
 //------------------------------------------------------------------------------
+template <>
+TParameterList Atol5Parameters<SerialAtol5OnlineFR>(const QStringList & aModels)
+{
+	return defaultParameters<SerialAtol5OnlineFR>(aModels, CComponents::FiscalRegistrator)
+		<< setProtocol(ProtocolNames::FR::ATOL5)
+		<< setSerialPortExcludedParameters(COMPortSDK::BaudRate);
+}
+
+//------------------------------------------------------------------------------
 template <class T>
 TParameterList AtolParameters(const QStringList & aModels, const QString & aDeviceType, const QString & aProtocol)
 {
@@ -382,7 +391,7 @@ BEGIN_REGISTER_PLUGIN
 	SINGLE_ATOL_PLUGIN(Paymaster3,  PaymasterParameters, Sensis Kaznachej, ATOL3)
 
 	COMMON_FR_PLUGIN(VCOMAtol5OnlineFR, Atol5Parameters)
-	//COMMON_FR_PLUGIN(SerialAtol5OnlineFR, Atol5Parameters)
+	COMMON_FR_PLUGIN(SerialAtol5OnlineFR, Atol5Parameters)
 
 	COMMON_FR_PLUGIN(ShtrihSerialFR, ShtrihParameters)
 	COMMON_FR_PLUGIN(ShtrihRetractorFR, ShtrihRetractorFRParameters)

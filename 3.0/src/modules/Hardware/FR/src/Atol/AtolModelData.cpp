@@ -44,6 +44,7 @@ CModelData::CModelData()
 	/// Онлайн.
 	addOnlineTrade(67, 32, Models::Atol11F, false, 3);
 	addOnlineTrade(78, 32, Models::Atol15F, false, 3);
+	addOnlineTrade(81, 48, Models::Atol20F, true,  6, CAtolFR::OnlineTradeBuild);
 	addOnlineTrade(57, 48, Models::Atol25F, true,  3);
 	addOnlineTrade(61, 32, Models::Atol30F, false, 3);
 	addOnlineTrade(64, 36, Models::Atol52F, true,  6, CAtolFR::OnlineTradeBuild, false);

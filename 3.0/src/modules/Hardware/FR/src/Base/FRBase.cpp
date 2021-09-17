@@ -168,8 +168,9 @@ void FRBase<T>::setDeviceConfiguration(const QVariantMap & aConfiguration)
 	if (aConfiguration.contains(CHardwareSDK::FR::DealerAgentFlag)) mFFEngine.setConfigParameter(CHardwareSDK::FR::DealerAgentFlag, getConfigParameter(CHardwareSDK::FR::DealerAgentFlag));
 	if (aConfiguration.contains(CHardwareSDK::OperatorPresence))    mFFEngine.setConfigParameter(CHardwareSDK::OperatorPresence, mOperatorPresence);
 
-	mFFEngine.checkDealerTaxSystem(mInitialized, !isAutoDetecting());
-	mFFEngine.checkDealerAgentFlag(mInitialized, !isAutoDetecting());
+	bool canLog = !isCreating(aConfiguration) && !isAutoDetecting();
+	mFFEngine.checkDealerTaxSystem(mInitialized, canLog);
+	mFFEngine.checkDealerAgentFlag(mInitialized, canLog);
 
 	releaseExternalResource();
 }
@@ -1058,7 +1059,8 @@ bool FRBase<T>::setFiscalFieldsOnPayment()
 template <class T>
 bool FRBase<T>::setFiscalFieldsOnSale(const SUnitData & aUnitData)
 {
-	checkFFExistingOnSale(CFR::FiscalFields::ProviderINN, aUnitData.providerINN.simplified());
+	checkFFExistingOnSale(CFR::FiscalFields::ProviderName, aUnitData.providerName.simplified());
+	checkFFExistingOnSale(CFR::FiscalFields::ProviderINN,  aUnitData.providerINN.simplified());
 	checkFFExistingOnSale(CFR::FiscalFields::AgentFlag, mFFEngine.getConfigParameter(CFiscalSDK::AgentFlagsReg));
 
 	foreach (auto field, mOFDFiscalFieldsOnSale)
@@ -1336,9 +1338,12 @@ bool FRBase<T>::openFRSession()
 		return true;
 	}
 
+	checkNotPrinting(true);
 	QTime currentTime = QTime::currentTime();
+	bool result = openSession();
+	checkNotPrinting(false);
 
-	if (!openSession())
+	if (!result)
 	{
 		return false;
 	}
@@ -1775,6 +1780,7 @@ void FRBase<T>::addFiscalFieldsOnPayment(const SPaymentData & aPaymentData)
 	checkFFExistingOnPayment(CFR::FiscalFields::AgentPhone,    isBothAgent, false);
 	checkFFExistingOnPayment(CFR::FiscalFields::ProviderPhone, isBothAgent);
 
+	checkFFExistingOnPayment(CFR::FiscalFields::ProviderName, true, false, false);
 	checkFFExistingOnPayment(CFR::FiscalFields::ProviderINN, aPaymentData.agentFlag != EAgentFlags::None, false, false);
 	checkFFExistingOnPayment(CFR::FiscalFields::AgentFlag,   aPaymentData.agentFlag != EAgentFlags::None, false, false);
 
@@ -1807,8 +1813,14 @@ void FRBase<T>::addFiscalFieldsOnPayment(const SPaymentData & aPaymentData)
 
 	if (mOperatorPresence)
 	{
-		addUserContact = !getConfigParameter(CFiscalSDK::UserContact).toString().isEmpty();
-		requiredUserContact = addUserContact && (notPrinting || internetMode);
+		bool userContactExists = !getConfigParameter(CFiscalSDK::UserContact).toString().isEmpty();
+		requiredUserContact = notPrinting || internetMode;
+		addUserContact = requiredUserContact || userContactExists;
+
+		if (requiredUserContact && !userContactExists)
+		{
+			setConfigParameter(CFiscalSDK::UserContact, QString());
+		}
 	}
 
 	checkFFExistingOnPayment(CFR::FiscalFields::SenderMail,  notPrinting, requiredSenderMail);
@@ -1821,6 +1833,18 @@ void FRBase<T>::addFiscalFieldsOnPayment(const SPaymentData & aPaymentData)
 	{
 		if (containsDeviceParameter(it->textKey)) FFConfig.insert(it->textKey, getDeviceParameter(it->textKey));
 		if (containsConfigParameter(it->textKey)) FFConfig.insert(it->textKey, getConfigParameter(it->textKey));
+	}
+
+	if (mFiscalServerPresence)
+	{
+		QString payOffPlace = aPaymentData.fiscalParameters.value(CPrintConstants::PointAddress).toString().simplified();
+		bool addPayOffPlace = !payOffPlace.isEmpty();
+		checkFFExistingOnPayment(CFR::FiscalFields::PayOffPlace, addPayOffPlace, false);
+
+		if (addPayOffPlace)
+		{
+			FFConfig.insert(CFiscalSDK::PayOffPlace, payOffPlace);
+		}
 	}
 
 	mFFEngine.setConfiguration(FFConfig);

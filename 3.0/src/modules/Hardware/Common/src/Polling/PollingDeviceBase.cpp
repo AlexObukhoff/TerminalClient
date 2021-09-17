@@ -11,14 +11,16 @@
 #include "PollingDeviceBase.h"
 
 //--------------------------------------------------------------------------------
-template class PollingDeviceBase<ProtoPrinter>;
-template class PollingDeviceBase<ProtoDispenser>;
-template class PollingDeviceBase<ProtoCashAcceptor>;
-template class PollingDeviceBase<ProtoFR>;
-template class PollingDeviceBase<ProtoHID>;
-template class PollingDeviceBase<ProtoMifareReader>;
-template class PollingDeviceBase<ProtoDeviceBase>;
-template class PollingDeviceBase<ProtoWatchdog>;
+template class PollingDeviceBase<DeviceBase<ProtoPrinter>>;
+template class PollingDeviceBase<DeviceBase<ProtoDispenser>>;
+template class PollingDeviceBase<DeviceBase<ProtoCashAcceptor>>;
+template class PollingDeviceBase<DeviceBase<ProtoFR>>;
+template class PollingDeviceBase<DeviceBase<ProtoHID>>;
+template class PollingDeviceBase<DeviceBase<ProtoMifareReader>>;
+template class PollingDeviceBase<DeviceBase<ProtoDeviceBase>>;
+template class PollingDeviceBase<DeviceBase<ProtoWatchdog>>;
+
+template class PollingDeviceBase<ExternalPortDeviceBase<ProtoFR>>;
 
 //--------------------------------------------------------------------------------
 template <class T>
@@ -46,7 +48,7 @@ bool PollingDeviceBase<T>::release()
 {
 	releasePolling();
 
-	return DeviceBase<T>::release();
+	return T::release();
 }
 
 //--------------------------------------------------------------------------------
@@ -55,7 +57,7 @@ void PollingDeviceBase<T>::finaliseInitialization()
 {
 	if (!mConnected)
 	{
-		processStatusCodes(TStatusCodes() << DeviceStatusCode::Error::NotAvailable);
+		processStatusCode(DeviceStatusCode::Error::NotAvailable);
 	}
 
 	bool notWaitFirst = mForceNotWaitFirst || !mConnected;
@@ -168,14 +170,14 @@ void PollingDeviceBase<T>::reInitialize()
 {
 	stopPolling(false);
 
-	DeviceBase<T>::reInitialize();
+	T::reInitialize();
 }
 
 //---------------------------------------------------------------------------
 template <class T>
 bool PollingDeviceBase<T>::isInitializationError(TStatusCodes & aStatusCodes)
 {
-	return mPollingActive && DeviceBase<T>::isInitializationError(aStatusCodes);
+	return mPollingActive && T::isInitializationError(aStatusCodes);
 }
 
 //--------------------------------------------------------------------------------

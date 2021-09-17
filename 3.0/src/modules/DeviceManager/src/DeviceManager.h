@@ -46,31 +46,31 @@ public:
 	DeviceManager(SDK::Plugin::IPluginLoader * aPluginLoader);
 	~DeviceManager();
 
-	/// Инициализация DeviceManager.
+	/// Инициализирует DeviceManager.
 	bool initialize();
 
-	/// Освобождение ресурсов.
+	/// Освобождает ресурсы.
 	void shutdown();
 
 	/// Ищет все подключенные устройства без сохранения конфигуркции.
-	QStringList detect(const QString & aDeviceType);
+	QStringList detect(bool aFast, const QString & aDeviceType);
 
 	/// Подключение/захват устройства, c заданной конфигурацией. По умолчаю конфигурация грузится из конфига плагина.
 	SDK::Driver::IDevice * acquireDevice(const QString & aInstancePath, const QString & aConfigPath = "");
 
-	/// Отключение/освобождение указанного устройства.
+	/// Отключает/освобождает указанные устройства.
 	void releaseDevice(SDK::Driver::IDevice * aDevice);
 
-	/// Создание устройства. Возвращает имя новой конфигурации.
+	/// Создаёт устройства. Возвращает имя новой конфигурации.
 	Q_INVOKABLE TNamedDevice createDevice(const QString & aDriverPath, const QVariantMap & aConfig, bool aDetecting = false);
 
-	/// Сохранить конфигурацию устройства.
+	/// Сохраняет конфигурацию устройства.
 	void saveConfiguration(SDK::Driver::IDevice * aDevice);
 
-	/// Получение списка драверов (поддерживаемых устройста).
+	/// Получает список драверов (поддерживаемых устройств).
 	QMap<QString, QStringList> getModelList(const QString & aFilter);
 
-	/// Получени списка доступных драйверов.
+	/// Получает список доступных драйверов.
 	QStringList getDriverList() const;
 
 	/// Останавливает процесс поиска устройств.
@@ -82,54 +82,54 @@ public:
 	/// Устанавливает конфигурацию устройству.
 	void setDeviceConfiguration(SDK::Driver::IDevice * aDevice, const QVariantMap & aConfig);
 
-	/// Получить конфигурацию устройства.
+	/// Получает конфигурацию устройства.
 	QVariantMap getDeviceConfiguration(SDK::Driver::IDevice * aDevice) const;
 
-	/// Получить список возможных значений для параметров устройств.
+	/// Получает список возможных значений для параметров устройств.
 	SDK::Plugin::TParameterList getDriverParameters(const QString & aDriverPath) const;
 
-	/// Проверить правильность путей плагинов драйверов. Workaround для обратной совместимости при накате обновления без автопоиска драйверов, при изменении путей.
+	/// Проверяет правильность путей плагинов драйверов. Workaround для обратной совместимости при накате обновления без автопоиска драйверов, при изменении путей.
 	// TODO: убрать после реализации автопоиска через мониторинг.
 	void checkInstancePath(QString & aInstancePath);
 	void checkITInstancePath(QString & aInstancePath);
 
-	/// Попробовать изменить путь плагина драйвера. Workaround для обратной совместимости при накате обновления без автопоиска драйверов, при изменении путей.
+	/// Пробует изменить путь плагина драйвера. Workaround для обратной совместимости при накате обновления без автопоиска драйверов, при изменении путей.
 	typedef QSet<QString> TNewPaths;
 	typedef QMap<QString, TNewPaths> TPaths;
 	void changeInstancePath(QString & aInstancePath, const QString & aConfigPath, const TPaths & aPaths);
 
 private:
 	/// Пробует найти устройство aDevicePath.
-	TNamedDevice findDevice(SDK::Driver::IDevice * aRequired, const QStringList & aDevicesToFind);
+	TNamedDevice findDevice(SDK::Driver::IDevice * aRequired, const QStringList & aDevicesToFind, bool aVCOM = false);
 
 	/// Пробует найти устройство aDriverName, не имеющее зависимых устройств
 	void findSimpleDevice(const SSimpleSearchDeviceData & aDeviceData);
 
 	/// Ищет все подключенные устройства, имеющие зависимые устройства, без сохранения конфигуркции.
-	void findRRDevices(QStringList & aFoundDevices);
+	void findRRDevices(QStringList & aFoundDevices, bool aVCOM);
 
 	/// Ищет все подключенные устройства, использующие зависимые устройства без сладения ими, без сохранения конфигуркции.
 	void findExternalRRDevices(SSimpleSearchDeviceData & aDeviceData);
 
-	/// Было ли устройство данного типа уже найдено.
+	/// Было ли устройство данного типа уже найдено?
 	bool isDetected(const QString & aConfigName);
 
-	/// Добавить устройство в список найденных.
+	/// Добавляет устройство в список найденных.
 	void markDetected(const QString & aConfigName);
 
 	/// Предикат для сортировки списка устройств при автодетекте.
 	bool deviceSortPredicate(const QString & aLhs, const QString & aRhs) const;
 
-	/// Установить лог для устройства.
+	/// Устанавливает лог для устройства.
 	void setDeviceLog(SDK::Driver::IDevice * aDevice, bool aDetecting);
 
-	/// Получить имя лога простого устройства.
+	/// Получает имя лога простого устройства.
 	QString getSimpleDeviceLogName(SDK::Driver::IDevice * aDevice, bool aDetecting);
 
-	/// Получить имя лога устройства.
+	/// Получает имя лога устройства.
 	QString getDeviceLogName(SDK::Driver::IDevice * aDevice, bool aDetecting);
 
-	/// Логгировать данные зависимых устройств.
+	/// Логгирует данные зависимых устройств.
 	void logRequiedDeviceData();
 
 signals:
@@ -140,7 +140,7 @@ signals:
 	void progress(int aCurrent, int aMax);
 
 private slots:
-	/// Обновить конфигурацию устройства (без зависимых устройств).
+	/// Обновляет конфигурацию устройства (без зависимых устройств).
 	void onConfigurationChanged();
 
 private:
@@ -178,6 +178,9 @@ private:
 
 	/// Список путей всех использованных устройств.
 	QStringList mAcquiredDevices;
+
+	/// Список путей всех использованных устройств.
+	bool mFastAutoSearching;
 };
 
 //--------------------------------------------------------------------------------

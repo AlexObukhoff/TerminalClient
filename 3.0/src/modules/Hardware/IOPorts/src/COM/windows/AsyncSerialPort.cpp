@@ -17,6 +17,9 @@ using namespace SDK::Driver;
 using namespace SDK::Driver::IOPort::COM;
 
 //--------------------------------------------------------------------------------
+QMutex AsyncSerialPort::mSystemAsyncPropertyMutex(QMutex::Recursive);
+
+//--------------------------------------------------------------------------------
 AsyncSerialPort::AsyncSerialPort() :
 	mPortHandle(0),
 	mExist(false),
@@ -50,14 +53,15 @@ AsyncSerialPort::AsyncSerialPort() :
 void AsyncSerialPort::initialize()
 {
 	TIOPortDeviceData deviceData;
-	SerialDeviceUtils::getDeviceProperties(mUuids, mPathProperty, false, &deviceData);
+	getAsyncDeviceProperties(false, false, &deviceData);
 
 	QStringList minePortData;
 	QStringList otherPortData;
 
 	for (auto it = deviceData.begin(); it != deviceData.end(); ++it)
 	{
-		bool mine = !mSystemName.isEmpty() && it->contains(mSystemName);
+		QString regExpData = mSystemName + "[^0-9]";
+		bool mine = !mSystemName.isEmpty() && it->contains(QRegExp(regExpData));
 		QStringList & target = mine ? minePortData : otherPortData;
 		target << it.key() + "\n" + it.value() + "\n";
 
@@ -66,9 +70,20 @@ void AsyncSerialPort::initialize()
 			bool cannotWaitResult = std::find_if(CAsyncSerialPort::CannotWaitResult.begin(), CAsyncSerialPort::CannotWaitResult.end(), [&] (const QString & aLexeme) -> bool
 				{ return it->contains(aLexeme, Qt::CaseInsensitive); }) != CAsyncSerialPort::CannotWaitResult.end();
 			setConfigParameter(CHardware::Port::COM::ControlRemoving, cannotWaitResult);
+
+			foreach (const QString & tag, CSerialDeviceUtils::AllVCOMTags())
+			{
+				if (it->contains(tag))
+				{
+					QString VCOMType = CSerialDeviceUtils::VCOMAdapterTags().contains(tag) ? VCOM::Types::Adapter : VCOM::Types::Manufacturer;
+					setConfigParameter(CHardwareSDK::VCOMType, VCOMType);
+					setConfigParameter(CHardwareSDK::Tag, tag);
+				}
+			}
 		}
 	}
 
+	setConfigParameter(CHardwareSDK::Type, SerialDeviceUtils::getSystemData()[mSystemName]);
 	adjustData(minePortData, otherPortData);
 }
 
@@ -802,7 +817,7 @@ bool AsyncSerialPort::setParity(EParity::Enum aValue)
 //--------------------------------------------------------------------------------
 bool AsyncSerialPort::deviceConnected()
 {
-	TWinDeviceProperties winProperties = SerialDeviceUtils::getDeviceProperties(mUuids, mPathProperty, true);
+	TWinDeviceProperties winProperties = getAsyncDeviceProperties(true, true);
 	bool result = (winProperties.size() > mWinProperties.size()) && !mWinProperties.isEmpty();
 
 	mWinProperties = winProperties;
@@ -815,6 +830,31 @@ bool AsyncSerialPort::deviceConnected()
 	}
 
 	return result;
+}
+
+//--------------------------------------------------------------------------------
+TWinDeviceProperties AsyncSerialPort::getAsyncDeviceProperties(bool aForce, bool aQuick, TIOPortDeviceData * aData)
+{
+	QMutexLocker locker(&mSystemAsyncPropertyMutex);
+
+	static TWinDeviceProperties asyncProperties;
+	static TIOPortDeviceData asyncDeviceData;
+
+	if (!asyncProperties.isEmpty() && !asyncDeviceData.isEmpty() && !aForce)
+	{
+		*aData = asyncDeviceData;
+
+		return asyncProperties;
+	}
+
+	asyncProperties = SerialDeviceUtils::getDeviceProperties(mUuids, mPathProperty, aQuick, &asyncDeviceData);
+
+	if (aData)
+	{
+		*aData = asyncDeviceData;
+	}
+
+	return asyncProperties;
 }
 
 //--------------------------------------------------------------------------------

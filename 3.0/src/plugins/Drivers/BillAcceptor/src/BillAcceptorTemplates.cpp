@@ -10,7 +10,7 @@
 //------------------------------------------------------------------------------
 template class CashAcceptorBase<SerialDeviceBase<PortPollingDeviceBase<ProtoCashAcceptor>>>;
 template class PortCashAcceptor<SerialDeviceBase<PortPollingDeviceBase<ProtoCashAcceptor>>>;
-template class CCTalkDeviceBase<TSerialCashAcceptor>;
-template class CCTalkAcceptorBase<TSerialCashAcceptor>;
+template class CCTalkDeviceBase<SerialCashAcceptor>;
+template class CCTalkAcceptorBase<SerialCashAcceptor>;
 
 //------------------------------------------------------------------------------

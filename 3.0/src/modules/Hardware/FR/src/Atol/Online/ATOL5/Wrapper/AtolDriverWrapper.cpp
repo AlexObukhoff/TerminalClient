@@ -41,7 +41,10 @@ bool AtolDriverWrapper::initialize(const QString & aLibraryPath)
 
 	try
 	{
-		mDriver = PDriver(new Atol::Fptr::Fptr(libraryPath.toStdWString()));
+		if (mDriver.isNull())
+		{
+			mDriver = PDriver(new Atol::Fptr::Fptr(libraryPath.toStdWString()));
+		}
 	}
 	catch (std::exception & e)
 	{

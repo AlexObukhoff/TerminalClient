@@ -14,8 +14,10 @@
  <string>Получатель денежных средств:</string>
  <string>[b]Content Card RUS[/b]</string>
  <string>Наименование операции:</string>
- <string>прием от физического лица наличных</string>
- <string>денежных средств.</string>
+ <string>Приход денежных средств</string>
+ <string>от покупателя (клиента)</string>
+ <string if="%PAY_TOOL%">Форма расчета: безналичные</string>
+ <else if="!%PAY_TOOL%">Форма расчета: наличные</else>
  <string>Назначение перевода:</string>
  <string>[b]%SERVICE_TYPE% (%OPERATOR_BRAND%)[/b]</string>
  <string>Номер сессии: %INITIAL_SESSION%</string>

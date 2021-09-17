@@ -6,6 +6,9 @@
 #include <QtCore/QMetaType>
 #include <Common/QtHeadersEnd.h>
 
+// Modules
+#include "Hardware/Common/SerialDeviceUtils.h"
+
 // Project
 #include "LibUSBPort.h"
 #include "LibUSBUtils.h"
@@ -371,7 +374,7 @@ CLibUSB::TDeviceProperties LibUSBPort::getDevicesProperties(bool aForce)
 	for (auto it = properties.begin(); it != properties.end();)
 	{
 		QString deviceProduct = it->deviceData.value(DeviceUSBData::Product).toString().toLower();
-		bool needErase = !it->VID || !it->PID || deviceProduct.contains("mouse");
+		bool needErase = !it->VID || !it->PID || SystemDeviceUtils::containsTag(deviceProduct, CSerialDeviceUtils::Tags::Unimportant());
 		it = needErase ? properties.erase(it) : it + 1;
 	}
 

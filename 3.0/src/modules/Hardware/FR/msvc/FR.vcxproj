@@ -113,6 +113,8 @@
   <ItemGroup>
     <ClCompile Include="..\src\Atol\Base\Atol3\Atol3FRBase.cpp" />
     <ClCompile Include="..\src\Atol\Base\AtolSerialFR.cpp" />
+    <ClCompile Include="..\src\Atol\Online\ATOL5\Proto\SerialProtoAtol5FR.cpp" />
+    <ClCompile Include="..\src\Atol\Online\ATOL5\Proto\VCOMProtoAtol5FR.cpp" />
     <ClCompile Include="..\src\Atol\Proto\ProtoAtolFR.cpp" />
     <ClCompile Include="..\src\Atol\Ejector\AtolEjectorFR.cpp" />
     <ClCompile Include="..\src\Atol\AtolModelData.cpp" />
@@ -130,6 +132,7 @@
     <ClCompile Include="..\src\Kasbi\KasbiFRBase.cpp" />
     <ClCompile Include="..\src\MStar\Online\AFPFR.cpp" />
     <ClCompile Include="..\src\Prim\Online\PrimOnlineFRBase.cpp" />
+    <ClCompile Include="..\src\Shtrih\Base\VirtualShtrihFR.cpp" />
     <ClCompile Include="..\src\Shtrih\Proto\ProtoShtrihFR.cpp" />
     <ClCompile Include="..\src\Shtrih\Base\ShtrihSerialFR.cpp" />
     <ClCompile Include="..\src\Shtrih\ModelData.cpp" />
@@ -169,7 +172,9 @@
     <ClInclude Include="..\src\Atol\Base\AtolFR.h" />
     <ClInclude Include="..\src\Atol\Base\AtolFRBaseConstants.h" />
     <ClInclude Include="..\src\Atol\Base\AtolSerialFR.h" />
-    <ClInclude Include="..\src\Atol\Online\ATOL5\ProtoAtol5FR.h" />
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Proto\ProtoAtol5FR.h" />
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Proto\SerialProtoAtol5FR.h" />
+    <ClInclude Include="..\src\Atol\Online\ATOL5\Proto\VCOMProtoAtol5FR.h" />
     <ClInclude Include="..\src\Atol\Proto\ProtoAtolFR.h" />
     <ClInclude Include="..\src\Atol\Ejector\AtolEjectorDataTypes.h" />
     <ClInclude Include="..\src\Atol\Ejector\AtolEjectorFR.h" />

@@ -33,6 +33,13 @@ namespace CAllHardware
 	const char PluginDirectory[] = "plugin_directory";
 	const char LogDirectory[] = "log_directory";
 	const char DataDirectory[] = "data_directory";
+	const char VCOMData[] = "vcom_data";
+	const char VCOMType[] = "vcom_type";
+	const char VCOMTags[] = "vcom_tags";
+	const char VCOMConnectionType[] = "serial_connection";
+	const char Tag[] = "tag";
+	const char Type[] = "type";
+	const char FastAutoSearching[] = "fast_auto_searching";
 
 	/// Значения настроек.
 	namespace Values
@@ -81,6 +88,7 @@ namespace CAllHardware
 		const char WithoutPrinting[] = "without_printing";
 		const char CanWithoutPrinting[] = "can_without_printing";
 		const char NullingSumInCash[] = "nulling_sum_in_cash";
+		const char RewriteCashier[] = "rewrite_cashier";
 	}
 
 	/// Константы принтера.
@@ -92,6 +100,7 @@ namespace CAllHardware
 		const char ServiceOperation[] = "service_operation";
 		const char BlockTerminalOnError[] = "block_terminal_on_error";
 		const char OFDNotSentError[] = "ofd_not_sent_error";
+		const char AmountPrefix[] = "amount_prefix";
 	}
 
 	/// Константы HID-устройств.

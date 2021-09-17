@@ -14,8 +14,10 @@
 	<string>Адрес терминала: [b]%POINT_ADDRESS%[/b]</string>
 	<string>-----------------------------------</string>
 	<string>Наименование операции:</string>
-	<string>прием от физического лица наличных</string>
-	<string>денежных средств.</string>
+	<string>Приход денежных средств</string>
+	<string>от покупателя (клиента)</string>
+	<string if="%PAY_TOOL%">Форма расчета: безналичные</string>
+	<else if="!%PAY_TOOL%">Форма расчета: наличные</else>
 	<string>Назначение перевода:</string>
 	<string>[b]%SERVICE_TYPE% (%OPERATOR_BRAND%)[/b]</string>
 	<string>Принято: [b]%AMOUNT_ALL% %CURRENCY%[/b]</string>

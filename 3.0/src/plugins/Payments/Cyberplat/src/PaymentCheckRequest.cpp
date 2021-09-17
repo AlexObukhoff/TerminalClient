@@ -20,6 +20,9 @@ PaymentCheckRequest::PaymentCheckRequest(Payment * aPayment, bool aFake)
 	{
 		addParameter("REQ_TYPE", 1);
 
+		int payTool = mPayment->getProviderSettings().processor.requests[CPayment::Requests::Check].payTool;
+		addParameter("PAY_TOOL", payTool);
+
 		QString limit = mPayment->getProviderSettings().limits.check.isEmpty() ?
 			mPayment->getProviderSettings().limits.min :
 			mPayment->getProviderSettings().limits.check;

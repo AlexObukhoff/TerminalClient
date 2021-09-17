@@ -26,6 +26,7 @@ typedef FRBase<PrinterBase<TPollingOPOSFR>> TOPOSFR;
 class OPOSMStarTUPK : public TOPOSFR
 {
 	SET_SERIES("Multisoft")
+	//SET_VCOM_DATA(Types::Manufacturer, None, ManufacturerTags::FR::MStar)
 
 public:
 	OPOSMStarTUPK();

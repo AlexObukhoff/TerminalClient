@@ -458,6 +458,7 @@ bool DealerSettings::loadProvidersFromBuffer(const std::string & aBuffer, SProvi
 					request.responseFields << field;
 				}
 
+				request.payTool = requestIt->second.get<int>("<xmlattr>.pay_tool", 0);
 				aProvider.processor.requests[requestIt->second.get<QString>("<xmlattr>.name").toUpper()] = request;
 			}
 
@@ -561,6 +562,15 @@ bool DealerSettings::loadProvidersFromBuffer(const std::string & aBuffer, SProvi
 				{
 					aProvider.receipts.insert(receiptIt.second.get<QString>("<xmlattr>.type"), receiptIt.second.get<QString>("<xmlattr>.template", QString()));
 				}
+			}
+
+			// Разрешенные способы оплаты
+			BOOST_FOREACH(const auto & pmIt, value.second.get_child("payment_methods", emptyTree))
+			{
+				if (pmIt.first == "parameter")
+				{
+					aProvider.paymentMethods << pmIt.second.get<QString>("<xmlattr>.name");
+				}				
 			}
 		}
 		catch (std::runtime_error & error)

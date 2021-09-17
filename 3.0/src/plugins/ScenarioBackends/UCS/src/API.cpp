@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include <windows.h>
+#include <psapi.h>
+#pragma comment(lib, "psapi.lib")
+
 #include <numeric>
 
 // Qt
@@ -13,10 +17,8 @@
 #include <Common/QtHeadersEnd.h>
 
 // SDK
-#include <SDK/PaymentProcessor/Core/ISettingsService.h>
 #include <SDK/PaymentProcessor/Core/IGUIService.h>
 #include <SDK/PaymentProcessor/Core/ISchedulerService.h>
-#include "SDK/PaymentProcessor/Settings/ISettingsAdapter.h"
 #include <SDK/PaymentProcessor/Core/IPrinterService.h>
 #include <SDK/PaymentProcessor/Scripting/Core.h>
 #include <SDK/PaymentProcessor/Scripting/PrinterService.h>
@@ -27,10 +29,7 @@
 #include "Ucs.h"
 #include "API.h"
 #include "Responses.h"
-#include "Utils.h"
 #include "UscEncashTask.h"
-
-#pragma comment(lib, "psapi.lib")
 
 namespace CUcs
 {
@@ -53,7 +52,6 @@ namespace Ucs
 API::API(SDK::PaymentProcessor::ICore * aCore, ILog * aLog) : 
 	ILogable(aLog),
 	mCore(aCore),
-	mTerminalSettings(static_cast<PPSDK::TerminalSettings *>(aCore->getSettingsService()->getAdapter(PPSDK::CAdapterNames::TerminalAdapter))),
 	mTerminalID(CUcs::DefaultTerminalID),
 	mLastLineReceived(false),
 	mTimerEncashID(0),
@@ -77,7 +75,15 @@ API::API(SDK::PaymentProcessor::ICore * aCore, ILog * aLog) :
 	//Заводим задачу в планировщике на ежесуточную инкассацию
 	mEncashmentTask = new UscEncashTask(Ucs::EncashmentTask, getLog()->getName(), QString());
 	connect(mEncashmentTask, SIGNAL(finished(const QString &, bool)), this, SLOT(onEncashTaskFinished(const QString &, bool)));
-	mCore->getSchedulerService()->registerTaskType(Ucs::EncashmentTask, mEncashmentTask);
+	auto scheduler = mCore->getSchedulerService();
+	if (scheduler)
+	{
+		scheduler->registerTaskType(Ucs::EncashmentTask, mEncashmentTask);
+	}
+	else
+	{
+		toLog(LogLevel::Error, QString("Failed register encashment task into scheduler service."));
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -132,7 +138,14 @@ bool API::setupRuntime(const QString & aRuntimePath)
 	// первый раз статус дергаем сразу после запуска
 	QTimer::singleShot(CUcs::ReconnectTimeout, this, SLOT(status()));
 
-	connect(mCore->getPrinterService(), SIGNAL(receiptPrinted(int, bool)), this, SLOT(onReceiptPrinted(int, bool)));
+	if (mCore->getPrinterService())
+	{
+		connect(mCore->getPrinterService(), SIGNAL(receiptPrinted(int, bool)), this, SLOT(onReceiptPrinted(int, bool)));
+	}
+	else
+	{
+		toLog(LogLevel::Error, QString("No print service available."));
+	}
 
 	return true;
 }
@@ -170,6 +183,7 @@ void API::disable()
 	mLoggedIn = QDateTime();
 
 	mCurrentReceipt.clear();
+	mLastLineReceived = false;
 
 	eftpCleanup();
 
@@ -374,7 +388,7 @@ void API::status()
 {
 	if (mTerminalState != APIState::None)
 	{
-		toLog(LogLevel::Debug, QString("Skip get status. State=%1.").arg(mTerminalState));
+		toLog(LogLevel::Debug, QString("Skip 'status'. Current API state=%1.").arg(mTerminalState));
 
 		return;
 	}
@@ -421,26 +435,33 @@ void API::printAllEncashments()
 	mNeedPrintAllEncashmentReports = false;
 
 	auto printingService = mCore->getPrinterService();
-	QVariantMap parameters;
-
-	toLog(LogLevel::Normal, "Start print all unprinted encashment.");
-
-	foreach (UcsDB::Encashment encashment, mDatabase.getAllNotPrinted())
+	if (printingService)
 	{
-		parameters["EMV_DATA"] = encashment.receipt.join("[br]");
+		QVariantMap parameters;
 
-		int job = printingService->printReceipt("", parameters, "emv_encashment", DSDK::EPrintingModes::Continuous);
+		toLog(LogLevel::Normal, "Start print all unprinted encashment.");
+
+		foreach (UcsDB::Encashment encashment, mDatabase.getAllNotPrinted())
+		{
+			parameters["EMV_DATA"] = encashment.receipt.join("[br]");
+
+			int job = printingService->printReceipt("", parameters, "emv_encashment", DSDK::EPrintingModes::Continuous);
 		
-		if (job)
-		{
-			toLog(LogLevel::Normal, QString("Encashment [%1] print started.").arg(encashment.date.toString("yyyy.MM.dd hh:mm:ss")));
+			if (job)
+			{
+				toLog(LogLevel::Normal, QString("Encashment [%1] print started.").arg(encashment.date.toString("yyyy.MM.dd hh:mm:ss")));
 
-			mEncashmentInPrint[job] = encashment;
+				mEncashmentInPrint[job] = encashment;
+			}
+			else
+			{
+				toLog(LogLevel::Error, QString("Failed start encashment [%1] print.").arg(encashment.date.toString("yyyy.MM.dd hh:mm:ss")));
+			}
 		}
-		else
-		{
-			toLog(LogLevel::Error, QString("Failed start encashment [%1] print.").arg(encashment.date.toString("yyyy.MM.dd hh:mm:ss")));
-		}
+	}
+	else
+	{
+		toLog(LogLevel::Error, QString("No print service available."));
 	}
 }
 
@@ -591,14 +612,16 @@ bool API::isPrintLineResponse(BaseResponsePtr aResponse)
 					emit saleComplete(mAuthResponse->mTransactionSumm / 100.0,
 						mAuthResponse->mCurrency,
 						mAuthResponse->mRRN,
-						mAuthResponse->mConfirmation);
+						mAuthResponse->mConfirmation,
+						mCurrentReceipt);
 
 					mAuthResponse.clear();
 				}
 				else
 				{
-					mTerminalState = APIState::None;
 					emit error("");
+
+					disable();
 				}
 			}
 		}
@@ -779,15 +802,24 @@ bool API::isMessageResponse(BaseResponsePtr aResponse)
 //---------------------------------------------------------------------------
 void API::printReceipt()
 {
-	QVariantMap parameters;
-	parameters["EMV_DATA"] = mCurrentReceipt.join("").replace("||", "|\n|").replace("\n", "[br]").replace("|", "");
-	
-	SDK::PaymentProcessor::Scripting::Core * scriptingCore = static_cast<SDK::PaymentProcessor::Scripting::Core *>
-		(dynamic_cast<SDK::GUI::IGraphicsHost *>(mCore->getGUIService())->getInterface<QObject>(SDK::PaymentProcessor::Scripting::CProxyNames::Core));
+	auto guiService = mCore->getGUIService();
 
-	SDK::PaymentProcessor::Scripting::PrinterService * ps = static_cast<SDK::PaymentProcessor::Scripting::PrinterService *>(scriptingCore->property("printer").value<QObject *>());
+	if (guiService)
+	{
+		QVariantMap parameters;
+		parameters["EMV_DATA"] = mCurrentReceipt.join("").replace("||", "|\n|").replace("\n", "[br]").replace("|", "");
 
-	ps->printReceiptExt("", parameters, "emv", DSDK::EPrintingModes::Glue);
+		SDK::PaymentProcessor::Scripting::Core * scriptingCore = static_cast<SDK::PaymentProcessor::Scripting::Core *>
+			(dynamic_cast<SDK::GUI::IGraphicsHost *>(guiService)->getInterface<QObject>(SDK::PaymentProcessor::Scripting::CProxyNames::Core));
+
+		SDK::PaymentProcessor::Scripting::PrinterService * ps = static_cast<SDK::PaymentProcessor::Scripting::PrinterService *>(scriptingCore->property("printer").value<QObject *>());
+
+		ps->printReceiptExt("", parameters, "emv", DSDK::EPrintingModes::Glue);
+	}
+	else
+	{
+		toLog(LogLevel::Error, QString("No GUI service available."));
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -814,7 +846,15 @@ void API::saveEncashmentReport()
 
 		parameters["EMV_DATA"] = enc.receipt.join("\n");
 
-		mCore->getPrinterService()->saveReceipt(parameters, "emv_encashment");
+		if (mCore->getPrinterService())
+		{
+			mCore->getPrinterService()->saveReceipt(parameters, "emv_encashment");
+		}
+		else
+		{
+			//TODO - необходимо предусмотреть для МП альтернативный способ сохранения чеков инкассаций
+			toLog(LogLevel::Error, QString("No print service available."));
+		}
 	}
 }
 
@@ -934,8 +974,6 @@ API::TResponse API::send(const QByteArray & aRequest, bool aWaitOperationComplet
 		{
 			mNeedEncashment = false;
 		}
-
-		mLastLineReceived = false;
 
 		disable();
 	}

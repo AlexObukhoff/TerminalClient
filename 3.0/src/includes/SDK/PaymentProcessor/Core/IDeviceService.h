@@ -37,7 +37,7 @@ public:
 
 public:
 	/// Неблокирующий поиск всех устройств.
-	virtual void detect(const QString & aDeviceType = QString()) = 0;
+	virtual void detect(bool aFast, const QString & aDeviceType = QString()) = 0;
 
 	/// Прервать поиск устройств.
 	virtual void stopDetection() = 0;

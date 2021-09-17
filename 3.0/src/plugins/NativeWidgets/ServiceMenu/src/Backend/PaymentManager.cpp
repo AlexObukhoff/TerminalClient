@@ -185,7 +185,8 @@ bool PaymentManager::printUnprintedReceiptsRegistry(const QSet<qint64> & aPaymen
 		QStringList registry;
 		QStringList paymentTitles;
 		QVariantList paymentsVAT;
-		QStringList paymentInn;
+		QStringList paymentNames;
+		QStringList paymentInns;
 
 		PaymentAmounts()
 		{
@@ -238,10 +239,11 @@ bool PaymentManager::printUnprintedReceiptsRegistry(const QSet<qint64> & aPaymen
 			auto provider = mDealerSettings->getMNPProvider(providerId, getewayIn, getewayOut);
 
 			amounts[payTool].summAmountAll += amountAll.toDouble();
-			amounts[payTool].summAmounts << amount;
+			amounts[payTool].summAmounts   << amount;
 			amounts[payTool].paymentTitles << formatPaymentTitle(provider);
-			amounts[payTool].paymentsVAT << vat;
-			amounts[payTool].paymentInn << provider.receiptParameters.value("OPERATOR_INN").toString();
+			amounts[payTool].paymentsVAT   << vat;
+			amounts[payTool].paymentNames  << provider.receiptParameters.value("OPERATOR_NAME").toString();
+			amounts[payTool].paymentInns   << provider.receiptParameters.value("OPERATOR_INN").toString();
 			amounts[payTool].summDealerFee += dealerFee;
 			amounts[payTool].summProcessingFee += processingFee;
 
@@ -259,12 +261,13 @@ bool PaymentManager::printUnprintedReceiptsRegistry(const QSet<qint64> & aPaymen
 			receiptParameters[CPaymentManager::UnprintedPaymentList] = amounts[payTool].registry;
 			receiptParameters[CPayment::AmountAll] = amounts[payTool].summAmountAll;
 			receiptParameters[QString("[%1]").arg(CPayment::Amount)] = amounts[payTool].summAmounts;
-			receiptParameters["[AMOUNT_TITLE]"] = amounts[payTool].paymentTitles;
-			receiptParameters["[AMOUNT_VAT]"] = amounts[payTool].paymentsVAT;
-			receiptParameters["[OPERATOR_INN]"] = amounts[payTool].paymentInn;
-			receiptParameters[CPayment::PayTool] = payTool;
+			receiptParameters["[AMOUNT_TITLE]"]    = amounts[payTool].paymentTitles;
+			receiptParameters["[AMOUNT_VAT]"]      = amounts[payTool].paymentsVAT;
+			receiptParameters["[OPERATOR_NAME]"]   = amounts[payTool].paymentNames;
+			receiptParameters["[OPERATOR_INN]"]    = amounts[payTool].paymentInns;
+			receiptParameters[CPayment::PayTool]   = payTool;
 			receiptParameters[CPayment::DealerFee] = amounts[payTool].summDealerFee;
-			receiptParameters[CPayment::Fee] = amounts[payTool].summDealerFee + amounts[payTool].summProcessingFee;
+			receiptParameters[CPayment::Fee]       = amounts[payTool].summDealerFee + amounts[payTool].summProcessingFee;
 			receiptParameters[CPayment::ProcessingFee] = amounts[payTool].summProcessingFee;
 
 			mPaymentsRegistryPrintJob = mPrinterService->printReceipt(PPSDK::CReceiptType::Payment, receiptParameters, CPaymentManager::UnprintedReest, DSDK::EPrintingModes::Continuous, true);

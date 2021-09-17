@@ -9,6 +9,7 @@
 class MStarPrinters : public SerialFRBase
 {
 	SET_SERIES(ProtocolNames::FR::Incotex)
+	SET_VCOM_DATA(Types::Manufacturer, ConnectionTypes::Dual, ManufacturerTags::FR::MStar)
 
 public:
 	MStarPrinters();

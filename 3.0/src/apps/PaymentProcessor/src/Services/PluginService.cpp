@@ -65,8 +65,15 @@ bool PluginService::initialize()
 	mPluginLoader->addDirectory(mApplication->getUserPluginPath());
 
 #ifndef _DEBUG
-	// Запустим фоновую проверку плагинов на наличие цифровой подписи
-	mPluginVerifierSynchronizer.addFuture(QtConcurrent::run(this, &PluginService::verifyPlugins));
+	if (QSysInfo::windowsVersion() != QSysInfo::WV_XP)
+	{
+		// Запустим фоновую проверку плагинов на наличие цифровой подписи
+		mPluginVerifierSynchronizer.addFuture(QtConcurrent::run(this, &PluginService::verifyPlugins));
+	}
+	else
+	{
+		toLog(LogLevel::Warning, "Windows XP found. Skip verify sign plugins.");
+	}
 #endif
 
 	return true;
@@ -306,6 +313,9 @@ void PluginService::verifyPlugins()
 		}
 	}
 
+#if 1
+	mUnsignedPlugins.clear();
+#else	
 	try
 	{
 		auto * eventService = EventService::instance(mApplication);
@@ -318,8 +328,9 @@ void PluginService::verifyPlugins()
 	}
 	catch (SDK::PaymentProcessor::ServiceIsNotImplemented & e)
 	{
-		toLog(LogLevel::Error, "Exception accured while verify plugins.");
+		toLog(LogLevel::Error, QString("Exception accured while verify plugins. %1").arg(e.what()));
 	}
+#endif
 
 #else
 	#pragma warning "PluginService::verifyPlugins not implemented on this platfotm."

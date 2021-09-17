@@ -14,6 +14,7 @@
 #include <SDK/Drivers/ICardReader.h>
 #include <SDK/Drivers/Components.h>
 #include <SDK/Drivers/InteractionTypes.h>
+#include <SDK/Drivers/ICardMachine.h>
 
 // Common
 #include <Common/ILogable.h>
@@ -27,10 +28,11 @@
 namespace Ucs
 {
 	const char ModelName[] = "UCS";
+	const char ParamRuntimePath[] = "ucs_runtime_path";
 }
 
 //--------------------------------------------------------------------------------
-class UcsDevice : public QObject, public SDK::Driver::ICardReader, private SDK::Driver::SingleDetectingIterator, public ILogable
+class UcsDevice : public QObject, public SDK::Driver::ICardReader, public SDK::Driver::ICardMachine, private SDK::Driver::SingleDetectingIterator, public ILogable
 {
 	Q_OBJECT
 
@@ -89,6 +91,21 @@ public:
 
 #pragma endregion
 
+
+#pragma region SDK::Driver::ICardMachine interface
+public:
+	/// Начать процедуру оплаты
+	virtual bool sale(SDK::PaymentProcessor::TPaymentAmount aAmount);
+
+	/// Отсоединиться
+	virtual void disable();
+
+signals:
+	void saleComplete(double aAmount, int aCurrency, const QString & aRRN, const QString & aConfirmationCode, const QStringList& aReceipt);
+	void message(const QString & aMessage);
+
+#pragma endregion
+
 public:
 	void setCore(SDK::PaymentProcessor::ICore * aCore);
 
@@ -97,6 +114,9 @@ signals:
 
 	/// Изменение состояния.
 	void status(SDK::Driver::EWarningLevel::Enum, const QString &, int);
+
+	/// Инициализация окончена.
+	void initialized();
 	
 	/// Карта вставлена.
 	void inserted(SDK::Driver::ECardType::Enum, const QVariantMap &);
@@ -115,6 +135,8 @@ private slots:
 	void onAPIError(const QString & aMessage);
 	void onState(int aState, const QString & aDeviceName, bool aLast);
 	void onEjected();
+	void onDoComplete(bool aISaleComplete);
+	void onAPIMessage(const QString& aMessage);
 
 private:
 	/// Параметры устройства.
@@ -137,6 +159,7 @@ private:
 private:
 	SDK::PaymentProcessor::ICore * mCore;
 	QList<QPair<int, QString>> mStates;
+	double mAcquireAmount;
 };
 
 //--------------------------------------------------------------------------------

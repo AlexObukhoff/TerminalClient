@@ -24,7 +24,7 @@ PrimOnlineFRBase::PrimOnlineFRBase()
 {
 	// данные устройства
 	mIsOnline = true;
-	mAFDFont = CPrimFR::FiscalFont::Default;
+	mBuild = 0;
 
 	// данные моделей
 	mDeviceName = CPrimFR::DefaultOnlineModelName;
@@ -74,13 +74,13 @@ bool PrimOnlineFRBase::updateParameters()
 	if (firmware.size() == 7)
 	{
 		QString textBuild = QString("%1.%2").arg(firmware.right(3)).arg(firmware[2]);
-		double build = textBuild.toDouble();
+		mBuild = textBuild.toDouble();
 
-		if (build)
+		if (mBuild)
 		{
-			mFFDFR = CPrimOnlineFR::getFFD(build);
+			mFFDFR = CPrimOnlineFR::getFFD(mBuild);
 			double actualFirmware = CPrimOnlineFR::getActualFirmware(mFFDFR);
-			mOldFirmware = actualFirmware && (actualFirmware > build);
+			mOldFirmware = actualFirmware && (actualFirmware > mBuild);
 
 			//TODO: TLV-запрос для получения версии ФФД ФН -> mFFDFS (тег 1190), будет после 1.05
 			mFFDFS = EFFD::F10;
@@ -469,50 +469,83 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 		}
 	}
 
-	int serialNumberY = serialNumber.size() + 2;
-	int documentNumberY = getDataY(5);
-	int timeY = getDataY(5);
 	bool cashierExist = operatorId != CPrimFR::OperatorID;
-	int cashierX = cashierExist ? 3 : 2;
-
 	int startX = aReceiptSize;
-	int lastX = startX + cashierX;
-
-	int INNY = INN.size() + 2;
-	int cashierY = cashierExist ? (cashier.size() + 2) : (INNY + 16);
+	int lastX = startX;
 	int totalY = getAmountY(getTotalAmount(aPaymentData));
-	int receiptNumberY = getDataY(5);
 
-	aCommandData
-		<< addGFieldToBuffer(startX + 1, serialNumberY, mAFDFont)      // серийный номер
-		<< addGFieldToBuffer(startX + 1, documentNumberY, mAFDFont)    // номер документа
-		<< addGFieldToBuffer(startX + 2, 1, mAFDFont)                  // дата
-		<< addGFieldToBuffer(startX + 2, timeY, mAFDFont)              // время
-		<< addGFieldToBuffer(lastX  + 2, INNY, mAFDFont)               // ИНН
-		<< addGFieldToBuffer(lastX  + 0, cashierY, mAFDFont) << mCodec->fromUnicode(operatorId)    // ID оператора
-		<< addGFieldToBuffer(lastX  + 2, totalY, mAFDFont)   << sumData;    // сумма
-
-	aAdditionalAFDData
-		<< addArbitraryFieldToBuffer(startX + 1, 1, serialNumber, mAFDFont)
-		<< addArbitraryFieldToBuffer(startX + 1, documentNumberY - (documentNumber.size() + 1), documentNumber, mAFDFont)
-		<< addArbitraryFieldToBuffer(lastX  + 2, 1, INN, mAFDFont)
-		<< addArbitraryFieldToBuffer(lastX  + 2, totalY - total.size() - 1, total, mAFDFont)
-
-		// 1038 (номер смены)
-		<< addArbitraryFieldToBuffer(lastX + 1, 1, session, mAFDFont)
-		<<            addFiscalField(lastX + 1, 2 + session.size(), mAFDFont, CFR::FiscalFields::SessionNumber)
-
-		// 1042 (номер чека)
-		<< addArbitraryFieldToBuffer(lastX + 1, receiptNumberY - receiptNumber.size() - 1, receiptNumber, mAFDFont)
-		<<            addFiscalField(lastX + 1, receiptNumberY, mAFDFont, CFR::FiscalFields::DocumentNumber);
-
-	if (cashierExist)
+	if (mBuild < CPrimOnlineFR::FFD11Build)
 	{
-		aAdditionalAFDData << addArbitraryFieldToBuffer(aReceiptSize + cashierX, 1, cashier, mAFDFont);
+		int serialNumberY = serialNumber.size() + 2;
+		int documentNumberY = getDataY(5);
+		int timeY = getDataY(5);
+
+		int cashierX = cashierExist ? 3 : 2;
+		lastX += cashierX;
+
+		int INNY = INN.size() + 2;
+		int cashierY = cashierExist ? (cashier.size() + 2) : (INNY + 16);
+		int receiptNumberY = getDataY(5);
+
+		aCommandData
+			<< addGFieldToBuffer(startX + 1, serialNumberY)           // серийный номер
+			<< addGFieldToBuffer(startX + 1, documentNumberY)         // номер документа
+			<< addGFieldToBuffer(startX + 2, 1)                       // дата
+			<< addGFieldToBuffer(startX + 2, timeY)                   // время
+			<< addGFieldToBuffer(lastX  + 2, INNY)                    // ИНН
+			<< addGFieldToBuffer(lastX  + 0, cashierY) << mCodec->fromUnicode(operatorId)    // ID оператора
+			<< addGFieldToBuffer(lastX  + 2, totalY)   << sumData;    // сумма
+
+		aAdditionalAFDData
+			<< addArbitraryFieldToBuffer(startX + 1, 1, serialNumber)
+			<< addArbitraryFieldToBuffer(startX + 1, documentNumberY - (documentNumber.size() + 1), documentNumber)
+			<< addArbitraryFieldToBuffer(lastX  + 2, 1, INN)
+			<< addArbitraryFieldToBuffer(lastX  + 2, totalY - total.size() - 1, total)
+
+			// 1038 (номер смены)
+			<< addArbitraryFieldToBuffer(lastX + 1, 1, session)
+			<<            addFiscalField(lastX + 1, 2 + session.size(), CFR::FiscalFields::SessionNumber)
+
+			// 1042 (номер чека)
+			<< addArbitraryFieldToBuffer(lastX + 1, receiptNumberY - receiptNumber.size() - 1, receiptNumber)
+			<<            addFiscalField(lastX + 1, receiptNumberY, CFR::FiscalFields::DocumentNumber);
+
+		if (cashierExist)
+		{
+			aAdditionalAFDData << addArbitraryFieldToBuffer(aReceiptSize + cashierX, 1, cashier);
+		}
+
+		lastX++;
+	}
+	else
+	{
+		lastX += int(cashierExist);
+		int documentNumberY = documentNumber.size() + 2;
+		int cashierY = cashierExist ? (cashier.size() + 2) : (documentNumberY + 11);
+
+		aCommandData
+			<< addGFieldToBuffer( lastX + 1, cashierY)           // серийный номер - нет в ПФ
+			<< addGFieldToBuffer( lastX + 1, documentNumberY)    // номер документа
+			<< addGFieldToBuffer( lastX + 1, cashierY)           // дата  - нет в ПФ
+			<< addGFieldToBuffer( lastX + 1, cashierY)           // время - нет в ПФ
+			<< addGFieldToBuffer( lastX + 1, cashierY)           // ИНН   - нет в ПФ
+			<< addGFieldToBuffer(startX + 1, cashierY) << mCodec->fromUnicode(operatorId)    // ID оператора
+			<< addGFieldToBuffer( lastX + 1, totalY)   << sumData;    // сумма
+
+		aAdditionalAFDData
+			<< addArbitraryFieldToBuffer(lastX + 1, 1, documentNumber)
+			<< addArbitraryFieldToBuffer(lastX + 1, totalY - total.size() - 1, total)
+			<<            addFiscalField(lastX + 1, cashierY, CFR::FiscalFields::SessionNumber)      // 1038 (номер смены) - нет в ПФ
+			<<            addFiscalField(lastX + 1, cashierY, CFR::FiscalFields::DocumentNumber);    // 1042 (номер чека) - нет в ПФ
+
+		if (cashierExist)
+		{
+			aAdditionalAFDData << addArbitraryFieldToBuffer(startX + 1, 1, cashier);
+		}
 	}
 
 	// продажи
-	lastX += 2;
+	lastX++;
 
 	for (int i = 0; i < aPaymentData.unitDataList.size(); ++i)
 	{
@@ -530,7 +563,7 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 
 		int addAFDDataIndex = aAdditionalAFDData.size();
 
-		#define ADD_AFD_TAG(aX, aY, aField, ...) aAdditionalAFDData << addFiscalField(lastX + aX, aY, mAFDFont, CFR::FiscalFields::aField * 100 + i + 1, __VA_ARGS__)
+		#define ADD_AFD_TAG(aX, aY, aField, ...) aAdditionalAFDData << addFiscalField(lastX + aX, aY, CFR::FiscalFields::aField * 100 + i + 1, __VA_ARGS__)
 		#define ADD_AFD_TAG_MULTI(aX, aY, aField, aData) ADD_AFD_TAG(aX, aY, aField, aData); lastX += int(newLine)
 
 		if (mFFDFR > EFFD::F10)
@@ -552,22 +585,35 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 			ADD_AFD_TAG(3,       1, VATRate);                          // 1199 (НДС, %)
 			ADD_AFD_TAG(3,    VATY, PayOffSubjectTaxAmount);           // 1200 (НДС, сумма)
 
-			if (unitData.payOffSubjectMethodType != EPayOffSubjectMethodTypes::Full)
+			bool payOffSubjectMethodTypeExists = unitData.payOffSubjectMethodType != EPayOffSubjectMethodTypes::None;
+
+			if (payOffSubjectMethodTypeExists)
 			{
-				ADD_AFD_TAG(4, 1, PayOffSubjectMethodType);    // 1214 (признак способа расчета)
+				if (mBuild >= CPrimOnlineFR::PayOffSubjectMethodTypeBuild)
+				{
+					ADD_AFD_TAG(4, 1, PayOffSubjectMethodType);    // 1214 (признак способа расчета)
+				}
+				else
+				{
+					QString payOffSubjectMethodType = CFR::PayOffSubjectMethodTypes[unitData.payOffSubjectMethodType];
+					aAdditionalAFDData << addArbitraryFieldToBuffer(lastX + 4, 1, payOffSubjectMethodType);
+				}
 			}
 
 			// не печатается на основании ФФД
 			//ADD_AFD_TAG(5, 1, PayOffSubjectType);    // 1212 (признак предмета расчета)
 
-			if (mOFDFiscalFieldsOnSale.contains(CFR::FiscalFields::ProviderINN))
+			if ((mBuild >= CPrimOnlineFR::FFD11Build) && (mOFDFiscalFieldsOnSale.contains(CFR::FiscalFields::ProviderINN)))
 			{
-				ADD_AFD_TAG(4, 2, ProviderINN, unitData.providerINN, true);    // 1226 (ИНН поставщика)
+				int x = 4 + int(payOffSubjectMethodTypeExists);
+				ADD_AFD_TAG(x, 1, ProviderINN, unitData.providerINN, true);    // 1226 (ИНН поставщика)
 			}
+
+			//TODO: CFR::FiscalFields::ProviderName
 		}
 		else
 		{
-			aAdditionalAFDData << addFiscalField(lastX + 1, 1, mAFDFont, CFR::FiscalFields::UnitName, data.join("|"));    // 1030 (наименование товара)
+			aAdditionalAFDData << addFiscalField(lastX + 1, 1, CFR::FiscalFields::UnitName, data.join("|"));    // 1030 (наименование товара)
 		}
 
 		foreach (auto AFDData, aAdditionalAFDData.mid(addAFDDataIndex))
@@ -587,10 +633,10 @@ void PrimOnlineFRBase::setFiscalData(CPrimFR::TData & aCommandData, CPrimFR::TDa
 		while (~aPaymentData.taxSystem & (1 << index++)) {}
 
 		int taxSystemY = agentFlagExists ? 25 : 1;
-		aAdditionalAFDData << addFiscalField(lastX + 1, taxSystemY, mAFDFont, CFR::FiscalFields::TaxSystem, int2String(index));
+		aAdditionalAFDData << addFiscalField(lastX + 1, taxSystemY, CFR::FiscalFields::TaxSystem, int2String(index));
 	}
 
-	#define ADD_PRIM_FF_DATA(aField, aData) aAdditionalAFDData.append(addFiscalField(++lastX, 1, mAFDFont, CFR::FiscalFields::aField, aData))
+	#define ADD_PRIM_FF_DATA(aField, aData) aAdditionalAFDData.append(addFiscalField(++lastX, 1, CFR::FiscalFields::aField, aData))
 	#define ADD_PRIM_FF(aField) ADD_PRIM_FF_DATA(aField, mFFEngine.getConfigParameter(CFiscalSDK::aField).toString())
 
 	// 1057 (флаг агента)
@@ -688,9 +734,9 @@ int PrimOnlineFRBase::getVerificationCode()
 }
 
 //--------------------------------------------------------------------------------
-CPrimFR::TData PrimOnlineFRBase::addFiscalField(int aX, int aY, int aFont, int aFiscalField, const QString & aData, bool aNoPrint)
+CPrimFR::TData PrimOnlineFRBase::addFiscalField(int aX, int aY, int aFiscalField, const QString & aData, bool aNoPrint)
 {
-	return addArbitraryFieldToBuffer(aX, aY, QString("<%1>").arg(aFiscalField) + aData, aFont, aNoPrint);
+	return addArbitraryFieldToBuffer(aX, aY, QString("<%1>").arg(aFiscalField) + aData, aNoPrint);
 }
 
 //--------------------------------------------------------------------------------

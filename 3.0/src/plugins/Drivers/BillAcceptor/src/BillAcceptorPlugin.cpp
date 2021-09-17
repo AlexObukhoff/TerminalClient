@@ -1,6 +1,5 @@
 /* @file Плагин c драйверами валидаторов. */
 
-#include "Hardware/Plugins/DevicePluginBase.h"
 #include "Hardware/Plugins/CommonParameters.h"
 #include "Hardware/CashAcceptors/CashAcceptorDevices.h"
 
