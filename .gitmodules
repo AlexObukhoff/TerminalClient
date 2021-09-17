@@ -1,0 +1,3 @@
+[submodule "thirdparty/atol5"]
+	path = thirdparty/atol5
+	url = https://dev.cyberplat.com/CyberPlat/atol5.git
